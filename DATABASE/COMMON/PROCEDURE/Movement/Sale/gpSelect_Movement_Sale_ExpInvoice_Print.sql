@@ -186,37 +186,37 @@ BEGIN
            , Object_BankAccount.Name                            AS BankAccount_ByContract
 --           , 'российских рублях' :: TVarChar                    AS CurrencyInternalAll_ByContract
            , Object_BankAccount.CurrencyInternalName            AS CurrencyInternal_ByContract
-           , Object_BankAccount.BankName                        AS BankName_ByContract
-           , Object_BankAccount.MFO                             AS BankMFO_ByContract
-           , Object_BankAccount.SWIFT                           AS BankSWIFT_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.BankName,'') = '' THEN 'Введите Банк'            ELSE Object_BankAccount.BankName END  AS BankName_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.MFO,'') = ''      THEN 'Введите МФО банка'       ELSE Object_BankAccount.MFO END       AS BankMFO_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.SWIFT,'') = ''    THEN 'Введите SWIFT-код банка' ELSE Object_BankAccount.SWIFT END AS BankSWIFT_ByContract
            , Object_BankAccount.IBAN                            AS BankIBAN_ByContract
-           , Object_BankAccount.CorrespondentBankName           AS CorrBankName_ByContract
-           , Object_Bank_View_CorrespondentBank_From.SWIFT      AS CorrBankSWIFT_ByContract
-           , Object_BankAccount.CorrespondentAccount            AS CorrespondentAccount_ByContract
-           , OHS_JD_JuridicalAddress_Bank_From.ValueData        AS JuridicalAddressBankFrom
-           , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
+           , CASE WHEN COALESCE (Object_BankAccount.CorrespondentBankName,'') = ''        THEN 'Введите Банк-корреспондент'            ELSE Object_BankAccount.CorrespondentBankName        END AS CorrBankName_ByContract
+           , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank_From.SWIFT,'') = ''   THEN 'Введите SWIFT-код банка-корреспондент' ELSE Object_Bank_View_CorrespondentBank_From.SWIFT   END AS CorrBankSWIFT_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.CorrespondentAccount,'') = ''         THEN 'Введите P/счет банка-корреспондент'    ELSE Object_BankAccount.CorrespondentAccount         END AS CorrespondentAccount_ByContract
+           , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_Bank_From.ValueData,'') = ''     THEN 'Введите Адрес банка'                   ELSE OHS_JD_JuridicalAddress_Bank_From.ValueData     END AS JuridicalAddressBankFrom
+           , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_CorrBank_From.ValueData,'') = '' THEN 'Введите Адрес банка-корреспондент'     ELSE OHS_JD_JuridicalAddress_CorrBank_From.ValueData END AS JuridicalAddressCorrBankFrom
 
 
-           , BankAccount_To.BankName                            AS BankName_Int
-           , BankAccount_To.Name                                AS BankAccount_Int
+           , CASE WHEN COALESCE (BankAccount_To.BankName,'') = ''        THEN 'Введите Банк-корреспондент' ELSE BankAccount_To.BankName  END AS BankName_Int
+           , CASE WHEN COALESCE (BankAccount_To.Name,'') = ''        THEN 'Введите Банк-корреспондент'     ELSE BankAccount_To.Name      END AS BankAccount_Int
 
-           , BankAccount_To.CorrespondentBankName               AS CorBankName_Int
-           , Object_Bank_View_CorrespondentBank.JuridicalName   AS CorBankJuridicalName_Int
-           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorBankSWIFT_Int
+           , CASE WHEN COALESCE (BankAccount_To.CorrespondentBankName,'') = ''             THEN 'Введите Банк-корреспондент'            ELSE BankAccount_To.CorrespondentBankName             END  AS CorBankName_Int
+           , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank.JuridicalName,'') = '' THEN 'Введите Банк-корреспондент'            ELSE Object_Bank_View_CorrespondentBank.JuridicalName END  AS CorBankJuridicalName_Int
+           , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank.SWIFT,'') = ''         THEN 'Введите SWIFT-код Банк-корреспондент'  ELSE Object_Bank_View_CorrespondentBank.SWIFT         END  AS CorBankSWIFT_Int
 
-           , BankAccount_To.BeneficiarysBankName                AS BenefBankName_Int
-           , OHS_JD_JuridicalAddress_BenifBank_To.ValueData     AS JuridicalAddressBenifBank_Int
-           , Object_Bank_View_BenifBank.SWIFT                   AS BenifBankSWIFT_Int
-           , BankAccount_To.BeneficiarysBankAccount             AS BenefBankAccount_Int
+           , CASE WHEN COALESCE (BankAccount_To.BeneficiarysBankName,'') = ''             THEN 'Введите банка-Бенефициар'            ELSE BankAccount_To.BeneficiarysBankName              END  AS BenefBankName_Int
+           , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_BenifBank_To.ValueData,'') = ''  THEN 'Введите адрес банка-Бенефициар'       ELSE OHS_JD_JuridicalAddress_BenifBank_To.ValueData   END  AS JuridicalAddressBenifBank_Int
+           , CASE WHEN COALESCE (Object_Bank_View_BenifBank.SWIFT,'') = ''                THEN 'Введите SWIFT-код банка-Бенефициар'   ELSE Object_Bank_View_BenifBank.SWIFT                 END  AS BenifBankSWIFT_Int
+           , CASE WHEN COALESCE (BankAccount_To.BeneficiarysBankAccount,'') = ''          THEN 'Введите Р/счет банка-Бенефициар'      ELSE BankAccount_To.BeneficiarysBankAccount           END  AS BenefBankAccount_Int
 
-           , BankAccount_To.MFO                                 AS BankMFO_Int
-           , BankAccount_To.SWIFT                               AS BankSWIFT_Int
+           , CASE WHEN COALESCE (BankAccount_To.MFO,'') = ''          THEN 'Введите МФО Банка'        ELSE BankAccount_To.MFO    END AS BankMFO_Int
+           , CASE WHEN COALESCE (BankAccount_To.SWIFT,'') = ''        THEN 'Введите SWIFT-код банка'  ELSE BankAccount_To.SWIFT  END AS BankSWIFT_Int
            , BankAccount_To.IBAN                                AS BankIBAN_Int
 
-           , Object_Bank_View_To.JuridicalName                  AS BankJuridicalName_Int
-           , OHS_JD_JuridicalAddress_To.ValueData               AS BankJuridicalAddress_Int
-           , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
-           , BankAccount_To.Name                                AS BankAccount_Int
+           , CASE WHEN COALESCE (Object_Bank_View_To.JuridicalName,'') = ''    THEN 'Введите Бенефициара'         ELSE Object_Bank_View_To.JuridicalName     END             AS BankJuridicalName_Int
+           , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_To.ValueData,'') = '' THEN 'Введите Адрес бенефициара'   ELSE OHS_JD_JuridicalAddress_To.ValueData  END             AS BankJuridicalAddress_Int
+           , CASE WHEN COALESCE (BankAccount_To.BeneficiarysAccount,'') = ''   THEN 'Введите Р/счет Бенефициара'  ELSE BankAccount_To.BeneficiarysAccount    END             AS BenefAccount_Int
+           , CASE WHEN COALESCE (BankAccount_To.Name,'') = ''                  THEN 'Введите Р/счет'              ELSE BankAccount_To.Name                   END             AS BankAccount_Int
 
            , View_CurrencyPartner.Name                          AS CurrencyPartnerName
            , View_CurrencyPartner.InternalName                  AS IntCurShortName

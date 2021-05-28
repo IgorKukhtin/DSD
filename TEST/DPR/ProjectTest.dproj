@@ -4313,6 +4313,10 @@
 				<Form>Report_CheckBonus_JournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus_JournalDialog.pas">
+				<Form>Report_CheckBonus_JournalDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

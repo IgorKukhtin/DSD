@@ -730,8 +730,8 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_CheckBonusDialogForm'
-      FormNameParam.Value = 'TReport_CheckBonusDialogForm'
+      FormName = 'TReport_CheckBonus_JournalDialogForm'
+      FormNameParam.Value = 'TReport_CheckBonus_JournalDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -849,6 +849,14 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
           Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReport'
+          Value = Null
+          Component = cbisReport
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
