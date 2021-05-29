@@ -114,7 +114,6 @@ BEGIN
      WHERE Movement.Id = inMovementId
     ;
 
-
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
@@ -130,7 +129,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
-
+    --проверка выбрана ли валюта
+    IF COALESCE (vbCurrencyDocumentId, 0) = zc_Enum_Currency_Basis()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Валюта документа должна отличаться от базовой';
+    END IF;
+    --
+    IF COALESCE (vbCurrencyPartnerValue, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не определен курс валюты';
+    END IF;
     --
     OPEN Cursor1 FOR
        SELECT
