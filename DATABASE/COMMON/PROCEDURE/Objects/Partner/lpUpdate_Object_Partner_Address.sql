@@ -180,7 +180,7 @@ BEGIN
                     AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
                   )
       THEN
-          RAISE EXCEPTION 'Ошибка.В справочник <Улица/проспект> значение <%><%> не уникально для города <%>.', lfGet_Object_ValueData (inStreetKindId), inStreetName, lfGet_Object_ValueData (vbCityId);
+          RAISE EXCEPTION 'Ошибка.1.В справочник <Улица/проспект> значение <%><%> не уникально для города <%>.', lfGet_Object_ValueData (inStreetKindId), inStreetName, lfGet_Object_ValueData (vbCityId);
       END IF;
 
         
@@ -220,7 +220,7 @@ BEGIN
                         AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
                       )
           THEN
-              RAISE EXCEPTION 'Ошибка.В справочник <Улица/проспект> значение <%><%> не уникально для города <%>.', lfGet_Object_ValueData (inStreetKindId), inStreetName, lfGet_Object_ValueData (vbCityId);
+              RAISE EXCEPTION 'Ошибка.2.В справочник <Улица/проспект> значение <%><%> не уникально для города <%>.', lfGet_Object_ValueData (inStreetKindId), inStreetName, lfGet_Object_ValueData (vbCityId);
           END IF;
             
           -- 2.2. нашли

@@ -32,6 +32,47 @@ BEGIN
    -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Street(), vbCode_calc);
 
+   -- проверка
+   IF COALESCE (inCityId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Населенный пункт> не заполнено.';
+   END IF;
+   -- проверка
+   IF COALESCE (inStreetKindId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Вид(улица,проспект)> не заполнено.';
+   END IF;
+
+   -- проверка
+   IF EXISTS (SELECT 1
+              FROM Object AS Object_Street
+                   JOIN ObjectLink AS ObjectLink_Street_StreetKind ON ObjectLink_Street_StreetKind.ObjectId     = Object_Street.Id
+                                                                  AND ObjectLink_Street_StreetKind.DescId        = zc_ObjectLink_Street_StreetKind()
+                                                                  AND ObjectLink_Street_StreetKind.ChildObjectId = inStreetKindId
+                   INNER JOIN ObjectLink AS ObjectLink_Street_City ON ObjectLink_Street_City.ObjectId       = Object_Street.Id
+                                                                  AND ObjectLink_Street_City.DescId         = zc_ObjectLink_Street_City()
+                                                                  AND ObjectLink_Street_City.ChildObjectId  = inCityId
+                   LEFT JOIN ObjectLink AS ObjectLink_Street_ProvinceCity ON ObjectLink_Street_ProvinceCity.ObjectId = Object_Street.Id
+                                                                         AND ObjectLink_Street_ProvinceCity.DescId = zc_ObjectLink_Street_ProvinceCity()
+                 /*LEFT JOIN ObjectString AS ObjectString_PostalCode ON ObjectString_PostalCode.ObjectId  = Object_Street.Id
+                                                                    AND ObjectString_PostalCode.DescId    = zc_ObjectString_Street_PostalCode()
+                                                                    AND ObjectString_PostalCode.ValueData = inPostalCode*/
+                                                                         
+              WHERE Object_Street.Id <> COALESCE (ioId, 0)
+                AND Object_Street.DescId = zc_Object_Street()
+                AND Object_Street.ValueData = inName
+                AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (inProvinceCityId, 0)
+              --AND COALESCE (ObjectString_PostalCode.ValueData, '') = COALESCE (inPostalCode, '')
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.В справочнике <Улица/проспект> значение <%><%> не уникально для города <%>.'
+                     , lfGet_Object_ValueData_sh (inStreetKindId)
+                     , inName
+                     , lfGet_Object_ValueData_sh (inCityId)
+                      ;
+   END IF;
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Street(), vbCode_calc, inName);
    -- сохранили св-во <Техпаспорт>
