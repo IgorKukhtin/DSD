@@ -1024,6 +1024,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParams.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inPartnerId', ftInteger, ptInput, execParams.ParamByName('calcPartnerId').AsInteger);
        Params.AddParam('inContractId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
        //try

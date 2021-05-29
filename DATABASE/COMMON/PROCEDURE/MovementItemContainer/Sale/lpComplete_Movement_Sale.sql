@@ -449,7 +449,7 @@ END IF;*/
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
                                                    , inPartnerId      := vbPartnerId_To
                                                    , inMovementDescId := zc_Movement_Sale()
-                                                   , inOperDate_order := NULL
+                                                   , inOperDate_order := NULL -- т.к. есть факт. дата
                                                    , inOperDatePartner:= vbOperDatePartner
                                                    , inDayPrior_PriceReturn:= 0
                                                    , inIsPrior        := FALSE -- !!!отказались от старых цен!!!

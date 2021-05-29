@@ -211,7 +211,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 55
       end
       object InvNumberPartner: TcxGridDBColumn
         Caption = 'External Nr'
@@ -234,11 +234,12 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Width = 91
+        Width = 110
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1084#1091
@@ -279,7 +280,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 70
       end
       object DiscountNextTax: TcxGridDBColumn
         Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
@@ -289,7 +290,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 70
       end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -343,7 +344,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 60
       end
       object CIN: TcxGridDBColumn
-        Caption = 'CIN Nr. (boat)'
+        Caption = 'CIN Nr.'
         DataBinding.FieldName = 'CIN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -360,8 +361,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 100
       end
       object BrandName: TcxGridDBColumn
-        Caption = 'Brand  (boat)'
+        Caption = 'Brand'
         DataBinding.FieldName = 'BrandName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -376,7 +378,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 130
       end
       object InvNumber_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        Caption = #8470' '#1076#1086#1082'. Invoice'
         DataBinding.FieldName = 'InvNumber_Invoice'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -392,6 +394,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       object Comment_Invoice: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
         DataBinding.FieldName = 'Comment_Invoice'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

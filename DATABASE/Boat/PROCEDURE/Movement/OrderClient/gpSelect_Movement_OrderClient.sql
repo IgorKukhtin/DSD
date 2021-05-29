@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderClient (TDateTime, TDateTime, Int
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inClientId      Integer  , 
+    IN inClientId      Integer  ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -57,7 +57,7 @@ BEGIN
                                     , MovementLinkObject_Product.ObjectId       AS ProductId
                                     , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
                                FROM tmpStatus
-                                    INNER JOIN Movement AS Movement_OrderClient 
+                                    INNER JOIN Movement AS Movement_OrderClient
                                                         ON Movement_OrderClient.StatusId = tmpStatus.StatusId
                                                        AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
                                                        AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
@@ -65,7 +65,7 @@ BEGIN
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                  ON MovementLinkObject_To.MovementId = Movement_OrderClient.Id
                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-           
+
                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -85,7 +85,7 @@ BEGIN
                                     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
                                                                    ON MovementLinkMovement_Invoice.MovementId = Movement_OrderClient.Id
                                                                   AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-                               WHERE MovementLinkObject_From.ObjectId = inClientId 
+                               WHERE MovementLinkObject_From.ObjectId = inClientId
                                   OR inClientId = 0
                               )
 
@@ -107,14 +107,14 @@ BEGIN
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
-  
+
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
              , Object_From.ValueData                      AS FromName
              , Object_To.Id                               AS ToId
              , Object_To.ObjectCode                       AS ToCode
              , Object_To.ValueData                        AS ToName
-             , Object_PaidKind.Id                         AS PaidKindId      
+             , Object_PaidKind.Id                         AS PaidKindId
              , Object_PaidKind.ValueData                  AS PaidKindName
              , Object_Product.Id                          AS ProductId
              , CASE WHEN Object_Product.isErased = TRUE THEN '--- ' || Object_Product.ValueData ELSE Object_Product.ValueData END :: TVarChar AS ProductName
@@ -122,15 +122,9 @@ BEGIN
              , Object_Brand.ValueData                     AS BrandName
              , ObjectString_CIN.ValueData                 AS CIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
-             
+
              , Movement_Invoice.Id               AS MovementId_Invoice
-             , ('№ '
-              ||CASE WHEN Movement_Invoice.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                     WHEN Movement_Invoice.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                     ELSE ''
-                END
-              ||' '
-              || Movement_Invoice.InvNumber || ' от ' || zfConvert_DateToString (Movement_Invoice.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
+             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
 
              , Object_Insert.ValueData              AS InsertName
@@ -192,7 +186,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement_OrderClient.Id
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
         LEFT JOIN MovementDate AS MovementDate_Update
                                ON MovementDate_Update.MovementId = Movement_OrderClient.Id
@@ -200,7 +194,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Update
                                      ON MLO_Update.MovementId = Movement_OrderClient.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
         --
         LEFT JOIN ObjectString AS ObjectString_CIN

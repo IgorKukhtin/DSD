@@ -1431,6 +1431,7 @@ object GuideGoodsForm: TGuideGoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Amount_diff

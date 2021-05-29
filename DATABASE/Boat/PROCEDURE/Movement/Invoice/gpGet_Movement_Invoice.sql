@@ -125,9 +125,7 @@ BEGIN
          , MovementString_Comment.ValueData                    AS Comment
    
          , Movement_Parent.Id             ::Integer  AS MovementId_parent
-         , (zfCalc_InvNumber_isErased (Movement_Parent.InvNumber, Movement_Parent.StatusId)
-            || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )'
-           ) :: TVarChar  AS InvNumber_parent
+         , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
    
        FROM Movement
            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

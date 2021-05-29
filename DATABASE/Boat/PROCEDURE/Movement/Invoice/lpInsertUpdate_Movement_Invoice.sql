@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
---DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inParentId         Integer  ,  --
     IN inInvNumber        TVarChar ,  -- Номер документа
     IN inOperDate         TDateTime,  --
-    IN inPlanDate         TDateTime,  -- Дата оплаты
+    IN inPlanDate         TDateTime,  -- Плановая дата оплаты по Счету
     IN inVATPercent       TFloat   ,  --
     IN inAmount           TFloat   ,  -- 
     IN inInvNumberPartner TVarChar ,  -- 
@@ -39,7 +39,27 @@ BEGIN
         inReceiptNumber := NULL;
     END IF;
      
-     
+    -- сначала Parent
+    IF inParentId > 0
+    THEN
+         -- если меняют на другой документ
+         IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0 AND Movement.ParentId <> inParentId)
+         THEN
+             -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со счетом
+             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
+         END IF;
+
+         -- в док. ParentId - это Заказ или Заказ сохраняеем связь со счетом
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
+ 
+    -- если был счет
+    ELSEIF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0)
+    THEN
+         -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со счетом
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
+    END IF;
+
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Invoice(), inInvNumber, inOperDate, inParentId, 0);
     
@@ -69,11 +89,6 @@ BEGIN
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-    IF COALESCE (inParentId,0)<>0
-    THEN
-        -- в док. ParentId - это Заказ или Приход сохраняеем связь со счетом
-         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
-    END IF;
     
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
@@ -105,3 +120,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  02.02.21         *
 */
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_Movement_Invoice

@@ -1,13 +1,15 @@
 -- Function: gpGet_Scale_PartnerParams()
 
 -- DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_PartnerParams(
-    IN inOperDate     TDateTime   ,
-    IN inPartnerId    Integer     ,
-    IN inContractId   Integer     ,
-    IN inSession      TVarChar      -- сессия пользователя
+    IN inOperDate       TDateTime   ,
+    IN inMovementDescId Integer     ,
+    IN inPartnerId      Integer     ,
+    IN inContractId     Integer     ,
+    IN inSession        TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (PartnerId       Integer, PartnerCode       Integer, PartnerName       TVarChar
              , PriceListId     Integer, PriceListCode     Integer, PriceListName     TVarChar
@@ -26,7 +28,13 @@ BEGIN
            WITH tmpPartner AS (SELECT Object_Partner.Id             AS PartnerId
                                     , Object_Partner.ObjectCode     AS PartnerCode
                                     , Object_Partner.ValueData      AS PartnerName
-                                    , lfGet_Object_Partner_PriceList_record (inContractId, Object_Partner.Id, inOperDate)            AS PriceListId
+                                    , lfGet_Object_Partner_PriceList_onDate_get (inContractId
+                                                                               , Object_Partner.Id
+                                                                               , inMovementDescId
+                                                                               , NULL :: TDateTime
+                                                                               , inOperDate
+                                                                               , FALSE
+                                                                                ) AS PriceListId
                                     , zfCalc_GoodsPropertyId (inContractId, ObjectLink_Partner_Juridical.ChildObjectId, inPartnerId) AS GoodsPropertyId
                                FROM Object AS Object_Partner
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -82,7 +90,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -92,4 +99,4 @@ ALTER FUNCTION gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_PartnerParams ('01.01.2015', 1, 1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_PartnerParams ('01.01.2015', 1, 1, 1, zfCalc_UserAdmin())

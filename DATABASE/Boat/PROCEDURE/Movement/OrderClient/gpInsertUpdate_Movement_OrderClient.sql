@@ -24,10 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbOldContractId Integer;
-   DECLARE vbDeferment Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderClient());
     vbUserId := lpGetUserBySession (inSession);

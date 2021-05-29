@@ -169,13 +169,8 @@ BEGIN
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , ObjectDesc.ItemName
 
-           , ('№ '
-             ||CASE WHEN Movement_Invoice.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                    WHEN Movement_Invoice.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                    ELSE ''
-               END
-             ||' '
-             || Movement_Invoice.InvNumber || ' от ' || zfConvert_DateToString (Movement_Invoice.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice_Full
+
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND tmpMovement.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND tmpMovement.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
            --, (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff

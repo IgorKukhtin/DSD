@@ -239,7 +239,13 @@ BEGIN
                   , tmpPartnerContract_find.InfoMoneyId
                   , tmpPartnerContract_find.JuridicalId
                   , zfCalc_GoodsPropertyId (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.JuridicalId, tmpPartnerContract_find.PartnerId) AS GoodsPropertyId
-                  , lfGet_Object_Partner_PriceList_record (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.PartnerId, inOperDate) AS PriceListId
+                  , lfGet_Object_Partner_PriceList_onDate_get (tmpPartnerContract_find.ContractId
+                                                             , tmpPartnerContract_find.PartnerId
+                                                             , inMovementDescId
+                                                             , NULL :: TDateTime
+                                                             , inOperDate
+                                                             , FALSE
+                                                              ) AS PriceListId
 
              FROM tmpPartnerContract_find
             ) AS tmpPartner

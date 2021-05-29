@@ -77,22 +77,14 @@ BEGIN
            , Object_Bank.ValueData             AS BankName
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
+
            , Movement_Invoice.Id               AS MovementId_Invoice
-           , ('№ ' 
-              ||CASE WHEN Movement_Invoice.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                     WHEN Movement_Invoice.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                     ELSE ''
-                END
-              ||' '|| Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
+           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+
            --parent для Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
-           , ('№ ' 
-              ||CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                     WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                     ELSE ''
-                END
-              ||' '||Movement_Parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate) :: TVarChar ||' (' ||MovementDesc_Parent.ItemName||' )' ) :: TVarChar  AS InvNumber_parent
+           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END

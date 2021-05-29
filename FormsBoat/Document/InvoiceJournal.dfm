@@ -483,7 +483,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 78
           end
           object InvNumber_parent: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' / '#1047#1072#1082#1072#1079
+            Caption = #1047#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumber_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

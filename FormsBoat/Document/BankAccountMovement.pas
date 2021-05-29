@@ -45,8 +45,6 @@ type
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
     GuidesInvoice: TdsdGuides;
-    cxLabel16: TcxLabel;
-    ceComment_Invoice: TcxTextEdit;
     cxLabel18: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     GuidesFiller: TGuidesFiller;

@@ -128,9 +128,24 @@ BEGIN
                                       , CASE WHEN MovementLinkMovement_Order.MovementChildId <> 0 AND MovementFloat_MovementDesc.ValueData = zc_Movement_Sale()
                                                   THEN MovementLinkObject_PriceList_Order.ObjectId -- если по заявке и zc_Movement_Sale, тогда св-во из заявки
                                              WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                                                  THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract.ObjectId /*MovementLinkObject_Contract_Order.ObjectId*/, MovementLinkObject_To.ObjectId, inOperDate) -- если zc_Movement_Sale или zc_Movement_ReturnOut, тогда определяется
-                                             WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
-                                                  THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract.ObjectId /*MovementLinkObject_Contract_Order.ObjectId*/, MovementLinkObject_From.ObjectId, inOperDate) -- если zc_Movement_Income или zc_Movement_ReturnIn, тогда определяется
+                                                  THEN -- если zc_Movement_Sale или zc_Movement_ReturnOut, тогда определяется
+                                                       lfGet_Object_Partner_PriceList_onDate_get (MovementLinkObject_Contract.ObjectId
+                                                                                                , MovementLinkObject_To.ObjectId
+                                                                                                , MovementFloat_MovementDesc.ValueData :: Integer
+                                                                                                , NULL :: TDateTime
+                                                                                                , inOperDate
+                                                                                                , FALSE
+                                                                                                 )
+                                             WHEN -- если zc_Movement_Income или zc_Movement_ReturnIn, тогда определяется
+                                                  MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
+                                                  THEN lfGet_Object_Partner_PriceList_onDate_get (MovementLinkObject_Contract.ObjectId
+                                                                                                , MovementLinkObject_From.ObjectId
+                                                                                                , MovementFloat_MovementDesc.ValueData :: Integer
+                                                                                                , NULL :: TDateTime
+                                                                                                , inOperDate
+                                                                                                , FALSE
+                                                                                                 )
+
                                              WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_SendOnPrice()
                                                   THEN zc_PriceList_Basis() -- для филиалов !!!всегда!!!
                                              ELSE 0

@@ -212,8 +212,24 @@ BEGIN
                                      ELSE '***' || Movement_Order.InvNumber
                                 END
                  END :: TVarChar AS InvNumberOrder
-               , COALESCE (Object_PriceList.Id,        (SELECT tmp.PriceListId   FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= MovementLinkObject_To.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListId
-               , COALESCE (Object_PriceList.ValueData, (SELECT tmp.PriceListName FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= MovementLinkObject_To.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp)) AS PriceListName
+               , COALESCE (Object_PriceList.Id,        (SELECT tmp.PriceListId 
+                                                        FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
+                                                                                                  , inPartnerId      := MovementLinkObject_To.ObjectId
+                                                                                                  , inMovementDescId := zc_Movement_Sale()
+                                                                                                  , inOperDate_order := NULL :: TDateTime-- т.к. есть факт. дата
+                                                                                                  , inOperDatePartner:= MovementDate_OperDatePartner.ValueData
+                                                                                                  , inDayPrior_PriceReturn:= 0
+                                                                                                  , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                                                                   ) AS tmp)) AS PriceListId
+               , COALESCE (Object_PriceList.ValueData, (SELECT tmp.PriceListName
+                                                        FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
+                                                                                                  , inPartnerId      := MovementLinkObject_To.ObjectId
+                                                                                                  , inMovementDescId := zc_Movement_Sale()
+                                                                                                  , inOperDate_order := NULL :: TDateTime -- т.к. есть факт. дата
+                                                                                                  , inOperDatePartner:= MovementDate_OperDatePartner.ValueData
+                                                                                                  , inDayPrior_PriceReturn:= 0
+                                                                                                  , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                                                                   ) AS tmp)) AS PriceListName
                , Object_TaxKind.Id                		AS DocumentTaxKindId
                , Object_TaxKind.ValueData         		AS DocumentTaxKindName
                , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master

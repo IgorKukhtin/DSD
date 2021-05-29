@@ -839,12 +839,8 @@
 				<Form>Report_MovementIncomeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Union_IncomeOrderJournalChoice.pas">
-				<Form>Union_IncomeOrderJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Union_InvoiceOrderJournalChoice.pas">
-				<Form>Union_InvoiceOrderJournalChoiceForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Document\Union_OrderJournalChoice.pas">
+				<Form>Union_OrderJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_GoodsDialog.pas">

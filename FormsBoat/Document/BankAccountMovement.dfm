@@ -3,7 +3,7 @@
   ClientHeight = 329
   ClientWidth = 463
   ExplicitWidth = 469
-  ExplicitHeight = 357
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -21,7 +21,7 @@
   object Код: TcxLabel [2]
     Left = 8
     Top = 5
-    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = 'Interne Nr'
   end
   object cxLabel1: TcxLabel [3]
     Left = 147
@@ -81,12 +81,12 @@
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object cxLabel6: TcxLabel [11]
-    Left = 7
+    Left = 8
     Top = 115
-    Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+    Caption = 'Lieferanten / Kunden'
   end
   object ceObject: TcxButtonEdit [12]
-    Left = 7
+    Left = 8
     Top = 135
     Properties.Buttons = <
       item
@@ -95,18 +95,18 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 260
+    Width = 259
   end
   object cxLabel10: TcxLabel [13]
-    Left = 280
+    Left = 8
     Top = 220
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [14]
-    Left = 280
+    Left = 8
     Top = 241
     TabOrder = 8
-    Width = 166
+    Width = 438
   end
   object edInvNumber: TcxTextEdit [15]
     Left = 8
@@ -151,48 +151,36 @@
     TabOrder = 19
     Width = 259
   end
-  object cxLabel16: TcxLabel [20]
-    Left = 280
-    Top = 168
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
-  end
-  object ceComment_Invoice: TcxTextEdit [21]
-    Left = 280
-    Top = 189
-    Properties.ReadOnly = True
-    TabOrder = 21
-    Width = 166
-  end
-  object cxLabel18: TcxLabel [22]
+  object cxLabel18: TcxLabel [20]
     Left = 287
     Top = 5
-    Caption = #8470' '#1076#1086#1082'. ('#1074#1085'.)'
+    Caption = 'External Nr'
   end
-  object edInvNumberPartner: TcxTextEdit [23]
+  object edInvNumberPartner: TcxTextEdit [21]
     Left = 287
     Top = 25
     Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1074#1085#1077#1096#1085#1080#1081')'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 23
+    TabOrder = 21
     Width = 159
   end
-  object cxLabel4: TcxLabel [24]
-    Left = 8
-    Top = 220
-    Caption = #8470' '#1076#1086#1082'. '#1055#1088#1080#1093#1086#1076' / '#1047#1072#1082#1072#1079
+  object cxLabel4: TcxLabel [22]
+    Left = 287
+    Top = 168
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
-  object edParent: TcxButtonEdit [25]
-    Left = 8
-    Top = 241
+  object edParent: TcxButtonEdit [23]
+    Left = 287
+    Top = 189
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 25
-    Width = 259
+    TabOrder = 23
+    Width = 159
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 107
@@ -448,7 +436,6 @@
       item
         Name = 'Comment_Invoice'
         Value = Null
-        Component = ceComment_Invoice
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -657,7 +644,6 @@
       item
         Name = 'Comment'
         Value = Null
-        Component = ceComment_Invoice
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -807,7 +793,6 @@
       item
         Name = 'Comment_Invoice'
         Value = Null
-        Component = ceComment_Invoice
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

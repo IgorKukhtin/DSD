@@ -1,4 +1,4 @@
-unit Union_InvoiceOrderJournalChoice;
+unit Union_OrderJournalChoice;
 
 interface
 
@@ -27,18 +27,13 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TUnion_InvoiceOrderJournalChoiceForm = class(TAncestorJournalForm)
-    ObjectName: TcxGridDBColumn;
+  TUnion_OrderJournalChoiceForm = class(TAncestorJournalForm)
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
-    AmountIn: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
-    InvNumber_Full: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
     PrintItemsCDS: TClientDataSet;
@@ -53,7 +48,6 @@ type
     actIsCopyTrue: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
     mactIsCopy: TMultiAction;
-    UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -68,9 +62,9 @@ type
     bbb: TdxBarButton;
     bbExecuteDialog: TdxBarButton;
     VATPercent: TcxGridDBColumn;
-    GuidesClient: TdsdGuides;
+    GuidesObject: TdsdGuides;
     cxLabel6: TcxLabel;
-    edClient: TcxButtonEdit;
+    edObject: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -82,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnion_InvoiceOrderJournalChoiceForm);
+  RegisterClass(TUnion_OrderJournalChoiceForm);
 
 end.

@@ -1,8 +1,9 @@
 -- Function: zfCalc_InvNumber_isErased (TVarChar, Integer)
 
 DROP FUNCTION IF EXISTS zfCalc_InvNumber_isErased (TVarChar, Integer);
+DROP FUNCTION IF EXISTS zfCalc_InvNumber_isErased (TVarChar, TVarChar, TDateTime, Integer);
 
-CREATE OR REPLACE FUNCTION zfCalc_InvNumber_isErased (inInvNumber TVarChar, inStatusId Integer)
+CREATE OR REPLACE FUNCTION zfCalc_InvNumber_isErased (inDescName TVarChar, inInvNumber TVarChar, inOperDate TDateTime, inStatusId Integer)
 RETURNS TVarChar
 AS
 $BODY$
@@ -14,6 +15,8 @@ BEGIN
               END
            ||' '
            || inInvNumber
+           || ' от ' || zfConvert_DateToString (inOperDate)
+           || CASE WHEN inDescName <> '' THEN ' (' ||inDescName||' )' ELSE '' END
              );
 
 END;
@@ -28,4 +31,4 @@ $BODY$
 */
 
 -- тест
--- SELECT zfCalc_InvNumber_isErased ('123', zc_Enum_Status_UnComplete())
+-- SELECT zfCalc_InvNumber_isErased ('', '123', CURRENT_DATE, zc_Enum_Status_UnComplete())

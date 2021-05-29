@@ -218,11 +218,9 @@ BEGIN
                        , Object_Update.ValueData                    AS UpdateName
                        , MovementDate_Update.ValueData              AS UpdateDate
 
-                       , Movement_Parent.Id               AS MovementId_parent
-                       , (zfCalc_InvNumber_isErased (Movement_Parent.InvNumber, Movement_Parent.StatusId)
-                          || ' от ' || zfConvert_DateToString (Movement_Parent.OperDate)
-                         )                             :: TVarChar AS InvNumber_parent
-                       , MovementDesc_Parent.ItemName              AS DescName_parent
+                       , Movement_Parent.Id                         AS MovementId_parent
+                       , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+                       , MovementDesc_Parent.ItemName               AS DescName_parent
 
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
                        /*, CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
@@ -417,4 +415,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_Invoice(inStartDate := ('01.01.2021')::TDateTime , inEndDate := ('18.02.2021')::TDateTime , inClientId:=0, inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.01.2021', inEndDate:= '18.02.2021', inClientId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

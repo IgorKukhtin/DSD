@@ -244,12 +244,7 @@ BEGIN
 
          , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
          , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
-         , (CASE WHEN tmpOrderClient.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                 WHEN tmpOrderClient.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                 ELSE ''
-            END
-            ||' '
-            ||tmpOrderClient.InvNumber) :: TVarChar  AS InvNumber_OrderClient
+         , zfCalc_InvNumber_isErased ('', tmpOrderClient.InvNumber, tmpOrderClient.OperDate, tmpOrderClient.StatusId) AS InvNumber_OrderClient
          , tmpOrderClient.StatusCode  :: Integer   AS StatusCode_OrderClient
          , tmpOrderClient.StatusName  :: TVarChar  AS StatusName_OrderClient
          , tmpOrderClient.VATPercent  :: TFloat    AS VATPercent_OrderClient
@@ -263,12 +258,7 @@ BEGIN
 
          , tmpInvoice_First.Id           :: Integer    AS MovementId_Invoice
          , tmpInvoice_First.OperDate     :: TDateTime  AS OperDate_Invoice
-         , (CASE WHEN tmpInvoice_First.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                 WHEN tmpInvoice_First.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                 ELSE ''
-            END
-            ||' '
-            ||tmpInvoice_First.InvNumber)  :: TVarChar   AS InvNumber_Invoice
+         , zfCalc_InvNumber_isErased ('', tmpInvoice_First.InvNumber, tmpInvoice_First.OperDate, tmpInvoice_First.StatusId) AS InvNumber_Invoice
          , tmpInvoice_First.StatusCode   :: Integer    AS StatusCode_Invoice
          , tmpInvoice_First.StatusName   :: TVarChar   AS StatusName_Invoice
 
@@ -368,7 +358,9 @@ BEGIN
           LEFT JOIN (SELECT SUM (COALESCE (tmpInvoice.AmountIn,0)) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           
           LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
-       WHERE Object_Product.Id = inId;
+       WHERE Object_Product.Id = inId
+      ;
+
    END IF;
 
 END;
@@ -383,7 +375,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Product(0, 0,'2')
-
-
---select * from gpGet_Object_Product(inId := 2539 , inMovementId_OrderClient := 80 ,  inSession := '5');
+-- SELECT * FROM gpGet_Object_Product (inId:= 2539, inMovementId_OrderClient:= 80, inSession:= zfCalc_UserAdmin());

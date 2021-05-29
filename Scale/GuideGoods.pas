@@ -205,6 +205,7 @@ type
     procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
+    oldParam1, oldParam2:Integer;
     fCloseOK : Boolean;
     fModeSave : Boolean;
     fStartWrite : Boolean;
@@ -285,20 +286,29 @@ begin
      else
      if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
      and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+     and (1=0)
      then
      with spSelect do
      begin
-       Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
-       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
-       Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
-       Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
-       Params.ParamByName('inGoodsCode').Value      := 0;
-       Params.ParamByName('inGoodsName').Value      := '';
-       Execute;
+       if ((oldParam1 <> execParamsMovement.ParamByName('ContractId').AsInteger)
+       or (oldParam2 <> execParamsMovement.ParamByName('FromId').AsInteger))
+       then begin
+             oldParam1:= execParamsMovement.ParamByName('ContractId').AsInteger;
+             oldParam2:= execParamsMovement.ParamByName('FromId').AsInteger;
+             //
+             Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+             if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
+             Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
+             Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+             Params.ParamByName('inGoodsCode').Value      := 0;
+             Params.ParamByName('inGoodsName').Value      := '';
+             Execute;
+       end;
      end
      else
      if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
      and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+     and (1=0)
      then
      with spSelect do
      begin
@@ -493,6 +503,7 @@ begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
       if (ActiveControl=EditGoodsName)and(trim (EditGoodsName.Text) <> '')
       and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+      and (1=0)
       then begin
                 spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
                 spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
@@ -889,7 +900,7 @@ begin
 
      if  (SettingMain.isGoodsComplete = FALSE){(CDS.RecordCount=0}
       and((ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
-       or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+       or ((1=0)and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
          )
       and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
@@ -1585,11 +1596,11 @@ begin
           end
      else if ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
           then begin
-                spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
+                {spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
                 spSelect.Params.ParamByName('inGoodsName').Value:= CDS.FieldByName('GoodsName').AsString;
-                actRefreshExecute(Self);
+                actRefreshExecute(Self);}
 
-                EditGoodsName.Text:=spSelect.Params.ParamByName('inGoodsName').Value;
+                EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
                 fEnterGoodsCode:= false;
                 fEnterGoodsName:= true;
                 EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);
@@ -1704,6 +1715,8 @@ var i:Integer;
 begin
   fStartWrite:=true;
   //
+  oldParam1:=-1;
+  oldParam2:=-1;
   // tare-main
   PanelTare.Visible:= SettingMain.WeightTare1 = 0;
   rgTareWeight.Visible:= SettingMain.WeightTare1 = 0;

@@ -58,7 +58,7 @@ BEGIN
              , 0                         AS MovementId_Invoice
              , CAST ('' as TVarChar)     AS InvNumber_Invoice
              , CAST ('' as TVarChar)     AS Comment_Invoice
-           
+
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
@@ -73,7 +73,7 @@ BEGIN
 
      RETURN QUERY
 
-        SELECT 
+        SELECT
             Movement_OrderClient.Id
           , Movement_OrderClient.InvNumber
           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
@@ -88,9 +88,9 @@ BEGIN
 
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
-          , Object_To.Id                              AS ToId      
+          , Object_To.Id                              AS ToId
           , Object_To.ValueData                       AS ToName
-          , Object_PaidKind.Id                        AS PaidKindId      
+          , Object_PaidKind.Id                        AS PaidKindId
           , Object_PaidKind.ValueData                 AS PaidKindName
 
           , Object_Product.Id                          AS ProductId
@@ -98,29 +98,23 @@ BEGIN
           , Object_Brand.Id                            AS BrandId
           , Object_Brand.ValueData                     AS BrandName
           , ObjectString_CIN.ValueData                 AS CIN
-             
+
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
-          , Movement_Invoice.Id                       AS MovementId_Invoice
-          , ('№ '
-             ||CASE WHEN Movement_Invoice.StatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
-                    WHEN Movement_Invoice.StatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
-                    ELSE ''
-               END
-             ||' '
-             || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice
-          , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+          , Movement_Invoice.Id                                        AS MovementId_Invoice
+          , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+          , MovementString_Comment_Invoice.ValueData                   AS Comment_Invoice
 
           , Object_Insert.Id                     AS InsertId
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
 
-        FROM Movement AS Movement_OrderClient 
+        FROM Movement AS Movement_OrderClient
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderClient.StatusId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId 
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
@@ -130,7 +124,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId 
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                          ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
@@ -144,7 +138,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-    
+
             LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                     ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
@@ -156,7 +150,7 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-    
+
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_OrderClient.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()

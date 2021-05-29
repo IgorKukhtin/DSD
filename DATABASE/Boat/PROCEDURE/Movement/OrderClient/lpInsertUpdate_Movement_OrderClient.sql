@@ -59,6 +59,9 @@ BEGIN
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+
   --------
  
  /*    --- находим сохраненный счет
@@ -172,13 +175,14 @@ BEGIN
                                                         , inAmount        := 1  ::TFloat
                                                         , ioOperPrice     := gpSelect.Basis_summ
                                                         , inOperPriceList := gpSelect.Basis_summ_orig
-                                                        , inBasisPrice    := gpSelect.Basis_summ1_orig  --
+                                                        , inBasisPrice    := gpSelect.Basis_summ1_orig
                                                         , inCountForPrice := 1  ::TFloat
                                                         , inComment       := '' ::TVarChar
                                                         , inUserId        := inUserId
                                                         )
          FROM gpSelect_Object_Product (FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
          WHERE gpSelect.MovementId_OrderClient = ioId;
+
      END IF;
                                                       
                                                       

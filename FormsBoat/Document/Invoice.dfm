@@ -229,7 +229,7 @@
   object cxLabel4: TcxLabel [30]
     Left = 15
     Top = 301
-    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' / '#1055#1088#1080#1093#1086#1076
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
   end
   object ceParent: TcxButtonEdit [31]
     Left = 15
@@ -834,10 +834,10 @@
     KeyField = 'Id'
     LookupControl = ceParent
     Key = '0'
-    FormNameParam.Value = 'TUnion_IncomeOrderJournalChoiceForm'
+    FormNameParam.Value = 'TUnion_OrderJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnion_IncomeOrderJournalChoiceForm'
+    FormName = 'TUnion_OrderJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

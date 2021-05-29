@@ -212,7 +212,7 @@ BEGIN
            , Object_PersonalSigning.PersonalName    AS PersonalSigningName
 
            , Object_BankAccount.Id              AS BankAccountId
-           , Object_BankAccount.ValueData       AS BankAccountName
+           , ( '(' || Object_BankAccount.ObjectCode :: TVarChar || ') ' || Object_BankAccount.ValueData) :: TVarChar AS BankAccountName
 
            , Object_Contract_View.ContractTagId
            , Object_Contract_View.ContractTagName
