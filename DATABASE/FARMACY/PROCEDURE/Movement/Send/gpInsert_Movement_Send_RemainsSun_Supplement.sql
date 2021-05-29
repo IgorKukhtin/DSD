@@ -108,15 +108,24 @@ BEGIN
           ) AS tmp;
 
      -- Частим маркетинговые контракты
-     PERFORM  gpUpdate_Movement_Promo_Supplement(Movement.Id, TRUE, inSession)
-     FROM Movement
-                                
-          INNER JOIN MovementBoolean AS MovementBoolean_Supplement
-                                     ON MovementBoolean_Supplement.MovementId =  Movement.Id
-                                    AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
-                                    AND MovementBoolean_Supplement.ValueData = True
-                           
-     WHERE Movement.DescId = zc_Movement_Promo();
+     IF EXISTS(SELECT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0)
+     THEN
+       PERFORM  gpUpdate_Movement_Promo_Supplement(Movement.Id, TRUE, inSession)
+       FROM Movement
+                                  
+            INNER JOIN MovementBoolean AS MovementBoolean_Supplement
+                                       ON MovementBoolean_Supplement.MovementId =  Movement.Id
+                                      AND MovementBoolean_Supplement.DescId = zc_MovementBoolean_Supplement()
+                                      AND MovementBoolean_Supplement.ValueData = True
+                             
+       WHERE Movement.DescId = zc_Movement_Promo();
+       
+       PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId       := Object_Goods_Main.Id 
+                                            , inisSupplementSUN1  := False
+                                            , inSession           := inSession)
+       FROM Object_Goods_Main 
+       WHERE Object_Goods_Main.isSupplementSUN1 = True;
+     END IF;
         
         
      --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0);      
@@ -133,4 +142,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

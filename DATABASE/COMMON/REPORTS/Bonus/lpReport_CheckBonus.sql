@@ -26,7 +26,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , BranchId Integer, BranchName TVarChar
              , BranchId_inf Integer, BranchName_inf TVarChar
              , RetailName TVarChar
-             , PersonalTradeCode Integer, PersonalTradeName TVarChar
+             , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              
              , PartnerId Integer, PartnerName TVarChar
@@ -1442,6 +1442,7 @@ BEGIN
             , Object_Branch_inf.ValueData                   AS BranchName_inf
 
             , Object_Retail.ValueData                       AS RetailName
+            , Object_PersonalTrade.PersonalId               AS PersonalTradeId
             , Object_PersonalTrade.PersonalCode             AS PersonalTradeCode
             , Object_PersonalTrade.PersonalName             AS PersonalTradeName
             , Object_Personal.PersonalId                    AS PersonalId
@@ -1600,6 +1601,7 @@ BEGIN
             , tmpData.BranchName_inf
 
             , tmpData.RetailName
+            , tmpData.PersonalTradeId
             , tmpData.PersonalTradeCode
             , tmpData.PersonalTradeName
             , tmpData.PersonalId

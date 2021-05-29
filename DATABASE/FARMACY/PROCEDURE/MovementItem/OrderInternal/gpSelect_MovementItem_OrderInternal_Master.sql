@@ -212,12 +212,11 @@ BEGIN
 
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() /*AND inSession <> '3'*/ AND inMovementId <> 10804217 AND inMovementId <> 10795784
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() 
       AND (inShowAll = FALSE OR inSession <> '3')
-      AND inSession <> '3'
     THEN
 
-  --   raise notice 'Value: %', 1;
+     raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -878,8 +877,8 @@ BEGIN
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
            , Object_PartnerGoods.Id                                 AS PartnerGoodsId
-           , ObjectString_Goods_Code.ValueData                      AS PartnerGoodsCode
-           , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
+           , COALESCE(MIString_GoodsCode.ValueData, ObjectString_Goods_Code.ValueData)                      AS PartnerGoodsCode
+           , COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData)                          AS PartnerGoodsName
            , tmpMI.JuridicalId
            , tmpMI.JuridicalName -- ***
            , tmpMI.ContractId
@@ -1017,6 +1016,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_Code
                                    ON ObjectString_Goods_Code.ObjectId = Object_PartnerGoods.Id
                                   AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
+                                  
+            LEFT JOIN MovementItemString AS MIString_GoodsCode 
+                                         ON MIString_GoodsCode.MovementItemId = tmpMI.MovementItemId
+                                        AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()                                  
+            LEFT JOIN MovementItemString AS MIString_GoodsName 
+                                         ON MIString_GoodsName.MovementItemId = tmpMI.MovementItemId
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
 
             -- показываем не зависимо от поставщ. явл. ли товар маркетинговым
             LEFT JOIN (SELECT DISTINCT GoodsPromo.GoodsId FROM GoodsPromo) AS GoodsPromoAll ON GoodsPromoAll.GoodsId = tmpMI.GoodsId
@@ -4598,4 +4604,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22824229 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 23444393 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

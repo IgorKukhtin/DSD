@@ -32,6 +32,7 @@ $BODY$
   DECLARE vbUnitId    Integer;
   DECLARE vbDate180   TDateTime;
   DECLARE vbOperDate  TDateTime;
+  DECLARE vbStatusId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -44,8 +45,12 @@ BEGIN
                      WHERE MovementLinkObject_From.MovementId = inMovementId
                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                     );
-     vbOperDate := (SELECT Date_TRUNC('DAY', Movement.OperDate)
-                    FROM Movement WHERE Movement.Id = inMovementId);
+
+    SELECT Date_TRUNC('DAY', Movement.OperDate)
+         , Movement.StatusId
+    INTO vbOperDate, vbStatusId
+    FROM Movement
+    WHERE Movement.Id =inMovementId;
 
      -- + пол года к текущей для определения сроков годности
      vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate(); --+ INTERVAL '180 DAY';  -- нужен 1 год (функция =6 мес.)
@@ -198,8 +203,8 @@ BEGIN
            , tmpMI.GoodsCode
            , tmpMI.GoodsName
            , tmpMI.PartnerGoodsId
-           , tmpMI.PartnerGoodsCode
-           , Object_PartnerGoods.ValueData AS PartnerGoodsName
+           , COALESCE(MIString_GoodsCode.ValueData, tmpMI.PartnerGoodsCode)        AS PartnerGoodsCode
+           , COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) AS PartnerGoodsName
            , Object_Retail.ValueData    AS RetailName
            , Object_Area.ValueData      AS AreaName
            , CASE WHEN COALESCE (tmpLoadPriceList.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList.GoodsNDS,'') ELSE '' END  :: TVarChar  AS NDS_PriceList                                                               -- НДС из прайса поставщика
@@ -252,6 +257,15 @@ BEGIN
            
             LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.PartnerGoodsId = tmpMI.PartnerGoodsId
             LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId
+
+            LEFT JOIN MovementItemString AS MIString_GoodsCode 
+                                         ON MIString_GoodsCode.MovementItemId = tmpMI.Id
+                                        AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()     
+                                        AND vbStatusId = zc_Enum_Status_Complete()                              
+            LEFT JOIN MovementItemString AS MIString_GoodsName 
+                                         ON MIString_GoodsName.MovementItemId = tmpMI.Id
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
+                                        AND vbStatusId = zc_Enum_Status_Complete() 
        ;
 
 END;

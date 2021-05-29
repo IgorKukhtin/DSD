@@ -7,9 +7,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -200
   ExplicitWidth = 1006
-  ExplicitHeight = 337
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -509,8 +508,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Width = 155
   end
   inherited ActionList: TActionList
-    Left = 143
-    Top = 98
+    Left = 119
+    Top = 130
     inherited actInsert: TdsdInsertUpdateAction
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       FormName = 'TProfitLossServiceForm'
@@ -801,8 +800,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Top = 96
   end
   inherited MasterCDS: TClientDataSet
-    Left = 24
-    Top = 104
+    Left = 32
+    Top = 64
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProfitLossService'
@@ -859,8 +858,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Top = 96
   end
   inherited BarManager: TdxBarManager
-    Left = 160
-    Top = 128
+    Left = 136
+    Top = 176
     DockControlHeights = (
       0
       0
@@ -977,8 +976,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 200
-    Top = 120
+    Left = 208
+    Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -988,6 +987,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       item
         Component = JuridicalBasisGuides
       end>
+    Left = 288
+    Top = 208
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ProfitLossService'
@@ -1069,7 +1070,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_ProfitLossService'
-    Top = 136
+    Left = 376
+    Top = 192
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_ProfitLossService'

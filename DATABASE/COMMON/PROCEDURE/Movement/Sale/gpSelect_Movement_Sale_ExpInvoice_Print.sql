@@ -188,8 +188,14 @@ BEGIN
            , Object_BankAccount.CurrencyInternalName            AS CurrencyInternal_ByContract
            , CASE WHEN COALESCE (Object_BankAccount.BankName,'') = '' THEN 'Введите Банк'            ELSE Object_BankAccount.BankName END  AS BankName_ByContract
            , CASE WHEN COALESCE (Object_BankAccount.MFO,'') = ''      THEN 'Введите МФО банка'       ELSE Object_BankAccount.MFO END       AS BankMFO_ByContract
-           , CASE WHEN COALESCE (Object_BankAccount.SWIFT,'') = ''    THEN 'Введите SWIFT-код банка' ELSE Object_BankAccount.SWIFT END AS BankSWIFT_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.SWIFT,'') = ''    THEN 'Введите SWIFT-код банка' ELSE Object_BankAccount.SWIFT END     AS BankSWIFT_ByContract
            , Object_BankAccount.IBAN                            AS BankIBAN_ByContract
+           
+           , CASE WHEN COALESCE (Object_BankAccount.BeneficiarysBankName,'') = ''          THEN 'Введите банка-Бенефициар'              ELSE Object_BankAccount.BeneficiarysBankName           END  AS BenefBankName_ByContract
+           , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_BenifBank_From.ValueData,'') = '' THEN 'Введите адрес банка-Бенефициар'       ELSE OHS_JD_JuridicalAddress_BenifBank_From.ValueData   END  AS JurAddrBenifBank_ByContract
+           , CASE WHEN COALESCE (Object_Bank_View_BenifBank_From.SWIFT,'') = ''            THEN 'Введите SWIFT-код банка-Бенефициар'   ELSE Object_Bank_View_BenifBank_From.SWIFT              END  AS BenifBankSWIFT_ByContract
+           , CASE WHEN COALESCE (Object_BankAccount.BeneficiarysBankAccount,'') = ''       THEN 'Введите Р/счет банка-Бенефициар'      ELSE Object_BankAccount.BeneficiarysBankAccount         END  AS BenefBankAccount_ByContract
+
            , CASE WHEN COALESCE (Object_BankAccount.CorrespondentBankName,'') = ''        THEN 'Введите Банк-корреспондент'            ELSE Object_BankAccount.CorrespondentBankName        END AS CorrBankName_ByContract
            , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank_From.SWIFT,'') = ''   THEN 'Введите SWIFT-код банка-корреспондент' ELSE Object_Bank_View_CorrespondentBank_From.SWIFT   END AS CorrBankSWIFT_ByContract
            , CASE WHEN COALESCE (Object_BankAccount.CorrespondentAccount,'') = ''         THEN 'Введите P/счет банка-корреспондент'    ELSE Object_BankAccount.CorrespondentAccount         END AS CorrespondentAccount_ByContract
@@ -197,11 +203,11 @@ BEGIN
            , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_CorrBank_From.ValueData,'') = '' THEN 'Введите Адрес банка-корреспондент'     ELSE OHS_JD_JuridicalAddress_CorrBank_From.ValueData END AS JuridicalAddressCorrBankFrom
 
 
-           , CASE WHEN COALESCE (BankAccount_To.BankName,'') = ''        THEN 'Введите Банк-корреспондент' ELSE BankAccount_To.BankName  END AS BankName_Int
-           , CASE WHEN COALESCE (BankAccount_To.Name,'') = ''        THEN 'Введите Банк-корреспондент'     ELSE BankAccount_To.Name      END AS BankAccount_Int
+           , CASE WHEN COALESCE (BankAccount_To.BankName,'') = ''        THEN 'Введите Банк-корреспондент' ELSE BankAccount_To.BankName          END AS BankName_Int
+           , CASE WHEN COALESCE (BankAccount_To.Name,'') = ''        THEN 'Введите р/счет Банка-корреспондент'     ELSE BankAccount_To.Name      END AS BankAccount_Int
 
            , CASE WHEN COALESCE (BankAccount_To.CorrespondentBankName,'') = ''             THEN 'Введите Банк-корреспондент'            ELSE BankAccount_To.CorrespondentBankName             END  AS CorBankName_Int
-           , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank.JuridicalName,'') = '' THEN 'Введите Банк-корреспондент'            ELSE Object_Bank_View_CorrespondentBank.JuridicalName END  AS CorBankJuridicalName_Int
+           , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank.JuridicalName,'') = '' THEN 'Введите Юр. наименование Банка-корреспондент'            ELSE Object_Bank_View_CorrespondentBank.JuridicalName END  AS CorBankJuridicalName_Int
            , CASE WHEN COALESCE (Object_Bank_View_CorrespondentBank.SWIFT,'') = ''         THEN 'Введите SWIFT-код Банк-корреспондент'  ELSE Object_Bank_View_CorrespondentBank.SWIFT         END  AS CorBankSWIFT_Int
 
            , CASE WHEN COALESCE (BankAccount_To.BeneficiarysBankName,'') = ''             THEN 'Введите банка-Бенефициар'            ELSE BankAccount_To.BeneficiarysBankName              END  AS BenefBankName_Int
@@ -217,6 +223,7 @@ BEGIN
            , CASE WHEN COALESCE (OHS_JD_JuridicalAddress_To.ValueData,'') = '' THEN 'Введите Адрес бенефициара'   ELSE OHS_JD_JuridicalAddress_To.ValueData  END             AS BankJuridicalAddress_Int
            , CASE WHEN COALESCE (BankAccount_To.BeneficiarysAccount,'') = ''   THEN 'Введите Р/счет Бенефициара'  ELSE BankAccount_To.BeneficiarysAccount    END             AS BenefAccount_Int
            , CASE WHEN COALESCE (BankAccount_To.Name,'') = ''                  THEN 'Введите Р/счет'              ELSE BankAccount_To.Name                   END             AS BankAccount_Int
+           , CASE WHEN COALESCE (ObjectString_BankAccountPartner.ValueData,'') = '' THEN 'Введите Р/счет (покупателя)' ELSE ObjectString_BankAccountPartner.ValueData END         AS BankAccountPartner_Int
 
            , View_CurrencyPartner.Name                          AS CurrencyPartnerName
            , View_CurrencyPartner.InternalName                  AS IntCurShortName
@@ -352,17 +359,31 @@ BEGIN
                                          AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
             LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank_From ON Object_Bank_View_CorrespondentBank_From.Id = Object_BankAccount.CorrespondentBankId
+            LEFT JOIN Object_Bank_View AS Object_Bank_View_BenifBank_From ON Object_Bank_View_BenifBank_From.Id = Object_BankAccount.BeneficiarysBankId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_CorrBank_From
                                                                 ON OH_JuridicalDetails_CorrBank_From.JuridicalId = Object_Bank_View_CorrespondentBank_From.JuridicalId
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_CorrBank_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_CorrBank_From.EndDate
 
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_BenifBank_From
+                                                                ON OH_JuridicalDetails_BenifBank_From.JuridicalId = Object_Bank_View_BenifBank_From.JuridicalId
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_BenifBank_From.StartDate
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_BenifBank_From.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_BenifBank_From
+                                          ON OHS_JD_JuridicalAddress_BenifBank_From.ObjectHistoryId = OH_JuridicalDetails_BenifBank_From.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_BenifBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_CorrBank_From
                                           ON OHS_JD_JuridicalAddress_CorrBank_From.ObjectHistoryId = OH_JuridicalDetails_CorrBank_From.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_CorrBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 -- +++++++++++++++++ BANK TO
+
+            LEFT JOIN ObjectString AS ObjectString_BankAccountPartner
+                                   ON ObjectString_BankAccountPartner.ObjectId = View_Contract.ContractId
+                                  AND ObjectString_BankAccountPartner.DescId = zc_objectString_Contract_BankAccountPartner()
 
             LEFT JOIN --список счетов.имя = исх счет по дог.знач
                       (SELECT Object_BankAccount_View.*

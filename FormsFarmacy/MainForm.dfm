@@ -1953,6 +1953,7 @@
     object actMovementLoad: TdsdOpenForm [155]
       Category = #1047#1072#1075#1088#1091#1079#1082#1080
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
       Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
       FormName = 'TMovementLoadForm'
@@ -2351,7 +2352,7 @@
     object actOrderExternal: TdsdOpenForm [195]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1077#1096#1085#1080#1077' - '#1047#1072#1082#1072#1079' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       FormName = 'TOrderExternalJournalForm'
       FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
@@ -2362,7 +2363,7 @@
     object actOrderInternal: TdsdOpenForm [196]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' - '#1054#1073#1097#1080#1081' '#1079#1072#1082#1072#1079
+      Caption = #1054#1073#1097#1080#1081' '#1079#1072#1082#1072#1079
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
@@ -4330,6 +4331,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SalesGoods_SUA: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1057#1059#1040
+      FormName = 'TReport_SalesGoods_SUAForm'
+      FormNameParam.Value = 'TReport_SalesGoods_SUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4718,6 +4730,7 @@
       end
       object miMovementLoad: TMenuItem
         Action = actMovementLoad
+        Visible = False
       end
       object miPriceListLoad: TMenuItem
         Action = actPriceListLoad
@@ -5203,6 +5216,9 @@
       end
       object N279: TMenuItem
         Action = actReport_HammerTimeSUN
+      end
+      object N296: TMenuItem
+        Action = actReport_SalesGoods_SUA
       end
     end
     object N40: TMenuItem [7]

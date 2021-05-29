@@ -313,11 +313,15 @@ BEGIN
                                     AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
          LEFT JOIN MovementItem AS MIInventory ON MIInventory.MovementId = vbInventoryID
                                               AND MIInventory.ObjectId = MovementItem.ObjectId
+         LEFT JOIN MovementItemFloat AS MIFloat_PriceInventory
+                                     ON MIFloat_PriceInventory.MovementItemId = MIInventory.Id
+                                    AND MIFloat_PriceInventory.DescId = zc_MIFloat_Price()
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE
     GROUP BY MovementItem.ObjectId, MIInventory.ID
     HAVING COALESCE(Max(MIInventory.Amount), 0) <> (COALESCE(Max(MIFloat_Remains.ValueData), 0) + Sum(MovementItem.Amount)) 
+        OR COALESCE (Max(MIFloat_Price.ValueData), 0) <> COALESCE (Max(MIFloat_PriceInventory.ValueData), 0)
         OR Max(MIInventory.Amount) IS NULL;
 
      -- Удалили все лишнее в инвентаризации

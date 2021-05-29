@@ -3682,6 +3682,14 @@
 				<Form>UnitAutoSUAForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SalesGoods_SUADialog.pas">
+				<Form>Report_SalesGoods_SUADialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas">
+				<Form>Report_SalesGoods_SUAForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

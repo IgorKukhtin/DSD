@@ -28,8 +28,9 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
+             , BranchId_inf Integer, BranchName_inf TVarChar
              , RetailName TVarChar
-             , PersonalTradeCode Integer, PersonalTradeName TVarChar
+             , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , AreaId Integer, AreaName TVarChar
@@ -196,7 +197,9 @@ BEGIN
            , tmp.ConditionKindId, tmp.ConditionKindName
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
+           , tmp.BranchId_inf, tmp.BranchName_inf
            , tmp.RetailName
+           , tmp.PersonalTradeId
            , tmp.PersonalTradeCode
            , tmp.PersonalTradeName
            , tmp.PersonalId
@@ -260,7 +263,9 @@ BEGIN
            , tmp.ConditionKindId, tmp.ConditionKindName
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
+           , tmp.BranchId_inf, tmp.BranchName_inf
            , tmp.RetailName
+           , tmp.PersonalTradeId
            , tmp.PersonalTradeCode
            , tmp.PersonalTradeName
            , tmp.PersonalId

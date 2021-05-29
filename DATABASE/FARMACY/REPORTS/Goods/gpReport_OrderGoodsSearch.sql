@@ -182,7 +182,8 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
             ,Goods_NDS.Name                           AS Name
             ,COALESCE(MIString_GoodsName.ValueData, 
                       MI_Income_View.PartnerGoodsName)AS PartnerGoodsName
-            ,MI_Income_View.MakerName                 AS MakerName
+            ,COALESCE(MIString_MakerName.ValueData, 
+                      MI_Income_View.MakerName)       AS MakerName
 
             ,Goods_NDS.NDSKindName                    AS NDSKindName
             ,Goods_NDS.NDS                            AS NDS
@@ -232,8 +233,11 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
 
         LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
 
+        LEFT JOIN MovementItemString AS MIString_MakerName
+                                     ON MIString_MakerName.MovementItemId = Movement.MovementItemId
+                                    AND MIString_MakerName.DescId = zc_MIString_Maker()
         LEFT JOIN MovementItemString AS MIString_GoodsName
-                                     ON MIString_GoodsName.MovementItemId = MI_Income_View.Id
+                                     ON MIString_GoodsName.MovementItemId = COALESCE(MI_Income_View.Id, Movement.MovementItemId)
                                     AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
 
         LEFT JOIN tmpMIFloat AS MIFloat_Price
