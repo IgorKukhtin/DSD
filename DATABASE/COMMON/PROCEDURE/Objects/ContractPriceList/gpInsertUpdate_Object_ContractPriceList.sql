@@ -66,8 +66,8 @@ BEGIN
        -- EndDate - апдейтим ВСЕМ
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractPriceList_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
-                                   , ObjectDate_StartDate.ValueData                        AS StartDate
-                                   , ROW_NUMBER() OVER (ORDER BY ObjectDate_StartDate ASC) AS Ord
+                                   , COALESCE (ObjectDate_StartDate.ValueData,zc_DateStart()) AS StartDate
+                                   , ROW_NUMBER() OVER (ORDER BY COALESCE (ObjectDate_StartDate.ValueData,zc_DateStart()) ASC) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    LEFT JOIN ObjectLink AS ObjectLink_PriceList
                                                         ON ObjectLink_PriceList.ObjectId      = ObjectLink_Contract.ObjectId
@@ -102,8 +102,8 @@ BEGIN
        -- EndDate - апдейтим ВСЕМ
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractPriceList_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
-                                   , ObjectDate_StartDate.ValueData                        AS StartDate
-                                   , ROW_NUMBER() OVER (ORDER BY ObjectDate_StartDate ASC) AS Ord
+                                   , COALESCE (ObjectDate_StartDate.ValueData,zc_DateStart())                        AS StartDate
+                                   , ROW_NUMBER() OVER (ORDER BY COALESCE (ObjectDate_StartDate.ValueData,zc_DateStart()) ASC) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    LEFT JOIN ObjectLink AS ObjectLink_PriceList
                                                         ON ObjectLink_PriceList.ObjectId      = ObjectLink_Contract.ObjectId
