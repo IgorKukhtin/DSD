@@ -67,6 +67,9 @@ type
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
     actOpenInvoiceForm: TdsdOpenForm;
+    InfoMoneyGroupName_Invoice: TcxGridDBColumn;
+    InfoMoneyDestinationName_Invoice: TcxGridDBColumn;
+    InfoMoneyName_all_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

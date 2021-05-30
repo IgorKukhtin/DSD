@@ -1,31 +1,31 @@
 inherited CostJournalChoiceForm: TCostJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072' '#1085#1072' '#1086#1087#1083#1072#1090#1091'>'
-  ClientHeight = 481
-  ClientWidth = 695
+  ClientHeight = 412
+  ClientWidth = 1366
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 711
-  ExplicitHeight = 516
+  ExplicitWidth = 1382
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 695
-    Height = 423
+    Width = 1366
+    Height = 354
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 695
-    ExplicitHeight = 423
-    ClientRectBottom = 423
-    ClientRectRight = 695
+    ExplicitWidth = 1366
+    ExplicitHeight = 354
+    ClientRectBottom = 354
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 695
-      ExplicitHeight = 423
+      ExplicitWidth = 1366
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
-        Width = 695
-        Height = 423
-        ExplicitWidth = 695
-        ExplicitHeight = 423
+        Width = 1366
+        Height = 354
+        ExplicitWidth = 1366
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -137,15 +137,6 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1053#1044#1057
             Width = 70
           end
-          object PartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PartnerCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1091#1089#1083#1091#1075
-            Width = 55
-          end
           object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'Amount'
@@ -156,6 +147,22 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Width = 80
+          end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1091#1089#1083#1091#1075
+            Width = 55
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
@@ -190,7 +197,6 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -200,6 +206,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 157
@@ -216,9 +223,9 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 695
+    Width = 1366
     Height = 32
-    ExplicitWidth = 695
+    ExplicitWidth = 1366
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 114
@@ -237,14 +244,6 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     inherited cxLabel2: TcxLabel
       Left = 210
       ExplicitLeft = 210
-    end
-    object cbOnlyService: TcxCheckBox
-      Left = 769
-      Top = 0
-      Caption = #1090#1086#1083#1100#1082#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-      TabOrder = 4
-      Visible = False
-      Width = 235
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -328,7 +327,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementId'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -341,14 +340,6 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'InvNumber_Full'
           Value = Null
           Component = MasterCDS
@@ -357,73 +348,47 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'StatusCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'StatusCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
       DataSource = MasterDS
-    end
-    object actCheckDescService: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescService
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescService
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actCheckDescInvoice: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescTransport
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescTransport
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actOpenFormService: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-      FormName = 'TTransportServiceForm'
-      FormNameParam.Value = 'TTransportServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
@@ -445,48 +410,14 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inOperDate'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
+          Component = deStart
           DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object macOpenFormService: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actCheckDescService
-        end
-        item
-          Action = actOpenFormService
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-    end
-    object macOpenFormTransport: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actCheckDescInvoice
-        end
-        item
-          Action = actOpenFormInvoice
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      ImageIndex = 25
     end
   end
   inherited MasterDS: TDataSource
@@ -570,7 +501,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormTransport'
+          ItemName = 'bbOpenFormInvoice'
         end
         item
           Visible = True
@@ -602,13 +533,16 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbOpenFormTransport: TdxBarButton
-      Action = macOpenFormTransport
+    object bbOpenFormInvoice: TdxBarButton
+      Action = actOpenFormInvoice
       Category = 0
     end
     object bbOpenFormService: TdxBarButton
-      Action = macOpenFormService
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Visible = ivAlways
+      ImageIndex = 29
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -722,45 +656,6 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     Top = 336
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterUnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterUnitName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isOnlyService'
-        Value = Null
-        Component = cbOnlyService
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 296
     Top = 304
   end
@@ -795,53 +690,5 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         MultiSelectSeparator = ','
       end>
     Left = 600
-  end
-  object spCheckDescTransport: TdsdStoredProc
-    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDescId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DescId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescCode_open'
-        Value = 'zc_Movement_Invoice'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 520
-    Top = 288
-  end
-  object spCheckDescService: TdsdStoredProc
-    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDescId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DescId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescCode_open'
-        Value = 'zc_Movement_TransportService'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 584
-    Top = 312
   end
 end

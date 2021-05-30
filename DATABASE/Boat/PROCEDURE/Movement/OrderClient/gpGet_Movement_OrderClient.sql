@@ -94,10 +94,10 @@ BEGIN
           , Object_PaidKind.ValueData                 AS PaidKindName
 
           , Object_Product.Id                          AS ProductId
-          , Object_Product.ValueData                   AS ProductName
+          , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
           , Object_Brand.Id                            AS BrandId
           , Object_Brand.ValueData                     AS BrandName
-          , ObjectString_CIN.ValueData                 AS CIN
+          , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
           , Movement_Invoice.Id                                        AS MovementId_Invoice

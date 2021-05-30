@@ -150,7 +150,7 @@ BEGIN
     , tmpData AS (SELECT
                          Movement.Id
                        , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
-                       , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate):: TVarChar ) :: TVarChar  AS InvNumber_Full
+                       , zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
                        , Movement.OperDate
                        , MovementDate_Plan.ValueData         :: TDateTime    AS PlanDate
                        , Object_Status.ObjectCode                            AS StatusCode
@@ -202,8 +202,8 @@ BEGIN
                        , Object_InfoMoney_View.InfoMoneyDestinationName
                        , Object_Product.Id                          AS ProductId
                        , Object_Product.ObjectCode                  AS ProductCode
-                       , Object_Product.ValueData                   AS ProductName
-                       , ObjectString_CIN.ValueData                 AS ProductCIN
+                       , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName
+                       , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN
                        , Object_PaidKind.Id                         AS PaidKindId
                        , Object_PaidKind.ValueData                  AS PaidKindName
                        , Object_Unit.Id                             AS UnitId
@@ -392,11 +392,11 @@ BEGIN
       , tmpData.DescName_parent
 
       -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
-      , CASE WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
-               OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
+      , CASE WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
+               OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END > COALESCE (tmpData.AmountOut_BankAccount,0)) -- AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
              THEN zc_Color_Blue()
-             WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END < COALESCE (tmpData.AmountIn_BankAccount,0)) AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
-               OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END < COALESCE (tmpData.AmountIn_BankAccount,0)) AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
+             WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END < COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
+               OR (CASE WHEN COALESCE (tmpData.AmountOut,0) <> 0 THEN tmpData.AmountOut ELSE 0 END < COALESCE (tmpData.AmountOut_BankAccount,0)) -- AND COALESCE (tmpData.AmountOut_BankAccount,0)<>0
              THEN zc_Color_Red()
              ELSE zc_Color_Black()
         END ::Integer AS Color_Pay

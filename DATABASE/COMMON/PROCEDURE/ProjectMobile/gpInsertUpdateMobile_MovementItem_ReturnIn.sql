@@ -50,6 +50,7 @@ BEGIN
                                                            , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                            , inDayPrior_PriceReturn:= 0
                                                            , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                           , inOperDatePartner_order:= NULL :: TDateTime
                                                            ) AS tmp);
       -- исправили ошибку
        vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, ingoodsId:= ingoodsId, inSession := inSession) AS tmp);

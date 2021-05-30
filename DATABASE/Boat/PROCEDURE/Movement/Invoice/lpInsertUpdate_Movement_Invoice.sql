@@ -19,21 +19,29 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inObjectId         Integer  ,  -- 
     IN inUnitId           Integer  ,  -- 
     IN inInfoMoneyId      Integer  ,  -- 
-    --IN inProductId        Integer  ,  -- 
     IN inPaidKindId       Integer  ,  -- 
     IN inUserId           Integer      -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
-    -- проверка
-    inOperDate:= DATE_TRUNC ('DAY', inOperDate);
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inObjectId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Lieferanten / Kunden>.';
+     END IF;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inInfoMoneyId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <УП статья назначения>.';
+     END IF;
+
       
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
-    --inReceiptNumber формируется только для Amount>0
+    -- inReceiptNumber формируется только для Amount > 0
     IF COALESCE (inAmount, 0) <= 0
     THEN
         inReceiptNumber := NULL;
@@ -67,8 +75,6 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Object(), ioId, inObjectId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
-    -- сохранили связь с <>
-    --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Product(), ioId, inProductId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
     -- сохранили связь с <>

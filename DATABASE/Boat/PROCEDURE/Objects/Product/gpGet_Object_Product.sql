@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Product(
     IN inId                      Integer,       -- Основные средства
-    iN inMovementId_OrderClient  Integer, 
+    iN inMovementId_OrderClient  Integer,
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -26,12 +26,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , VATPercent_OrderClient TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
              , isBasicConf Boolean, isProdColorPattern Boolean
-             
-             , MovementId_Invoice Integer  
+
+             , MovementId_Invoice Integer
              , OperDate_Invoice   TDateTime
-             , InvNumber_Invoice  TVarChar 
-             , StatusCode_Invoice Integer  
-             , StatusName_Invoice TVarChar 
+             , InvNumber_Invoice  TVarChar
+             , StatusCode_Invoice Integer
+             , StatusName_Invoice TVarChar
              , AmountIn_Invoice TFloat
              , AmountIn_InvoiceAll TFloat
              , AmountIn_BankAccount TFloat
@@ -104,7 +104,7 @@ BEGIN
 
            , CAST (0 AS TFloat)        AS AmountIn_rem
            , CAST (0 AS TFloat)        AS AmountIn_remAll
-         
+
 
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
@@ -124,7 +124,7 @@ BEGIN
                              , MovementFloat_VATPercent.ValueData         AS VATPercent
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-                     
+
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                           ON MovementLinkObject_From.MovementId = Movement.Id
                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -185,7 +185,7 @@ BEGIN
                                                  --AND MovementFloat_Amount.ValueData > 0
                     WHERE MovementLinkMovement_Invoice.MovementId IN (SELECT DISTINCT tmpOrderClient.MovementId FROM tmpOrderClient)
                       AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-                 UNION 
+                 UNION
                     SELECT tmpInvoice_First.ParentId
                          , tmpInvoice_First.Id
                          , tmpInvoice_First.AmountIn
@@ -264,14 +264,14 @@ BEGIN
 
          , tmpInvoice_First.AmountIn     ::TFloat AS AmountIn_Invoice
          , tmpInvoice.AmountIn           ::TFloat AS AmountIn_InvoiceAll
-         
+
          , tmpBankAccount_First.AmountIn ::TFloat AS AmountIn_BankAccount
          , tmpBankAccount.AmountIn       ::TFloat AS AmountIn_BankAccountAll
 
          --, (COALESCE (tmpInvoice_First.AmountIn,0) - COALESCE (tmpBankAccount_First.AmountIn,0)) ::TFloat AS AmountIn_rem
          , (COALESCE (tmpInvoice.AmountIn,0) - COALESCE (tmpBankAccount.AmountIn,0))               ::TFloat AS AmountIn_rem       -- итого к оплате по выставленным счетам
          , (COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (tmpBankAccount.AmountIn,0)) ::TFloat AS AmountIn_remAll    -- итого к оплате за лодку
-         
+
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                   ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
@@ -356,7 +356,7 @@ BEGIN
                      GROUP BY tmpBankAccount.MovementId_Invoice
                      ) AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.Id
           LEFT JOIN (SELECT SUM (COALESCE (tmpInvoice.AmountIn,0)) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
-          
+
           LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
        WHERE Object_Product.Id = inId
       ;

@@ -160,6 +160,7 @@ BEGIN
                                                                        , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                                        , inDayPrior_PriceReturn:= 0
                                                                        , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                                       , inOperDatePartner_order:= NULL
                                                            ) AS tmp
                                   LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
                              LIMIT 1

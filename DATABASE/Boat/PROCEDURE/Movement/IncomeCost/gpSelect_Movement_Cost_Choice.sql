@@ -1,5 +1,7 @@
 -- Function: gpSelect_Movement_Cost_Choice()
 
+DROP FUNCTION IF EXISTS gpCheckDesc_Movement_IncomeCost (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpCheckDesc_Movement_IncomeCost (Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
@@ -9,12 +11,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
     IN inInfoMoneyId   Integer   ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar , DescId Integer, DescName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat, Amount_NotVAT TFloat, Amount_VAT TFloat
+             , VATPercent TFloat
               )
 AS
 $BODY$
@@ -31,22 +34,23 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
-
-
+       -- Счета, которые выставили нам
      , tmpInvoice AS (SELECT Movement.Id AS MovementId
                            , Movement.StatusId AS StatusId
                            , Movement.OperDate
                            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-                           , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate)) :: TVarChar AS InvNumber_Full
+                           , zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
                            , Movement.DescId                               AS DescId
                            , MovementDesc.ItemName                         AS DescName
 
                              -- с НДС
                            , -1 * MovementFloat_Amount.ValueData           AS Amount
                              -- без НДС
-                           , -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) AS Amount_NotVAT
+                           , -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) AS Amount_NotVAT
                              -- НДС
-                           , -1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, ObjectFloat_TaxKind_Value.ValueData) AS Amount_VAT
+                           , -1 * zfCalc_Summ_VAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData) AS Amount_VAT
+                             -- % НДС
+                           , MovementFloat_VATPercent.ValueData            AS VATPercent
 
                            , MovementString_Comment.ValueData              AS Comment
                            , MLO_InfoMoney.ObjectId                        AS InfoMoneyId
@@ -57,7 +61,7 @@ BEGIN
                                               AND Movement.StatusId = tmpStatus.StatusId
                            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-                           -- Сумма по счету, которую выставили нам
+                           -- условие - счету, который выставили нам
                            INNER JOIN MovementFloat AS MovementFloat_Amount
                                                     ON MovementFloat_Amount.MovementId = Movement.Id
                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -72,30 +76,30 @@ BEGIN
                            LEFT JOIN MovementString AS MovementString_Comment
                                                     ON MovementString_Comment.MovementId =  Movement.Id
                                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                                ON ObjectLink_TaxKind.ObjectId = MLO_Object.ObjectId
-                                               AND ObjectLink_TaxKind.DescId   IN (zc_ObjectLink_Partner_TaxKind(), zc_ObjectLink_Client_TaxKind())
-                           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                                                AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+
+                           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                                  AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
                      )
-     , tmpList AS  (SELECT tmpInvoice.MovementId, tmpInvoice.StatusId, tmpInvoice.OperDate, tmpInvoice.InvNumber, tmpInvoice.InvNumber_Full
-                         , tmpInvoice.DescId, tmpInvoice.DescName
-                         , tmpInvoice.Amount, tmpInvoice.Amount_NotVAT, tmpInvoice.Amount_VAT
-                         , tmpInvoice.Comment
-                         , tmpInvoice.InfoMoneyId, tmpInvoice.PartnerId
-                    FROM tmpInvoice
-                   )
+       -- Счета, которые уже попали в zc_Movement_IncomeCost, их не всегда надо показывать
+     , tmpInvoice_check AS (SELECT tmpInvoice.MovementId
+                            FROM tmpInvoice
+                                 JOIN MovementFloat AS MovementFloat_MovementId 
+                                                    ON MovementFloat_MovementId.ValueData = tmpInvoice.MovementId
+                                                   AND MovementFloat_MovementId.DescId    = zc_MovementFloat_MovementId()
+                                 JOIN Movement ON Movement.Id       = MovementFloat_MovementId.MovementId
+                                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                           )
         -- РЕЗУЛЬТАТ
-        SELECT tmpList.MovementId AS Id
-             , tmpList.InvNumber
-             , tmpList.InvNumber_Full
-             , tmpList.OperDate
+        SELECT tmpInvoice.MovementId
+             , tmpInvoice.InvNumber
+             , tmpInvoice.InvNumber_Full
+             , tmpInvoice.OperDate
              , Object_Status.ObjectCode         AS StatusCode
              , Object_Status.ValueData          AS StatusName
-             , tmpList.Comment
-             , tmpList.DescId
-             , tmpList.DescName
+             , tmpInvoice.Comment
+             , tmpInvoice.DescId
+             , tmpInvoice.DescName
              
              , Object_Partner.ObjectCode   AS PartnerCode
              , Object_Partner.ValueData    AS PartnerName
@@ -107,16 +111,20 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyName_all
 
                -- Сумма счета - с НДС
-             , tmpList.Amount :: TFloat
+             , tmpInvoice.Amount :: TFloat
                -- без НДС
-             , tmpList.Amount_NotVAT :: TFloat
+             , tmpInvoice.Amount_NotVAT :: TFloat
                -- НДС
-             , tmpList.Amount_VAT :: TFloat
+             , tmpInvoice.Amount_VAT :: TFloat
+               -- % НДС
+             , tmpInvoice.VATPercent :: TFloat
 
-        FROM tmpList
-             LEFT JOIN Object AS Object_Status  ON Object_Status.Id  = tmpList.StatusId
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpList.PartnerId
-             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpList.InfoMoneyId
+        FROM tmpInvoice
+             LEFT JOIN Object AS Object_Status  ON Object_Status.Id  = tmpInvoice.StatusId
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpInvoice.PartnerId
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpInvoice.InfoMoneyId
+             LEFT JOIN tmpInvoice_check ON tmpInvoice_check.MovementId = tmpInvoice.MovementId
+        WHERE tmpInvoice_check.MovementId IS NULL
       ;
 
 END;

@@ -8,14 +8,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost_byParent(
     IN inIsErased    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer
-             , OperDate TDateTime, MasterOperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
-             , DescId Integer, ItemName TVarChar
-             , Comment TVarChar, MasterComment TVarChar
-             , AmountCost TFloat, AmountCost_Master TFloat, AmountCostNotVAT_Master TFloat
-             , PartnerCode Integer, PartnerName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+RETURNS TABLE (Id Integer, MovementId_Master Integer
+             , InvNumber Integer
+             , InvNumber_Master TVarChar
+             , OperDate TDateTime, OperDate_Master TDateTime
+             , StatusCode Integer, StatusName TVarChar, StatusCode_Master Integer, StatusName_Master TVarChar
+             , DescId_Master Integer, ItemName_Master TVarChar
+             , Comment TVarChar, Comment_Master TVarChar
+             , AmountCost TFloat, Amount_Master TFloat, AmountNotVAT_Master TFloat, VATPercent_Master TFloat
+             , PartnerCode_Master Integer, PartnerName_Master TVarChar
+             , InfoMoneyCode_Master Integer, InfoMoneyGroupName_Master TVarChar, InfoMoneyDestinationName_Master TVarChar, InfoMoneyName_Master TVarChar, InfoMoneyName_all_Master TVarChar
               )
 AS
 $BODY$
@@ -33,40 +35,40 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
-      , tmpMovement AS (SELECT Movement.Id                                   AS Id
-                             , Movement_Master.Id                            AS MasterMovementId
-                             , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-                             , zfConvert_StringToNumber (Movement_Master.InvNumber) AS MasterInvNumber
-                             , Movement.OperDate                             AS OperDate
-                             , Movement_Master.OperDate                      AS MasterOperDate
-                             , Object_Status.ObjectCode                      AS StatusCode
-                             , Object_Status.ValueData                       AS StatusName
-                             , Object_StatusMaster.ObjectCode                AS MasterStatusCode
-                             , Object_StatusMaster.ValueData                 AS MasterStatusName
-
-                             , MovementDescMaster.Id                         AS DescId
-                             , MovementDescMaster.ItemName                   AS ItemName
-                             , MovementString_Comment.ValueData              AS Comment
-                             , MovementString_CommentMaster.ValueData        AS MasterComment
+      , tmpMovement AS (SELECT Movement.Id                                    AS Id
+                             , Movement_Master.Id                             AS MovementId_Master
+                             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+                             , zfCalc_InvNumber_isErased ('', Movement_Master.InvNumber, Movement_Master.OperDate, Movement_Master.StatusId) AS InvNumber_Master
+                             , Movement.OperDate                              AS OperDate
+                             , Movement_Master.OperDate                       AS OperDate_Master
+                             , Object_Status.ObjectCode                       AS StatusCode
+                             , Object_Status.ValueData                        AS StatusName
+                             , Object_StatusMaster.ObjectCode                 AS StatusCode_Master
+                             , Object_StatusMaster.ValueData                  AS StatusName_Master
+                                                                              
+                             , MovementDescMaster.Id                          AS DescId_Master
+                             , MovementDescMaster.ItemName                    AS ItemName_Master
+                             , MovementString_Comment.ValueData               AS Comment
+                             , MovementString_CommentMaster.ValueData         AS Comment_Master
                              
-                             , Object_Partner.ObjectCode AS PartnerCode
-                             , Object_Partner.ValueData  AS PartnerName
+                             , Object_Partner.ObjectCode                      AS PartnerCode_Master
+                             , Object_Partner.ValueData                       AS PartnerName_Master
 
-                             , Object_InfoMoney_View.InfoMoneyCode
-                             , Object_InfoMoney_View.InfoMoneyGroupName
-                             , Object_InfoMoney_View.InfoMoneyDestinationName
-                             , Object_InfoMoney_View.InfoMoneyName
-                             , Object_InfoMoney_View.InfoMoneyName_all
+                             , Object_InfoMoney_View.InfoMoneyCode            AS InfoMoneyCode_Master
+                             , Object_InfoMoney_View.InfoMoneyGroupName       AS InfoMoneyGroupName_Master
+                             , Object_InfoMoney_View.InfoMoneyDestinationName AS InfoMoneyDestinationName_Master
+                             , Object_InfoMoney_View.InfoMoneyName            AS InfoMoneyName_Master
+                             , Object_InfoMoney_View.InfoMoneyName_all        AS InfoMoneyName_all_Master
 
                               -- без НДС
-                             , MovementFloat_AmountCost.ValueData            AS AmountCost
+                             , MovementFloat_AmountCost.ValueData             AS AmountCost
 
                                -- с НДС
-                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * MovementFloat_AmountCost_Master.ValueData ELSE 0 END :: TFloat AS AmountCost_Master
+                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * MovementFloat_Amount_Master.ValueData ELSE 0 END :: TFloat AS Amount_Master
                                -- без НДС
-                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_AmountCost_Master.ValueData, ObjectFloat_TaxKind_Value.ValueData) ELSE 0 END :: TFloat AS AmountCostNotVAT_Master
-
-                             , Movement_Master.Id AS MovementId_master
+                             , CASE WHEN Movement_Master.StatusId = zc_Enum_Status_Complete() THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount_Master.ValueData, MovementFloat_VATPercent.ValueData) ELSE 0 END :: TFloat AS AmountNotVAT_Master
+                             
+                             , MovementFloat_VATPercent.ValueData AS VATPercent_Master
 
                         FROM Movement
                              INNER JOIN  tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -84,9 +86,9 @@ BEGIN
                              -- Документ Счет
                              LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementFloat_MovementId.ValueData :: Integer
                              -- Сумма по счету
-                             LEFT JOIN MovementFloat AS MovementFloat_AmountCost_Master
-                                                     ON MovementFloat_AmountCost_Master.MovementId = Movement_Master.Id
-                                                    AND MovementFloat_AmountCost_Master.DescId     = zc_MovementFloat_Amount()
+                             LEFT JOIN MovementFloat AS MovementFloat_Amount_Master
+                                                     ON MovementFloat_Amount_Master.MovementId = Movement_Master.Id
+                                                    AND MovementFloat_Amount_Master.DescId     = zc_MovementFloat_Amount()
 
                              LEFT JOIN MovementDesc AS MovementDescMaster ON MovementDescMaster.Id = Movement_Master.DescId
 
@@ -103,50 +105,46 @@ BEGIN
                                                           ON MLO_InfoMoney.MovementId = Movement_Master.Id
                                                          AND MLO_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
 
+                             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                                     ON MovementFloat_VATPercent.MovementId = Movement_Master.Id
+                                                    AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
+
                              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MLO_Object.ObjectId
                              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MLO_InfoMoney.ObjectId
-
-                             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                                  ON ObjectLink_TaxKind.ObjectId = MLO_Object.ObjectId
-                                                 AND ObjectLink_TaxKind.DescId   IN (zc_ObjectLink_Partner_TaxKind(), zc_ObjectLink_Client_TaxKind())
-                             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                  AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-
-
 
                         WHERE Movement.ParentId = inParentId
                           AND Movement.DescId   = zc_Movement_IncomeCost()
                        )
          -- Результат
          SELECT  tmpMovement.Id
-               , tmpMovement.MasterMovementId
+               , tmpMovement.MovementId_Master
                , tmpMovement.InvNumber
-               , tmpMovement.MasterInvNumber
+               , tmpMovement.InvNumber_Master
                , tmpMovement.OperDate
-               , tmpMovement.MasterOperDate
+               , tmpMovement.OperDate_Master
                , tmpMovement.StatusCode
                , tmpMovement.StatusName
-               , tmpMovement.MasterStatusCode
-               , tmpMovement.MasterStatusName
+               , tmpMovement.StatusCode_Master
+               , tmpMovement.StatusName_Master
 
-               , tmpMovement.DescId
-               , tmpMovement.ItemName
+               , tmpMovement.DescId_Master
+               , tmpMovement.ItemName_Master
                , tmpMovement.Comment
-               , tmpMovement.MasterComment
+               , tmpMovement.Comment_Master
 
                , tmpMovement.AmountCost
-               , tmpMovement.AmountCost_Master
-               , tmpMovement.AmountCostNotVAT_Master
+               , tmpMovement.Amount_Master
+               , tmpMovement.AmountNotVAT_Master
+               , tmpMovement.VATPercent_Master
 
-               , tmpMovement.PartnerCode
-               , tmpMovement.PartnerName
+               , tmpMovement.PartnerCode_Master
+               , tmpMovement.PartnerName_Master
 
-               , tmpMovement.InfoMoneyCode
-               , tmpMovement.InfoMoneyGroupName
-               , tmpMovement.InfoMoneyDestinationName
-               , tmpMovement.InfoMoneyName
-               , tmpMovement.InfoMoneyName_all
+               , tmpMovement.InfoMoneyCode_Master
+               , tmpMovement.InfoMoneyGroupName_Master
+               , tmpMovement.InfoMoneyDestinationName_Master
+               , tmpMovement.InfoMoneyName_Master
+               , tmpMovement.InfoMoneyName_all_Master
 
          FROM tmpMovement
       ;

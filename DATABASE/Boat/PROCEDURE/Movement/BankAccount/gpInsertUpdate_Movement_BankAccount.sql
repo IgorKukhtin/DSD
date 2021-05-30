@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
     IN inMovementId_Invoice   Integer   , -- Счет
-    IN inMovementId_Parent    Integer   , -- Parent счета  Приход или Заказ
+    IN inMovementId_Parent    Integer   , -- Заказ Клиента
     IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -22,7 +22,6 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
-   DECLARE vbInvNumber_Invoice TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
@@ -51,40 +50,34 @@ BEGIN
         vbAmount := -1 * inAmountOut;
      END IF;
 
-     --проверка, если док Счет пусто нужно его создат, связать с Заказом
+     -- проверка, если док. Счет пусто нужно его создать
      IF COALESCE (inMovementId_Invoice,0) = 0
      THEN
-             -- сохранили <Документ>
-        vbInvNumber_Invoice := NEXTVAL ('movement_Invoice_seq') :: TVarChar;
-        inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
-                                                               , inParentId         := inMovementId_Parent::Integer
-                                                               , inInvNumber        := vbInvNumber_Invoice                 :: TVarChar
-                                                               , inOperDate         := inOperDate
-                                                               , inPlanDate         := Null                                ::TDateTime
-                                                               , inVATPercent       := ObjectFloat_TaxKind_Value.ValueData ::TFloat
-                                                               , inAmount           := vbAmount                            ::TFloat
-                                                               , inInvNumberPartner := ''                                  ::TVarChar
-                                                               , inReceiptNumber    := ''                                  ::TVarChar
-                                                               , inComment          := ''                                  ::TVarChar
-                                                               , inObjectId         := inMoneyPlaceId
-                                                               , inUnitId           := Null                                ::Integer
-                                                               , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
-                                                               , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
-                                                               , inUserId           := vbUserId
-                                                               )
-        FROM Object AS Object_Client
-             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                  ON ObjectLink_TaxKind.ObjectId = Object_Client.Id
-                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-   
-             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-  
-             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
-                                  ON ObjectLink_InfoMoney.ObjectId = Object_Client.Id
-                                 AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Client_InfoMoney()
-        WHERE Object_Client.Id = inMoneyPlaceId;
+         -- сохранили <Документ> + для inMovementId_Parent уствновится связь на этот inMovementId_Invoice
+         inMovementId_Invoice := lpInsertUpdate_Movement_Invoice (ioId               := 0                                   ::Integer
+                                                                , inParentId         := inMovementId_Parent                 ::Integer
+                                                                , inInvNumber        := NEXTVAL ('movement_Invoice_seq')    ::TVarChar
+                                                                , inOperDate         := inOperDate
+                                                                , inPlanDate         := NULL                                ::TDateTime
+                                                                  -- это св-во в Заказе
+                                                                , inVATPercent       := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Parent AND MF.DescId = zc_MovementFloat_VATPercent())
+                                                                  -- 
+                                                                , inAmount           := vbAmount                            ::TFloat
+                                                                , inInvNumberPartner := ''                                  ::TVarChar
+                                                                , inReceiptNumber    := ''                                  ::TVarChar
+                                                                , inComment          := ''                                  ::TVarChar
+                                                                , inObjectId         := inMoneyPlaceId
+                                                                , inUnitId           := NULL                                ::Integer
+                                                                , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
+                                                                , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
+                                                                , inUserId           := vbUserId
+                                                                 )
+         FROM Object AS Object_Client
+              LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                   ON ObjectLink_InfoMoney.ObjectId = Object_Client.Id
+                                  AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
+         WHERE Object_Client.Id = inMoneyPlaceId;
+
      END IF;
      
 

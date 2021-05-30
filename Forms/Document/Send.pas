@@ -140,6 +140,7 @@ type
     bbMISetUnErasedDetail: TdxBarButton;
     actShowErasedDetail: TBooleanStoredProcAction;
     bb: TdxBarButton;
+    PartionGoodsId: TcxGridDBColumn;
   private
     { Private declarations }
   public

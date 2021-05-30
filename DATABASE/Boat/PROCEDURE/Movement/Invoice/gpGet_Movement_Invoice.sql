@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime , -- 
+    IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -49,8 +49,8 @@ BEGIN
                                    FROM MovementString
                                    WHERE MovementString.DescId = zc_MovementString_ReceiptNumber())
                                    , 1);
-                                   
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_Invoice_seq') AS TVarChar)  AS InvNumber
@@ -83,8 +83,8 @@ BEGIN
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
      ELSE
-     
-     RETURN QUERY 
+
+     RETURN QUERY
         WITH -- Все документы, в которых указан этот Счет, возьмем первый
              tmpMLM AS (SELECT *
                         FROM (SELECT MovementLinkMovement.*
@@ -99,7 +99,7 @@ BEGIN
                         WHERE tmp.Ord = 1
                        )
        -- Результат
-       SELECT     
+       SELECT
            Movement.Id
          , Movement.InvNumber
          , Movement.OperDate
@@ -114,34 +114,34 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyName
          , Object_Product.Id                                   AS ProductId
-         , Object_Product.ValueData                            AS ProductName
+         , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
          , Object_PaidKind.Id                                  AS PaidKindId
          , Object_PaidKind.ValueData                           AS PaidKindName
          , Object_Unit.Id                                      AS UnitId
          , Object_Unit.ValueData                               AS UnitName
-   
+
          , MovementString_InvNumberPartner.ValueData           AS InvNumberPartner
          , MovementString_ReceiptNumber.ValueData              AS ReceiptNumber
          , MovementString_Comment.ValueData                    AS Comment
-   
+
          , Movement_Parent.Id             ::Integer  AS MovementId_parent
          , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
-   
+
        FROM Movement
            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-           
+
            LEFT JOIN MovementFloat AS MovementFloat_Amount
                                    ON MovementFloat_Amount.MovementId = Movement.Id
                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-   
+
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-   
+
            LEFT JOIN MovementDate AS MovementDate_Plan
                                   ON MovementDate_Plan.MovementId = Movement.Id
                                  AND MovementDate_Plan.DescId = zc_MovementDate_Plan()
-    
+
            -- Номер документа (внешний)
            LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -153,23 +153,23 @@ BEGIN
            LEFT JOIN MovementString AS MovementString_Comment
                                     ON MovementString_Comment.MovementId = Movement.Id
                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-   
+
            --  Client or Partner
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Object
                                         ON MovementLinkObject_Object.MovementId = Movement.Id
                                        AND MovementLinkObject_Object.DescId = zc_MovementLinkObject_Object()
            LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementLinkObject_Object.ObjectId
-           
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
-   
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-   
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -179,28 +179,28 @@ BEGIN
            LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
                             ON MovementLinkMovement_Invoice.MovementChildId = Movement.Id
                            AND MovementLinkMovement_Invoice.DescId          = zc_MovementLinkMovement_Invoice()
-           -- Parent - если указан
+           -- Parent - если указан - он в приоритете
            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = COALESCE (Movement.ParentId, MovementLinkMovement_Invoice.MovementId)
            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
-           
+
            -- Лодку показываем из док. Movement_Parent
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                         ON MovementLinkObject_Product.MovementId = Movement_Parent.Id
                                        AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
-   
+
           WHERE Movement.Id = inMovementId
           ;
 
-   END IF;  
-  
+   END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  03.02.21         *
 */
 

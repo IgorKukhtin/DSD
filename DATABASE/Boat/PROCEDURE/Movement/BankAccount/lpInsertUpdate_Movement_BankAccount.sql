@@ -1,49 +1,64 @@
--- Function: lpComplete_Movement_BankAccount (Integer, Boolean)
+-- Function: lpInsertUpdate_movement_BankAccount
 
-DROP FUNCTION IF EXISTS lpinsertupdate_movement_BankAccount(Integer, TVarChar, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_movement_BankAccount(Integer, TVarChar, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 
-CREATE OR REPLACE FUNCTION lpinsertupdate_movement_BankAccount(
-  INOUT ioid                   Integer, 
-     IN ininvnumber            TVarChar, 
+CREATE OR REPLACE FUNCTION lpInsertUpdate_movement_BankAccount(
+  INOUT ioId                   Integer, 
+     IN inInvNumber            TVarChar, 
      IN inInvNumberPartner     TVarChar  , -- Номер документа (внешний)
-     IN inoperdate             TDateTime, 
-     IN inamount               TFloat, 
+     IN inOperDate             TDateTime, 
+     IN inAmount               TFloat, 
      IN inBankAccountId        Integer, 
-     IN inmoneyplaceid         Integer, 
+     IN inMoneyPlaceId         Integer, 
      IN inMovementId_Invoice     Integer, 
-     IN incomment              TVarChar, 
+     IN inComment              TVarChar, 
      IN inuserid               Integer)
   RETURNS Integer AS
 $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
- 
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inBankAccountId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Расчетный счет>.';
+     END IF;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inMoneyPlaceId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Lieferanten / Kunden>.';
+     END IF;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inMovementId_Invoice, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Счет>.';
+     END IF;
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL, inUserId);
-
-     -- <>
+     -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner); 
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
-     -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+
+     -- поиск <Элемент документа>
+     vbMovementItemId:= (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master());
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, Null, ioId, inAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, NULL, ioId, inAmount, NULL);
 
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
 
-     -- сохранили связь с документом <Счет>
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
-
-     -- Комментарий
+     -- Примечание
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
-    -- !!!протокол через свойства конкретного объекта!!!
+
+     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>
@@ -60,6 +75,8 @@ BEGIN
          END IF;
      END IF;
      
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 

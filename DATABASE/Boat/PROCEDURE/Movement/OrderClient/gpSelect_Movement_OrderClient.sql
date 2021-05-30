@@ -117,10 +117,10 @@ BEGIN
              , Object_PaidKind.Id                         AS PaidKindId
              , Object_PaidKind.ValueData                  AS PaidKindName
              , Object_Product.Id                          AS ProductId
-             , CASE WHEN Object_Product.isErased = TRUE THEN '--- ' || Object_Product.ValueData ELSE Object_Product.ValueData END :: TVarChar AS ProductName
+             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
-             , ObjectString_CIN.ValueData                 AS CIN
+             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id               AS MovementId_Invoice

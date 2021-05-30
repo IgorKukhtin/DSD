@@ -245,6 +245,7 @@ BEGIN
                                                              , NULL :: TDateTime
                                                              , inOperDate
                                                              , FALSE
+                                                             , NULL :: TDateTime
                                                               ) AS PriceListId
 
              FROM tmpPartnerContract_find

@@ -65,7 +65,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , Basis_summ_orig       TFloat
                -- ИТОГО Сумма продажи с НДС - без Скидки
              , BasisWVAT_summ_orig   TFloat
-             
+
              , SummDiscount1      TFloat
              , SummDiscount2      TFloat
              , SummDiscount3      TFloat
@@ -108,6 +108,7 @@ BEGIN
                            )
       -- документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                AS MovementId
+                              , Movement.StatusId          AS StatusId
                               , Movement.InvNumber         AS InvNumber
                               , Movement.OperDate          AS OperDate
                               , Object_Status.ObjectCode   AS StatusCode
@@ -243,7 +244,7 @@ BEGIN
                                              AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
 
                          -- Заказы клиента
-                         LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = Object_Product.Id 
+                         LEFT JOIN tmpOrderClient ON tmpOrderClient.ProductId = Object_Product.Id
 
                          -- цены для <Шаблон сборка Модели>
                          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_ReceiptProdModel.ChildObjectId
@@ -337,7 +338,7 @@ BEGIN
                                   , 0 AS BasisPrice_summ_disc_1
                                   , 0 AS BasisPrice_summ_disc_2
                                   , 0 AS BasisPriceWVAT_summ_disc
-                                  
+
                                   , lpSelect.DiscountTax
                                   , lpSelect.DiscountNextTax
                                   , lpSelect.VATPercent
@@ -372,7 +373,7 @@ BEGIN
                                   , 0 AS BasisPrice_summ_disc_1
                                   , 0 AS BasisPrice_summ_disc_2
                                   , 0 AS BasisPriceWVAT_summ_disc
-                                  
+
                                   , lpSelect.DiscountTax
                                   , lpSelect.DiscountNextTax
                                   , lpSelect.VATPercent
@@ -614,7 +615,7 @@ BEGIN
          , tmpOrderClient.FromName          AS ClientName
          , tmpOrderClient.MovementId        AS MovementId_OrderClient
          , tmpOrderClient.OperDate          AS OperDate_OrderClient
-         , tmpOrderClient.InvNumber         AS InvNumber_OrderClient
+         , zfCalc_InvNumber_isErased ('', tmpOrderClient.InvNumber, tmpOrderClient.OperDate, tmpOrderClient.StatusId) AS InvNumber_OrderClient
          , tmpOrderClient.StatusCode        AS StatusCode_OrderClient
          , tmpOrderClient.StatusName        AS StatusName_OrderClient
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client

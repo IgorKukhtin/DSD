@@ -5,7 +5,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -238
   ExplicitWidth = 1044
   ExplicitHeight = 391
   PixelsPerInch = 96
@@ -1068,10 +1067,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbb'
         end
         item
@@ -1106,6 +1101,9 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = actPrint

@@ -34,6 +34,7 @@ BEGIN
                                                                                , NULL :: TDateTime
                                                                                , inOperDate
                                                                                , FALSE
+                                                                               , NULL :: TDateTime
                                                                                 ) AS PriceListId
                                     , zfCalc_GoodsPropertyId (inContractId, ObjectLink_Partner_Juridical.ChildObjectId, inPartnerId) AS GoodsPropertyId
                                FROM Object AS Object_Partner

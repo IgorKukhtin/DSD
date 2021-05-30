@@ -92,9 +92,9 @@ BEGIN
      IF ((COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
           OR 1=1 -- !!!всегда расчет!!!
          )
-         AND inUserId <> zfCalc_UserMain()
-         AND inUserId <> 9464 -- Рудик Н.В.
-         AND inUserId <> zfCalc_UserAdmin() :: Integer
+       --AND inUserId <> zfCalc_UserMain()
+       --AND inUserId <> 9464 -- Рудик Н.В.
+       --AND inUserId <> zfCalc_UserAdmin() :: Integer
         )
         OR COALESCE (ioPriceListId, 0) = 0
      THEN
@@ -235,7 +235,7 @@ BEGIN
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                       ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                     AND MIFloat_PromoMovement.DescId         = zc_MIFloat_PromoMovementId()
      WHERE MovementItem.MovementId = ioId
        AND MovementItem.DescId = zc_MI_Master();
 

@@ -338,7 +338,12 @@ BEGIN
     ELSEIF inMovementId_Invoice > 0
     THEN
         -- пересохранили дату документа
-        PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice(), inInvNumber_Invoice, inOperDate_Invoice, inMovementId_OrderClient, vbUserId);
+        PERFORM lpInsertUpdate_Movement (inMovementId_Invoice, zc_Movement_Invoice()
+                                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice)
+                                       , (SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId_Invoice)
+                                       , inMovementId_OrderClient
+                                       , vbUserId
+                                        );
         --сохранили сумму
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), inMovementId_Invoice, vbAmount);
 

@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeCost (Integer, Integer, In
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeCost(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inParentId            Integer   , -- От кого (в документе)
-    IN inMovementId          Integer   , --
+    IN inParentId            Integer   , -- документ Приход
+    IN inMovementId          Integer   , -- документ Счет
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -20,8 +20,8 @@ BEGIN
 
 
      PERFORM lpInsertUpdate_Movement_IncomeCost (ioId         := ioId
-                                               , inParentId   := inParentId          -- док приход
-                                               , inMovementId := inMovementId        -- док услуг
+                                               , inParentId   := inParentId          -- документ Приход
+                                               , inMovementId := inMovementId        -- документ Счет
                                                , inComment    := inComment
                                                , inUserId     := vbUserId
                                                 );

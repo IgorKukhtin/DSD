@@ -1,6 +1,7 @@
 -- Function: lfGet_Object_Partner_PriceList_onDate_get (Integer, Integer, TDateTime)
 
- DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate_get (Integer, Integer, Integer, TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate_get (Integer, Integer, Integer, TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate_get (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TDateTime);
 
 CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_onDate_get(
     IN inContractId      Integer, 
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_onDate_get(
     IN inMovementDescId  Integer,
     IN inOperDate_order  TDateTime,
     IN inOperDatePartner TDateTime,
-    IN inIsPrior         Boolean
+    IN inIsPrior         Boolean,
+    IN inOperDatePartner_order TDateTime -- DEFAULT NULL
 )
 RETURNS Integer
 AS
@@ -17,7 +19,15 @@ $BODY$
 BEGIN
       SELECT PriceListId
              INTO vbPriceListId
-      FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= inContractId, inPartnerId:= inPartnerId, inMovementDescId:= inMovementDescId, inOperDate_order:= inOperDate_order, inOperDatePartner:= inOperDatePartner, inDayPrior_PriceReturn:= 14, inIsPrior:= inIsPrior);
+      FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= inContractId
+                                                , inPartnerId:= inPartnerId
+                                                , inMovementDescId:= inMovementDescId
+                                                , inOperDate_order:= inOperDate_order
+                                                , inOperDatePartner:= inOperDatePartner
+                                                , inDayPrior_PriceReturn:= 14
+                                                , inIsPrior:= inIsPrior
+                                                , inOperDatePartner_order:= inOperDatePartner_order
+                                                 );
 
       RETURN vbPriceListId;
 END;

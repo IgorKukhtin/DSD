@@ -33,22 +33,15 @@ type
     cxLabel3: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
-    spCheckDescTransport: TdsdStoredProc;
-    spCheckDescService: TdsdStoredProc;
-    actCheckDescService: TdsdExecStoredProc;
-    actCheckDescInvoice: TdsdExecStoredProc;
-    actOpenFormService: TdsdOpenForm;
     actOpenFormInvoice: TdsdOpenForm;
-    macOpenFormService: TMultiAction;
-    macOpenFormTransport: TMultiAction;
-    bbOpenFormTransport: TdxBarButton;
+    bbOpenFormInvoice: TdxBarButton;
     bbOpenFormService: TdxBarButton;
-    cbOnlyService: TcxCheckBox;
     Amount: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     Amount_NotVAT: TcxGridDBColumn;
     Amount_VAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

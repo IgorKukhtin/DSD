@@ -136,13 +136,8 @@ type
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
-    actCheckDescService: TdsdExecStoredProc;
-    actCheckDescInvoice: TdsdExecStoredProc;
-    actOpenFormService: TdsdOpenForm;
     actOpenFormInvoice: TdsdOpenForm;
-    macOpenFormService: TMultiAction;
-    macOpenFormInvoice: TMultiAction;
-    bbOpenFormTransport: TdxBarButton;
+    bbOpenFormInvoice: TdxBarButton;
     bbOpenFormService: TdxBarButton;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
@@ -163,15 +158,13 @@ type
     actCompleteCost: TdsdChangeMovementStatus;
     actSetErasedCost: TdsdChangeMovementStatus;
     actUnCompleteCost: TdsdChangeMovementStatus;
-    spCheckDescService: TdsdStoredProc;
-    spCheckDescInvoice: TdsdStoredProc;
     InsertRecordCost: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
     MovementCostProtocolOpenForm: TdsdOpenForm;
     bbMovementCostProtocolOpenForm: TdxBarButton;
     CostPrice: TcxGridDBColumn;
-    AmountCostNotVAT_Master: TcxGridDBColumn;
-    PartnerCode: TcxGridDBColumn;
+    AmountNotVAT_Master: TcxGridDBColumn;
+    PartnerCode_Master: TcxGridDBColumn;
     OperPrice_cost: TcxGridDBColumn;
     TotalSumm_cost: TcxGridDBColumn;
     Summ_cost: TcxGridDBColumn;
@@ -179,6 +172,10 @@ type
     edInsertDate: TcxDateEdit;
     cxLabel13: TcxLabel;
     edInsertName: TcxButtonEdit;
+    InfoMoneyGroupName_Master: TcxGridDBColumn;
+    InfoMoneyDestinationName_Master: TcxGridDBColumn;
+    InfoMoneyName_Master: TcxGridDBColumn;
+    VATPercent_Master: TcxGridDBColumn;
   private
   public
   end;

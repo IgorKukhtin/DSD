@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeCost (Integer, Integer, In
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeCost(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inParentId            Integer   , -- док приход
-    IN inMovementId          Integer   , -- док услуг
+    IN inParentId            Integer   , -- документ Приход
+    IN inMovementId          Integer   , -- документ Счет
     IN inComment             TVarChar  , --
     IN inUserId              Integer     -- пользователь
 )
@@ -13,19 +13,17 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbDescId   Integer;
 BEGIN
+     -- проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не выбран документ <Счет>.';
+     END IF;   
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
-
-     -- проверка
-     IF COALESCE (inMovementId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Документ Счет не выбран.';
-     END IF;   
 
      -- сохранили <Документ>
      IF COALESCE (ioId, 0) = 0
@@ -45,7 +43,7 @@ BEGIN
                                         , zc_Movement_IncomeCost()
                                         , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId)
                                         , CURRENT_DATE
-                                        , inParentId
+                                        , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inParentId)
                                         , inUserId
                                          );
      END IF;
@@ -55,16 +53,6 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
      
-     -- сохраняем для нач. услуг приход в список док. затрат
-     /*IF vbDescId = zc_Movement_Service()
-     THEN
-         PERFORM lpInsertUpdate_MovementString (zc_MovementString_MovementId(), inMovementId, CASE WHEN COALESCE (MovementString.ValueData,'') = ''  THEN inParentId :: TVarChar ELSE MovementString.ValueData|| ','||inParentId END :: TVarChar) 
-         FROM Movement
-              LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id
-                                      AND MovementString.DescId = zc_MovementString_MovementId()              
-         WHERE Movement.Id = inMovementId;
-     END IF;
-     */
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE

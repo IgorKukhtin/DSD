@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 455
+  ClientHeight = 439
   ClientWidth = 1191
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -50,7 +50,7 @@ object IncomeForm: TIncomeForm
     object cxLabel2: TcxLabel
       Left = 171
       Top = 5
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+      Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
       Left = 404
@@ -278,12 +278,12 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 123
     Width = 1191
-    Height = 332
+    Height = 316
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 332
+    ClientRectBottom = 316
     ClientRectRight = 1191
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -293,7 +293,7 @@ object IncomeForm: TIncomeForm
         Left = 0
         Top = 0
         Width = 1191
-        Height = 308
+        Height = 292
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -696,7 +696,7 @@ object IncomeForm: TIncomeForm
         Left = 0
         Top = 0
         Width = 1191
-        Height = 308
+        Height = 292
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -712,12 +712,12 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCost_Master
+              Column = Amount_Master
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCostNotVAT_Master
+              Column = AmountNotVAT_Master
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -728,12 +728,12 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCost_Master
+              Column = Amount_Master
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCostNotVAT_Master
+              Column = AmountNotVAT_Master
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -776,7 +776,7 @@ object IncomeForm: TIncomeForm
             Width = 80
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
+            Caption = 'Interne Nr'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -790,7 +790,7 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
-            Width = 150
+            Width = 120
           end
           object AmountCost: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090' '#1073#1077#1079' '#1053#1044#1057
@@ -800,53 +800,48 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090' '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
-            Width = 90
+            Width = 100
           end
-          object AmountCostNotVAT_Master: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090' '#1073#1077#1079' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountCostNotVAT_Master'
+          object AmountNotVAT_Master: TcxGridDBColumn
+            Caption = '***'#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountNotVAT_Master'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090' '#1073#1077#1079' '#1053#1044#1057
+            HeaderHint = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' - '#1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
             Width = 90
           end
-          object AmountCost_Master: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountCost_Master'
+          object Amount_Master: TcxGridDBColumn
+            Caption = '***'#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Amount_Master'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090' '#1089' '#1053#1044#1057
-            Options.Editing = False
-            Width = 90
-          end
-          object ItemName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'ItemName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' - '#1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
-            Width = 99
+            Width = 90
           end
-          object MasterOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1057#1095#1077#1090')'
-            DataBinding.FieldName = 'MasterOperDate'
+          object VATPercent_Master: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
-            Width = 79
+            Width = 55
           end
-          object MasterInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. ('#1057#1095#1077#1090')'
-            DataBinding.FieldName = 'MasterInvNumber'
+          object InvNumber_Master: TcxGridDBColumn
+            Caption = '***Interne Nr'
+            DataBinding.FieldName = 'InvNumber_Master'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -856,29 +851,31 @@ object IncomeForm: TIncomeForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            Width = 110
           end
-          object PartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1055#1086#1089#1090'.'
-            DataBinding.FieldName = 'PartnerCode'
+          object PartnerCode_Master: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1055#1086#1089#1090'. '#1091#1089#1083'.'
+            DataBinding.FieldName = 'PartnerCode_Master'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            HeaderHint = #1050#1086#1076' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1091#1089#1083#1091#1075
             Options.Editing = False
             Width = 55
           end
-          object PartnerName: TcxGridDBColumn
+          object PartnerName_Master: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
-            DataBinding.FieldName = 'PartnerName'
+            DataBinding.FieldName = 'PartnerName_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
-            Width = 156
+            Width = 120
           end
-          object MasterStatusCode: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' ('#1057#1095#1077#1090')'
-            DataBinding.FieldName = 'MasterStatusCode'
+          object StatusCode_Master: TcxGridDBColumn
+            Caption = '***'#1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode_Master'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
             Properties.Items = <
@@ -898,32 +895,68 @@ object IncomeForm: TIncomeForm
                 Value = 3
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
             Width = 80
           end
-          object InfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode_Master: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
+            DataBinding.FieldName = 'InfoMoneyCode_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName_all: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-            DataBinding.FieldName = 'InfoMoneyName_all'
+          object InfoMoneyGroupName_Master: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
             Options.Editing = False
-            Width = 150
+            Width = 80
           end
-          object MasterComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1095#1077#1090')'
-            DataBinding.FieldName = 'MasterComment'
+          object InfoMoneyDestinationName_Master: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object InfoMoneyName_Master: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            Options.Editing = False
+            Width = 120
+          end
+          object InfoMoneyName_all_Master: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object Comment_Master: TcxGridDBColumn
+            Caption = '***'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1074' '#1057#1095#1077#1090#1077
             Options.Editing = False
             Width = 120
           end
@@ -1107,7 +1140,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormTransport'
+          ItemName = 'bbOpenFormInvoice'
         end
         item
           Visible = True
@@ -1180,7 +1213,6 @@ object IncomeForm: TIncomeForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Enabled = False
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -1258,13 +1290,17 @@ object IncomeForm: TIncomeForm
       Visible = ivAlways
       ImageIndex = 57
     end
-    object bbOpenFormTransport: TdxBarButton
-      Action = macOpenFormInvoice
+    object bbOpenFormInvoice: TdxBarButton
+      Action = actOpenFormInvoice
       Category = 0
     end
     object bbOpenFormService: TdxBarButton
-      Action = macOpenFormService
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
       Category = 0
+      Enabled = False
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Visible = ivAlways
+      ImageIndex = 29
     end
     object bbMovementCostProtocolOpenForm: TdxBarButton
       Action = MovementCostProtocolOpenForm
@@ -1309,8 +1345,13 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
+      StoredProc = spSelectMI
       StoredProcList = <
         item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1333,6 +1374,7 @@ object IncomeForm: TIncomeForm
           StoredProc = spSelectMI
         end
         item
+          StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1560,7 +1602,6 @@ object IncomeForm: TIncomeForm
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1585,8 +1626,8 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099'>'
       ImageIndex = 34
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
@@ -1616,8 +1657,8 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -1735,62 +1776,11 @@ object IncomeForm: TIncomeForm
       ShortCut = 45
       ImageIndex = 0
     end
-    object actCheckDescService: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescService
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescService
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actCheckDescInvoice: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spCheckDescInvoice
-      StoredProcList = <
-        item
-          StoredProc = spCheckDescInvoice
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actOpenFormService: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-      FormName = 'TTransportServiceForm'
-      FormNameParam.Value = 'TTransportServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
+      TabSheet = cxTabSheetCost
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
       ImageIndex = 25
@@ -1802,18 +1792,15 @@ object IncomeForm: TIncomeForm
         item
           Name = 'Id'
           Value = Null
+          Component = CostCDS
+          ComponentItem = 'MovementId_Master'
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = Null
+          Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
@@ -1830,28 +1817,19 @@ object IncomeForm: TIncomeForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'key'
+          Name = 'Key'
           Value = Null
           Component = CostCDS
-          ComponentItem = 'MasterMovementId'
+          ComponentItem = 'MovementId_Master'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
+          Name = 'InvNumber_Full'
           Value = Null
           Component = CostCDS
-          ComponentItem = 'MasterInvNumber'
+          ComponentItem = 'InvNumber_Master'
           DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = Null
-          Component = CostCDS
-          ComponentItem = 'MasterOperDate'
-          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1859,63 +1837,37 @@ object IncomeForm: TIncomeForm
           Name = 'StatusCode'
           Value = Null
           Component = CostCDS
-          ComponentItem = 'MasterStatusCode'
+          ComponentItem = 'StatusCode_Master'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterUnitId'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitName'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
+          Name = 'PartnerName'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'PartnerName_Master'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isOnlyService'
-          Value = False
-          DataType = ftBoolean
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'InfoMoneyCode_Master'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = CostCDS
+          ComponentItem = 'InfoMoneyName_Master'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object macOpenFormService: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescService
-        end
-        item
-          Action = actOpenFormService
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-    end
-    object macOpenFormInvoice: TMultiAction
-      Category = 'OpenForm'
-      TabSheet = cxTabSheetCost
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescInvoice
-        end
-        item
-          Action = actOpenFormInvoice
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
-      ImageIndex = 25
     end
     object actUpdateClientDataCost: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -3170,7 +3122,7 @@ object IncomeForm: TIncomeForm
         Name = 'inMovementId'
         Value = Null
         Component = CostCDS
-        ComponentItem = 'MasterMovementId'
+        ComponentItem = 'MovementId_Master'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3197,53 +3149,5 @@ object IncomeForm: TIncomeForm
     Params = <>
     Left = 744
     Top = 191
-  end
-  object spCheckDescService: TdsdStoredProc
-    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDescId'
-        Value = Null
-        Component = CostCDS
-        ComponentItem = 'DescId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescCode_open'
-        Value = 'zc_Movement_TransportService'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 920
-    Top = 256
-  end
-  object spCheckDescInvoice: TdsdStoredProc
-    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDescId'
-        Value = Null
-        Component = CostCDS
-        ComponentItem = 'DescId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDescCode_open'
-        Value = 'zc_Movement_Invoice'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 936
-    Top = 304
   end
 end

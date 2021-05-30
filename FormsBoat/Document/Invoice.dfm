@@ -2,6 +2,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 503
   ClientWidth = 351
+  ExplicitTop = -54
   ExplicitWidth = 357
   ExplicitHeight = 528
   PixelsPerInch = 96
@@ -271,6 +272,20 @@
     end
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 71
     Top = 300
   end
@@ -573,8 +588,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 440
+    Left = 48
+    Top = 32
   end
   object GuidesObject: TdsdGuides
     KeyField = 'Id'

@@ -135,6 +135,7 @@ BEGIN
                                                                                                 , NULL :: TDateTime
                                                                                                 , inOperDate
                                                                                                 , FALSE
+                                                                                                , NULL :: TDateTime
                                                                                                  )
                                              WHEN -- если zc_Movement_Income или zc_Movement_ReturnIn, тогда определяется
                                                   MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
@@ -144,6 +145,7 @@ BEGIN
                                                                                                 , NULL :: TDateTime
                                                                                                 , inOperDate
                                                                                                 , FALSE
+                                                                                                , NULL :: TDateTime
                                                                                                  )
 
                                              WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_SendOnPrice()

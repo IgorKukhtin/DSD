@@ -116,19 +116,20 @@ $BODY$
 */
 
 -- тест
- SELECT * FROM lpGet_ObjectHistory_Price_check (inMovementId            := 1
-                                                   , inMovementItemId        := 1
-                                                   , inContractId            := 1
-                                                   , inPartnerId             := 1
-                                                   , inMovementDescId        := zc_Movement_Sale()
-                                                   , inOperDate_order        := CURRENT_DATE
-                                                   , inOperDatePartner       := NULL
-                                                   , inDayPrior_PriceReturn  := NULL
-                                                   , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
-                                                   , inOperDatePartner_order := CURRENT_DATE
-                                                   , inGoodsId               := 2
-                                                   , inGoodsKindId           := 2
-                                                   , inPrice                 := 1
-                                                   , inCountForPrice         := 1
-                                                   , inUserId                := 5
-                                                    )
+/* SELECT * FROM lpGet_ObjectHistory_Price_check (inMovementId            := 1
+                                              , inMovementItemId        := 1
+                                              , inContractId            := 1
+                                              , inPartnerId             := 1
+                                              , inMovementDescId        := zc_Movement_Sale()
+                                              , inOperDate_order        := CURRENT_DATE
+                                              , inOperDatePartner       := NULL
+                                              , inDayPrior_PriceReturn  := NULL
+                                              , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
+                                              , inOperDatePartner_order := CURRENT_DATE
+                                              , inGoodsId               := 2
+                                              , inGoodsKindId           := 2
+                                              , inPrice                 := 1
+                                              , inCountForPrice         := 1
+                                              , inUserId                := 5
+                                               )
+*/

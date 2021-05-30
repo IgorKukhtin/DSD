@@ -36,8 +36,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := inOperDate
                                                            , inOperDatePartner:= NULL
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= inOperDate
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -59,8 +60,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := FALSE
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -82,8 +84,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := TRUE
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -102,8 +105,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -121,8 +125,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -139,8 +144,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_Income()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -158,8 +164,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
@@ -177,8 +184,9 @@ BEGIN
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
                                                            , inOperDatePartner:= inOperDate
-                                                           , inDayPrior_PriceReturn:= 10
+                                                           , inDayPrior_PriceReturn:= 14
                                                            , inIsPrior        := NULL
+                                                           , inOperDatePartner_order:= NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
                  SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;

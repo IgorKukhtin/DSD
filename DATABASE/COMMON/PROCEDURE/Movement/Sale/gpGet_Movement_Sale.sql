@@ -220,6 +220,7 @@ BEGIN
                                                                                                   , inOperDatePartner:= MovementDate_OperDatePartner.ValueData
                                                                                                   , inDayPrior_PriceReturn:= 0
                                                                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                                                                  , inOperDatePartner_order:= NULL
                                                                                                    ) AS tmp)) AS PriceListId
                , COALESCE (Object_PriceList.ValueData, (SELECT tmp.PriceListName
                                                         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
@@ -229,6 +230,7 @@ BEGIN
                                                                                                   , inOperDatePartner:= MovementDate_OperDatePartner.ValueData
                                                                                                   , inDayPrior_PriceReturn:= 0
                                                                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                                                                  , inOperDatePartner_order:= NULL
                                                                                                    ) AS tmp)) AS PriceListName
                , Object_TaxKind.Id                		AS DocumentTaxKindId
                , Object_TaxKind.ValueData         		AS DocumentTaxKindName

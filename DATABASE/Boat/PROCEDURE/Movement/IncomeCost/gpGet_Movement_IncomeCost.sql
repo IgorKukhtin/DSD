@@ -49,11 +49,11 @@ BEGIN
                , MovementString_Comment.ValueData              AS Comment
               
                , Movement_Master.Id                            AS MovementId_Master
-               , (' № ' || Movement_Master.InvNumber || ' от ' || Movement_Master.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Master_Full
+               , zfCalc_InvNumber_isErased ('', Movement_Master.InvNumber, Movement_Master.OperDate, Movement_Master.StatusId) AS InvNumber_Master_Full
                , MovementDescMaster.ItemName                   AS ItemName_Master
 
                , Movement_Income.Id                            AS MovementId_Income
-               , ('№ ' || Movement_Income.InvNumber || ' от ' || Movement_Income.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Income_Full
+               , zfCalc_InvNumber_isErased ('', Movement_Income.InvNumber, Movement_Income.OperDate, Movement_Income.StatusId) AS InvNumber_Income_Full
 
                , Object_To.Id                                AS ToId_Income
                , Object_To.ValueData                         AS ToName_Income
@@ -97,4 +97,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Movement_IncomeCost (inMovementId := 12325439 , inOperDate:= '01.01.2018', inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Movement_IncomeCost (inMovementId := 0 , inOperDate:= '01.01.2018', inSession:= zfCalc_UserAdmin())
