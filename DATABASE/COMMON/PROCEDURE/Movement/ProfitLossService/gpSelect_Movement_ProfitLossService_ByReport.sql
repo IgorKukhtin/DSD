@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService_ByReport(
     IN inisReport           Boolean ,   -- Данные из отчета (да/нет)
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE( MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
+RETURNS TABLE( MovementId Integer, InvNumber TVarChar, OperDate TDateTime, ServiceDate TDateTime, StatusCode Integer
              , isSend Boolean
              , ContractStateKindId_Child Integer, ContractStateKindName_Child TVarChar
              , ContractTagName_child TVarChar
@@ -98,151 +98,217 @@ BEGIN
                          WHERE inisReport = TRUE
                          )
 
+         , tmpMovementAll AS (SELECT tmpMovement.Id AS MovementId
+                                   , tmpMovement.InvNumber
+                                   , tmpMovement.OperDate
+                                   , tmpMovement.ServiceDate
+                                   , tmpMovement.StatusCode
+                                   , FALSE ::Boolean AS isSend 
+                                   , Object_Contract_Child.ContractStateKindId   AS ContractStateKindId_Child
+                                   , Object_Contract_Child.ContractStateKindName AS ContractStateKindName_Child
+                                   , tmpMovement.ContractTagName_child
+                                   , tmpMovement.ContractMasterId                AS ContractId_Master
+                                   , tmpMovement.ContractChildId                 AS ContractId_Child
+                                   , 0 ::Integer                                 AS ContractId_find
+                                   , tmpMovement.ContractMasterInvNumber         AS InvNumber_master
+                                   , tmpMovement.ContractChildInvNumber          AS InvNumber_child
+                                   , '' ::TVarChar                               AS InvNumber_find
+                                   , tmpMovement.BranchId
+                                   , tmpMovement.BranchName
+                                   , Object_Personal_trade.BranchName AS BranchName_inf -- Филиал из подразделения  отв.сотр.
+                                   , tmpMovement.JuridicalId
+                                   , tmpMovement.JuridicalName 
+                                   , tmpMovement.ContractConditionKindId    AS ConditionKindId
+                                   , tmpMovement.ContractConditionKindName  AS ConditionKindName
+                                   , tmpMovement.BonusValue AS Value
+                                   , tmpMovement.PercentRet AS PercentRetBonus
+                                   , 0 ::TFloat AS PercentRetBonus_fact_weight
+                                   , 0 ::TFloat AS Sum_Sale_weight
+                                   , 0 ::TFloat AS Sum_ReturnIn_weight
+                                   , 0 ::TFloat AS PercentRetBonus_diff_weight
+                                   , tmpMovement.BonusKindId
+                                   , tmpMovement.BonusKindName
+                                   , tmpMovement.InfoMoneyName        AS InfoMoneyName_master --Object_InfoMoney_master.ValueData      
+                                   , Object_InfoMoney_child.ValueData AS InfoMoneyName_child
+                                   , 0 ::TVarChar                     AS InfoMoneyName_find
+                                   , tmpMovement.PaidKindId
+                                   , tmpMovement.PaidKindName
+                                   , tmpMovement.PaidKindId_Child
+                                   , tmpMovement.PaidKindName_Child
+                                   , tmpMovement.RetailName
+                                   , tmpMovement.PersonalId_main    AS PersonalId
+                                   , Object_Personal.PersonalCode   AS PersonalCode
+                                   , tmpMovement.PersonalName_main  AS PersonalName  --супервайзер
+                                   , tmpMovement.PersonalId AS PersonalTradeId
+                                   , Object_Personal_trade.PersonalCode   AS PersonalTradeCode
+                                   , Object_Personal_trade.PersonalName   AS PersonalTradeName
+                                   , tmpMovement.PartnerId
+                                   , tmpMovement.PartnerName
+                                   , Object_Area.Id                  AS AreaId
+                                   , Object_Area.ValueData           AS AreaName
+                                   , tmpMovement.TotalSumm ::TFloat AS Sum_CheckBonus --сумма база
+                                   , 0 ::TFloat  AS Sum_SaleReturnIn
+                                   , 0 ::TFloat  AS Sum_Account
+                                   , 0 ::TFloat  AS Sum_AccountSendDebt
+                                   , 0 ::TFloat  AS Sum_Bonus
+                                   , (COALESCE (tmpMovement.AmountIn,0) + COALESCE (tmpMovement.AmountOut,0)) ::TFloat AS Sum_BonusFact
+                                   , 0 ::TFloat AmountKg
+                                   , 0 ::TFloat AmountSh
+                                   , 0 ::TFloat PartKg  
+                                   , tmpMovement.Comment
+                                   , FALSE ::Boolean AS isSalePart --Долевая продажа
+                              FROM tmpMovement
+                                   --LEFT JOIN tmpObject_Contract_View AS Object_Contract_Master ON Object_Contract_Master.ContractId = tmpMovement.ContractMasterId
+                                   LEFT JOIN tmpObject_Contract_View AS Object_Contract_Child ON Object_Contract_Child.ContractId = tmpMovement.ContractChildId
+                       
+                                   LEFT JOIN Object AS Object_InfoMoney_master ON Object_InfoMoney_master.Id = tmpMovement.ContractMasterId
+                                   LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = Object_Contract_Child.ContractId
+                       
+                                   LEFT JOIN tmpObject_Personal_View AS Object_Personal_trade ON Object_Personal_trade.PersonalId = tmpMovement.PersonalId
+                                   LEFT JOIN tmpObject_Personal_View AS Object_Personal ON Object_Personal.PersonalId = tmpMovement.PersonalId_main
+                       
+                                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                                        ON ObjectLink_Partner_Area.ObjectId = tmpMovement.PartnerId
+                                                       AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+                                   LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+                             )
+
+         , tmpReportAll AS (SELECT 0                AS MovementId
+                                 , ''   ::TVarChar  AS InvNumber
+                                 , NULL ::TDateTime AS OperDate
+                                 , NULL ::Integer   AS StatusCode
+                                 , FALSE ::Boolean AS isSend
+                                 , Object_Contract_Child.ContractStateKindId   AS ContractStateKindId_Child
+                                 , Object_Contract_Child.ContractStateKindName AS ContractStateKindName_Child
+                                 , tmp.ContractTagName_child
+                                 , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find
+                                 , tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+                                 , tmp.BranchId, tmp.BranchName
+                                 , tmp.BranchName_inf
+                                 , tmp.JuridicalId, tmp.JuridicalName
+                                 , tmp.ConditionKindId, tmp.ConditionKindName
+                                 , tmp.Value
+                                 , tmp.PercentRetBonus
+                                 , tmp.PercentRetBonus_fact_weight
+                                 , tmp.Sum_Sale_weight
+                                 , tmp.Sum_ReturnIn_weight
+                                 , tmp.PercentRetBonus_diff_weight
+                                 , tmp.BonusKindId, tmp.BonusKindName
+                                 , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
+                                 , tmp.PaidKindId, tmp.PaidKindName
+                                 , tmp.PaidKindId_Child, tmp.PaidKindName_Child
+                                 , tmp.RetailName
+                                 , tmp.PersonalId
+                                 , tmp.PersonalCode
+                                 , tmp.PersonalName
+                                 , tmp.PersonalTradeId
+                                 , tmp.PersonalTradeCode
+                                 , tmp.PersonalTradeName           
+                                 , tmp.PartnerId
+                                 , tmp.PartnerName
+                                 , tmp.AreaId
+                                 , tmp.AreaName
+                                 , tmp.Sum_CheckBonus
+                                 , tmp.Sum_SaleReturnIn
+                                 , tmp.Sum_Account
+                                 , tmp.Sum_AccountSendDebt           
+                                 , tmp.Sum_Bonus
+                                 , tmp.Sum_BonusFact
+                                 , tmp.AmountKg  ::TFloat
+                                 , tmp.AmountSh  ::TFloat
+                                 , tmp.PartKg    ::TFloat
+                                 , tmp.Comment
+                                 , tmp.isSalePart
+                           FROM tmpReport AS tmp
+                                 LEFT JOIN tmpObject_Contract_View AS Object_Contract_Child  ON Object_Contract_Child.ContractId = tmp.ContractId_child
+                            )
 
 
-       SELECT tmpMovement.Id AS MovementId
-            , tmpMovement.InvNumber
-            , tmpMovement.OperDate
-            , tmpMovement.StatusCode
+       SELECT COALESCE (tmp.MovementId ,tmpR.MovementId) AS MovementId
+            , COALESCE (tmp.InvNumber,tmpR.InvNumber)    AS InvNumber
+            , COALESCE (tmp.OperDate,tmpR.OperDate)      AS OperDate
+            , COALESCE (tmp.ServiceDate,Null) ::TDateTime AS ServiceDate
+            , COALESCE (tmp.StatusCode,tmpR.StatusCode)  AS StatusCode
             
-            , FALSE ::Boolean AS isSend 
-            , Object_Contract_Child.ContractStateKindId   AS ContractStateKindId_Child
-            , Object_Contract_Child.ContractStateKindName AS ContractStateKindName_Child
-            , tmpMovement.ContractTagName_child
-            , tmpMovement.ContractMasterId                AS ContractId_Master
-            , tmpMovement.ContractChildId                 AS ContractId_Child
-            , 0 ::Integer                                 AS ContractId_find
-            , tmpMovement.ContractMasterInvNumber         AS InvNumber_master
-            , tmpMovement.ContractChildInvNumber          AS InvNumber_child
-            , '' ::TVarChar                               AS InvNumber_find
-            , tmpMovement.BranchId
-            , tmpMovement.BranchName
-            , Object_Personal_trade.BranchName AS BranchName_inf -- Филиал из подразделения  отв.сотр.
+            , COALESCE (tmp.isSend ,tmpR.isSend) AS isSend
+            , COALESCE (tmp.ContractStateKindId_Child,tmpR.ContractStateKindId_Child)     AS ContractStateKindId_Child
+            , COALESCE (tmp.ContractStateKindName_Child,tmpR.ContractStateKindName_Child) AS ContractStateKindName_Child
+            , COALESCE (tmp.ContractTagName_child,tmpR.ContractTagName_child)             AS ContractTagName_child
+            , COALESCE (tmp.ContractId_Master,tmpR.ContractId_Master) AS ContractId_Master
+            , COALESCE (tmp.ContractId_Child,tmpR.ContractId_Child)   AS ContractId_Child
+            , COALESCE (tmp.ContractId_find,tmpR.ContractId_find)     AS ContractId_find
+            , COALESCE (tmp.InvNumber_master,tmpR.InvNumber_master) AS InvNumber_master
+            , COALESCE (tmp.InvNumber_child,tmpR.InvNumber_child)   AS InvNumber_child
+            , COALESCE (tmp.InvNumber_find,tmpR.InvNumber_find)     AS InvNumber_find
+            , COALESCE (tmp.BranchId,tmpR.BranchId) AS BranchId
+            , COALESCE (tmp.BranchName,tmpR.BranchName) AS BranchName
+            , COALESCE (tmp.BranchName_inf,tmpR.BranchName_inf) AS BranchName_inf
 
-            , tmpMovement.JuridicalId
-            , tmpMovement.JuridicalName 
+            , COALESCE (tmp.JuridicalId,tmpR.JuridicalId) AS JuridicalId
+            , COALESCE (tmp.JuridicalName,tmpR.JuridicalName)  AS JuridicalName
 
-            , tmpMovement.ContractConditionKindId    AS ConditionKindId
-            , tmpMovement.ContractConditionKindName  AS ConditionKindName
+            , COALESCE (tmp.ConditionKindId,tmpR.ConditionKindId)    AS ConditionKindId
+            , COALESCE (tmp.ConditionKindName,tmpR.ConditionKindName)  AS ConditionKindName
             
-            , tmpMovement.BonusValue AS Value
-            , tmpMovement.PercentRet AS PercentRetBonus
-            , 0 ::TFloat AS PercentRetBonus_fact_weight
-            , 0 ::TFloat AS Sum_Sale_weight
-            , 0 ::TFloat AS Sum_ReturnIn_weight
-            , 0 ::TFloat AS PercentRetBonus_diff_weight
+            , COALESCE (tmp.Value,tmpR.Value)                                             ::TFloat AS Value
+            , COALESCE (tmp.PercentRetBonus,tmpR.PercentRetBonus)                         ::TFloat AS PercentRetBonus
+            , COALESCE (tmp.PercentRetBonus_fact_weight,tmpR.PercentRetBonus_fact_weight) ::TFloat AS PercentRetBonus_fact_weight
+            , COALESCE (tmp.Sum_Sale_weight ,tmpR.Sum_Sale_weight)                        ::TFloat AS Sum_Sale_weight
+            , COALESCE (tmp.Sum_ReturnIn_weight ,tmpR.Sum_ReturnIn_weight)                ::TFloat AS Sum_ReturnIn_weight
+            , COALESCE (tmp.PercentRetBonus_diff_weight,tmpR.PercentRetBonus_diff_weight) ::TFloat AS PercentRetBonus_diff_weight
             
-            , tmpMovement.BonusKindId
-            , tmpMovement.BonusKindName
+            , COALESCE (tmp.BonusKindId,tmpR.BonusKindId)     AS BonusKindId
+            , COALESCE (tmp.BonusKindName,tmpR.BonusKindName) AS BonusKindName
             
-            , tmpMovement.InfoMoneyName  --Object_InfoMoney_master.ValueData      AS InfoMoneyName_master
-            , Object_InfoMoney_child.ValueData       AS InfoMoneyName_child
-            , 0 ::TVarChar                            AS InfoMoneyName_find
+            , COALESCE (tmp.InfoMoneyName_master,tmpR.InfoMoneyName_master)        AS InfoMoneyName_master
+            , COALESCE (tmp.InfoMoneyName_child,tmpR.InfoMoneyName_child)          AS InfoMoneyName_child
+            , COALESCE (tmp.InfoMoneyName_find,tmpR.InfoMoneyName_find) ::TVarChar AS InfoMoneyName_find
             
-            , tmpMovement.PaidKindId
-            , tmpMovement.PaidKindName
-            , tmpMovement.PaidKindName_Child
+            , COALESCE (tmp.PaidKindId,tmpR.PaidKindId)             AS PaidKindId
+            , COALESCE (tmp.PaidKindName,tmpR.PaidKindName)         AS PaidKindName
+            , COALESCE (tmp.PaidKindName_Child,tmpR.PaidKindName_Child) AS PaidKindName_Child
             
-            , tmpMovement.RetailName
-            , tmpMovement.PersonalId_main    AS PersonalId
-            , Object_Personal.PersonalCode   AS PersonalCode
-            , tmpMovement.PersonalName_main  AS PersonalName  --супервайзер
+            , COALESCE (tmp.RetailName,tmpR.RetailName)       As RetailName
+            , COALESCE (tmp.PersonalId,tmpR.PersonalId)       AS PersonalId
+            , COALESCE (tmp.PersonalCode,tmpR.PersonalCode)   AS PersonalCode
+            , COALESCE (tmp.PersonalName,tmpR.PersonalName)   AS PersonalName  --супервайзер
             
-            , tmpMovement.PersonalId AS PersonalTradeId
-            , Object_Personal_trade.PersonalCode   AS PersonalTradeCode
-            , Object_Personal_trade.PersonalName   AS PersonalTradeName
+            , COALESCE (tmp.PersonalTradeId,tmpR.PersonalTradeId)       AS PersonalTradeId
+            , COALESCE (tmp.PersonalTradeCode,tmpR.PersonalTradeCode)   AS PersonalTradeCode
+            , COALESCE (tmp.PersonalTradeName,tmpR.PersonalTradeName)   AS PersonalTradeName
             
-            , tmpMovement.PartnerId
-            , tmpMovement.PartnerName
+            , COALESCE (tmp.PartnerId,tmpR.PartnerId)     AS PartnerId
+            , COALESCE (tmp.PartnerName,tmpR.PartnerName) AS PartnerName
 
-            , Object_Area.Id                  AS AreaId
-            , Object_Area.ValueData           AS AreaName
+            , COALESCE (tmp.AreaId,tmpR.AreaId)           AS AreaId
+            , COALESCE (tmp.AreaName,tmpR.AreaName)       AS AreaName
             
-            , tmpMovement.Summ ::TFloat AS Sum_CheckBonus
-            , 0 ::TFloat  AS Sum_SaleReturnIn
-            , 0 ::TFloat  AS Sum_Account
-            , 0 ::TFloat  AS Sum_AccountSendDebt
-            , 0 ::TFloat  AS Sum_Bonus
-            , (COALESCE (tmpMovement.AmountIn,0) + COALESCE (tmpMovement.AmountOut,0)) ::TFloat AS Sum_BonusFact
+            , COALESCE (tmp.Sum_CheckBonus, tmpR.Sum_CheckBonus)           ::TFloat AS Sum_CheckBonus
+            , COALESCE (tmp.Sum_SaleReturnIn, tmpR.Sum_SaleReturnIn)       ::TFloat AS Sum_SaleReturnIn
+            , COALESCE (tmp.Sum_Account, tmpR.Sum_Account)                 ::TFloat AS Sum_Account
+            , COALESCE (tmp.Sum_AccountSendDebt, tmpR.Sum_AccountSendDebt) ::TFloat AS Sum_AccountSendDebt
+            , COALESCE (tmp.Sum_Bonus, tmpR.Sum_Bonus)                     ::TFloat AS Sum_Bonus
+            , COALESCE (tmp.Sum_BonusFact, tmpR.Sum_BonusFact)             ::TFloat AS Sum_BonusFact
 
-             , 0 ::TFloat AmountKg
-             , 0 ::TFloat AmountSh
-             , 0 ::TFloat PartKg  
-             
-            , tmpMovement.Comment
+            , COALESCE (tmp.AmountKg, tmpR.AmountKg)                       ::TFloat AS AmountKg
+            , COALESCE (tmp.AmountSh, tmpR.AmountSh)                       ::TFloat AS AmountSh
+            , COALESCE (tmp.PartKg, tmpR.PartKg)                           ::TFloat AS PartKg
             
-            , FALSE ::Boolean AS isSalePart --Долевая продажа
+            , COALESCE (tmp.Comment,tmpR.Comment)                        ::TVarChar AS Comment
+            , COALESCE (tmp.isSalePart, tmpR.isSalePart)                 ::Boolean  AS isSalePart --Долевая продажа
             
-       FROM tmpMovement
-            --LEFT JOIN tmpObject_Contract_View AS Object_Contract_Master ON Object_Contract_Master.ContractId = tmpMovement.ContractMasterId
-            LEFT JOIN tmpObject_Contract_View AS Object_Contract_Child ON Object_Contract_Child.ContractId = tmpMovement.ContractChildId
+       FROM tmpMovementAll AS tmp
+          FULL JOIN tmpReportAll AS tmpR ON tmpR.ContractStateKindId_Child = tmp.ContractStateKindId_Child
+                                        AND tmpR.ContractId_Master = tmp.ContractId_Master
+                                        AND tmpR.JuridicalId = tmp.JuridicalId
+                                        AND tmpR.Value = tmp.Value
+                                        AND COALESCE (tmpR.PersonalTradeId,0) = COALESCE (tmp.PersonalTradeId,0)
+                                        AND COALESCE (tmpR.PersonalId,0) = COALESCE (tmp.PersonalId,0)
+                                        AND COALESCE (tmpR.PaidKindId_Child,0) = COALESCE (tmp.PaidKindId_Child,0)
+                                        AND COALESCE (tmpR.Sum_CheckBonus,0) = COALESCE (tmp.Sum_CheckBonus,0)
+                                        AND COALESCE (tmpR.PercentRetBonus,0) = COALESCE (tmp.PercentRetBonus,0)
+                                        AND COALESCE (tmpR.PartKg,0) = COALESCE (tmp.PartKg,0)
 
-            LEFT JOIN Object AS Object_InfoMoney_master ON Object_InfoMoney_master.Id = tmpMovement.ContractMasterId
-            LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = Object_Contract_Child.ContractId
-
-            LEFT JOIN tmpObject_Personal_View AS Object_Personal_trade ON Object_Personal_trade.PersonalId = tmpMovement.PersonalId
-            LEFT JOIN tmpObject_Personal_View AS Object_Personal ON Object_Personal.PersonalId = tmpMovement.PersonalId_main
-
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                                 ON ObjectLink_Partner_Area.ObjectId = tmpMovement.PartnerId
-                                AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
-     UNION 
-       SELECT 0                AS MovementId
-            , ''   ::TVarChar  AS InvNumber
-            , NULL ::TDateTime AS OperDate
-            , NULL ::Integer   AS StatusCode
-            , FALSE ::Boolean AS isSend
-            , Object_Contract_Child.ContractStateKindId   AS ContractStateKindId_Child
-            , Object_Contract_Child.ContractStateKindName AS ContractStateKindName_Child
-            , tmp.ContractTagName_child
-            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find
-            , tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
-            , tmp.BranchId, tmp.BranchName
-            , tmp.BranchName_inf
-            
-            , tmp.JuridicalId, tmp.JuridicalName
-            , tmp.ConditionKindId, tmp.ConditionKindName
-            , tmp.Value
-            , tmp.PercentRetBonus
-            , tmp.PercentRetBonus_fact_weight
-            , tmp.Sum_Sale_weight
-            , tmp.Sum_ReturnIn_weight
-            , tmp.PercentRetBonus_diff_weight
-            , tmp.BonusKindId, tmp.BonusKindName
-            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
-            
-            
-            , tmp.PaidKindId, tmp.PaidKindName
-            , tmp.PaidKindName_Child
-            , tmp.RetailName
-            , tmp.PersonalId
-            , tmp.PersonalCode
-            , tmp.PersonalName
-            , tmp.PersonalTradeId
-            , tmp.PersonalTradeCode
-            , tmp.PersonalTradeName           
-            
-            , tmp.PartnerId
-            , tmp.PartnerName
-            , tmp.AreaId
-            , tmp.AreaName
-            
-            , tmp.Sum_CheckBonus
-            , tmp.Sum_SaleReturnIn
-            , tmp.Sum_Account
-            , tmp.Sum_AccountSendDebt           
-            , tmp.Sum_Bonus
-            , tmp.Sum_BonusFact
-
-            , tmp.AmountKg  ::TFloat
-            , tmp.AmountSh  ::TFloat
-            , tmp.PartKg    ::TFloat
-
-            , tmp.Comment
-            , tmp.isSalePart
-      FROM tmpReport AS tmp
-            LEFT JOIN tmpObject_Contract_View AS Object_Contract_Child  ON Object_Contract_Child.ContractId = tmp.ContractId_child
       ;
 
 END;

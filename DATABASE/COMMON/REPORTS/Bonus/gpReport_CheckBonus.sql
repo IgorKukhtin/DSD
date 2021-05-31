@@ -24,7 +24,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , PaidKindName_Child TVarChar
+             , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
@@ -193,7 +193,7 @@ BEGIN
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
            , tmp.JuridicalId, tmp.JuridicalName
            , tmp.PaidKindId, tmp.PaidKindName
-           , tmp.PaidKindName_Child
+           , tmp.PaidKindId_Child, tmp.PaidKindName_Child
            , tmp.ConditionKindId, tmp.ConditionKindName
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
@@ -259,7 +259,7 @@ BEGIN
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
            , tmp.JuridicalId, tmp.JuridicalName
            , tmp.PaidKindId, tmp.PaidKindName
-           , tmp.PaidKindName_Child
+           , tmp.PaidKindId_Child, tmp.PaidKindName_Child
            , tmp.ConditionKindId, tmp.ConditionKindName
            , tmp.BonusKindId, tmp.BonusKindName
            , tmp.BranchId, tmp.BranchName
