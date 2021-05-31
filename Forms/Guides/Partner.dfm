@@ -846,6 +846,18 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Category'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic2'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowCurPartnerOnMap'
         end
         item
@@ -1017,6 +1029,10 @@ object PartnerForm: TPartnerForm
       Action = actStartLoad
       Category = 0
     end
+    object bbUpdate_Category: TdxBarButton
+      Action = actUpdate_Category
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1101,6 +1117,38 @@ object PartnerForm: TPartnerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actUpdate_Category: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1058#1058
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1058#1058
+      ImageIndex = 43
+      FormName = 'TPartner_CategoryEditForm'
+      FormNameParam.Name = 'TPartner_CategoryEditForm'
+      FormNameParam.Value = 'TPartner_CategoryEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Category'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Category'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      IdFieldName = 'Id'
+    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1108,7 +1156,7 @@ object PartnerForm: TPartnerForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPartnerEditForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TPartnerEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1130,7 +1178,6 @@ object PartnerForm: TPartnerForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'

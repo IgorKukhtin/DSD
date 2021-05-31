@@ -1972,6 +1972,9 @@ end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_CategoryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner_CategoryEditForm');
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerPersonalForm');
@@ -1979,12 +1982,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
   exit;
@@ -2000,6 +2004,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_PriceList_viewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_PriceList_viewForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadPartnerTagFormTest;
