@@ -19,9 +19,11 @@ $BODY$
 BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
-
     -- Перебили дату документа
---    UPDATE Movement SET OperDate = CURRENT_DATE WHERE Movement.Id = inMovementId;
+    IF CURRENT_DATE <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) 
+    THEN
+      UPDATE Movement SET OperDate = CURRENT_DATE WHERE Movement.Id = inMovementId;
+    END IF;
 
     IF CURRENT_DATE <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) 
     THEN

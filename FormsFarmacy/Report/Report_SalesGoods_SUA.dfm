@@ -1,29 +1,29 @@
 inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1057#1059#1040'>'
   ClientHeight = 480
-  ClientWidth = 827
+  ClientWidth = 936
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 843
+  ExplicitWidth = 952
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 827
+    Width = 936
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1019
+    ExplicitWidth = 827
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 827
+    ClientRectRight = 936
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1019
+      ExplicitWidth = 827
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 827
+        Width = 936
         Height = 421
-        ExplicitWidth = 1019
+        ExplicitWidth = 827
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -221,6 +221,11 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -277,6 +282,15 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
             Options.Editing = False
             Width = 91
           end
+          object SummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
           object AmountCheck: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'AmountCheck'
@@ -303,41 +317,37 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
     end
   end
   inherited Panel: TPanel
-    Width = 827
+    Width = 936
     Height = 33
-    ExplicitWidth = 1019
+    ExplicitWidth = 827
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 119
+      Left = 109
       Top = 4
-      ExplicitLeft = 119
+      ExplicitLeft = 109
       ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 326
+      Left = 316
       Top = 4
-      ExplicitLeft = 326
+      ExplicitLeft = 316
       ExplicitTop = 4
     end
     inherited cxLabel1: TcxLabel
-      Left = 20
       Top = 5
-      ExplicitLeft = 20
       ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 210
       Top = 5
-      ExplicitLeft = 210
       ExplicitTop = 5
     end
     object cxLabel3: TcxLabel
-      Left = 434
+      Left = 409
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 528
+      Left = 503
       Top = 4
       Properties.Buttons = <
         item
@@ -350,6 +360,20 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 244
+    end
+    object cxLabel4: TcxLabel
+      Left = 753
+      Top = 5
+      Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1076#1072#1078':'
+    end
+    object edPercentageSales: TcxDBTextEdit
+      Left = 852
+      Top = 4
+      DataBinding.DataField = 'PercentageSales'
+      DataBinding.DataSource = MasterDS
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 61
     end
   end
   inherited ActionList: TActionList
