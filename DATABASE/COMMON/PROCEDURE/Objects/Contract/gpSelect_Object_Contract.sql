@@ -62,7 +62,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
 
-             --, PriceListId Integer, PriceListName TVarChar
+             , PriceListId Integer, PriceListName TVarChar, PriceListName_old TVarChar
              , PriceListGoodsId Integer, PriceListGoodsName TVarChar
              -- , PriceListPromoId Integer, PriceListPromoName TVarChar
              -- , StartPromo TDateTime, EndPromo TDateTime
@@ -123,6 +123,27 @@ BEGIN
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                      GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     )
+      , tmpContractPriceList AS (SELECT ObjectLink_ContractPriceList_Contract.ChildObjectId AS ContractId
+                                      , Object_PriceList.Id                  AS PriceListId
+                                      , Object_PriceList.ValueData           AS PriceListName
+                                 FROM Object AS Object_ContractPriceList
+                                      INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                            ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
+                                                           AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractPriceList_EndDate()
+                                                           AND ObjectDate_EndDate.ValueData = zc_DateEnd()
+                                 
+                                      LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_Contract
+                                                           ON ObjectLink_ContractPriceList_Contract.ObjectId = Object_ContractPriceList.Id
+                                                          AND ObjectLink_ContractPriceList_Contract.DescId = zc_ObjectLink_ContractPriceList_Contract()
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_PriceList
+                                                           ON ObjectLink_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
+                                                          AND ObjectLink_ContractPriceList_PriceList.DescId = zc_ObjectLink_ContractPriceList_PriceList()
+                                      LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_ContractPriceList_PriceList.ChildObjectId  
+
+                                 WHERE Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
+                                   AND Object_ContractPriceList.isErased = FALSE
+                                 )
 
    SELECT
          Object_Contract_View.ContractId   AS Id
@@ -244,8 +265,9 @@ BEGIN
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
        
-       --, Object_PriceList.Id             AS PriceListId 
-       --, Object_PriceList.ValueData      AS PriceListName
+       , tmpContractPriceList.PriceListId    AS PriceListId 
+       , tmpContractPriceList.PriceListName  AS PriceListName
+       , Object_PriceList_old.ValueData      AS PriceListName_old
 
        , Object_PriceListGoods.Id        AS PriceListGoodsId
        , Object_PriceListGoods.ValueData AS PriceListGoodsName
@@ -424,11 +446,12 @@ BEGIN
                              ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()*/
 
-       /* LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                             ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
-*/
+        --перенесено в отд.справочник ContractPriceList
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList_old
+                             ON ObjectLink_Contract_PriceList_old.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceList_old.DescId = zc_ObjectLink_Contract_PriceList()
+        LEFT JOIN Object AS Object_PriceList_old ON Object_PriceList_old.Id = ObjectLink_Contract_PriceList_old.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListGoods
                              ON ObjectLink_Contract_PriceListGoods.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceListGoods.DescId = zc_ObjectLink_Contract_PriceListGoods()
@@ -448,6 +471,8 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
  
+        LEFT JOIN tmpContractPriceList ON tmpContractPriceList.ContractId = Object_Contract_View.ContractId
+
    WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate_Term BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
           ) OR inIsPeriod = FALSE)
      AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate_Term <= inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
