@@ -13,17 +13,17 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 827
+    ExplicitWidth = 936
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 936
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 827
+      ExplicitWidth = 936
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 936
         Height = 421
-        ExplicitWidth = 827
+        ExplicitWidth = 936
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -226,6 +226,11 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummsSend
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -269,7 +274,17 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 113
+            Width = 110
+          end
+          object SummsSend: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            DataBinding.FieldName = 'SummsSend'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object AmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1079#1072#1082#1072#1079')'
@@ -319,7 +334,7 @@ inherited Report_SalesGoods_SUAForm: TReport_SalesGoods_SUAForm
   inherited Panel: TPanel
     Width = 936
     Height = 33
-    ExplicitWidth = 827
+    ExplicitWidth = 936
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 109

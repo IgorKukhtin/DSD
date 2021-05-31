@@ -1,24 +1,25 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
-    IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
-    IN inShareFromPriceCode      TVarChar  ,     -- Перечень кодов товаров которые можно делить с любой ценой
-    IN inisGetHardwareData       Boolean   ,     -- Получить данные аппаратной части
-    IN inDateBanSUN              TDateTime ,     -- Запрет работы по СУН
-    IN inSummaFormSendVIP        TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
-    IN inSummaUrgentlySendVIP    TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
-    IN inDaySaleForSUN           Integer   ,     -- Количество дней для контроля <Продано/Продажа до след СУН>
-    IN inDayNonCommoditySUN      Integer   ,     -- Количество дней для контроля Комментария "Нетоварный вид"
-    IN inisBlockVIP              Boolean   ,     -- Блокировать формирование перемещений VIP
-    IN inisPairedOnlyPromo       Boolean   ,     -- При опускании парных контролировать только акционный
-    IN inAttemptsSub             TFloat    ,     -- Количество попыток до успешной сдачи теста для предложения подмен
-    IN inUpperLimitPromoBonus    TFloat    ,     -- Верхний предел сравнения (маркет бонусы)
-    IN inLowerLimitPromoBonus    TFloat    ,     -- Нижний предел сравнения (маркет бонусы)
-    IN inMinPercentPromoBonus    TFloat    ,     -- Минимальная наценка (маркет бонусы)
-    IN inDayCompensDiscount      Integer   ,     -- Дней до компенсации по дисконтным проектам
-    IN inSession                 TVarChar        -- сессия пользователя
+    IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
+    IN inShareFromPriceCode         TVarChar  ,     -- Перечень кодов товаров которые можно делить с любой ценой
+    IN inisGetHardwareData          Boolean   ,     -- Получить данные аппаратной части
+    IN inDateBanSUN                 TDateTime ,     -- Запрет работы по СУН
+    IN inSummaFormSendVIP           TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
+    IN inSummaUrgentlySendVIP       TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
+    IN inDaySaleForSUN              Integer   ,     -- Количество дней для контроля <Продано/Продажа до след СУН>
+    IN inDayNonCommoditySUN         Integer   ,     -- Количество дней для контроля Комментария "Нетоварный вид"
+    IN inisBlockVIP                 Boolean   ,     -- Блокировать формирование перемещений VIP
+    IN inisPairedOnlyPromo          Boolean   ,     -- При опускании парных контролировать только акционный
+    IN inAttemptsSub                TFloat    ,     -- Количество попыток до успешной сдачи теста для предложения подмен
+    IN inUpperLimitPromoBonus       TFloat    ,     -- Верхний предел сравнения (маркет бонусы)
+    IN inLowerLimitPromoBonus       TFloat    ,     -- Нижний предел сравнения (маркет бонусы)
+    IN inMinPercentPromoBonus       TFloat    ,     -- Минимальная наценка (маркет бонусы)
+    IN inDayCompensDiscount         Integer   ,     -- Дней до компенсации по дисконтным проектам
+    IN inMethodsAssortmentGuidesId  Integer   ,     -- Методы выбора аптек ассортимента
+    IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
 $BODY$
@@ -74,6 +75,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);
    -- сохранили При опускании парных контролировать только акционный
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_PairedOnlyPromo(), vbID, inisPairedOnlyPromo);
+
+   -- сохранили Методы выбора аптек ассортимента
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CashSettings_MethodsAssortment(), vbID, inMethodsAssortmentGuidesId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

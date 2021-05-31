@@ -3018,6 +3018,10 @@ begin
      }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMethodsAssortmentForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMethodsAssortmentForm');
+
       {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');

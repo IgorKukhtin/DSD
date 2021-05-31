@@ -45,6 +45,19 @@ BEGIN
                       WHERE Movement.DescId = zc_Movement_TestingUser()
                         AND Movement.OperDate = vbDateStart
                       GROUP BY MovementItem.ObjectId),
+        tmpWages AS (SELECT DISTINCT MovementItem.ObjectId                   AS UserID
+                      FROM Movement
+
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+
+                           INNER JOIN MovementItemBoolean ON MovementItemBoolean.MovementItemId = MovementItem.Id
+                                                         AND MovementItemBoolean.DescId = zc_MIBoolean_isTestingUser()
+                                                         AND MovementItemBoolean.ValueData = True
+
+
+                      WHERE Movement.DescId = zc_Movement_Wages()
+                        AND Movement.OperDate = vbDateStart),
         tmpUser AS (SELECT Object_User.Id                               AS UserId
                          , Object_User.ObjectCode                       AS UserCode
                          , Object_User.ValueData                        AS UserName
@@ -109,8 +122,11 @@ BEGIN
 
         LEFT JOIN tmpProtocolArc ON tmpProtocolArc.UserID = tmpUser.UserId
 
+        LEFT JOIN tmpWages ON tmpWages.UserID = tmpUser.UserId
+
    WHERE COALESCE(tmpResult.Result, 0) < 85
      AND COALESCE(tmpUser.DateIn, tmpProtocolArc.DateInsert, tmpProtocol.DateInsert, '01.01.2021') < vbDateStart
+     AND COALESCE(tmpWages.UserId, 0) = 0
      AND tmpUser.UserId = inUserId
    LIMIT 1;
 
@@ -126,5 +142,4 @@ ALTER FUNCTION gpSelect_PUSH_CashTestingUser (Integer, Integer, Integer) OWNER T
 */
 
 -- тест
--- 
-select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId := 16175938); 3);
+-- select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId := 6025400);

@@ -442,7 +442,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_inSupplementSUN1() RETURNS Inte
 -- !!! Типы аналитик для проводок
 -- !!!
 
--- -- Кол-во, реализация, у покупателя 
+-- -- Кол-во, реализация, у покупателя
 -- CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SaleCount_10400()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SaleCount_10400' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- -- Кол-во, реализация, Скидка за вес
 -- CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SaleCount_10500() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SaleCount_10500' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -535,10 +535,18 @@ CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Marketing() RETURNS integer 
 CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_AB() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_AB' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_CC1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_CC1' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Методы выбора аптек ассортимента
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_MethodsAssortment_Geographically() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_MethodsAssortment_Geographically' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_MethodsAssortment_Sales() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_MethodsAssortment_Sales' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 31.05.21                                                                                                   * zc_Enum_MethodsAssortment_
  16.02.21                                                                                                   * zc_Enum_InstructionsKind_
  13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24

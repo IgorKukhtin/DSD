@@ -1035,7 +1035,8 @@ uses
   Report_AutoCalculation_SAUA in '..\..\FormsFarmacy\Report\Report_AutoCalculation_SAUA.pas' {Report_AutoCalculation_SAUAForm: TParentForm},
   UnitAutoSUA in '..\..\FormsFarmacy\Guides\UnitAutoSUA.pas' {UnitAutoSUAForm: TParentForm},
   Report_SalesGoods_SUADialog in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUADialog.pas' {Report_SalesGoods_SUADialogForm: TParentForm},
-  Report_SalesGoods_SUA in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas' {Report_SalesGoods_SUAForm: TParentForm};
+  Report_SalesGoods_SUA in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas' {Report_SalesGoods_SUAForm: TParentForm},
+  MethodsAssortment in '..\..\FormsFarmacy\Kind\MethodsAssortment.pas' {MethodsAssortmentForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

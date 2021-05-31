@@ -56,6 +56,7 @@ type
     SummaWithVAT: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edPercentageSales: TcxDBTextEdit;
+    SummsSend: TcxGridDBColumn;
   private
     { Private declarations }
   public

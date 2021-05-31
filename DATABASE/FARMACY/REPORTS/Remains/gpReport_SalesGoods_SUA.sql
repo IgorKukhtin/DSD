@@ -14,6 +14,8 @@ RETURNS TABLE (UnitId Integer
              , GoodsName TVarChar
 
              , AmountSend TFloat
+             , SummsSend TFloat
+             
              , AmountIncome TFloat
              , SummaWithVAT TFloat
 
@@ -355,6 +357,8 @@ BEGIN
          , Object_Goods.ValueData
 
          , tmpMovementContainerSend.Amount::TFloat                             AS AmountSend
+         , Round(tmpMovementContainerSend.Amount * tmpMovementContainerPrice.Price, 2)::TFloat  AS SummsSend
+         
          , tmpMovementContainerIncome.Amount::TFloat                           AS AmountIncome
          , tmpMovementContainerIncome.SummaWithVAT::TFloat                     AS SummaWithVAT
 

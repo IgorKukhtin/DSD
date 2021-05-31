@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 475
+  ClientHeight = 505
   ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton1: TcxButton
     Left = 156
-    Top = 437
+    Top = 469
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -41,7 +41,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 437
+    Top = 469
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -225,6 +225,22 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 354
     Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
   end
+  object edMethodsAssortment: TcxButtonEdit
+    Left = 232
+    Top = 432
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 293
+  end
+  object cxLabel13: TcxLabel
+    Left = 20
+    Top = 432
+    Caption = #1052#1077#1090#1086#1076#1099' '#1074#1099#1073#1086#1088#1072' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -378,6 +394,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceDayCompensDiscount
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMethodsAssortmentGuidesId'
+        Value = Null
+        Component = MethodsAssortmentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -488,6 +512,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceDayCompensDiscount
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MethodsAssortmentId'
+        Value = Null
+        Component = MethodsAssortmentGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MethodsAssortmentName'
+        Value = Null
+        Component = MethodsAssortmentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -516,5 +555,34 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Params = <>
     Left = 456
     Top = 144
+  end
+  object MethodsAssortmentGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMethodsAssortment
+    FormNameParam.Value = 'TMethodsAssortmentForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMethodsAssortmentForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MethodsAssortmentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MethodsAssortmentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 373
+    Top = 423
   end
 end
