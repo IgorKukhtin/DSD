@@ -30,8 +30,8 @@ BEGIN
          , Object_PriceList.Id                  AS PriceListId
          , Object_PriceList.ValueData           AS PriceListName
 
-         , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
-         , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
+         , ObjectDate_StartDate.ValueData :: TDateTime AS StartDate
+         , ObjectDate_EndDate.ValueData   :: TDateTime AS EndDate
 
          , Object_Insert.ValueData              AS InsertName
          , Object_Update.ValueData              AS UpdateName
