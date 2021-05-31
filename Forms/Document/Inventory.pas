@@ -111,6 +111,15 @@ type
     bbPrintStickerGrid: TdxBarButton;
     IdBarCode: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
+    spInsert_MI_Inventory_bySale: TdsdStoredProc;
+    spDelete_MI_Inventory_bySale: TdsdStoredProc;
+    actSaleOpenForm: TOpenChoiceForm;
+    macDelete_bySale: TMultiAction;
+    actDelete_bySale: TdsdExecStoredProc;
+    macInsert_bySale: TMultiAction;
+    actInsert_bySale: TdsdExecStoredProc;
+    bbInsert_bySale: TdxBarButton;
+    bbDelete_bySale: TdxBarButton;
   private
     { Private declarations }
   public
