@@ -2788,7 +2788,7 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
-    Top = 304
+    Top = 360
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 32
@@ -5282,8 +5282,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 312
+    Left = 200
+    Top = 392
   end
   inherited StatusGuides: TdsdGuides
     Top = 272
@@ -6259,8 +6259,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 408
+    Left = 296
+    Top = 416
   end
   object PartnerCDS: TClientDataSet
     Aggregates = <>

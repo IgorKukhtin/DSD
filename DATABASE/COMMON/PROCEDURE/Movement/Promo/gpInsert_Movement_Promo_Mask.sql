@@ -69,23 +69,28 @@ BEGIN
                                                   ) 
    FROM gpSelect_MovementItem_PromoGoods (ioId, 'False', inSession)  AS tmp;
 
-   -- записываем строки PromoPartner документа
-   PERFORM lpInsertUpdate_MovementItem_PromoPartner (ioId         := 0
-                                                   , inMovementId := vbMovementId
-                                                   , inPartnerId  := tmp.PartnerId
-                                                   , inContractId := tmp.ContractId
-                                                   , inUserId     := vbUserId
-                                                    ) 
-   FROM gpSelect_MovementItem_PromoPartner (ioId, inSession)  AS tmp;
+   PERFORM gpInsertUpdate_Movement_PromoPartner(ioId              := 0                  ::Integer     -- Ключ объекта <партнер для документа акции>
+                                              , inParentId        := vbMovementId       ::Integer     -- Ключ родительского объекта <Документ акции>
+                                              , inPartnerId       := tmp.PartnerId      ::Integer     -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
+                                              , inContractId      := tmp.ContractId     ::Integer     -- Ключ объекта <Контракт>
+                                              , inComment         := ''                 ::TVarChar    -- Примечание
+                                              , inRetailName_inf  := tmp.RetailName_inf ::TVarChar    -- торг.сеть доп.
+                                              , inSession         := inSession          ::TVarChar    -- сессия пользователя
+                                              )
+   FROM gpSelect_Movement_PromoPartner (ioId, FALSE ,inSession)  AS tmp;
 
    -- записываем строки PromoPartner документа
    PERFORM lpInsertUpdate_MovementItem_PromoPartner (ioId         := 0
-                                                   , inMovementId := vbMovementId
+                                                   , inMovementId := tmpPP.Id
                                                    , inPartnerId  := tmp.PartnerId
                                                    , inContractId := tmp.ContractId
                                                    , inUserId     := vbUserId
                                                     ) 
-   FROM gpSelect_MovementItem_PromoPartner (ioId, inSession)  AS tmp;
+   FROM gpSelect_MovementItem_PromoPartner (ioId, inSession)  AS tmp
+        -- связываем с уже записанными строками Movement_PromoPartner
+        INNER JOIN (SELECT tmp.Id
+                    FROM gpSelect_Movement_PromoPartner (vbMovementId, FALSE ,inSession) AS tmp limit 1 ) AS tmpPP ON 1=1
+        ;
 
    -- записываем строки документа
    ioid := vbMovementId;

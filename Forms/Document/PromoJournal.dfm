@@ -440,6 +440,31 @@ inherited PromoJournalForm: TPromoJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction [4]
       FormName = 'TPromoForm'
@@ -464,6 +489,12 @@ inherited PromoJournalForm: TPromoJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
     end
@@ -809,6 +840,7 @@ inherited PromoJournalForm: TPromoJournalForm
       ImageIndexFalse = 63
     end
     inherited actInsertMask: TdsdInsertUpdateAction [39]
+      ShortCut = 0
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
       GuiParams = <
