@@ -1265,6 +1265,8 @@ type
     miReport_Supply_Remains: TMenuItem;
     actReport_CheckBonus_Journal: TdsdOpenForm;
     N240: TMenuItem;
+    actSmsSettings: TdsdOpenForm;
+    miSmsSettings: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
