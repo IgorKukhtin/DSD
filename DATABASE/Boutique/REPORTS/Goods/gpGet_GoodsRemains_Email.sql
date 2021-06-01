@@ -33,9 +33,9 @@ BEGIN
 */
 
      SELECT inFileName                    :: TVarChar AS Subject
-          , ''                            :: TBlob    AS Body
+          , inFileName                    :: TBlob    AS Body
           , 'podium_dnepr@ukr.net'        :: TVarChar AS AddressFrom
-          , CASE WHEN inSession = zfCalc_UserAdmin() THEN 'ashtu@ua.fm'  ELSE 'Grigorashd@i.ua;ashtu@ua.fm' END :: TVarChar AS AddressTo
+          , CASE WHEN 1=0 AND inSession = zfCalc_UserAdmin() THEN 'ashtu@ua.fm'  ELSE 'Grigorashd@i.ua;ashtu@ua.fm' END :: TVarChar AS AddressTo
 --        , 'ashtu@ua.fm'                 :: TVarChar AS AddressTo
           , 'smtp.ukr.net'                :: TVarChar AS Host
           , '465'                         :: TVarChar AS Port

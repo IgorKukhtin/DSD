@@ -18,6 +18,9 @@ BEGIN
      vbUserId := lpGetUserBySession (inSession);
 
 
+     IF inSession = zfCalc_UserAdmin() THEN inSession:= '-123'; END IF;
+
+     
      -- магазин PODIUM
      --IF inUnitId = 0 THEN inUnitId:= 6318; END IF;
      --IF inUnitId = 0 THEN inUnitId:= 6319; END IF;

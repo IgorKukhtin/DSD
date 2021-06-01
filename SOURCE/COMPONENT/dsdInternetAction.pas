@@ -111,7 +111,7 @@ var EMsg: TIdMessage;
     i: integer;
     Stream: TFileStream;
     FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
-begin
+ begin
   FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FIdSSLIOHandlerSocketOpenSSL.MaxLineAction := maException;
   FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvTLSv1;
@@ -235,11 +235,19 @@ begin
   end;
   FillAttachments;
   try
-    result := TMailer.SendMail(Host.Value, Port.Value,
-                               Password.Value, Username.Value,
-                               Recipients, FromAddress.Value,
-                               Subject.Value, Body.Value,
-                               FAttachments);
+    if Assigned (Body.Component)
+    then
+      result := TMailer.SendMail(Host.Value, Port.Value,
+                                 Password.Value, Username.Value,
+                                 Recipients, FromAddress.Value,
+                                 Subject.Value, Body.Value,
+                                 FAttachments)
+    else
+      result := TMailer.SendMail(Host.Value, Port.Value,
+                                 Password.Value, Username.Value,
+                                 Recipients, FromAddress.Value,
+                                 Subject.Value, '',
+                                 FAttachments);
   finally
     DeleteAttachments;
   end;

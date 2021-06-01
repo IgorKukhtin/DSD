@@ -503,7 +503,7 @@ begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
       if (ActiveControl=EditGoodsName)and(trim (EditGoodsName.Text) <> '')
       and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
-      and (1=0)
+      and (CDS.RecordCount=0)
       then begin
                 spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
                 spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
@@ -900,7 +900,7 @@ begin
 
      if  (SettingMain.isGoodsComplete = FALSE){(CDS.RecordCount=0}
       and((ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
-       or ((1=0)and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+       or ((CDS.RecordCount=0)and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
          )
       and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;

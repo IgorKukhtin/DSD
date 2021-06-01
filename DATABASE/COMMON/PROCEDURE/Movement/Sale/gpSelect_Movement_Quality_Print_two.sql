@@ -119,6 +119,7 @@ BEGIN
                               , CarModelName TVarChar
                               , CarName TVarChar
                               , isJuridicalBasis Boolean
+                              , Main_str TVarChar
                               , QualityCode TVarChar
                               , QualityName TVarChar
                               , QualityComment Text
@@ -154,7 +155,7 @@ BEGIN
                         , Amount5 , Amount9, Amount13 
                         , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end , OperDate_part 
                         , NormInDays_gk_str , CarModelName, CarName
-                        , isJuridicalBasis 
+                        , isJuridicalBasis, Main_str
                         , QualityCode, QualityName, QualityComment
                         , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10, Value11_gk
                         , InvNumber_Quality, OperDate_Quality, OperDateCertificate, CertificateNumber, CertificateSeries, CertificateSeriesNumber
@@ -484,6 +485,7 @@ tmpMI AS
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
                                    , OH_JuridicalDetails_From.Phone                                           AS Phone_From
+                                   , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                                    , View_Contract.InvNumber        		                              AS ContractName
                                    , Object_To.ValueData                                                      AS PartnerName
                                    , MovementString_InvNumberOrder.ValueData                                  AS InvNumber_Order
@@ -523,6 +525,10 @@ tmpMI AS
                                                                                        ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                       ON OH_JuridicalDetails_To.JuridicalId = View_Contract.JuridicalId
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               )
    
            , tmpNewQuality AS (SELECT DISTINCT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
@@ -598,6 +604,9 @@ tmpMI AS
            , Object_CarModel.ValueData        AS CarModelName
            , Object_Car.ValueData             AS CarName
            , TRUE                 :: Boolean  AS isJuridicalBasis
+
+             -- ÌÅÒÐÎ Êåø åíä Êåð³ Óêðà¿íà ÒÎÂ
+           , CASE WHEN Movement.OKPO_To = '32049199' THEN 'ÄÅÊËÀÐÀÖ²ß ÏÎÑÒÀ×ÀËÜÍÈÊÀ' ELSE 'Äåêëàðàö³ÿ âèðîáíèêà' END :: TVarChar AS Main_str
 
            , tmpGoodsQuality.QualityCode
 
@@ -709,6 +718,7 @@ tmpMI AS
                               , CarModelName TVarChar
                               , CarName TVarChar
                               , isJuridicalBasis Boolean
+                              , Main_str TVarChar
                               
                               , NumberPrint TFloat
                               , QualityCode TVarChar
@@ -735,7 +745,7 @@ tmpMI AS
                         , Amount5 , Amount9, Amount13 
                         , OperDateIn, OperDateIn_str4 , OperDateOut , OperDate_end 
                         , NormInDays_gk_str , CarModelName, CarName
-                        , isJuridicalBasis , NumberPrint
+                        , isJuridicalBasis, Main_str , NumberPrint
                         , QualityCode, QualityName, QualityComment
                         , Value17  , Value1 , Value2, Value3, Value4, Value5, Value6, Value7, Value8, Value9, Value10
                         , InvNumber_Quality, OperDate_Quality, OperDateCertificate, CertificateNumber, CertificateSeries, CertificateSeriesNumber
@@ -1046,6 +1056,7 @@ tmpMI AS
                                    , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
+                                   , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                               FROM tmpMovement
                                    INNER JOIN Movement ON Movement.Id = tmpMovement.Id
                                    
@@ -1079,6 +1090,10 @@ tmpMI AS
                                                                                        ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                       ON OH_JuridicalDetails_To.JuridicalId = View_Contract.JuridicalId
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               )
 
       -- Ðåçóëüòàò
@@ -1138,6 +1153,9 @@ tmpMI AS
            , '' :: TVarChar    AS CarModelName
            , '' :: TVarChar    AS CarName
            , TRUE :: Boolean   AS isJuridicalBasis
+
+             -- ÌÅÒÐÎ Êåø åíä Êåð³ Óêðà¿íà ÒÎÂ
+           , CASE WHEN Movement.OKPO_To = '32049199' THEN 'ÄÅÊËÀÐÀÖ²ß ÏÎÑÒÀ×ÀËÜÍÈÊÀ' ELSE 'Äåêëàðàö³ÿ âèðîáíèêà' END :: TVarChar AS Main_str
 
            , tmpGoodsQuality.NumberPrint
            , tmpGoodsQuality.QualityCode
@@ -1241,6 +1259,4 @@ $BODY$
  11.02.15                                                       *
 */
 
-
---select * from gpSelect_Movement_Quality_Print_two(inMovementId := 19042873 , inisAll := 'True' ,  inSession := '5');
---FETCH ALL "<unnamed portal 9>";
+-- SELECT * FROM gpSelect_Movement_Quality_Print_two(inMovementId := 19042873 , inisAll := 'True' ,  inSession := '5'); --FETCH ALL "<unnamed portal 9>";

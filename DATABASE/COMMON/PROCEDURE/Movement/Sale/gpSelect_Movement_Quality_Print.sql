@@ -383,6 +383,7 @@ BEGIN
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
                                    , OH_JuridicalDetails_From.Phone                                           AS Phone_From
+                                   , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                                    , View_Contract.InvNumber        		                              AS ContractName
                                    , Object_To.ValueData                                                      AS PartnerName
                                    , MovementString_InvNumberOrder.ValueData        AS InvNumber_Order
@@ -421,6 +422,10 @@ BEGIN
                                                                                        ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                       ON OH_JuridicalDetails_To.JuridicalId = View_Contract.JuridicalId
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               WHERE Movement.Id = inMovementId
                               )
    
@@ -497,6 +502,9 @@ BEGIN
            , Object_CarModel.ValueData        AS CarModelName
            , Object_Car.ValueData             AS CarName
            , TRUE                 :: Boolean  AS isJuridicalBasis
+
+             -- ÌÅÒÐÎ Êåø åíä Êåð³ Óêðà¿íà ÒÎÂ
+           , CASE WHEN Movement.OKPO_To = '32049199' THEN 'ÄÅÊËÀÐÀÖ²ß ÏÎÑÒÀ×ÀËÜÍÈÊÀ' ELSE 'Äåêëàðàö³ÿ âèðîáíèêà' END :: TVarChar AS Main_str
 
            , tmpGoodsQuality.QualityCode
 
@@ -856,6 +864,7 @@ BEGIN
                                    , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
+                                   , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                               FROM Movement
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
@@ -887,6 +896,10 @@ BEGIN
                                                                                        ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                                       ON OH_JuridicalDetails_To.JuridicalId = View_Contract.JuridicalId
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                                                      AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               WHERE Movement.Id = inMovementId
                               )
       -- Ðåçóëüòàò
@@ -946,6 +959,8 @@ BEGIN
            , '' :: TVarChar    AS CarModelName
            , '' :: TVarChar    AS CarName
            , TRUE :: Boolean   AS isJuridicalBasis
+
+           , CASE WHEN Movement.OKPO_To = '32294926' THEN 'ÄÅÊËÀÐÀÖ²ß ÏÎÑÒÀ×ÀËÜÍÈÊÀ' ELSE 'Äåêëàðàö³ÿ âèðîáíèêà' END :: TVarChar AS Main_str
 
            , tmpGoodsQuality.NumberPrint
            , tmpGoodsQuality.QualityCode

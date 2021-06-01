@@ -1,4 +1,4 @@
--- Function: lfGet_Object_Partner_PriceList_onDate (Integer, Integer, TDateTime)
+ -- Function: lfGet_Object_Partner_PriceList_onDate (Integer, Integer, TDateTime)
 
 DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Boolean);
 -- DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Boolean);
@@ -101,14 +101,14 @@ BEGIN
               INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
                  SELECT inOperDatePartner :: Date - inDayPrior_PriceReturn AS OperDate
                       , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                              , ObjectLink_Contract_PriceList.ChildObjectId
                                 , tmpContract_PriceList.PriceListId
-                              --, ObjectLink_Contract_PriceList.ChildObjectId
                                 , ObjectLink_Juridical_PriceList.ChildObjectId
                                 , zc_PriceList_Basis()) AS PriceListId
 
                       , COALESCE (ObjectLink_Partner_PriceList.DescId
+                              , ObjectLink_Contract_PriceList.DescId
                                 , tmpContract_PriceList.DescId
-                              --, ObjectLink_Contract_PriceList.DescId
                                 , ObjectLink_Juridical_PriceList.DescId
                                 , 0) AS DescId
                  FROM tmpPartner
@@ -120,10 +120,10 @@ BEGIN
                                                      AND tmpContract_PriceList.PriceListId > 0
                                                      AND inOperDatePartner :: Date - inDayPrior_PriceReturn
                                                          BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId      = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId        = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0*/
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                            ON ObjectLink_Juridical_PriceList.ObjectId      = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList.DescId        = zc_ObjectLink_Juridical_PriceList()
@@ -160,8 +160,8 @@ BEGIN
                  SELECT inOperDatePartner AS OperDate
                       , COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
                                 , ObjectLink_Partner_PriceList30201.ChildObjectId
+                              , ObjectLink_Contract_PriceList.ChildObjectId
                                 , tmpContract_PriceList.PriceListId
-                              --, ObjectLink_Contract_PriceList.ChildObjectId
                                 , ObjectLink_Juridical_PriceList30103.ChildObjectId
                                 , ObjectLink_Juridical_PriceList30201.ChildObjectId
                                 , zc_PriceList_Basis()) AS PriceListId
@@ -169,8 +169,8 @@ BEGIN
                       , COALESCE (ObjectLink_Partner_PriceList30103.DescId
                                 , ObjectLink_Partner_PriceList30201.DescId
 
+                              , ObjectLink_Contract_PriceList.DescId
                                 , tmpContract_PriceList.DescId
-                              --, ObjectLink_Contract_PriceList.DescId
 
                                 , ObjectLink_Juridical_PriceList30103.DescId
                                 , ObjectLink_Juridical_PriceList30201.DescId
@@ -192,10 +192,10 @@ BEGIN
                                                      AND tmpContract_PriceList.PriceListId > 0
                                                      AND inOperDatePartner :: Date
                                                          BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0*/
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
 
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30103
                                            ON ObjectLink_Juridical_PriceList30103.ObjectId = tmpPartner.JuridicalId
@@ -263,14 +263,14 @@ BEGIN
 
 
                       , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                              , ObjectLink_Contract_PriceList.ChildObjectId
                                 , tmpContract_PriceList.PriceListId
-                              --, ObjectLink_Contract_PriceList.ChildObjectId
                                 , ObjectLink_Juridical_PriceList.ChildObjectId
                                 , zc_PriceList_Basis()) AS PriceListId
 
                       , COALESCE (ObjectLink_Partner_PriceList.DescId
+                              , ObjectLink_Contract_PriceList.DescId
                                 , tmpContract_PriceList.DescId
-                              --, ObjectLink_Contract_PriceList.DescId
                                 , ObjectLink_Juridical_PriceList.DescId
                                 , 0) AS DescId
 
@@ -293,10 +293,10 @@ BEGIN
                                                               ELSE inOperDatePartner
                                                          END
                                                          BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0*/
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                            ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
@@ -339,16 +339,16 @@ BEGIN
                  SELECT inOperDatePartner AS OperDate
                       , COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
                                 , ObjectLink_Partner_PriceList30201.ChildObjectId
-                                , tmpContract_PriceList.PriceListId
-                              --, ObjectLink_Contract_PriceList.ChildObjectId
+                              , ObjectLink_Contract_PriceList.ChildObjectId
+                              --  , tmpContract_PriceList.PriceListId
                                 , ObjectLink_Juridical_PriceList30103.ChildObjectId
                                 , ObjectLink_Juridical_PriceList30201.ChildObjectId
                                 , zc_PriceList_Basis()) AS PriceListId
 
                       , COALESCE (ObjectLink_Partner_PriceList30103.DescId
                                 , ObjectLink_Partner_PriceList30201.DescId
+                              , ObjectLink_Contract_PriceList.DescId
                                 , tmpContract_PriceList.DescId
-                              --, ObjectLink_Contract_PriceList.DescId
                                 , ObjectLink_Juridical_PriceList30103.DescId
                                 , ObjectLink_Juridical_PriceList30201.DescId
                                 , 0) AS DescId
@@ -368,10 +368,10 @@ BEGIN
                                                      AND tmpContract_PriceList.PriceListId > 0
                                                      AND inOperDatePartner
                                                          BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0*/
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
 
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30103
                                            ON ObjectLink_Juridical_PriceList30103.ObjectId = tmpPartner.JuridicalId
@@ -408,21 +408,21 @@ BEGIN
               -- Результат
               INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
                  SELECT COALESCE (inOperDatePartner, inOperDate_order) AS OperDate
-                      , COALESCE (tmpContract_PriceList.PriceListId
-                              --, ObjectLink_Contract_PriceList.ChildObjectId
-                                , zc_PriceList_Basis()) AS PriceListId
-                      , COALESCE (tmpContract_PriceList.DescId
-                              --, ObjectLink_Contract_PriceList.DescId
-                                , 0) AS DescId
+                      , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
+                                , tmpContract_PriceList.PriceListId
+                              , zc_PriceList_Basis()) AS PriceListId
+                      , COALESCE (ObjectLink_Contract_PriceList.DescId
+                                , tmpContract_PriceList.DescId
+                              , 0) AS DescId
                  FROM tmpPartner
                       LEFT JOIN tmpContract_PriceList ON tmpContract_PriceList.ContractId  = tmpPartner.ContractId
                                                      AND tmpContract_PriceList.PriceListId > 0
                                                      AND COALESCE (inOperDatePartner, inOperDate_order)
                                                          BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0*/
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                  ;
           END IF;
           END IF;

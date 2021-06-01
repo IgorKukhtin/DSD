@@ -49,6 +49,25 @@ BEGIN
      END IF;
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), ioId
+                                           -- без НДС + если Проведен + если это Расход
+                                         , CASE WHEN MovementFloat_Amount.ValueData < 0 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                     THEN -1 * zfCalc_Summ_NoVAT (MovementFloat_Amount.ValueData, MovementFloat_VATPercent.ValueData)
+                                                ELSE 0
+                                           END
+                                          )
+     FROM Movement
+          LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                  ON MovementFloat_Amount.MovementId = Movement.Id
+                                 AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
+
+     WHERE Movement.Id = inMovementId
+    ;
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), ioId, inMovementId);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

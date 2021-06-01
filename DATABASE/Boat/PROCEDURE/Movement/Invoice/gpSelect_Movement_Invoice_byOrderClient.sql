@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Invoice_byOrderClient()
+-- Function: gpSelect_Movement_Invoice_byOrderClient() - Детально по счету - Журнал <Расчетный счет, приход/расход>
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice_byOrderClient (Integer, Boolean, TVarChar);
 
