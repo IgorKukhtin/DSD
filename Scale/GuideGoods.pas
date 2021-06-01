@@ -285,8 +285,8 @@ begin
      end
      else
      if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-     and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
-     and (1=0)
+     and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 301)
+   //and (1=0)
      then
      with spSelect do
      begin

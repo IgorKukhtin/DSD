@@ -891,8 +891,8 @@ BEGIN
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
-                               --WHERE inBranchCode BETWEEN 302 AND 310
-                                 WHERE inBranchCode BETWEEN 301 AND 310
+                                 WHERE inBranchCode BETWEEN 302 AND 310
+                               --WHERE inBranchCode BETWEEN 301 AND 310
                                    AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20300() -- МНМА
@@ -961,8 +961,8 @@ BEGIN
                               LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                               LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
                          WHERE (tmpGoods_Return.GoodsId > 0
-                           --OR inBranchCode BETWEEN 302 AND 310
-                             OR inBranchCode BETWEEN 301 AND 310
+                             OR inBranchCode BETWEEN 302 AND 310
+                           --OR inBranchCode BETWEEN 301 AND 310
                              OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310)
                              OR tmpInfoMoney.isTare = TRUE
                              OR inBranchCode IN (103)

@@ -37,7 +37,9 @@ $BODY$
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
     
-    DECLARE vbWeighingCount   Integer;
+    DECLARE vbWeighingCount Integer;
+    
+    DECLARE vbTotalSumm     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -66,9 +68,12 @@ BEGIN
           , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())  AS CurrencyPartnerId
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
+          
+          , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyPartnerValue, vbParPartnerValue
+               , vbTotalSumm
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -85,6 +90,10 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                   ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                  AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                  ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                 AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                        ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
@@ -130,12 +139,12 @@ BEGIN
     END IF;
 
     --проверка выбрана ли валюта
-    IF COALESCE (vbCurrencyDocumentId, 0) = zc_Enum_Currency_Basis()
+    IF COALESCE (vbCurrencyDocumentId, 0) = zc_Enum_Currency_Basis() AND vbTotalSumm <> 0
     THEN
         RAISE EXCEPTION 'Ошибка.Валюта документа должна отличаться от базовой';
     END IF;
     --
-    IF COALESCE (vbCurrencyPartnerValue, 0) = 0
+    IF COALESCE (vbCurrencyPartnerValue, 0) = 0 AND vbTotalSumm <> 0
     THEN
         RAISE EXCEPTION 'Ошибка.Не определен курс валюты';
     END IF;
@@ -573,10 +582,10 @@ BEGIN
                   , SUM (COALESCE (OF_Box_Weight.ValueData, 0) * COALESCE (MIFloat_BoxCount.ValueData, 0)) AS BoxCount_summ
                   , SUM ( SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) ) OVER ()               AS AmountPartner_all
              FROM MovementItem
-                  INNER JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              AND MIFloat_Price.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                           --AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -661,4 +670,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_ExpInvoice_Print (Integer,TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_ExpInvoice_Print (inMovementId := 570596, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Sale_ExpInvoice_Print (inMovementId := 570596, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";

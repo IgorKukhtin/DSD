@@ -69,7 +69,7 @@
 end
 
      WHERE Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
-      and ObjectDate_EndDate.ValueData = zc_DateEnd()
+      and COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd()) = zc_DateEnd()
 and MovementLinkObject_PriceList.ObjectId <> Object_PriceList.Id
  and Movement.StatusId = zc_Enum_Status_Complete()
 
