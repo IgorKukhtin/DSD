@@ -11,6 +11,7 @@
   $BODY$
      DECLARE vbUserId Integer;
      DECLARE vbStatusId Integer;
+     DECLARE vbOperDate TDateTime;
   BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -25,6 +26,8 @@
     THEN
       RETURN;
     END IF;
+    
+    vbOperDate := CURRENT_DATE; -- INTERVAL '1 DAY';
 
       -- Отменяем отложку со всех перемещений
     IF EXISTS(SELECT 1
@@ -110,7 +113,7 @@
                           WHERE Container.DescId = zc_Container_CountPartionDate()
                             AND Container.WhereObjectId = inUnitID
                             AND Container.Amount > 0
-                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', CURRENT_DATE - INTERVAL '85 DAY')
+                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', vbOperDate - INTERVAL '85 DAY')
                             AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE),
          --  Перемещения в списания
          tmpMovementSend AS (SELECT MovementItem.ObjectId                   AS GoodsId 
@@ -130,7 +133,7 @@
                                                          AND MovementItem.DescId = zc_MI_Master()
                                                          AND MovementItem.Amount > 0
                                                          AND MovementItem.isErased = FALSE 
-                              WHERE Movement.OperDate BETWEEN date_trunc('month', CURRENT_DATE) AND date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'  
+                              WHERE Movement.OperDate BETWEEN date_trunc('month', vbOperDate) AND date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'  
                                 AND Movement.DescId = zc_Movement_Send() 
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
                                 AND (MovementLinkObject_From.ObjectId =  inUnitID
@@ -165,7 +168,7 @@
 
               WHERE Movement.DescId = zc_Movement_Loss()
                 AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND Movement.OperDate = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                AND Movement.OperDate = date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
     THEN
       SELECT Movement.Id, Movement.StatusId
       INTO outMovementID, vbStatusId
@@ -183,7 +186,7 @@
 
       WHERE Movement.DescId = zc_Movement_Loss()
         AND Movement.StatusId <> zc_Enum_Status_Erased()
-        AND Movement.OperDate = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+        AND Movement.OperDate = date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
        
       IF vbStatusId = zc_Enum_Status_Complete()
       THEN
@@ -202,7 +205,7 @@
         THEN
           outMovementID := lpInsertUpdate_Movement_Loss (ioId                 := 0
                                                        , inInvNumber          := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
-                                                       , inOperDate           := date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                       , inOperDate           := date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                        , inUnitId             := inUnitId
                                                        , inArticleLossId      := 13892113
                                                        , inComment            := ''
@@ -210,7 +213,10 @@
                                                        , inUserId             := vbUserId
                                                         );
         END IF;
-
+        
+        -- сохранили признак
+        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_FinalFormation(), outMovementID, True);
+        
         PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := MovementItem.Id
                                                 , inMovementId        := outMovementID
                                                 , inGoodsId           := tmpContainerOverdueLoss.GoodsId
@@ -258,5 +264,5 @@
  27.03.20                                                         *
    */
 
--- тест SELECT * FROM grInsert_Movement_LossOverdueUnit (inUnitID := 11152911, inSession:= '3')
+-- тест SELECT * FROM grInsert_Movement_LossOverdueUnit (inUnitID := 11152911 , inSession:= '3')
 -- SELECT grInsert_Movement_LossOverdue (inSession := zfCalc_UserAdmin());
