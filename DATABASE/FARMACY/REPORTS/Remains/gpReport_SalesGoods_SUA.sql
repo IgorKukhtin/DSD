@@ -365,7 +365,7 @@ BEGIN
          , tmpContainerCheck.AmountCheck::TFloat                               AS AmountCheck
          , tmpContainerCheck.SummaCheck::TFloat                                AS SummaCheck
          
-         , tmpItog.PercentageSales::TFloat                                     AS PercentageSales 
+         , Round(tmpItog.PercentageSales, 2)::TFloat                           AS PercentageSales 
          
          , tmpMovementContainerPrice.Amount::TFloat                            AS AmountAll 
          , tmpMovementContainerPrice.Price::TFloat                             AS Price 

@@ -85,15 +85,19 @@ BEGIN
 
     -- Создание полного списания
     BEGIN
-      IF CURRENT_DATE = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AND date_part('HOUR',  CURRENT_TIME)::Integer = 21
+      IF CURRENT_DATE = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AND date_part('HOUR',  CURRENT_TIME)::Integer = 22
          AND NOT EXISTS(SELECT 1 FROM Movement
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                                            ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                                           AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()    
-                        WHERE Movement.OperDate  = CURRENT_DATE
+                              LEFT JOIN MovementBoolean AS MovementBoolean_FinalFormation
+                                                        ON MovementBoolean_FinalFormation.MovementId = Movement.Id
+                                                       AND MovementBoolean_FinalFormation.DescId = zc_MovementBoolean_FinalFormation()
+                        WHERE Movement.OperDate  = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                           AND Movement.DescId = zc_Movement_Loss()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                          AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113)
+                          AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113
+                          AND COALESCE(MovementBoolean_FinalFormation.ValueData, False) = True)
       THEN
          PERFORM grInsert_Movement_LossOverdue (inSession := zfCalc_UserAdmin());
       END IF;
@@ -293,7 +297,19 @@ BEGIN
 
     -- Списание товара с комментарием "Нетоварный вид"
     BEGIN
-      IF date_part('HOUR',  CURRENT_TIME)::Integer = 22 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
+      IF date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 21
+         AND NOT EXISTS(SELECT 1 FROM Movement
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                           ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                                          AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()    
+                              LEFT JOIN MovementBoolean AS MovementBoolean_FinalFormation
+                                                        ON MovementBoolean_FinalFormation.MovementId = Movement.Id
+                                                       AND MovementBoolean_FinalFormation.DescId = zc_MovementBoolean_FinalFormation()
+                        WHERE Movement.OperDate  = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                          AND Movement.DescId = zc_Movement_Loss()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113
+                          AND COALESCE(MovementBoolean_FinalFormation.ValueData, False) = True)
       THEN
           PERFORM gpInsert_Movement_Loss_NonCommodity (inOperDate := CURRENT_DATE, inSession := zfCalc_UserAdmin());    
       END IF;

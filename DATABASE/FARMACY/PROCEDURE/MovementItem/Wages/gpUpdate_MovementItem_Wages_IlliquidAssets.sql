@@ -47,7 +47,7 @@ BEGIN
                                                  inProcUnit := 10, 
                                                  inPlanAmount := 0, 
                                                  inPenalty := 500, 
-                                                 inisPenaltySumInfo := FALSE,
+                                                 inisPenaltyInfo := FALSE,
                                                  inPenaltySum := 0, 
                                                  inisPenaltySumInfo := TRUE,
                                                  inSession := inSession) AS IPE
