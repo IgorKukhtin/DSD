@@ -53,6 +53,9 @@ type
     cxLabel10: TcxLabel;
     ceDayCompensDiscount: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
+    edMethodsAssortment: TcxButtonEdit;
+    MethodsAssortmentGuides: TdsdGuides;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

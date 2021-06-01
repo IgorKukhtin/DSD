@@ -4415,10 +4415,20 @@ BEGIN
      
 END $$;
 
+DO $$
+BEGIN
+     -- !!! Шкала расчета премии/штрафы в план по маркетингу
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MethodsAssortment_Geographically(),   inDescId:= zc_Object_MethodsAssortment(), inCode:= 1, inName:= 'Выбор ближайших географически',      inEnumName:= 'zc_Enum_MethodsAssortment_Geographically');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MethodsAssortment_Sales(),            inDescId:= zc_Object_MethodsAssortment(), inCode:= 2, inName:= 'Выбор по объему продаж',             inEnumName:= 'zc_Enum_MethodsAssortment_Sales');
+     
+END $$;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 31.05.21                                                                                                   * zc_Object_MethodsAssortment
  16.02.21                                                                                                   * zc_Object_InstructionsKind
  13.08.20                                                                                                   * zc_Enum_DivisionParties_UKTVED
  15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24

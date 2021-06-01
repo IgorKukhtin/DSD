@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LowerLimitPromoBonus TFloat
              , MinPercentPromoBonus TFloat
              , DayCompensDiscount Integer
+             , MethodsAssortmentId Integer
+             , MethodsAssortmentName TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -47,6 +49,8 @@ BEGIN
         , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
         , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
         , ObjectFloat_CashSettings_DayCompensDiscount.ValueData::Integer           AS DayCompensDiscount
+        , Object_MethodsAssortment.Id                                              AS MethodsAssortmentId
+        , Object_MethodsAssortment.ValueData                                       AS MethodsAssortmentName
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -94,6 +98,12 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
                                 ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
+
+        LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
+               ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
+              AND ObjectLink_CashSettings_MethodsAssortment.DescId = zc_ObjectLink_CashSettings_MethodsAssortment()
+        LEFT JOIN Object AS Object_MethodsAssortment ON Object_MethodsAssortment.Id = ObjectLink_CashSettings_MethodsAssortment.ChildObjectId
+
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
   

@@ -20,7 +20,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , PaidKindName_Child TVarChar
+             , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , ConditionKindId Integer, ConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
@@ -1428,6 +1428,7 @@ BEGIN
 
             , Object_PaidKind.Id                            AS PaidKindId
             , Object_PaidKind.ValueData                     AS PaidKindName
+            , Object_PaidKind_Child.Id                      AS PaidKindId_Child
             , Object_PaidKind_Child.ValueData               AS PaidKindName_Child
 
             , Object_ContractConditionKind.Id               AS ConditionKindId
@@ -1587,6 +1588,7 @@ BEGIN
 
             , tmpData.PaidKindId
             , tmpData.PaidKindName
+            , tmpData.PaidKindId_Child
             , tmpData.PaidKindName_Child
 
             , tmpData.ConditionKindId

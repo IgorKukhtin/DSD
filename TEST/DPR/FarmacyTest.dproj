@@ -3690,6 +3690,10 @@
 				<Form>Report_SalesGoods_SUAForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\MethodsAssortment.pas">
+				<Form>MethodsAssortmentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

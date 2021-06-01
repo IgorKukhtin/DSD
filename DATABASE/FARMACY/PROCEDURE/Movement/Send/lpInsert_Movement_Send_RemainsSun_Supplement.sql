@@ -834,19 +834,19 @@ BEGIN
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_Supplement.UnitId
-                  , CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
-                    CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                    CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                         THEN - _tmpRemains_all_Supplement.AmountRemains
-                         ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                         END  - _tmpRemains_all_Supplement.AmountUse
-                    ELSE
-                    FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                                 THEN - _tmpRemains_all_Supplement.AmountRemains
-                                 ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                 END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+                  , FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
+                          CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                               THEN - _tmpRemains_all_Supplement.AmountRemains
+                               ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                               END  - _tmpRemains_all_Supplement.AmountUse
+                          ELSE
+                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                                       THEN - _tmpRemains_all_Supplement.AmountRemains
+                                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                       END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
 
-                    END END
+                          END END)
              FROM _tmpRemains_all_Supplement
 
                   LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
@@ -858,18 +858,19 @@ BEGIN
                                                                  ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
                                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
-             WHERE (CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                    CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                         THEN - _tmpRemains_all_Supplement.AmountRemains
-                         ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                         END  - _tmpRemains_all_Supplement.AmountUse
-                    ELSE
-                    FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                                 THEN - _tmpRemains_all_Supplement.AmountRemains
-                                 ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                 END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+             WHERE FLOOR (CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
+                          CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                               THEN - _tmpRemains_all_Supplement.AmountRemains
+                               ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                               END  - _tmpRemains_all_Supplement.AmountUse
+                          ELSE
+                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                                       THEN - _tmpRemains_all_Supplement.AmountRemains
+                                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                       END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
 
-                    END) > 0
+                          END END) > 0
                AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
                AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
@@ -887,7 +888,7 @@ BEGIN
              -- данные по Автозаказ
              FETCH curResult_next INTO vbUnitId_to, vbNeed;
              -- если данные закончились, или все кол-во найдено тогда выход
-             IF NOT FOUND OR vbSurplus = 0 THEN EXIT; END IF;
+             IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
 
 /*             IF vbUnitId_to = 377610 AND vbGoodsId = 12918138
              THEN
@@ -895,13 +896,13 @@ BEGIN
              END IF;
 */
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
-               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END);
+               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
 
-             UPDATE _tmpRemains_all_Supplement SET AmountUse = AmountUse + CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END
+             UPDATE _tmpRemains_all_Supplement SET AmountUse = AmountUse + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
              WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_to
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
 
-             vbSurplus := vbSurplus - CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+             vbSurplus := vbSurplus - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
 
          END LOOP; -- финиш цикла по курсору2
          CLOSE curResult_next; -- закрыли курсор2.

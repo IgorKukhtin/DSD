@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit;
 
 type
   TReport_SalesGoods_SUAForm = class(TAncestorReportForm)
@@ -53,6 +53,10 @@ type
     AmountCheck: TcxGridDBColumn;
     SummaCheck: TcxGridDBColumn;
     bbMoneyBoxSun: TdxBarButton;
+    SummaWithVAT: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edPercentageSales: TcxDBTextEdit;
+    SummsSend: TcxGridDBColumn;
   private
     { Private declarations }
   public

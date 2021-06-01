@@ -154,6 +154,8 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actUpdate_Category: TdsdInsertUpdateAction;
+    bbUpdate_Category: TdxBarButton;
   private
     { Private declarations }
   public

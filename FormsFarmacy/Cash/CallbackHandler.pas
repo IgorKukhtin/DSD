@@ -146,6 +146,8 @@ end;
 procedure TCallbackHandlerForm.IdHTTPServerCommandGet(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
   var I : integer; Res: TArray<string>;
+//var
+//  F: TextFile;
 begin
   for I := 0 to ARequestInfo.Params.Count - 1 do
   begin
@@ -155,6 +157,23 @@ begin
       FCallback := COPY(Res[1], 3, Length(Res[1]) - 4);
       Timer.Enabled := False;
       ModalResult := mrOk;
+
+//      AssignFile(F, 'CallbackAll.txt');
+//      Rewrite(F);
+//      try
+//        Writeln(F, Res[1]);
+//      finally
+//        CloseFile(F);
+//      end;
+//
+//      AssignFile(F, 'Callback.txt');
+//      Rewrite(F);
+//      try
+//        Writeln(F, FCallback);
+//      finally
+//        CloseFile(F);
+//      end;
+
       Break;
     end;
   end;

@@ -1398,6 +1398,10 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsDivisionLock() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsDivisionLock', 'Блокировка деления товара по подразделениям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsDivisionLock');
 
+CREATE OR REPLACE FUNCTION zc_Object_MethodsAssortment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MethodsAssortment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MethodsAssortment', 'Методы выбора аптек ассортимента' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MethodsAssortment');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1414,6 +1418,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 31.05.21                                                                                        * zc_Object_GoodsDivisionLock
  27.05.21         * zc_Object_ContractPriceList  
  17.05.21                                                                                        * zc_Object_GoodsDivisionLock
  28.04.21         * zc_Object_FineSubject

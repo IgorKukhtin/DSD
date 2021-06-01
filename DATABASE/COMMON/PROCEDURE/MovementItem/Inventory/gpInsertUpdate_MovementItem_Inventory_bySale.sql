@@ -1,11 +1,11 @@
--- Function: gpInsert_MovementItem_Inventory_bySend()
+-- Function: gpInsertUpdate_MovementItem_Inventory_bySale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Inventory_bySale (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySale (Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySale(
     IN inMovementId               Integer   , -- Ключ объекта <Документ инвенторизации>
-    IN inMovementId_Send          Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inMovementId_Sale          Integer   , -- Ключ объекта <Документ >
     IN inIsAdd                    Boolean   , -- добавить кол-во из накладной или отнять 
     IN inSession                  TVarChar    -- сессия пользователя
 )
@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbKoef Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
+     -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
      -- определяем нужно добавлять или минусовать кол-во из накладной перемещения
@@ -50,12 +50,12 @@ BEGIN
                                                   , inUserId             := vbUserId
                                                    )
      FROM (SELECT tmpMI.MovementItemId                                                      AS MovementItemId
-                , COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)                              AS GoodsId
-                , COALESCE (tmpMI.GoodsKindId, tmpMI_Send.GoodsKindId)                      AS GoodsKindId
+                , COALESCE (tmpMI.GoodsId, tmpMI_Sale.GoodsId)                              AS GoodsId
+                , COALESCE (tmpMI.GoodsKindId, tmpMI_Sale.GoodsKindId)                      AS GoodsKindId
                 , COALESCE (tmpMI.GoodsKindCompleteId, 0)                                   AS GoodsKindCompleteId
-                , COALESCE (tmpMI.PartionGoods, tmpMI_Send.PartionGoods)                    AS PartionGoods
-                , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Send.PartionGoodsDate)            AS PartionGoodsDate
-                , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Send.Amount, 0)) :: TFloat  AS Amount
+                , COALESCE (tmpMI.PartionGoods, tmpMI_Sale.PartionGoods)                    AS PartionGoods
+                , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Sale.PartionGoodsDate)            AS PartionGoodsDate
+                , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Sale.Amount, 0)) :: TFloat  AS Amount
 
            FROM (SELECT MovementItem.ObjectId                                    AS GoodsId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
@@ -64,25 +64,25 @@ BEGIN
                       , SUM (MovementItem.Amount) * vbKoef                       AS Amount
                  FROM MovementItem
                     LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                               AND vbUnitId NOT IN (8459 -- Склад Реализации
                                                                  , 8458 -- Склад База ГП
                                                                   )
                     LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                 AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                WHERE MovementItem.MovementId = inMovementId_Send
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                WHERE MovementItem.MovementId = inMovementId_Sale
                   AND MovementItem.DescId     = zc_MI_Master()
                   AND MovementItem.isErased   = FALSE
                  GROUP BY MovementItem.ObjectId
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                         , COALESCE (MIString_PartionGoods.ValueData, '')
                         , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
-                ) tmpMI_Send
+                ) tmpMI_Sale
 
                   LEFT JOIN (SELECT MovementItem.Id                                          AS MovementItemId
                                   , MovementItem.ObjectId                                    AS GoodsId
@@ -114,10 +114,10 @@ BEGIN
                                                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                WHERE Movement.Id = inMovementId
-                               ) AS tmpMI ON tmpMI.GoodsId          = tmpMI_Send.GoodsId
-                                         AND tmpMI.GoodsKindId      = tmpMI_Send.GoodsKindId
-                                         AND tmpMI.PartionGoods     = tmpMI_Send.PartionGoods
-                                         AND tmpMI.PartionGoodsDate = tmpMI_Send.PartionGoodsDate
+                               ) AS tmpMI ON tmpMI.GoodsId          = tmpMI_Sale.GoodsId
+                                         AND tmpMI.GoodsKindId      = tmpMI_Sale.GoodsKindId
+                                         AND tmpMI.PartionGoods     = tmpMI_Sale.PartionGoods
+                                         AND tmpMI.PartionGoodsDate = tmpMI_Sale.PartionGoodsDate
                                          AND tmpMI.Ord              = 1 -- !!!вдруг дублируются строки!!!
            ) AS tmp;
 
@@ -128,10 +128,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 04.06.18         * add inIsAdd
- 17.10.16         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.05.21         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_bySend (ioId:= 0, inMovementId:= 10, inMovementId_Send:= 1, inIsAdd := TRUE, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_bySale (ioId:= 0, inMovementId:= 10, inMovementId_Sale:= 1, inIsAdd := TRUE, inSession:= '2')

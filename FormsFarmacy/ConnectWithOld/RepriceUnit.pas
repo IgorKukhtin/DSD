@@ -149,6 +149,7 @@ type
     colisResolution_224: TcxGridDBColumn;
     cdsResultisResolution_224: TBooleanField;
     colisPromoBonus: TcxGridDBColumn;
+    cdsResultisPromoBonus: TBooleanField;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -500,6 +501,7 @@ begin
           cdsResult.FieldByName('isTop_Goods').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop_Goods').AsBoolean;
           cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
           cdsResult.FieldByName('isResolution_224').AsBoolean := AllGoodsPriceCDS.FieldByName('isResolution_224').AsBoolean;
+          cdsResult.FieldByName('isPromoBonus').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromoBonus').AsBoolean;
           cdsResult.FieldByName('MidPriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceDiff').AsCurrency;
           cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;
           cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;

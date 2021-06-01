@@ -2546,9 +2546,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsDivisionLock_Unit() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsDivisionLock_Unit', 'Подразделение', zc_Object_GoodsDivisionLock(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsDivisionLock_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_MethodsAssortment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_MethodsAssortment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CashSettings_MethodsAssortment', 'Методы выбора аптек ассортимента', zc_Object_CashSettings(), zc_Object_MethodsAssortment() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_MethodsAssortment');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.05.21                                                                                      * zc_ObjectLink_CashSettings_MethodsAssortment
  27.05.21         * zc_ObjectLink_ContractPriceList_Contract
                     zc_ObjectLink_ContractPriceList_PriceList
  17.05.21                                                                                      * zc_ObjectLink_GoodsDivisionLock_...
