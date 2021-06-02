@@ -471,12 +471,12 @@ begin
 
   LoadReportFromFile('PrintMovement_Sale2_3683763', ReportPath + '\Товарный Учет\PrintMovement_Sale2_3683763.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_SaleInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleInvoice.fr3');
   LoadReportFromFile('PrintMovement_SaleSpec', ReportPath + '\Товарный Учет\PrintMovement_SaleSpec.fr3');
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
   exit;
-  {LoadReportFromFile('PrintMovement_SaleTotal', ReportPath + '\Товарный Учет\PrintMovement_SaleTotal.fr3');
+  LoadReportFromFile('PrintMovement_SaleTotal', ReportPath + '\Товарный Учет\PrintMovement_SaleTotal.fr3');
 //  LoadReportFromFile('PrintMovement_SendOnPriceIn', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceIn.fr3');
 //  LoadReportFromFile('PrintMovement_SendOnPriceOut', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceOut.fr3');
 
@@ -486,7 +486,10 @@ begin
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
-
+  }
+  LoadReportFromFile('PrintMovement_Quality32049199_2393', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199_2393.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');
   exit;
 

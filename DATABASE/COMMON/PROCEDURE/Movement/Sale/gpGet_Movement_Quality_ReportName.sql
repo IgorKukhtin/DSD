@@ -35,8 +35,8 @@ BEGIN
                                    );
 
        --
-       SELECT CASE WHEN vbIsGoodsCode_2393 = TRUE
-                   THEN 'PrintMovement_Quality32294926'
+       SELECT CASE WHEN vbIsGoodsCode_2393 = TRUE AND OH_JuridicalDetails.OKPO =  '32049199' THEN 'PrintMovement_Quality32049199_2393'
+                   WHEN vbIsGoodsCode_2393 = TRUE AND OH_JuridicalDetails.OKPO <> '32049199' THEN 'PrintMovement_Quality32294926'
                    ELSE COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Quality')
               END
               INTO vbPrintFormName
