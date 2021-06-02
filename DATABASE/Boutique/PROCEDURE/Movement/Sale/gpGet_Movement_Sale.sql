@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PhoneMobile TVarChar, Phone TVarChar
              , Comment TVarChar, Comment_Client TVarChar
              , isOffer Boolean
+             , isDisableSMS Boolean
              , InsertName TVarChar, InsertDate TDateTime
                )
 AS
@@ -97,6 +98,7 @@ BEGIN
              , CAST ('' as TVarChar)            AS Comment
              , CAST ('' as TVarChar)            AS Comment_Client
              , CAST (FALSE AS Boolean)          AS isOffer
+             , CAST (FALSE AS Boolean)          AS isDisableSMS
 
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
@@ -226,6 +228,7 @@ BEGIN
              , ObjectString_Comment.ValueData         AS Comment_Client
              
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer
+             , COALESCE (MovementBoolean_DisableSMS.ValueData, FALSE) ::Boolean AS isDisableSMS
 
              , Object_Insert.ValueData                AS InsertName
              , COALESCE (MovementDate_Insert.ValueData, CURRENT_TIMESTAMP)  :: TDateTime AS InsertDate
@@ -239,6 +242,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Offer
                                       ON MovementBoolean_Offer.MovementId = Movement.Id
                                      AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DisableSMS
+                                      ON MovementBoolean_DisableSMS.MovementId = Movement.Id
+                                     AND MovementBoolean_DisableSMS.DescId = zc_MovementBoolean_DisableSMS()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

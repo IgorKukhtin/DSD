@@ -213,6 +213,27 @@ type
     macInsertMI_byReturn_offer: TMultiAction;
     bbInsertMI_byReturn_offer: TdxBarButton;
     bbPrintCheckPriceReal: TdxBarButton;
+    cbDisableSMS: TcxCheckBox;
+    cxLabel20: TcxLabel;
+    edKeySMS: TcxCurrencyEdit;
+    spUpdate_isDisableSMS: TdsdStoredProc;
+    actUpdate_DisableSMS: TdsdExecStoredProc;
+    bbUpdate_DisableSMS: TdxBarButton;
+    spInsert_Movement_Sale_SMS: TdsdStoredProc;
+    edSmsSettingsName: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    edLogin: TcxTextEdit;
+    cxLabel23: TcxLabel;
+    edPassword: TcxTextEdit;
+    cxLabel24: TcxLabel;
+    edMessage: TcxTextEdit;
+    PhoneSMS11: TcxLabel;
+    edPhoneSMS: TcxTextEdit;
+    cxLabel26: TcxLabel;
+    edMovementId: TcxTextEdit;
+    actInsert_SMS: TdsdExecStoredProc;
+    bbInsert_SMS: TdxBarButton;
   private
   public
   end;

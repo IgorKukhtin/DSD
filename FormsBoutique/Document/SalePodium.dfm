@@ -2,7 +2,7 @@ object SalePodiumForm: TSalePodiumForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
-  ClientHeight = 469
+  ClientHeight = 633
   ClientWidth = 1066
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object SalePodiumForm: TSalePodiumForm
     Left = 0
     Top = 0
     Width = 1066
-    Height = 129
+    Height = 161
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -136,15 +136,15 @@ object SalePodiumForm: TSalePodiumForm
       Width = 89
     end
     object cxLabel16: TcxLabel
-      Left = 208
+      Left = 397
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1086#1082#1091#1084#1077#1085#1090
     end
     object ceComment: TcxTextEdit
-      Left = 208
+      Left = 397
       Top = 103
       TabOrder = 13
-      Width = 349
+      Width = 256
     end
     object cxLabel6: TcxLabel
       Left = 770
@@ -197,12 +197,12 @@ object SalePodiumForm: TSalePodiumForm
       Width = 127
     end
     object cxLabel15: TcxLabel
-      Left = 566
+      Left = 660
       Top = 85
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 566
+      Left = 660
       Top = 103
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yy hh:mm'
@@ -213,12 +213,12 @@ object SalePodiumForm: TSalePodiumForm
       Width = 104
     end
     object cxLabel18: TcxLabel
-      Left = 677
+      Left = 770
       Top = 85
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 677
+      Left = 770
       Top = 103
       Properties.Buttons = <
         item
@@ -228,11 +228,11 @@ object SalePodiumForm: TSalePodiumForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 180
+      Width = 144
     end
     object edDiscountTaxTwo: TcxCurrencyEdit
-      Left = 975
-      Top = 113
+      Left = 1047
+      Top = 90
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
@@ -365,8 +365,8 @@ object SalePodiumForm: TSalePodiumForm
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
     end
     object cbOffer: TcxCheckBox
-      Left = 30
-      Top = 90
+      Left = 23
+      Top = 93
       Caption = #1055#1088#1080#1084#1077#1088#1082#1072
       ParentFont = False
       Properties.ReadOnly = False
@@ -379,29 +379,109 @@ object SalePodiumForm: TSalePodiumForm
       TabOrder = 39
       Width = 174
     end
+    object cbDisableSMS: TcxCheckBox
+      Left = 169
+      Top = 103
+      Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1088#1086#1074#1077#1088#1082#1091' SMS'
+      Caption = #1054#1090#1082#1083'. '#1087#1088#1086#1074#1077#1088#1082#1091' SMS'
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 40
+      Width = 127
+    end
+    object cxLabel20: TcxLabel
+      Left = 301
+      Top = 85
+      Caption = #1055#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1057#1052#1057
+    end
+    object edKeySMS: TcxCurrencyEdit
+      Left = 302
+      Top = 103
+      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      ShowHint = True
+      TabOrder = 42
+      Width = 87
+    end
+    object edSmsSettingsName: TcxTextEdit
+      Left = 74
+      Top = 129
+      Properties.ReadOnly = True
+      TabOrder = 43
+      Width = 108
+    end
+    object cxLabel21: TcxLabel
+      Left = 9
+      Top = 130
+      Caption = 'SmsSettings'
+    end
+    object cxLabel23: TcxLabel
+      Left = 334
+      Top = 130
+      Caption = 'Password '
+    end
+    object edPassword: TcxTextEdit
+      Left = 387
+      Top = 129
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 108
+    end
+    object cxLabel24: TcxLabel
+      Left = 503
+      Top = 130
+      Caption = 'Message'
+    end
+    object edMessage: TcxTextEdit
+      Left = 554
+      Top = 129
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 108
+    end
+    object PhoneSMS11: TcxLabel
+      Left = 670
+      Top = 130
+      Caption = 'PhoneSMS'
+    end
+    object edPhoneSMS: TcxTextEdit
+      Left = 728
+      Top = 129
+      Properties.ReadOnly = True
+      TabOrder = 50
+      Width = 108
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 155
+    Top = 187
     Width = 1066
-    Height = 284
+    Height = 416
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 284
+    ExplicitTop = 155
+    ExplicitHeight = 284
+    ClientRectBottom = 416
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 260
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1066
-        Height = 177
+        Height = 309
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 81
+        ExplicitHeight = 341
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1743,12 +1823,13 @@ object SalePodiumForm: TSalePodiumForm
   end
   object PanelNameFull: TPanel
     Left = 0
-    Top = 439
+    Top = 603
     Width = 1066
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitTop = 439
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1769,6 +1850,30 @@ object SalePodiumForm: TSalePodiumForm
       AnchorX = 533
       AnchorY = 15
     end
+  end
+  object cxLabel22: TcxLabel
+    Left = 187
+    Top = 130
+    Caption = 'Login'
+  end
+  object edLogin: TcxTextEdit
+    Left = 219
+    Top = 129
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 108
+  end
+  object cxLabel26: TcxLabel
+    Left = 842
+    Top = 130
+    Caption = 'MovementId'
+  end
+  object edMovementId: TcxTextEdit
+    Left = 909
+    Top = 129
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 108
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1944,6 +2049,22 @@ object SalePodiumForm: TSalePodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_DisableSMS'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_SMS'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -2097,6 +2218,14 @@ object SalePodiumForm: TSalePodiumForm
     end
     object bbPrintCheckPriceReal: TdxBarButton
       Action = mactPrintCheckPriceReal
+      Category = 0
+    end
+    object bbUpdate_DisableSMS: TdxBarButton
+      Action = actUpdate_DisableSMS
+      Category = 0
+    end
+    object bbInsert_SMS: TdxBarButton
+      Action = actInsert_SMS
       Category = 0
     end
   end
@@ -3035,6 +3164,38 @@ object SalePodiumForm: TSalePodiumForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072' ('#1094#1077#1085#1099' '#1074' '#1069#1050#1042'.)'
       ImageIndex = 15
     end
+    object actInsert_SMS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Movement_Sale_SMS
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Movement_Sale_SMS
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1084#1089
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1084#1089
+      ImageIndex = 53
+    end
+    object actUpdate_DisableSMS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDisableSMS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDisableSMS
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1054#1090#1082#1083'. '#1087#1088#1086#1074#1077#1088#1082#1091' SMS  ('#1044#1072' / '#1053#1077#1090')'
+      Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1088#1086#1074#1077#1088#1082#1091' SMS  ('#1044#1072' / '#1053#1077#1090')'
+      ImageIndex = 79
+    end
     object actUpdate_isChecked: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3833,6 +3994,13 @@ object SalePodiumForm: TSalePodiumForm
         Component = cbOffer
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDisableSMS'
+        Value = Null
+        Component = cbDisableSMS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -4381,8 +4549,8 @@ object SalePodiumForm: TSalePodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
-    Top = 87
+    Left = 448
+    Top = 39
   end
   object spGet_New: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -4751,8 +4919,8 @@ object SalePodiumForm: TSalePodiumForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1008
-    Top = 88
+    Left = 976
+    Top = 8
   end
   object spInsertMI_byReturn: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_SalePodium_Offer_byReturn'
@@ -4788,5 +4956,95 @@ object SalePodiumForm: TSalePodiumForm
     PackSize = 1
     Left = 402
     Top = 184
+  end
+  object spUpdate_isDisableSMS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_isDisableSMS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDisableSMS'
+        Value = Null
+        Component = cbDisableSMS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDisableSMS'
+        Value = Null
+        Component = cbDisableSMS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 451
+  end
+  object spInsert_Movement_Sale_SMS: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_SMS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = edMovementId
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSmsSettingsName'
+        Value = 'False'
+        Component = edSmsSettingsName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outLogin'
+        Value = 'False'
+        Component = edLogin
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = Null
+        Component = edPassword
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessage'
+        Value = Null
+        Component = edMessage
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPhoneSMS'
+        Value = Null
+        Component = edPhoneSMS
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 64
+    Top = 507
   end
 end
