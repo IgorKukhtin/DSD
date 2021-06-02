@@ -3,7 +3,7 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -266,6 +266,15 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
+          end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Options.Editing = False
+            Width = 70
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055

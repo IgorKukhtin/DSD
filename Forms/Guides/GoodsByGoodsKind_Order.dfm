@@ -3,7 +3,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -239,6 +239,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
             Options.Editing = False
             Width = 70
           end
@@ -520,6 +529,20 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end>
       isShowModal = False
     end
+    object actUpdate_Top: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_Top
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Top
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 76
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     object actUpdateNewQuality: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -585,6 +608,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Top'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -613,6 +644,10 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     end
     object bbUpdateNewQuality: TdxBarButton
       Action = actUpdateNewQuality
+      Category = 0
+    end
+    object bbUpdate_Top: TdxBarButton
+      Action = actUpdate_Top
       Category = 0
     end
   end
@@ -712,5 +747,47 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     PackSize = 1
     Left = 368
     Top = 176
+  end
+  object spUpdate_Top: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isTop'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 136
   end
 end

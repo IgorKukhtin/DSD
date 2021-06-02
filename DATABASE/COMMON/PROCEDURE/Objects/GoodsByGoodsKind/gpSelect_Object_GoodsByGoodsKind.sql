@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , NormRem TFloat, NormOut TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , isNewQuality Boolean
+             , isTop Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar, MeasureSubSendName TVarChar
@@ -184,6 +185,7 @@ BEGIN
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
            , COALESCE (ObjectBoolean_NewQuality.ValueData, False)      AS isNewQuality
+           , COALESCE (ObjectBoolean_Top.ValueData, False)             AS isTop
 
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
@@ -330,6 +332,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NewQuality
                                     ON ObjectBoolean_NewQuality.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_NewQuality.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NewQuality()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                    ON ObjectBoolean_Top.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId

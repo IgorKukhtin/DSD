@@ -290,6 +290,15 @@ inherited GoodsByGoodsKind_NormForm: TGoodsByGoodsKind_NormForm
             Options.Editing = False
             Width = 110
           end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Options.Editing = False
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'

@@ -573,11 +573,9 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
-  exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
-  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
@@ -587,7 +585,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_lineVMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_lineVMCForm');
 

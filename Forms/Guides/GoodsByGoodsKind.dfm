@@ -3,7 +3,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -553,6 +553,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1080#1103' '#1089' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1084' "'#1042#1078#1080#1090#1080' '#1076#1086'"'
+            Options.Editing = False
+            Width = 70
+          end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
             Options.Editing = False
             Width = 70
           end

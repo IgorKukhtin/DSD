@@ -3431,7 +3431,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Sh'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3471,7 +3471,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Nom'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3511,7 +3511,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Sh'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3551,7 +3551,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Ves'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3592,7 +3592,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Nom'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3632,7 +3632,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Ves'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -15,17 +15,17 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
     Height = 542
     ExplicitTop = 56
     ExplicitWidth = 1039
-    ExplicitHeight = 364
+    ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1039
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1039
-      ExplicitHeight = 364
+      ExplicitHeight = 542
       inherited cxGrid: TcxGrid
         Width = 1039
         Height = 542
         ExplicitWidth = 1039
-        ExplicitHeight = 364
+        ExplicitHeight = 542
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -3782,7 +3782,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Sh'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3822,7 +3822,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Nom'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3862,7 +3862,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Sh'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3902,7 +3902,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Ves'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3943,7 +3943,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Nom'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3983,7 +3983,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       end
       item
         Name = 'inisGoodsTypeKind_Ves'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
