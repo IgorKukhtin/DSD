@@ -420,6 +420,34 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object isDisableSMS: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1087#1088#1086#1074#1077#1088#1082#1072' SMS'
+        DataBinding.FieldName = 'isDisableSMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
+      object KeySMS: TcxGridDBColumn
+        Caption = #1055#1072#1088#1086#1083#1100' '#1076#1083#1103' SMS'
+        DataBinding.FieldName = 'KeySMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
+      object DiscountTaxSMS: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1082#1083#1080#1077#1085#1090#1072' '#1076#1083#1103' SMS'
+        DataBinding.FieldName = 'DiscountTaxSMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
+      object PhoneSMS: TcxGridDBColumn
+        Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072' '#1076#1083#1103' SMS'
+        DataBinding.FieldName = 'PhoneSMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
       object isProtocol: TcxGridDBColumn
         Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'isProtocol'
