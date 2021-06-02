@@ -128,7 +128,7 @@ function GetStateReceipt : boolean;
 implementation
 
 uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
-     DBClient, LocalWorkUnit, CommonData, ChoiceHelsiUserName;
+     DBClient, LocalWorkUnit, CommonData, ChoiceHelsiUserName, Clipbrd;
 
 var HelsiApi : THelsiApi;
 
@@ -494,7 +494,7 @@ begin
                 for I := 0 to JSONA.Count - 1 do if JSONA.Items[I].FindValue('medication_id') <> Nil then
                 begin
                   if FMedication_ID_List = '' then FMedication_ID_List := DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString)
-                  else FMedication_ID_List := FMedication_ID_List + ',' + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
+                  else FMedication_ID_List := FMedication_ID_List + FormatSettings.ListSeparator + DelDoubleQuote(JSONA.Items[I].FindValue('medication_id').ToString);
                 end;
               end;
             end;
@@ -875,6 +875,7 @@ begin
     case IdHTTP.ResponseCode of
       302 : if IdHTTP.Response.RawHeaders.IndexOfName('Location') >= 0 then
             begin
+              Clipboard.AsText := FPassword;
               Result := True;
               FShow_eHealth := True;
               FShow_Location := IdHTTP.Response.RawHeaders.Values['Location'];
@@ -997,6 +998,9 @@ function InitHelsiApi : boolean;
   var I : integer;
       ds : TClientDataSet;
       S : string;
+       // временно
+//      fileStream: TFileStream;
+//      base64Stream: TStringStream;
 begin
 
   Result := False;
@@ -1060,6 +1064,20 @@ begin
         HelsiApi.FPassword := DecodeString(ds.FieldByName('UserPassword').AsString);
         HelsiApi.FBase64Key := ds.FieldByName('Key').AsString;
         HelsiApi.FKeyPassword := DecodeString(ds.FieldByName('KeyPassword').AsString);
+
+        // временно
+//        if HelsiApi.FUserName = 'roza.y+gonchar@helsi.me' then
+//        begin
+//          fileStream := TFileStream.Create('Копия.ZS2', fmOpenRead);
+//          base64Stream := TStringStream.Create;
+//          try
+//            EncodeStream(fileStream, base64Stream);
+//            HelsiApi.FBase64Key := base64Stream.DataString;
+//          finally
+//            FreeAndNil(fileStream);
+//            FreeAndNil(base64Stream);
+//          end;
+//        end;
 
       finally
         ds.free;

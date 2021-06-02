@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat, FixEndDate TDateTime,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
-               CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
+               CountSP TFloat, CountSPMin TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
@@ -899,12 +899,13 @@ BEGIN
           , Object_Goods_Main.Analog                               AS GoodsAnalog
           , Object_Goods_Main.AnalogATC                            AS GoodsAnalogATC
           , Object_Goods_Main.ActiveSubstance                      AS GoodsActiveSubstance
-          , tmpGoodsSP.CountSP                                     AS CountSP
-          , tmpGoodsSP.IdSP                                        AS IdSP
-          , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP
-          , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
-          , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
-          , tmpGoodsSP.PaymentSP                                   AS PaymentSP
+          , tmpGoodsSP.CountSP::TFloat                             AS CountSP
+          , tmpGoodsSP.CountSP::TFloat                             AS CountSPMin
+          , tmpGoodsSP.IdSP::TVarChar                              AS IdSP
+          , tmpGoodsSP.ProgramIdSP::TVarChar                       AS ProgramIdSP
+          , tmpGoodsSP.DosageIdSP::TVarChar                        AS DosageIdSP
+          , tmpGoodsSP.PriceRetSP::TFloat                          AS PriceRetSP
+          , tmpGoodsSP.PaymentSP::TFloat                           AS PaymentSP
           , CASE CashSessionSnapShot.PartionDateKindId
             WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
             WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0

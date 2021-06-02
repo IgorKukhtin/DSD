@@ -453,7 +453,7 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
             Width = 74
           end
           object cxGridDBColumn6: TcxGridDBColumn
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080':'
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080', '#1096#1090#1088#1072#1092#1072':'
             DataBinding.FieldName = 'Awarding'
             PropertiesClassName = 'TcxComboBoxProperties'
             Properties.DropDownListStyle = lsFixedList
@@ -461,8 +461,9 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
               'Yes'
               'No')
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Styles.Content = dmMain.cxGreenEdit
-            Width = 82
+            Width = 63
           end
           object cxGridDBColumn7: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086':'
@@ -471,7 +472,7 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 70
+            Width = 58
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -848,15 +849,31 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
   end
   object cdsResult: TClientDataSet
     PersistDataPacket.Data = {
-      370000009619E0BD010000001800000001000000000003000000370008417761
-      7264696E6701004900000001000557494454480200020003000000}
+      BA0000009619E0BD010000001800000004000000000003000000BA0012546F74
+      616C457865637574696F6E4C696E650800040000000100075355425459504502
+      00490006004D6F6E65790015546F74616C457865637574696F6E416C6C4C696E
+      65080004000000010007535542545950450200490006004D6F6E657900084177
+      617264696E67010049000000010005574944544802000200030005546F74616C
+      080004000000010007535542545950450200490006004D6F6E6579000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
       item
+        Name = 'TotalExecutionLine'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'TotalExecutionAllLine'
+        DataType = ftCurrency
+      end
+      item
         Name = 'Awarding'
         DataType = ftString
         Size = 3
+      end
+      item
+        Name = 'Total'
+        DataType = ftCurrency
       end>
     IndexDefs = <>
     Params = <>
@@ -865,23 +882,17 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
     Left = 40
     Top = 384
     object cdsResultTotalExecutionLine: TCurrencyField
-      FieldKind = fkCalculated
       FieldName = 'TotalExecutionLine'
-      Calculated = True
     end
     object cdsResultTotalExecutionAllLine: TCurrencyField
-      FieldKind = fkCalculated
       FieldName = 'TotalExecutionAllLine'
-      Calculated = True
     end
     object cdsResultAwarding: TStringField
       FieldName = 'Awarding'
       Size = 3
     end
     object cdsResultTotal: TCurrencyField
-      FieldKind = fkCalculated
       FieldName = 'Total'
-      Calculated = True
     end
   end
   object cdsListBands: TClientDataSet
@@ -906,5 +917,55 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
     CheckBoxList = <>
     Left = 568
     Top = 199
+  end
+  object spGetTotal: TdsdStoredProc
+    StoredProcName = 'gpReport_ImplementationPeriodTotal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43221d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalExecutionLine'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountTheFineTab'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusAmountTab'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotal'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 344
   end
 end

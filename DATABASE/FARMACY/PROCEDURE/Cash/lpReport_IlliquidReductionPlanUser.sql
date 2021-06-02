@@ -95,7 +95,7 @@ BEGIN
       Return;
     END IF;
 
-    WITH tmpCount AS (SELECT tmpMovement.UnitId
+/*    WITH tmpCount AS (SELECT tmpMovement.UnitId
                            , count(*) AS CountCheck
                       FROM tmpMovement
                       GROUP BY tmpMovement.UnitId)
@@ -103,8 +103,26 @@ BEGIN
     INTO vbUnitId
     FROM tmpCount
     ORDER BY tmpCount.CountCheck DESC
-    LIMIT 1;
-
+    LIMIT 1;*/
+    
+     -- Основное подразделение по графику
+    SELECT MILinkObject_Unit.ObjectId AS UnitId
+    INTO vbUnitId
+    FROM Movement
+                                      
+         INNER JOIN MovementItem AS MIMaster
+                                 ON MIMaster.MovementId = Movement.ID
+                                AND MIMaster.DescId = zc_MI_Master()
+                                AND MIMaster.ObjectId   = inUserId
+                                                                   
+                                           
+         INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                           ON MILinkObject_Unit.MovementItemId = MIMaster.Id
+                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                                                 
+    WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+      AND Movement.OperDate = vbDateStart;
+    
       -- Товары без продаж
     CREATE TEMP TABLE tmpGoods (
             GoodsID         Integer,
@@ -252,3 +270,6 @@ $BODY$
 */
 
 -- тест select * from lpReport_IlliquidReductionPlanUser(inUserID := 3997097);
+
+
+SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := '4093498')

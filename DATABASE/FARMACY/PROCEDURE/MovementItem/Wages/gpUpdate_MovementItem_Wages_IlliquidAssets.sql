@@ -12,6 +12,12 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
+
+   DECLARE vbProcGoods TFloat;
+   DECLARE vbProcUnit TFloat;
+   DECLARE vbPlanAmount TFloat;
+   DECLARE vbPenalty TFloat;
+   DECLARE vbPenaltySum TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -35,6 +41,18 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Документ ЗП не найден.';
     END IF;
 
+    SELECT GetIlliquidReduction.ProcGoods
+         , GetIlliquidReduction.ProcUnit
+         , GetIlliquidReduction.PlanAmount
+         , GetIlliquidReduction.Penalty 
+         , GetIlliquidReduction.PenaltySum
+    INTO vbProcGoods 
+       , vbProcUnit
+       , vbPlanAmount
+       , vbPenalty
+       , vbPenaltySum
+    FROM gpReport_GetIlliquidReductionPlanUser (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY', inSession) AS GetIlliquidReduction;
+
     PERFORM gpInsertUpdate_MovementItem_Wages_IlliquidAssets (ioId              := T1.Id
                                                             , inMovementId      := vbMovementId
                                                             , inUserId          := T1.UserID
@@ -43,13 +61,13 @@ BEGIN
                                                             , inSession         := inSession)
     FROM (SELECT COALESCE(MovementItem.id, 0) AS Id, IPE.UnitID, IPE.UserID, ROUND(COALESCE (- IPE.SummaPenalty, 0)) AS SummaPenalty
           FROM gpReport_IlliquidReductionPlanAll(inStartDate := DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY',  
-                                                 inProcGoods := 20 , 
-                                                 inProcUnit := 10, 
-                                                 inPlanAmount := 0, 
-                                                 inPenalty := 500, 
+                                                 inProcGoods := vbProcGoods, 
+                                                 inProcUnit := vbProcUnit, 
+                                                 inPlanAmount := vbPlanAmount, 
+                                                 inPenalty := vbPenalty, 
                                                  inisPenaltyInfo := FALSE,
-                                                 inPenaltySum := 0, 
-                                                 inisPenaltySumInfo := TRUE,
+                                                 inPenaltySum := vbPenaltySum, 
+                                                 inisPenaltySumInfo := inOperDate < '01.05.2021'::TDateTime,
                                                  inSession := inSession) AS IPE
          
                LEFT JOIN MovementItem ON MovementItem.MovementId = vbMovementId
@@ -64,6 +82,8 @@ BEGIN
             AND COALESCE (IPE.SummaPenalty, 0) > 0
             AND COALESCE (IPE.ManDays, 0) > 0
           ) AS T1;
+
+       -- RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
 
 END;
 $BODY$

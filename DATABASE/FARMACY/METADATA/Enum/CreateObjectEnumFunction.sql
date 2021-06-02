@@ -534,6 +534,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_InstructionsKind_Marketing() RETURNS integer 
 
 CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_AB() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_AB' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_CC1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_CC1' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ScaleCalcMarketingPlan_D() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ScaleCalcMarketingPlan_D' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Методы выбора аптек ассортимента

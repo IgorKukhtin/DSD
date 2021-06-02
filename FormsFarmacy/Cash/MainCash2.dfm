@@ -6051,6 +6051,10 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 32882
       OnExecute = actRecipeNumber1303Execute
     end
+    object actSenClipboardName: TAction
+      Caption = 'actSenClipboardName'
+      OnExecute = actSenClipboardNameExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

@@ -13,19 +13,19 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
     Width = 867
     Height = 421
     ExplicitTop = 83
-    ExplicitWidth = 866
+    ExplicitWidth = 867
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 867
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 866
+      ExplicitWidth = 867
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Top = 89
         Width = 867
         Height = 332
         ExplicitTop = 89
-        ExplicitWidth = 866
+        ExplicitWidth = 867
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -217,7 +217,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGridDetals
-        ExplicitWidth = 866
       end
       object cxGridDetals: TcxGrid
         Left = 0
@@ -227,7 +226,6 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 866
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetalsDS
@@ -343,7 +341,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
             Width = 80
           end
           object D_SummaPenaltySum: TcxGridDBColumn
-            Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1079#1085#1072#1082#1086#1084#1083#1077#1085#1080#1077
+            Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1089#1091#1084#1084#1077
             DataBinding.FieldName = 'SummaPenaltySum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -372,7 +370,7 @@ inherited Report_IlliquidReductionPlanUserForm: TReport_IlliquidReductionPlanUse
   inherited Panel: TPanel
     Width = 867
     Height = 57
-    ExplicitWidth = 866
+    ExplicitWidth = 867
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       EditValue = 43344d

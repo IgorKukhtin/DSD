@@ -232,15 +232,23 @@ BEGIN
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
 
 --      , 1                                                    AS eHealthApi
-      , CASE WHEN inSession = '3' THEN 2 ELSE 1 END          AS eHealthApi
+      , CASE WHEN inSession = '3' THEN 1 ELSE 1 END          AS eHealthApi
 
       , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
-        ELSE NULL::Integer END                               AS Helsi_IdSP
-       , Object_Helsi_Id.ValueData                           AS Helsi_Id
-       , Object_Helsi_be.ValueData                           AS Helsi_be
-       , Object_Helsi_ClientId.ValueData                     AS Helsi_ClientId
-       , Object_Helsi_ClientSecret.ValueData                 AS Helsi_ClientSecret
-       , Object_Helsi_IntegrationClient.ValueData            AS Helsi_IntegrationClient
+        ELSE NULL::Integer END                                   AS Helsi_IdSP
+       , CASE WHEN inSession = '0' 
+         THEN 'https://qa2id.helsi.pro'
+         ELSE Object_Helsi_Id.ValueData END::TVarChar            AS Helsi_Id
+       , CASE WHEN inSession = '0' 
+         THEN 'https://qa2api.helsi.pro'
+         ELSE Object_Helsi_be.ValueData END::TVarChar            AS Helsi_be
+       , CASE WHEN inSession = '0' 
+         THEN '65b612a4-7921-422f-8992-a6c4c9e76d2a'
+         ELSE Object_Helsi_ClientId.ValueData END::TVarChar      AS Helsi_ClientId
+       , CASE WHEN inSession = '0' 
+         THEN '395f60acab35de5ff84216eb1154d0562775274a'
+         ELSE Object_Helsi_ClientSecret.ValueData END::TVarChar  AS Helsi_ClientSecret
+       , Object_Helsi_IntegrationClient.ValueData                AS Helsi_IntegrationClient
 
        , CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
          WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin())) THEN TRUE ELSE FALSE END AS isSpotter

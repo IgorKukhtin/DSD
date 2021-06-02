@@ -32,7 +32,7 @@ BEGIN
     END IF;
 
       -- Мовементы по сотруднику
-    CREATE TEMP TABLE tmpMovement (
+    CREATE TEMP TABLE tmpMovementGet (
             MovementID         Integer,
 
             OperDate           TDateTime,
@@ -42,7 +42,7 @@ BEGIN
       ) ON COMMIT DROP;
 
        -- Добовляем простые продажи
-    INSERT INTO tmpMovement
+    INSERT INTO tmpMovementGet
     SELECT
            Movement.ID                                      AS ID
          , date_trunc('day', MovementDate_Insert.ValueData) AS OperDate
@@ -71,7 +71,7 @@ BEGIN
       AND Movement.StatusId = zc_Enum_Status_Complete();
 
       -- Добовляем отборы
-    INSERT INTO tmpMovement
+    INSERT INTO tmpMovementGet
     SELECT
            Movement.ID                           AS ID
          , date_trunc('day', Movement.OperDate)  AS OperDate
@@ -97,19 +97,19 @@ BEGIN
       AND Movement.DescId = zc_Movement_Check()
       AND Movement.StatusId = zc_Enum_Status_Complete();
 
-    ANALYSE tmpMovement;
+    ANALYSE tmpMovementGet;
 
---raise notice 'Value 03: %', (SELECT count(*) FROM tmpMovement);
+--raise notice 'Value 03: %', (SELECT count(*) FROM tmpMovementGet);
 
-    IF NOT EXISTS(SELECT * FROM tmpMovement)
+    IF NOT EXISTS(SELECT * FROM tmpMovementGet)
     THEN
          RAISE EXCEPTION 'По вам ненайдены чеки.';
     END IF;
 
-    WITH tmpCount AS (SELECT tmpMovement.UnitId
+    WITH tmpCount AS (SELECT tmpMovementGet.UnitId
                            , count(*) AS CountCheck
-                      FROM tmpMovement
-                      GROUP BY tmpMovement.UnitId)
+                      FROM tmpMovementGet
+                      GROUP BY tmpMovementGet.UnitId)
     SELECT tmpCount.UnitId
     INTO vbUnitId
     FROM tmpCount
@@ -134,8 +134,8 @@ BEGIN
        SELECT MovementFloat_DayCount.ValueData::Integer            AS DayCount
             , 20::TFloat
             , 10::TFloat
-            , 7::TFloat
-            , 500::TFloat
+            , CASE WHEN vbDateStart < '01.06.2021' THEN 7 ELSE 5 END::TFloat
+            , CASE WHEN vbDateStart < '01.06.2021' THEN 500 ELSE 250 END::TFloat
             , 250::TFloat
        FROM Movement
 
@@ -178,3 +178,5 @@ $BODY$
 */
 
 -- тест select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('27.04.2021')::TDateTime , inSession := '3');
+
+select * from gpReport_GetIlliquidReductionPlanUser(inStartDate := ('06.06.2021')::TDateTime ,  inSession := '3');

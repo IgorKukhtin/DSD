@@ -4,7 +4,7 @@ interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, System.StrUtils, System.IOUtils,
+  System.Classes, System.StrUtils, System.IOUtils, System.UITypes,
   Vcl.Graphics, System.DateUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
@@ -571,6 +571,7 @@ type
     IntegerField4: TIntegerField;
     IntegerField5: TIntegerField;
     CurrencyField1: TCurrencyField;
+    actSenClipboardName: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -725,6 +726,7 @@ type
     procedure CheckGridColNameStylesGetContentStyle(
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+    procedure actSenClipboardNameExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -949,7 +951,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
-  LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog;
+  LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd;
 
 const
   StatusUnCompleteCode = 1;
@@ -4002,6 +4004,17 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.actSenClipboardNameExecute(Sender: TObject);
+begin
+  if (ActiveControl is TcxGridSite) AND not CheckCDS.IsEmpty then
+  begin
+    Clipboard.AsText := CheckCDS.FieldByName('GoodsCode').AsString + ' - ' + CheckCDS.FieldByName('GoodsName').AsString;
+  end else if RemainsCDS.IsEmpty then
+  begin
+    Clipboard.AsText := RemainsCDS.FieldByName('GoodsCode').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString;
+  end;
+end;
+
 procedure TMainCashForm2.actSetFilterExecute(Sender: TObject);
 begin
   inherited;
@@ -5810,7 +5823,7 @@ var
   SPTax: Currency;
   HelsiID, HelsiIDList, HelsiName: string;
   HelsiQty: Currency;
-  Res: TArray<string>;
+  Res : TArray<string>;
 begin
 
   if not CheckSP then
@@ -5932,23 +5945,30 @@ begin
       try
         if HelsiIDList <> '' then
         begin
-          Res := TRegEx.Split(HelsiIDList, ',');
+          Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
+
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and (';
           for I := 0 to High(Res) do
+          begin
             if I = 0 then
               RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' +
                 QuotedStr(Res[I])
             else
               RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' +
                 QuotedStr(Res[I]);
+          end;
           RemainsCDS.Filter := RemainsCDS.Filter + ')'
         end
         else
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
-        RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
+
+         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+           ' or CountSP = CountSPMin';
+
+         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
           CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
           + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
@@ -5976,7 +5996,7 @@ begin
           / 18) + ' or CountSP = ' +
           CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 12) + ')';
+          / 20) + '))';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
@@ -6150,22 +6170,28 @@ begin
       try
         if HelsiIDList <> '' then
         begin
-          Res := TRegEx.Split(HelsiIDList, ',');
+          Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and (';
           for I := 0 to High(Res) do
+          begin
             if I = 0 then
               RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' +
                 QuotedStr(Res[I])
             else
               RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' +
                 QuotedStr(Res[I]);
+          end;
           RemainsCDS.Filter := RemainsCDS.Filter + ')'
         end
         else
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
+
+        RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+           ' or CountSP = CountSPMin';
+
         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
           CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
           + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
@@ -6194,7 +6220,7 @@ begin
           / 18) + ' or CountSP = ' +
           CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
           ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 10) + ')';
+          / 20) + '))';
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
@@ -9153,6 +9179,7 @@ begin
       fShift := ssShift in Shift;
       actPutCheckToCashExecute(nil);
     End;
+
   finally
     fPrint := False;
   end;

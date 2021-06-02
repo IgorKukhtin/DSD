@@ -37,10 +37,16 @@ BEGIN
 
         , ObjectLink_User_Unit.ChildObjectId AS UnitId
 
-        , ObjectString_UserName.ValueData
-        , encode(ObjectString_UserPassword.ValueData::bytea, 'base64')::TVarChar
+        ,  CASE WHEN inSession = '0' 
+           THEN 'roza.y+gonchar@helsi.me'
+           ELSE ObjectString_UserName.ValueData END::TVarChar 
+        ,  CASE WHEN inSession = '0'
+           THEN encode('Test12341234'::bytea, 'base64')
+           ELSE encode(ObjectString_UserPassword.ValueData::bytea, 'base64') END::TVarChar
         , ObjectBlob_Key.ValueData
-        , encode(ObjectString_KeyPassword.ValueData::bytea, 'base64')::TVarChar
+        , CASE WHEN inSession = '0'
+           THEN encode('111'::bytea, 'base64')
+           ELSE encode(ObjectString_KeyPassword.ValueData::bytea, 'base64') END::TVarChar
    FROM Object AS Object_User
 
          INNER JOIN ObjectLink AS ObjectLink_User_Unit

@@ -103,9 +103,6 @@ type
     cxGridDBColumn6: TcxGridDBColumn;
     cxGridDBColumn7: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    cdsResultAwarding: TStringField;
-    cdsResultTotal: TCurrencyField;
-    cdsResultTotalExecutionLine: TCurrencyField;
     dxBarButton1: TdxBarButton;
     actConsider: TAction;
     edFilter: TcxTextEdit;
@@ -118,7 +115,11 @@ type
     AmountPlan: TcxGridDBBandedColumn;
     AmountPlanAward: TcxGridDBBandedColumn;
     cxGridDBColumn8: TcxGridDBColumn;
+    spGetTotal: TdsdStoredProc;
+    cdsResultTotalExecutionLine: TCurrencyField;
     cdsResultTotalExecutionAllLine: TCurrencyField;
+    cdsResultAwarding: TStringField;
+    cdsResultTotal: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -156,6 +157,7 @@ type
     FStyle : TcxStyle;
 
     FUnitCalck : Integer;
+    FUnitId : Integer;
     FUnitCategoryID : Integer;
 
     FAmountPlan :  TcxGridDBBandedColumn;
@@ -237,7 +239,7 @@ begin
     ClientDataSet.EnableControls;
     ClientDataSet.AfterPost :=  ClientDataSetAfterPost;
     ClientDataSet.Resync([]);
-    cdsResult.Resync([]);
+   // cdsResult.Resync([]);
   end;
 end;
 
@@ -446,10 +448,19 @@ begin
     Dataset['TotalExecutionAllLine'] := (ClientDataSet.RecordCount - FCountAllO) / FCountYes * 100
   else Dataset['TotalExecutionAllLine'] := 0;
 
-  if Dataset['Awarding'] = 'Yes' then
-    Dataset['Total'] := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1] -
-      cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0]
-  else Dataset['Total'] := 0;
+  spGetTotal.ParamByName('inUnitId').Value := FUnitId;
+  spGetTotal.ParamByName('inOperDate').Value := deStart.Date;
+  spGetTotal.ParamByName('inTotalExecutionLine').Value := Dataset['TotalExecutionLine'];
+  spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
+  spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
+  spGetTotal.ParamByName('outTotal').Value := 0;
+  try
+    spGetTotal.Execute;
+  except
+  end;
+
+  if spGetTotal.ParamByName('outTotal').AsFloat <> 0 then Dataset['Awarding'] := 'Yes';
+  Dataset['Total'] := spGetTotal.ParamByName('outTotal').AsFloat;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterOpen(
@@ -467,6 +478,7 @@ begin
       begin
         nCount := cdsUnit.FieldByName('FactOfManDays').AsInteger;
         FUnitCategoryID := cdsUnit.FieldByName('UnitCategoryId').AsInteger;
+        FUnitId := cdsUnit.FieldByName('UnitId').AsInteger;
         FUnitCalck := cdsUnit.RecNo - 1;
       end;
       cdsUnit.Next;
@@ -488,7 +500,7 @@ procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterPost(
   DataSet: TDataSet);
 begin
   ClientDataSet.Resync([]);
-  cdsResult.Resync([]);
+//  cdsResult.Resync([]);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterOpen(
@@ -536,18 +548,44 @@ begin
 
     if cdsResult.RecordCount = 0 then cdsResult.Append
     else cdsResult.Edit;
-//    if (cdsUnitCategory.RecordCount > 0) and (cdsResult.FieldByName('TotalExecutionLine').AsCurrency >=
-//      (cur / cdsUnitCategory.RecordCount)) then
+////    if (cdsUnitCategory.RecordCount > 0) and (cdsResult.FieldByName('TotalExecutionLine').AsCurrency >=
+////      (cur / cdsUnitCategory.RecordCount)) then
+////      cdsResult.FieldByName('Awarding').AsString := 'Yes'
+//    if (FCountYes <> 0) and cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) and
+//      (((ClientDataSet.RecordCount - FCountO) / FCountYes * 100) >=
+//      cdsUnitCategory.FieldByName('MinLineByLineImplPlan').AsCurrency) then
 //      cdsResult.FieldByName('Awarding').AsString := 'Yes'
-    if (FCountYes <> 0) and cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) and
-      (((ClientDataSet.RecordCount - FCountO) / FCountYes * 100) >=
-      cdsUnitCategory.FieldByName('MinLineByLineImplPlan').AsCurrency) then
-      cdsResult.FieldByName('Awarding').AsString := 'Yes'
+//    else cdsResult.FieldByName('Awarding').AsString := 'No';
+
+    if not ClientDataSet.Active then Exit;
+
+    if FCountYes <> 0 then
+      cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100
+    else cdsResult.FieldByName('TotalExecutionLine').AsCurrency := 0;
+
+    if FCountYes <> 0 then
+      cdsResult.FieldByName('TotalExecutionAllLine').AsCurrency := (ClientDataSet.RecordCount - FCountAllO) / FCountYes * 100
+    else cdsResult.FieldByName('TotalExecutionAllLine').AsCurrency := 0;
+
+    spGetTotal.ParamByName('inUnitId').Value := FUnitId;
+    spGetTotal.ParamByName('inOperDate').Value := deStart.Date;
+    spGetTotal.ParamByName('inTotalExecutionLine').Value := cdsResult.FieldByName('TotalExecutionLine').AsCurrency;
+    spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
+    spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
+    spGetTotal.ParamByName('outTotal').Value := 0;
+    try
+      spGetTotal.Execute;
+    except
+    end;
+
+    if spGetTotal.ParamByName('outTotal').AsFloat <> 0 then cdsResult.FieldByName('Awarding').AsString := 'Yes'
     else cdsResult.FieldByName('Awarding').AsString := 'No';
+    cdsResult.FieldByName('Total').AsCurrency := spGetTotal.ParamByName('outTotal').AsFloat;
+
     cdsResult.Post;
   finally
-    cdsUnitCategory.First;
-    cdsUnitCategory.EnableControls;
+//    cdsUnitCategory.First;
+//    cdsUnitCategory.EnableControls;
   end;
 end;
 
@@ -571,7 +609,7 @@ begin
     ClientDataSet.EnableControls;
   end;
 
-  cdsResult.Resync([]);
+//  cdsResult.Resync([]);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetCalcFields(

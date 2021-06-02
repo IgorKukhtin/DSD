@@ -4412,6 +4412,7 @@ BEGIN
      
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ScaleCalcMarketingPlan_AB(),   inDescId:= zc_Object_ScaleCalcMarketingPlan(), inCode:= 1, inName:= 'Øךאכא ÀÂ',              inEnumName:= 'zc_Enum_ScaleCalcMarketingPlan_AB');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ScaleCalcMarketingPlan_CC1(),  inDescId:= zc_Object_ScaleCalcMarketingPlan(), inCode:= 2, inName:= 'Øךאכא CC1',             inEnumName:= 'zc_Enum_ScaleCalcMarketingPlan_CC1');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ScaleCalcMarketingPlan_D(),    inDescId:= zc_Object_ScaleCalcMarketingPlan(), inCode:= 3, inName:= 'Øךאכא D',             inEnumName:= 'zc_Enum_ScaleCalcMarketingPlan_D');
      
 END $$;
 
