@@ -286,9 +286,15 @@ INSERT INTO ObjectDesc (Code, ItemName)
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --   SELECT 'zc_Object_TranslateWord', 'Перевод Слов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TranslateWord');
 
+CREATE OR REPLACE FUNCTION zc_Object_SmsSettings() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SmsSettings'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_SmsSettings', 'Установки для СМС' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SmsSettings');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Воробкало А. А.
+01.06.21          *zc_Object_SmsSettings
 22.09.20          * zc_Object_Language
                     zc_Object_TranslateWord
 06.05.20          * zc_Object_GoodsTag

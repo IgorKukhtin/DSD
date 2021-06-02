@@ -98,6 +98,7 @@ type
     procedure LoadReturnOutFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadSaleFormTest;
+        procedure LoadSmsSettingsFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadObjectUnionFormTest;
@@ -1451,6 +1452,15 @@ end;
 //
 
 //
+
+procedure TLoadFormTest.LoadSmsSettingsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsEditForm');
+end;
+
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));

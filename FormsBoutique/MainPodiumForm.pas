@@ -241,6 +241,9 @@ type
     N3: TMenuItem;
     actReturnInPodium: TdsdOpenForm;
     actGoodsAccountPodium: TdsdOpenForm;
+    actSmsSettings: TdsdOpenForm;
+    miSmsSettings: TMenuItem;
+    N8: TMenuItem;
   private
     { Private declarations }
   public

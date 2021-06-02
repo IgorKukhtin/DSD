@@ -18,7 +18,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SmsSettings());
+   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SmsSettings());
+   vbUserId:= lpGetUserBySession (inSession);
 
 
    -- определяем признак Создание/Корректировка

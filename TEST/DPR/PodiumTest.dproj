@@ -1182,6 +1182,11 @@
 				<Form>DatePeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\SmsSettings.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Guides\SmsSettingsEdit.pas">
+				<Form>SmsSettingsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

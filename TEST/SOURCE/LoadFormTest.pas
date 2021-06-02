@@ -194,7 +194,7 @@ type
     procedure LoadSettingsServiceFormTest;
     procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
-    procedure LoadSmsSettingsFormTest;
+
     procedure LoadStaffListFormTest;
     procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
@@ -3520,14 +3520,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
 end;
 
-
-procedure TLoadFormTest.LoadSmsSettingsFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsEditForm');
-end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin
