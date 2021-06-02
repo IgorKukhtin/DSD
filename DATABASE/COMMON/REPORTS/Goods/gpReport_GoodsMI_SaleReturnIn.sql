@@ -61,6 +61,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
              , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
+             , isTop Boolean
               )
 AS
 $BODY$
@@ -129,10 +130,21 @@ BEGIN
                        ;
     END IF;
 
+    -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+    CREATE TEMP TABLE _tmpTOP (GoodsId Integer, GoodsKindId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpTOP (GoodsId, GoodsKindId)
+        SELECT Object_GoodsByGoodsKind_View.GoodsId
+             , Object_GoodsByGoodsKind_View.GoodsKindId
+        FROM ObjectBoolean
+             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+        WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+          AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE;
+
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
        SELECT *
+            , FALSE AS isTop
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -156,6 +168,7 @@ BEGIN
        SELECT * 
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+            , FALSE AS isTop
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -395,8 +408,11 @@ BEGIN
             , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
-            
+
+            , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END AS isTop
        FROM tmpData AS gpReport
+           LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = gpReport.GoodsId
+                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (gpReport.GoodsKindId,0)
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
@@ -415,6 +431,7 @@ BEGIN
               , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
               , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
+              , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
                ;
        --
        RETURN;
@@ -822,6 +839,7 @@ BEGIN
          
          , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
+         , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END AS isTop
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -911,6 +929,9 @@ BEGIN
                                ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+          LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = tmpOperationGroup.GoodsId
+                           AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
     ;
 
 END;
