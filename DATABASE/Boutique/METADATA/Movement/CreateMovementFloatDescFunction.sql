@@ -121,10 +121,21 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPriceListTo() RETURNS Integ
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummPriceListTo', 'Итого сумма перемещения по PriceList (в ГРН)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPriceListTo');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_KeySMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_KeySMS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_KeySMS', 'Пароль для SMS' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_KeySMS');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountTaxSMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTaxSMS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_DiscountTaxSMS', 'Скидка клиента' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTaxSMS');
+
+
 /*-------------------------------------------------------------------------------
  !!!!!!!!!!!!!!!!!!! РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ !!!!!!!!!!!!!!!!!!!
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Роман
+ 02.06.21         * zc_MovementFloat_KeySMS
+                    zc_MovementFloat_DiscountTaxSMS
  15.05.20         * zc_MovementFloat_TotalSummPayOth_curr
  14.05.20         * zc_MovementFloat_TotalSummPriceListTo
                     zc_MovementFloat_TotalSummPriceListTo_start

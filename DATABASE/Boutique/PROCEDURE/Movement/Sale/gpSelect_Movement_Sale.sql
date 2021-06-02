@@ -32,14 +32,23 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isOffer Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , isProtocol Boolean
+
+             , isDisableSMS Boolean
+             , KeySMS TFloat
+             , DiscountTaxSMS TFloat
+             , PhoneSMS TVarChar
              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAdmin Boolean;
+   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     vbAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View as tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId IN (zc_Enum_Role_Admin())) ;
           
      -- Результат
      RETURN QUERY 
@@ -124,6 +133,11 @@ BEGIN
            , MovementDate_Insert.ValueData               AS InsertDate
 
            , CASE WHEN tmpProtocol.MovementId > 0 THEN TRUE ELSE FALSE END AS isProtocol
+           
+           , COALESCE (MovementBoolean_DisableSMS.ValueData, FALSE) ::Boolean AS isDisableSMS
+           , CASE WHEN vbAdmin = TRUE THEN MovementFloat_KeySMS.ValueData ELSE NULL END ::TFloat AS KeySMS
+           , MovementFloat_DiscountTaxSMS.ValueData ::TFloat   AS DiscountTaxSMS
+           , MovementString_PhoneSMS.ValueData      ::TVarChar AS TotalSummChangePhoneSMS
 
        FROM tmpMovement AS Movement
 
@@ -136,6 +150,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Offer
                                       ON MovementBoolean_Offer.MovementId = Movement.Id
                                      AND MovementBoolean_Offer.DescId = zc_MovementBoolean_Offer()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DisableSMS
+                                      ON MovementBoolean_DisableSMS.MovementId = Movement.Id
+                                     AND MovementBoolean_DisableSMS.DescId = zc_MovementBoolean_DisableSMS()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
@@ -169,6 +187,17 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay_curr
                                     ON MovementFloat_TotalSummPay_curr.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPay_curr.DescId = zc_MovementFloat_TotalSummPay_curr()
+
+            LEFT JOIN MovementFloat AS MovementFloat_KeySMS
+                                    ON MovementFloat_KeySMS.MovementId = Movement.Id
+                                   AND MovementFloat_KeySMS.DescId = zc_MovementFloat_KeySMS()
+            LEFT JOIN MovementFloat AS MovementFloat_DiscountTaxSMS
+                                    ON MovementFloat_DiscountTaxSMS.MovementId = Movement.Id
+                                   AND MovementFloat_DiscountTaxSMS.DescId = zc_MovementFloat_DiscountTaxSMS()
+
+            LEFT JOIN MovementString AS MovementString_PhoneSMS
+                                     ON MovementString_PhoneSMS.MovementId = Movement.Id
+                                    AND MovementString_PhoneSMS.DescId = zc_MovementString_PhoneSMS()
 
            /* LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -204,6 +233,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.21         *
  22.04.21         * isOffer
  13.05.20         * 
  19.02.18         * add inUnitId
