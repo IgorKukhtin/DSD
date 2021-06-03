@@ -55,6 +55,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Amount_40200_Weight TFloat
              , Return_Amount_40200_Weight TFloat
              , ReturnPercent TFloat
+             , isTop Boolean
               )
 AS
 $BODY$
@@ -341,6 +342,18 @@ BEGIN
                              OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) <> 0
                              OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) <> 0
                         )
+
+        -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+       , _tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                          , Object_GoodsByGoodsKind_View.GoodsKindId
+                     FROM ObjectBoolean
+                          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+                     WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+                       AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                     )
+
+
+     ---
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.Id                    AS GoodsId
@@ -439,7 +452,7 @@ BEGIN
          , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
 
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
-
+         , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isTop
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
@@ -494,6 +507,9 @@ BEGIN
           LEFT JOIN Object AS Object_BranchPersonal    ON Object_BranchPersonal.Id    = tmpOperationGroup.BranchId_Personal
           LEFT JOIN Object AS Object_PersonalTrade     ON Object_PersonalTrade.Id     = tmpOperationGroup.PersonalTradeId
           LEFT JOIN Object AS Object_UnitPersonalTrade ON Object_UnitPersonalTrade.Id = tmpOperationGroup.UnitId_PersonalTrade
+
+          LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = tmpOperationGroup.GoodsId
+                           AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
     ;
 
 END;
@@ -503,6 +519,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.06.21         * add isTop
  28.04.21         * add PartnerCategory
  29.04.21         *
  13.02.16                                        *
