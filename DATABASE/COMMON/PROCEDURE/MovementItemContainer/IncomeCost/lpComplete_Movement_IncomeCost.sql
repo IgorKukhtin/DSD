@@ -58,13 +58,13 @@ BEGIN
      -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
      IF vbMovementDescId_from = zc_Movement_TransportService() -- AND 1=0
      THEN
-         PERFORM gpReComplete_Movement_TransportService (vbMovementId_from, inUserId :: TVarChar);
+         PERFORM gpReComplete_Movement_TransportService (vbMovementId_from, lfGet_User_Session (inUserId));
          --
          DROP TABLE _tmpItem;
 
      ELSEIF vbMovementDescId_from = zc_Movement_Transport() -- AND 1=0
      THEN
-         PERFORM gpReComplete_Movement_Transport (vbMovementId_from, NULL, inUserId :: TVarChar);
+         PERFORM gpReComplete_Movement_Transport (vbMovementId_from, NULL, lfGet_User_Session (inUserId));
          --
          DROP TABLE _tmpItem_Transport;
 

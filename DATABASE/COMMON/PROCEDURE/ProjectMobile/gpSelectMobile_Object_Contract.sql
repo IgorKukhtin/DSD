@@ -171,6 +171,7 @@ BEGIN
                                                 AND tmpDelayDayBank.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
              WHERE Object_Contract.DescId   = zc_Object_Contract()
            --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
 
       END IF;

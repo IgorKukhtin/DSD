@@ -57,7 +57,7 @@ BEGIN
                                                                                               , inPriceListId:= vbPriceListId
                                                                                               , inGoodsId    := inGoodsId
                                                                                               , inGoodsKindId:= inGoodsKindId
-                                                                                              , inSession    := inUserId :: TVarChar
+                                                                                              , inSession    := lfGet_User_Session (inUserId)
                                                                                                ) AS tmp)
                                 , 0);
        -- если не нашли
@@ -68,7 +68,7 @@ BEGIN
                                                                                                   , inPriceListId:= vbPriceListId
                                                                                                   , inGoodsId    := inGoodsId
                                                                                                   , inGoodsKindId:= NULL
-                                                                                                  , inSession    := inUserId :: TVarChar
+                                                                                                  , inSession    := lfGet_User_Session (inUserId)
                                                                                                    ) AS tmp)
                                     , 0);
        END IF;

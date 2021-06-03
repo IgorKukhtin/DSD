@@ -90,7 +90,7 @@ BEGIN
           IF vbIndex = 0 OR 1=1
           THEN
               -- подписали
-              PERFORM gpInsertUpdate_MI_Sign (inMovementId, TRUE, inUserId :: TVarChar);
+              PERFORM gpInsertUpdate_MI_Sign (inMovementId, TRUE, lfGet_User_Session (inUserId));
           END IF;
           --
           -- если надо 2 раза подписать + есть кому подписать после текущего
@@ -102,7 +102,7 @@ BEGIN
                                                               , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
                                                               , inIsQuickly           := TRUE
                                                               , inComment             := ''
-                                                              , inSession             := inUserId :: TVarChar
+                                                              , inSession             := lfGet_User_Session (inUserId)
                                                                );
           END IF;
           
@@ -115,7 +115,7 @@ BEGIN
                                                               , inPromoStateKindId    := zc_Enum_PromoStateKind_Head()
                                                               , inIsQuickly           := TRUE
                                                               , inComment             := ''
-                                                              , inSession             := inUserId :: TVarChar
+                                                              , inSession             := lfGet_User_Session (inUserId)
                                                                );
           END IF;
 
@@ -128,7 +128,7 @@ BEGIN
                                                               , inPromoStateKindId    := zc_Enum_PromoStateKind_Main()
                                                               , inIsQuickly           := TRUE
                                                               , inComment             := ''
-                                                              , inSession             := inUserId :: TVarChar
+                                                              , inSession             := lfGet_User_Session (inUserId)
                                                                );
           END IF;
 

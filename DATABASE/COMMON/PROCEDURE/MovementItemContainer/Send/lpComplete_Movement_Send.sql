@@ -57,7 +57,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId, UnitId_ProfitLoss, BranchId_ProfitLoss, BusinessId_ProfitLoss
                           )
         WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
-                           FROM lfSelect_Object_Member_findPersonal (inUserId :: TVarChar) AS lfSelect
+                           FROM lfSelect_Object_Member_findPersonal (lfGet_User_Session (inUserId)) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
            , tmpMI AS (SELECT MovementItem.Id AS MovementItemId

@@ -37,10 +37,22 @@ BEGIN
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
 
                        , ContractConditionKindId, BonusKindId, BonusTax
+                       , GoodsByGoodsKindId
                         )
 
    WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
       , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.* FROM Constant_ProfitLoss_AnalyzerId_View)
+      , tmpGoodsByGoodsKind AS (SELECT
+                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id 
+                                    , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                    , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                               )
+
       , tmpOperation_SaleReturn
                      AS (SELECT MIContainer.OperDate
                               , CLO_Juridical.ObjectId                AS JuridicalId
@@ -588,6 +600,8 @@ BEGIN
            , tmpResult.ContractConditionKindId
            , tmpResult.BonusKindId
            , tmpResult.BonusTax
+           
+           , COALESCE (tmpGoodsByGoodsKind.Id, 0) AS GoodsByGoodsKindId
 
       FROM (SELECT tmpOperation.OperDate
 
@@ -730,6 +744,9 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
                                 ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
                                AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
+           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpResult.GoodsId
+                                        AND tmpGoodsByGoodsKind.GoodsKindId = tmpResult.GoodsKindId
+
      UNION ALL
       -- Â˘Â –≈«”À‹“¿“
       SELECT MovementItemContainer.OperDate
@@ -769,6 +786,8 @@ BEGIN
            , 0 AS ContractConditionKindId
            , 0 AS BonusKindId
            , 0 ::TFloat AS BonusTax
+           
+           , 0 AS GoodsByGoodsKindId
 
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id

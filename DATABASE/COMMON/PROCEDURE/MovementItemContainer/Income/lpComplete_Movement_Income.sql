@@ -1646,7 +1646,7 @@ END IF;
                              , CAST (tmp.SummReparation AS NUMERIC (16, 2)) AS SummReparation
                         FROM gpGet_Movement_IncomeFuel (inMovementId := inMovementId
                                                       , inOperDate   := NULL
-                                                      , inSession    := inUserId :: TVarChar
+                                                      , inSession    := lfGet_User_Session (inUserId)
                                                        ) AS tmp
                              LEFT JOIN _tmpItem ON 1 = 1
                        ) AS tmpFuel ON 1 = 1

@@ -200,17 +200,17 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 50
       end
-      object OperPriceListReal: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1043#1056#1053
-        DataBinding.FieldName = 'OperPriceListReal'
+      object OperPriceList_disc: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' (% '#1089#1082'.)'
+        DataBinding.FieldName = 'OperPriceList_disc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+        HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Options.Editing = False
-        Width = 70
+        Width = 80
       end
       object OperPriceList: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
@@ -224,6 +224,14 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 70
       end
+      object CurrencyName_pl: TcxGridDBColumn
+        Caption = #1042#1072#1083'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'CurrencyName_pl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
       object CurrencyValue_pl: TcxGridDBColumn
         Caption = #1050#1091#1088#1089' '#1055#1088#1072#1081#1089
         DataBinding.FieldName = 'CurrencyValue_pl'
@@ -235,13 +243,17 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Options.Editing = False
         Width = 55
       end
-      object CurrencyName_pl: TcxGridDBColumn
-        Caption = #1042#1072#1083'. '#1087#1088#1072#1081#1089
-        DataBinding.FieldName = 'CurrencyName_pl'
+      object OperPriceListReal: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1043#1056#1053
+        DataBinding.FieldName = 'OperPriceListReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         Options.Editing = False
-        Width = 50
+        Width = 70
       end
       object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
@@ -1098,14 +1110,14 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1201,6 +1213,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = Color_calc
@@ -1209,6 +1222,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

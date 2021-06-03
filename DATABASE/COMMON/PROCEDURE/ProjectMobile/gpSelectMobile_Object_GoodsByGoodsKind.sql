@@ -208,7 +208,8 @@ ELSE
              FROM tmpGoodsOrder_all
                   LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoodsOrder_all.GoodsId
                                       AND tmpRemains.GoodsKindId = tmpGoodsOrder_all.GoodsKindId
-           --LIMIT CASE WHEN vbUserId = 1072129 THEN 100 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
 
       END IF;

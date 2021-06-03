@@ -49,13 +49,13 @@ BEGIN
                                                                                           , inPriceListId:= vbPriceListId
                                                                                           , inGoodsId    := inGoodsId
                                                                                           , inGoodsKindId:= inGoodsKindId
-                                                                                          , inSession    := inUserId :: TVarChar
+                                                                                          , inSession    := lfGet_User_Session (inUserId)
                                                                                            ) AS tmp)
                             ,(SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_pl
                                                                                           , inPriceListId:= vbPriceListId
                                                                                           , inGoodsId    := inGoodsId
                                                                                           , inGoodsKindId:= NULL
-                                                                                          , inSession    := inUserId :: TVarChar
+                                                                                          , inSession    := lfGet_User_Session (inUserId)
                                                                                            ) AS tmp)
                             , 0);
      END IF;

@@ -904,7 +904,7 @@ end if;
 
       -- 7. удаляем !!!все!!! строки из Налоговой
       PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpMI_Tax.MovementItemId
-                                          , inSession := inUserId :: TVarChar)
+                                          , inSession := lfGet_User_Session (inUserId))
       FROM
            (SELECT MovementItem.Id         AS MovementItemId
                  , MovementItem.ObjectId   AS GoodsId
@@ -1315,7 +1315,7 @@ end if;
 
       -- 7. удаляем !!!все!!! строки из Корректировки
       PERFORM gpMovementItem_TaxCorrective_SetErased (inMovementItemId:= tmp.MovementItemId
-                                                    , inSession       := inUserId :: TVarChar)
+                                                    , inSession       := lfGet_User_Session (inUserId))
       FROM (SELECT MovementItem.Id         AS MovementItemId
             FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective) AS tmp
                  INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId

@@ -28,6 +28,7 @@ RETURNS TABLE (Id                   Integer
              , Value_choice         TFloat
              , OperPrice            TFloat
              , OperPriceList        TFloat
+             , OperPriceList_disc   TFloat
              , OperPriceListReal    TFloat
              , CurrencyValue_pl     TFloat
              , BrandName            TVarChar
@@ -219,6 +220,8 @@ BEGIN
             , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
               -- Цена в прайсе 
             , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END :: TFloat AS OperPriceList
+              -- Цена прайса со скидкой
+            , zfCalc_SummChangePercent (1, COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList), tmpDiscount.DiscountTax) :: TFloat AS OperPriceList_disc
 
               -- Цена в прайсе - ГРН
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()

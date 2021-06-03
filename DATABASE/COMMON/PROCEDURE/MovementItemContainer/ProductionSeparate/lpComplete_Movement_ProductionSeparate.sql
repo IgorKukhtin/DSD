@@ -44,7 +44,7 @@ BEGIN
      IF inUserId = zc_Enum_Process_Auto_ReComplete()
         AND DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY')
      THEN
-         PERFORM gpUpdate_MI_ProductionSeparate_StorageLineByChild (inMovementId, inUserId :: TVarChar);
+         PERFORM gpUpdate_MI_ProductionSeparate_StorageLineByChild (inMovementId, lfGet_User_Session (inUserId));
      END IF;
 
 

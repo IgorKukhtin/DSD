@@ -197,7 +197,7 @@ BEGIN
                                                    ))
                        , CASE WHEN EXISTS (SELECT 1 FROM _tmpItem JOIN Object ON Object.Id = _tmpItem.ContractId AND Object.isErased = TRUE)
                                    THEN 'Удален'
-                                   ELSE 'в статусе <' || lfGet_Object_ValueData (zc_Enum_ContractStateKind_Close() || '>'
+                                   ELSE 'в статусе <' || lfGet_Object_ValueData (zc_Enum_ContractStateKind_Close()) || '>'
                        END
                          ;
      END IF;
@@ -214,7 +214,7 @@ BEGIN
                                                                                             ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
                                                                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
                                                      WHERE _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
-                                                  , inUserId :: TVarChar) AS tmp
+                                                  , lfGet_User_Session (inUserId)) AS tmp
                          )
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Diff, OperSumm_Asset, OperSumm_Diff_Asset
                          , MovementItemId, ContainerId, ContainerId_Currency, ContainerId_Diff, ProfitLossId_Diff

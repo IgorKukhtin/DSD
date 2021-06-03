@@ -263,7 +263,7 @@ BEGIN
      -- !!!Проводим но не ВСЁ!!!
      PERFORM gpComplete_Movement_Send (inMovementId     := tmp.MovementId
                                      , inIsLastComplete := NULL
-                                     , inSession        := inUserId :: TVarChar)
+                                     , inSession        := lfGet_User_Session (inUserId))
      FROM (SELECT DISTINCT _tmpResult.MovementId FROM _tmpResult WHERE _tmpResult.isDelete = FALSE AND _tmpResult.MovementId <> 0) AS tmp
           INNER JOIN Movement ON Movement.Id = tmp.MovementId
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()

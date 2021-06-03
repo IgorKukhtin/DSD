@@ -53,7 +53,7 @@ BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
-                        FROM lfSelect_Object_Member_findPersonal (inUserId :: TVarChar) AS lfSelect
+                        FROM lfSelect_Object_Member_findPersonal (lfGet_User_Session (inUserId)) AS lfSelect
                         WHERE lfSelect.Ord = 1
                        )
      SELECT _tmp.MovementDescId, _tmp.OperDate

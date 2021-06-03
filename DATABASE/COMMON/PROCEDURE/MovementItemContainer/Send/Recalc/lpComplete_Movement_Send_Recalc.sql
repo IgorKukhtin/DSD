@@ -156,7 +156,7 @@ BEGIN
              -- Проводим
              PERFORM gpComplete_Movement_Send (inMovementId     := vbMovementId_Send_out
                                              , inIsLastComplete := TRUE
-                                             , inSession        := inUserId :: TVarChar
+                                             , inSession        := lfGet_User_Session (inUserId)
                                               )
             ;
 

@@ -29,7 +29,7 @@ $BODY$
   DECLARE vbCriticalWeight   TFloat;
   DECLARE vbIsLessWeigth     Boolean;
 BEGIN
-     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := inUserId :: TVarChar);
+     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
      
      --
      vbCriticalWeight:= (SELECT tmpGet.CriticalWeight FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin()) AS tmpGet);

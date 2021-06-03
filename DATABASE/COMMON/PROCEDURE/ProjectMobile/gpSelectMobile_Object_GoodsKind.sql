@@ -77,6 +77,7 @@ BEGIN
                   LEFT JOIN tmpGoodsKind ON tmpGoodsKind.GoodsKindId = Object_GoodsKind.Id
              WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind()
            --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
            
       END IF;

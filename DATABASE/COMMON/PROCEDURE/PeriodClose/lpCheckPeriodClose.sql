@@ -41,9 +41,9 @@ BEGIN
      -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
      IF inUserId IN (439917, 300550) -- Маховская М.В. + Рыбалко В.В.
      THEN
-         IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inUserId :: TVarChar) AS gpGet) - INTERVAL '6 DAY' > inOperDate
+         IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, lfGet_User_Session (inUserId)) AS gpGet) - INTERVAL '6 DAY' > inOperDate
          THEN
-             RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', zfConvert_DateToString ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inUserId :: TVarChar) AS gpGet) - INTERVAL '6 DAY');
+             RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', zfConvert_DateToString ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, lfGet_User_Session (inUserId)) AS gpGet) - INTERVAL '6 DAY');
          END IF;
      END IF;
 

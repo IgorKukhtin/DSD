@@ -131,8 +131,8 @@ BEGIN
      END IF;
 
 /*
-    RAISE EXCEPTION 'Ошибка.<%>  %', (SELECT zfCalc_WordNumber_Split (tmp.strIdSign,   ',', vbUserId :: TVarChar)
-                            || '  _  ' || zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', vbUserId :: TVarChar)
+    RAISE EXCEPTION 'Ошибка.<%>  %', (SELECT zfCalc_WordNumber_Split (tmp.strIdSign,   ',', lfGet_User_Session (vbUserId))
+                            || '  _  ' || zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', lfGet_User_Session (vbUserId))
                                    FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp)
                                 , (SELECT count(*) FROM MovementItem WHERE MovementId = inMovementId and DescId = zc_MI_Sign())
                                    ;

@@ -402,7 +402,8 @@ BEGIN
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
                -- AND (COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) = 4 or inSession <> '1839161')
-           --LIMIT CASE WHEN vbUserId = 1072129 THEN 2 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
 
       END IF;
