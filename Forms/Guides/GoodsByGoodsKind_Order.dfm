@@ -540,7 +540,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 76
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateNewQuality: TdsdDataSetRefresh
@@ -784,6 +783,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         ComponentItem = 'IsTop'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTop'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

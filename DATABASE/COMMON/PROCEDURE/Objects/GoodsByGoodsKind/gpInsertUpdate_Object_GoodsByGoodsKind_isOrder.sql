@@ -16,6 +16,8 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsOrder Boolean;
+   DECLARE vbIsNotMobile Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
@@ -35,11 +37,21 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
    END IF;   
 
+   --проверка если inIsOrder и inIsNotMobile не менялись выходим, значит менялся isTop - другие права и процка
+   vbIsOrder     :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()) :: Boolean;
+   vbIsNotMobile :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()):: Boolean;
+   IF COALESCE (vbIsNotMobile,False) = COALESCE (inIsNotMobile,False) AND COALESCE (vbIsOrder,False) = COALESCE (inIsOrder,False)
+   THEN
+       RETURN;
+   END IF;
+   
    -- проверка - что б Админ ничего не ломал
    IF vbUserId = 5
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
    END IF;
+
+
 
 
    IF COALESCE (ioId, 0) = 0 

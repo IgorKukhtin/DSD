@@ -7,9 +7,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_isTop(
     IN inGoodsId             Integer  , -- Товары
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inIsTop               Boolean  , --
+   OUT outIsTop               Boolean  , --
     IN inSession             TVarChar 
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -61,8 +62,10 @@ BEGIN
 
    END IF;
    
+   outIsTop := NOT inIsTop;
+   
    -- сохранили свойство <Новая декларация с параметром "Вжити до">
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Top(), ioId, NOT inIsTop);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Top(), ioId, outIsTop);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
