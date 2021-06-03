@@ -57,6 +57,10 @@ type
     cbisPersonalGroup: TcxCheckBox;
     actRefreshDataPersonalGroup: TdsdDataSetRefresh;
     PersonalGroupName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    cbMovement: TcxCheckBox;
+    actRefreshMov: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

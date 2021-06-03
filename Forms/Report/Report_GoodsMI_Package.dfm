@@ -384,6 +384,20 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1044#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -450,6 +464,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       TabOrder = 7
       Width = 143
     end
+    object cbMovement: TcxCheckBox
+      Left = 447
+      Top = 30
+      Action = actRefreshMov
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 146
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -482,6 +504,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshData: TdsdDataSetRefresh [1]
@@ -496,6 +519,19 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       Hint = #1087#1086' '#1076#1072#1090#1072#1084
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMov: TdsdDataSetRefresh [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -518,7 +554,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -529,7 +565,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -602,7 +638,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -613,7 +649,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -731,6 +767,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           Name = 'isPersonalGroup'
           Value = Null
           Component = cbisPersonalGroup
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -890,6 +934,14 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -1038,6 +1090,6 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 544
+    Left = 672
   end
 end

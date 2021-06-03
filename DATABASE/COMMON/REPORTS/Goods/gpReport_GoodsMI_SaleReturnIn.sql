@@ -130,17 +130,6 @@ BEGIN
                        ;
     END IF;
 
-    -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
-    CREATE TEMP TABLE _tmpTOP (GoodsId Integer, GoodsKindId Integer) ON COMMIT DROP;
-     INSERT INTO _tmpTOP (GoodsId, GoodsKindId)
-        SELECT Object_GoodsByGoodsKind_View.GoodsId
-             , Object_GoodsByGoodsKind_View.GoodsKindId
-        FROM ObjectBoolean
-             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
-        WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
-          AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE;
-
-
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
        SELECT *
@@ -291,6 +280,7 @@ BEGIN
                                     , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
                                     , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
                                     , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                                    , (gpReport.isTop) :: Boolean AS isTop
                                   --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
                                FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
@@ -346,6 +336,7 @@ BEGIN
                                     , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
                                     , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
                                     , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                                    , (gpReport.isTop) :: Boolean AS isTop
                                   --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
@@ -409,10 +400,8 @@ BEGIN
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
-            , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END AS isTop
+            , gpReport.isTop
        FROM tmpData AS gpReport
-           LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = gpReport.GoodsId
-                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (gpReport.GoodsKindId,0)
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
@@ -431,7 +420,7 @@ BEGIN
               , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
               , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
-              , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
+              , gpReport.isTop
                ;
        --
        RETURN;
@@ -724,6 +713,16 @@ BEGIN
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
 
+           -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+          , _tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                             , Object_GoodsByGoodsKind_View.GoodsKindId
+                        FROM ObjectBoolean
+                             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+                        WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+                          AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                        )
+
+     -----
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.Id                    AS GoodsId
@@ -839,7 +838,7 @@ BEGIN
          
          , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
-         , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END AS isTop
+         , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
