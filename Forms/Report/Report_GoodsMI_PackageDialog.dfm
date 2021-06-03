@@ -3,7 +3,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1091#1087#1072#1082#1086#1074#1082#1077'>'
-  ClientHeight = 217
+  ClientHeight = 226
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 50
-    Top = 166
+    Left = 64
+    Top = 186
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 166
+    Left = 238
+    Top = 186
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -53,8 +53,8 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     Width = 90
   end
   object edUnit: TcxButtonEdit
-    Left = 8
-    Top = 118
+    Left = 22
+    Top = 138
     Properties.Buttons = <
       item
         Default = True
@@ -65,8 +65,8 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 8
-    Top = 98
+    Left = 22
+    Top = 118
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -95,15 +95,23 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
     TabOrder = 9
     Width = 143
   end
+  object cbMovement: TcxCheckBox
+    Left = 20
+    Top = 92
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 146
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 176
-    Top = 151
+    Left = 190
+    Top = 171
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 216
-    Top = 87
+    Left = 230
+    Top = 107
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -168,9 +176,17 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 143
+    Left = 38
+    Top = 163
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -199,7 +215,7 @@ object Report_GoodsMI_PackageDialogForm: TReport_GoodsMI_PackageDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 111
+    Left = 102
+    Top = 131
   end
 end

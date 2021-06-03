@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inStartDate          TDateTime ,
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inUnitId             Integer   ,
     IN inIsDate             Boolean   , -- по датам
     IN inIsPersonalGroup    Boolean   , -- по № бригады
+    IN inisMovement         Boolean   , -- показать № накладной перемещения
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
@@ -31,6 +33,8 @@ RETURNS TABLE (OperDate TDateTime
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              
              , PersonalGroupName      TVarChar
+             
+             , InvNumber TVarChar, MovementDescName TVarChar
               )
 AS
 $BODY$
@@ -60,6 +64,7 @@ BEGIN
                            
                            , tmpMI.PersonalGroupName
                           -- , tmpMI.UnitName_PersonalGroup
+                           , tmpMI.MovementId
 
                       FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
@@ -89,6 +94,8 @@ BEGIN
 
                                  , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END AS PersonalGroupName
                                  --, STRING_AGG (DISTINCT CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END, '; ')      AS PersonalGroupName
+                                 
+                                 , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END MovementId
                             FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                               ON MLO_DocumentKind.MovementId = MIContainer.MovementId
@@ -117,6 +124,7 @@ BEGIN
                                    , MIContainer.ObjectIntId_Analyzer
                                    , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
+                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
@@ -125,7 +133,10 @@ BEGIN
                                  , MAX (Object_Receipt.Id) AS ReceiptId
                                  , MAX (COALESCE (ObjectLink_Receipt_Goods_Parent_0.ChildObjectId, 0)) AS GoodsId_basis
                                  , MAX (COALESCE (ObjectLink_Receipt_Parent_0.ChildObjectId, 0))       AS ReceiptId_basis
-                            FROM tmpMI_Union
+                            FROM (SELECT DISTINCT
+                                         tmpMI_Union.GoodsId
+                                       , tmpMI_Union.GoodsKindId
+                                  FROM tmpMI_Union) AS tmpMI_Union
                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_Union.GoodsId
                                                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
@@ -229,8 +240,14 @@ BEGIN
          , ObjectFloat_WeightTotal.ValueData AS WeightTotal
          
          , tmpMI_Union.PersonalGroupName      ::TVarChar
+         
+         , Movement.InvNumber    :: TVarChar
+         , MovementDesc.ItemName :: TVarChar AS MovementDescName
 
      FROM tmpMI_Union
+          LEFT JOIN Movement ON Movement.Id = tmpMI_Union.MovementId
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
           LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_Union.GoodsId
                               AND tmpReceipt.GoodsKindId = tmpMI_Union.GoodsKindId
                               AND tmpReceipt.GoodsId_basis <> 0
@@ -286,6 +303,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.21         * inisMovement
  17.08.20         * inIsPersonalGroup
  29.04.20         * zc_Movement_SendAsset()
  07.06.18         * add inIsDate
@@ -304,4 +322,9 @@ ORDER BY 7;
 SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '01.09.2020', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inSession:= zfCalc_UserAdmin()) 
 where goodsId = 2062
 ORDER BY 7;
+
+SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '02.08.2020', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inisMovement := true, inSession:= zfCalc_UserAdmin()) 
+where goodsId = 2062
+ORDER BY invnumber , 7;
+
 */

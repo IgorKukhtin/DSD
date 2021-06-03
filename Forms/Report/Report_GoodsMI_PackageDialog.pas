@@ -28,6 +28,7 @@ type
     UnitGuides: TdsdGuides;
     cbisDate: TcxCheckBox;
     cbisPersonalGroup: TcxCheckBox;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public
