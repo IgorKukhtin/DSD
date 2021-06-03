@@ -212,6 +212,10 @@ BEGIN
 
    UNION SELECT 58, 'dimension' :: TVarChar AS FieldType, 'Категория ТТ' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'CategoryName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object_Partner_Category_View' :: TVarChar, 'Object_Partner_Category_View' :: TVarChar, 'PartnerId' :: TVarChar, 'Category' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+
+   UNION SELECT 59, 'dimension' :: TVarChar AS FieldType, 'Топ' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ValueData' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+                 'Object_GoodsByGoodsKind_Top_View' :: TVarChar, 'Object_GoodsByGoodsKind_Top_View' :: TVarChar, 'GoodsByGoodsKindId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+
      )
                  AS SetupData ORDER BY 1;
 
