@@ -36,7 +36,7 @@ BEGIN
 
    -- если даты меньше текущей можем закрывать
    -- сохранили св€зь с <—осто€ние договора>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), ioId, zc_Enum_ContractStateKind_Close());   
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), inId, zc_Enum_ContractStateKind_Close());   
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);

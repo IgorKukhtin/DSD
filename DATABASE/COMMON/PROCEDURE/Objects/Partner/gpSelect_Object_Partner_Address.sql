@@ -55,7 +55,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
-/*if inSession <> '5' 
+/*if inSession <> '5'
 then
     RAISE EXCEPTION 'Ошибка.Повторите действие через 3 мин.';
 end if;*/
@@ -126,7 +126,7 @@ end if;
                                  ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
- 
+
                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                  ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -140,46 +140,76 @@ end if;
                     WHERE Object_Personal.DescId = zc_Object_Personal()
                      )
 
-   , tmpMovement AS (SELECT Object.Id AS PartnerId
-                          , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN 3000
-                                      ELSE 0
-                                 END
-                               + CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN zc_Movement_Sale()
-                                      ELSE zc_Movement_Income()
-                                 END
-                                 ) AS DescId
-                          , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 3000
-                                      WHEN MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 2000
-                                      ELSE 0
-                                 END
-                               + COALESCE (MLO_PaidKind.ObjectId, 0)
-                                 ) AS PaidKindId
-                          , MAX (CASE WHEN ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101() -- Готовая продукция
-                                           THEN ObjectLink_Contract_InfoMoney.ChildObjectId
-                                      ELSE -1 * ObjectLink_Contract_InfoMoney.ChildObjectId
-                                 END
-                                 ) AS InfoMoneyId
-                          , MAX (COALESCE (MILO_Branch.ObjectId, 0)) AS BranchId
-                     FROM Object
-                          INNER JOIN MovementLinkObject ON MovementLinkObject.ObjectId = Object.Id
-                          INNER JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
-                                             AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
-                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                             AND Movement.StatusId = zc_Enum_Status_Complete()
+   , tmpMovement_1 AS (SELECT Movement.*
+                       FROM Movement
+                       WHERE Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
+                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND inIsPeriod = TRUE
+                      )
+   , tmpMovement_2 AS (SELECT MovementLinkObject.*
+                       FROM MovementLinkObject
+                       WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_1.Id FROM tmpMovement_1)
+                      )
+         , tmpMI_1 AS (SELECT MovementItem.*
+                       FROM MovementItem
+                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_1.Id FROM tmpMovement_1)
+                         AND MovementItem.IsErased = FALSE
+                      )
+         , tmpMI_2 AS (SELECT MovementItemLinkObject.*
+                       FROM MovementItemLinkObject
+                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_1.Id FROM tmpMI_1)
+                         AND MovementItemLinkObject.DescId = zc_MILinkObject_Branch()
+                      )
+       , tmpMI_3 AS (SELECT Object.Id AS PartnerId
+                          , Movement.DescId AS MovementDescId
+                          , MLO_PaidKind.ObjectId AS PaidKindId
+                          , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                          , COALESCE (MILO_Branch.ObjectId, 0) AS BranchId
+                     FROM tmpMovement_1 AS Movement
+
+                          INNER JOIN tmpMovement_2 AS MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                          INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
+                                           AND Object.DescId = zc_Object_Partner()
+
                           LEFT JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                AND MovementItem.IsErased = FALSE
-                          LEFT JOIN MovementItemLinkObject AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
+
                           LEFT JOIN MovementLinkObject AS MLO_Contract ON MLO_Contract.MovementId = Movement.Id AND MLO_Contract.DescId =  zc_MovementLinkObject_Contract()
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                ON ObjectLink_Contract_InfoMoney.ObjectId = MLO_Contract.ObjectId
-                                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                     WHERE Object.DescId = zc_Object_Partner()
-                       AND inIsPeriod = TRUE
-                       AND (ObjectLink_Contract_InfoMoney.ChildObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                     GROUP BY Object.Id
-                    ) 
+                                              AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
 
+                          LEFT JOIN tmpMI_1 AS MovementItem
+                                            ON MovementItem.MovementId = Movement.Id
+                                           AND MovementItem.IsErased   = FALSE
+                          LEFT JOIN tmpMI_2 AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
+                    )
+
+   , tmpMovement AS (SELECT tmpMI_3.PartnerId
+                          , MAX (CASE WHEN tmpMI_3.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN 3000
+                                      ELSE 0
+                                 END
+                               + CASE WHEN tmpMI_3.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN zc_Movement_Sale()
+                                      ELSE zc_Movement_Income()
+                                 END
+                                 ) AS DescId
+                          , MAX (CASE WHEN MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND tmpMI_3.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 3000
+                                      WHEN tmpMI_3.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 2000
+                                      ELSE 0
+                                 END
+                               + tmpMI_3.PaidKindId
+                                 ) AS PaidKindId
+                          , MAX (CASE WHEN tmpMI_3.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                           THEN tmpMI_3.InfoMoneyId
+                                      ELSE -1 * tmpMI_3.InfoMoneyId
+                                 END
+                                 ) AS InfoMoneyId
+                          , MAX (tmpMI_3.BranchId) AS BranchId
+                     FROM tmpMI_3
+                     WHERE (tmpMI_3.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+                     GROUP BY tmpMI_3.PartnerId
+                    )
+     -- Результат
      SELECT
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
@@ -272,9 +302,9 @@ end if;
 
      FROM tmpIsErased
           INNER JOIN Object AS Object_Partner
-                            ON Object_Partner.isErased = tmpIsErased.isErased 
+                            ON Object_Partner.isErased = tmpIsErased.isErased
                            AND Object_Partner.DescId = zc_Object_Partner()
-       
+
           LEFT JOIN  tmpMovement ON tmpMovement.PartnerId = Object_Partner.id
          LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = CASE WHEN tmpMovement.DescId > 3000 THEN tmpMovement.DescId - 3000 WHEN tmpMovement.DescId > 2000 THEN tmpMovement.DescId - 2000 ELSE tmpMovement.DescId END
          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN tmpMovement.PaidKindId > 3000 THEN tmpMovement.PaidKindId - 3000 WHEN tmpMovement.PaidKindId > 2000 THEN tmpMovement.PaidKindId - 2000 ELSE tmpMovement.PaidKindId END
@@ -380,7 +410,7 @@ end if;
          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
@@ -413,7 +443,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  19.06.17         * add PersonalMerch
- 06.05.17         * 
+ 06.05.17         *
  06.10.15         * add inShowAll
  09.12.14                                        * add inInfoMoneyId
  03.12.14                                        * all
@@ -424,3 +454,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Partner_Address(inStartDate := ('01.02.2015')::TDateTime , inEndDate := ('28.02.2015')::TDateTime , inIsPeriod := 'False' , inShowAll := 'False' , inJuridicalId := 15029 , inInfoMoneyId := 0 , inPersonalTradeId := 0 , inRetailId := 0 , inRouteId := 0 ,  inSession := '5');
+-- select * from gpSelect_Object_Partner_Address(inStartDate := ('01.05.2021')::TDateTime , inEndDate := ('31.05.2021')::TDateTime , inIsPeriod := 'True' , inShowAll := 'False' , inJuridicalId := 0 , inInfoMoneyId := 8962 , inPersonalTradeId := 0 , inRetailId := 0 , inRouteId := 0 ,  inSession := '5284405');	
