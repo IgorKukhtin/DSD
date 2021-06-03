@@ -42,9 +42,12 @@ type
     actUpdateNewQuality: TdsdDataSetRefresh;
     spUpdateNewQuality: TdsdStoredProc;
     bbUpdateNewQuality: TdxBarButton;
-    spUpdate_Top: TdsdStoredProc;
-    actUpdate_Top: TdsdDataSetRefresh;
+    spUpdate_Top_Yes: TdsdStoredProc;
+    actUpdate_Top_Yes: TdsdDataSetRefresh;
     bbUpdate_Top: TdxBarButton;
+    spUpdate_Top_No: TdsdStoredProc;
+    actUpdate_Top_No: TdsdDataSetRefresh;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
