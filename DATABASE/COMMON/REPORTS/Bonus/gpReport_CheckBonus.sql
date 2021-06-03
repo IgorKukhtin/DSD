@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
 RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
              , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
-             , InfoMoneyId_master Integer, InfoMoneyId_find Integer
+             , InfoMoneyId_master Integer, InfoMoneyId_child Integer, InfoMoneyId_find Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -189,7 +189,7 @@ BEGIN
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
-           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
+           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_child, tmp.InfoMoneyId_find
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
            , tmp.JuridicalId, tmp.JuridicalName
            , tmp.PaidKindId, tmp.PaidKindName
@@ -255,7 +255,7 @@ BEGIN
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
            , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
-           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_find
+           , tmp.InfoMoneyId_master, tmp.InfoMoneyId_child, tmp.InfoMoneyId_find
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
            , tmp.JuridicalId, tmp.JuridicalName
            , tmp.PaidKindId, tmp.PaidKindName

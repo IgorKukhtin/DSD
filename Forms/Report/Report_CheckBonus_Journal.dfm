@@ -1761,13 +1761,21 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
     Top = 22
   end
   object spInsertUpdate_ByGrid: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid'
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport_Journal'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inOperDate'
         Value = 44197d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1787,6 +1795,33 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
         Value = 42370d
         Component = MasterCDS
         ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Sum_CheckBonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentRet'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PercentRetBonus_fact_weight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartKg'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartKg'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1848,6 +1883,14 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindId_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId_Child'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inConditionKindId'
         Value = Null
         Component = MasterCDS
@@ -1868,6 +1911,22 @@ inherited Report_CheckBonus_JournalForm: TReport_CheckBonus_JournalForm
         Value = ''
         Component = MasterCDS
         ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalTradeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

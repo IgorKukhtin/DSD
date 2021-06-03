@@ -28,9 +28,10 @@ RETURNS TABLE( MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Servi
              , Sum_Sale_weight TFloat, Sum_ReturnIn_weight TFloat
              , PercentRetBonus_diff_weight TFloat
              , BonusKindId Integer, BonusKindName TVarChar
+             , InfoMoneyId_master Integer, InfoMoneyId_child Integer, InfoMoneyId_find Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , PaidKindName_Child TVarChar
+             , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , RetailName TVarChar
              , PersonalId Integer
              , PersonalCode Integer
@@ -128,9 +129,12 @@ BEGIN
                                    , 0 ::TFloat AS PercentRetBonus_diff_weight
                                    , tmpMovement.BonusKindId
                                    , tmpMovement.BonusKindName
+                                   , tmpMovement.InfoMoneyid        AS InfoMoneyId_master --Object_InfoMoney_master.ValueData      
+                                   , Object_InfoMoney_child.Id      AS InfoMoneyId_child
+                                   , 0 ::Integer                    AS InfoMoneyId_find
                                    , tmpMovement.InfoMoneyName        AS InfoMoneyName_master --Object_InfoMoney_master.ValueData      
                                    , Object_InfoMoney_child.ValueData AS InfoMoneyName_child
-                                   , 0 ::TVarChar                     AS InfoMoneyName_find
+                                   , '' ::TVarChar                    AS InfoMoneyName_find
                                    , tmpMovement.PaidKindId
                                    , tmpMovement.PaidKindName
                                    , tmpMovement.PaidKindId_Child
@@ -194,6 +198,7 @@ BEGIN
                                  , tmp.Sum_ReturnIn_weight
                                  , tmp.PercentRetBonus_diff_weight
                                  , tmp.BonusKindId, tmp.BonusKindName
+                                 , tmp.InfoMoneyId_master, tmp.InfoMoneyId_child, tmp.InfoMoneyId_find
                                  , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
                                  , tmp.PaidKindId, tmp.PaidKindName
                                  , tmp.PaidKindId_Child, tmp.PaidKindName_Child
@@ -259,6 +264,10 @@ BEGIN
             
             , COALESCE (tmp.BonusKindId,tmpR.BonusKindId)     AS BonusKindId
             , COALESCE (tmp.BonusKindName,tmpR.BonusKindName) AS BonusKindName
+
+            , COALESCE (tmp.InfoMoneyId_master,tmpR.InfoMoneyId_master)        AS InfoMoneyId_master
+            , COALESCE (tmp.InfoMoneyId_child,tmpR.InfoMoneyId_child)          AS InfoMoneyId_child
+            , COALESCE (tmp.InfoMoneyId_find,tmpR.InfoMoneyId_find)            AS InfoMoneyId_find
             
             , COALESCE (tmp.InfoMoneyName_master,tmpR.InfoMoneyName_master)        AS InfoMoneyName_master
             , COALESCE (tmp.InfoMoneyName_child,tmpR.InfoMoneyName_child)          AS InfoMoneyName_child
@@ -266,6 +275,7 @@ BEGIN
             
             , COALESCE (tmp.PaidKindId,tmpR.PaidKindId)             AS PaidKindId
             , COALESCE (tmp.PaidKindName,tmpR.PaidKindName)         AS PaidKindName
+            , COALESCE (tmp.PaidKindId_Child,tmpR.PaidKindId_Child)     AS PaidKindId_Child
             , COALESCE (tmp.PaidKindName_Child,tmpR.PaidKindName_Child) AS PaidKindName_Child
             
             , COALESCE (tmp.RetailName,tmpR.RetailName)       As RetailName

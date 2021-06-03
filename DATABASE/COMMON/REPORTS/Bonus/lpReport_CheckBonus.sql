@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpReport_CheckBonus (
 RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
              , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
-             , InfoMoneyId_master Integer, InfoMoneyId_find Integer
+             , InfoMoneyId_master Integer, InfoMoneyId_child Integer, InfoMoneyId_find Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -1417,6 +1417,7 @@ BEGIN
             , tmpData.ContractStateKindCode_child  
 
             , Object_InfoMoney_master.Id                    AS InfoMoneyId_master
+            , Object_InfoMoney_child.Id                     AS InfoMoneyId_child
             , Object_InfoMoney_find.Id                      AS InfoMoneyId_find
 
             , Object_InfoMoney_master.ValueData             AS InfoMoneyName_master
@@ -1577,6 +1578,7 @@ BEGIN
             , tmpData.ContractStateKindCode_child  
 
             , tmpData.InfoMoneyId_master
+            , tmpData.InfoMoneyId_child
             , tmpData.InfoMoneyId_find
 
             , tmpData.InfoMoneyName_master

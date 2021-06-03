@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, ItemName_Partner TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , ContractMasterId Integer, ContractMasterInvNumber TVarChar
              , ContractTagId_master Integer, ContractTagName_master TVarChar
@@ -140,6 +140,7 @@ BEGIN
 
            , Object_InfoMoney_View.InfoMoneyGroupName       AS InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName AS InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyId              AS InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyCode            AS InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName            AS InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyName_all
