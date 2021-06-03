@@ -68,7 +68,7 @@ BEGIN
 
                       FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
-                                 , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDatetime AS OperDate
+                                 , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDatetime AS OperDate
                                  
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
                                       + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()                  AND MIContainer.IsActive = TRUE AND MLO_DocumentKind.ObjectId > 0 AND MIContainer.ObjectExtId_Analyzer = inUnitId
@@ -122,7 +122,7 @@ BEGIN
                               -- AND MIContainer.Amount <> 0
                             GROUP BY MIContainer.ObjectId_Analyzer
                                    , MIContainer.ObjectIntId_Analyzer
-                                   , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
+                                   , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN MIContainer.OperDate ELSE NULL END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                            ) AS tmpMI

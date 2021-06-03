@@ -32,11 +32,6 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
    END IF;   
 
-   -- проверка - что б Админ ничего не ломал
-   IF vbUserId = 5 AND 1=1
-   THEN
-       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
-   END IF;
 
 
    IF COALESCE (ioId, 0) = 0 
@@ -71,6 +66,13 @@ BEGIN
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   
+      -- проверка - что б Админ ничего не ломал
+   IF vbUserId = 5 AND 1=1
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав - что б Админ ничего не ломал.';
+   END IF;
+
 
 END;
 $BODY$

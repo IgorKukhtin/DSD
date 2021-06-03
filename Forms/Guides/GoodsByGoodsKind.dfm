@@ -19,6 +19,8 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       inherited cxGrid: TcxGrid
         Width = 1030
         Height = 394
+        ExplicitLeft = 72
+        ExplicitTop = 240
         ExplicitWidth = 1030
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
