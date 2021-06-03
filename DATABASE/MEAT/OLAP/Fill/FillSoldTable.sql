@@ -17,6 +17,25 @@ BEGIN
   DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
 
 
+/*
+update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
+FROM (with tmpGoodsByGoodsKind AS (SELECT
+                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id 
+                                    , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                    , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                               )
+      select * from tmpGoodsByGoodsKind
+     ) AS tmpGoodsByGoodsKind
+where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
+  AND tmpGoodsByGoodsKind.GoodsKindId = SoldTable .GoodsKindId
+  AND SoldTable.OperDate BETWEEN '01.04.2021' AND '01.05.2021'
+
+*/
   --
   INSERT INTO SoldTable (OperDate
                        , AccountId

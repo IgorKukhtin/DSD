@@ -9,7 +9,8 @@ AS
 $BODY$
 BEGIN
       -- Результат
-      RETURN 5416834;
+    --RETURN 5416834;
+      RETURN 0;
 END;
 $BODY$
   LANGUAGE plpgsql IMMUTABLE;

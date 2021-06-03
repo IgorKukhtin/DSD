@@ -464,15 +464,12 @@ object SalePodiumForm: TSalePodiumForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 155
-    ExplicitHeight = 284
     ClientRectBottom = 416
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 260
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -480,8 +477,6 @@ object SalePodiumForm: TSalePodiumForm
         Height = 309
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 81
-        ExplicitHeight = 341
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1828,8 +1823,7 @@ object SalePodiumForm: TSalePodiumForm
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 6
-    ExplicitTop = 439
+    TabOrder = 4
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1860,7 +1854,7 @@ object SalePodiumForm: TSalePodiumForm
     Left = 219
     Top = 129
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 108
   end
   object cxLabel26: TcxLabel
@@ -3176,9 +3170,8 @@ object SalePodiumForm: TSalePodiumForm
         item
           StoredProc = spGet
         end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1084#1089
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1089#1084#1089
-      ImageIndex = 53
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' SMS'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' SMS'
     end
     object actUpdate_DisableSMS: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -3194,7 +3187,7 @@ object SalePodiumForm: TSalePodiumForm
         end>
       Caption = #1054#1090#1082#1083'. '#1087#1088#1086#1074#1077#1088#1082#1091' SMS  ('#1044#1072' / '#1053#1077#1090')'
       Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1088#1086#1074#1077#1088#1082#1091' SMS  ('#1044#1072' / '#1053#1077#1090')'
-      ImageIndex = 79
+      ImageIndex = 52
     end
     object actUpdate_isChecked: TdsdExecStoredProc
       Category = 'DSDLib'

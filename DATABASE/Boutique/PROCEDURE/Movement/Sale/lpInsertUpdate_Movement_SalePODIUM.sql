@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
     IN inComment              TVarChar  , -- Примечание
-    IN inisOffer              Boolean   , -- Примерка
+    IN inIsOffer              Boolean   , -- Примерка
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -81,7 +81,7 @@ BEGIN
 
 
      -- сохранили связь с <Примерка>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Offer(), ioId, inisOffer);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Offer(), ioId, inIsOffer);
      
      IF vbIsInsert = TRUE
      THEN
