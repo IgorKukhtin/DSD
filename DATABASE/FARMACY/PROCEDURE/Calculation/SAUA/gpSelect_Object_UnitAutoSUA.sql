@@ -54,7 +54,7 @@ BEGIN
                      ORDER BY Object_Juridical.ValueData
                             , Object_Unit.ValueData
                      )
-       , tmpMaxData AS (SELECT Max(ObjectDate_AutoSUA.ValueData)                       AS MaxDateAuto 
+       , tmpMaxData AS (SELECT Max(ObjectDate_AutoSUA.ValueData) + ((1 - date_part('DOW', Max(ObjectDate_AutoSUA.ValueData))::Integer)::TVarChar||' DAY')::INTERVAL AS MaxDateAuto 
                         FROM tmpUnit
                              INNER JOIN ObjectDate AS ObjectDate_AutoSUA
                                                    ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
@@ -106,4 +106,5 @@ $BODY$
 
 -- тест
 --
- SELECT * FROM gpSelect_Object_UnitAutoSUA (inSession:= '3')    
+
+select * from gpSelect_Object_UnitAutoSUA( inSession := '3');

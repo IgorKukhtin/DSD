@@ -128,7 +128,7 @@ function GetStateReceipt : boolean;
 implementation
 
 uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
-     DBClient, LocalWorkUnit, CommonData, ChoiceHelsiUserName, Clipbrd;
+     DBClient, LocalWorkUnit, CommonData, ChoiceHelsiUserName;
 
 var HelsiApi : THelsiApi;
 
@@ -875,7 +875,6 @@ begin
     case IdHTTP.ResponseCode of
       302 : if IdHTTP.Response.RawHeaders.IndexOfName('Location') >= 0 then
             begin
-              Clipboard.AsText := FPassword;
               Result := True;
               FShow_eHealth := True;
               FShow_Location := IdHTTP.Response.RawHeaders.Values['Location'];

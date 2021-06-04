@@ -75,8 +75,9 @@ BEGIN
          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
          , COALESCE (MovementBoolean_Sent.ValueData, FALSE) ::Boolean
          , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean
+         , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
     INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, 
-         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived       
+         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived, vbCommentSendID       
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -85,6 +86,10 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                      
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                           ON MILinkObject_CommentSend.MovementItemId = Movement.Id
+                                          AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
 
           LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                     ON MovementBoolean_SUN.MovementId = Movement.Id
