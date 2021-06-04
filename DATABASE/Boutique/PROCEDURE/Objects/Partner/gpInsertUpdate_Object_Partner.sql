@@ -19,8 +19,8 @@ $BODY$
    DECLARE vbOldId  Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId:= lpGetUserBySession (inSession);
+   --vbUserId:= lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
 
    -- Расчетное свойство

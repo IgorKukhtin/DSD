@@ -15,8 +15,9 @@ $BODY$
 BEGIN
 
    -- ïðîâåðêà ïðàâ ïîëüçîâàòåëÿ íà âûçîâ ïðîöåäóðû
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Fabrika());
-   vbUserId:= lpGetUserBySession (inSession);
+   --vbUserId:= lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Fabrika());
+   
 
    -- Íóæåí ÂÑÅÃÄÀ- ÄËß ÍÎÂÎÉ ÑÕÅÌÛ Ñ ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Fabrika_seq'); 
