@@ -378,6 +378,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     end
   end
   inherited ActionList: TActionList
+    Top = 271
     inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -529,32 +530,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end>
       isShowModal = False
     end
-    object actUpdate_Top_No: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUpdate_Top_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Top_No
-        end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
-      ImageIndex = 80
-      RefreshOnTabSetChanges = True
-    end
-    object actUpdate_Top_Yes: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUpdate_Top_Yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Top_Yes
-        end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
-      ImageIndex = 79
-      RefreshOnTabSetChanges = True
-    end
     object actUpdateNewQuality: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -568,6 +543,32 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       ImageIndex = 77
       ShortCut = 16505
       RefreshOnTabSetChanges = True
+    end
+    object actUpdate_Top_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Top_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Top_Yes
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      ImageIndex = 79
+    end
+    object actUpdate_Top_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Top_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Top_No
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      ImageIndex = 80
     end
   end
   inherited MasterDS: TDataSource
@@ -624,7 +625,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_Top_No'
         end
         item
           Visible = True
@@ -666,7 +667,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       Action = actUpdate_Top_Yes
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_Top_No: TdxBarButton
       Action = actUpdate_Top_No
       Category = 0
     end

@@ -430,6 +430,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -441,6 +442,7 @@ inherited BankAccountJournalByInvoiceForm: TBankAccountJournalByInvoiceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

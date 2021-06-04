@@ -5,7 +5,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
-  ExplicitHeight = 391
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -590,7 +590,45 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       end>
   end
   inherited ActionList: TActionList
-    object macUpdateMoneyPlace: TMultiAction [2]
+    object actOpenIncomeCostByInvoice: TdsdOpenForm [0]
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
+      ImageIndex = 25
+      FormName = 'TIncomeCostJournalByInvoiceForm'
+      FormNameParam.Value = 'TIncomeCostJournalByInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macUpdateMoneyPlace: TMultiAction [3]
       Category = 'Update'
       MoveParams = <>
       ActionList = <
@@ -607,7 +645,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091'>'
       ImageIndex = 55
     end
-    object actUpdateMoneyPlace: TdsdDataSetRefresh [3]
+    object actUpdateMoneyPlace: TdsdDataSetRefresh [4]
       Category = 'Update'
       MoveParams = <>
       StoredProcList = <
@@ -673,7 +711,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actChoiceMoneyPlace: TOpenChoiceForm [18]
+    object actChoiceMoneyPlace: TOpenChoiceForm [19]
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -716,7 +754,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
       isShowModal = True
     end
-    object actChoiceContract: TOpenChoiceForm [19]
+    object actChoiceContract: TOpenChoiceForm [20]
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -759,7 +797,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end>
       isShowModal = True
     end
-    object actUpdateContract: TdsdDataSetRefresh [20]
+    object actUpdateContract: TdsdDataSetRefresh [21]
       Category = 'Update'
       MoveParams = <>
       StoredProcList = <

@@ -77,6 +77,7 @@ type
     bbOpenBankAccountJournalByInvoice: TdxBarButton;
     InvNumber_parent: TcxGridDBColumn;
     DescName_parent: TcxGridDBColumn;
+    actOpenIncomeCostByInvoice: TdsdOpenForm;
   private
     { Private declarations }
   public
