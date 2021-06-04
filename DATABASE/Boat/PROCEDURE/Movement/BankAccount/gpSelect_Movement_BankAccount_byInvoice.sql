@@ -18,12 +18,13 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , InvNumber_Invoice_Full TVarChar
              , AmountIn_Invoice TFloat
              , AmountOut_Invoice TFloat
+             , Amount_Invoice TFloat
              , Amount_diff TFloat
              , isDiff Boolean
              , ObjectName_Invoice TVarChar
              , DescName_Invoice TVarChar
-             , InfoMoneyCode_Invoice Integer
-             , InfoMoneyName_Invoice TVarChar
+             , InfoMoneyCode_Invoice Integer, InfoMoneyGroupName_Invoice TVarChar, InfoMoneyDestinationName_Invoice TVarChar
+             , InfoMoneyName_Invoice TVarChar, InfoMoneyName_all_Invoice TVarChar
              , ProductCode_Invoice Integer
              , ProductName_Invoice TVarChar
              , ProductCIN_Invoice TVarChar
@@ -173,6 +174,15 @@ BEGIN
 
            , CASE WHEN tmpInvoice_Params.Amount > 0 AND tmpMovement.Ord = 1 THEN tmpInvoice_Params.Amount      ELSE 0 END::TFloat AS AmountIn_Invoice
            , CASE WHEN tmpInvoice_Params.Amount < 0 AND tmpMovement.Ord = 1 THEN -1 * tmpInvoice_Params.Amount ELSE 0 END::TFloat AS AmountOut_Invoice
+
+             -- —умма по —чету - только в последнем платеже
+           , CASE WHEN tmpInvoice_Params.Amount > 0 AND MLM_Invoice.Ord = 1
+                       THEN  1 * tmpInvoice_Params.Amount
+                  WHEN tmpInvoice_Params.Amount < 0 AND MLM_Invoice.Ord = 1
+                       THEN  1 * tmpInvoice_Params.Amount
+                  ELSE 0
+             END :: TFloat AS Amount_Invoice
+
            --, (COALESCE (MovementItem.Amount,0) + COALESCE (tmpInvoice_Params.Amount,0))          ::TFloat AS Amount_diff
            , CASE WHEN tmpMovement.Ord = 1 OR tmpMovement.MovementId_Invoice IS NULL
                   THEN (COALESCE (tmpInvoice_Params.Amount,0) - (COALESCE (MovementItem.SumIn,0) - COALESCE (MovementItem.SumOut,0)) )
@@ -186,7 +196,10 @@ BEGIN
            , tmpInvoice_Params.ObjectName          AS ObjectName_Invoice
            , tmpInvoice_Params.DescName            AS DescName_Invoice
            , tmpInvoice_Params.InfoMoneyCode       AS InfoMoneyCode_Invoice
-           , tmpInvoice_Params.InfoMoneyName_all   AS InfoMoneyName_Invoice
+           , tmpInvoice_Params.InfoMoneyGroupName  AS InfoMoneyGroupName_Invoice
+           , tmpInvoice_Params.InfoMoneyDestinationName AS InfoMoneyDestinationName_Invoice
+           , tmpInvoice_Params.InfoMoneyName       AS InfoMoneyName_Invoice
+           , tmpInvoice_Params.InfoMoneyName_all   AS InfoMoneyName_all_Invoice
            , tmpInvoice_Params.ProductCode         AS ProductCode_Invoice
            , tmpInvoice_Params.ProductName         AS ProductName_Invoice
            , tmpInvoice_Params.ProductCIN          AS ProductCIN_Invoice
