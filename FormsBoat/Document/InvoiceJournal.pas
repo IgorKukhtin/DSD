@@ -78,6 +78,7 @@ type
     InvNumber_parent: TcxGridDBColumn;
     DescName_parent: TcxGridDBColumn;
     actOpenIncomeCostByInvoice: TdsdOpenForm;
+    bbOpenIncomeCostByInvoice: TdxBarButton;
   private
     { Private declarations }
   public

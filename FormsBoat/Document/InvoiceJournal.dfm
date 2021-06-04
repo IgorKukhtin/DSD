@@ -595,7 +595,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       MoveParams = <>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1089#1095#1077#1090#1091' - '#1046#1091#1088#1085#1072#1083' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'('#1079#1072#1090#1088#1072#1090#1099')>'
-      ImageIndex = 25
+      ImageIndex = 26
       FormName = 'TIncomeCostJournalByInvoiceForm'
       FormNameParam.Value = 'TIncomeCostJournalByInvoiceForm'
       FormNameParam.DataType = ftString
@@ -1289,6 +1289,18 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenIncomeCostByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1342,6 +1354,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object bbOpenBankAccountJournalByInvoice: TdxBarButton
       Action = actOpenBankAccountJournalByInvoice
+      Category = 0
+    end
+    object bbOpenIncomeCostByInvoice: TdxBarButton
+      Action = actOpenIncomeCostByInvoice
       Category = 0
     end
   end
