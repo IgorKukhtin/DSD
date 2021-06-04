@@ -98,7 +98,6 @@ BEGIN
                                                             , inFromId             := vbPartnerId   ::Integer
                                                             , inToId               := 35139         ::Integer -- Склад
                                                             , inPaidKindId         := zc_Enum_PaidKind_FirstForm() ::Integer
-                                                            , inMovementId_Invoice := 0             ::Integer
                                                             , inComment            := 'auto'        ::TVarChar
                                                             , inUserId             := vbUserId      ::Integer
                                                             );
@@ -188,7 +187,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 25.02.21          *
+ 04.06.21         *
+ 25.02.21         *
 */
 
 -- тест

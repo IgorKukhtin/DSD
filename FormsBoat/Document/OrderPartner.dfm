@@ -3,7 +3,7 @@ object OrderPartnerForm: TOrderPartnerForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 559
-  ClientWidth = 1102
+  ClientWidth = 1236
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderPartnerForm: TOrderPartnerForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1102
+    Width = 1236
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1102
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -167,12 +168,12 @@ object OrderPartnerForm: TOrderPartnerForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 747
+      Left = 932
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 747
+      Left = 932
       Top = 63
       TabOrder = 18
       Width = 306
@@ -195,12 +196,12 @@ object OrderPartnerForm: TOrderPartnerForm
       Width = 124
     end
     object cxLabel17: TcxLabel
-      Left = 752
+      Left = 932
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 752
+      Left = 932
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -211,12 +212,12 @@ object OrderPartnerForm: TOrderPartnerForm
       Width = 146
     end
     object cxLabel18: TcxLabel
-      Left = 907
+      Left = 1087
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 907
+      Left = 1087
       Top = 23
       Properties.Buttons = <
         item
@@ -245,37 +246,70 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 26
       Width = 94
     end
+    object cxLabel15: TcxLabel
+      Left = 749
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+    end
+    object ceInvoice: TcxButtonEdit
+      Left = 749
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 175
+    end
+    object cxLabel9: TcxLabel
+      Left = 749
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'. '#1057#1095#1077#1090')'
+    end
+    object ceComment_Invoice: TcxTextEdit
+      Left = 749
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 175
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1102
+    Width = 1236
     Height = 436
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1102
     ClientRectBottom = 436
-    ClientRectRight = 1102
+    ClientRectRight = 1236
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1102
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1102
+        Width = 1236
         Height = 194
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
+        ExplicitWidth = 1102
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 1100
+          Width = 1234
           Height = 192
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 1100
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -603,20 +637,22 @@ object OrderPartnerForm: TOrderPartnerForm
       object cxTopSplitter: TcxSplitter
         Left = 0
         Top = 194
-        Width = 1102
+        Width = 1236
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
+        ExplicitWidth = 1102
       end
       object Panel4: TPanel
         Left = 0
         Top = 202
-        Width = 1102
+        Width = 1236
         Height = 210
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
+        ExplicitWidth = 1102
         object cxSplitter1: TcxSplitter
           Left = 1
           Top = 1
@@ -626,10 +662,11 @@ object OrderPartnerForm: TOrderPartnerForm
         object cxGrid1: TcxGrid
           Left = 9
           Top = 1
-          Width = 1092
+          Width = 1226
           Height = 208
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 1092
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -2355,6 +2392,14 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2406,6 +2451,7 @@ object OrderPartnerForm: TOrderPartnerForm
         Control = ceComment
       end
       item
+        Control = ceInvoice
       end
       item
       end
@@ -2587,6 +2633,28 @@ object OrderPartnerForm: TOrderPartnerForm
         Value = Null
         Component = edInsertDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment_Invoice'
+        Value = Null
+        Component = ceComment_Invoice
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3127,5 +3195,57 @@ object OrderPartnerForm: TOrderPartnerForm
     PackSize = 1
     Left = 440
     Top = 432
+  end
+  object GuidesInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInvoice
+    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 812
+    Top = 15
   end
 end

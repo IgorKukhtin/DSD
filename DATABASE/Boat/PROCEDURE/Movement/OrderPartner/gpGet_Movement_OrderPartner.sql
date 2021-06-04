@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
               )
 AS
@@ -49,7 +50,11 @@ BEGIN
              , 0                         AS PaidKindId
              , CAST ('' AS TVarChar)     AS PaidKindName
              , CAST ('' AS TVarChar)     AS Comment
-           
+
+             , 0                         AS MovementId_Invoice
+             , CAST ('' as TVarChar)     AS InvNumber_Invoice
+             , CAST ('' as TVarChar)     AS Comment_Invoice
+
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
@@ -86,6 +91,10 @@ BEGIN
           , Object_PaidKind.ValueData                 AS PaidKindName
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+
+          , Movement_Invoice.Id                       AS MovementId_Invoice
+          , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+          , MovementString_Comment_Invoice.ValueData  AS Comment_Invoice
 
           , Object_Insert.Id                     AS InsertId
           , Object_Insert.ValueData              AS InsertName
@@ -136,6 +145,15 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement_OrderPartner.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
+                                           ON MovementLinkMovement_Invoice.MovementId = Movement_OrderPartner.Id
+                                          AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MovementLinkMovement_Invoice.MovementChildId
+
+            LEFT JOIN MovementString AS MovementString_Comment_Invoice
+                                     ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement_OrderPartner.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -156,6 +174,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.06.21         *
  12.04.21         *
 */
 
