@@ -110,6 +110,8 @@ type
     InvNumber_Transport: TcxGridDBColumn;
     bbIsUpdate: TdxBarControlContainerItem;
     cbIsUpdate: TcxCheckBox;
+    actOpenProtocol: TdsdOpenForm;
+    bbOpenProtocol: TdxBarButton;
   private
     { Private declarations }
   public
