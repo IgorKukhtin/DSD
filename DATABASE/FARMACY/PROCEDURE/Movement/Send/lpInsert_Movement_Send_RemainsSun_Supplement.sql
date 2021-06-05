@@ -789,6 +789,11 @@ BEGIN
             LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = _tmpRemains_all_Supplement.GoodsId
                                                     AND _tmpGoods_PromoUnit_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId  
                                                                             
+            -- найдем дисконтній товар
+            LEFT JOIN _tmpGoods_DiscountExternal_Supplement AS _tmpGoods_DiscountExternal
+                                                           ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                          AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
        WHERE CASE WHEN COALESCE (GiveAway, 0) > 0 THEN - COALESCE (GiveAway, 0) ELSE
              CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
@@ -816,6 +821,7 @@ BEGIN
                  
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
          AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
+         AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
        ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
               , CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains

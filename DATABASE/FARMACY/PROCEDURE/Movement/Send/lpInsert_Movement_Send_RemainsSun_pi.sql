@@ -1772,8 +1772,14 @@ BEGIN
              LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
                                        AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
 
+             -- найдем дисконтній товар
+             LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                  ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
+                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
+
+          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
 
           AND _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) > 0
 /*          AND CASE -- если у парного ост = 0, не отдаем

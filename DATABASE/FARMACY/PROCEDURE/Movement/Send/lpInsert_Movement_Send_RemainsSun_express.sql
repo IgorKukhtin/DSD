@@ -903,7 +903,13 @@ BEGIN
              LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
                                        AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
 
+             -- найдем дисконтній товар
+             LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                  ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
+                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
+                                                 
         WHERE _tmpRemains_Partion.AmountResult - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) > 0
+          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1

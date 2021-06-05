@@ -822,8 +822,14 @@ BEGIN
 
             LEFT JOIN _tmpUnit_SUN_UKTZED ON _tmpUnit_SUN_UKTZED.UnitId = _tmpRemains_all_UKTZED.UnitId
 
+            -- найдем дисконтній товар
+            LEFT JOIN _tmpGoods_DiscountExternal_UKTZED AS _tmpGoods_DiscountExternal
+                                                        ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_UKTZED.UnitId
+                                                       AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_UKTZED.GoodsId
+
        WHERE _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True
          AND _tmpRemains_all_UKTZED.AmountRemains > 0
+         AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
        ORDER BY _tmpRemains_all_UKTZED.UnitId
               , _tmpRemains_all_UKTZED.GoodsId
        ;
