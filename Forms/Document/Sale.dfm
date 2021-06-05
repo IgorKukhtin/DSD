@@ -3006,12 +3006,6 @@ inherited SaleForm: TSaleForm
     OnlyEditingCellOnEnter = True
     ColumnEnterList = <
       item
-        Column = GoodsName
-      end
-      item
-        Column = Amount
-      end
-      item
         Column = AmountPartner
       end>
     SummaryItemList = <

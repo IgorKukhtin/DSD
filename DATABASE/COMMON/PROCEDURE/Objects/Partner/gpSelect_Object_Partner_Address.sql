@@ -80,6 +80,7 @@ end if;
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
    vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    vbIsConstraint:= (COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbObjectId_Branch_Constraint, 0) > 0)
+                AND vbUserId <> 471654  -- ױמכמה ְ.ֲ.
                 AND vbUserId <> 4067214 -- ױמכמה ְ.
                ;
 
@@ -427,7 +428,9 @@ end if;
                                                                 )
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
            OR tmpMovement.PartnerId > 0
-           OR vbIsConstraint = FALSE)
+           OR vbIsConstraint = FALSE
+           OR ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
+          )
       AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
       AND (ObjectLink_Partner_Route.ChildObjectId    = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
       AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalTradeId OR COALESCE (inPersonalTradeId, 0) = 0)

@@ -5,13 +5,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EDIOrder(Integer, Integer, TVarChar, T
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EDIOrder(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsPropertyId     Integer   , 
+    IN inGoodsPropertyId     Integer   ,
     IN inGoodsName           TVarChar  , -- Товар
     IN inGLNCode             TVarChar  , -- Товар
     IN inAmountOrder         TFloat    , -- Количество Заказа
     IN inPriceOrder          TFloat    , -- Цена из Эксайта
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId   Integer;
@@ -27,48 +27,64 @@ BEGIN
 
 
      -- Проверка
-     IF 1 < (SELECT COUNT (*)
-             FROM MovementItemString 
-                  INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
-                                         AND MovementItem.MovementId = inMovementId
-                                         AND MovementItem.DescId = zc_MI_Master() 
-                                         AND MovementItem.isErased = FALSE
-             WHERE MovementItemString.ValueData = inGLNCode
-               AND MovementItemString.DescId = zc_MIString_GLNCode()
-             )
+     IF 1 < (WITH tmpMI AS (SELECT MovementItem.Id
+                            FROM MovementItem
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+                           )
+                , tmpMIS AS (SELECT MovementItemString.*
+                             FROM MovementItemString
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementItemString.DescId         = zc_MIString_GLNCode()
+                            )
+             -- Результат
+             SELECT COUNT(*) FROM tmpMIS WHERE tmpMIS.ValueData = inGLNCode
+            )
      THEN
          -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
          /**/
          UPDATE MovementItem SET isErased = TRUE
          WHERE MovementItem.MovementId = inMovementId
-           AND MovementItem.DescId = zc_MI_Master() 
-           AND MovementItem.isErased = FALSE
-           AND MovementItem.Id IN (SELECT tmp.Id
-                                   FROM
-                                 (SELECT MovementItem.Id
-                                        , ROW_NUMBER() OVER (PARTITION BY MovementItemString.ValueData ORDER BY MovementItem.Id ASC) AS Ord
-                                   FROM MovementItemString 
-                                        INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
-                                                               AND MovementItem.MovementId = inMovementId
-                                                               AND MovementItem.DescId = zc_MI_Master() 
-                                                               AND MovementItem.isErased = FALSE
-                                   WHERE MovementItemString.ValueData = inGLNCode
-                                     AND MovementItemString.DescId = zc_MIString_GLNCode()
-                                  ) AS tmp
-                                  WHERE tmp.Ord = 1
-                                  );
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.isErased   = FALSE
+           AND MovementItem.Id         IN (WITH tmpMI AS (SELECT MovementItem.Id
+                                                          FROM MovementItem
+                                                          WHERE MovementItem.MovementId = inMovementId
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE
+                                                         )
+                                              , tmpMIS AS (SELECT MovementItemString.*
+                                                           FROM MovementItemString
+                                                           WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                             AND MovementItemString.DescId         = zc_MIString_GLNCode()
+                                                          )
+                                           -- Результат
+                                           SELECT tmp.MovementItemId
+                                           FROM (SELECT tmpMIS.MovementItemId
+                                                      , ROW_NUMBER() OVER (PARTITION BY tmpMIS.ValueData ORDER BY tmpMIS.MovementItemId DESC) AS Ord
+                                                 FROM tmpMIS
+                                                 WHERE tmpMIS.ValueData = inGLNCode
+                                                ) AS tmp
+                                           WHERE tmp.Ord <> 1
+                                          );
          /**/
 
          -- Проверка после исправления
-         IF 1 < (SELECT COUNT (*)
-                 FROM MovementItemString 
-                      INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
-                                             AND MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId = zc_MI_Master() 
-                                             AND MovementItem.isErased = FALSE
-                 WHERE MovementItemString.ValueData = inGLNCode
-                   AND MovementItemString.DescId = zc_MIString_GLNCode()
-                 )
+         IF 1 < (WITH tmpMI AS (SELECT MovementItem.Id
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                               )
+                    , tmpMIS AS (SELECT MovementItemString.*
+                                 FROM MovementItemString
+                                 WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                   AND MovementItemString.DescId         = zc_MIString_GLNCode()
+                                )
+                 -- Результат
+                 SELECT COUNT(*) FROM tmpMIS WHERE tmpMIS.ValueData = inGLNCode
+                )
          THEN
              RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
                                                                                                   , DATE ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI()))
@@ -77,14 +93,20 @@ BEGIN
      END IF;
 
      -- находим элемент (по идее один товар - один GLN-код)
-     vbMovementItemId := COALESCE((SELECT MovementItem.Id
-                                   FROM MovementItemString 
-                                        JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
-                                                         AND MovementItem.MovementId = inMovementId
-                                                         AND MovementItem.DescId = zc_MI_Master() 
-                                                         AND MovementItem.isErased = FALSE
-                                   WHERE MovementItemString.ValueData = inGLNCode
-                                     AND MovementItemString.DescId = zc_MIString_GLNCode()), 0);
+     vbMovementItemId := COALESCE((WITH tmpMI AS (SELECT MovementItem.Id
+                                                  FROM MovementItem
+                                                  WHERE MovementItem.MovementId = inMovementId
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                 )
+                                      , tmpMIS AS (SELECT MovementItemString.*
+                                                   FROM MovementItemString
+                                                   WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                     AND MovementItemString.DescId         = zc_MIString_GLNCode()
+                                                  )
+                                   -- Результат
+                                   SELECT tmpMIS.MovementItemId FROM tmpMIS WHERE tmpMIS.ValueData = inGLNCode
+                                  ), 0);
 
      -- если есть классификатор
      IF COALESCE (inGoodsPropertyId, 0) <> 0
@@ -104,7 +126,7 @@ BEGIN
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectString_ArticleGLN.objectid
                                   AND ObjectLink_GoodsPropertyValue_Goods.DescId   = zc_ObjectLink_GoodsPropertyValue_Goods()
-         WHERE ObjectString_ArticleGLN.DescId    = zc_ObjectString_GoodsPropertyValue_ArticleGLN()           
+         WHERE ObjectString_ArticleGLN.DescId    = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
            AND ObjectString_ArticleGLN.ValueData = inGLNCode;
      END IF;
 
@@ -128,14 +150,20 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPriceOrder);
 
      -- Проверка
-     IF 1 < (SELECT COUNT (*)
-             FROM MovementItemString
-                  INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
-                                         AND MovementItem.MovementId = inMovementId
-                                         AND MovementItem.DescId = zc_MI_Master() 
-                                         AND MovementItem.isErased = FALSE
-             WHERE MovementItemString.ValueData = inGLNCode
-               AND MovementItemString.DescId = zc_MIString_GLNCode())
+     IF 1 < (WITH tmpMI AS (SELECT MovementItem.Id
+                            FROM MovementItem
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+                           )
+                , tmpMIS AS (SELECT MovementItemString.*
+                             FROM MovementItemString
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementItemString.DescId         = zc_MIString_GLNCode()
+                            )
+             -- Результат
+             SELECT COUNT(*) FROM tmpMIS WHERE tmpMIS.ValueData = inGLNCode
+            )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>. Повторите действие через 25 сек.'
                                                                                               , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
@@ -160,16 +188,21 @@ BEGIN
      THEN
          -- сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
-     END iF;
+     END IF;
+
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.Test-ok-end';
+END IF;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.05.14                         * 
+ 29.05.14                         *
 */
 
 -- тест

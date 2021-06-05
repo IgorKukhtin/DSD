@@ -77,6 +77,7 @@ BEGIN
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
    vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    vbIsConstraint:= zfCalc_AccessKey_GuideAll (vbUserId) = FALSE AND (COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0)
+                AND vbUserId <> 471654  -- Холод А.В.
                 AND vbUserId <> 4067214 -- Холод А.
                ;
 
@@ -424,14 +425,15 @@ BEGIN
          LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
-                                ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
+                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
    WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
+           OR ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
            OR ObjectBoolean_isBranchAll.ValueData = TRUE
            OR vbIsConstraint = FALSE
           )

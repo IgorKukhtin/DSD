@@ -340,6 +340,11 @@ BEGIN
                                                               , 8359 -- 04-Услуги
                                                                )
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
+          -- филиал Киев + филиал Львов
+          OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 8379 AND vbBranchId_Constraint = 3080683)
+          -- филиал Львов + филиал Киев
+          OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
+          --
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
@@ -647,6 +652,11 @@ BEGIN
                                                               , 8359 -- 04-Услуги
                                                                )
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
+          -- филиал Киев + филиал Львов
+          OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 8379 AND vbBranchId_Constraint = 3080683)
+          -- филиал Львов + филиал Киев
+          OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
+          --
           OR ObjectBoolean_isBranchAll.ValueData = TRUE
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400

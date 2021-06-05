@@ -37,7 +37,8 @@ end if;
 
 
      -- Проверка
-     IF 1 < (SELECT COUNT (*)
+     IF vbUserId <> 5
+    AND 1 < (SELECT COUNT (*)
              FROM Movement
                   INNER JOIN MovementString AS MovementString_GLNPlaceCode
                                             ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
@@ -109,7 +110,9 @@ end if;
                      WHERE Movement.DescId = zc_Movement_EDI()
                        AND Movement.OperDate = inOrderOperDate
                        AND Movement.InvNumber = inOrderInvNumber
-                       AND Movement.StatusId <> zc_Enum_Status_Erased());
+                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                       AND vbUserId <> 5
+                    );
 
      -- определяется параметр
      vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());

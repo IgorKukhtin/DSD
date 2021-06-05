@@ -35,6 +35,7 @@ type
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
     FInsertEDIEvents: TdsdStoredProc;
+    FExistsOrder: TdsdStoredProc;
     FUpdateDeclarAmount: TdsdStoredProc;
     FInsertEDIFile: TdsdStoredProc;
     FUpdateEDIErrorState: TdsdStoredProc;
@@ -47,6 +48,7 @@ type
     FisEDISaveLocal: boolean;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType;
       spHeader, spList: TdsdStoredProc; lFileName : String);
+    function fIsExistsOrder(lFileName : String) : Boolean;
     function InsertUpdateComDoc(≈лектроннийƒокумент
       : IXML≈лектроннийƒокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
@@ -294,6 +296,13 @@ begin
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
   FInsertEDIEvents.StoredProcName := 'gpInsert_Movement_EDIEvents';
   FInsertEDIEvents.OutputType := otResult;
+
+  FExistsOrder := TdsdStoredProc.Create(nil);
+  FExistsOrder.Params.AddParam('inFileName', ftString, ptInput, '');
+  FExistsOrder.Params.AddParam('outIsExists', ftBoolean, ptOutput, false);
+  FExistsOrder.StoredProcName := 'gpSelect_Movement_EDI_exists';
+  FExistsOrder.OutputType := otResult;
+
 
   FUpdateDeclarAmount := TdsdStoredProc.Create(nil);
   FUpdateDeclarAmount.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
@@ -2774,6 +2783,13 @@ begin
   FIdFTP.ReadTimeOut := 600000;
 end;
 
+function TEDI.fIsExistsOrder(lFileName : String) : Boolean;
+begin
+    FExistsOrder.ParamByName('inFileName').Value := lFileName;
+    FExistsOrder.Execute;
+    Result:= FExistsOrder.ParamByName('outIsExists').Value = TRUE;
+end;
+
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType;
   spHeader, spList: TdsdStoredProc; lFileName : String);
 var
@@ -3311,51 +3327,58 @@ begin
               if ((copy(List[i], 1, 5) = 'order') and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
                or((AnsiUpperCase(copy(List[i], 1, 11)) = AnsiUpperCase('inbox\order')) and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
               then
-              begin
-                DocData := gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd');
-                if (StartDate <= DocData) and (DocData <= EndDate) then
+                if fIsExistsOrder(List[i]) = true then
+                   if err_msg = '' then err_msg:= '--- ignore file <'+ List[i]+')'
+                   else
+                else
                 begin
-                  // т€нем файл к нам
-                  Stream.Clear;
-                  if not FIdFTP.Connected then
-                    FIdFTP.Connect;
-                  FIdFTP.ChangeDir(Directory);
-                  FIdFTP.Get(List[i], Stream);
-                  ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
-                  // загружаем в базенку
-                  InsertUpdateOrder(ORDER, spHeader, spList, List[i]);
-                  //
-                  //ѕытаемс€ найти параметр
-                  if Assigned(spHeader.Params.ParamByName('gIsDelete'))
-                  then fIsDelete:= spHeader.ParamByName('gIsDelete').Value
-                  else fIsDelete:= false;
-                  // теперь перенесли файл в директроию Archive
-                  if (DocData < Date) or (fIsDelete = true)
-                  then
-                     try
-                       // FIdFTP.ChangeDir('/archive');
-                       // FIdFTP.Put(Stream, List[i]);
-                       //err_msg:= '';
-                       try FIdFTP.Delete(List[i]);
+                  DocData := gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd');
+                  if (StartDate <= DocData) and (DocData <= EndDate) then
+                  begin
+                    // т€нем файл к нам
+                    Stream.Clear;
+                    if not FIdFTP.Connected then
+                      FIdFTP.Connect;
+                    FIdFTP.ChangeDir(Directory);
+                    FIdFTP.Get(List[i], Stream);
+                    ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
+                    // загружаем в базенку
+//  gc_isDebugMode:= TRUE;
+//  gc_isShowTimeMode:= TRUE;
+                    InsertUpdateOrder(ORDER, spHeader, spList, List[i]);
+                    //
+                    //ѕытаемс€ найти параметр
+                    if Assigned(spHeader.Params.ParamByName('gIsDelete'))
+                    then fIsDelete:= spHeader.ParamByName('gIsDelete').Value
+                    else fIsDelete:= false;
+                    // теперь перенесли файл в директроию Archive
+                    if (DocData < Date) or (fIsDelete = true)
+                    then
+                       try
+                         // FIdFTP.ChangeDir('/archive');
+                         // FIdFTP.Put(Stream, List[i]);
+                         //err_msg:= '';
+                         try FIdFTP.Delete(List[i]);
+                         except
+                              try FIdFTP.Delete(List[i]); except FIdFTP.Delete(List[i]); end;
+                         end;
                        except
-                            try FIdFTP.Delete(List[i]); except FIdFTP.Delete(List[i]); end;
+                         on E: Exception do begin
+                           ii:= ii + 1;
+                           err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message;
+                           //if err_msg = ''
+                           //then err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message
+                           //else err_msg:= '(' + intToStr(ii) + ')' + err_msg;
+                           //raise Exception.Create (err_msg);
+                           //ShowMessage(err_msg);
+                         end;
+                       //finally
+                       //  FIdFTP.ChangeDir(Directory);
+                       //  FIdFTP.Delete(List[i]);
                        end;
-                     except
-                       on E: Exception do begin
-                         ii:= ii + 1;
-                         err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message;
-                         //if err_msg = ''
-                         //then err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message
-                         //else err_msg:= '(' + intToStr(ii) + ')' + err_msg;
-                         //raise Exception.Create (err_msg);
-                         //ShowMessage(err_msg);
-                       end;
-                     //finally
-                     //  FIdFTP.ChangeDir(Directory);
-                     //  FIdFTP.Delete(List[i]);
-                     end;
+                  end;
                 end;
-              end;
+              //
               IncProgress;
             end;
           finally
@@ -3366,12 +3389,12 @@ begin
         List.Free;
         Stream.Free;
         //
-        if err_msg <> '' then raise Exception.Create (err_msg);
+        if (err_msg <> '') then raise Exception.Create (err_msg);
       end;
     end;
   except
     on E: Exception do begin
-        if err_msg <> ''
+        if (err_msg <> '')
         then raise Exception.Create (err_msg)
         else raise E;
     end;

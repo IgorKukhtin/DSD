@@ -89,6 +89,21 @@ object TransportJournalForm: TTransportJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountMemberCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HoursStop
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HoursMove
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PartnerCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -115,6 +130,21 @@ object TransportJournalForm: TTransportJournalForm
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = CarName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HoursStop
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = HoursMove
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PartnerCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

@@ -346,7 +346,7 @@ begin
 
   except
      on E: Exception do begin
-        gErr:= TRUE;
+        gErr:= Pos('--- ignore file',E.Message) = 0;
         AddToLog(E.Message);
      end;
   end;
@@ -525,7 +525,7 @@ try
   try fEdi_LoadData_from;
   except
         on E: Exception do begin
-           gErr:= TRUE;
+           gErr:= Pos('--- ignore file',E.Message) = 0;
            AddToLog('**** Ошибка *** LoadData - from *** : ' + E.Message);
         end;
   end;
