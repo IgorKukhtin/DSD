@@ -572,6 +572,7 @@ type
     IntegerField5: TIntegerField;
     CurrencyField1: TCurrencyField;
     actSenClipboardName: TAction;
+    C1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -4006,10 +4007,10 @@ end;
 
 procedure TMainCashForm2.actSenClipboardNameExecute(Sender: TObject);
 begin
-  if (ActiveControl is TcxGridSite) AND not CheckCDS.IsEmpty then
+  if (ActiveControl is TcxGridSite) AND (ActiveControl.Parent = CheckGrid) AND not CheckCDS.IsEmpty then
   begin
     Clipboard.AsText := CheckCDS.FieldByName('GoodsCode').AsString + ' - ' + CheckCDS.FieldByName('GoodsName').AsString;
-  end else if RemainsCDS.IsEmpty then
+  end else if not RemainsCDS.IsEmpty then
   begin
     Clipboard.AsText := RemainsCDS.FieldByName('GoodsCode').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString;
   end;

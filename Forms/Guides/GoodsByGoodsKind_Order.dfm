@@ -378,6 +378,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     end
   end
   inherited ActionList: TActionList
+    Top = 271
     inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -529,20 +530,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end>
       isShowModal = False
     end
-    object actUpdate_Top: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUpdate_Top
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Top
-        end>
-      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'" ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 76
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
     object actUpdateNewQuality: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -556,6 +543,32 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       ImageIndex = 77
       ShortCut = 16505
       RefreshOnTabSetChanges = True
+    end
+    object actUpdate_Top_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Top_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Top_Yes
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1044#1072'"'
+      ImageIndex = 79
+    end
+    object actUpdate_Top_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Top_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Top_No
+        end>
+      Caption = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1058#1054#1055'  '#1053#1077#1090'"'
+      ImageIndex = 80
     end
   end
   inherited MasterDS: TDataSource
@@ -612,6 +625,10 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Top_No'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -647,7 +664,11 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
       Category = 0
     end
     object bbUpdate_Top: TdxBarButton
-      Action = actUpdate_Top
+      Action = actUpdate_Top_Yes
+      Category = 0
+    end
+    object bbUpdate_Top_No: TdxBarButton
+      Action = actUpdate_Top_No
       Category = 0
     end
   end
@@ -701,6 +722,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304
@@ -748,8 +778,8 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     Left = 368
     Top = 176
   end
-  object spUpdate_Top: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isTop'
+  object spUpdate_Top_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -778,16 +808,106 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsTop'
+        Name = 'inisOrder'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'IsTop'
+        ComponentItem = 'isOrder'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMobile'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotMobile'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTop'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTop'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
     Top = 136
+  end
+  object spUpdate_Top_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOrder'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMobile'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotMobile'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTop'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsTop'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 128
   end
 end

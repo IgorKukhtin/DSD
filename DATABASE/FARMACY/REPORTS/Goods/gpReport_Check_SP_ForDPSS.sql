@@ -274,7 +274,7 @@ BEGIN
              , tmpData.SummChangePercent::TFloat
              , tmpData.PriceRetSP                        
              , tmpData.PriceWithVAT
-             , COALESCE(Object_Goods_Retail.PercentMarkup , (tmpData.PriceSale - tmpData.PriceWithVAT) / tmpData.PriceWithVAT * 100)::TFloat
+             , COALESCE(Object_Goods_Retail_4.PercentMarkup, Object_Goods_Retail.PercentMarkup , (tmpData.PriceSale - tmpData.PriceWithVAT) / tmpData.PriceWithVAT * 100)::TFloat
              , tmpData.OperDateIncome
              , tmpData.FromId
              , Object_From.ValueData
@@ -283,6 +283,9 @@ BEGIN
              LEFT JOIN Object AS Object_From ON Object_From.ID = tmpData.FromId
              
              LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpData.GoodsId
+             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail_4 
+                                           ON Object_Goods_Retail_4.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                          AND Object_Goods_Retail_4.RetailId = 4
              
         ORDER BY tmpData.IntenalSPName
                , tmpData.PriceSale  
@@ -306,4 +309,5 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_Check_SP_ForDPSS(inStartDate := ('01.04.2021')::TDateTime , inEndDate := ('30.04.2021')::TDateTime , inJuridicalId := 0 ,  inSession := '3');
+
+select * from gpReport_Check_SP_ForDPSS(inStartDate := ('01.04.2021')::TDateTime , inEndDate := ('30.04.2021')::TDateTime , inJuridicalId := 10106457 ,  inSession := '3');

@@ -1,9 +1,9 @@
-object OrderPartnerJournalForm: TOrderPartnerJournalForm
+object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 492
-  ClientWidth = 1034
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' - '#1047#1072#1090#1088#1072#1090'>'
+  ClientHeight = 444
+  ClientWidth = 809
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,52 +14,73 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1034
+    Width = 809
     Height = 31
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 501
       Top = 5
-      EditValue = 44197d
-      Properties.ReadOnly = False
+      EditValue = 43466d
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
+      Visible = False
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 670
       Top = 5
-      EditValue = 44197d
-      Properties.ReadOnly = False
+      EditValue = 43466d
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
+      Visible = False
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 10
-      Top = 6
+      Left = 450
+      Top = 8
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+      Visible = False
     end
     object cxLabel2: TcxLabel
-      Left = 200
+      Left = 554
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Visible = False
+    end
+    object cxLabel6: TcxLabel
+      Left = 14
+      Top = 8
+      Caption = #1057#1095#1077#1090':'
+    end
+    object edInvoice: TcxButtonEdit
+      Left = 48
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 236
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1034
-    Height = 435
+    Width = 809
+    Height = 387
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -75,7 +96,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -88,22 +108,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummMVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalCount
         end
         item
           Format = ',0.####'
@@ -116,57 +120,56 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost_Master
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSumm
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummMVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = 'C'#1090#1088#1086#1082': ,0'
+          Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = FromName
+          Column = Comment
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost_Master
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -181,8 +184,66 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object StatusCode_Income: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1091#1089' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        DataBinding.FieldName = 'StatusCode_Income'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 11
+            Value = 1
+          end
+          item
+            Description = #1055#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 12
+            Value = 2
+          end
+          item
+            Description = #1059#1076#1072#1083#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object InvNumber_Income: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        DataBinding.FieldName = 'InvNumber_Income'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object OperDate_Income: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        DataBinding.FieldName = 'OperDate_Income'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object ItemName_Income: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        DataBinding.FieldName = 'ItemName_Income'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        Options.Editing = False
+        Width = 99
+      end
       object StatusCode: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
+        Caption = #1057#1090#1072#1090#1091#1089' ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.ImageList
@@ -202,168 +263,106 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        Options.Editing = False
+        Width = 80
       end
       object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'.'
+        Caption = #8470' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        Options.Editing = False
+        Width = 70
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object OperDatePartner: TcxGridDBColumn
-        Caption = 'Plan Dt'
-        DataBinding.FieldName = 'OperDatePartner'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
         Options.Editing = False
-        Width = 100
-      end
-      object InvNumberPartner: TcxGridDBColumn
-        Caption = 'External Nr'
-        DataBinding.FieldName = 'InvNumberPartner'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object FromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1082#1086#1075#1086
-        DataBinding.FieldName = 'FromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Width = 91
-      end
-      object ToName: TcxGridDBColumn
-        Caption = 'Lieferanten'
-        DataBinding.FieldName = 'ToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1091
-        Width = 91
-      end
-      object PaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'TotalCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-        DataBinding.FieldName = 'TotalSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object DiscountTax: TcxGridDBColumn
-        Caption = '% '#1089#1082'.'
-        DataBinding.FieldName = 'DiscountTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object DiscountNextTax: TcxGridDBColumn
-        Caption = '% '#1089#1082'.('#1076#1086#1087'.)'
-        DataBinding.FieldName = 'DiscountNextTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object PriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'PriceWithVAT'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object VATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 42
-      end
-      object TotalSummVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object TotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummMVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object TotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummPVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 79
       end
       object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 130
+        HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+        Width = 150
       end
-      object InvNumber_Invoice: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. Invoice'
-        DataBinding.FieldName = 'InvNumber_Invoice'
+      object AmountCost: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
+        DataBinding.FieldName = 'AmountCost'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountCost_Master: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'AmountCost_Master'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object ItemName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 99
+      end
+      object MasterStatusCode: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1091#1089
+        DataBinding.FieldName = 'MasterStatusCode'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 11
+            Value = 1
+          end
+          item
+            Description = #1055#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 12
+            Value = 2
+          end
+          item
+            Description = #1059#1076#1072#1083#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object MasterOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'MasterOperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object MasterInvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'MasterInvNumber'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -373,47 +372,39 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1086' / '#1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 156
+      end
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
+      object MasterComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'MasterComment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
-      end
-      object Comment_Invoice: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Invoice)'
-        DataBinding.FieldName = 'Comment_Invoice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
-      end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
-      object UpdateName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-        DataBinding.FieldName = 'UpdateName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
-      end
-      object UpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1087#1086#1089#1083'. '#1087#1088#1086#1074#1086#1076#1082#1080')'
-        DataBinding.FieldName = 'UpdateDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -422,14 +413,14 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 24
+    Left = 40
     Top = 136
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 136
+    Left = 96
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -453,8 +444,8 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 64
+    Left = 464
+    Top = 144
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -473,8 +464,8 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 416
+    Top = 136
     DockControlHeights = (
       0
       0
@@ -495,14 +486,13 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
           ItemName = 'bbEdit'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -537,15 +527,15 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -580,12 +570,10 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -603,14 +591,9 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
-      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -622,27 +605,82 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrintOrderConfirmation
-      Caption = 'Print Tender'
+      Action = actPrint
       Category = 0
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
       Category = 0
     end
-    object bbPrintSticker: TdxBarButton
-      Action = actPrintOffer
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
       Category = 0
     end
-    object bbPrintStickerTermo: TdxBarButton
-      Action = actPrintStructure
+    object bbOpenFormIncome: TdxBarButton
+      Action = actOpenFormIncome
+      Category = 0
+      ImageIndex = 24
+    end
+    object bbOpenFormTransport: TdxBarButton
+      Action = macOpenFormInvoice
+      Category = 0
+      ImageIndex = 25
+    end
+    object bbOpenFormService: TdxBarButton
+      Action = macOpenFormService
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 64
+    Left = 288
+    Top = 144
+    object actOpenFormIncome: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      ImageIndex = 29
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_Income'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = ClientDataSet
+          ComponentItem = 'OperDate_Income'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actCheckDescService: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescService
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescService
+        end>
+      Caption = 'actCheckRight'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -666,6 +704,55 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actOpenFormService: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
+      FormName = 'TTransportServiceForm'
+      FormNameParam.Value = 'TTransportServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MasterMovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MasterOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenFormService: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescService
+        end
+        item
+          Action = actOpenFormService
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -679,10 +766,10 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintOld
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintOld
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -714,39 +801,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      FormName = 'TOrderPartnerForm'
-      FormNameParam.Value = 'TOrderPartnerForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object MovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -776,42 +830,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      FormName = 'TOrderPartnerForm'
-      FormNameParam.Value = 'TOrderPartnerForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -854,21 +872,6 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1093,6 +1096,61 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = DataSource
+    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1107,246 +1165,140 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrintStickerTermo: TdsdPrintAction
-      Category = 'DSDLib'
+    object actCheckDescInvoice: TdsdExecStoredProc
+      Category = 'OpenForm'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescInvoice
       StoredProcList = <
         item
+          StoredProc = spCheckDescInvoice
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088'  '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088'  '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ImageIndex = 20
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrintTermo'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_IncomeSticker'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
+      Caption = 'actCheckRight'
     end
-    object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+    object actOpenFormInvoice: TdsdOpenForm
+      Category = 'OpenForm'
       MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-        end>
-      Params = <
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      ImageIndex = 29
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'MasterMovementId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isPrice'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrintTermo'
+          Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_IncomeSticker'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintOffer: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintOffer
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintOffer
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' Offer'
-      Hint = 'Print Offer'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = ClientDataSet
+          ComponentItem = 'MasterOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
-      Params = <
+      isShowModal = False
+    end
+    object macOpenFormInvoice: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescInvoice
+        end
+        item
+          Action = actOpenFormInvoice
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1057#1095#1077#1090'>'
+      ImageIndex = 29
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TIncomeCostForm'
+      FormNameParam.Value = 'TIncomeCostForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintProduct_Offer'
-      ReportNameParam.Value = 'PrintProduct_Offer'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintStructure: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintStructure
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintStructure
-        end>
-      Caption = 'Print Structure'
-      Hint = 'Print Structure'
-      ImageIndex = 15
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;ProdColorGroupName'
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
-      Params = <
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TIncomeCostForm'
+      FormNameParam.Value = 'TIncomeCostForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = FormParams
+          Component = ClientDataSet
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintProduct_Structure'
-      ReportNameParam.Value = 'PrintProduct_Structure'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PictureFields.Strings = (
-        'photo1')
-    end
-    object actPrintOrderConfirmation: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintOrderConfirmation
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintOrderConfirmation
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' OrderConfirmation'
-      Hint = 'Print OrderConfirmation'
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
-          DataSet = PrintItemsColorCDS
-          UserName = 'frxDBDChild'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Name = 'inOperDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_OrderConfirmation'
-      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderPartner'
+    StoredProcName = 'gpSelect_Movement_IncomeCost_byInvoice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1354,18 +1306,10 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       end>
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inMovementId_Invoice'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1378,11 +1322,11 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 192
+    Left = 56
+    Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderPartner'
+    StoredProcName = 'gpComplete_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1395,18 +1339,20 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
+    Left = 56
     Top = 232
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 112
-    Top = 64
+    Left = 360
+    Top = 136
     object N3: TMenuItem
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
     end
     object N2: TMenuItem
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
     end
     object N4: TMenuItem
       Caption = '-'
@@ -1437,7 +1383,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_OrderPartner'
+    StoredProcName = 'gpUnComplete_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1454,7 +1400,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_OrderPartner'
+    StoredProcName = 'gpSetErased_Movement_IncomeCost'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1475,19 +1421,15 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     Top = 320
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 168
+    Left = 200
+    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = actUpdate
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1499,14 +1441,14 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 248
-    Top = 216
+    Left = 184
+    Top = 224
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 328
-    Top = 64
+    Left = 728
+    Top = 128
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1515,37 +1457,14 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end>
-    Left = 584
-    Top = 48
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_OrderPartner'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    PackSize = 1
-    Left = 240
-    Top = 288
+    Left = 576
+    Top = 24
   end
-  object spSelectPrintOld: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderPartner_Print'
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1565,8 +1484,8 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 264
+    Left = 728
+    Top = 200
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1594,12 +1513,36 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_OrderPartner'
+    StoredProcName = 'gpReComplete_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1610,97 +1553,84 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 233
-    Top = 346
+    Left = 217
+    Top = 282
   end
-  object PrintItemsColorCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 532
-    Top = 318
-  end
-  object spSelectPrintOffer: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_OfferPrint'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
+  object spCheckDescInvoice: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId_OrderClient'
+        Name = 'inDescId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_Invoice'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 216
+    Left = 416
+    Top = 304
   end
-  object spSelectPrintStructure: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_StructurePrint'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
+  object spCheckDescService: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId_OrderClient'
+        Name = 'inDescId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Id'
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_TransportService'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 264
-  end
-  object spSelectPrintOrderConfirmation: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsColorCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId_OrderClient'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 648
+    Left = 584
     Top = 312
+  end
+  object GuidesInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvoice
+    FormNameParam.Value = 'TInvoiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 65531
   end
 end

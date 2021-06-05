@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderPartner(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat
                                                            , Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderPartner(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat
+                                                           , Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -16,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderPartner(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
+    IN inMovementId_Invoice  Integer   , -- Счет
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -39,6 +42,7 @@ BEGIN
                                                , inDiscountTax, inDiscountNextTax
                                                , inFromId, inToId
                                                , inPaidKindId
+                                               , inMovementId_Invoice
                                                , inComment
                                                , vbUserId);
 
@@ -49,6 +53,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.06.21         *
  12.04.21         *
 */
 

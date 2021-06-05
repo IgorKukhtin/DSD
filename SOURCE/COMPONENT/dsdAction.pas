@@ -8,7 +8,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
-  System.IOUtils
+  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI
   {$IFDEF DELPHI103RIO}, Actions {$ENDIF}, Vcl.Graphics;
 
 type
@@ -1013,6 +1013,56 @@ type
     property Component: TComponent read FComponent write SetComponent;
   end;
 
+  TdsdSendSMSAction = class(TdsdCustomAction)
+  private
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+    FHostParam: TdsdParam;
+    FLoginParam: TdsdParam;
+    FPasswordParam: TdsdParam;
+    FPhonesParam: TdsdParam;
+    FMessageParam: TdsdParam;
+    FShowCostParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property Host: TdsdParam read FHostParam write FHostParam;
+    property Login: TdsdParam read FLoginParam write FLoginParam;
+    property Password: TdsdParam read FPasswordParam write FPasswordParam;
+    property Phones: TdsdParam read FPhonesParam write FPhonesParam;
+    property Message: TdsdParam read FMessageParam write FMessageParam;
+    property ShowCost: TdsdParam read FShowCostParam write FShowCostParam;
+  end;
+
+  TdsdSetFocusedAction = class(TdsdCustomAction)
+  private
+
+    FControlNameParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property ControlName: TdsdParam read FControlNameParam write FControlNameParam;
+  end;
+
 procedure Register;
 
 implementation
@@ -1068,6 +1118,8 @@ begin
   RegisterActions('DSDLib', [TdsdSetDefaultParams], TdsdSetDefaultParams);
   RegisterActions('DSDLib', [TdsdFTP], TdsdFTP);
   RegisterActions('DSDLib', [TdsdDblClickAction], TdsdDblClickAction);
+  RegisterActions('DSDLib', [TdsdSendSMSAction], TdsdSendSMSAction);
+  RegisterActions('DSDLib', [TdsdSetFocusedAction], TdsdSetFocusedAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -4456,6 +4508,201 @@ begin
       ShowMessage('Класс ' + Value.ClassName + ' не имеет метода с именем OnDblClick.')
     end;
   end;
+end;
+
+
+  {TdsdSendSMSAction}
+
+constructor TdsdSendSMSAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+  FHostParam := TdsdParam.Create(nil);
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FLoginParam := TdsdParam.Create(nil);
+  FLoginParam.DataType := ftInteger;
+  FLoginParam.Value := '';
+
+  FPasswordParam := TdsdParam.Create(nil);
+  FPasswordParam.DataType := ftString;
+  FPasswordParam.Value := '';
+
+  FPhonesParam := TdsdParam.Create(nil);
+  FPhonesParam.DataType := ftString;
+  FPhonesParam.Value := '';
+
+  FMessageParam := TdsdParam.Create(nil);
+  FMessageParam.DataType := ftString;
+  FMessageParam.Value := '';
+
+  FShowCostParam := TdsdParam.Create(nil);
+  FShowCostParam.DataType := ftBoolean;
+  FShowCostParam.Value := False;
+end;
+
+destructor TdsdSendSMSAction.Destroy;
+begin
+  FreeAndNil(FHostParam);
+  FreeAndNil(FLoginParam);
+  FreeAndNil(FPasswordParam);
+  FreeAndNil(FPhonesParam);
+  FreeAndNil(FMessageParam);
+  FreeAndNil(FShowCostParam);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+function TdsdSendSMSAction.LocalExecute: Boolean;
+  var S : String;
+begin
+  inherited;
+  Result := False;
+
+  if (FHostParam.Value = '') or
+     (FLoginParam.Value = '') or
+     (FPasswordParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host, Login или Password.');
+    Exit;
+  end;
+
+  if FPhonesParam.Value = '' then
+  begin
+    ShowMessage('Не заполнен номер телефона.');
+    Exit;
+  end;
+
+  if FMessageParam.Value = '' then
+  begin
+    ShowMessage('Не заполнен текст SMS.');
+    Exit;
+  end;
+
+  // Узнаем стоимость сообщения
+  if FShowCostParam.Value = True then
+  begin
+    FIdHTTP.Request.ContentType := 'application/json';
+    FIdHTTP.Request.ContentEncoding := 'utf-8';
+    FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+    try
+      S := FIdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '?login=' + FLoginParam.Value +
+                                                           '&psw=' + FPasswordParam.Value +
+                                                           '&phones=' + FPhonesParam.Value +
+                                                           '&mes=' + FMessageParam.Value +
+                                                           '&cost=1'));
+    except
+    end;
+
+    case FIdHTTP.ResponseCode of
+      200 : if Pos('error', LowerCase(S)) > 0 then
+            begin
+              ShowMessage(S);
+              Exit
+            end  else
+            begin
+              if MessageDlg('Стоимость отправки: ' + S + #13#10#13#10'Отправлять SMS ?...', mtInformation, mbOKCancel, 0) <> mrOk then Exit;
+            end;
+      else begin
+             ShowMessage(S);
+             Exit;
+           end;
+    end;
+  end;
+
+  // Непосредственно отправка
+
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  try
+    S := FIdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '?login=' + FLoginParam.Value +
+                                                         '&psw=' + FPasswordParam.Value +
+                                                         '&phones=' + FPhonesParam.Value +
+                                                         '&mes=' + FMessageParam.Value));
+  except
+  end;
+
+  case FIdHTTP.ResponseCode of
+    200 : if Pos('error', LowerCase(S)) > 0 then
+          begin
+            ShowMessage(S);
+          end else Result := True;
+    else begin
+           ShowMessage(S);
+         end;
+  end;
+end;
+
+  {TdsdSetFocusedAction}
+
+constructor TdsdSetFocusedAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FControlNameParam := TdsdParam.Create(nil);
+  FControlNameParam.DataType := ftString;
+  FControlNameParam.Value := '';
+end;
+
+destructor TdsdSetFocusedAction.Destroy;
+begin
+  FreeAndNil(FControlNameParam);
+
+  inherited;
+end;
+
+function TdsdSetFocusedAction.LocalExecute: Boolean;
+  var I : integer;
+
+  function SetFocused(Control: TWinControl; Form : TForm): Boolean;
+  begin
+    if (Control.Parent <> Nil) and (Control.Parent <> Form) then SetFocused(Control.Parent, Form);
+    if Control.Parent is TcxPageControl then
+    begin
+      TcxPageControl(Control.Parent).ActivePage := TcxTabSheet(Control);
+    end else if Control.TabStop then Control.SetFocus;
+    Result := ActiveControl = Control;
+  end;
+
+  function SetFocusedColumn(Column: TcxGridColumn; Form : TForm): Boolean;
+  begin
+    Column.Focused := True;
+    if Column.GridView.Control is TWinControl then
+      Result := SetFocused(TWinControl(Column.GridView.Control), Form)
+    else Result := False;
+  end;
+
+begin
+  inherited;
+  Result := False;
+
+  if FControlNameParam.Value = '' then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  if Owner is TForm then
+  begin
+    for I := 0 to TForm(Owner).ComponentCount - 1 do
+      if (LowerCase(TForm(Owner).Components[I].Name) = LowerCase(FControlNameParam.Value)) then
+    begin
+      if (TForm(Owner).Components[I] is TWinControl) then SetFocused(TWinControl(TForm(Owner).Components[I]), TForm(Owner))
+      else if (TForm(Owner).Components[I] is TcxGridColumn) then SetFocusedColumn(TcxGridColumn(TForm(Owner).Components[I]), TForm(Owner));
+      Break;
+    end;
+  end;
+
 end;
 
 initialization

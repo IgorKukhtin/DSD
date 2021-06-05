@@ -234,6 +234,7 @@ type
     edMovementId: TcxTextEdit;
     actInsert_SMS: TdsdExecStoredProc;
     bbInsert_SMS: TdxBarButton;
+    actSendSMSAction: TdsdSendSMSAction;
   private
   public
   end;

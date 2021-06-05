@@ -111,15 +111,15 @@ BEGIN
                             MovementCheck.TotalSumm                               AS FactAmount,
                             0.0::TFloat                                           AS FactAmountSale
                      FROM Movement_Check_View AS MovementCheck
-                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+/*                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                     ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
                                                    AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
-                                                   AND MovementBoolean_CorrectMarketing.ValueData = True
+                                                   AND MovementBoolean_CorrectMarketing.ValueData = True*/
                      WHERE MovementCheck.OperDate >= vbStartDate
                        AND MovementCheck.OperDate < vbEndDate
                        AND MovementCheck.StatusId = zc_Enum_Status_Complete()
                        AND (MovementCheck.UnitId = inUnitId or inUnitId = 0)
-                       AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+--                       AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
                        AND MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
                      UNION ALL
                      SELECT
@@ -158,16 +158,16 @@ BEGIN
                                     MovementCheck.TotalSummChangePercent                  AS Summa,
                                     0.0::TFloat                                           AS SummaSale
                              FROM Movement_Check_View AS MovementCheck
-                                  LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+/*                                  LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                             ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
                                                            AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
-                                                           AND MovementBoolean_CorrectMarketing.ValueData = True
+                                                           AND MovementBoolean_CorrectMarketing.ValueData = True*/
                              WHERE MovementCheck.OperDate >= vbStartDate
                                AND MovementCheck.OperDate < vbEndDate
                                AND MovementCheck.StatusId = zc_Enum_Status_Complete()
                                AND (MovementCheck.UnitId = inUnitId or inUnitId = 0)
                                AND COALESCE( MovementCheck.SPKindId, 0) <> 0
-                               AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+--                               AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
                                AND MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
                              UNION ALL
                              SELECT
@@ -188,16 +188,16 @@ BEGIN
                                     MovementCheck.TotalSummChangePercent                  AS Summa,
                                     0.0::TFloat                                           AS SummaSale
                              FROM Movement_Check_View AS MovementCheck
-                                  LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+/*                                  LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                             ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
                                                            AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
-                                                           AND MovementBoolean_CorrectMarketing.ValueData = True
+                                                           AND MovementBoolean_CorrectMarketing.ValueData = True*/
                              WHERE MovementCheck.OperDate >= vbStartDate
                                AND MovementCheck.OperDate < vbEndDate
                                AND MovementCheck.StatusId = zc_Enum_Status_Complete()
                                AND (MovementCheck.UnitId = inUnitId or inUnitId = 0)
                                AND COALESCE( MovementCheck.DiscountCardId, 0) <> 0
-                               AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+--                               AND COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
                                AND MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
                              )
 
@@ -277,18 +277,18 @@ BEGIN
                                           SUM(MovementCheck.TotalSumm)             AS FactAmount
                                       FROM
                                           Movement_Check_View AS MovementCheck
-                                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+/*                                          LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
                                                                     ON MovementBoolean_CorrectMarketing.MovementId = MovementCheck.Id
                                                                    AND MovementBoolean_CorrectMarketing.DescId in (zc_MovementBoolean_CorrectMarketing(), zc_MovementBoolean_CorrectIlliquidMarketing())
-                                                                   AND MovementBoolean_CorrectMarketing.ValueData = True
+                                                                   AND MovementBoolean_CorrectMarketing.ValueData = True*/
                                       WHERE
                                           MovementCheck.OperDate >= (vbStartDate-INTERVAL '56 DAY')
                                           AND
                                           MovementCheck.OperDate < vbStartDate
                                           AND
                                           MovementCheck.StatusId = zc_Enum_Status_Complete()
-                                          AND 
-                                          COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False
+/*                                          AND 
+                                          COALESCE(MovementBoolean_CorrectMarketing.ValueData, False) = False*/
                                           AND 
                                           MovementCheck.Id NOT IN (22653173, 22653613, 22653819)
                                           AND
@@ -464,7 +464,4 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
  28.09.15                                                                        *
 */
 
-select * from gpSelect_Report_SoldDay(inMonth := ('01.05.2021')::TDateTime , inUnitId := 377613 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
-
-
-select * from gpSelect_Report_SoldDay(inMonth := ('31.05.2021')::TDateTime , inUnitId := 183292 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
+select * from gpSelect_Report_SoldDay(inMonth := ('02.06.2021')::TDateTime , inUnitId := 377605 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'False' ,  inSession := '3');

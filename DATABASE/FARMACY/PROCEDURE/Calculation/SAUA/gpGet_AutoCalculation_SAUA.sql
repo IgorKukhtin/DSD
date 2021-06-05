@@ -20,7 +20,9 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbLatitude Float;
   DECLARE vbLongitude Float;
+  DECLARE vbRealization TFloat;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbMethodsAssortmentId Integer;
 
   DECLARE vbUnit1Id Integer;
   DECLARE vbUnit2Id Integer;
@@ -33,6 +35,15 @@ BEGIN
     
     vbOperDate := CURRENT_DATE + ((8 - date_part('DOW', CURRENT_DATE)::Integer)::TVarChar||' DAY')::INTERVAL;
   
+    SELECT ObjectLink_CashSettings_MethodsAssortment.ChildObjectId
+    INTO vbMethodsAssortmentId
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
+                              ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
+                             AND ObjectLink_CashSettings_MethodsAssortment.DescId = zc_ObjectLink_CashSettings_MethodsAssortment()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
+
     CREATE TEMP TABLE _tmpUnit ON COMMIT DROP AS (  
     WITH tmpUnit AS (SELECT Object_Unit.Id                AS UnitId
                           , Object_Unit.ValueData         AS UnitName
@@ -64,6 +75,7 @@ BEGIN
          , COALESCE(NULLIF(ObjectString_Latitude.ValueData, ''), '0')::FLOAT                          AS Latitude 
          , COALESCE(NULLIF(ObjectString_Longitude.ValueData, ''), '0')::FLOAT                         AS Longitude
          , tmpUnit.ORD                                                                                AS ORD
+         , 0::TFloat                                                                                  AS Realization
     FROM tmpUnit
          LEFT JOIN ObjectString AS ObjectString_Latitude
                                 ON ObjectString_Latitude.ObjectId = tmpUnit.UnitId
@@ -75,6 +87,26 @@ BEGIN
                               ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
                              AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
          );
+         
+    IF vbMethodsAssortmentId = zc_Enum_MethodsAssortment_Sales()
+    THEN
+    
+      UPDATE _tmpUnit SET Realization = R.AmountSum
+      FROM (SELECT AnalysisContainerItem.UnitID
+                 , Sum(COALESCE(AnalysisContainerItem.AmountCheckSum, 0))        AS AmountSum
+            FROM AnalysisContainerItem
+            WHERE AnalysisContainerItem.OperDate >= DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 MONTH'
+              AND AnalysisContainerItem.OperDate < DATE_TRUNC ('month', CURRENT_DATE)
+              AND AnalysisContainerItem.UnitID IN (SELECT _tmpUnit.UnitId FROM _tmpUnit)
+              AND AnalysisContainerItem.AmountCheckSum > 0
+              AND AnalysisContainerItem.GoodsId NOT IN (SELECT Object_Goods_Retail.ID
+                                                        FROM Object_Goods_Retail
+                                                        WHERE (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                           OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0))
+            GROUP BY AnalysisContainerItem.UnitID) AS R
+      WHERE _tmpUnit.UnitId = R.UnitId;
+    
+    END IF;
              
     -- Выбераем аптеку
     IF EXISTS(SELECT * FROM _tmpUnit WHERE _tmpUnit.DateAuto = vbOperDate)
@@ -82,9 +114,11 @@ BEGIN
       SELECT _tmpUnit.UnitId
            , _tmpUnit.Latitude
            , _tmpUnit.Longitude
+           , _tmpUnit.Realization
       INTO vbUnitId
          , vbLatitude
          , vbLongitude
+         , vbRealization
       FROM _tmpUnit
       WHERE _tmpUnit.DateAuto = vbOperDate;    
     ELSEIF EXISTS(SELECT * FROM _tmpUnit WHERE _tmpUnit.DateAuto is Null)
@@ -123,7 +157,7 @@ BEGIN
     WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
                              , _tmpUnit.UnitName
                              , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
-                             , ROW_NUMBER()OVER(ORDER BY |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
+                             , ROW_NUMBER()OVER(ORDER BY ABS(_tmpUnit.Realization - vbRealization), |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
                         FROM _tmpUnit      
                         WHERE _tmpUnit.UnitId <> vbUnitId)      
                                  
@@ -259,4 +293,5 @@ $BODY$
 
 -- тест
 --
- SELECT * FROM gpGet_AutoCalculation_SAUA (inSession:= '3')    
+ 
+select * from gpGet_AutoCalculation_SAUA( inSession := '3');

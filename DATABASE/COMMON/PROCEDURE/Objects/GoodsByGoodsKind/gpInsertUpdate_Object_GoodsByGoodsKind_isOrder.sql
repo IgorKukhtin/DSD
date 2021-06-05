@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_isOrder(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
@@ -10,17 +11,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_isOrder(
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inIsOrder             Boolean  , -- используется в заявках
     IN inIsNotMobile         Boolean  , -- НЕ используется в моб.агенте
+    IN inIsTop               Boolean  , --
+   OUT outIsTop              Boolean  , --
     IN inSession             TVarChar 
 )
-RETURNS Integer
+RETURNS Record
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsOrder Boolean;
+   DECLARE vbIsNotMobile Boolean;
+   DECLARE vbIsTop Boolean;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
 
-
+   vbUserId:= lpGetUserBySession (inSession);
+   
    -- проверка уникальности
    IF EXISTS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
               FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -33,7 +38,7 @@ BEGIN
                 AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId <> COALESCE (ioId, 0))
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
-   END IF;   
+   END IF;
 
    -- проверка - что б Админ ничего не ломал
    IF vbUserId = 5
@@ -69,11 +74,36 @@ BEGIN
 
    END IF;
    
-   -- сохранили свойство <используется в заявках>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
+   -- если менялись IsOrder и inIsNotMobile одни права
+   vbIsOrder     :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()) :: Boolean;
+   vbIsNotMobile :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()):: Boolean;
+   IF COALESCE (vbIsNotMobile,False) <> COALESCE (inIsNotMobile,False) OR COALESCE (vbIsOrder,False) <> COALESCE (inIsOrder,False)
+   THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
 
-   -- сохранили свойство <используется в заявках>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotMobile(), ioId, inIsNotMobile);
+        -- сохранили свойство <используется в заявках>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
+
+        -- сохранили свойство <используется в заявках>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotMobile(), ioId, inIsNotMobile);
+
+   END IF;
+   
+   --если  менялся isTop - другие права
+   vbIsTop :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()):: Boolean;
+   outIsTop := vbIsTop;
+   IF COALESCE (vbIsTop,False) <> COALESCE (inIsTop,False)
+   THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_GoodsByGoodsKind_Top());
+
+        outIsTop := inIsTop;
+   
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Top(), ioId, outIsTop);
+   END IF;
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

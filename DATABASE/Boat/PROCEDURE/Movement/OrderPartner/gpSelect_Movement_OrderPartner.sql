@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              )
@@ -50,6 +51,7 @@ BEGIN
                                          , MovementLinkObject_To.ObjectId             AS ToId
                                          , MovementLinkObject_From.ObjectId           AS FromId
                                          , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
+                                         , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
                                     FROM tmpStatus
                                          INNER JOIN Movement AS Movement_OrderPartner 
                                                              ON Movement_OrderPartner.StatusId = tmpStatus.StatusId
@@ -75,6 +77,10 @@ BEGIN
                                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                 ON MovementDate_OperDatePartner.MovementId = Movement_OrderPartner.Id
                                                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                                        LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Invoice
+                                                                       ON MovementLinkMovement_Invoice.MovementId = Movement_OrderPartner.Id
+                                                                      AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
                                    )
 
 
@@ -107,6 +113,10 @@ BEGIN
 
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
+             , Movement_Invoice.Id               AS MovementId_Invoice
+             , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+             , MovementString_Comment_Invoice.ValueData AS Comment_Invoice
+
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
@@ -118,6 +128,11 @@ BEGIN
         LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_OrderPartner.FromId
         LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_OrderPartner.ToId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Movement_OrderPartner.PaidKindId
+        LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement_OrderPartner.MovementId_Invoice
+
+        LEFT JOIN MovementString AS MovementString_Comment_Invoice
+                                 ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement_OrderPartner.Id
@@ -178,6 +193,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.06.21         *
  12.04.21         *
 */
 

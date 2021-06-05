@@ -335,7 +335,10 @@ begin
              Caption := AddOnFormData.Params.ParamByName('FormCaption').Value + ' <' + gc_User.Login + '>';
            // Выводим PUSH сообщение
            if Assigned(AddOnFormData.PUSHMessage) then
-              AddOnFormData.PUSHMessage.Execute
+              AddOnFormData.PUSHMessage.Execute;
+           // Устанавливаем фокус
+           if Assigned(AddOnFormData.SetFocusedAction) then
+              AddOnFormData.SetFocusedAction.Execute;
         end;
   finally
     FisAlreadyOpen := true;
@@ -685,6 +688,8 @@ initialization
   RegisterClass (TdsdSetDefaultParams);
   RegisterClass (TdsdFTP);
   RegisterClass (TdsdDblClickAction);
+  RegisterClass (TdsdSendSMSAction);
+  RegisterClass (TdsdSetFocusedAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

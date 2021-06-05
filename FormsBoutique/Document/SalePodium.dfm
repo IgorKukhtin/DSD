@@ -1823,7 +1823,7 @@ object SalePodiumForm: TSalePodiumForm
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 4
+    TabOrder = 3
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1854,7 +1854,7 @@ object SalePodiumForm: TSalePodiumForm
     Left = 219
     Top = 129
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 108
   end
   object cxLabel26: TcxLabel
@@ -3161,6 +3161,7 @@ object SalePodiumForm: TSalePodiumForm
     object actInsert_SMS: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actSendSMSAction
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_Movement_Sale_SMS
       StoredProcList = <
@@ -3283,6 +3284,34 @@ object SalePodiumForm: TSalePodiumForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1089' '#1087#1088#1080#1084#1077#1088#1082#1080
       ImageIndex = 27
+    end
+    object actSendSMSAction: TdsdSendSMSAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSendSMSAction'
+      InfoAfterExecute = 'SMS '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Host.Value = ''
+      Host.Component = edSmsSettingsName
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Login.Value = ''
+      Login.Component = edLogin
+      Login.MultiSelectSeparator = ','
+      Password.Value = ''
+      Password.Component = edPassword
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Phones.Value = ''
+      Phones.Component = edPhoneSMS
+      Phones.DataType = ftString
+      Phones.MultiSelectSeparator = ','
+      Message.Value = ''
+      Message.Component = edMessage
+      Message.DataType = ftString
+      Message.MultiSelectSeparator = ','
+      ShowCost.Value = True
+      ShowCost.DataType = ftBoolean
+      ShowCost.MultiSelectSeparator = ','
     end
   end
   object MasterDS: TDataSource

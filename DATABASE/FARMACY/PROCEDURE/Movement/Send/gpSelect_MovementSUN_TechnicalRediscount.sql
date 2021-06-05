@@ -78,7 +78,16 @@ BEGIN
          -- сохранили признак
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NotDisplaySUN(), inMovementId, TRUE);
       END IF;
-      IF vbStatusId <> zc_Enum_Status_Erased()
+      IF vbStatusId <> zc_Enum_Status_Erased() AND 
+         NOT EXISTS(SELECT 1
+                    FROM Movement
+                                                      
+                         INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                           ON MILinkObject_CommentSend.MovementItemId = Movement.Id
+                                                          AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                          AND MILinkObject_CommentSend.ObjectId = 16978916 
+
+                    WHERE Movement.Id = inMovementId)
       THEN
          -- сохранили признак
          PERFORM gpSetErased_Movement_Send(inMovementId, inSession);
@@ -280,7 +289,7 @@ BEGIN
                            , inMovementId   := vbMovementTRId
                            , inGoodsId      := MISend.GoodsId
                            , inAmount       := CASE WHEN COALESCE (MISend.CommentTRId, 0) <> 0 AND COALESCE (MISend.AmountDelta, 0) > 0 THEN - MISend.AmountDelta ELSE 0 END
-                           , inCommentSendID:= COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
+                           , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
                            , isExplanation  := COALESCE (MIString_Explanation.ValueData , '')
                            , isComment      := 'Коррекция СУН'
                            , inUserId       := vbUserId)                                  AS MITechnicalRediscountId
@@ -368,4 +377,4 @@ ALTER FUNCTION gpSelect_MovementOccupancySUN (Integer, TVarChar) OWNER TO postgr
 -- тест
 -- SELECT * FROM Movement where ID = 19363037
 --
--- SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 20074073   , inSession:= '3')
+-- SELECT * FROM gpSelect_MovementSUN_TechnicalRediscount (inMovementID:= 23522963   , inSession:= '3')

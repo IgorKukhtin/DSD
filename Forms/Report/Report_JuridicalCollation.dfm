@@ -807,7 +807,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -816,7 +816,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'inChangePercentAmount'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1216,7 +1216,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1288,6 +1288,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ImageIndex = 17
+    end
+    object actOpenProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actPrintCurrency: TdsdPrintAction
       Category = 'DSDLib'
@@ -1441,7 +1471,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1652,7 +1682,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -2016,6 +2046,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2060,6 +2098,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Hint = 'bbIsUpdate'
       Visible = ivAlways
       Control = cbIsUpdate
+    end
+    object bbOpenProtocol: TdxBarButton
+      Action = actOpenProtocol
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2213,7 +2255,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -2221,7 +2263,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2364,7 +2406,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2508,7 +2550,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'outContractSigningDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ContractSigningDate'
         DataType = ftDateTime
@@ -2872,7 +2914,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

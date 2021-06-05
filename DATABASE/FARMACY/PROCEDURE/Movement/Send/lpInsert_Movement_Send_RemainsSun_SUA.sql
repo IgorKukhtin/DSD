@@ -1684,6 +1684,10 @@ return;
              LEFT JOIN _tmpGoods_PromoUnit_SUA ON _tmpGoods_PromoUnit_SUA.GoodsID = _tmpRemains_Partion_SUA.GoodsId
                                                     AND _tmpGoods_PromoUnit_SUA.UnitId = _tmpRemains_Partion_SUA.UnitId  
                         
+              -- найдем дисконтній товар
+              LEFT JOIN _tmpGoods_DiscountExternal_SUA AS _tmpGoods_DiscountExternal
+                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion_SUA.UnitId
+                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion_SUA.GoodsId
 
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
@@ -1693,6 +1697,7 @@ return;
                               THEN (COALESCE(_tmpGoodsLayout_SUN_SUA.Layout, 0) + COALESCE(_tmpGoods_PromoUnit_SUA.Amount, 0)) -
                                    (Amount_save - _tmpRemains_Partion_SUA.Amount)
                               ELSE 0 END) >= 1
+          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
         ORDER BY _tmpRemains_Partion_SUA.Amount DESC, _tmpRemains_Partion_SUA.UnitId, _tmpRemains_Partion_SUA.GoodsId
        ;
      -- начало цикла по курсору1

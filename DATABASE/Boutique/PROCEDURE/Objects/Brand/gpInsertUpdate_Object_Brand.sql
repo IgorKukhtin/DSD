@@ -15,8 +15,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
    -- ïðîâåðêà ïðàâ ïîëüçîâàòåëÿ íà âûçîâ ïðîöåäóðû
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Brand());
-   vbUserId:= lpGetUserBySession (inSession);
+   --vbUserId:= lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Brand());
 
    -- Íóæåí ÂÑÅÃÄÀ- ÄËß ÍÎÂÎÉ ÑÕÅÌÛ Ñ ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Brand_seq'); 

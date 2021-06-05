@@ -944,6 +944,7 @@ type
     FAddOnFormRefresh: TAddOnFormRefresh;
     FPUSHMessage: TdsdShowPUSHMessage;
     FClosePUSHMessage: TdsdShowPUSHMessage;
+    FSetFocusedAction: TdsdSetFocusedAction;
   public
     constructor Create;
     destructor Destroy; override;
@@ -970,6 +971,8 @@ type
     property PUSHMessage: TdsdShowPUSHMessage Read FPUSHMessage Write FPUSHMessage;
     // Событие вызываемое для выыода PUSH сообщений при закрытии окна
     property ClosePUSHMessage: TdsdShowPUSHMessage Read FClosePUSHMessage Write FClosePUSHMessage;
+    // Событие вызываемое для выыода PUSH сообщений при закрытии окна
+    property SetFocusedAction: TdsdSetFocusedAction Read FSetFocusedAction Write FSetFocusedAction;
   end;
 
   TdsdGMMap = class(TGMMap)
