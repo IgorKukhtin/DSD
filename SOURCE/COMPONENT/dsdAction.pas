@@ -4670,7 +4670,7 @@ function TdsdSetFocusedAction.LocalExecute: Boolean;
     if Control.Parent is TcxPageControl then
     begin
       TcxPageControl(Control.Parent).ActivePage := TcxTabSheet(Control);
-    end else if Control.TabStop then Control.SetFocus;
+    end else if Control.TabStop then ActiveControl := Control;
     Result := ActiveControl = Control;
   end;
 

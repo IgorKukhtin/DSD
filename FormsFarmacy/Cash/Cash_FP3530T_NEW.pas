@@ -715,7 +715,7 @@ begin
 
   S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - Abs(nSum);
 end;
 
 function TCashFP3530T_NEW.SummaCard : Currency;
@@ -729,7 +729,7 @@ begin
 
   S := FPrinter.SUMDAY[2, 1, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - nSum;
+  if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result - Abs(nSum);
 end;
 
 function TCashFP3530T_NEW.ReceiptsSales : Integer;

@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NumberSeats Integer
              , isBanFiscalSale Boolean
              , isSendLoss Boolean
+             , SetFocused TVarChar
               )
 AS
 $BODY$
@@ -74,6 +75,7 @@ BEGIN
              , CAST (0 AS Integer)                              AS NumberSeats
              , FALSE                                            AS isBanFiscalSale
              , FALSE                                            AS isSendLoss
+             , ''::TVarChar                                     AS SetFocused 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -119,6 +121,7 @@ BEGIN
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
            , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
+           , CASE WHEN inSession = '3' THEN 'AmountManual' ELSE '' END::TVarChar    AS SetFocused 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

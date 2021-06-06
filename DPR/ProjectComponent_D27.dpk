@@ -128,16 +128,19 @@ contains
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201112 in '..\SOURCE\MeDOC\Medoc_J1201112.pas',
+  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201111 in '..\SOURCE\MeDOC\Medoc_J1201111.pas',
-  Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas';
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 end.
