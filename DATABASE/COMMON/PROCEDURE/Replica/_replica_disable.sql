@@ -65,7 +65,7 @@ ALTER TABLE loginprotocol DISABLE TRIGGER trigger_notify_changes_loginprotocol;
 ALTER TABLE Userprotocol DISABLE TRIGGER trigger_notify_changes_Userprotocol;
 
 
--- ALTER TABLE SoldTable DISABLE TRIGGER trigger_notify_changes_SoldTable;
+ALTER TABLE SoldTable DISABLE TRIGGER trigger_notify_changes_SoldTable;
 
 ALTER TABLE objecthistory DISABLE TRIGGER trigger_notify_changes_objecthistory;
 ALTER TABLE objecthistoryDate DISABLE TRIGGER trigger_notify_changes_objecthistoryDate;

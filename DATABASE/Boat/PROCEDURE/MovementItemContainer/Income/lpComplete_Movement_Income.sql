@@ -122,7 +122,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods
                          , GoodsId, PartionId
-                         , OperCount, OperSumm, OperSumm_VAT
+                         , OperCount, OperPrice_orig, OperPrice, CountForPrice, OperSumm, OperSumm_VAT
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
         -- результат
@@ -133,12 +133,19 @@ BEGIN
              , tmp.GoodsId
              , tmp.PartionId
              , tmp.OperCount
+             
+               -- Цена вх. без НДС, БЕЗ учета скидки
+             , tmp.OperPrice AS OperPrice_orig
+               -- Цена вх. без НДС, с учетом скидки
+             , zfCalc_SummDiscountTax (tmp.OperPrice, vbDiscountTax) AS OperPrice
+               -- 
+             , tmp.CountForPrice
 
-              -- конечная сумма по Поставщику
+              -- конечная сумма по Поставщику - без НДС
             , tmp.OperSumm
               -- Сумма НДС
             , CASE WHEN vbVATPercent > 0
-                        THEN CAST ( (1 + vbVATPercent / 100) * tmp.OperSumm AS NUMERIC (16, 2)) - tmp.OperSumm
+                        THEN zfCalc_SummWVAT (tmp.OperSumm, vbVATPercent) - tmp.OperSumm
                    ELSE 0
               END AS OperSumm_VAT
 
@@ -151,17 +158,20 @@ BEGIN
              , tmp.InfoMoneyId
 
         FROM (SELECT MovementItem.Id                    AS MovementItemId
-                   , Object_PartionGoods.ObjectId       AS GoodsId
+                   , MovementItem.ObjectId              AS GoodsId
                    , MovementItem.Id                    AS PartionId -- !!!здесь можно было б и MovementItem.PartionId!!!
                    , MovementItem.Amount                AS OperCount
-                   , Object_PartionGoods.EKPrice        AS OperPrice
-                   , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
+                     -- Цена без НДС, без учета скидки
+                   , CASE WHEN vbPriceWithVAT = TRUE THEN zfCalc_Summ_NoVAT (MIFloat_OperPrice.ValueData, vbVATPercent) ELSE MIFloat_OperPrice.ValueData END AS OperPrice
+                   , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
 
                     -- учитываем % Скидки для суммы без НДС
-                   , CASE WHEN vbDiscountTax > 0
-                               THEN CAST ((1 - vbDiscountTax/100) * zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.EKPrice, Object_PartionGoods.CountForPrice)
-                                          AS NUMERIC (16, 2))
-                                ELSE zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.EKPrice, Object_PartionGoods.CountForPrice)
+                   , CASE WHEN vbPriceWithVAT = TRUE
+                               THEN zfCalc_SummDiscountTax
+                                   (zfCalc_Summ_NoVAT 
+                                   (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbVATPercent), vbDiscountTax)
+                               ELSE zfCalc_SummDiscountTax
+                                   (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbDiscountTax)
                      END AS OperSumm
 
                      -- Управленческая группа
@@ -176,9 +186,14 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
 
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
+                   LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                               ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_PartionGoods.ObjectId
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    -- !!!ВРЕМЕННО!!! Комплектующие
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
@@ -442,9 +457,14 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     -- дописали - КОЛ-ВО
-     UPDATE Object_PartionGoods SET Amount = _tmpItem.OperCount, isErased = FALSE, isArc = FALSE
-                                  , OperDate = vbOperDate
+     -- дописали - КОЛ-ВО + Цену
+     UPDATE Object_PartionGoods SET Amount        = _tmpItem.OperCount
+                                  , EKPrice_orig  = _tmpItem.OperPrice_orig
+                                  , EKPrice       = _tmpItem.OperPrice
+                                  , CountForPrice = _tmpItem.CountForPrice
+                                  , OperDate      = vbOperDate
+                                  , isErased      = FALSE
+                                  , isArc         = FALSE
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
     ;

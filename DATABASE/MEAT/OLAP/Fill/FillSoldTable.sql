@@ -33,7 +33,8 @@ FROM (with tmpGoodsByGoodsKind AS (SELECT
      ) AS tmpGoodsByGoodsKind
 where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
   AND tmpGoodsByGoodsKind.GoodsKindId = SoldTable .GoodsKindId
-  AND SoldTable.OperDate BETWEEN '01.04.2021' AND '01.05.2021'
+  AND SoldTable.OperDate BETWEEN '01.12.2020' AND '01.01.2021'
+  AND GoodsByGoodsKindId IS NULL
 
 */
   --

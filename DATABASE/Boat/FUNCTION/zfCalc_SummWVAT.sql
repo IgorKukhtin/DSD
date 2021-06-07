@@ -11,7 +11,7 @@ AS
 $BODY$
 BEGIN
      -- округлили до 2-х знаков
-     RETURN CAST (inSumm * (1 + inTaxKindValue/100) AS NUMERIC (16, 2));
+     RETURN CAST (inSumm * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 2));
                 
 END;
 $BODY$

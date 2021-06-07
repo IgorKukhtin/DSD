@@ -112,7 +112,7 @@ BEGIN
                                                      , inOperDate          := vbOperDate           ::TDateTime     -- Дата прихода
                                                      , inObjectId          := inGoodsId            ::Integer       -- Комплектующие или Лодка
                                                      , inAmount            := inAmount             ::TFloat        -- Кол-во приход
-                                                     , inEKPrice           := inOperPrice          ::TFloat        -- Цена вх. без НДС
+                                                     , inEKPrice           := inOperPrice          ::TFloat        -- Цена вх. без НДС, ???с учетом скидки???
                                                      , inCountForPrice     := COALESCE (inCountForPrice, 1)  ::TFloat  -- Цена за количество
                                                      , inEmpfPrice         := inEmpfPrice          ::TFloat        -- Цена рекоменд. без НДС
                                                      , inOperPriceList     := inOperPriceList      ::TFloat        -- Цена продажи, !!!грн!!!

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inOperPrice           TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inPartNumber          TVarChar  , --№ по тех паспорту
-    IN inComment             TVarChar  , 
+    IN inComment             TVarChar  ,
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -30,7 +30,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
-     
+
      -- <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
      -- <>
@@ -42,7 +42,11 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
-   
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
      END IF;
 
      -- пересчитали Итоговые суммы
@@ -60,7 +64,7 @@ LANGUAGE PLPGSQL VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  24.02.21         * PartNumber
- 11.05.18         * 
+ 11.05.18         *
 */
 
 -- тест
