@@ -69,7 +69,7 @@ BEGIN
           , lfSelect.PersonalId                  AS PersonalId
           , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8411 -- Склад ГП ф.Киев
-                 ELSE lfSelect.UnitId                      
+                 ELSE lfSelect.UnitId
             END AS UnitId
           , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
                       THEN 8379 -- филиал Киев
@@ -181,7 +181,12 @@ BEGIN
             , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
             , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_three
             , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_four
-
+/*
+            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
+            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
+            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_three
+            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_four
+*/
             -- AS LastDateIn
             -- AS LastDateOut
 
@@ -246,7 +251,7 @@ END;$BODY$
 */
 /*
 -------- GetCurrentCoordinates :
-try (LocManagerObj :=TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE) 
+try (LocManagerObj :=TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE)
 FCurCoordinatesMsg:= 'ошибка при обращении к Сервису GPS';
 
 if not Assigned(LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE))

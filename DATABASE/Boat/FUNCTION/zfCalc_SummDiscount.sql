@@ -1,4 +1,4 @@
--- Function: Считаем Скидку - Округление до 2-х знаков
+-- Function: Считаем Сумму Скидки - Округление до 2-х знаков
 
 DROP FUNCTION IF EXISTS zfCalc_SummDiscount (TFloat, TFloat);
 
