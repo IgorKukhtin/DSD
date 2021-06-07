@@ -625,6 +625,24 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

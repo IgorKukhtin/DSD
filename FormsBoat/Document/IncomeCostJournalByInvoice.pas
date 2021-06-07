@@ -105,6 +105,12 @@ type
     cxLabel6: TcxLabel;
     edInvoice: TcxButtonEdit;
     GuidesInvoice: TdsdGuides;
+    cxLabel3: TcxLabel;
+    GuidesObject: TdsdGuides;
+    ceObject: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
   public
   end;

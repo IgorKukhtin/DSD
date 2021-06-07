@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterIn
              , OperDate_Income TDateTime
              , DescId_Income Integer,ItemName_Income TVarChar
              , StatusCode_Income Integer
+             , FromId Integer, FromCode Integer, FromName TVarChar  -- поставщик, док приход
                -- Сумма затрат без НДС
              , AmountCost TFloat
                -- Сумма Счет без НДС
@@ -26,7 +27,6 @@ RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterIn
              --, AmountCostVAT_Master TFloat
                --
              , ObjectCode Integer, ObjectName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -116,19 +116,11 @@ BEGIN
      , tmpMI_master AS (SELECT tmpMovement.MovementId_master
                              , 0                                            AS ObjectCode
                              , STRING_AGG (Object_Object.ValueData, ';') AS ObjectName
-
-                             , 0 AS InfoMoneyCode
-                             , STRING_AGG (Object_InfoMoney_View.InfoMoneyName, ';') AS InfoMoneyName
-                             , STRING_AGG (Object_InfoMoney_View.InfoMoneyName_all, ';') AS InfoMoneyName_all
                         FROM tmpMovement
+
                              LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId_master
                                                    AND MovementItem.DescId     = zc_MI_Master()
                              LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
-
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
                         GROUP BY tmpMovement.MovementId_master
                        )
@@ -157,15 +149,15 @@ BEGIN
                , tmpMovement.ItemName_Income
                , tmpMovement.StatusCode_Income
 
+               , Object_From.Id          AS FromId
+               , Object_From.ObjectCode  AS FromCode
+               , Object_From.ValueData   AS FromName
+
                , tmpMovement.AmountCost
                , tmpMovement.AmountCost_Master
 
                , tmpMI_master.ObjectCode :: Integer
                , tmpMI_master.ObjectName :: TVarChar
-
-               , tmpMI_master.InfoMoneyCode :: Integer
-               , tmpMI_master.InfoMoneyName :: TVarChar
-               , tmpMI_master.InfoMoneyName_all :: TVarChar
 
                , Object_Insert.ValueData              AS InsertName
                , MovementDate_Insert.ValueData        AS InsertDate
@@ -189,6 +181,12 @@ BEGIN
                                            ON MLO_Update.MovementId = tmpMovement.Id
                                           AND MLO_Update.DescId = zc_MovementLinkObject_Update()
               LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+              LEFT JOIN Object AS Object_From   ON Object_From.Id   = MovementLinkObject_From.ObjectId
+
       ;
 
 END;
