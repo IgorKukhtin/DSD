@@ -253,7 +253,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
         Options.Editing = False
         Width = 121
       end
@@ -262,7 +262,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         DataBinding.FieldName = 'InvNumber_Income'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
+        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
         Options.Editing = False
         Width = 129
       end
@@ -271,6 +271,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         DataBinding.FieldName = 'OperDate_Income'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
         Options.Editing = False
         Width = 87
       end
