@@ -23,10 +23,13 @@ $BODY$
   DECLARE vbRealization TFloat;
   DECLARE vbOperDate TDateTime;
   DECLARE vbMethodsAssortmentId Integer;
+  DECLARE vbAssortmentGeograph Integer;
+  DECLARE vbAssortmentSales Integer;
 
-  DECLARE vbUnit1Id Integer;
-  DECLARE vbUnit2Id Integer;
-  DECLARE vbUnit3Id Integer;
+  DECLARE vbUnit1GeographId Text;
+  DECLARE vbUnit1GeographName Text;
+  DECLARE vbUnitSalesId Text;
+  DECLARE vbUnitSalesName Text;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -34,13 +37,27 @@ BEGIN
     vbUserId := inSession;
     
     vbOperDate := CURRENT_DATE + ((8 - date_part('DOW', CURRENT_DATE)::Integer)::TVarChar||' DAY')::INTERVAL;
-  
+    vbUnit1GeographId := '';
+    vbUnit1GeographName := '';
+    vbUnitSalesId := '';
+    vbUnitSalesName := '';
+
     SELECT ObjectLink_CashSettings_MethodsAssortment.ChildObjectId
+         , ObjectFloat_CashSettings_AssortmentGeograph.ValueData::Integer           AS AssortmentGeograph
+         , ObjectFloat_CashSettings_AssortmentSales.ValueData::Integer              AS AssortmentSales
     INTO vbMethodsAssortmentId
+       , vbAssortmentGeograph
+       , vbAssortmentSales
     FROM Object AS Object_CashSettings
          LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                               ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
                              AND ObjectLink_CashSettings_MethodsAssortment.DescId = zc_ObjectLink_CashSettings_MethodsAssortment()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AssortmentGeograph
+                               ON ObjectFloat_CashSettings_AssortmentGeograph.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_AssortmentGeograph.DescId = zc_ObjectFloat_CashSettings_AssortmentGeograph()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AssortmentSales
+                               ON ObjectFloat_CashSettings_AssortmentSales.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_AssortmentSales.DescId = zc_ObjectFloat_CashSettings_AssortmentSales()
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
     LIMIT 1;
 
@@ -88,7 +105,7 @@ BEGIN
                              AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
          );
          
-    IF vbMethodsAssortmentId = zc_Enum_MethodsAssortment_Sales()
+    IF vbMethodsAssortmentId in (zc_Enum_MethodsAssortment_Sales(), zc_Enum_MethodsAssortment_GeographSales()) 
     THEN
     
       UPDATE _tmpUnit SET Realization = R.AmountSum
@@ -152,30 +169,108 @@ BEGIN
 
     -- сохранили свойство <Дату авто пересчета>
     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_AutoSUA(), vbUnitId, vbOperDate);
-
-    -- Выбераем 3 ближайших
-    WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
-                             , _tmpUnit.UnitName
-                             , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
-                             , ROW_NUMBER()OVER(ORDER BY ABS(_tmpUnit.Realization - vbRealization), |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
-                        FROM _tmpUnit      
-                        WHERE _tmpUnit.UnitId <> vbUnitId)      
-                                 
-    SELECT tmpUnitAll1.UnitId
-         , tmpUnitAll2.UnitId
-         , tmpUnitAll3.UnitId
-    INTO vbUnit1Id
-       , vbUnit2Id
-       , vbUnit3Id
-    FROM tmpUnitAll AS tmpUnitAll1
     
-         LEFT JOIN tmpUnitAll AS tmpUnitAll2
-                              ON tmpUnitAll2.ORD = 2
+    
+    -- Выбераем ближайшие аптеки
 
-         LEFT JOIN tmpUnitAll AS tmpUnitAll3
-                              ON tmpUnitAll3.ORD = 3
+    IF vbMethodsAssortmentId = zc_Enum_MethodsAssortment_Geographically()
+    THEN
+    
+      IF COALESCE(vbAssortmentGeograph, 0) < 3 
+      THEN
+        vbAssortmentGeograph := 3;
+      END IF;
+      
+      WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
+                               , _tmpUnit.UnitName
+                               , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
+                               , ROW_NUMBER()OVER(ORDER BY |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
+                          FROM _tmpUnit      
+                          WHERE _tmpUnit.UnitId <> vbUnitId)      
+                                   
+      SELECT string_agg(tmpUnitAll1.UnitId::TVarChar, ',')
+           , string_agg(tmpUnitAll1.UnitName::TVarChar, CHR(13))
+      INTO vbUnit1GeographId
+         , vbUnit1GeographName
+      FROM tmpUnitAll AS tmpUnitAll1
+      WHERE tmpUnitAll1.ORD <= vbAssortmentGeograph;
 
-    WHERE tmpUnitAll1.ORD = 1;
+    ELSEIF vbMethodsAssortmentId = zc_Enum_MethodsAssortment_Sales()
+    THEN
+    
+      IF COALESCE(vbAssortmentSales, 0) < 3 
+      THEN
+        vbAssortmentSales := 3;
+      END IF;
+
+      WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
+                               , _tmpUnit.UnitName
+                               , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
+                               , ROW_NUMBER()OVER(ORDER BY ABS(_tmpUnit.Realization - vbRealization), |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
+                          FROM _tmpUnit      
+                          WHERE _tmpUnit.UnitId <> vbUnitId)      
+                                   
+      SELECT string_agg(tmpUnitAll1.UnitId::TVarChar, ',')
+           , string_agg(tmpUnitAll1.UnitName::TVarChar, CHR(13))
+      INTO vbUnitSalesId
+         , vbUnitSalesName
+      FROM tmpUnitAll AS tmpUnitAll1
+      WHERE tmpUnitAll1.ORD <= vbAssortmentSales;
+
+    ELSEIF vbMethodsAssortmentId = zc_Enum_MethodsAssortment_GeographSales()
+    THEN
+
+      IF COALESCE(vbAssortmentGeograph, 0) = 0
+      THEN
+        vbAssortmentGeograph := 0;
+      END IF;
+
+
+      IF (COALESCE(vbAssortmentSales, 0) + vbAssortmentGeograph) < 3 
+      THEN
+        vbAssortmentSales := 3 - vbAssortmentGeograph;
+      END IF;
+
+      IF COALESCE(vbAssortmentGeograph, 0) > 0
+      THEN
+        WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
+                                 , _tmpUnit.UnitName
+                                 , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
+                                 , ROW_NUMBER()OVER(ORDER BY |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
+                            FROM _tmpUnit      
+                            WHERE _tmpUnit.UnitId <> vbUnitId)      
+                                     
+        SELECT string_agg(tmpUnitAll1.UnitId::TVarChar, ',')
+             , string_agg(tmpUnitAll1.UnitName::TVarChar, CHR(13))
+        INTO vbUnit1GeographId
+           , vbUnit1GeographName
+        FROM tmpUnitAll AS tmpUnitAll1
+        WHERE tmpUnitAll1.ORD <= vbAssortmentGeograph;
+      END IF;
+      
+      
+      IF COALESCE(vbAssortmentSales, 0) > 0
+      THEN
+        WITH tmpUnitAll AS (SELECT _tmpUnit.UnitId
+                                 , _tmpUnit.UnitName
+                                 , |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude - vbLongitude)^2)
+                                 , ROW_NUMBER()OVER(ORDER BY ABS(_tmpUnit.Realization - vbRealization), |/((_tmpUnit.Latitude - vbLatitude)^2 + (_tmpUnit.Longitude -vbLongitude)^2)) as ORD 
+                            FROM _tmpUnit      
+                            WHERE _tmpUnit.UnitId <> vbUnitId
+                              AND ','||vbUnit1GeographId||',' NOT LIKE '%,'||_tmpUnit.UnitId::TEXT||',%'
+)      
+                                       
+        SELECT string_agg(tmpUnitAll1.UnitId::TVarChar, ',')
+             , string_agg(tmpUnitAll1.UnitName::TVarChar, CHR(13))
+        INTO vbUnitSalesId
+           , vbUnitSalesName
+        FROM tmpUnitAll AS tmpUnitAll1
+        WHERE tmpUnitAll1.ORD <= vbAssortmentSales;
+      END IF;
+    
+    ELSE 
+       RAISE EXCEPTION 'Ошибка. Не определен механизм расчета аптек ассортимента.';       
+    END IF;
           
     
     RETURN QUERY    
@@ -255,8 +350,8 @@ BEGIN
          , Object_Unit.ValueData
          
          , Object_Unit.ID::Text            AS UnitRecipient
-         , (vbUnit1Id::Text||','||vbUnit2Id::Text||','||vbUnit3Id::Text)::Text AS UnitAssortment
-         , (Object_Unit1.ValueData||CHR(13)||Object_Unit2.ValueData||CHR(13)||Object_Unit3.ValueData)::Text AS UnitAssortmentName
+         , (vbUnit1GeographId||CASE WHEN vbUnit1GeographId <> '' AND vbUnitSalesId <> '' THEN ',' ELSE ''END||vbUnitSalesId)::Text AS UnitAssortment
+         , (vbUnit1GeographName||CASE WHEN vbUnit1GeographName <> '' AND vbUnitSalesName <> '' THEN CHR(13) ELSE ''END||vbUnitSalesName)::Text AS UnitAssortmentName
 
          , (CURRENT_DATE - INTERVAL '46 DAY')::TDateTime
          , (CURRENT_DATE - INTERVAL '1 DAY')::TDateTime
@@ -273,11 +368,6 @@ BEGIN
          , tmpSUAProtocol.isNeedRound
          
     FROM Object AS Object_Unit
-    
-         LEFT JOIN Object AS Object_Unit1 ON Object_Unit1.ID = vbUnit1Id
-         LEFT JOIN Object AS Object_Unit2 ON Object_Unit2.ID = vbUnit2Id
-         LEFT JOIN Object AS Object_Unit3 ON Object_Unit3.ID = vbUnit3Id
-         
          LEFT JOIN tmpSUAProtocol ON 1 = 1 
     WHERE Object_Unit.ID = vbUnitId;
 

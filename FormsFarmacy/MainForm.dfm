@@ -3424,7 +3424,7 @@
       isShowModal = False
     end
     object actIlliquidUnitJournal: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1085#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       Hint = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1085#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
@@ -4046,7 +4046,7 @@
       isShowModal = False
     end
     object actCalculation_SAUA: TdsdOpenStaticForm
-      Category = 'DSDLib'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1080#1089#1090#1077#1084#1077' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1086#1084
       FormName = 'TCalculation_SAUAForm'
@@ -4332,11 +4332,33 @@
       isShowModal = False
     end
     object actReport_SalesGoods_SUA: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1057#1059#1040
       FormName = 'TReport_SalesGoods_SUAForm'
       FormNameParam.Value = 'TReport_SalesGoods_SUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTestingTuning: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1060#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074
+      FormName = 'TTestingTuningForm'
+      FormNameParam.Value = 'TTestingTuningForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRepriceSite: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      FormName = 'TRepriceSiteForm'
+      FormNameParam.Value = 'TRepriceSiteForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4700,6 +4722,9 @@
         object N245: TMenuItem
           Action = actTHouseholdInventoryRemains
         end
+      end
+      object N297: TMenuItem
+        Action = actTestingTuning
       end
       object N87: TMenuItem
         Caption = '-'
@@ -5686,11 +5711,14 @@
       object miRepriceChangeJournal: TMenuItem [35]
         Action = actRepriceChangeJournal
       end
-      object N261: TMenuItem [38]
+      object N298: TMenuItem [36]
+        Action = actRepriceSite
+      end
+      object N261: TMenuItem [39]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
-      object N270: TMenuItem [39]
+      object N270: TMenuItem [40]
         Action = actClearDefaultUnit
       end
     end

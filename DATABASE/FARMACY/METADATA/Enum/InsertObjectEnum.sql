@@ -4422,6 +4422,7 @@ BEGIN
      
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MethodsAssortment_Geographically(),   inDescId:= zc_Object_MethodsAssortment(), inCode:= 1, inName:= 'Выбор ближайших географически',      inEnumName:= 'zc_Enum_MethodsAssortment_Geographically');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MethodsAssortment_Sales(),            inDescId:= zc_Object_MethodsAssortment(), inCode:= 2, inName:= 'Выбор по объему продаж',             inEnumName:= 'zc_Enum_MethodsAssortment_Sales');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MethodsAssortment_GeographSales(),    inDescId:= zc_Object_MethodsAssortment(), inCode:= 3, inName:= 'Смешанный. Географически и по объему продаж', inEnumName:= 'zc_Enum_MethodsAssortment_GeographSales');
      
 END $$;
 

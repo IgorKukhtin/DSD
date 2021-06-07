@@ -2002,9 +2002,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MarketingDiscount_FixValue() RETURNS I
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_MarketingDiscount(), 'zc_ObjectFloat_MarketingDiscount_FixValue', 'Фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MarketingDiscount_FixValue');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentGeograph() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentGeograph'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentGeograph', 'Аптек аналитиков по географии' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentGeograph');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentSales() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentSales', 'Аптек аналитиков по продажам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 07.06.21                                                                                      * zc_ObjectFloat_CashSettings_Assortment...
  29.04.21         * zc_ObjectFloat_Partner_Category
  27.04.21                                                                                      * zc_ObjectFloat_MarketingDiscount_...
  27.04.21         * zc_ObjectFloat_Car_PartnerMin

@@ -56,6 +56,10 @@ type
     edMethodsAssortment: TcxButtonEdit;
     MethodsAssortmentGuides: TdsdGuides;
     cxLabel13: TcxLabel;
+    ceAssortmentGeograph: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceAssortmentSales: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
   private
     { Private declarations }
   public
