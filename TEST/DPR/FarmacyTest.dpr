@@ -1036,7 +1036,8 @@ uses
   UnitAutoSUA in '..\..\FormsFarmacy\Guides\UnitAutoSUA.pas' {UnitAutoSUAForm: TParentForm},
   Report_SalesGoods_SUADialog in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUADialog.pas' {Report_SalesGoods_SUADialogForm: TParentForm},
   Report_SalesGoods_SUA in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas' {Report_SalesGoods_SUAForm: TParentForm},
-  MethodsAssortment in '..\..\FormsFarmacy\Kind\MethodsAssortment.pas' {MethodsAssortmentForm: TParentForm};
+  MethodsAssortment in '..\..\FormsFarmacy\Kind\MethodsAssortment.pas' {MethodsAssortmentForm: TParentForm},
+  RepriceSite in '..\..\FormsFarmacy\ConnectWithOld\RepriceSite.pas' {RepriceSiteForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1673,14 +1673,17 @@ end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TReport_GoodsOnUnit_ForSiteForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnit_ForSiteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceSiteForm');
 
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TReport_GoodsOnUnit_ForSiteDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load
-    ('TReport_GoodsOnUnit_ForSiteDialogForm');
+//  TdsdFormStorageFactory.GetStorage.Save
+//    (GetForm('TReport_GoodsOnUnit_ForSiteForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnit_ForSiteForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save
+//    (GetForm('TReport_GoodsOnUnit_ForSiteDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load
+//    ('TReport_GoodsOnUnit_ForSiteDialogForm');
 end;
 
 procedure TLoadFormTest.LoadRogerseFormTest;

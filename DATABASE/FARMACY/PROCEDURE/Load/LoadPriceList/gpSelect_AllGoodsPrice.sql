@@ -67,7 +67,10 @@ RETURNS TABLE (
     AddPercentRepriceMin TFloat ,   -- Изменение в ночной переоценке низнего предела
 
     JuridicalPromoId     Integer,    -- Поставщик Id
+    JuridicalPromoName   TVarChar,   -- Поставщик 
     ContractPromoId      Integer,    -- договор Ид
+    ContractPromoName    TVarChar,   -- договор 
+    
     Juridical_PricePromo TFloat,     -- Цена у поставщика
     Juridical_PercentPromo   TFloat,     -- % Корректировки наценки Поставщика
     Contract_PercentPromo    TFloat,     -- % Корректировки наценки Договора
@@ -397,7 +400,9 @@ BEGIN
 
             SelectMinPrice_AllGoods.isJuridicalPromo,
             SelectMinPrice_AllGoods.JuridicalPromoId,
+            Object_JuridicalPromo.ValueData                                              AS JuridicalPromoName,
             SelectMinPrice_AllGoods.ContractPromoId,
+            Object_ContractPromo.ValueData                                               AS ContractPromoName,
             (SelectMinPrice_AllGoods.PricePromo * (100 + Object_Goods.NDS)/100)::TFloat  AS Juridical_PricePromo,
             ObjectFloat_JuridicalPromo_Percent.ValueData   AS Juridical_PercentPromo,
             ObjectFloat_ContractPromo_Percent.ValueData    AS Contract_PercentPromo,
@@ -452,6 +457,9 @@ BEGIN
                                     ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = SelectMinPrice_AllGoods.AreaId
+
+            LEFT JOIN Object AS Object_JuridicalPromo ON Object_JuridicalPromo.Id = SelectMinPrice_AllGoods.JuridicalPromoId
+            LEFT JOIN Object AS Object_ContractPromo ON Object_ContractPromo.Id = SelectMinPrice_AllGoods.ContractPromoId
 
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
@@ -647,7 +655,9 @@ BEGIN
              THEN -5 ELSE 0 END::TFloat                                        AS AddPercentRepriceMin,
 
         ResultSet.JuridicalPromoId  ,
+        ResultSet.JuridicalPromoName  ,
         ResultSet.ContractPromoId ,
+        ResultSet.ContractPromoName ,
         ResultSet.Juridical_PricePromo ,
         ResultSet.Juridical_PercentPromo,
         ResultSet.Contract_PercentPromo,
@@ -773,4 +783,5 @@ $BODY$
 
 -- тест
 --
-SELECT * FROM gpSelect_AllGoodsPrice (377605 , 0, 30, True, 0, 0, '3') order by ID --where Reprice = False -- ExpirationDate < CURRENT_DATE + INTERVAL '6 month'  -- Аптека_1 пр_Правды_6
+
+select * from gpSelect_AllGoodsPrice(inUnitId := 183292 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
