@@ -132,6 +132,16 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartnerPrior_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_calc_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -238,6 +248,16 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartnerPrior_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_calc_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -339,6 +359,16 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object RemainsEnd_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'RemainsEnd_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -455,16 +485,6 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object RemainsEnd_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'. ('#1074#1077#1089')'
-            DataBinding.FieldName = 'RemainsEnd_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object CountIn_Weight: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'CountIn_Weight'
@@ -557,6 +577,29 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object RemainsEnd_calc: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'. ('#1088#1072#1089#1095#1077#1090'.)'
+            DataBinding.FieldName = 'RemainsEnd_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1084#1080#1085#1091#1089#1086#1084' '#1079#1072#1103#1074#1086#1082
+            Width = 70
+          end
+          object RemainsEnd_calc_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'. ('#1088#1072#1089#1095#1077#1090'.) ('#1074#1077#1089')'
+            DataBinding.FieldName = 'RemainsEnd_calc_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1084#1080#1085#1091#1089#1086#1084' '#1079#1072#1103#1074#1086#1082' ('#1074#1077#1089')'
             Width = 70
           end
         end

@@ -37,6 +37,10 @@ RETURNS TABLE ( GoodsId Integer
               , AmountPartner_Weight      TFloat
               , AmountPartnerPrior        TFloat
               , AmountPartnerPrior_Weight TFloat
+
+              , RemainsEnd_calc        TFloat --остаток без за 
+              , RemainsEnd_calc_Weight TFloat
+
               )
 AS
 $BODY$
@@ -326,7 +330,9 @@ BEGIN
               , tmpData.AmountPartner_Weight      ::TFloat
               , tmpData.AmountPartnerPrior        ::TFloat
               , tmpData.AmountPartnerPrior_Weight ::TFloat
-
+              
+              , (COALESCE (tmpData.RemainsEnd,0) - COALESCE (tmpData.AmountPartner,0)) ::TFloat AS RemainsEnd_calc
+              , (COALESCE (tmpData.RemainsEnd_Weight,0) - COALESCE (tmpData.AmountPartner_Weight,0)) ::TFloat AS RemainsEnd_calc_Weight
          FROM tmpRez AS tmpData
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
