@@ -141,6 +141,7 @@ type
     actShowErasedDetail: TBooleanStoredProcAction;
     bb: TdxBarButton;
     PartionGoodsId: TcxGridDBColumn;
+    ord: TcxGridDBColumn;
   private
     { Private declarations }
   public

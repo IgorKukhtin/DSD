@@ -358,4 +358,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsRemains_byPack(inStartDate:= '01.05.2021', inEndDate:= '31.05.2021', inUnitId := 8457, inSession:= zfCalc_UserAdmin()) where goodsid = 2157 --3713924
+-- SELECT * FROM gpReport_GoodsRemains_byPack(inStartDate:= '31.05.2021', inEndDate:= '31.05.2021', inUnitId := 8457, inSession:= zfCalc_UserAdmin()) where goodsid = 2157 --3713924
