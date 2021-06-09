@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxSplitter;
 
 type
   TOrderGoodsForm = class(TAncestorDocumentForm)
@@ -50,7 +51,6 @@ type
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
-    actAssetGoodsChoiceForm: TOpenChoiceForm;
     actGoodsKindCompleteChoice: TOpenChoiceForm;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
@@ -71,6 +71,23 @@ type
     bbPersonalGroupChoiceForm: TdxBarButton;
     actUpdatePersonalGroup: TdsdExecStoredProc;
     macUpdatePersonalGroup: TMultiAction;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    ChildGoodsKindName: TcxGridDBColumn;
+    ChildAmount: TcxGridDBColumn;
+    ChildIsErased: TcxGridDBColumn;
+    cxGridLevelChild: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    PopupMenuChild: TPopupMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    N4: TMenuItem;
+    ChildDBViewAddOn: TdsdDBViewAddOn;
+    spSelect_Child: TdsdStoredProc;
   private
     { Private declarations }
   public

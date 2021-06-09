@@ -569,7 +569,7 @@ inherited SendForm: TSendForm
             Width = 159
           end
           object SubjectDocName_ch2: TcxGridDBColumn
-            Caption = #1055#1088#1080#1095#1080#1085#1072
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
             DataBinding.FieldName = 'SubjectDocName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2660,8 +2660,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 16
+    Left = 688
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -2838,8 +2837,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 744
-    Top = 56
+    Left = 720
+    Top = 72
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'

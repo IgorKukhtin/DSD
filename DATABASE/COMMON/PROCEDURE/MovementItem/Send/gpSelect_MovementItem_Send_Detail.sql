@@ -54,7 +54,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
      vbUserId:= lpGetUserBySession (inSession);
-
+     
+     --переопределили, показываем всегда
+     inShowAll := TRUE;
+     
      -- Результат
      IF inShowAll THEN
 
@@ -125,9 +128,9 @@ BEGIN
                             , ''  ::TVarChar AS SubjectDocName
                             , 0   ::Integer  AS ReturnKindId
                             , ''  ::TVarChar AS ReturnKindName
-                            , Null::Integer AS ord            --не сохраненные не нумеруем
+                            , 999 ::Integer AS ord            --не сохраненные не нумеруем
                        FROM tmpMI_Master
-                            LEFT JOIN tmpDiff ON tmpDiff.Id = tmpMI_Master.Id
+                            INNER JOIN tmpDiff ON tmpDiff.Id = tmpMI_Master.Id
                       )
        -- Результат
        SELECT
@@ -148,7 +151,7 @@ BEGIN
            , tmpAll.ReturnKindId   ::Integer
            , tmpAll.ReturnKindName ::TVarChar
            , FALSE                      AS isErased
-           , tmpAll.ord ::integer AS ord  --№ п.п.
+           , ROW_NUMBER () OVER (ORDER BY tmpAll.ord,Object_Goods.ValueData )  ::integer AS ord  --№ п.п.
        FROM tmpAll
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpAll.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpAll.GoodsKindId
