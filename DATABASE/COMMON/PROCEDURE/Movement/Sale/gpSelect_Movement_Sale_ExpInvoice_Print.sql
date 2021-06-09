@@ -144,7 +144,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Валюта документа должна отличаться от базовой';
     END IF;
     --
-    IF COALESCE (vbCurrencyPartnerValue, 0) = 0 AND vbTotalSumm <> 0
+    IF COALESCE (vbCurrencyPartnerValue, 0) = 0 AND vbTotalSumm <> 0 AND (vbCurrencyDocumentId <> vbCurrencyPartnerId)
     THEN
         RAISE EXCEPTION 'Ошибка.Не определен курс валюты';
     END IF;

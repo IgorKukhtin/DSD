@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -8,10 +9,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderGoods(
     IN inGoodsId                Integer   , -- Товары
     IN inGoodsKindId            Integer   , -- Виды товаров
     IN inAmount                 TFloat    , -- Количество
+    IN inPrice                  TFloat    , --
     IN inComment                TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -24,6 +26,7 @@ BEGIN
                                                      , inGoodsId      := inGoodsId
                                                      , inGoodsKindId  := inGoodsKindId
                                                      , inAmount       := inAmount
+                                                     , inPrice        := inPrice
                                                      , inComment      := inComment
                                                      , inUserId       := vbUserId
                                                       ) AS tmp;

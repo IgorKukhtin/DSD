@@ -382,7 +382,7 @@ BEGIN
              -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
 
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in
+           , CASE WHEN tmpData.Remains  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Remains
                   ELSE 0
              END :: TFloat AS OperPrice
            , COALESCE (tmpData.CountForPrice,1)   :: TFloat AS CountForPrice
@@ -391,7 +391,7 @@ BEGIN
            , tmpData.OperPriceList :: TFloat
 
            --, tmpData.OperPrice_cost   :: TFloat
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Amount_in
+           , CASE WHEN tmpData.Remains  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Remains
                   ELSE 0
              END :: TFloat AS OperPrice_cost
            , tmpData.CostPrice_summ        :: TFloat AS CostPrice
