@@ -41,6 +41,8 @@ BEGIN
              vbId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), inUserId, inMovementId, vbAmount, ioId);
              -- сохранили связь с <Виды товаров>
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbId_child, vbGoodsKindId);
+             -- сохранили свойство <>
+             PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_child, CURRENT_TIMESTAMP);
          END IF;
      END IF;
 
