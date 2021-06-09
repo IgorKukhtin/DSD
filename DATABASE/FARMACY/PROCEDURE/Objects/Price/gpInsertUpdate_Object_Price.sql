@@ -358,7 +358,7 @@ BEGIN
     THEN
         PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_PercentMarkup(), ioId, inPercentMarkup);
         -- сохранили св-во < Дата изменения >
-        outDateChange := CURRENT_DATE;
+        outPercentMarkupDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_PercentMarkupDateChange(), ioId, outPercentMarkupDateChange);
     END IF;
 

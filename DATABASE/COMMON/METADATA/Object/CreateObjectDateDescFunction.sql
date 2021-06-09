@@ -484,25 +484,30 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_FinalSUAProtocol_DateEnd() RETURNS Inte
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_FinalSUAProtocol(), 'zc_ObjectDate_FinalSUAProtocol_DateEnd', 'Окончание периода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_FinalSUAProtocol_DateEnd');
 
-CREATE OR REPLACE FUNCTION zc_ObjectDate_MarketingDiscount_EndDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_EndDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectDate_MarketingDiscount_EndDate', 'Дата окончания' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_EndDate');
-
-CREATE OR REPLACE FUNCTION zc_ObjectDate_MarketingDiscount_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_MarketingDiscount(), 'zc_ObjectDate_MarketingDiscount_DateChange', 'Дата, время изменения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MarketingDiscount_DateChange');
-
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_AutoSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_AutoSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_AutoSUA', 'Дата автоматического расчета по СУА' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_AutoSUA');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_DateChange', 'Дата изменения цены' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DateChange');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_FixDateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_FixDateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_FixDateChange', 'Дата изменения фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_FixDateChange');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_PercentMarkupDateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_PercentMarkupDateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_PercentMarkupDateChange', 'Дата изменения % наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_PercentMarkupDateChange');
+  
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 27.04.21                                                                                     * zc_ObjectDate_PriceSite_...
  27.05.21         * zc_ObjectDate_ContractPriceList_StartDate
                     zc_ObjectDate_ContractPriceList_EndDate
  19.05.21                                                                                     * zc_ObjectDate_Unit_AutoSUA
  13.05.21         * zc_ObjectDate_User_GUID
- 27.04.21                                                                                     * zc_ObjectDate_MarketingDiscount_EndDate
  24.03.21                                                                                     * zc_ObjectDate_FinalSUAProtocol_...
  04.02.21                                                                                     * zc_ObjectDate_Hardware_Update
  06.11.20         * zc_ObjectDate_ContractGoods_Start
