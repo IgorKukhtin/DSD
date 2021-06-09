@@ -118,6 +118,7 @@ type
     procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
+    procedure LoadPriceSiteFormTest;
     procedure LoadPriceChangeFormTest;
     procedure LoadProjectsImprovementsFormTest;
     procedure LoadProfitLossFormTest;
@@ -2480,6 +2481,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceGoodsDialogForm');
    }
 end;
+
+procedure TLoadFormTest.LoadPriceSiteFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceSiteDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceSiteDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceSiteForm');
+end;
+
 
 procedure TLoadFormTest.LoadPriceChangeFormTest;
 begin

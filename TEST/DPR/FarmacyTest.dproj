@@ -3645,14 +3645,6 @@
 				<Form>Report_KilledCodeRecoveryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MarketingDiscount.pas">
-				<Form>MarketingDiscountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MarketingDiscountDialog.pas">
-				<Form>MarketingDiscountDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas">
 				<Form>Report_MovementCheck_UnderreportedDEForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3696,6 +3688,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceSite.pas">
 				<Form>RepriceSiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceSiteDialog.pas">
+				<Form>PriceSiteDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceSite.pas">
+				<Form>PriceSiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

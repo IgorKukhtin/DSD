@@ -4265,17 +4265,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actMarketingDiscount: TdsdOpenForm
-      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
-      MoveParams = <>
-      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1077' '#1089#1082#1080#1076#1082#1080
-      FormName = 'TMarketingDiscountForm'
-      FormNameParam.Value = 'TMarketingDiscountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
     object actGoodsDivisionLock: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -4359,6 +4348,17 @@
       Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
       FormName = 'TRepriceSiteForm'
       FormNameParam.Value = 'TRepriceSiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPriceSite: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      FormName = 'TPriceSiteForm'
+      FormNameParam.Value = 'TPriceSiteForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4596,6 +4596,9 @@
       end
       object N96: TMenuItem
         Action = actPriceOnDate
+      end
+      object N287: TMenuItem
+        Action = actPriceSite
       end
       object N53: TMenuItem
         Action = actAlternativeGroup
@@ -5374,9 +5377,6 @@
       end
       object N65: TMenuItem
         Action = actPromo
-      end
-      object N287: TMenuItem
-        Action = actMarketingDiscount
       end
       object miLayoutJournal: TMenuItem
         Action = actLayoutJournal
