@@ -23,6 +23,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
 
+     IF COALESCE (inSubjectDocId,0) = 0 AND COALESCE (inSubjectDocId_top,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не выбрано Основание для перемещения.';
+     END IF;
+
+     IF COALESCE (inReturnKindId,0) = 0 AND COALESCE (inReturnKindId_top,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не выбран Тип перемещения.';
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
  
@@ -47,7 +57,7 @@ BEGIN
      THEN
          inReturnKindId := inReturnKindId_top;
      END IF;
-
+     
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inGoodsId, inMovementId, inAmount, inParentId);

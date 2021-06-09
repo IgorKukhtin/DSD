@@ -3,7 +3,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' - '#1047#1072#1090#1088#1072#1090'>'
   ClientHeight = 444
-  ClientWidth = 809
+  ClientWidth = 943
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,13 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 809
+    Width = 943
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 971
     object deStart: TcxDateEdit
-      Left = 501
+      Left = 738
       Top = 5
       EditValue = 43466d
       Properties.ReadOnly = True
@@ -37,7 +38,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 670
+      Left = 782
       Top = 5
       EditValue = 43466d
       Properties.ReadOnly = True
@@ -48,13 +49,13 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 450
-      Top = 8
+      Left = 738
+      Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
       Visible = False
     end
     object cxLabel2: TcxLabel
-      Left = 554
+      Left = 730
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
       Visible = False
@@ -75,16 +76,51 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       TabOrder = 5
       Width = 236
     end
+    object cxLabel3: TcxLabel
+      Left = 294
+      Top = 7
+      Caption = 'Lieferanten:'
+    end
+    object ceObject: TcxButtonEdit
+      Left = 359
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 254
+    end
+    object cxLabel5: TcxLabel
+      Left = 620
+      Top = 8
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 678
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 264
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 809
+    Width = 943
     Height = 387
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 971
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -185,7 +221,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object StatusCode_Income: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        Caption = '***'#1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode_Income'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.ImageList
@@ -206,7 +242,6 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
             Value = 3
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
@@ -214,14 +249,13 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         Width = 80
       end
       object InvNumber_Income: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
+        Caption = '***'#8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber_Income'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
         Options.Editing = False
-        Width = 80
+        Width = 103
       end
       object OperDate_Income: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
@@ -232,18 +266,16 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         Options.Editing = False
         Width = 79
       end
-      object ItemName_Income: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
-        DataBinding.FieldName = 'ItemName_Income'
-        Visible = False
+      object FromName: TcxGridDBColumn
+        Caption = '***Lieferanten'
+        DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.)'
-        Options.Editing = False
-        Width = 99
+        HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
+        Width = 227
       end
       object StatusCode: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089' ('#1079#1072#1090#1088#1072#1090#1099')'
+        Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.ImageList
@@ -271,16 +303,16 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         Width = 80
       end
       object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
+        Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
         Options.Editing = False
-        Width = 70
+        Width = 122
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -288,7 +320,7 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         Width = 79
       end
       object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -315,14 +347,17 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object ItemName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'ItemName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 99
       end
       object MasterStatusCode: TcxGridDBColumn
@@ -347,17 +382,23 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
             Value = 3
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1090#1072#1090#1091#1089' '#1057#1095#1077#1090
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object MasterOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'MasterOperDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1057#1095#1077#1090
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 79
       end
       object MasterInvNumber: TcxGridDBColumn
@@ -370,40 +411,22 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+        VisibleForCustomization = False
         Width = 70
-      end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086' / '#1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 156
-      end
-      object InfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object InfoMoneyName_all: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-        DataBinding.FieldName = 'InfoMoneyName_all'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 150
       end
       object MasterComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'MasterComment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1057#1095#1077#1090
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 120
       end
     end
@@ -1537,6 +1560,24 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1632,5 +1673,86 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
       end>
     Left = 168
     Top = 65531
+  end
+  object GuidesObject: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceObject
+    FormNameParam.Value = 'TUnion_ClientPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnion_ClientPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'DayCalendar'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DayCalendar'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 507
+    Top = 5
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 807
+    Top = 2
   end
 end

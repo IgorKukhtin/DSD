@@ -1259,7 +1259,9 @@ uses
   Report_Supply_Remains in '..\..\Forms\Report\Report_Supply_Remains.pas' {Report_Supply_RemainsForm: TParentForm},
   Report_CheckBonus_Journal in '..\..\Forms\Report\Report_CheckBonus_Journal.pas' {Report_CheckBonus_JournalForm: TParentForm},
   Report_CheckBonus_JournalDialog in '..\..\Forms\Report\Report_CheckBonus_JournalDialog.pas' {Report_CheckBonus_JournalDialogForm: TParentForm},
-  Partner_CategoryEdit in '..\..\Forms\Guides\Partner_CategoryEdit.pas' {Partner_CategoryEditForm: TParentForm};
+  Partner_CategoryEdit in '..\..\Forms\Guides\Partner_CategoryEdit.pas' {Partner_CategoryEditForm: TParentForm},
+  Report_GoodsRemains_byPack in '..\..\Forms\Report\Report_GoodsRemains_byPack.pas' {Report_GoodsRemains_byPackForm: TParentForm},
+  Report_GoodsRemains_byPackDialog in '..\..\Forms\Report\Report_GoodsRemains_byPackDialog.pas' {Report_GoodsRemains_byPackDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

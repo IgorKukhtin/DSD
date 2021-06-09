@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DayCompensDiscount Integer
              , MethodsAssortmentId Integer
              , MethodsAssortmentName TVarChar
+             , AssortmentGeograph Integer
+             , AssortmentSales Integer
              ) AS
 $BODY$
 BEGIN
@@ -51,6 +53,8 @@ BEGIN
         , ObjectFloat_CashSettings_DayCompensDiscount.ValueData::Integer           AS DayCompensDiscount
         , Object_MethodsAssortment.Id                                              AS MethodsAssortmentId
         , Object_MethodsAssortment.ValueData                                       AS MethodsAssortmentName
+        , ObjectFloat_CashSettings_AssortmentGeograph.ValueData::Integer           AS AssortmentGeograph
+        , ObjectFloat_CashSettings_AssortmentSales.ValueData::Integer              AS AssortmentSales
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -91,6 +95,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DayCompensDiscount
                               ON ObjectFloat_CashSettings_DayCompensDiscount.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_DayCompensDiscount.DescId = zc_ObjectFloat_CashSettings_DayCompensDiscount()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AssortmentGeograph
+                              ON ObjectFloat_CashSettings_AssortmentGeograph.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AssortmentGeograph.DescId = zc_ObjectFloat_CashSettings_AssortmentGeograph()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AssortmentSales
+                              ON ObjectFloat_CashSettings_AssortmentSales.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AssortmentSales.DescId = zc_ObjectFloat_CashSettings_AssortmentSales()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 

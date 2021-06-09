@@ -2335,6 +2335,12 @@ inherited SendForm: TSendForm
         Value = 'False'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SetFocused'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 456
@@ -2608,6 +2614,14 @@ inherited SendForm: TSendForm
         Value = Null
         Component = cbSendLoss
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SetFocused'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SetFocused'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216

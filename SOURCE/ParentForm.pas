@@ -564,6 +564,12 @@ begin
          AddOnFormData.ExecuteDialogAction := nil;
       if AComponent = AddOnFormData.Params then
          AddOnFormData.Params := nil;
+      if AComponent = AddOnFormData.PUSHMessage then
+         AddOnFormData.PUSHMessage := nil;
+      if AComponent = AddOnFormData.ClosePUSHMessage then
+         AddOnFormData.ClosePUSHMessage := nil;
+      if AComponent = AddOnFormData.SetFocusedAction then
+         AddOnFormData.SetFocusedAction := nil;
     end;
 end;
 

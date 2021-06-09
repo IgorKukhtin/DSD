@@ -2,10 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1140
-  ExplicitLeft = -367
-  ExplicitTop = -217
   ExplicitWidth = 1156
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -6690,7 +6688,7 @@
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -7877,7 +7875,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -7984,7 +7982,7 @@
       end
       item
         Name = 'OperDateEnd'
-        Value = 0.000000000000000000
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -8050,7 +8048,7 @@
       end
       item
         Name = 'ioOperDateEnd'
-        Value = 0.000000000000000000
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInputOutput
@@ -8144,43 +8142,11 @@
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 390
     Top = 344
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 542
     Top = 344
   end
@@ -8223,7 +8189,7 @@
       end
       item
         Name = 'inAmountNext'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'AmountNext'
         DataType = ftFloat
@@ -8249,7 +8215,7 @@
       end
       item
         Name = 'outAmountTotal'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'AmountTotal'
         DataType = ftFloat
@@ -8257,7 +8223,7 @@
       end
       item
         Name = 'outAmountNextTotal'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'AmountNextTotal'
         DataType = ftFloat
@@ -8483,6 +8449,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -8511,6 +8478,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -8560,7 +8528,7 @@
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -8603,14 +8571,14 @@
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -8664,7 +8632,7 @@
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -8707,14 +8675,14 @@
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -8768,7 +8736,7 @@
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -9010,7 +8978,7 @@
       end
       item
         Name = 'inAmountPackNextSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = ChildCDS
         ComponentItem = 'AmountPackNextSecond'
         DataType = ftFloat
@@ -9082,8 +9050,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 890
-    Top = 192
+    Left = 826
+    Top = 224
   end
   object spUpdateAmountNextSecond_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -9138,8 +9106,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 890
-    Top = 206
+    Left = 842
+    Top = 238
   end
   object spUpdateAmountNextSecondCEH_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -9218,14 +9186,14 @@
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -9268,14 +9236,14 @@
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountTwo'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -9316,6 +9284,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

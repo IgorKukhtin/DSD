@@ -811,6 +811,10 @@ type
     actReport_IncomeConsumptionBalance: TdsdOpenStaticForm;
     actReport_SalesGoods_SUA: TdsdOpenForm;
     N296: TMenuItem;
+    actTestingTuning: TdsdOpenForm;
+    N297: TMenuItem;
+    actRepriceSite: TdsdOpenForm;
+    N298: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

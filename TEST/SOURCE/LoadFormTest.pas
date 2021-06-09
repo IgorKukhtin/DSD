@@ -2082,6 +2082,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_byPackForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_byPackDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_RemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Supply_RemainsForm');

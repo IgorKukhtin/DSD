@@ -19,6 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inMinPercentPromoBonus       TFloat    ,     -- Минимальная наценка (маркет бонусы)
     IN inDayCompensDiscount         Integer   ,     -- Дней до компенсации по дисконтным проектам
     IN inMethodsAssortmentGuidesId  Integer   ,     -- Методы выбора аптек ассортимента
+    IN inAssortmentGeograph         Integer   ,     -- Аптек аналитиков по географии
+    IN inAssortmentSales            Integer   ,     -- Аптек аналитиков по продажам
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -71,9 +73,14 @@ BEGIN
       -- сохранили Дней до компенсации по дисконтным проектам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DayCompensDiscount(), vbID, inDayCompensDiscount);
 
+      -- сохранили Аптек аналитиков по географии
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentGeograph(), vbID, inAssortmentGeograph);
+      -- сохранили Дней до компенсации по дисконтным проектам
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentSales(), vbID, inAssortmentSales);
+
    -- сохранили Блокировать формирование перемещений VIP
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);
-   -- сохранили При опускании парных контролировать только акционный
+   -- сохранили Аптек аналитиков по продажам
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_PairedOnlyPromo(), vbID, inisPairedOnlyPromo);
 
    -- сохранили Методы выбора аптек ассортимента

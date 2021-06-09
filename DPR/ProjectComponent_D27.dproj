@@ -225,8 +225,6 @@
         <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
             <Form>PUSHMessageForm</Form>
@@ -236,9 +234,14 @@
         <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201112.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
         <None Include="ModelSupport_ProjectComponent_D27\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -292,6 +295,12 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="..\BIN64\Bpl\21.0\ProjectComponent_D27.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>ProjectComponent_D27.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\BIN\Bpl\21.0\ProjectComponent_D27.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ProjectComponent_D27.bpl</RemoteName>
