@@ -1267,6 +1267,9 @@ type
     N240: TMenuItem;
     actReport_GoodsRemains_byPack: TdsdOpenForm;
     miReport_GoodsRemains_byPack: TMenuItem;
+    actOrderGoods: TdsdOpenForm;
+    miOrderGoods: TMenuItem;
+    N242: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
