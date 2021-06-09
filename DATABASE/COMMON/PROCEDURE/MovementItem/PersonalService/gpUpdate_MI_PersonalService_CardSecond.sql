@@ -23,7 +23,10 @@ BEGIN
      END IF;
 
 -- !!!тест 
--- PERFORM gpUnComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
+IF vbUserId = 5 AND 1=0
+THEN
+    PERFORM gpUnComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
+END IF;
  
      -- определяем <Месяц начислений>
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
@@ -164,8 +167,13 @@ BEGIN
                                      INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                            ON ObjectLink_Personal_Member.ObjectId      = CLO_Personal.ObjectId
                                                           AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                     LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                          ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = CLO_PersonalServiceList.ObjectId
+                                                         AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                                         AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
                                 WHERE CLO_ServiceDate.ObjectId    = vbServiceDateId
                                   AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                  AND ObjectLink_PersonalServiceList_PaidKind.ObjectId IS NULL
                                )                                   
              , tmpPersonal AS (SELECT DISTINCT
                                       tmpContainer_all.PersonalId
@@ -448,6 +456,10 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
+IF vbUserId = 5
+THEN
+    RAISE EXCEPTION 'Ошибка.test=ok';
+END IF;
 
 END;
 $BODY$

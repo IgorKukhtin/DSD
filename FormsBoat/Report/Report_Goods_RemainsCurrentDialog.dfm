@@ -2,7 +2,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074'>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1089#1090#1072#1090#1082#1080'>'
   ClientHeight = 261
   ClientWidth = 340
   Color = clBtnFace
@@ -51,7 +51,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   object cxLabel3: TcxLabel
     Left = 10
     Top = 13
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1043#1088#1091#1087#1087#1072':'
+    Caption = #1057#1082#1083#1072#1076' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cbPartion: TcxCheckBox
     Left = 3
@@ -103,7 +103,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   object cxLabel5: TcxLabel
     Left = 8
     Top = 129
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    Caption = #1043#1088#1091#1087#1087#1072':'
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 10

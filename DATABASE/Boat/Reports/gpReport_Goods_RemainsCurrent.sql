@@ -123,7 +123,7 @@ BEGIN
                                                                     , inOperDate   := CURRENT_DATE) AS tmp
                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmp.GoodsId
                            )
-   --остатки
+     -- остатки
    , tmpContainer_All AS (SELECT Container.*
                           FROM Container
                                INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId

@@ -40,6 +40,10 @@ BEGIN
 
      RETURN QUERY
        WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination FROM Movement WHERE Movement.Id = inMovementId
+                           UNION ALL
+                            SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination
+                            FROM Movement
+                            WHERE Movement.ParentId = inMovementId
                            )
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId

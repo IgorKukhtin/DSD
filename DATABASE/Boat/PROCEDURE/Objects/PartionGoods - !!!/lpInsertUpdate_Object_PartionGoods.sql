@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inOperDate               TDateTime,     -- Дата прихода
     IN inObjectId               Integer,       -- Комплектующие или Лодка
     IN inAmount                 TFloat,        -- Кол-во приход
-    IN inEKPrice                TFloat,        -- Цена вх. без НДС
+    IN inEKPrice                TFloat,        -- Цена вх. без НДС, с учетом скидки
+  --IN inEKPrice_orig           TFloat,        -- Цена вх. без НДС, БЕЗ учета скидки
   --IN inCostPrice              TFloat,        -- Цена затрат без НДС, !!!это значенеи будет формироваться не здесь!!!
     IN inCountForPrice          TFloat,        -- Цена за количество
     IN inEmpfPrice              TFloat,        -- Цена рекоменд. без НДС
@@ -52,6 +53,8 @@ BEGIN
                                                   AND Movement.DescId   <> zc_Movement_Income()     -- !!!только НЕ Приход от постав.!!!
                           WHERE MovementItem.PartionId = inMovementItemId
                             AND MovementItem.isErased  = FALSE -- !!!только НЕ удаленные!!!
+-- !!! временно
+AND 1=0
                             -- AND MovementItem.DescId = ...   -- !!!любой Desc!!!
                           ORDER BY Movement.OperDate DESC
                           LIMIT 1
@@ -261,6 +264,7 @@ BEGIN
               , ObjectId             = inObjectId
             --, Amount               = inAmount
               , EKPrice              = inEKPrice
+              , EKPrice_orig         = inEKPrice
               , CountForPrice        = inCountForPrice
             --, CostPrice            = inCostPrice
               , EmpfPrice            = inEmpfPrice
@@ -287,11 +291,11 @@ BEGIN
      IF NOT FOUND THEN
         -- добавили новый элемент
         INSERT INTO Object_PartionGoods (MovementItemId, MovementId, MovementDescId, FromId, UnitId, OperDate, ObjectId
-                                       , Amount, EKPrice, CountForPrice, CostPrice, EmpfPrice, OperPriceList
+                                       , Amount, EKPrice, EKPrice_orig, CountForPrice, CostPrice, EmpfPrice, OperPriceList
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
-                                       , 0 /*inAmount*/, inEKPrice, inCountForPrice, 0, inEmpfPrice
+                                       , 0 /*inAmount*/, inEKPrice, inEKPrice, inCountForPrice, 0, inEmpfPrice
                                          -- "сложно" получили цену
                                        , inOperPriceList
                                                            /*CASE WHEN vbRePrice_exists = TRUE

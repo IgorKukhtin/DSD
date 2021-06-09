@@ -388,7 +388,7 @@ BEGIN
             , _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Summ
             , 0                                       AS ParentId
-            , _tmpItem.AccountId                      AS AccountId              -- счет
+            , _tmpItem.AccountId                      AS AccountId              -- Счет есть всегда
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , _tmpItem.PartionId                      AS PartionId              -- Партия

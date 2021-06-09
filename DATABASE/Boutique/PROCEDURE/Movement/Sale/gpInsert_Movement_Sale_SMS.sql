@@ -112,9 +112,11 @@ BEGIN
           , tmp.Login    :: TVarChar
           , tmp.Password :: TVarChar
           , REPLACE (REPLACE (tmp.Message, '%1', vbKeySMS), '%2', zfConvert_FloatToString (vbDiscountTax))
+--          , REPLACE (REPLACE (tmp.Message, '%1', vbKeySMS), '%2', zfConvert_FloatToString (50))
         --, outPhoneSMS
             -- !номер для теста!
-          , '+380674464560'
+          , '0674464560'
+--          , '0965592230'
             INTO outSmsSettingsName, outLogin, outPassword, outMessage, outPhoneSMS
      FROM gpSelect_Object_SmsSettings (inIsShowAll := FALSE, inSession := inSession) AS tmp
     ;
