@@ -4342,12 +4342,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRepriceSite: TdsdOpenForm
+    object actReport_RepriceSite: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
-      FormName = 'TRepriceSiteForm'
-      FormNameParam.Value = 'TRepriceSiteForm'
+      FormName = 'TReport_RepriceSiteForm'
+      FormNameParam.Value = 'TReport_RepriceSiteForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4359,6 +4359,17 @@
       Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1076#1083#1103' '#1089#1072#1081#1090#1072
       FormName = 'TPriceSiteForm'
       FormNameParam.Value = 'TPriceSiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRepriceSite: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      FormName = 'TRepriceSiteJournalForm'
+      FormNameParam.Value = 'TRepriceSiteJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4848,6 +4859,9 @@
       end
       object N72: TMenuItem
         Action = actRepriceJournal
+      end
+      object N299: TMenuItem
+        Action = actRepriceSite
       end
       object N295: TMenuItem
         Caption = '-'
@@ -5712,7 +5726,7 @@
         Action = actRepriceChangeJournal
       end
       object N298: TMenuItem [36]
-        Action = actRepriceSite
+        Action = actReport_RepriceSite
       end
       object N261: TMenuItem [39]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102

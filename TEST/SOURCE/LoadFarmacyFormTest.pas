@@ -139,6 +139,7 @@ type
     procedure LoadReportUploadFormTest;
     procedure LoadRepriceFormTest;
     procedure LoadRepriceChangeFormTest;
+    procedure LoadRepriceSiteFormTest;
     procedure LoadRetailFormTest;
     procedure LoadRetailCostCreditFormTest;
     procedure LoadReturnInFormTest;
@@ -1674,17 +1675,15 @@ end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceSiteForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRepriceSiteForm');
 
-//  TdsdFormStorageFactory.GetStorage.Save
-//    (GetForm('TReport_GoodsOnUnit_ForSiteForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnit_ForSiteForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save
-//    (GetForm('TReport_GoodsOnUnit_ForSiteDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load
-//    ('TReport_GoodsOnUnit_ForSiteDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save
+    (GetForm('TReport_GoodsOnUnit_ForSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsOnUnit_ForSiteForm');
+
+  TdsdFormStorageFactory.GetStorage.Save
+    (GetForm('TReport_GoodsOnUnit_ForSiteDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load
+    ('TReport_GoodsOnUnit_ForSiteDialogForm');
 end;
 
 procedure TLoadFormTest.LoadRogerseFormTest;
@@ -1744,6 +1743,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceChangeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceChangeForm');
 end;
+
+procedure TLoadFormTest.LoadRepriceSiteFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RepriceSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RepriceSiteForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceSiteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceSiteJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceSiteJournalForm');
+end;
+
 
 procedure TLoadFormTest.LoadRetailFormTest;
 begin

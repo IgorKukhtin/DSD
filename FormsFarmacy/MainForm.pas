@@ -811,10 +811,12 @@ type
     N296: TMenuItem;
     actTestingTuning: TdsdOpenForm;
     N297: TMenuItem;
-    actRepriceSite: TdsdOpenForm;
+    actReport_RepriceSite: TdsdOpenForm;
     N298: TMenuItem;
     actPriceSite: TdsdOpenForm;
     N287: TMenuItem;
+    actRepriceSite: TdsdOpenForm;
+    N299: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

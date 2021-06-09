@@ -3686,8 +3686,8 @@
 				<Form>MethodsAssortmentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceSite.pas">
-				<Form>RepriceSiteForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\Report_RepriceSite.pas">
+				<Form>Report_RepriceSiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceSiteDialog.pas">
@@ -3696,6 +3696,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceSite.pas">
 				<Form>PriceSiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RepriceSiteJournal.pas">
+				<Form>RepriceSiteJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RepriceSite.pas">
+				<Form>RepriceSiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
