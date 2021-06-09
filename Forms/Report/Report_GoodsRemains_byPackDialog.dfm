@@ -3,7 +3,7 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1089#1090#1072#1090#1082#1080' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080'>'
-  ClientHeight = 178
+  ClientHeight = 280
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 56
-    Top = 136
+    Left = 40
+    Top = 240
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 230
-    Top = 136
+    Left = 214
+    Top = 240
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -53,7 +53,7 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
     Width = 90
   end
   object edUnit: TcxButtonEdit
-    Left = 14
+    Left = 11
     Top = 88
     Properties.Buttons = <
       item
@@ -65,7 +65,7 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 14
+    Left = 11
     Top = 68
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
@@ -79,11 +79,44 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
+  object cxLabel4: TcxLabel
+    Left = 11
+    Top = 122
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 11
+    Top = 142
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 305
+  end
+  object cxLabel2: TcxLabel
+    Left = 11
+    Top = 174
+    Caption = #1058#1086#1074#1072#1088':'
+  end
+  object edGoods: TcxButtonEdit
+    Left = 11
+    Top = 193
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 305
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 182
-    Top = 121
+    Left = 166
+    Top = 225
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 222
@@ -136,9 +169,43 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 30
-    Top = 113
+    Left = 14
+    Top = 217
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -169,5 +236,65 @@ object Report_GoodsRemains_byPackDialogForm: TReport_GoodsRemains_byPackDialogFo
       end>
     Left = 94
     Top = 81
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 220
+    Top = 118
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 202
+    Top = 168
   end
 end

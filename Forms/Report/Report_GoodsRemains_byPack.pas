@@ -42,6 +42,12 @@ type
     bbReport_Goods: TdxBarButton;
     actRefreshDataPersonalGroup: TdsdDataSetRefresh;
     actRefreshMov: TdsdDataSetRefresh;
+    cxLabel5: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

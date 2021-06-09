@@ -274,7 +274,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 138
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -290,7 +290,6 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 55
           end
           object GoodsName_basis: TcxGridDBColumn
@@ -299,7 +298,6 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 100
           end
           object GoodsCode: TcxGridDBColumn
@@ -363,6 +361,16 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object RemainsStart_Weight: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1086#1089#1090'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'RemainsStart_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
           object RemainsEnd_Weight: TcxGridDBColumn
             Caption = #1050#1086#1085#1077#1095#1085'. '#1086#1089#1090'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'RemainsEnd_Weight'
@@ -371,7 +379,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 92
           end
           object CountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -475,18 +483,8 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Options.Editing = False
             Width = 70
           end
-          object RemainsStart_Weight: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1086#1089#1090'. ('#1074#1077#1089')'
-            DataBinding.FieldName = 'RemainsStart_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object CountIn_Weight: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
+            Caption = #1048#1058#1054#1043#1054' '#1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'CountIn_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -495,7 +493,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             Options.Editing = False
-            Width = 70
+            Width = 112
           end
           object CountIn_pack_Weight: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1089' '#1094#1077#1093' '#1091#1087#1072#1082' ('#1074#1077#1089')'
@@ -503,6 +501,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1093#1086#1076' '#1089' '#1094#1077#1093' '#1091#1087#1072#1082' ('#1074#1077#1089')'
@@ -515,6 +514,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1093#1086#1076' '#1076#1088#1091#1075#1086#1081' ('#1074#1077#1089')'
@@ -522,7 +522,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             Width = 70
           end
           object CountOut_Weight: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
+            Caption = #1048#1058#1054#1043#1054' '#1056#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'CountOut_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -531,7 +531,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
             Options.Editing = False
-            Width = 70
+            Width = 101
           end
           object CountOut_sale_Weight: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' ('#1088#1077#1072#1083#1080#1079'.) ('#1074#1077#1089')'
@@ -539,6 +539,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1093#1086#1076' ('#1088#1077#1072#1083#1080#1079'.+'#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077') ('#1074#1077#1089')'
@@ -551,6 +552,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1093#1086#1076' '#1074' '#1094#1077#1093' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
@@ -566,7 +568,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 79
           end
           object AmountPartnerPrior_Weight: TcxGridDBColumn
             Caption = #1053#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1074#1077#1089')'
@@ -600,7 +602,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1084#1080#1085#1091#1089#1086#1084' '#1079#1072#1103#1074#1086#1082' ('#1074#1077#1089')'
-            Width = 70
+            Width = 95
           end
         end
       end
@@ -651,6 +653,40 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 210
+    end
+    object cxLabel5: TcxLabel
+      Left = 222
+      Top = 30
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    end
+    object edGoodsGroup: TcxButtonEdit
+      Left = 314
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 210
+    end
+    object cxLabel7: TcxLabel
+      Left = 536
+      Top = 31
+      Caption = #1058#1086#1074#1072#1088':'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 576
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 192
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -752,8 +788,8 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077' '
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077' '
+      Caption = #1054#1090#1095#1077#1090' '#1054#1089#1090#1072#1090#1082#1080' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
+      Hint = #1054#1090#1095#1077#1090' '#1054#1089#1090#1072#1090#1082#1080' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -790,8 +826,8 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
+      ReportName = #1054#1090#1095#1077#1090' '#1054#1089#1090#1072#1090#1082#1080' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1054#1089#1090#1072#1090#1082#1080' '#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -931,6 +967,40 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
           Name = 'UnitName'
           Value = ''
           Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1075,6 +1145,22 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -1111,15 +1197,11 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_Goods'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1137,6 +1219,7 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Visible = ivNever
     end
     object bbPrintByGoods: TdxBarButton
       Action = actPrintByGoods
@@ -1223,6 +1306,67 @@ inherited Report_GoodsRemains_byPackForm: TReport_GoodsRemains_byPackForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
+    Left = 352
+    Top = 65528
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 8
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 640
+    Top = 3
   end
 end
