@@ -29,6 +29,8 @@ END $$;
 -- CREATE EVENT TRIGGER etg ON DDL_COMMAND_END
 --    EXECUTE PROCEDURE _replica.notice_ddl();
 
+ALTER TABLE periodclose DISABLE TRIGGER trigger_notify_changes_periodclose;
+
 
 ALTER TABLE LockProtocol DISABLE TRIGGER trigger_notify_changes_LockProtocol;
 -- ALTER TABLE LockUnique DISABLE TRIGGER trigger_notify_changes_LockUnique;

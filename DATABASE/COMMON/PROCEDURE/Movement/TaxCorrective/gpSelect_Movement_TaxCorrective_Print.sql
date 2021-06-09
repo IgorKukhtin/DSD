@@ -588,7 +588,7 @@ BEGIN
                     AND MovementLinkObject_Contract.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
                  )
 
-, tmpMLM_Child AS (SELECT MovementLinkMovement_Child.MovementId          AS MovementId
+ , tmpMLM_Child AS (SELECT MovementLinkMovement_Child.MovementId          AS MovementId
                         , Movement_child.OperDate                        AS OperDate_Child
                         , Movement_child.Id                              AS MovementId_Child
                         , MovementString_InvNumberBranch_Child.ValueData AS InvNumberBranch_Child

@@ -121,7 +121,7 @@ where T.table_name ILIKE 'movementitemcontainer'
 -- truncate table resourseitemprotocol
 
 -- where  T.table_name ILIKE 'soldtable'
- where  T.table_name ILIKE 'MovementItemProtocol'
+-- where  T.table_name ILIKE 'MovementItemProtocol'
 /*   OR T.table_name ILIKE 'wms_from_host_error'
    OR T.table_name ILIKE 'wms_mi_incoming'
    OR T.table_name ILIKE 'wms_mi_weighingproduction'
