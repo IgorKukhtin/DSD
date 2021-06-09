@@ -1043,6 +1043,14 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnKind_Utilization(), inDescId:= zc_Object_ReturnKind(), inCode:= 2, inName:= 'Утилизация', inEnumName:= 'zc_Enum_ReturnKind_Utilization');
 END $$;
 
+DO $$
+BEGIN 
+     -- !!! Вид периода планирования
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_OrderPeriodKind_Month(), inDescId:= zc_Object_OrderPeriodKind(), inCode:= 1, inName:= 'Месяц', inEnumName:= 'zc_Enum_OrderPeriodKind_Month');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_OrderPeriodKind_Week_2(), inDescId:= zc_Object_OrderPeriodKind(), inCode:= 2, inName:= '2 недели', inEnumName:= 'zc_Enum_OrderPeriodKind_Week_2');
+END $$;
+
+
 
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>

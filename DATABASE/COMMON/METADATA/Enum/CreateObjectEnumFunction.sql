@@ -1323,10 +1323,18 @@ CREATE OR REPLACE FUNCTION zc_Enum_PSLExportKind_iBank() RETURNS integer AS $BOD
 CREATE OR REPLACE FUNCTION zc_Enum_ReturnKind_Defect() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReturnKind_Defect' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ReturnKind_Utilization() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ReturnKind_Utilization' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Вид периода планирования
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_OrderPeriodKind_Month()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_OrderPeriodKind_Month' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_OrderPeriodKind_Week_2() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_OrderPeriodKind_Week_2' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 08.06.21         * zc_Enum_OrderPeriodKind
  07.04.21         * 
  18.03.21         * zc_Enum_PSLExportKind_...
  03.03.20         * add zc_Enum_ImportType_SaleExternalVarus

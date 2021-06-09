@@ -1100,6 +1100,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_Summ() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_MemberMinus_Summ', zc_Object_MemberMinus(), 'Сумма к удержанию ежемесячно' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Summ');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderPeriodKind_Week() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderPeriodKind_Week'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_OrderPeriodKind_Week', zc_Object_WorkTimeKind(), 'Кол-во недель' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderPeriodKind_Week');
 
 --!!! АПТЕКА
 
@@ -2013,6 +2016,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 08.06.21         * zc_ObjectFloat_OrderPeriodKind_Week
  07.06.21                                                                                      * zc_ObjectFloat_CashSettings_Assortment...
  29.04.21         * zc_ObjectFloat_Partner_Category
  27.04.21                                                                                      * zc_ObjectFloat_MarketingDiscount_...

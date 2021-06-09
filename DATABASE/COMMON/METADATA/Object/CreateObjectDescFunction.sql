@@ -937,6 +937,9 @@ CREATE OR REPLACE FUNCTION zc_Object_ContractPriceList() RETURNS integer AS $BOD
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_ContractPriceList', 'История Прайс-листов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractPriceList');
 
+CREATE OR REPLACE FUNCTION zc_Object_OrderPeriodKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_OrderPeriodKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_OrderPeriodKind', 'Вид периода планирования' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_OrderPeriodKind');
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
@@ -1419,6 +1422,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 08.06.21         * zc_Object_OrderPeriodKind
  31.05.21                                                                                        * zc_Object_GoodsDivisionLock
  27.05.21         * zc_Object_ContractPriceList  
  17.05.21                                                                                        * zc_Object_GoodsDivisionLock

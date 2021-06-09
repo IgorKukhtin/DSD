@@ -1261,7 +1261,10 @@ uses
   Report_CheckBonus_JournalDialog in '..\..\Forms\Report\Report_CheckBonus_JournalDialog.pas' {Report_CheckBonus_JournalDialogForm: TParentForm},
   Partner_CategoryEdit in '..\..\Forms\Guides\Partner_CategoryEdit.pas' {Partner_CategoryEditForm: TParentForm},
   Report_GoodsRemains_byPack in '..\..\Forms\Report\Report_GoodsRemains_byPack.pas' {Report_GoodsRemains_byPackForm: TParentForm},
-  Report_GoodsRemains_byPackDialog in '..\..\Forms\Report\Report_GoodsRemains_byPackDialog.pas' {Report_GoodsRemains_byPackDialogForm: TParentForm};
+  Report_GoodsRemains_byPackDialog in '..\..\Forms\Report\Report_GoodsRemains_byPackDialog.pas' {Report_GoodsRemains_byPackDialogForm: TParentForm},
+  OrderPeriodKind in '..\..\Forms\Kind\OrderPeriodKind.pas' {OrderPeriodKindForm: TParentForm},
+  OrderGoods in '..\..\Forms\Document\OrderGoods.pas' {OrderGoodsForm: TParentForm},
+  OrderGoodsJournal in '..\..\Forms\Document\OrderGoodsJournal.pas' {OrderGoodsJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
