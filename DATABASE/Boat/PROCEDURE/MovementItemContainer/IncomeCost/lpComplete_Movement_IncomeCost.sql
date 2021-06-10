@@ -11,6 +11,7 @@ AS
 $BODY$
    DECLARE vbMovementId_from       Integer;
    DECLARE vbMovementDescId_from   Integer;
+   DECLARE vbMovementId_income     Integer;
 
    DECLARE vbJuridicalId_Basis       Integer; -- значение пока НЕ определяется
    DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
@@ -333,6 +334,14 @@ BEGIN
      UPDATE Object_PartionGoods SET CostPrice = CASE WHEN _tmpItem.Amount <> 0 THEN _tmpItem.OperSumm_calc / _tmpItem.Amount ELSE _tmpItem.OperSumm_calc END
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId;
+
+     ---!!Добавляем сформированные затраты в док прихода
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCost(), _tmpMovement_to.MovementId_to,(COALESCE(MovementFloat_TotalSummCost.ValueData,0) + COALESCE (OperSumm_calc,0)) ) 
+     FROM _tmpMovement_to
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCost
+                                  ON MovementFloat_TotalSummCost.MovementId = _tmpMovement_to.MovementId_to
+                                 AND MovementFloat_TotalSummCost.DescId = zc_MovementFloat_TotalSummCost()
+     ;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

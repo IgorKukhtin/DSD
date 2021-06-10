@@ -14,6 +14,22 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_IncomeCost());
 
+     -- снимаем сумму затраты с документа приход
+     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCost(), Movement.ParentId, COALESCE(MovementFloat_TotalSummCost.ValueData,0) - COALESCE(MovementFloat_AmountCost.ValueData,0) ) 
+         FROM Movement
+              --затрата
+              LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                      ON MovementFloat_AmountCost.MovementId = Movement.Id
+                                     AND MovementFloat_AmountCost.DescId = zc_MovementFloat_AmountCost()
+              --сумма затратв док приходе
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSummCost
+                                      ON MovementFloat_TotalSummCost.MovementId = Movement.ParentId
+                                     AND MovementFloat_TotalSummCost.DescId = zc_MovementFloat_TotalSummCost()
+         WHERE Movement.Id = inMovementId;
+     END IF;
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId
