@@ -1,4 +1,4 @@
--- Function: gpInsert_MovementItem_RepriceSite_Clipped()
+-- Function: gpInsertUpdate_MovementItem_RepriceSite_Clipped()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceSite_Clipped (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
@@ -31,15 +31,9 @@ BEGIN
                                         FROM MovementString AS MS_GUID
                                         WHERE MS_GUID.ValueData = inGUID
                                           AND MS_GUID.DescId    = zc_MovementString_Comment())
-                      ,  tmpMLO_Unit AS (SELECT MLO_Unit.MovementId
-                                         FROM MovementLinkObject AS MLO_Unit
-                                         WHERE MLO_Unit.MovementId IN (SELECT DISTINCT tmpMS_GUID.MovementId FROM tmpMS_GUID)
-                                           AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
-                                           AND MLO_Unit.ObjectId   = inUnitId
-                                        )
                       ,  tmpMovement AS (SELECT Movement.Id, Movement.OperDate, Movement.DescId
                                          FROM Movement
-                                         WHERE Movement.Id IN (SELECT DISTINCT tmpMLO_Unit.MovementId FROM tmpMLO_Unit)
+                                         WHERE Movement.Id IN (SELECT DISTINCT tmpMS_GUID.MovementId FROM tmpMS_GUID)
                                         )
                     -- Результат
                     SELECT Movement.Id AS MovementId
@@ -76,7 +70,7 @@ BEGIN
                                                    , inUserId             := vbUserId);
 
     -- сохранили <Признак лог отсечения>
-    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ClippedRepriceSite(), ioId, True);
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ClippedReprice(), ioId, True);
     
     -- сохранили <По маркетинговому бонусу >
     IF COALESCE (inisPromoBonus, False) = TRUE

@@ -31,7 +31,6 @@ type
     JuridicalName: TcxGridDBColumn;
     Juridical_GoodsName: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
-    MarginPercent: TcxGridDBColumn;
     Juridical_Price: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     IsTop_Goods: TcxGridDBColumn;
@@ -39,9 +38,6 @@ type
     actExecRepriceSiteMI: TdsdExecStoredProc;
     spExecRepriceSiteMI: TdsdStoredProc;
     bbRepriceSiteMI: TdxBarButton;
-    actRepriceSiteMIAll: TMultiAction;
-    actExecRepriceSiteMIAll: TdsdExecStoredProc;
-    spExecRepriceSiteMIAll: TdsdStoredProc;
     bbRepriceSiteMIAll: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
     dxBarStatic1: TdxBarStatic;

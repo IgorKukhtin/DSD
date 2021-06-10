@@ -90,8 +90,9 @@ BEGIN
          GROUP BY tmp.GoodsId; 
          
      -- записываем свойство кол-во прайсов товару сети
-     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountPrice(), _tmpDataCount.GoodsId, COALESCE (_tmpDataCount.CountPrice, 0))
-     FROM _tmpDataCount; 
+     PERFORM lpUpdate_Goods_CountPrice (_tmpDataCount.GoodsId, COALESCE (_tmpDataCount.CountPrice, 0), vbUserId)
+     FROM _tmpDataCount
+     ; 
 
 END;$BODY$
 
@@ -99,9 +100,10 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 10.06.11                                                      * 
  16.03.18         *
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Goods_CountPrice('2'::TVarChar)
+-- SELECT * FROM gpUpdate_Goods_CountPrice('3'::TVarChar)

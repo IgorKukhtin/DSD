@@ -96,6 +96,10 @@ BEGIN
     -- проверили корректность цены
     IF COALESCE (inMCSValue_min, 0) > COALESCE (inMCSValue, 0)
     THEN
+        IF inSession = '3'
+        THEN
+          RETURN;
+        END IF;
         RAISE EXCEPTION 'Ошибка.НТЗ мин. <%> Не может быть больше НТЗ <%>. Медикамент <%>', inMCSValue_min, inMCSValue, 
           (SELECT ValueData FROM Object WHERE ID = inGoodsId);
     END IF;
