@@ -134,31 +134,11 @@ inherited RepriceSiteForm: TRepriceSiteForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
-          object Juridical_Percent: TcxGridDBColumn
-            Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090'.)'
-            DataBinding.FieldName = 'Juridical_Percent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-            Width = 71
-          end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 49
-          end
-          object Contract_Percent: TcxGridDBColumn
-            Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
-            DataBinding.FieldName = 'Contract_Percent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
             Width = 71
           end
           object Juridical_GoodsName: TcxGridDBColumn
@@ -174,15 +154,6 @@ inherited RepriceSiteForm: TRepriceSiteForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
-          end
-          object MarginPercent: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1090#1086#1095#1082#1077
-            DataBinding.FieldName = 'MarginPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 71
           end
           object Juridical_Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
@@ -357,39 +328,6 @@ inherited RepriceSiteForm: TRepriceSiteForm
         end>
       Caption = 'actExecRepriceSiteMI'
     end
-    object actRepriceSiteMIAll: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecRepriceSiteMIAll
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1090#1077#1082#1091#1097#1077#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087 +
-        #1077#1088#1077#1086#1094#1077#1085#1082#1080' '#1079#1072' '#1076#1077#1085#1100' '#1075#1076#1077' '#1086#1085#1072' '#1086#1090#1089#1077#1077#1085#1072'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = 
-        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
-        ' '#1079#1072' '#1076#1077#1085#1100
-      Hint = 
-        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
-        ' '#1079#1072' '#1076#1077#1085#1100
-      ImageIndex = 28
-    end
-    object actExecRepriceSiteMIAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spExecRepriceSiteMIAll
-      StoredProcList = <
-        item
-          StoredProc = spExecRepriceSiteMIAll
-        end>
-      Caption = 'actExecRepriceSiteMIAll'
-    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_RepriceSite'
@@ -485,10 +423,6 @@ inherited RepriceSiteForm: TRepriceSiteForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRepriceSiteMIAll'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -523,8 +457,15 @@ inherited RepriceSiteForm: TRepriceSiteForm
       Category = 0
     end
     object bbRepriceSiteMIAll: TdxBarButton
-      Action = actRepriceSiteMIAll
+      Caption = 
+        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
+        ' '#1079#1072' '#1076#1077#1085#1100
       Category = 0
+      Hint = 
+        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
+        ' '#1079#1072' '#1076#1077#1085#1100
+      Visible = ivAlways
+      ImageIndex = 28
     end
     object dxBarSubItem1: TdxBarSubItem
       Caption = 'New SubItem'
@@ -653,22 +594,5 @@ inherited RepriceSiteForm: TRepriceSiteForm
     PackSize = 1
     Left = 662
     Top = 176
-  end
-  object spExecRepriceSiteMIAll: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_RepriceSiteAll'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 662
-    Top = 256
   end
 end

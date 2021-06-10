@@ -6,6 +6,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -358
   ExplicitWidth = 1147
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -185,7 +186,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CostSumm_Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -226,7 +226,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CostSumm_Remains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -622,16 +621,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
-          end
-          object CostSumm_Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1091#1084#1084#1077' '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'CostSumm_Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
-            Visible = False
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
           end
         end
       end

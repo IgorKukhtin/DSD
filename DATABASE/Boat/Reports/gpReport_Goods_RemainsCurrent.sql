@@ -421,7 +421,12 @@ BEGIN
            , CASE WHEN tmpData.Remains  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Remains
                   ELSE 0
              END :: TFloat AS OperPrice_cost
-           , tmpData.CostPrice_summ        :: TFloat AS CostPrice
+            
+            --затрата           
+           --, tmpData.CostPrice_summ        :: TFloat AS CostPrice
+           , CASE WHEN tmpData.Remains  <> 0 THEN (COALESCE (tmpData.Remains_sum,0) - COALESCE (tmpData.TotalSummEKPrice,0)) / tmpData.Remains
+                  ELSE 0
+             END :: TFloat AS CostPrice
 
            
              -- Кол-во - остаток

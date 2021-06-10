@@ -27,7 +27,7 @@ BEGIN
                                                  AND MIFloat_PriceSale.DescId         = zc_MIFloat_PriceSale()
                       LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedRepriceSite
                                                     ON MIBoolean_ClippedRepriceSite.MovementItemId = MovementItem.Id
-                                                   AND MIBoolean_ClippedRepriceSite.DescId         = zc_MIBoolean_ClippedRepriceSite()
+                                                   AND MIBoolean_ClippedRepriceSite.DescId         = zc_MIBoolean_ClippedReprice()
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId     = zc_MI_Master()
                     AND MovementItem.isErased   = FALSE
