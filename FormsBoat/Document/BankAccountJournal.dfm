@@ -4,9 +4,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 835
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -101
   ExplicitWidth = 851
-  ExplicitHeight = 391
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -895,8 +894,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'acInvoiceJournalDetailChoiceForm'
-      FormName = 'TInvoiceJournalDetailChoiceForm'
-      FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+      FormName = 'TInvoiceJournalChoiceForm'
+      FormNameParam.Value = 'TInvoiceJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -904,7 +903,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Name = 'InvNumber_Full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_Invoice'
+          ComponentItem = 'InvNumber_Invoice_Full'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -914,19 +913,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Invoice'
-          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterJuridicalId'
+          Name = 'MasterClientId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MoneyPlaceId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterJuridicalName'
+          Name = 'MasterClientName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MoneyPlaceName'

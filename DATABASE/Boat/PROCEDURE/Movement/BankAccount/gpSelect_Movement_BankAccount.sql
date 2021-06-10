@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , AmountOut TFloat
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
-             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice_Full TVarChar
              , Amount_Invoice TFloat
              , Amount_diff TFloat
@@ -166,6 +166,7 @@ BEGIN
            , MovementItem.ObjectId             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_Bank.ValueData             AS BankName
+           , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , ObjectDesc.ItemName
