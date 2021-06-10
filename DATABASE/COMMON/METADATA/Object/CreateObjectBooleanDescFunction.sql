@@ -956,9 +956,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsDivisionLock_Lock() RETURNS Int
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsDivisionLock(), 'zc_ObjectBoolean_GoodsDivisionLock_Lock', 'Блокировка деления товара' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsDivisionLock_Lock');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PriceSite_Fix() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PriceSite_Fix'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectBoolean_PriceSite_Fix', 'фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PriceSite_Fix');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 09.06.21                                                                                                          * zc_ObjectBoolean_PriceSite_Fix
  17.05.21                                                                                                          * zc_ObjectBoolean_GoodsDivisionLock_Lock
  13.05.21         * zc_ObjectBoolean_User_ProjectAuthent
  05.05.21                                                                                                          * zc_ObjectBoolean_Member_ReleasedMarketingPlan

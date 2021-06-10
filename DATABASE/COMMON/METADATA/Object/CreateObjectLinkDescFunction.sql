@@ -2526,9 +2526,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan() R
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan', 'Связь с Шкала расчета премии/штрафы в план по маркетингу', zc_Object_UnitCategory(), zc_Object_ScaleCalcMarketingPlan() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitCategory_ScaleCalcMarketingPlan');
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceSite_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceSite_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_MarketingDiscount_Goods', 'Связь с Товаром СЕТИ', zc_Object_MarketingDiscount(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Goods');
+SELECT 'zc_ObjectLink_PriceSite_Goods', 'Связь с Товаром СЕТИ', zc_Object_PriceSite(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceSite_Goods');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_MarketingDiscount_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MarketingDiscount_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

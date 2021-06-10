@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
@@ -51,7 +52,11 @@ RETURNS TABLE (MovementItemId       Integer
              , Summ_Cost               TFloat -- Сумма затрат
              , TotalSumm_Cost          TFloat -- Сумма вх+ затраты
              , PriceTax                TFloat -- % скидки !!!НА!!! zc_DateEnd
-                    
+
+             , Remains_sum       TFloat --сумма остатка
+             , OperPrice_Remains TFloat
+             , CostSumm_Remains  TFloat
+
              , Comment_in       TVarChar
              , DiscountTax_in   TFloat
              , VATPercent_in    TFloat
@@ -128,9 +133,23 @@ BEGIN
                           FROM Container
                                INNER JOIN _tmpUnit ON _tmpUnit.UnitId = Container.WhereObjectId
                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
-                           WHERE Container.DescId = zc_Container_Count()
-                            AND (COALESCE(Container.Amount,0) <> 0 OR inIsRemains = TRUE)
+                           WHERE (COALESCE(Container.Amount,0) <> 0 OR inIsRemains = TRUE)
+                             AND Container.DescId = zc_Container_Count()
                           )
+
+   , tmpContainer_Summ AS (SELECT tmpContainer_All.Id AS ContainerId_Count
+                                , tmpContainer_All.ObjectId
+                                , tmpContainer_All.PartionId
+                                --, Container.Id AS ContainerId_Summ
+                                , SUM (COALESCE (Container.Amount,0)) AS Amount      -- Сумма
+                           FROM tmpContainer_All
+                                INNER JOIN Container ON Container.ParentId = tmpContainer_All.Id
+                                                    AND Container.DescId = zc_Container_Summ()
+                           GROUP BY tmpContainer_All.Id
+                                  , tmpContainer_All.ObjectId
+                                  , tmpContainer_All.PartionId
+                            )
+
 
    , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
                                 FROM Object_PartionGoods
@@ -142,6 +161,8 @@ BEGIN
                            , Object_PartionGoods.MovementItemId
                            , Container.ObjectId             AS GoodsId
                            , COALESCE (Container.Amount, 0) AS Remains
+                           --сумма остатков
+                           , COALESCE (tmpContainer_Summ.Amount,0) AS Remains_sum
                            --, Object_PartionGoods.BrandId
                            , Object_PartionGoods.FromId AS PartnerId
 
@@ -175,10 +196,13 @@ BEGIN
 
                       FROM tmpContainer_All AS Container
                            INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
-                                                         AND Object_PartionGoods.ObjectId        = Container.ObjectId
+                                                         AND Object_PartionGoods.ObjectId       = Container.ObjectId
                                                          AND (Object_PartionGoods.isErased      = FALSE
                                                            OR Object_PartionGoods.Amount        > 0
                                                              )
+                           LEFT JOIN tmpContainer_Summ ON tmpContainer_Summ.ContainerId_Count = Container.Id
+                                                      AND tmpContainer_Summ.PartionId = Container.PartionId
+                                                      AND tmpContainer_Summ.ObjectId = Container.ObjectId
                             -- цена из Прайс-листа
                            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Container.ObjectId
 
@@ -204,7 +228,7 @@ BEGIN
                          FROM MovementItemString AS MIString_PartNumber
                          WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpContainer.MovementItemId FROM tmpContainer)
                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                         ) 
+                         )
 
        , tmpData_All AS (SELECT tmpContainer.UnitId
                               , tmpContainer.GoodsId
@@ -230,6 +254,7 @@ BEGIN
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
                               , SUM (tmpContainer.Remains)         AS Remains
+                              , SUM (tmpContainer.Remains_sum)     AS Remains_sum
                               , SUM (zfCalc_SummIn        (tmpContainer.Remains, tmpContainer.EKPrice, tmpContainer.CountForPrice)) AS TotalSummEKPrice
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.CostPrice))                           AS TotalSumm_cost
@@ -312,6 +337,7 @@ BEGIN
 
                           , SUM (tmpData_All.Amount_in)           AS Amount_in
                           , SUM (tmpData_All.Remains)             AS Remains
+                          , SUM (tmpData_All.Remains_sum)         AS Remains_sum
                           , SUM (tmpData_All.TotalSummEKPrice)    AS TotalSummEKPrice
                           , SUM (tmpData_All.TotalSummPriceList)  AS TotalSummPriceList
                           , SUM (tmpData_All.TotalSummPrice_cost) AS TotalSummPrice_cost
@@ -382,20 +408,26 @@ BEGIN
              -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
 
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in
+           , CASE WHEN tmpData.Remains  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Remains
                   ELSE 0
              END :: TFloat AS OperPrice
+
            , COALESCE (tmpData.CountForPrice,1)   :: TFloat AS CountForPrice
 
              -- Цена по прайсу
            , tmpData.OperPriceList :: TFloat
 
            --, tmpData.OperPrice_cost   :: TFloat
+<<<<<<< HEAD
            , CASE WHEN tmpData.Amount_in  <> 0 THEN (COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0)) / tmpData.Amount_in
+=======
+           , CASE WHEN tmpData.Remains  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Remains
+>>>>>>> origin/master
                   ELSE 0
              END :: TFloat AS OperPrice_cost
            , tmpData.CostPrice_summ        :: TFloat AS CostPrice
 
+           
              -- Кол-во - остаток
            , tmpData.Remains                 :: TFloat AS Remains
              -- Сумма по входным ценам
@@ -411,6 +443,13 @@ BEGIN
                         THEN (100 * tmpData.TotalSummPriceList / tmpData.TotalSummPrice_cost - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
+
+             -- Сумма - остаток
+           , tmpData.Remains_sum                 :: TFloat AS Remains_sum
+           , CASE WHEN tmpData.Remains  <> 0 THEN tmpData.Remains_sum / tmpData.Remains
+                  ELSE 0
+             END :: TFloat AS OperPrice_Remains
+           , (COALESCE (tmpData.Remains_sum,0) - COALESCE (tmpData.TotalSummEKPrice,0)) :: TFloat AS CostSumm_Remains --остаток по сумме затрат
 
            , tmpData.Comment_in       :: TVarChar
            , tmpData.DiscountTax_in   :: TFloat
@@ -454,3 +493,4 @@ $BODY$
 -- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
 
 --select * from Object_PartionGoods limit 10
+select * from gpReport_Goods_RemainsCurrent(inUnitId := 35139 , inPartnerId := 2934 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsRemains := 'False' , inisPartNumber := 'False' ,  inSession := '5');

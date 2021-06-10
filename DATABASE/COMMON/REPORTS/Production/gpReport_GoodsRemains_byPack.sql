@@ -2,17 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsRemains_byPack (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsRemains_byPack (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsRemains_byPack (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsRemains_byPack(
     IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inUnitId             Integer   , 
+    IN inGoodsGroupId       Integer,    -- группа товара
+    IN inGoodsId            Integer,    -- товар
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE ( GoodsId Integer
               , GoodsCode Integer
               , GoodsName TVarChar
               , GoodsKindName TVarChar
+              , GoodsCode_basis Integer, GoodsName_basis TVarChar
               , GoodsGroupId Integer
               , GoodsGroupName TVarChar
               , GoodsGroupNameFull TVarChar
@@ -46,18 +50,36 @@ AS
 $BODY$
 BEGIN
 
+    -- группа товаров или товар или все товары 
+    CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+    THEN
+        INSERT INTO tmpGoods (GoodsId)
+           SELECT lfSelect.GoodsId 
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+           ;
+    ELSE 
+        INSERT INTO tmpGoods (GoodsId)
+           SELECT Object.Id
+           FROM Object
+           WHERE Object.DescId = zc_Object_Goods()
+             AND Object.isErased = False
+             AND (Object.Id = inGoodsId OR inGoodsId = 0) 
+           ;
+    END IF;
+
     -- Результат
     RETURN QUERY
          --
     WITH 
-    tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+    /*tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                  FROM Object_InfoMoney_View
                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                            ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                  WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- ГП   zc_Enum_InfoMoney_30101() -- Готовая продукция
                  )
-  , tmpAccountNo AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+  ,*/ tmpAccountNo AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
     -- Склад Реализации
   , tmpUnit_SKLAD AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup) --8457 базы+ реализ   --8459 реализ
     -- Цех Упаковки
@@ -295,12 +317,75 @@ BEGIN
                        , ObjectFloat_Weight.ValueData
                )
 
+           , tmpReceipt AS (SELECT tmpRez.GoodsId
+                                 , tmpRez.GoodsKindId
+                                 , MAX (Object_Receipt.Id) AS ReceiptId
+                                 , MAX (COALESCE (ObjectLink_Receipt_Goods_Parent_0.ChildObjectId, 0)) AS GoodsId_basis
+                                 , MAX (COALESCE (ObjectLink_Receipt_Parent_0.ChildObjectId, 0))       AS ReceiptId_basis
+                            FROM (SELECT DISTINCT
+                                         tmpRez.GoodsId
+                                       , tmpRez.GoodsKindId
+                                  FROM tmpRez) AS tmpRez
+                                 INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                       ON ObjectLink_Receipt_Goods.ChildObjectId = tmpRez.GoodsId
+                                                      AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                 INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                       ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                      AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                      AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpRez.GoodsKindId
+                                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                    AND Object_Receipt.isErased = FALSE
+                                 INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                          ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                         AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                         AND ObjectBoolean_Main.ValueData = TRUE
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
+                                                      ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
+                                                     AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent_0
+                                                      ON ObjectLink_Receipt_Goods_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                     AND ObjectLink_Receipt_Goods_Parent_0.DescId = zc_ObjectLink_Receipt_Goods()
+                            GROUP BY tmpRez.GoodsId
+                                   , tmpRez.GoodsKindId
+                          )
+           , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
+                                 SELECT tmpReceipt.GoodsId
+                                      , tmpReceipt.GoodsKindId
+                                      , tmpReceipt.ReceiptId
+                                      , MAX (COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)) AS GoodsId_basis
+                                 FROM tmpReceipt
+                                      INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                           ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpReceipt.ReceiptId
+                                                          AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+                                      INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                              AND Object_ReceiptChild.isErased = FALSE
+                                      LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                           ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                          AND ObjectLink_ReceiptChild_Goods.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+                                      INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                             ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                            AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                            AND ObjectFloat_Value.ValueData <> 0
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                           ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                      INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                      AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                                        OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                          )
+                                 WHERE tmpReceipt.ReceiptId_basis = 0
+                                 GROUP BY tmpReceipt.GoodsId
+                                        , tmpReceipt.GoodsKindId
+                                        , tmpReceipt.ReceiptId
+                                )
+
          -- Результат
          SELECT Object_Goods.Id                            AS GoodsId
               , Object_Goods.ObjectCode                    AS GoodsCode
               , Object_Goods.ValueData     :: TVarChar     AS GoodsName
               , Object_GoodsKind.ValueData ::TVarChar      AS GoodsKindName
-
+              , Object_Goods_basis.ObjectCode              AS GoodsCode_basis
+              , Object_Goods_basis.ValueData               AS GoodsName_basis
               , Object_GoodsGroup.Id                       AS GoodsGroupId
               , Object_GoodsGroup.ValueData                AS GoodsGroupName
               , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -345,6 +430,15 @@ BEGIN
               LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                      ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                     AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+              LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpData.GoodsId
+                                  AND tmpReceipt.GoodsKindId = tmpData.GoodsKindId
+                                  AND tmpReceipt.GoodsId_basis <> 0
+              LEFT JOIN tmpReceipt_find ON tmpReceipt_find.GoodsId     = tmpData.GoodsId
+                                       AND tmpReceipt_find.GoodsKindId = tmpData.GoodsKindId
+                                       AND tmpReceipt_find.GoodsId_basis <> 0
+
+              LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = COALESCE (tmpReceipt.GoodsId_basis, COALESCE (tmpReceipt_find.GoodsId_basis, tmpData.GoodsId))
       ;
 END;
 $BODY$
@@ -358,4 +452,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsRemains_byPack(inStartDate:= '31.05.2021', inEndDate:= '31.05.2021', inUnitId := 8457, inSession:= zfCalc_UserAdmin()) where goodsid = 2157 --3713924
+-- SELECT * FROM gpReport_GoodsRemains_byPack(inStartDate:= '31.05.2021', inEndDate:= '31.05.2021', inUnitId := 8457, inGoodsGroupId := 0,inGoodsId := 8457, inSession:= zfCalc_UserAdmin()) where goodsid = 2157 --3713924

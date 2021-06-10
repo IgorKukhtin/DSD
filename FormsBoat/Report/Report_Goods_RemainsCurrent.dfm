@@ -6,9 +6,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -358
   ExplicitWidth = 1147
-  ExplicitHeight = 559
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -140,17 +139,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     TabOrder = 3
     ExplicitTop = 86
     ExplicitWidth = 1131
-    ExplicitHeight = 447
+    ExplicitHeight = 408
     ClientRectBottom = 408
     ClientRectRight = 1131
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1131
-      ExplicitHeight = 447
+      ExplicitHeight = 408
       inherited cxGrid: TcxGrid
         Width = 1131
         Height = 332
         ExplicitWidth = 1131
-        ExplicitHeight = 371
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -176,12 +175,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_cost
+              Column = CostSumm_Remains_Summ_cost
             end
             item
               Format = ',0.####'
               Kind = skAverage
-              Column = TotalSumm_cost
+              Column = Remains_sum_TotalSumm_cost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CostSumm_Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -212,12 +216,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_cost
+              Column = CostSumm_Remains_Summ_cost
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSumm_cost
+              Column = Remains_sum_TotalSumm_cost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CostSumm_Remains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -475,9 +484,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 70
           end
-          object Summ_cost: TcxGridDBColumn
+          object CostSumm_Remains_Summ_cost: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1079#1072#1090#1088#1072#1090#1099
-            DataBinding.FieldName = 'Summ_cost'
+            DataBinding.FieldName = 'CostSumm_Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -488,9 +497,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 80
           end
-          object OperPrice_cost: TcxGridDBColumn
+          object OperPrice_Remains_OperPrice_cost: TcxGridDBColumn
             Caption = 'Netto EK cost'
-            DataBinding.FieldName = 'OperPrice_cost'
+            DataBinding.FieldName = 'OperPrice_Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -499,9 +508,9 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1062#1077#1085#1072' '#1074#1093'. '#1089' '#1079#1072#1090#1088#1072#1090#1072#1084#1080' '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
           end
-          object TotalSumm_cost: TcxGridDBColumn
+          object Remains_sum_TotalSumm_cost: TcxGridDBColumn
             Caption = 'Total EK cost'
-            DataBinding.FieldName = 'TotalSumm_cost'
+            DataBinding.FieldName = 'Remains_sum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -614,6 +623,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object CostSumm_Remains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1091#1084#1084#1077' '#1079#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'CostSumm_Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
       object ExportXmlGrid: TcxGrid
@@ -624,7 +643,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitTop = 371
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -661,7 +679,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 533
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0

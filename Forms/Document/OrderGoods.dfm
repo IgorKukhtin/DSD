@@ -1,28 +1,28 @@
 inherited OrderGoodsForm: TOrderGoodsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 602
-  ClientWidth = 1002
-  ExplicitWidth = 1018
-  ExplicitHeight = 640
+  ClientHeight = 638
+  ClientWidth = 982
+  ExplicitWidth = 998
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1002
-    Height = 476
+    Width = 982
+    Height = 512
     ExplicitTop = 126
-    ExplicitWidth = 1002
-    ExplicitHeight = 476
-    ClientRectBottom = 476
-    ClientRectRight = 1002
+    ExplicitWidth = 982
+    ExplicitHeight = 512
+    ClientRectBottom = 512
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1002
-      ExplicitHeight = 452
+      ExplicitWidth = 982
+      ExplicitHeight = 488
       inherited cxGrid: TcxGrid
-        Width = 1002
-        Height = 452
-        ExplicitWidth = 1002
-        ExplicitHeight = 452
+        Width = 982
+        Height = 300
+        ExplicitWidth = 982
+        ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -62,43 +62,22 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_kg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -109,6 +88,16 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_kg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -143,13 +132,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actAssetGoodsChoiceForm
+                Caption = 'GoodsForm'
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 182
           end
           object GoodsKindName: TcxGridDBColumn [3]
@@ -162,7 +152,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -197,17 +187,42 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Width = 70
           end
           object Amount_kg: TcxGridDBColumn [7]
-            Caption = #1042#1077#1089
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
             DataBinding.FieldName = 'Amount_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [8]
+          object Amount_sh: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090
+            DataBinding.FieldName = 'Amount_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa: TcxGridDBColumn [9]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -218,17 +233,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object msInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
           object msUpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -237,10 +245,19 @@ inherited OrderGoodsForm: TOrderGoodsForm
           object msUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object msInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object msInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -248,17 +265,133 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 93
           end
         end
+      end
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 308
+        Width = 982
+        Height = 180
+        Align = alBottom
+        TabOrder = 1
+        object cxGridDBTableViewChild: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ChildAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ChildAmount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ChildGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object ChildAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object ChildInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 146
+          end
+          object ChildInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 197
+          end
+          object ChildIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'IsErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+        end
+        object cxGridLevelChild: TcxGridLevel
+          GridView = cxGridDBTableViewChild
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 300
+        Width = 982
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridChild
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1002
+    Width = 982
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1002
+    ExplicitWidth = 982
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -393,17 +526,30 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 363
+    Top = 528
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
     Top = 640
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 303
+    Left = 87
+    Top = 255
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_Child
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
@@ -412,6 +558,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
           StoredProc = spInsertUpdateMovement
         end
         item
+        end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect_Child
         end>
     end
     object actPrintNoGroup: TdsdPrintAction [8]
@@ -701,40 +859,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end>
       isShowModal = True
     end
-    object actAssetGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
-      FormName = 'TAssetGoods_ObjectForm'
-      FormNameParam.Value = 'TAssetGoods_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actGoodsKindCompleteChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -859,12 +983,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 16
+    Top = 320
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 40
+    Top = 368
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderGoods'
@@ -874,6 +998,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -905,6 +1037,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True
@@ -987,8 +1123,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Top = 225
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 600
+    Top = 360
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1048,7 +1184,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_SaleExternal'
+    StoredProcName = 'gpUpdate_Status_OrderGoods'
     Left = 128
     Top = 64
   end
@@ -1268,13 +1404,13 @@ inherited OrderGoodsForm: TOrderGoodsForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderGoods_SetErased'
-    Left = 718
-    Top = 512
+    Left = 646
+    Top = 304
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderGoods_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 646
+    Top = 240
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderGoods'
@@ -1319,6 +1455,24 @@ inherited OrderGoodsForm: TOrderGoodsForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1360,6 +1514,24 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Name = 'inAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1513,5 +1685,74 @@ inherited OrderGoodsForm: TOrderGoodsForm
       end>
     Left = 620
     Top = 8
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 236
+    Top = 490
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 176
+    Top = 489
+  end
+  object PopupMenuChild: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 120
+    Top = 544
+    object MenuItem1: TMenuItem
+      Action = actRefresh
+    end
+    object MenuItem2: TMenuItem
+      Action = actGridToExcel
+    end
+    object MenuItem3: TMenuItem
+    end
+    object MenuItem4: TMenuItem
+    end
+    object N4: TMenuItem
+    end
+  end
+  object ChildDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 206
+    Top = 545
+  end
+  object spSelect_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderGoods_Child'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 496
   end
 end

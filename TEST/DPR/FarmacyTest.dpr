@@ -1025,8 +1025,6 @@ uses
   ScaleCalcMarketingPlan in '..\..\FormsFarmacy\Kind\ScaleCalcMarketingPlan.pas' {ScaleCalcMarketingPlanForm: TParentForm},
   Report_KilledCodeRecoveryDialog in '..\..\FormsFarmacy\Report\Report_KilledCodeRecoveryDialog.pas' {Report_KilledCodeRecoveryDialogForm: TParentForm},
   Report_KilledCodeRecovery in '..\..\FormsFarmacy\Report\Report_KilledCodeRecovery.pas' {Report_KilledCodeRecoveryForm: TParentForm},
-  MarketingDiscount in '..\..\FormsFarmacy\Guides\MarketingDiscount.pas' {MarketingDiscountForm: TParentForm},
-  MarketingDiscountDialog in '..\..\FormsFarmacy\Guides\MarketingDiscountDialog.pas' {MarketingDiscountDialogForm: TParentForm},
   Report_MovementCheck_UnderreportedDE in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnderreportedDE.pas' {Report_MovementCheck_UnderreportedDEForm: TParentForm},
   SendCashSUN in '..\..\FormsFarmacy\Document\SendCashSUN.pas' {SendCashSUNForm: TParentForm},
   RecalcMCSShedulerMainDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerMainDialog.pas' {RecalcMCSShedulerMainDialogForm: TParentForm},
@@ -1037,7 +1035,11 @@ uses
   Report_SalesGoods_SUADialog in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUADialog.pas' {Report_SalesGoods_SUADialogForm: TParentForm},
   Report_SalesGoods_SUA in '..\..\FormsFarmacy\Report\Report_SalesGoods_SUA.pas' {Report_SalesGoods_SUAForm: TParentForm},
   MethodsAssortment in '..\..\FormsFarmacy\Kind\MethodsAssortment.pas' {MethodsAssortmentForm: TParentForm},
-  RepriceSite in '..\..\FormsFarmacy\ConnectWithOld\RepriceSite.pas' {RepriceSiteForm: TParentForm};
+  Report_RepriceSite in '..\..\FormsFarmacy\ConnectWithOld\Report_RepriceSite.pas' {Report_RepriceSiteForm: TParentForm},
+  PriceSiteDialog in '..\..\FormsFarmacy\Guides\PriceSiteDialog.pas' {PriceSiteDialogForm: TParentForm},
+  PriceSite in '..\..\FormsFarmacy\Guides\PriceSite.pas' {PriceSiteForm: TParentForm},
+  RepriceSiteJournal in '..\..\FormsFarmacy\Document\RepriceSiteJournal.pas' {RepriceSiteJournalForm: TParentForm},
+  RepriceSite in '..\..\FormsFarmacy\Document\RepriceSite.pas' {RepriceSiteForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

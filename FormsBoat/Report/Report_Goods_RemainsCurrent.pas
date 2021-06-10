@@ -142,6 +142,7 @@ type
     GuidesGoodsGroup: TdsdGuides;
     MovementItemId: TcxGridDBColumn;
     cbPartNumber: TcxCheckBox;
+    CostSumm_Remains: TcxGridDBColumn;
   private
     { Private declarations }
   public
