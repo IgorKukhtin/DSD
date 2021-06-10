@@ -137,7 +137,7 @@ BEGIN
                -- Цена вх. без НДС, БЕЗ учета скидки
              , tmp.OperPrice AS OperPrice_orig
                -- Цена вх. без НДС, с учетом скидки
-             , zfCalc_SummDiscountTax (tmp.OperPrice, vbDiscountTax) AS OperPrice
+             , CASE WHEN vbDiscountTax <> 0 THEN zfCalc_SummDiscountTax (tmp.OperPrice, vbDiscountTax) ELSE tmp.OperPrice END AS OperPrice
                -- 
              , tmp.CountForPrice
 
