@@ -1,14 +1,15 @@
 -- Function: zfCalc_SalePriceSite
 
-DROP FUNCTION IF EXISTS zfCalc_SalePriceSite(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_SalePriceSite(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SalePriceSite(
     IN inPriceWithVAT        TFloat    , -- Цена С НДС
     IN inMarginPercent       TFloat    , -- % наценки в КАТЕГОРИИ
     IN inIsTop               Boolean   , -- ТОП позиция
     IN inPercentMarkup       TFloat    , -- % наценки у товара
-    IN inJuridicalPercent    TFloat    , -- % корректировки у Юр Лица для ТОПа
+    IN inPercentMarkupPrice  TFloat    , -- % наценки у товара для сайта
     IN inPrice               TFloat    , -- Цена у товара (фиксированная)
+    IN inPriceGods           TFloat    , -- Цена у товара (фиксированная пл сети)
     IN inPriceMax            TFloat      -- Максимальная цена для товара
 )
 RETURNS TFloat AS
@@ -17,21 +18,23 @@ $BODY$
   DECLARE vbPrice TFloat;
 BEGIN
 
+     -- !!!Цена у товара (фиксированная)!!!
+     IF COALESCE(inPrice, 0) <> 0  THEN 
+        RETURN inPrice;
+     END IF;
+     
      -- расчет % наценки
-     IF inIsTop AND COALESCE (inPercentMarkup, 0) > 0 THEN
+     IF COALESCE(inPercentMarkupPrice, 0) > 0
+     THEN
+       vbPercent := COALESCE (inPercentMarkupPrice, 0);
+     ELSEIF inIsTop AND COALESCE (inPercentMarkup, 0) > 0 AND COALESCE (inPercentMarkup, 0) < COALESCE (inMarginPercent, 0)  THEN
         -- для ТОП = % наценки у товара - % корректировки у Юр Лица для топа
-        vbPercent := COALESCE (inPercentMarkup, 0) - COALESCE (inJuridicalPercent, 0);
+        vbPercent := COALESCE (inPercentMarkup, 0);
      ELSE
         -- остальные = % наценки в КАТЕГОРИИ
         vbPercent := COALESCE (inMarginPercent, 0);
      END IF;
      
-     -- Если по категории меньше     
-     IF vbPercent > COALESCE (inMarginPercent, 0)
-     THEN
-        vbPercent := COALESCE (inMarginPercent, 0);     
-     END IF;
-
      -- вернули цену
      IF (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1)) < inPriceWithVAT
      THEN
@@ -40,11 +43,10 @@ BEGIN
        vbPrice := (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
      END IF;
      
-     -- !!!Цена у товара (фиксированная)!!!
-     IF COALESCE(inPrice, 0) <> 0 AND COALESCE(inPrice, 0) < vbPrice THEN 
-        vbPrice := inPrice;
-     END IF;
-
+     IF inIsTop AND COALESCE(inPriceGods, 0) > 0 AND COALESCE(inPriceGods, 0) < vbPrice
+     THEN
+       vbPrice := COALESCE(inPriceGods, 0);
+     END IF; 
 
      IF inPriceMax IS NOT NULL AND COALESCE (inPriceMax, 0) > 0 AND inPriceMax < vbPrice
      THEN
@@ -53,10 +55,23 @@ BEGIN
      
      RETURN vbPrice;
 
+/*     if inPriceWithVAT = 155.6
+     THEN
+     RAISE notice '<%> <%> <%> <%> <%> <%> <%> <%> ', 
+        inPriceWithVAT
+       ,inMarginPercent
+       ,inIsTop
+       ,inPercentMarkup
+       ,inPercentMarkupPrice
+       ,inPrice
+       ,inPriceGods
+       ,inPriceMax ;
+     END IF;
+*/
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_SalePriceSite(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
+ALTER FUNCTION zfCalc_SalePriceSite(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -65,4 +80,6 @@ ALTER FUNCTION zfCalc_SalePriceSite(TFloat, TFloat, Boolean, TFloat, TFloat, TFl
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  08.06.21                                                       * 
 */
--- тест select zfCalc_SalePriceSite(0.41, 4, False, 0, 0, 0, 0.0) 
+-- тест 
+
+select zfCalc_SalePriceSite(155.6, 4, True, 4, 0, 0, 0.0, 0.0) 
