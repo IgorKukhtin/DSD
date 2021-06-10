@@ -28,6 +28,14 @@ $BODY$
    DECLARE vbMovementId_Invoice Integer;
    DECLARE vbisComplete_Invoice Boolean;
 BEGIN
+     -- Проверка
+     IF COALESCE (inToId, 0) = 0
+     THEN
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Lieferanten>.' :: TVarChar
+                                               , inProcedureName := 'lpInsertUpdate_Movement_OrderPartner'
+                                               , inUserId        := vbUserId
+                                                );
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

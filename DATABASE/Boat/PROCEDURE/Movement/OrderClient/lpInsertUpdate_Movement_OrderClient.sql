@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
     IN inProductId           Integer   , -- Лодка
-    IN inMovementId_Invoice  Integer, 
+    IN inMovementId_Invoice  Integer,
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -29,6 +29,14 @@ $BODY$
    DECLARE vbMovementId_Invoice Integer;
    DECLARE vbisComplete_Invoice Boolean;
 BEGIN
+     -- Проверка
+     IF COALESCE (inFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Kunden>.' :: TVarChar
+                                               , inProcedureName := 'lpInsertUpdate_Movement_OrderClient'
+                                               , inUserId        := vbUserId
+                                                );
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -52,7 +60,7 @@ BEGIN
      -- сохранили значение <% скидки>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);     
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -63,14 +71,14 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
   --------
- 
+
  /*    --- находим сохраненный счет
      vbMovementId_Invoice := (SELECT MovementLinkMovement.MovementChildId
                               FROM MovementLinkMovement
                               WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                                 AND MovementLinkMovement.MovementId = ioId
                               );
-     --если счет меняется то нужно в старом удалить ссылку на тек документ 
+     --если счет меняется то нужно в старом удалить ссылку на тек документ
      IF COALESCE (vbMovementId_Invoice,0) <> COALESCE (inMovementId_Invoice,0) AND COALESCE (vbMovementId_Invoice,0) <> 0
      THEN
          vbisComplete_Invoice := FALSE;
@@ -161,31 +169,41 @@ BEGIN
      IF inProductId > 0
      THEN
          -- ищем строку док. с лодкой, находим  - перезаписываем, не находим создаем
-         vbMI_Id := (SELECT MovementItem.Id 
-                     FROM MovementItem 
+         vbMI_Id := (SELECT MovementItem.Id
+                     FROM MovementItem
                      WHERE MovementItem.MovementId = ioId
                        AND MovementItem.isErased = FALSE
                        AND MovementItem.DescId = zc_MI_Master()
                        AND MovementItem.ObjectId = inProductId
                     );
          -- сохраняем лодку в строчную часть
-         PERFORM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
-                                                        , inMovementId    := ioId
-                                                        , inGoodsId       := inProductId
-                                                        , inAmount        := 1  ::TFloat
-                                                        , ioOperPrice     := gpSelect.Basis_summ
-                                                        , inOperPriceList := gpSelect.Basis_summ_orig
-                                                        , inBasisPrice    := gpSelect.Basis_summ1_orig
-                                                        , inCountForPrice := 1  ::TFloat
-                                                        , inComment       := '' ::TVarChar
-                                                        , inUserId        := inUserId
-                                                        )
-         FROM gpSelect_Object_Product (FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
-         WHERE gpSelect.MovementId_OrderClient = ioId;
+         vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+                                      FROM gpSelect_Object_Product (FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
+                                      WHERE gpSelect.MovementId_OrderClient = ioId
+                                     )
+                    -- Результат
+                    SELECT tmp.ioId
+                    FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
+                                                                , inMovementId    := ioId
+                                                                , inGoodsId       := inProductId
+                                                                , inAmount        := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id), 1)
+                                                                , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                                , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                                , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                                , inCountForPrice := 1  ::TFloat
+                                                                , inComment       := '' ::TVarChar
+                                                                , inUserId        := inUserId
+                                                                 ) AS tmp
+                   );
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (vbMI_Id, inUserId, vbIsInsert);
+
+         -- пересчитали Итоговые суммы
+         PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (ioId);
 
      END IF;
-                                                      
-                                                      
+
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

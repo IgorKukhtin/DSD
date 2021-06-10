@@ -29,6 +29,12 @@ $BODY$
    DECLARE vbPriceListId Integer;
    DECLARE vbOperDate_pl TDateTime;
 BEGIN
+     -- Проверка
+     IF COALESCE (inGoodsId, 0) = 0 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар не определн.';
+     END IF;
+
      -- !!!временно - пока есть ошибка на моб устройстве с ценами!!!
      IF COALESCE (ioPrice, 0) = 0 -- AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
      THEN
@@ -137,6 +143,8 @@ BEGIN
 
      ELSE -- !!!обратно из прайса + проверка!!!!
 
+         IF inGoodsId > 0
+         THEN
           -- !!!замена!!!
           ioPrice:= lpGet_ObjectHistory_Price_check (inMovementId            := inMovementId
                                                    , inMovementItemId        := ioId
@@ -154,6 +162,7 @@ BEGIN
                                                    , inCountForPrice         := 1
                                                    , inUserId                := inUserId
                                                     );
+         END IF;
      END IF;
 
 

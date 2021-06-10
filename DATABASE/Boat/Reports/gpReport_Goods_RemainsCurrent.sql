@@ -391,7 +391,7 @@ BEGIN
            , tmpData.OperPriceList :: TFloat
 
            --, tmpData.OperPrice_cost   :: TFloat
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0) / tmpData.Amount_in
+           , CASE WHEN tmpData.Amount_in  <> 0 THEN (COALESCE (tmpData.TotalSummEKPrice,0) + COALESCE (tmpData.CostPrice_summ,0)) / tmpData.Amount_in
                   ELSE 0
              END :: TFloat AS OperPrice_cost
            , tmpData.CostPrice_summ        :: TFloat AS CostPrice

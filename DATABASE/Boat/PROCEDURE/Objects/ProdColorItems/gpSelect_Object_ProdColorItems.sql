@@ -183,6 +183,7 @@ BEGIN
                     WHERE Object_Product.DescId = zc_Object_Product()
                      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
                      AND (COALESCE (tmpOrderClient.MovementId, 0) = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
+                     AND (Object_Product.isErased = FALSE OR inIsErased = TRUE)
                    )
      -- существующие элементы Boat Structure
    , tmpRes_all AS (SELECT Object_ProdColorItems.Id         AS Id
@@ -314,7 +315,7 @@ BEGIN
 
          , Object_Product.Id                  ::Integer   AS ProductId
          , Object_Product.ObjectCode          ::Integer   AS ProductCode
-         , Object_Product.ValueData           ::TVarChar  AS ProductName
+         , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
 
          , Object_ReceiptProdModel.Id                    :: Integer  AS ReceiptProdModelId
          , Object_ReceiptProdModel.ValueData             :: TVarChar AS ReceiptProdModelName

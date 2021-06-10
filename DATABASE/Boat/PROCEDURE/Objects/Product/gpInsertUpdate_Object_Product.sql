@@ -100,6 +100,16 @@ BEGIN
                                             , inUserId        := vbUserId
                                              );
    END IF;
+   
+   -- Проверка
+   IF COALESCE (inClientId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Kunden>.' :: TVarChar
+                                             , inProcedureName := 'gpInsertUpdate_Object_Product'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+   
 
    -- Проверка
    IF COALESCE (inModelId, 0) = 0
@@ -220,7 +230,7 @@ BEGIN
                                                  , inMovementId_Invoice := tmp.MovementId_Invoice  ::Integer  --пересохраняем
                                                  , inComment          := tmp.Comment               ::TVarChar
                                                  , inUserId           := vbUserId     ::Integer
-                                                 )
+                                                  )
        FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, inOperDate_OrderClient, inSession) AS tmp;
    END IF;
 

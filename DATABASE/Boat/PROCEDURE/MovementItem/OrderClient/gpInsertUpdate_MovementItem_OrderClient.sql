@@ -28,10 +28,10 @@ BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-     
+
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioOperPrice
-   INTO ioId , ioOperPrice
+            INTO ioId , ioOperPrice
      FROM lpInsertUpdate_MovementItem_OrderClient (ioId
                                                  , inMovementId
                                                  , inGoodsId
@@ -44,7 +44,7 @@ BEGIN
                                                  , vbUserId
                                                  ) AS tmp;
 
-                  
+
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (inMovementId);
 

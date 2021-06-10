@@ -12,14 +12,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inOperDate         TDateTime,  --
     IN inPlanDate         TDateTime,  -- Плановая дата оплаты по Счету
     IN inVATPercent       TFloat   ,  --
-    IN inAmount           TFloat   ,  -- 
-    IN inInvNumberPartner TVarChar ,  -- 
-    IN inReceiptNumber    TVarChar ,  -- 
-    IN inComment          TVarChar ,  -- 
-    IN inObjectId         Integer  ,  -- 
-    IN inUnitId           Integer  ,  -- 
-    IN inInfoMoneyId      Integer  ,  -- 
-    IN inPaidKindId       Integer  ,  -- 
+    IN inAmount           TFloat   ,  --
+    IN inInvNumberPartner TVarChar ,  --
+    IN inReceiptNumber    TVarChar ,  --
+    IN inComment          TVarChar ,  --
+    IN inObjectId         Integer  ,  --
+    IN inUnitId           Integer  ,  --
+    IN inInfoMoneyId      Integer  ,  --
+    IN inPaidKindId       Integer  ,  --
     IN inUserId           Integer      -- сессия пользователя
 )
 RETURNS Integer
@@ -37,40 +37,44 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определено значение <УП статья назначения>.';
      END IF;
 
-      
-    -- определяем признак Создание/Корректировка
-    vbIsInsert:= COALESCE (ioId, 0) = 0;
-    
+
     -- inReceiptNumber формируется только для Amount > 0
     IF COALESCE (inAmount, 0) <= 0
     THEN
         inReceiptNumber := NULL;
     END IF;
-     
+
     -- сначала Parent
     IF inParentId > 0
     THEN
          -- если меняют на другой документ
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0 AND Movement.ParentId <> inParentId)
          THEN
-             -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со счетом
+             -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со Счетом
              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
          END IF;
 
-         -- в док. ParentId - это Заказ или Заказ сохраняеем связь со счетом
-         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
- 
+         -- если Счет уже есть
+         IF ioId > 0
+         THEN
+             -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
+             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
+         END IF;
+
     -- если был счет
     ELSEIF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0)
     THEN
-         -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со счетом
+         -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со Счетом
          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
     END IF;
 
 
+    -- определяем признак Создание/Корректировка
+    vbIsInsert:= COALESCE (ioId, 0) = 0;
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Invoice(), inInvNumber, inOperDate, inParentId, 0);
-    
+
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Object(), ioId, inObjectId);
     -- сохранили связь с <>
@@ -79,7 +83,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
- 
+
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Plan(), ioId, inPlanDate);
 
@@ -87,31 +91,38 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
     -- Сохранили свойство <Итого Сумма>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
-    
-    -- Примечание
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);    
-    -- Примечание
+
+    --  External Nr
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+    -- Официальный номер квитанции
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_ReceiptNumber(), ioId, inReceiptNumber);
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-    
+
+    -- если Счет был Создан
+    IF vbIsInsert = TRUE
+    THEN
+        -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
+        PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
+    END IF;
+
     -- !!!протокол через свойства конкретного объекта!!!
-     IF vbIsInsert = FALSE
-     THEN
-         -- сохранили свойство <Дата корректировки>
-         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
-         -- сохранили свойство <Пользователь (корректировка)>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
-     ELSE
-         IF vbIsInsert = TRUE
-         THEN
-             -- сохранили свойство <Дата создания>
-             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
-             -- сохранили свойство <Пользователь (создание)>
-             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
-         END IF;
-     END IF;
+    IF vbIsInsert = FALSE
+    THEN
+        -- сохранили свойство <Дата корректировки>
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+        -- сохранили свойство <Пользователь (корректировка)>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+    ELSE
+        IF vbIsInsert = TRUE
+        THEN
+            -- сохранили свойство <Дата создания>
+            PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+            -- сохранили свойство <Пользователь (создание)>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+        END IF;
+    END IF;
 
 
     -- сохранили протокол

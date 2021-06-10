@@ -256,6 +256,7 @@ BEGIN
                           WHERE Object_Product.DescId = zc_Object_Product()
                            AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
                            AND (COALESCE (tmpOrderClient.MovementId, 0) = inMovementId_OrderClient OR inMovementId_OrderClient = 0)
+                           AND (Object_Product.isErased = FALSE OR inIsErased = TRUE)
                           )
       -- существующие элементы ProdOptItems
     , tmpProdOptItems AS (SELECT Object_ProdOptItems.Id           AS Id
@@ -439,6 +440,8 @@ BEGIN
                     WHERE tmpProdOptItems.ProdOptionsId IS NULL
                       -- если нужны все
                       AND inIsShowAll = TRUE
+                      -- или так или есть связь с комплектующим ?
+                      AND tmpProdOptions.SalePrice > 0
                    )
          -- свойства для GoodsId
        , tmpGoods AS (SELECT tmpObject.GoodsId                          AS GoodsId
@@ -476,7 +479,7 @@ BEGIN
          , tmpRes.Id
          , tmpRes.Code
          , tmpRes.Name
-         , ROW_NUMBER() OVER (PARTITION BY tmpProduct.Id ORDER BY CASE WHEN tmpRes.Id > 0 THEN 0 ELSE 1 END, tmpRes.Id ASC, Object_ProdOptions.ObjectCode ASC) :: Integer AS NPP
+         , ROW_NUMBER() OVER (PARTITION BY tmpProduct.Id ORDER BY CASE WHEN tmpRes.Id > 0 THEN 0 WHEN tmpRes.ProdColorPatternId > 0 THEN 1 ELSE 2 END, tmpRes.Id ASC, Object_ProdOptions.ObjectCode ASC) :: Integer AS NPP
 
          , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
@@ -484,7 +487,7 @@ BEGIN
          , (tmpProduct.Id :: TVarChar || '_' || tmpRes.MovementId_OrderClient :: TVarChar) :: TVarChar KeyId
 
          , tmpProduct.Id                  ::Integer   AS ProductId
-         , tmpProduct.ValueData           ::TVarChar  AS ProductName
+         , zfCalc_ValueData_isErased (tmpProduct.ValueData, tmpProduct.isErased) AS ProductName
 
          , Object_ProdOptions.Id                          AS ProdOptionsId
          , Object_ProdOptions.ValueData                   AS ProdOptionsName

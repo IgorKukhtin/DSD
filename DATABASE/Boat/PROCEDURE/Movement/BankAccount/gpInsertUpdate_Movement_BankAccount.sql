@@ -78,6 +78,13 @@ BEGIN
                                   AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
          WHERE Object_Client.Id = inMoneyPlaceId;
 
+         -- проводим Документ
+         IF vbUserId = lpCheckRight (vbUserId :: TVarChar, zc_Enum_Process_Complete_Invoice())
+         THEN
+              PERFORM lpComplete_Movement_Invoice (inMovementId := inMovementId_Invoice
+                                                 , inUserId     := vbUserId);
+         END IF;
+
      END IF;
      
 

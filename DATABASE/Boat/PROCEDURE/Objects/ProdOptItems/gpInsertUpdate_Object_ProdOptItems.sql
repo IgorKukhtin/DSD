@@ -27,6 +27,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMI_Id Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptItems());
@@ -45,6 +46,17 @@ BEGIN
    IF COALESCE (inMovementId_OrderClient, 0) = 0
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> не установлен.'
+                                             , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                             , inUserId        := vbUserId
+                                              );
+   END IF;
+
+   -- Поиск - строка inMovementId_OrderClient с Лодкой
+   vbMI_Id := (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_OrderClient AND MI.ObjectId = inProductId AND MI.isErased = FALSE AND MI.DescId = zc_MI_Master());
+   -- Проверка
+   IF COALESCE (vbMI_Id, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.В Документе <Заказ Клиента> не найден главный элемент.'
                                              , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                              , inUserId        := vbUserId
                                               );
@@ -189,6 +201,33 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+
+   -- пересохраняем - элемент  - Заказ Клиента
+   vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+                                FROM gpSelect_Object_Product (FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
+                                WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
+                               )
+              -- Результат
+              SELECT tmp.ioId
+              FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
+                                                          , inMovementId    := inMovementId_OrderClient
+                                                          , inGoodsId       := inProductId
+                                                          , inAmount        := (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id)
+                                                          , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                          , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                          , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                          , inCountForPrice := 1  ::TFloat
+                                                          , inComment       := '' ::TVarChar
+                                                          , inUserId        := vbUserId
+                                                           ) AS tmp
+             );
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (vbMI_Id, vbUserId, FALSE);
+   -- пересчитали Итоговые суммы - Заказ Клиента
+   PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (inMovementId_OrderClient);
+
 
 END;
 $BODY$
