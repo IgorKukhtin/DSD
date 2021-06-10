@@ -3,7 +3,7 @@
   ClientHeight = 329
   ClientWidth = 463
   ExplicitWidth = 469
-  ExplicitHeight = 354
+  ExplicitHeight = 357
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -183,15 +183,15 @@
     Width = 159
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 107
-    Top = 276
+    Left = 35
+    Top = 164
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 64
-    Top = 276
+    Left = 80
+    Top = 228
   end
   inherited ActionList: TActionList
-    Left = 159
+    Left = 175
     Top = 275
   end
   inherited FormParams: TdsdFormParams
@@ -208,6 +208,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 40
     Top = 268
   end
   inherited spInsertUpdate: TdsdStoredProc
@@ -454,8 +455,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 216
+    Top = 224
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -699,15 +699,11 @@
       item
         Name = 'MovementId_parent'
         Value = Null
-        Component = GuidesParent
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_parent'
         Value = Null
-        Component = GuidesParent
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -758,7 +754,14 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromId'
+        Name = 'Comment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
         Value = ''
         Component = GuidesObject
         ComponentItem = 'Key'
@@ -766,7 +769,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromName'
+        Name = 'ClientName'
         Value = ''
         Component = GuidesObject
         ComponentItem = 'TextValue'
@@ -775,26 +778,33 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountOut'
-        Value = 0.000000000000000000
-        Component = ceAmountIn
-        DataType = ftFloat
-        ParamType = ptInput
+        Name = 'MasterClientId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountIn'
-        Value = 0.000000000000000000
-        Component = ceAmountOut
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment_Invoice'
-        Value = Null
+        Name = 'MasterClientName'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -813,23 +823,8 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientId'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterClientName'
-        Value = Null
-        Component = GuidesObject
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 172
-    Top = 219
+    Left = 356
+    Top = 183
   end
 end

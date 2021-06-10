@@ -15,7 +15,6 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides1
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -1638,9 +1637,15 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = edClient
+      end
+      item
+        Component = GuidesClient
       end>
-    Left = 584
-    Top = 48
+    Left = 640
+    Top = 32
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_OrderClient'

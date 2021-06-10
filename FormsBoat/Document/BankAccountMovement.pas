@@ -49,8 +49,8 @@ type
     edInvNumberPartner: TcxTextEdit;
     GuidesFiller: TGuidesFiller;
     cxLabel4: TcxLabel;
-    edParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
+    edParent: TcxButtonEdit;
   private
     { Private declarations }
   public
