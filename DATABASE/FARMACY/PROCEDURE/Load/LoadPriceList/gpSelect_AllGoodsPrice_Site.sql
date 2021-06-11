@@ -35,9 +35,10 @@ RETURNS TABLE (
     MinPriceIncome      TFloat,     -- мин цена партий
     MaxPriceIncome      TFloat,     -- макс цена партий
     MidPriceSale        TFloat,     -- средн€€ цена остатка
-    MinPriceUnit        TFloat,     -- ћин отпускна€ цена в аптеках
+    MidPriceUnit        TFloat,     -- —редн€€ отпускна€ цена в аптеках
     MidPriceDiff        TFloat,     -- отклонение от средн€€ цена остатка
     UnitPriceDiff       TFloat,     -- отклонение от минимальной цена подразделений
+    MidPriceUnitDiff    TFloat,     -- отклонение цен остатка в подразделени€х
     MinExpirationDate   TDateTime,  -- ћинимальный срок годности препарата на точке
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
     isPriceFix          Boolean ,   -- фиксированна€ цена точки
@@ -223,7 +224,8 @@ BEGIN
             Object_Area.ValueData                            AS AreaName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
-            SelectMinPrice_AllGoods.MinPriceUnit             AS MinPriceUnit,
+            SelectMinPrice_AllGoods.MidPriceUnit             AS MidPriceUnit,
+            SelectMinPrice_AllGoods.MidPriceUnitDiff         AS MidPriceUnitDiff,
             SelectMinPrice_AllGoods.MidPriceIncome           AS MidPriceIncome,
             SelectMinPrice_AllGoods.MinPriceIncome           AS MinPriceIncome,
             SelectMinPrice_AllGoods.MaxPriceIncome           AS MaxPriceIncome,
@@ -361,13 +363,14 @@ BEGIN
         ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
 
         ROUND ((ResultSet.NewPrice - ResultSet.LastPrice) * ResultSet.RemainsCount, 2) :: TFloat AS SumReprice,
-        ResultSet.MidPriceIncome :: TFloat,
-        ResultSet.MinPriceIncome :: TFloat,
-        ResultSet.MaxPriceIncome :: TFloat,
+       (ResultSet.MidPriceIncome * (100 + ResultSet.NDS)/100)::TFloat AS MidPriceIncome,
+       (ResultSet.MinPriceIncome * (100 + ResultSet.NDS)/100)::TFloat AS MinPriceIncome,
+       (ResultSet.MaxPriceIncome * (100 + ResultSet.NDS)/100)::TFloat AS MaxPriceIncome,
         ResultSet.MidPriceSale,
-        ResultSet.MinPriceUnit,        
+        ResultSet.MidPriceUnit,        
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff,
-        CAST (CASE WHEN COALESCE(ResultSet.MinPriceUnit,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MinPriceUnit) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS UnitPriceDiff,
+        CAST (CASE WHEN COALESCE(ResultSet.MidPriceUnit,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceUnit) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS UnitPriceDiff,
+        ResultSet.MidPriceUnitDiff,
         ResultSet.MinExpirationDate,
         ResultSet.isOneJuridical,
         ResultSet.isPriceFix,
