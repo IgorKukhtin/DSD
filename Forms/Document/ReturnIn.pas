@@ -240,6 +240,35 @@ type
     actPrintAkt: TdsdPrintAction;
     bbPrintAkt: TdxBarButton;
     Amount_find: TcxGridDBColumn;
+    cxTabSheet1: TcxTabSheet;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ord: TcxGridDBColumn;
+    GoodsGroupNameFull_ch2: TcxGridDBColumn;
+    GoodsCode_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    GoodsKindName_ch2: TcxGridDBColumn;
+    MeasureName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    ReturnKindName_ch2: TcxGridDBColumn;
+    SubjectDocName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    spSelectDetail: TdsdStoredProc;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    spInsertUpdateMIDetail: TdsdStoredProc;
+    spInsertMaskMIDetail: TdsdStoredProc;
+    cxLabel27: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    cxLabel28: TcxLabel;
+    edReturnKind: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
+    GuidesReturnKind: TdsdGuides;
+    actSubjectDocOpenForm: TOpenChoiceForm;
+    actReturnKindOpenForm: TOpenChoiceForm;
+    DetailCDS_str: TClientDataSet;
+    DetailDS_str: TDataSource;
+    actUpdateDetailDS_str: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
