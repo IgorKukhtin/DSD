@@ -1399,7 +1399,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
 
