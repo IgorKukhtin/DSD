@@ -68,7 +68,7 @@ BEGIN
         SELECT Movement_cost.Id                   AS MovementId_cost
              , _tmpMovement_from.MovementId_from  AS MovementId_from
              , Movement_cost.ParentId             AS MovementId_to
-               -- 
+               --
              , _tmpMovement_from.InfoMoneyId      AS InfoMoneyId_from
               -- сумма без НДС со Скидкой
              , SUM (zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.EKPrice, Object_PartionGoods.CountForPrice)) AS OperSumm
@@ -83,7 +83,7 @@ BEGIN
                                     )
              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id       = Movement_cost.ParentId
                                                    AND Movement_Income.DescId   = zc_Movement_Income()
-                                                   AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                                                   AND Movement_Income.StatusId <> zc_Enum_Status_Erased()
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Income.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
@@ -143,6 +143,21 @@ BEGIN
        AND tmp.MovementId_to   = _tmpMovement_to.MovementId_to
     ;
 
+     --- !!!Вычитаем !!!Предыдущие затраты в док прихода
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCost(), _tmpMovement_to.MovementId_to
+                                         , COALESCE (MovementFloat_TotalSummCost.ValueData, 0)
+                                         - COALESCE (MovementFloat_AmountCost.ValueData, 0)
+                                          )
+     FROM _tmpMovement_to
+          JOIN Movement ON Movement.Id       = _tmpMovement_to.MovementId_cost
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+          LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                  ON MovementFloat_AmountCost.MovementId = _tmpMovement_to.MovementId_cost
+                                 AND MovementFloat_AmountCost.DescId     = zc_MovementFloat_AmountCost()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCost
+                                  ON MovementFloat_TotalSummCost.MovementId = _tmpMovement_to.MovementId_to
+                                 AND MovementFloat_TotalSummCost.DescId     = zc_MovementFloat_TotalSummCost()
+     ;
      -- распровели
      PERFORM lpUnComplete_Movement (inMovementId := _tmpMovement_to.MovementId_cost
                                   , inUserId     := inUserId
@@ -152,13 +167,15 @@ BEGIN
     ;
 
      -- сохранили новую сумму "затрат"
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), _tmpMovement_to.MovementId_cost, OperSumm_calc)
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), _tmpMovement_to.MovementId_cost, _tmpMovement_to.OperSumm_calc)
      FROM _tmpMovement_to;
+
      -- обновили дату
      UPDATE Movement SET OperDate = Movement_Income.OperDate
      FROM _tmpMovement_to
           JOIN Movement AS Movement_Income ON Movement_Income.Id = _tmpMovement_to.MovementId_to
      WHERE Movement.Id = _tmpMovement_to.MovementId_cost;
+
 
 
      -- проводки для !!!ВСЕХ!!! zc_Movement_IncomeCost
@@ -239,11 +256,11 @@ BEGIN
                                             AND MLO_Object.DescId     = zc_MovementLinkObject_Object()
           ;
 
-     -- 
+     --
      UPDATE _tmpItem SET AccountId_50101 = tmp.AccountId
-     FROM (WITH tmp AS (SELECT DISTINCT _tmpItem.InfoMoneyDestinationId FROM _tmpItem) 
+     FROM (WITH tmp AS (SELECT DISTINCT _tmpItem.InfoMoneyDestinationId FROM _tmpItem)
                 SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_50000()    -- Расходы будущих периодов
-                                                  , inAccountDirectionId     := zc_Enum_AccountDirection_50100() -- 
+                                                  , inAccountDirectionId     := zc_Enum_AccountDirection_50100() --
                                                   , inInfoMoneyDestinationId := tmp.InfoMoneyDestinationId
                                                   , inInfoMoneyId            := NULL
                                                   , inUserId                 := inUserId
@@ -253,9 +270,9 @@ BEGIN
            ) AS tmp
      WHERE _tmpItem.InfoMoneyDestinationId = tmp.InfoMoneyDestinationId
     ;
-     -- 
+     --
      UPDATE _tmpItem SET ContainerId_50101 = tmp.ContainerId
-     FROM (WITH tmp AS (SELECT DISTINCT _tmpItem.AccountId_50101, _tmpItem.InfoMoneyId, _tmpItem.PartnerId FROM _tmpItem) 
+     FROM (WITH tmp AS (SELECT DISTINCT _tmpItem.AccountId_50101, _tmpItem.InfoMoneyId, _tmpItem.PartnerId FROM _tmpItem)
                 SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                              , inParentId          := NULL
                                              , inObjectId          := tmp.AccountId_50101
@@ -316,7 +333,7 @@ BEGIN
             , 0                                       AS ParentId
             , _tmpItem.AccountId_50101                AS AccountId              -- Счет есть всегда
             , 0                                       AS AnalyzerId             -- нет аналитики
-            , _tmpItem.PartnerId                      AS ObjectId_Analyzer      -- 
+            , _tmpItem.PartnerId                      AS ObjectId_Analyzer      --
             , 0                                       AS PartionId              -- Партия
             , 0                                       AS WhereObjectId_Analyzer -- Место учета
             , Container.ObjectId                      AS AccountId_Analyzer     -- Счет - корреспонденет
@@ -335,12 +352,15 @@ BEGIN
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId;
 
-     ---!!Добавляем сформированные затраты в док прихода
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCost(), _tmpMovement_to.MovementId_to,(COALESCE(MovementFloat_TotalSummCost.ValueData,0) + COALESCE (OperSumm_calc,0)) ) 
+     --- !!!Добавляем сформированные затраты в док Приход
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCost(), _tmpMovement_to.MovementId_to
+                                         , COALESCE (MovementFloat_TotalSummCost.ValueData, 0)
+                                         + COALESCE (_tmpMovement_to.OperSumm_calc, 0)
+                                          )
      FROM _tmpMovement_to
           LEFT JOIN MovementFloat AS MovementFloat_TotalSummCost
                                   ON MovementFloat_TotalSummCost.MovementId = _tmpMovement_to.MovementId_to
-                                 AND MovementFloat_TotalSummCost.DescId = zc_MovementFloat_TotalSummCost()
+                                 AND MovementFloat_TotalSummCost.DescId     = zc_MovementFloat_TotalSummCost()
      ;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

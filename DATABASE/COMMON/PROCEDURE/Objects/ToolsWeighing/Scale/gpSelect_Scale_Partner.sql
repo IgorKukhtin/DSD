@@ -370,6 +370,10 @@ BEGIN
                            WHERE Object_Partner.IsErased = FALSE
                              AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
                                   OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
+                                  -- филиал  иев + филиал Ћьвов
+                                  OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 8379 AND vbBranchId_Constraint = 3080683)
+                                  -- филиал Ћьвов + филиал  иев
+                                  OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
                                   OR vbIsConstraint = FALSE
                                  )
                            /*GROUP BY Object_Partner.Id
