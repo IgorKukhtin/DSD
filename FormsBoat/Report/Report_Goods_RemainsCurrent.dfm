@@ -185,6 +185,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_reserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -225,6 +230,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_reserve
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -430,6 +440,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1089#1082#1083#1072#1076#1077
+            Options.Editing = False
+            Width = 55
+          end
+          object Amount_reserve: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
+            DataBinding.FieldName = 'Amount_reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074' ('#1047#1072#1082#1072#1079')'
             Options.Editing = False
             Width = 55
           end
@@ -1757,6 +1779,58 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
     end
+    object actOpenOrderClient_reserve: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1088#1077#1079#1077#1088#1074')>'
+      Hint = #1046#1091#1088#1085#1072#1083' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1088#1077#1079#1077#1088#1074')>'
+      ImageIndex = 26
+      FormName = 'TOrderClientJournalReserveForm'
+      FormNameParam.Value = 'TOrderClientJournalReserveForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPeriodAll'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1876,6 +1950,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenOrderClient_reserve'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1966,6 +2044,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object bbPrint_Curr: TdxBarButton
       Action = actPrint_Curr
+      Category = 0
+    end
+    object bbOpenOrderClient_reserve: TdxBarButton
+      Action = actOpenOrderClient_reserve
       Category = 0
     end
   end

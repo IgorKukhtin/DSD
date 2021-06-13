@@ -142,6 +142,8 @@ type
     GuidesGoodsGroup: TdsdGuides;
     MovementItemId: TcxGridDBColumn;
     cbPartNumber: TcxCheckBox;
+    actOpenOrderClient_reserve: TdsdOpenForm;
+    bbOpenOrderClient_reserve: TdxBarButton;
   private
     { Private declarations }
   public

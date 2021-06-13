@@ -266,7 +266,8 @@ uses
   DocTag in '..\..\FormsBoat\Guides\DocTag.pas' {DocTagForm: TParentForm},
   DocTagEdit in '..\..\FormsBoat\Guides\DocTagEdit.pas' {DocTagEditForm: TParentForm},
   ProductDocumentPhotoEdit in '..\..\FormsBoat\Guides\ProductDocumentPhotoEdit.pas' {ProductDocumentPhotoEditForm: TParentForm},
-  IncomeCostJournalByInvoice in '..\..\FormsBoat\Document\IncomeCostJournalByInvoice.pas' {IncomeCostJournalByInvoiceForm: TParentForm};
+  IncomeCostJournalByInvoice in '..\..\FormsBoat\Document\IncomeCostJournalByInvoice.pas' {IncomeCostJournalByInvoiceForm: TParentForm},
+  OrderClientJournalReserve in '..\..\FormsBoat\Document\OrderClientJournalReserve.pas' {OrderClientJournalReserveForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

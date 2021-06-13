@@ -56,6 +56,7 @@ RETURNS TABLE (MovementItemId       Integer
              , Remains_sum       TFloat --сумма остатка
              , OperPrice_Remains TFloat
              , CostSumm_Remains  TFloat
+             , Amount_reserve    TFloat
 
              , Comment_in       TVarChar
              , DiscountTax_in   TFloat
@@ -155,6 +156,25 @@ BEGIN
                                 FROM Object_PartionGoods
                                 WHERE Object_PartionGoods.ObjectId IN (SELECT DISTINCT tmpContainer_All.ObjectId FROM tmpContainer_All)
                                 )
+   -- "Резерв кол-во" из zc_Movement_OrderClient.zc_MI_Child
+   , tmpReserv AS (SELECT MovementItem.PartionId            AS PartionId
+                        , MILinkObject_Unit.ObjectId        AS UnitId
+                        , MovementItem.ObjectId             AS ObjectId
+                        , COALESCE (MovementItem.Amount, 0) AS Amount
+                   FROM Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId     = zc_MI_Child()
+                                               AND MovementItem.isErased   = FALSE
+                                               AND MovementItem.ParentId > 0
+                        
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                         ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                   WHERE Movement.DescId = zc_Movement_OrderClient()
+                     AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     AND COALESCE (MovementItem.Amount 0) > 0
+                   )
+
    -- Остатки + Партии
    , tmpContainer AS (SELECT Container.WhereObjectId        AS UnitId
                            --, Container.PartionId            AS PartionId
@@ -191,6 +211,8 @@ BEGIN
                            , Object_PartionGoods.Amount     AS Amount_in
                            , Object_PartionGoods.UnitId     AS UnitId_in
                            
+                           , COALESCE (tmpReserv.Amount,0) AS Amount_reserve
+                           
                              --  № п/п - только для = 1 возьмем Amount_in
                            , ROW_NUMBER() OVER (PARTITION BY Container.PartionId ORDER BY CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
@@ -205,6 +227,9 @@ BEGIN
                                                       AND tmpContainer_Summ.ObjectId = Container.ObjectId
                             -- цена из Прайс-листа
                            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Container.ObjectId
+                           
+                           LEFT JOIN tmpReserv ON tmpReserv.PartionId = Container.PartionId
+                                              AND tmpReserv.ObjectId = Container.ObjectId
 
                       WHERE (Object_PartionGoods.FromId = inPartnerId  OR inPartnerId = 0)
                       )
@@ -259,8 +284,9 @@ BEGIN
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPriceList))                       AS TotalSummPriceList
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.CostPrice))                           AS TotalSumm_cost
                               , SUM (zfCalc_SummPriceList (tmpContainer.Remains, tmpContainer.OperPrice_cost))                      AS TotalSummPrice_cost
+                              , SUM (tmpContainer.Amount_reserve)   AS Amount_reserve
 
-                              , STRING_AGG (MS_Comment.ValueData, ' ;') ::TVarChar AS Comment_in
+                              , STRING_AGG (DISTINCT MS_Comment.ValueData, ' ;') ::TVarChar AS Comment_in
                               , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
                               , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
                               , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
@@ -342,6 +368,7 @@ BEGIN
                           , SUM (tmpData_All.TotalSummPriceList)  AS TotalSummPriceList
                           , SUM (tmpData_All.TotalSummPrice_cost) AS TotalSummPrice_cost
                           , SUM (tmpData_All.TotalSumm_cost)      AS TotalSumm_cost
+                          , SUM (tmpData_All.Amount_reserve)       AS Amount_reserve
                      FROM tmpData_All
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
                      GROUP BY tmpData_All.UnitId
@@ -451,6 +478,9 @@ BEGIN
                   ELSE 0
              END :: TFloat AS OperPrice_Remains
            , (COALESCE (tmpData.Remains_sum,0) - COALESCE (tmpData.TotalSummEKPrice,0)) :: TFloat AS CostSumm_Remains --остаток по сумме затрат
+           
+           -- резерв
+           , COALESCE (tmpData.Amount_reserve,0) ::TFloat AS Amount_reserve
 
            , tmpData.Comment_in       :: TVarChar
            , tmpData.DiscountTax_in   :: TFloat
@@ -494,4 +524,32 @@ $BODY$
 -- select * from gpReport_Goods_RemainsCurrent (inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inIsRemains := 'False' ,  inSession := '2');
 
 --select * from Object_PartionGoods limit 10
-select * from gpReport_Goods_RemainsCurrent(inUnitId := 35139 , inPartnerId := 2934 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsRemains := 'False' , inisPartNumber := 'False' ,  inSession := '5');
+--select * from gpReport_Goods_RemainsCurrent(inUnitId := 35139 , inPartnerId := 2934 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsRemains := 'False' , inisPartNumber := 'False' ,  inSession := '5');
+
+
+/*
+
+        SELECT MovementItem.PartionId                    AS PartionId
+             , MILinkObject_Unit.ObjectId                AS UnitId
+             , COALESCE (MILinkObject_Goods.ObjectId, 0) AS GoodsId
+             , MovementItem.ObjectId                     AS ObjectId
+
+             , MovementItem.Amount                       AS Amount
+--, CASE WHEN Object_Object.DescId = zc_Object_ReceiptService() THEN 0 ELSE MovementItem.Amount  END :: TFloat AS Amount_unit        -- Количество резерв
+        FROM Movement
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Child()
+                                    AND MovementItem.isErased   = FALSE
+                                    AND COALESCE (MovementItem.Amount,0) > 0
+                                    AND MovementItem.ParentId > 0
+         
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+      WHERE Movement.DescId = zc_Movement_OrderClient()
+    AND Movement.StatusId = zc_Enum_Status_Complete()
+    
+    */

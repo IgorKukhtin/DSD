@@ -2,18 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpCheckDesc_Movement_IncomeCost (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpCheckDesc_Movement_IncomeCost (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inisShowAll     Boolean      , --
     IN inIsErased      Boolean   ,
     IN inInfoMoneyId   Integer   ,
     IN inSession       TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE (MovementId Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer,MovementId Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Comment TVarChar , DescId Integer, DescName TVarChar
+             , InvNumber_cost TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat, Amount_NotVAT TFloat, Amount_VAT TFloat
@@ -83,6 +86,7 @@ BEGIN
                      )
        -- —чета, которые уже попали в zc_Movement_IncomeCost, их не всегда надо показывать
      , tmpInvoice_check AS (SELECT tmpInvoice.MovementId
+                                 , Movement.Id AS MovementId_cost
                             FROM tmpInvoice
                                  JOIN MovementFloat AS MovementFloat_MovementId 
                                                     ON MovementFloat_MovementId.ValueData = tmpInvoice.MovementId
@@ -91,7 +95,8 @@ BEGIN
                                               AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                            )
         -- –≈«”Ћ№“ј“
-        SELECT tmpInvoice.MovementId
+        SELECT tmpInvoice.MovementId AS Id
+             , tmpInvoice.MovementId
              , tmpInvoice.InvNumber
              , tmpInvoice.InvNumber_Full
              , tmpInvoice.OperDate
@@ -100,6 +105,8 @@ BEGIN
              , tmpInvoice.Comment
              , tmpInvoice.DescId
              , tmpInvoice.DescName
+
+             , zfCalc_InvNumber_isErased ('', Movement_IncomeCost.InvNumber, Movement_IncomeCost.OperDate, Movement_IncomeCost.StatusId) AS InvNumber_cost
              
              , Object_Partner.ObjectCode   AS PartnerCode
              , Object_Partner.ValueData    AS PartnerName
@@ -124,7 +131,9 @@ BEGIN
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpInvoice.PartnerId
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpInvoice.InfoMoneyId
              LEFT JOIN tmpInvoice_check ON tmpInvoice_check.MovementId = tmpInvoice.MovementId
-        WHERE tmpInvoice_check.MovementId IS NULL
+             LEFT JOIN Movement AS Movement_IncomeCost ON Movement_IncomeCost.Id = tmpInvoice_check.MovementId_cost
+                                        AND inisShowAll = TRUE
+        WHERE (tmpInvoice_check.MovementId IS NULL OR inisShowAll = TRUE)
       ;
 
 END;
@@ -138,4 +147,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.01.2021'::TDateTime, inEndDate:= '31.03.2021'::TDateTime, inIsErased:= FALSE, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.01.2021'::TDateTime, inEndDate:= '31.03.2021'::TDateTime, inisShowAll:= FALSE, inIsErased:= FALSE, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())

@@ -42,6 +42,9 @@ type
     Amount_NotVAT: TcxGridDBColumn;
     Amount_VAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    InvNumber_cost: TcxGridDBColumn;
   private
     { Private declarations }
   public

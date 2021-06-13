@@ -4,8 +4,9 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
   ClientWidth = 1366
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -138
   ExplicitWidth = 1382
-  ExplicitHeight = 447
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -218,6 +219,13 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
+          object InvNumber_cost: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1047#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'InvNumber_cost'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 162
+          end
         end
       end
     end
@@ -292,7 +300,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -419,6 +427,25 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1073#1077#1079' '#1079#1072#1090#1088#1072#1090
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1073#1077#1079' '#1079#1072#1090#1088#1072#1090
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -443,6 +470,14 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -481,7 +516,19 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -543,6 +590,10 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
       Visible = ivAlways
       ImageIndex = 29
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
