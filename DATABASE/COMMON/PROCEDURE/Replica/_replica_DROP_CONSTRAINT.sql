@@ -4,6 +4,7 @@ alter table containerlinkobject DROP CONSTRAINT  fk_containerlinkobject_containe
 alter table historycost DROP CONSTRAINT  fk_historycost_containerid;
 alter table movementitemcontainer DROP CONSTRAINT  fk_movementitemcontainer_containerid;
 alter table container DROP CONSTRAINT  fk_container_descid_containerdesc;
+alter table container DROP CONSTRAINT  fk_container_parentid_container;
 alter table containerlinkobject DROP CONSTRAINT  fk_containerlinkobject_desc;
 alter table defaultvalue DROP CONSTRAINT  fk_defaultvalue_defaultkeyid;
 alter table movement DROP CONSTRAINT  fk_movement_parentid;
