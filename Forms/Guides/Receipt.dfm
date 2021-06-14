@@ -3,7 +3,7 @@ object ReceiptForm: TReceiptForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1094#1077#1087#1090#1091#1088#1099'>'
   ClientHeight = 587
-  ClientWidth = 1152
+  ClientWidth = 1065
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object ReceiptForm: TReceiptForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 1152
+    Width = 1065
     Height = 271
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1152
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -537,13 +538,14 @@ object ReceiptForm: TReceiptForm
   object cxGridReceiptChild: TcxGrid
     Left = 0
     Top = 337
-    Width = 1152
+    Width = 1065
     Height = 250
     Align = alBottom
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 1152
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -852,6 +854,21 @@ object ReceiptForm: TReceiptForm
         Visible = False
         Width = 60
       end
+      object chReceiptLevelName: TcxGridDBColumn
+        Caption = #1069#1090#1072#1087#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'ReceiptLevelName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actReceiptLevelChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
     end
     object cxGridLevel2: TcxGridLevel
       GridView = cxGridDBTableViewReceiptChild
@@ -860,18 +877,20 @@ object ReceiptForm: TReceiptForm
   object cxBottomSplitter: TcxSplitter
     Left = 0
     Top = 332
-    Width = 1152
+    Width = 1065
     Height = 5
     AlignSplitter = salBottom
     Control = cxGridReceiptChild
+    ExplicitWidth = 1152
   end
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 1152
+    Width = 1065
     Height = 35
     Align = alTop
     TabOrder = 7
+    ExplicitWidth = 1152
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9
@@ -906,6 +925,25 @@ object ReceiptForm: TReceiptForm
       TabOrder = 3
       Width = 173
     end
+  end
+  object cxLabel2: TcxLabel
+    Left = 755
+    Top = 9
+    Caption = #1069#1090#1072#1087#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072':'
+    Visible = False
+  end
+  object edReceiptLevel: TcxButtonEdit
+    Left = 872
+    Top = 8
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Visible = False
+    Width = 173
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1409,6 +1447,33 @@ object ReceiptForm: TReceiptForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actReceiptLevelChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ReceiptChildForm'
+      FormName = 'TReceiptLevelForm'
+      FormNameParam.Value = 'TReceiptLevelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ReceiptLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ReceiptLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object ReceiptChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1843,6 +1908,7 @@ object ReceiptForm: TReceiptForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ValueColumn = Color_Disabled
@@ -1855,6 +1921,7 @@ object ReceiptForm: TReceiptForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 272
     Top = 184
@@ -1924,7 +1991,7 @@ object ReceiptForm: TReceiptForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1933,7 +2000,7 @@ object ReceiptForm: TReceiptForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1954,6 +2021,14 @@ object ReceiptForm: TReceiptForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'ReceiptLevelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2096,6 +2171,7 @@ object ReceiptForm: TReceiptForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = GroupNumber
@@ -2150,6 +2226,7 @@ object ReceiptForm: TReceiptForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 448
     Top = 360
@@ -2480,5 +2557,34 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 554
     Top = 493
+  end
+  object GuidesReceiptLevel: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptLevel
+    FormNameParam.Value = 'TReceiptLevelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptLevelForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 976
+    Top = 3
   end
 end

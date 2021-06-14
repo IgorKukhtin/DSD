@@ -165,6 +165,7 @@ BEGIN
                                              , inEndDate            := tmp.EndDate
                                              , inComment            := tmp.Comment 
                                              , inReceiptId          := ioId            --tmp.ReceiptId
+                                             , inReceiptLevelId     := tmp.ReceiptLevelId
                                              , inGoodsId            := tmp.GoodsId
                                              , inGoodsKindId        := tmp.GoodsKindId
                                              , inSession            := inSession

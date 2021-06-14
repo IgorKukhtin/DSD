@@ -290,6 +290,7 @@ object ProductForm: TProductForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -1224,19 +1225,6 @@ object ProductForm: TProductForm
           Options.Editing = False
           Width = 55
         end
-        object Amount_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1083'-'#1074#1086
-          DataBinding.FieldName = 'Amount'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1089#1073#1086#1088#1082#1077
-          Options.Editing = False
-          Width = 55
-        end
         object EKPrice_ch1: TcxGridDBColumn
           Caption = 'Netto EK'
           DataBinding.FieldName = 'EKPrice'
@@ -1249,6 +1237,19 @@ object ProductForm: TProductForm
           HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 50
+        end
+        object Amount_ch1: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1089#1073#1086#1088#1082#1077
+          Options.Editing = False
+          Width = 55
         end
         object EKPrice_summ_ch1: TcxGridDBColumn
           Caption = 'Total EK'

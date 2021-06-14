@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ReceiptChild()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
     IN inEndDate         TDateTime , -- Конечная дата
     IN inComment         TVarChar  , -- Комментарий
     IN inReceiptId       Integer   , -- ссылка на Рецептуры
+    IN inReceiptLevelId  Integer   , -- этапы производства
     IN inGoodsId         Integer   , -- ссылка на Товары
     IN inGoodsKindId     Integer   , -- ссылка на Виды товаров
     IN inSession         TVarChar    -- сессия пользователя
@@ -48,7 +50,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_Goods(), ioId, inGoodsId);
    -- сохранили связь с <Видом товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_GoodsKind(), ioId, inGoodsKindId);
-   
+
+   -- сохранили связь с <Этапы производства>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_ReceiptLevel(), ioId, inReceiptLevelId);
+
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
    -- сохранили свойство <Входит в осн. сырье (100 кг.)>
@@ -75,11 +80,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.06.21         * inReceiptLevelId
  12.11.15         * 
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_              

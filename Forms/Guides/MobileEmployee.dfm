@@ -463,7 +463,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
-      ErasedFieldName = 'Erased'
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -478,7 +478,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
-      ErasedFieldName = 'Erased'
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -793,7 +793,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
     Top = 142
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MobileNumbersEmployee'
+    StoredProcName = 'gpUpdate_Object_isErased_MobileEmployee2'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -806,11 +806,11 @@ object MobileEmployeeForm: TMobileEmployeeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 260
-    Top = 142
+    Left = 332
+    Top = 110
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'Erased'
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

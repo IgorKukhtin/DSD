@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TF
                Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean,
                GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar,
                GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar,
+               ReceiptLevelId Integer, ReceiptLevelName TVarChar,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -94,6 +95,9 @@ BEGIN
          , Object_Measure_Parent.ValueData             AS MeasureName_Parent
          , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
          , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
+         
+         , Object_ReceiptLevel.Id        AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData AS ReceiptLevelName
 
          , tmpReceiptChild.isErased
          
@@ -119,6 +123,8 @@ BEGIN
                                                     ) AS isWeightTotal
                 , ObjectFloat_Value.ValueData :: TFloat AS Value
                 , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS ValueWeight
+
+                , ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId AS ReceiptLevelId
 
                 , ObjectBoolean_WeightMain.ValueData AS isWeightMain
                 , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
@@ -164,6 +170,10 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
                                      ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
                                     AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+
+                LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                     ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
+                                    AND ObjectLink_ReceiptChild_ReceiptLevel.DescId = zc_ObjectLink_ReceiptChild_ReceiptLevel()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                      ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
@@ -215,6 +225,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpReceiptChild.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpReceiptChild.GoodsKindId
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmpReceiptChild.ReceiptLevelId
  
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpReceiptChild.MeasureId
           LEFT JOIN Object AS Object_Measure_calc ON Object_Measure_calc.Id = zc_Measure_Kg() AND Object_Measure.Id = zc_Measure_Sh()
@@ -256,6 +267,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.06.21         *
  05.03.19         * 
  08.12.15         * add Parent
  12.11.15         * add протокол 

@@ -415,7 +415,7 @@ object MobileTariffForm: TMobileTariffForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
-      ErasedFieldName = 'Erased'
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -430,7 +430,7 @@ object MobileTariffForm: TMobileTariffForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
-      ErasedFieldName = 'Erased'
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -614,7 +614,7 @@ object MobileTariffForm: TMobileTariffForm
     Top = 166
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'Erased'
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -633,10 +633,13 @@ object MobileTariffForm: TMobileTariffForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 882
     Top = 329
   end

@@ -812,4 +812,7 @@ inherited ContractGoodsForm: TContractGoodsForm
     Left = 128
     Top = 256
   end
+  inherited spErasedUnErased: TdsdStoredProc
+    Left = 224
+  end
 end

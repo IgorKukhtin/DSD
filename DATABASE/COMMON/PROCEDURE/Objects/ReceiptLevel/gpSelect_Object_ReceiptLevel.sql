@@ -58,6 +58,25 @@ BEGIN
           LEFT JOIN MovementDesc ON MovementDesc.Id = ObjectFloat_MovementDesc.ValueData ::Integer
 
      WHERE Object_ReceiptLevel.DescId = zc_Object_ReceiptLevel()
+      UNION ALL
+       SELECT 
+           0    :: Integer AS Id 
+         , NULL :: Integer AS Code
+         , '<ÏÓÑÒÎ>' :: TVarChar AS Name
+         
+         , 0    :: Integer AS FromId
+         , NULL :: Integer AS FromCode
+         , '<ÓÄÀËÈÒÜ>' :: TVarChar AS FromName
+         
+         , 0    :: Integer AS ToId
+         , NULL :: Integer AS ToCode
+         , ''  :: TVarChar AS ToName
+
+         , NULL :: TFloat AS MovementDesc
+         , '' :: TVarChar AS MovementDescName
+         , '' :: TVarChar AS Comment
+
+         , FALSE AS isErased
      ; 
 
 END;

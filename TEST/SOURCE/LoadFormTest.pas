@@ -3564,12 +3564,14 @@ begin
   // форма справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffForm');
-  // форма правки данных справочника Тарифы мобильных операторов
+  {// форма правки данных справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEditForm');
+  }
   // форма справочника Мобильные телефоны сотрудников
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeForm');
+  exit;
   // форма правки данных справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeEditForm');
@@ -3921,7 +3923,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelEditForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptMainGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptMainGoods_ObjectForm');

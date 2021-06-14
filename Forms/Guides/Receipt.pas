@@ -191,6 +191,11 @@ type
     actUpdateDisabled_no: TdsdExecStoredProc;
     bbUpdateDisabled_yes: TdxBarButton;
     bbUpdateDisabled_no: TdxBarButton;
+    chReceiptLevelName: TcxGridDBColumn;
+    actReceiptLevelChoiceForm: TOpenChoiceForm;
+    cxLabel2: TcxLabel;
+    edReceiptLevel: TcxButtonEdit;
+    GuidesReceiptLevel: TdsdGuides;
   private
     { Private declarations }
   public
