@@ -2013,9 +2013,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentSales() RETURNS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentSales', 'Аптек аналитиков по продажам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentSales() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentSales', 'Аптек аналитиков по продажам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptLevel_MovementDesc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptLevel_MovementDesc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptLevel(), 'zc_ObjectFloat_ReceiptLevel_MovementDesc', 'Код документа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptLevel_MovementDesc');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.06.21         * zc_ObjectFloat_ReceiptLevel_MovementDesc
  08.06.21         * zc_ObjectFloat_OrderPeriodKind_Week
  07.06.21                                                                                      * zc_ObjectFloat_CashSettings_Assortment...
  29.04.21         * zc_ObjectFloat_Partner_Category

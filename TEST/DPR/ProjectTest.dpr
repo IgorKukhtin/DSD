@@ -1264,7 +1264,9 @@ uses
   Report_GoodsRemains_byPackDialog in '..\..\Forms\Report\Report_GoodsRemains_byPackDialog.pas' {Report_GoodsRemains_byPackDialogForm: TParentForm},
   OrderPeriodKind in '..\..\Forms\Kind\OrderPeriodKind.pas' {OrderPeriodKindForm: TParentForm},
   OrderGoods in '..\..\Forms\Document\OrderGoods.pas' {OrderGoodsForm: TParentForm},
-  OrderGoodsJournal in '..\..\Forms\Document\OrderGoodsJournal.pas' {OrderGoodsJournalForm: TParentForm};
+  OrderGoodsJournal in '..\..\Forms\Document\OrderGoodsJournal.pas' {OrderGoodsJournalForm: TParentForm},
+  ReceiptLevel in '..\..\Forms\Guides\ReceiptLevel.pas' {ReceiptLevelForm: TParentForm},
+  ReceiptLevelEdit in '..\..\Forms\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

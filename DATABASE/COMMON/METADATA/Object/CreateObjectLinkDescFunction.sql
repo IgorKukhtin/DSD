@@ -1883,6 +1883,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPriceList_Member() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MemberPriceList_Member', 'Физ лицо', zc_Object_MemberPriceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPriceList_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptLevel_To() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptLevel_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReceiptLevel_To', 'Кому', zc_Object_ReceiptLevel(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptLevel_To');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptLevel_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptLevel_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReceiptLevel_From', 'От кого', zc_Object_ReceiptLevel(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptLevel_From');
 
 
 --!!! АПТЕКА

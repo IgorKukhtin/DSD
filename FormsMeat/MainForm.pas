@@ -1270,6 +1270,8 @@ type
     actOrderGoods: TdsdOpenForm;
     miOrderGoods: TMenuItem;
     N242: TMenuItem;
+    actReceiptLevel: TdsdOpenForm;
+    miReceiptLevel: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

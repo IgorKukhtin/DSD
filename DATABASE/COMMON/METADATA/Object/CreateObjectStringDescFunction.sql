@@ -812,6 +812,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_FineSubject_Comment() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_FineSubject_Comment', zc_Object_FineSubject(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_FineSubject_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptLevel_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptLevel_Comment', zc_Object_ReceiptLevel(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_Comment');
+
 
 ---!!! Аптека
 
@@ -1256,6 +1260,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 14.06.21         * zc_ObjectString_ReceiptLevel_Comment
  13.05.21         * zc_ObjectString_User_PhoneAuthent
                     zc_ObjectString_User_GUID
  11.05.21                                                                                                         * zc_ObjectString_RecalcMCSSheduler_Comment  
