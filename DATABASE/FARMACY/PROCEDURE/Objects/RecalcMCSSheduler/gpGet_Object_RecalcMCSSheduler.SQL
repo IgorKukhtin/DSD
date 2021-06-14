@@ -130,10 +130,6 @@ BEGIN
                                          ON ObjectBoolean_PharmacyItem.ObjectId = Object_Unit.Id
                                         AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
 
-                 LEFT JOIN ObjectString AS ObjectString_Comment
-                                        ON ObjectString_Comment.ObjectId = Object_RecalcMCSSheduler.Id
-                                       AND ObjectString_Comment.DescId = zc_ObjectString_RecalcMCSSheduler_Comment()
-
                  LEFT JOIN ObjectFloat AS ObjectFloat_Period
                                        ON ObjectFloat_Period.ObjectId = Object_Unit.Id
                                       AND ObjectFloat_Period.DescId = zc_ObjectFloat_Unit_Period()

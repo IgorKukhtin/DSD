@@ -668,21 +668,21 @@ BEGIN
 
        ;
        
-/*     IF CURRENT_DATE <= '24.05.2021'
+     IF CURRENT_DATE <= '14.06.2021'
      THEN
 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 22295653)
-       WHERE _tmpRemains_all_Supplement.UnitId = 183292
-         AND _tmpRemains_all_Supplement.GoodsId = 1204616;
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 28249596)
+       WHERE _tmpRemains_all_Supplement.UnitId = 377595
+         AND _tmpRemains_all_Supplement.GoodsId = 18436;
        
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 22295653) / 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(Container.Amount) FROM Container WHERE Container.ID = 28249596) / 
                                                                (SELECT count(*) FROM _tmpRemains_all_Supplement
-                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 183292
-                                                                  AND _tmpRemains_all_Supplement.GoodsId = 1204616))
-       WHERE _tmpRemains_all_Supplement.UnitId <> 183292
-         AND _tmpRemains_all_Supplement.GoodsId = 1204616;
+                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 377595
+                                                                  AND _tmpRemains_all_Supplement.GoodsId = 18436))
+       WHERE _tmpRemains_all_Supplement.UnitId <> 377595
+         AND _tmpRemains_all_Supplement.GoodsId = 18436;
 
-     END IF;*/
+     END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      --
