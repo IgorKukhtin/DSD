@@ -64,6 +64,10 @@ BEGIN
   WHERE Object_RepriceUnitSheduler.DescId = zc_Object_RepriceUnitSheduler()
     AND Object_RepriceUnitSheduler.isErased = FALSE
     AND (ObjectLink_Unit_Juridical.ChildObjectId = InJuridicalID OR InJuridicalID = 0);
+    
+    
+    -- Переоценка для сайта
+  PERFORM * FROM gpRun_Object_RepriceSheduler_RepriceSite (inSession);
 
 END;
 $BODY$

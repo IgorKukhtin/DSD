@@ -1,8 +1,8 @@
--- Function: zfCalc_SalePriceSite
+-- Function: zfCalc_SalePriceSiteUnit
 
-DROP FUNCTION IF EXISTS zfCalc_SalePriceSite(TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_SalePriceSiteUnit(TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat);
 
-CREATE OR REPLACE FUNCTION zfCalc_SalePriceSite(
+CREATE OR REPLACE FUNCTION zfCalc_SalePriceSiteUnit(
     IN inPriceWithVAT        TFloat    , -- Цена С НДС
     IN inMarginPercent       TFloat    , -- % наценки в КАТЕГОРИИ
     IN inIsTop               Boolean   , -- ТОП позиция
@@ -25,12 +25,17 @@ BEGIN
      END IF;
      
           -- !!!Цена у товара (спец условия)!!!
-     IF inIsSpecial = True AND COALESCE(inPriceGods, 0) <> 0  THEN 
+     IF inIsSpecial = True AND COALESCE(inPriceGods, 0) <> 0 OR
+        inIsTop AND COALESCE(inPriceGods, 0) > 0 
+     THEN 
         RETURN inPriceGods;
      END IF;
 
      -- расчет % наценки
-     IF COALESCE(inPercentMarkupPrice, 0) > 0
+     IF inIsTop AND COALESCE(inPercentMarkup, 0) = 100
+     THEN
+       vbPercent := 0;
+     ELSEIF COALESCE(inPercentMarkupPrice, 0) > 0
      THEN
        vbPercent := COALESCE (inPercentMarkupPrice, 0);
      ELSEIF inIsTop AND COALESCE (inPercentMarkup, 0) > 0 AND COALESCE (inPercentMarkup, 0) < COALESCE (inMarginPercent, 0)  THEN
@@ -49,11 +54,6 @@ BEGIN
        vbPrice := (ROUND((100 + vbPercent) * inPriceWithVAT / 100, 1));
      END IF;
      
-     IF inIsTop AND COALESCE(inPriceGods, 0) > 0 AND COALESCE(inPriceGods, 0) < vbPrice
-     THEN
-       vbPrice := COALESCE(inPriceGods, 0);
-     END IF; 
-
      IF inPriceMax IS NOT NULL AND COALESCE (inPriceMax, 0) > 0 AND inPriceMax < vbPrice
      THEN
        vbPrice := inPriceMax;
@@ -77,7 +77,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_SalePriceSite(TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
+ALTER FUNCTION zfCalc_SalePriceSiteUnit(TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -88,4 +88,4 @@ ALTER FUNCTION zfCalc_SalePriceSite(TFloat, TFloat, Boolean, Boolean, TFloat, TF
 */
 -- тест 
 
-select zfCalc_SalePriceSite(2.5, 4, True, True, 0, 0, 0, 2.7, 0.0) 
+select zfCalc_SalePriceSiteUnit(2.5, 4, True, True, 0, 0, 0, 2.7, 0.0) 

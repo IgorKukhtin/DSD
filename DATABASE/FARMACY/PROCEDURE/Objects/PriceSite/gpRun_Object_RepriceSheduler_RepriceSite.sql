@@ -194,7 +194,7 @@ BEGIN
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
-    WHERE idRepriceMain = True;
+    WHERE Reprice = True;
       
     PERFORM gpInsertUpdate_MovementItem_RepriceSite_Clipped(
       ioID := 0 ,
@@ -211,7 +211,7 @@ BEGIN
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
-    WHERE idRepriceMain = False;
+    WHERE Reprice = False;
 
 
   EXCEPTION
