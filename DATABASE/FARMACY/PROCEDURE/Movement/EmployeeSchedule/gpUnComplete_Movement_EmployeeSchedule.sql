@@ -16,7 +16,7 @@ BEGIN
   vbUserId:= inSession;
 
   -- проверка прав пользователя на вызов процедуры
-  IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer AND 9383066  <> inSession::Integer
+  IF inSession::Integer NOT IN (3, 758920, 4183126, 9383066, 8037524)
   THEN
     RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
   END IF;

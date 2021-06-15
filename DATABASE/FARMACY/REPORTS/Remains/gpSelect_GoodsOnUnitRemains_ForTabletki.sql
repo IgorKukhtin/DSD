@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOperDate_Begin1 TDateTime;
    DECLARE vbSiteDiscount TFloat;
+   DECLARE vbRetailId    Integer;
 BEGIN
     -- сразу запомнили время начала выполнения Проц.
     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -20,6 +21,15 @@ BEGIN
     -- vbUserId:= lpGetUserBySession (inSession);
     vbUserId:= inSession :: Integer;
     vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
+
+    SELECT ObjectLink_Juridical_Retail.ChildObjectId
+    INTO vbRetailId
+    FROM ObjectLink AS ObjectLink_Unit_Juridical
+         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+    WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
+      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
     RETURN QUERY
     WITH
@@ -120,6 +130,18 @@ BEGIN
                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                         AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                            )
+      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                               , Price_Goods.ChildObjectId                  AS GoodsId
+                          FROM Object AS Object_PriceSite
+                               INNER JOIN ObjectLink AS Price_Goods
+                                       ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                      AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                      ON Price_Value.ObjectId = Object_PriceSite.Id
+                                     AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                          WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                            AND COALESCE (vbRetailId, 4) = 4
+                          )
 
       , tmpPrice_View AS (SELECT tmpPrice.GoodsId 
                                , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
@@ -178,9 +200,9 @@ BEGIN
                             '<Offer Code="'||CAST(Object_Goods_Main.ObjectCode AS TVarChar)
                                ||'" Name="'||replace(replace(replace(Object_Goods_Main.Name, '"', ''),'&','&amp;'),'''','')
                                ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
-                               ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
+                               ||'" Price="'||to_char(COALESCE(Price_Site.Price, Object_Price.Price),'FM9999990.00')
                                ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
-                               ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
+                               ||'" PriceReserve="'||to_char(COALESCE(Price_Site.Price, Object_Price.PriceReserve),'FM9999990.00')
                                ||'" Barcode="'||COALESCE (tmpGoodsBarCode.BarCode, '')
                                ||'" />'
 
@@ -191,6 +213,8 @@ BEGIN
                              INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                              LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
+                             
+                             LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
 
                              LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 
@@ -267,5 +291,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 -- тест
 -- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '-3')
 
-
+--Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(10128935 ,'3');
 Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(13711869 ,'3');

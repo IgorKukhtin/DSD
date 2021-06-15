@@ -45,16 +45,16 @@ BEGIN
                     WHERE Object_Unit.Id = inUnitId OR inUnitId = 0
                    )
    , tmpContainerPD AS
-                   (SELECT tmpUnit.UnitId
+                   (SELECT Container.WhereObjectId                                           AS UnitId
                          , Container.ObjectId
                          , Container.Id
                          , Container.Amount
                          , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
                     FROM Container
-                         INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                          LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
                     WHERE Container.DescId        = zc_Container_CountPartionDate()
+                      AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
                       AND Container.Amount        > 0
                    )
    , tmpRemainsPD AS
@@ -70,14 +70,14 @@ BEGIN
                            , Container.ObjectId
                    )
    , tmpContainer AS
-                   (SELECT tmpUnit.UnitId
+                   (SELECT Container.WhereObjectId AS UnitId
                          , Container.ObjectId
                          , Container.Id
                          , Container.Amount
                     FROM Container
-                         INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                     WHERE Container.DescId        = zc_Container_Count()
                       AND Container.Amount        <> 0
+                      AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
                    )
    , tmpPartionMI AS
                    (SELECT CLO.ContainerId
@@ -195,6 +195,17 @@ BEGIN
                                                      ON Price_Value.ObjectId = tmpPrice.Id
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                           )
+      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                               , Price_Goods.ChildObjectId                  AS GoodsId
+                          FROM Object AS Object_PriceSite
+                               INNER JOIN ObjectLink AS Price_Goods
+                                       ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                      AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                      ON Price_Value.ObjectId = Object_PriceSite.Id
+                                     AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                          WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                          )
         -- Штрих-коды производителя
       , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
                                  , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
@@ -248,8 +259,8 @@ BEGIN
            , REPLACE(Object_Goods_Juridical_Optima.Code, ',', ';')::TVarChar      AS Optima
            , REPLACE(Object_Goods_Juridical_Badm.Code, ',', ';')::TVarChar        AS Badm
            , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
-           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS Price
-           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS OfflinePrice
+           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS Price
+           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS OfflinePrice
            , NULL::TVarChar                   AS PickupPrice
            , NULL::TVarChar                 AS "10000001 - insurance company #1 id"
            , NULL::TVarChar                 AS "10000002 - insurance company #2 id"
@@ -271,11 +282,21 @@ BEGIN
                                  ON Object_Goods_Juridical_Badm.Id = Remains.ObjectId
                                 AND Object_Goods_Juridical_Badm.Ord = 1
 
+           INNER JOIN  ObjectLink AS ObjectLink_Unit_Juridical
+                                  ON ObjectLink_Unit_Juridical.ObjectId = Remains.UnitId
+                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                 
+           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                 ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
 
            LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
                                                         AND Object_Price.UnitId = Remains.UnitId
+
+           LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
                                                       AND Reserve_Goods.UnitId = Remains.UnitId
@@ -300,4 +321,5 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_For103UA (Integer, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 377606, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 377606, inSession:= '3')

@@ -2422,6 +2422,13 @@ inherited OrderInternalForm: TOrderInternalForm
       item
         Guides = GuidesUnit
       end>
+    ActionItemList = <
+      item
+        Action = actInsertUpdateMovement
+      end
+      item
+        Action = actPUSHInfo
+      end>
     Left = 208
     Top = 152
   end

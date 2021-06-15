@@ -523,7 +523,6 @@ uses
   Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm},
   Report_GoodsRemains_AnotherRetail in '..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas' {Report_GoodsRemains_AnotherRetailForm: TParentForm},
   Report_Movement_AnotherRetail in '..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas' {Report_Movement_AnotherRetailForm: TParentForm},
-  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   ContactPersonEdit in '..\..\FormsFarmacy\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPerson in '..\..\FormsFarmacy\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   Report_MinPrice_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromoDialog.pas' {Report_MinPrice_byPromoDialogForm: TParentForm},

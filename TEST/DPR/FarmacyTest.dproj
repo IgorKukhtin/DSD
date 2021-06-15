@@ -1712,10 +1712,6 @@
 				<Form>Report_Movement_AnotherRetailForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
-				<Form>OrderInternalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\ContactPersonEdit.pas">
 				<Form>ContactPersonEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
