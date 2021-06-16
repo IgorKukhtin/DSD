@@ -694,11 +694,11 @@ inherited SaleForm: TSaleForm
     Top = 312
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 328
+    Top = 360
   end
   inherited ActionList: TActionList
     Left = 87
-    Top = 327
+    Top = 359
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -804,7 +804,7 @@ inherited SaleForm: TSaleForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -930,6 +930,47 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = True
     end
+    object actExec_Update_PriceSale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_Update_PriceSale
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceSale
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceSale
+        end>
+      Caption = 'actExec_Update_PriceSale'
+      ImageIndex = 79
+    end
+    object actExecuteDialog_Update_PriceSale: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialog_Update_PriceSale'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PriceSale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LabelPriceSale'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1050,6 +1091,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbactUpdatePriceSale'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1069,6 +1118,10 @@ inherited SaleForm: TSaleForm
     end
     object dxBarButton2: TdxBarButton
       Action = spUpdateisDeferredNo
+      Category = 0
+    end
+    object bbactUpdatePriceSale: TdxBarButton
+      Action = actExec_Update_PriceSale
       Category = 0
     end
   end
@@ -1118,6 +1171,18 @@ inherited SaleForm: TSaleForm
         Value = Null
         Component = edTotalSummPrimeCost
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSale'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPriceSale'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1169,7 +1234,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1293,7 +1358,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'OperDateSP'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1465,7 +1530,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inOperDateSP'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateSP
         DataType = ftDateTime
         ParamType = ptInput
@@ -1895,6 +1960,7 @@ inherited SaleForm: TSaleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1907,6 +1973,7 @@ inherited SaleForm: TSaleForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 318
@@ -1940,7 +2007,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'MasterOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2131,7 +2198,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'MasterOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2315,14 +2382,14 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2346,14 +2413,14 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2361,5 +2428,39 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 552
     Top = 315
+  end
+  object spUpdate_PriceSale: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_PriceSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSale'
+        Value = True
+        Component = FormParams
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 339
   end
 end

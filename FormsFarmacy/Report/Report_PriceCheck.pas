@@ -93,6 +93,10 @@ type
     isPromoBonus: TcxGridDBColumn;
     PromoBonus: TcxGridDBColumn;
     isLearnWeek: TcxGridDBColumn;
+    cePercentSite: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    PriceSite: TcxGridDBColumn;
+    Color_calcSite: TcxGridDBColumn;
   private
   public
   end;

@@ -1,5 +1,5 @@
 inherited ListGoodsForm: TListGoodsForm
-  Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
+  Caption = #1042#1099#1073#1086#1088' '#1055#1056#1048#1054#1056#1048#1058#1045#1058#1053#1054#1043#1054' '#1055#1054#1057#1058#1040#1042#1065#1048#1050#1040' '#1055#1056#1048' '#1047#1040#1050#1040#1047#1045
   ClientHeight = 442
   ClientWidth = 839
   OnCreate = ParentFormCreate
@@ -15,6 +15,8 @@ inherited ListGoodsForm: TListGoodsForm
     Width = 839
     Height = 227
     Align = alClient
+    BiDiMode = bdLeftToRight
+    ParentBiDiMode = False
     TabOrder = 1
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
@@ -368,9 +370,9 @@ inherited ListGoodsForm: TListGoodsForm
     object actSearchGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
-      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
-      ImageIndex = 28
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072'  '#1087#1086' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084' '#1042#1057#1045#1061' '#1055#1054#1057#1058#1040#1042#1065#1048#1050#1054#1042
+      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072'  '#1087#1086' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084' '#1042#1057#1045#1061' '#1055#1054#1057#1058#1040#1042#1065#1048#1050#1054#1042
+      ImageIndex = 65
       FormName = 'TChoiceGoodsFromPriceListForm'
       FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
       FormNameParam.DataType = ftString
@@ -567,6 +569,8 @@ inherited ListGoodsForm: TListGoodsForm
     object bbGridToExcel: TdxBarButton
       Action = actSearchGoods
       Category = 0
+      Lowered = True
+      PaintStyle = psCaptionGlyph
       Left = 232
     end
     object bbOpen: TdxBarButton

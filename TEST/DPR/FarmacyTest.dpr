@@ -1038,7 +1038,8 @@ uses
   PriceSiteDialog in '..\..\FormsFarmacy\Guides\PriceSiteDialog.pas' {PriceSiteDialogForm: TParentForm},
   PriceSite in '..\..\FormsFarmacy\Guides\PriceSite.pas' {PriceSiteForm: TParentForm},
   RepriceSiteJournal in '..\..\FormsFarmacy\Document\RepriceSiteJournal.pas' {RepriceSiteJournalForm: TParentForm},
-  RepriceSite in '..\..\FormsFarmacy\Document\RepriceSite.pas' {RepriceSiteForm: TParentForm};
+  RepriceSite in '..\..\FormsFarmacy\Document\RepriceSite.pas' {RepriceSiteForm: TParentForm},
+  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

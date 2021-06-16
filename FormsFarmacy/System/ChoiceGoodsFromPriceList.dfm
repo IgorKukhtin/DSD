@@ -6,7 +6,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ShowHint = True
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 918
-  ExplicitHeight = 331
+  ExplicitHeight = 332
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -138,6 +138,15 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 98
+          end
+          object colPriceSite: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'PriceSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082

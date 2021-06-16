@@ -73,6 +73,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     spGet_Area_byUser: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    colPriceSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

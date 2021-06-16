@@ -326,9 +326,52 @@ begin
 end;
 
 procedure TListGoodsForm.ParentFormCreate(Sender: TObject);
+
+  procedure SaveLocalGoods;
+  var
+    sp : TdsdStoredProc;
+    ds : TClientDataSet;
+    DateTime: TDateTimeInfoRec;
+  begin  //+
+    // pr вызываетс€ из обновлени€ остатков
+    // ѕровер€ем обновл€ли ли сегодн€
+
+    if FileExists(Goods_lcl) and FileGetDateTimeInfo(Goods_lcl, DateTime) and
+      (MinutesBetween(DateTime.TimeStamp, Now) < 15) then Exit;
+
+    sp := TdsdStoredProc.Create(nil);
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_CashGoods';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexGoods');
+        WaitForSingleObject(MutexGoods, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,Goods_lcl);
+        finally
+          Add_Log('End MutexGoods');
+          ReleaseMutex(MutexGoods);
+        end;
+
+      finally
+        ds.free;
+      end;
+    finally
+      freeAndNil(sp);
+    end;
+  end;
+
 begin
 
   FStyle := TcxStyle.Create(nil);
+
+  //ѕолучение товаров
+  if not gc_User.Local then SaveLocalGoods;
 
   if not gc_User.Local then
   begin

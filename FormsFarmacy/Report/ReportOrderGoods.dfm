@@ -3,7 +3,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   ClientHeight = 358
   ClientWidth = 806
   ExplicitWidth = 822
-  ExplicitHeight = 396
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -144,6 +144,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
+          end
+          object PriceSite: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'PriceSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
           object Amount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
@@ -428,7 +438,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -485,7 +495,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -493,7 +503,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

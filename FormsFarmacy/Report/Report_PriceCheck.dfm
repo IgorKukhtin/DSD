@@ -21,7 +21,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     Left = 0
     Top = 0
     Width = 1145
-    Height = 31
+    Height = 33
     Align = alTop
     TabOrder = 0
     object cxLabel4: TcxLabel
@@ -36,10 +36,10 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 1
-      Width = 90
+      Width = 57
     end
     object ceUser: TcxButtonEdit
-      Left = 368
+      Left = 480
       Top = 3
       Properties.Buttons = <
         item
@@ -49,15 +49,15 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 2
-      Width = 241
+      Width = 201
     end
     object cxLabel1: TcxLabel
-      Left = 262
+      Left = 374
       Top = 4
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1072#1087#1090#1077#1082#1080':'
     end
     object cbHideExceptRed: TcxCheckBox
-      Left = 623
+      Left = 692
       Top = 3
       Hint = #1057#1082#1088#1099#1090#1100' '#1082#1088#1086#1084#1077' '#1082#1088#1072#1089#1085#1099#1093
       Caption = #1057#1082#1088#1099#1090#1100' '#1082#1088#1086#1084#1077' '#1082#1088#1072#1089#1085#1099#1093
@@ -65,7 +65,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       Width = 146
     end
     object cbisRetail: TcxCheckBox
-      Left = 780
+      Left = 844
       Top = 3
       Caption = #1058#1086#1074#1072#1088' '#1089#1090#1080
       State = cbsChecked
@@ -73,18 +73,32 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
       Width = 77
     end
     object cbManagerUnitsOnly: TcxCheckBox
-      Left = 863
+      Left = 927
       Top = 3
       Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
       TabOrder = 6
       Width = 210
     end
+    object cePercentSite: TcxCurrencyEdit
+      Left = 284
+      Top = 3
+      EditValue = 25.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      TabOrder = 7
+      Width = 57
+    end
+    object cxLabel2: TcxLabel
+      Left = 223
+      Top = 4
+      Caption = #1076#1083#1103' '#1089#1072#1081#1090#1072
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 59
     Width = 1145
-    Height = 383
+    Height = 381
     Align = alClient
     TabOrder = 5
     object cxGridDBTableView: TcxGridDBTableView
@@ -303,6 +317,18 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Options.Editing = False
         Width = 76
       end
+      object PriceSite: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+        DataBinding.FieldName = 'PriceSite'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object Color_calcSite: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calcSite'
+        Visible = False
+        VisibleForCustomization = False
+      end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -353,6 +379,11 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Component = cbManagerUnitsOnly
         Properties.Strings = (
           'Checked')
+      end
+      item
+        Component = cePercentSite
+        Properties.Strings = (
+          'Value')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -602,6 +633,14 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPercentSite'
+        Value = Null
+        Component = cePercentSite
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUserId'
         Value = Null
         Component = GuidesUser
@@ -696,6 +735,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -718,10 +758,16 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Price
         ValueColumn = Color_Calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PriceSite
+        ValueColumn = Color_calcSite
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -762,7 +808,7 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 456
+    Left = 584
     Top = 1
   end
 end
