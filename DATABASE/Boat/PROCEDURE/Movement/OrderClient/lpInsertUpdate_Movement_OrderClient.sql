@@ -34,7 +34,7 @@ BEGIN
      THEN
          RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Kunden>.' :: TVarChar
                                                , inProcedureName := 'lpInsertUpdate_Movement_OrderClient'
-                                               , inUserId        := vbUserId
+                                               , inUserId        := inUserId
                                                 );
      END IF;
 

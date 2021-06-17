@@ -886,6 +886,10 @@ inherited ServiceJournalForm: TServiceJournalForm
     Left = 392
     Top = 200
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Service'
+    Top = 152
+  end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_Service'
     DataSets = <>

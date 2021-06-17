@@ -26,7 +26,6 @@ object OrderPartnerForm: TOrderPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1102
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -285,14 +284,12 @@ object OrderPartnerForm: TOrderPartnerForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1102
     ClientRectBottom = 436
     ClientRectRight = 1236
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1102
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -301,7 +298,6 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        ExplicitWidth = 1102
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -309,7 +305,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 192
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 1100
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -642,7 +637,6 @@ object OrderPartnerForm: TOrderPartnerForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitWidth = 1102
       end
       object Panel4: TPanel
         Left = 0
@@ -652,7 +646,6 @@ object OrderPartnerForm: TOrderPartnerForm
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
-        ExplicitWidth = 1102
         object cxSplitter1: TcxSplitter
           Left = 1
           Top = 1
@@ -666,7 +659,6 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 208
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 1092
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -952,7 +944,7 @@ object OrderPartnerForm: TOrderPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 638
+    Left = 862
     Top = 87
   end
   object spSelectMI: TdsdStoredProc
@@ -2205,8 +2197,23 @@ object OrderPartnerForm: TOrderPartnerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 680
+    Left = 640
     Top = 16
   end
   object PopupMenu: TPopupMenu
@@ -2942,8 +2949,8 @@ object OrderPartnerForm: TOrderPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 64
+    Left = 320
+    Top = 8
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>

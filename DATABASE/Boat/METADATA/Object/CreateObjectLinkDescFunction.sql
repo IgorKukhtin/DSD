@@ -410,6 +410,8 @@ SELECT 'zc_ObjectLink_Account_AccountKind', 'Типы Счетов', zc_Object_Account(), 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.21         * zc_ObjectLink_Client_PaidKind
+                    zc_ObjectLink_Partner_PaidKind
  21.04.21         * zc_ObjectLink_ProductDocument_Product
                     zc_ObjectLink_ProductDocument_DocTag
                     zc_ObjectLink_ProductPhoto_Product

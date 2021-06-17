@@ -78,6 +78,9 @@ type
     GuidesTaxKind: TdsdGuides;
     cxLabel20: TcxLabel;
     edTaxNumber: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
   private
     { Private declarations }
   public

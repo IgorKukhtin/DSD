@@ -20,7 +20,7 @@
     Left = 10
     Top = 72
     TabOrder = 0
-    Width = 550
+    Width = 407
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -293,6 +293,23 @@
     TabOrder = 41
     Width = 130
   end
+  object cxLabel19: TcxLabel
+    Left = 430
+    Top = 54
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+  end
+  object edPaidKind: TcxButtonEdit
+    Left = 430
+    Top = 72
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 43
+    Width = 130
+  end
   object ActionList: TActionList
     Left = 152
     Top = 99
@@ -496,6 +513,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -696,6 +721,21 @@
         Component = edTaxNumber
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -835,5 +875,34 @@
       end>
     Left = 469
     Top = 359
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 477
+    Top = 57
   end
 end

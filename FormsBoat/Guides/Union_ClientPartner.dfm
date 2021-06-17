@@ -51,7 +51,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 45
       end
       object Name: TcxGridDBColumn
         Caption = 'Lieferanten / Kunden'
@@ -59,14 +59,22 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 269
+        Width = 214
       end
       object DescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 172
+        Width = 137
+      end
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 53
       end
       object DayCalendar: TcxGridDBColumn
         Caption = #1054#1090#1089#1088'. '#1074' '#1082#1072#1083#1077#1085#1076'. '#1076#1085#1103#1093
@@ -78,7 +86,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1082#1072#1083#1077#1085#1076#1072#1088#1085#1099#1093' '#1076#1085#1103#1093
         Options.Editing = False
-        Width = 92
+        Width = 70
       end
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1059#1055
@@ -86,7 +94,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 46
       end
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -94,7 +102,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 45
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -102,7 +110,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 45
       end
       object TaxKind_Value: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
@@ -112,7 +120,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 46
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -348,6 +356,21 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
           ComponentItem = 'TaxKind_Value'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -470,6 +493,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item

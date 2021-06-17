@@ -154,6 +154,7 @@ BEGIN
                                            , inPLZId    := COALESCE (vbPLZId,0)  :: Integer 
                                            , inInfoMoneyId:= zc_Enum_InfoMoney_10101()
                                            , inTaxKindId  := zc_Enum_TaxKind_Basis() -- 19.0%
+                                           , inPaidKindId := zc_Enum_PaidKind_FirstForm() ::Integer
                                            , inSession  := inSession       :: TVarChar
                                             );
    ELSE
@@ -179,6 +180,7 @@ BEGIN
                                            , inPLZId        := vbPLZId
                                            , inInfoMoneyId  := COALESCE (tmp.InfoMoneyId, zc_Enum_InfoMoney_10101())
                                            , inTaxKindId    := COALESCE (tmp.TaxKindId, zc_Enum_TaxKind_Basis())
+                                           , inPaidKindId   := COALESCE (tmp.PaidKindId, zc_Enum_PaidKind_FirstForm() ::Integer) 
                                            , inSession      := inSession                              :: TVarChar
                                             )
        FROM gpSelect_Object_Partner(FALSE, inSession) AS tmp
@@ -193,6 +195,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.06.21         *
  09.11.20         *
 */
 

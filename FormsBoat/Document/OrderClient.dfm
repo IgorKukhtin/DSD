@@ -4615,9 +4615,24 @@ object OrderClientForm: TOrderClientForm
         Component = edVATPercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 65528
+    Left = 456
+    Top = 8
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
