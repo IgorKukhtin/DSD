@@ -10,19 +10,19 @@ inherited ReturnInForm: TReturnInForm
     Top = 195
     Width = 1304
     Height = 453
-    ExplicitTop = 166
-    ExplicitWidth = 1252
-    ExplicitHeight = 482
+    ExplicitTop = 195
+    ExplicitWidth = 1304
+    ExplicitHeight = 453
     ClientRectBottom = 453
     ClientRectRight = 1304
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1252
-      ExplicitHeight = 458
+      ExplicitWidth = 1304
+      ExplicitHeight = 429
       inherited cxGrid: TcxGrid
         Width = 1304
         Height = 291
-        ExplicitWidth = 1252
-        ExplicitHeight = 320
+        ExplicitWidth = 1304
+        ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -376,8 +376,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 328
-        ExplicitWidth = 1252
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -711,15 +709,11 @@ inherited ReturnInForm: TReturnInForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 320
-        ExplicitWidth = 1252
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1252
-      ExplicitHeight = 458
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -727,8 +721,6 @@ inherited ReturnInForm: TReturnInForm
         Height = 429
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1252
-        ExplicitHeight = 458
         object lDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1079,8 +1071,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitWidth = 1252
-      ExplicitHeight = 458
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -1089,10 +1079,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 212
-        ExplicitTop = -24
-        ExplicitWidth = 1252
-        ExplicitHeight = 458
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_str
@@ -1262,11 +1248,12 @@ inherited ReturnInForm: TReturnInForm
             Width = 70
           end
           object SubjectDocName_ch2: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'SubjectDocName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actSubjectDocOpenForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1281,6 +1268,7 @@ inherited ReturnInForm: TReturnInForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actReturnKindOpenForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1625,7 +1613,7 @@ inherited ReturnInForm: TReturnInForm
     object cxLabel27: TcxLabel
       Left = 867
       Top = 127
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
     end
     object edSubjectDoc: TcxButtonEdit
       Left = 867
@@ -4410,6 +4398,35 @@ inherited ReturnInForm: TReturnInForm
         Component = GuidesMemberExp
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnKindId'
+        Value = Null
+        Component = GuidesReturnKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnKindName'
+        Value = Null
+        Component = GuidesReturnKind
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
     Left = 224

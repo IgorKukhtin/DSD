@@ -116,6 +116,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummDiscount_total
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -167,6 +172,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummDiscount_total
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -263,13 +273,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 70
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1073#1077#1079' '#1053#1044#1057' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080')'
         Width = 80
       end
       object DiscountTax: TcxGridDBColumn
@@ -322,7 +333,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 60
       end
       object TotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -330,10 +341,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1073#1077#1079' '#1053#1044#1057' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1086#1082')'
         Width = 60
       end
       object TotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -341,7 +353,21 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1080')'
         Width = 60
+      end
+      object SummDiscount_total: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082'. ('#1080#1090#1086#1075#1086')'
+        DataBinding.FieldName = 'SummDiscount_total'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+        Options.Editing = False
+        Width = 75
       end
       object CIN: TcxGridDBColumn
         Caption = 'CIN Nr.'

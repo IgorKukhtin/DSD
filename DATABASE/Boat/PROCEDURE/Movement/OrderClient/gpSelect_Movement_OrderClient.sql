@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , VATPercent TFloat, DiscountTax TFloat, DiscountNextTax TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
+             , SummDiscount_total TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -107,6 +108,7 @@ BEGIN
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
+             , (zfCalc_SummDiscount (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0), COALESCE (MovementFloat_DiscountTax.ValueData,0) + COALESCE (MovementFloat_DiscountNextTax.ValueData,0) ) ) :: TFloat AS SummDiscount_total
 
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
@@ -219,3 +221,10 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inClientId:=0 , inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+
+/*
+1) Итого сумма по документу (без НДС без учета скидок)                     TotalSummMVAT
+2) Итого сумма по документу (без НДС с учетом скидки)                      TotalSumm
+3) Итого сумма по документу (с учетом НДС и скидки)                        TotalSummPVAT
+ 4) итого сумма скидки
+ */

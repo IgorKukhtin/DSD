@@ -488,7 +488,7 @@ object OrderClientForm: TOrderClientForm
               Width = 80
             end
             object BasisPrice: TcxGridDBColumn
-              Caption = 'Total LP off Disc (Basis)'
+              Caption = '***Total LP (Basis)'
               DataBinding.FieldName = 'BasisPrice'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -496,7 +496,7 @@ object OrderClientForm: TOrderClientForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1048#1058#1054#1043#1054' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
+              HeaderHint = #1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
               Options.Editing = False
               Width = 104
             end
@@ -547,7 +547,7 @@ object OrderClientForm: TOrderClientForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+              HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
               Options.Editing = False
               Width = 80
             end
