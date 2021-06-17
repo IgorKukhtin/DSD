@@ -3875,7 +3875,7 @@ begin
           vipList.FieldByName('GoodsCode').AsInteger;
         CheckCDS.FieldByName('GoodsName').AsString :=
           vipList.FieldByName('GoodsName').AsString;
-        CheckCDS.FieldByName('Amount').AsFloat := 0;
+        CheckCDS.FieldByName('Amount').AsFloat := VipList.FieldByName('Amount').AsFloat;
         // VipList.FieldByName('Amount').AsFloat; //маленькая ошибочка, поставил 0, ***20.07.16
         CheckCDS.FieldByName('Price').AsFloat :=
           vipList.FieldByName('Price').AsFloat;
@@ -3981,22 +3981,23 @@ begin
           vipList.FieldByName('GoodsName').AsString + ' AmountOrder - ' +
           vipList.FieldByName('AmountOrder').AsString + ' Price - ' +
           vipList.FieldByName('Price').AsString);
-        if FormParams.ParamByName('CheckId').Value <> 0 then
-          // UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
-          // маленькая ошибочка, попробуем с VipList, ***20.07.16
-          UpdateRemainsFromCheck(vipList.FieldByName('GoodsId').AsInteger,
-            vipList.FieldByName('PartionDateKindId').AsInteger,
-            vipList.FieldByName('NDSKindId').AsInteger,
-            vipList.FieldByName('DiscountExternalID').AsInteger,
-            vipList.FieldByName('DivisionPartiesID').AsInteger,
-            vipList.FieldByName('isPresent').AsBoolean,
-            vipList.FieldByName('Amount').AsFloat,
-            vipList.FieldByName('PriceSale').asCurrency,
-            True);
+//        if FormParams.ParamByName('CheckId').Value <> 0 then
+//          // UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
+//          // маленькая ошибочка, попробуем с VipList, ***20.07.16
+//          UpdateRemainsFromCheck(vipList.FieldByName('GoodsId').AsInteger,
+//            vipList.FieldByName('PartionDateKindId').AsInteger,
+//            vipList.FieldByName('NDSKindId').AsInteger,
+//            vipList.FieldByName('DiscountExternalID').AsInteger,
+//            vipList.FieldByName('DivisionPartiesID').AsInteger,
+//            vipList.FieldByName('isPresent').AsBoolean,
+//            vipList.FieldByName('Amount').AsFloat,
+//            vipList.FieldByName('PriceSale').asCurrency,
+//            True);
         vipList.Next;
       End;
     End;
 
+    CalcTotalSumm;
   finally
     vip.Close;
     vip.Free;

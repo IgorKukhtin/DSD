@@ -9,17 +9,17 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 885
-    ExplicitWidth = 832
+    ExplicitWidth = 885
     ClientRectRight = 885
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 832
+      ExplicitWidth = 885
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 885
         Height = 255
         ExplicitTop = 27
-        ExplicitWidth = 832
+        ExplicitWidth = 885
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -141,6 +141,16 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 85
+          end
+          object colPriceSite: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'PriceSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
           object colAmount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -325,7 +335,6 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 832
         object edCodeSearch: TcxTextEdit
           Left = 94
           Top = 3
@@ -627,6 +636,48 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         end>
       Caption = 'actExecSetGoodsObjectPrice'
     end
+    object actUpdate_PriceSale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_Update_PriceSite
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetGoodsObjectPriceSite
+      StoredProcList = <
+        item
+          StoredProc = spSetGoodsObjectPriceSite
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1087#1091#1089#1082#1085#1091#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      ImageIndex = 75
+    end
+    object actExecuteDialog_Update_PriceSite: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialog_Update_PriceSite'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PriceSite'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LabelPriceSale'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -699,6 +750,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceSale'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -711,6 +770,10 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     end
     object dxBarButton1: TdxBarButton
       Action = actGoodsObjectPrice
+      Category = 0
+    end
+    object bbUpdate_PriceSale: TdxBarButton
+      Action = actUpdate_PriceSale
       Category = 0
     end
   end
@@ -764,8 +827,46 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSite'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelPriceSale'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1081#1102' '#1094#1077#1085#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 200
+  end
+  object spSetGoodsObjectPriceSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_GoodsSitePrice_SetPriceSite'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSite'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'PriceSite'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 208
   end
 end
