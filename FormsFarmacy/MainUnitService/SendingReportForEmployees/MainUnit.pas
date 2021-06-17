@@ -18,14 +18,14 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UtilTelegram,
-  cxDataControllerConditionalFormattingRulesManagerDialog;
+  cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges;
 
 type
   TMainForm = class(TForm)
     ZConnection1: TZConnection;
     Timer1: TTimer;
-    qryDriver: TZQuery;
-    dsDriver: TDataSource;
+    qrySendList: TZQuery;
+    dsSendList: TDataSource;
     Panel2: TPanel;
     btnSendTelegram: TButton;
     btnExport: TButton;
@@ -40,21 +40,20 @@ type
     ciUserName: TcxGridDBColumn;
     cidID: TcxGridDBColumn;
     grChatIdLevel: TcxGridLevel;
-    btnAllDriver: TButton;
+    btnAllLine: TButton;
     grReport: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    isUrgently: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     Panel1: TPanel;
     cxGrid1: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
-    drCode: TcxGridDBColumn;
-    drName: TcxGridDBColumn;
-    drChatIDSendVIP: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ChatIdDS: TDataSource;
+    Message: TcxGridDBColumn;
+    slId: TcxGridDBColumn;
+    slDateSend: TcxGridDBColumn;
+    slChatIDList: TcxGridDBColumn;
+    slSQL: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -62,7 +61,7 @@ type
     procedure btnSendTelegramClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnAllDriverClick(Sender: TObject);
+    procedure btnAllLineClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
@@ -118,7 +117,7 @@ begin
 
     Add_Log('');
     Add_Log('-------------------');
-    Add_Log('Водитель VIP: ' + qryDriver.FieldByName('Name').AsString);
+    Add_Log('Сообщение: ' + qrySendList.FieldByName('Id').AsString);
 
     btnExecuteClick(Nil);
     btnExportClick(Nil);
@@ -143,19 +142,19 @@ begin
     if not qryReport_Upload.Active then Exit;
     if qryReport_Upload.IsEmpty then Exit;
 
-    qryDriver.First;
-    while not qryDriver.Eof do
+    qrySendList.First;
+    while not qrySendList.Eof do
     begin
 
       btnSendTelegramClick(Nil);
 
-      qryDriver.Next;
+      qrySendList.Next;
       Application.ProcessMessages;
     end;
 
     if not FError then
     begin
-      Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP.ini');
+      Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
       try
         FDate := Now;
         Ini.WriteDateTime('Options', 'Date', FDate);
@@ -170,7 +169,7 @@ begin
   end;
 end;
 
-procedure TMainForm.btnAllDriverClick(Sender: TObject);
+procedure TMainForm.btnAllLineClick(Sender: TObject);
 begin
   AllDriver;
 end;
@@ -178,13 +177,13 @@ end;
 procedure TMainForm.btnExecuteClick(Sender: TObject);
   var APoint : TPoint;
 begin
-  if not qryDriver.Active then Exit;
-  if qryDriver.IsEmpty then Exit;
+  if not qrySendList.Active then Exit;
+  if qrySendList.IsEmpty then Exit;
 
   try
-    FileName := qryDriver.FieldByName('Name').AsString;
+//    FileName := qrySendList.FieldByName('Name').AsString;
     qryReport_Upload.Close;
-    qryReport_Upload.ParamByName('Date').AsDateTime := FDate;
+    qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
     qryReport_Upload.Open;
   except
     on E: Exception do Add_Log(E.Message);
@@ -197,46 +196,28 @@ var
 begin
   if not qryReport_Upload.Active then Exit;
   if qryReport_Upload.IsEmpty then Exit;
-  if not qryDriver.Active then Exit;
-  if qryDriver.IsEmpty then Exit;
+  if not qrySendList.Active then Exit;
+  if qrySendList.IsEmpty then Exit;
   Add_Log('Начало выгрузки отчета');
 
   FMessage.Clear;
-  qryReport_Upload.First;
-  if qryReport_Upload.FieldByName('isUrgently').AsBoolean then
-  begin
-    Urgently := True;
-    FMessage.Add('Срочный заказ:');
-  end else
-  begin
-    Urgently := False;
-    FMessage.Add('Доставить товар в течении 24 часов:');
-  end;
-
-  while not qryReport_Upload.Eof do
-  begin
-    if qryReport_Upload.FieldByName('isUrgently').AsBoolean <> Urgently then
-    begin
-      Urgently := False;
-      FMessage.Add('');
-      FMessage.Add('Доставить товар в течении 24 часов:');
-    end;
-    FMessage.Add('c ' + qryReport_Upload.FieldByName('FromName').AsString + ' на ' + qryReport_Upload.FieldByName('ToName').AsString);
-    qryReport_Upload.Next;
-  end;
-
+  FMessage.Text := qryReport_Upload.FieldByName('Message').AsString;
 
 end;
 
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
+  var Res : TArray<string>; I, ChatId : Integer;
 begin
 
   if FMessage.Count = 0 then Exit;
 
-  Add_Log('Начало отправки сообщения: ' + qryDriver.FieldByName('Name').AsString);
+  Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
 
+  Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, FormatSettings.ListSeparator);
+
+  for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try
-    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsInteger, FMessage.Text) then
+    if not TelegramBot.SendMessage(ChatId, FMessage.Text) then
     begin
       FError := True;
       Add_Log(TelegramBot.ErrorText);
@@ -259,7 +240,7 @@ var
   Ini: TIniFile;
 begin
   FMessage := TStringList.Create;
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
 
   try
     SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
@@ -304,7 +285,7 @@ begin
   end;
 
   TelegramBot := TTelegramBot.Create(Token);
-  TelegramBot.FileNameChatId := ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP_ChatId.xml';
+  TelegramBot.FileNameChatId := ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees_ChatId.xml';
   if TelegramBot.Id <> 0 then
   begin
     TelegramBot.LoadChatId;
@@ -313,9 +294,9 @@ begin
 
   if ZConnection1.Connected then
   begin
-    qryDriver.Close;
+    qrySendList.Close;
     try
-      qryDriver.Open;
+      qrySendList.Open;
     except
       on E: Exception do
       begin
@@ -329,7 +310,7 @@ begin
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnAll.Enabled := false;
-      btnAllDriver.Enabled := false;
+      btnAllLine.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
       btnSendTelegram.Enabled := false;
@@ -348,7 +329,7 @@ procedure TMainForm.Timer1Timer(Sender: TObject);
 begin
   try
     timer1.Enabled := False;
-    if qryDriver.Active then btnAllClick(nil);
+    if qrySendList.Active then btnAllClick(nil);
   finally
     Close;
   end;
