@@ -7,9 +7,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Detail(
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
-    IN inSubjectDocId_top      Integer   , -- 
+    IN inReasonId_top      Integer   , -- 
     IN inReturnKindId_top      Integer   , -- 
-    IN inSubjectDocId          Integer   , -- 
+    IN inReasonId          Integer   , -- 
     IN inReturnKindId          Integer   , -- 
     IN inAmount                TFloat    , -- Количество
     IN inSession               TVarChar    -- сессия пользователя
@@ -23,7 +23,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
 
-     IF COALESCE (inSubjectDocId,0) = 0 AND COALESCE (inSubjectDocId_top,0) = 0
+     IF COALESCE (inReasonId,0) = 0 AND COALESCE (inReasonId_top,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не выбрано Основание для перемещения.';
      END IF;
@@ -48,9 +48,9 @@ BEGIN
      END IF;
 
      -- если не внесено в гриде значение берем из шапки
-     IF COALESCE (inSubjectDocId,0) = 0
+     IF COALESCE (inReasonId,0) = 0
      THEN
-         inSubjectDocId := inSubjectDocId_top;
+         inReasonId := inReasonId_top;
      END IF;
      -- если не внесено в гриде значение берем из шапки
      IF COALESCE (inReturnKindId,0) = 0
@@ -63,7 +63,7 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inGoodsId, inMovementId, inAmount, inParentId);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_SubjectDoc(), ioId, inSubjectDocId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Reason(), ioId, inReasonId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReturnKind(), ioId, inReturnKindId);
 

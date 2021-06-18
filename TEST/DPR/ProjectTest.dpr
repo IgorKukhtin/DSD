@@ -1266,7 +1266,9 @@ uses
   OrderGoods in '..\..\Forms\Document\OrderGoods.pas' {OrderGoodsForm: TParentForm},
   OrderGoodsJournal in '..\..\Forms\Document\OrderGoodsJournal.pas' {OrderGoodsJournalForm: TParentForm},
   ReceiptLevel in '..\..\Forms\Guides\ReceiptLevel.pas' {ReceiptLevelForm: TParentForm},
-  ReceiptLevelEdit in '..\..\Forms\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm};
+  ReceiptLevelEdit in '..\..\Forms\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
+  Reason in '..\..\Forms\Guides\Reason.pas' {ReasonForm: TParentForm},
+  ReasonEdit in '..\..\Forms\Guides\ReasonEdit.pas' {ReasonEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MemberId Integer, MemberName TVarChar, MemberInsertName TVarChar
              , MemberExpId Integer, MemberExpName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
-             , SubjectDocId Integer, SubjectDocName  TVarChar
+             , ReasonId Integer, ReasonName  TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , Comment TVarChar
              , isPromo Boolean
@@ -103,8 +103,8 @@ BEGIN
              , 0                   		        AS ReestrKindId
              , CAST ('' AS TVarChar)                    AS ReestrKindName 
 
-             , 0                   		        AS SubjectDocId
-             , CAST ('' AS TVarChar)                    AS SubjectDocName 
+             , 0                   		        AS ReasonId
+             , CAST ('' AS TVarChar)                    AS ReasonName 
              , 0                   		        AS ReturnKindId
              , CAST ('' AS TVarChar)                    AS ReturnKindName
 
@@ -235,8 +235,8 @@ BEGIN
            , Object_ReestrKind.Id             	    AS ReestrKindId
            , Object_ReestrKind.ValueData       	    AS ReestrKindName
 
-           , 0                   		    AS SubjectDocId
-           , CAST ('' AS TVarChar)                  AS SubjectDocName 
+           , 0                   		    AS ReasonId
+           , CAST ('' AS TVarChar)                  AS ReasonName 
            , 0                   		    AS ReturnKindId
            , CAST ('' AS TVarChar)                  AS ReturnKindName
 

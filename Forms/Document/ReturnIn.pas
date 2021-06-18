@@ -251,7 +251,7 @@ type
     MeasureName_ch2: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
     ReturnKindName_ch2: TcxGridDBColumn;
-    SubjectDocName_ch2: TcxGridDBColumn;
+    ReasonName_ch2: TcxGridDBColumn;
     isErased_ch2: TcxGridDBColumn;
     cxGridLevelDetail: TcxGridLevel;
     spSelectDetail: TdsdStoredProc;
@@ -259,16 +259,30 @@ type
     spInsertUpdateMIDetail: TdsdStoredProc;
     spInsertMaskMIDetail: TdsdStoredProc;
     cxLabel27: TcxLabel;
-    edSubjectDoc: TcxButtonEdit;
+    edReason: TcxButtonEdit;
     cxLabel28: TcxLabel;
     edReturnKind: TcxButtonEdit;
-    GuidesSubjectDoc: TdsdGuides;
+    GuidesReason: TdsdGuides;
     GuidesReturnKind: TdsdGuides;
-    actSubjectDocOpenForm: TOpenChoiceForm;
+    actReasonOpenForm: TOpenChoiceForm;
     actReturnKindOpenForm: TOpenChoiceForm;
-    DetailCDS_str: TClientDataSet;
-    DetailDS_str: TDataSource;
-    actUpdateDetailDS_str: TdsdUpdateDataSet;
+    DetailCDS_Reason: TClientDataSet;
+    DetailDS_Reason: TDataSource;
+    actUpdateDetailDS_Reason: TdsdUpdateDataSet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    isError_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    spSelect_MI_Child_reason: TdsdStoredProc;
+    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    ChildCDS_Reason: TClientDataSet;
+    ChildDS_Reason: TDataSource;
+    dsdDBViewAddOn3: TdsdDBViewAddOn;
+    spUpdateMIChild_reason: TdsdStoredProc;
+    actChoiceSale_reason: TOpenChoiceForm;
   private
     { Private declarations }
   public

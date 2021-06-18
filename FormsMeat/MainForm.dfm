@@ -10081,6 +10081,9 @@ inherited MainForm: TMainForm
       object miSubjectDoc: TMenuItem
         Action = actSubjectDoc
       end
+      object N241: TMenuItem
+        Action = actReason
+      end
     end
     object miJuridicalGuides: TMenuItem [17]
       Caption = #1050#1083#1080#1077#1085#1090#1099

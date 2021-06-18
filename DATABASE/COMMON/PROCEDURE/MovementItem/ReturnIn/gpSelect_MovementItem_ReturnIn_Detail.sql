@@ -1,6 +1,6 @@
  -- Function: gpSelect_MovementItem_ReturnIn_Detail()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn_Detail (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn_Detail (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn_Detail(
     IN inMovementId  Integer      , -- ключ Документа
@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , SubjectDocId Integer, SubjectDocName  TVarChar
+             , ReasonId Integer, ReasonName  TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , isErased Boolean
              , Ord Integer
@@ -44,8 +44,8 @@ BEGIN
                                   , MovementItem.ParentId
                                   , MovementItem.ObjectId          AS GoodsId
                                   , MovementItem.Amount
-                                  , Object_SubjectDoc.Id           AS SubjectDocId
-                                  , Object_SubjectDoc.ValueData    AS SubjectDocName
+                                  , Object_Reason.Id               AS ReasonId
+                                  , Object_Reason.ValueData        AS ReasonName
                                   , Object_ReturnKind.Id           AS ReturnKindId
                                   , Object_ReturnKind.ValueData    AS ReturnKindName
                                   , SUM (COALESCE (MovementItem.Amount,0)) OVER (PARTITION BY MovementItem.ParentId) AS TotalAmount 
@@ -53,10 +53,10 @@ BEGIN
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId     = zc_MI_Detail()
                                                    AND MovementItem.isErased   = tmpIsErased.isErased
-                                  LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
-                                                                   ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
-                                                                  AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
-                                  LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+                                  LEFT JOIN MovementItemLinkObject AS MILO_Reason
+                                                                   ON MILO_Reason.MovementItemId = MovementItem.Id
+                                                                  AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                                  LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
 
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ReturnKind
                                                                    ON MILinkObject_ReturnKind.MovementItemId = MovementItem.Id
@@ -76,8 +76,8 @@ BEGIN
                             , tmpMI_Master.GoodsId
                             , tmpMI_Master.GoodsKindId
                             , COALESCE (tmpMI_Detail.Amount, tmpMI_Master.Amount) :: TFloat AS Amount
-                            , tmpMI_Detail.SubjectDocId   ::Integer
-                            , tmpMI_Detail.SubjectDocName ::TVarChar
+                            , tmpMI_Detail.ReasonId   ::Integer
+                            , tmpMI_Detail.ReasonName ::TVarChar
                             , tmpMI_Detail.ReturnKindId   ::Integer
                             , tmpMI_Detail.ReturnKindName ::TVarChar
                               -- № п.п.
@@ -90,8 +90,8 @@ BEGIN
                             , tmpMI_Master.GoodsId
                             , tmpMI_Master.GoodsKindId
                             , tmpDiff.Amount :: TFloat AS Amount
-                            , 0   ::Integer  AS SubjectDocId
-                            , ''  ::TVarChar AS SubjectDocName
+                            , 0   ::Integer  AS ReasonId
+                            , ''  ::TVarChar AS ReasonName
                             , 0   ::Integer  AS ReturnKindId
                             , ''  ::TVarChar AS ReturnKindName
                               -- № п.п. - здесь всегда последний
@@ -113,8 +113,8 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
  
-           , tmpAll.SubjectDocId   ::Integer
-           , tmpAll.SubjectDocName ::TVarChar
+           , tmpAll.ReasonId   ::Integer
+           , tmpAll.ReasonName ::TVarChar
            , tmpAll.ReturnKindId   ::Integer
            , tmpAll.ReturnKindName ::TVarChar
            , FALSE                      AS isErased

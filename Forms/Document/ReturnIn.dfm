@@ -1075,13 +1075,13 @@ inherited ReturnInForm: TReturnInForm
         Left = 0
         Top = 0
         Width = 1304
-        Height = 429
+        Height = 291
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DetailDS_str
+          DataController.DataSource = DetailDS_Reason
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1247,13 +1247,13 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SubjectDocName_ch2: TcxGridDBColumn
+          object ReasonName_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
-            DataBinding.FieldName = 'SubjectDocName'
+            DataBinding.FieldName = 'ReasonName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actSubjectDocOpenForm
+                Action = actReasonOpenForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1290,6 +1290,348 @@ inherited ReturnInForm: TReturnInForm
         object cxGridLevelDetail: TcxGridLevel
           GridView = cxGridDBTableViewDetail
         end
+      end
+      object cxGrid2: TcxGrid
+        Left = 0
+        Top = 299
+        Width = 1304
+        Height = 130
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView2: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS_Reason
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_ch3
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_ch3
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isError_ch3: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object GoodsCode_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object GoodsName_ch3: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 209
+          end
+          object GoodsKindName_ch3: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object Amount_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountPartner_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Price_ch3: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ChangePercent_Sale_ch3: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo_Sale_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object DescName_Sale_ch3: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DescName_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InvNumber_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceSale
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumberPartner_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object InvNumber_Master_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InvNumberPartner_Master_ch3: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_ch3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDatePartner_ch3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDate_Master_ch3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'OperDate_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ContractCode_Sale_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractCode_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object ContractName_Sale_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object ContractCode_Tax_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractCode_Tax'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object ContractName_Tax_ch3: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractName_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object DocumentTaxKindName_ch3: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object FromName_ch3: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'FromName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ToCode_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ToCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ToName_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object JuridicalName_ch3: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MovementId_sale_ch3: TcxGridDBColumn
+            Caption = 'Id1'
+            DataBinding.FieldName = 'MovementId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object MovementItemId_sale_ch3: TcxGridDBColumn
+            Caption = 'Id2'
+            DataBinding.FieldName = 'MovementItemId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object isErased_ch3: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableView2
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 291
+        Width = 1304
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid2
       end
     end
   end
@@ -1615,7 +1957,7 @@ inherited ReturnInForm: TReturnInForm
       Top = 127
       Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
     end
-    object edSubjectDoc: TcxButtonEdit
+    object edReason: TcxButtonEdit
       Left = 867
       Top = 145
       Properties.Buttons = <
@@ -1868,6 +2210,9 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spSelectDetail
+        end
+        item
+          StoredProc = spSelect_MI_Child_reason
         end>
       RefreshOnTabSetChanges = True
     end
@@ -3108,6 +3453,298 @@ inherited ReturnInForm: TReturnInForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
     end
+    object actChoiceSale_reason: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Report_Goods_SalebyReturnIn_ChoiceForm'
+      FormName = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.Name = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.Value = 'TReport_Goods_SalebyReturnIn_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'MovementId_sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementItemId'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'MovementItemId_sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStartDate'
+          Value = 42181d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDatePartner
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = DetailDS_Reason
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = DetailDS_Reason
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = DetailDS_Reason
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = DetailDS_Reason
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = DetailDS_Reason
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToCode'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'ToCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'InvNumberPartner'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberPartner_Master'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'InvNumberPartner_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate_Master'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'OperDate_Master'
+          DataType = ftDateTime
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountPartner'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'AmountPartner'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Master'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'InvNumber_Master'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DocumentTaxKindName'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'DocumentTaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actUpdateAuto: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3469,28 +4106,43 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = 'actSPSavePrintState'
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm
+    object actReasonOpenForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TSubjectDocForm'
-      FormNameParam.Value = 'TSubjectDocForm'
+      Caption = 'ReasonForm'
+      FormName = 'TReasonForm'
+      FormNameParam.Value = 'TReasonForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
-          Component = DetailCDS
-          ComponentItem = 'SubjectDocId'
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReasonId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = DetailCDS
-          ComponentItem = 'SubjectDocName'
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReasonName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReturnKindId'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReturnKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReturnKindName'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReturnKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -3509,21 +4161,21 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'Key'
           Value = Null
-          Component = DetailCDS
+          Component = DetailCDS_Reason
           ComponentItem = 'ReturnKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = DetailCDS
+          Component = DetailCDS_Reason
           ComponentItem = 'ReturnKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object actUpdateDetailDS_str: TdsdUpdateDataSet
+    object actUpdateDetailDS_Reason: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3536,7 +4188,7 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spSelectDetail
         end>
       Caption = 'actUpdateDetailDS'
-      DataSource = DetailDS_str
+      DataSource = DetailDS_Reason
     end
   end
   inherited MasterDS: TDataSource
@@ -4401,16 +5053,16 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SubjectDocId'
+        Name = 'ReasonId'
         Value = Null
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SubjectDocName'
+        Name = 'ReasonName'
         Value = Null
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -6066,13 +6718,13 @@ inherited ReturnInForm: TReturnInForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 296
-    Top = 520
+    Left = 272
+    Top = 552
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
-    Left = 360
-    Top = 520
+    Left = 352
+    Top = 552
   end
   object spSelect_MI_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'
@@ -6099,8 +6751,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 528
+    Left = 72
+    Top = 544
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6125,8 +6777,8 @@ inherited ReturnInForm: TReturnInForm
     ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
-    Left = 342
-    Top = 545
+    Left = 222
+    Top = 585
   end
   object spUpdateAuto: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_ReturnIn_Auto'
@@ -6407,10 +7059,10 @@ inherited ReturnInForm: TReturnInForm
   end
   object spSelectDetail: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnIn_Detail'
-    DataSet = DetailCDS_str
+    DataSet = DetailCDS_Reason
     DataSets = <
       item
-        DataSet = DetailCDS_str
+        DataSet = DetailCDS_Reason
       end>
     Params = <
       item
@@ -6466,7 +7118,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ioId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6474,7 +7126,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inParentId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'ParentId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6490,15 +7142,15 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSubjectDocId_top'
+        Name = 'inReasonId_top'
         Value = ''
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6512,17 +7164,17 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSubjectDocId'
+        Name = 'inReasonId'
         Value = Null
-        Component = DetailCDS_str
-        ComponentItem = 'SubjectDocId'
+        Component = DetailCDS_Reason
+        ComponentItem = 'ReasonId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inReturnKindId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'ReturnKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6530,7 +7182,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inAmount'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
@@ -6554,7 +7206,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inParentId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'ParentId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6570,15 +7222,15 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = DetailCDS_str
+        Component = DetailCDS_Reason
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSubjectDocId_top'
+        Name = 'inReasonId_top'
         Value = ''
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6592,7 +7244,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSubjectDocId'
+        Name = 'inReasonId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6614,19 +7266,19 @@ inherited ReturnInForm: TReturnInForm
     Left = 904
     Top = 520
   end
-  object GuidesSubjectDoc: TdsdGuides
+  object GuidesReason: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edSubjectDoc
-    FormNameParam.Value = 'TSubjectDocForm'
+    LookupControl = edReason
+    FormNameParam.Value = 'TReasonForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TSubjectDocForm'
+    FormName = 'TReasonForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6634,7 +7286,24 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesSubjectDoc
+        Component = GuidesReason
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnKindId'
+        Value = Null
+        Component = GuidesReturnKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnKindName'
+        Value = Null
+        Component = GuidesReturnKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6672,7 +7341,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 1168
     Top = 136
   end
-  object DetailCDS_str: TClientDataSet
+  object DetailCDS_Reason: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     MasterFields = 'Id'
@@ -6680,9 +7349,163 @@ inherited ReturnInForm: TReturnInForm
     Left = 1056
     Top = 504
   end
-  object DetailDS_str: TDataSource
-    DataSet = DetailCDS_str
+  object DetailDS_Reason: TDataSource
+    DataSet = DetailCDS_Reason
     Left = 1120
     Top = 504
+  end
+  object spSelect_MI_Child_reason: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'
+    DataSet = ChildCDS_Reason
+    DataSets = <
+      item
+        DataSet = ChildCDS_Reason
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 560
+  end
+  object dsdDBViewAddOn2: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    ShowFieldImageList = <>
+    SearchAsFilter = False
+    PropertiesCellList = <>
+    Left = 758
+    Top = 577
+  end
+  object ChildCDS_Reason: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'ParentId'
+    MasterSource = DetailDS_Reason
+    PacketRecords = 0
+    Params = <>
+    Left = 712
+    Top = 552
+  end
+  object ChildDS_Reason: TDataSource
+    DataSet = ChildCDS_Reason
+    Left = 776
+    Top = 552
+  end
+  object dsdDBViewAddOn3: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView2
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    ShowFieldImageList = <>
+    SearchAsFilter = False
+    PropertiesCellList = <>
+    Left = 598
+    Top = 585
+  end
+  object spUpdateMIChild_reason: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ReturnIn_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS_Reason
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ChildCDS_Reason
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildCDS_Reason
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Sale'
+        Value = Null
+        Component = ChildCDS_Reason
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_sale'
+        Value = Null
+        Component = ChildCDS_Reason
+        ComponentItem = 'MovementItemId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 560
   end
 end

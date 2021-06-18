@@ -349,6 +349,11 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_SubjectDoc() RETURNS Integer AS $BODY
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_SubjectDoc', 'Основание для перемещения' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_SubjectDoc');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Reason() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Reason'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Reason', 'Причина возврата / перемещения' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Reason');
+
+
 CREATE OR REPLACE FUNCTION zc_MILinkObject_ReturnKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ReturnKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_ReturnKind', 'Тип возврата' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ReturnKind');
@@ -365,6 +370,7 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 17.06.21         * zc_MILinkObject_Reason
  06.05.21         * zc_MILinkObject_UnitFineSubject
  28.04.21         * zc_MILinkObject_FineSubject
  07.04.21         * zc_MILinkObject_SubjectDoc
