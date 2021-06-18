@@ -107,8 +107,9 @@ BEGIN
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
-             , (zfCalc_SummDiscount (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0), COALESCE (MovementFloat_DiscountTax.ValueData,0) + COALESCE (MovementFloat_DiscountNextTax.ValueData,0) ) ) :: TFloat AS SummDiscount_total
+             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS TotalSummVAT
+             --, (zfCalc_SummDiscount (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0), COALESCE (MovementFloat_DiscountTax.ValueData,0) + COALESCE (MovementFloat_DiscountNextTax.ValueData,0) ) ) :: TFloat AS SummDiscount_total
+             , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS SummDiscount_total
 
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
