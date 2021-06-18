@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inMedicSP               TVarChar   , -- ФИО врача (Соц. проект)
     IN inMemberSP              TVarChar   , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
+    IN inisNP                  Boolean    , -- Доставка "Новой почтой"
    OUT outSPKindName           TVarChar   , -- вид соц.проекта
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -141,6 +143,7 @@ BEGIN
                                         , inMedicSP         := COALESCE (vbMedicSPId,0)
                                         , inMemberSP        := COALESCE (vbMemberSPId,0)
                                         , inComment         := inComment
+                                        , inisNP            := inisNP
                                         , inUserId          := vbUserId
                                         );
 

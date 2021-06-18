@@ -213,7 +213,7 @@ begin
 
   Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
 
-  Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, FormatSettings.ListSeparator);
+  Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
 
   for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try

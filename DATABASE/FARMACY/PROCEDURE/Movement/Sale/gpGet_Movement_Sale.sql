@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer
              , SPKindId   Integer
              , SPKindName TVarChar
              , isDeferred Boolean
+             , isNP Boolean
              )
 AS
 $BODY$
@@ -94,6 +95,7 @@ BEGIN
           , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
           , FALSE::Boolean                                       AS isDeferred
+          , CASE WHEN inSession = '8720522' THEN TRUE ELSE FALSE END::Boolean AS isNP
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -154,6 +156,7 @@ BEGIN
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
+          , COALESCE (MovementBoolean_NP.ValueData, FALSE) ::Boolean  AS isNP
           
         FROM Movement_Sale_View AS Movement_Sale
 
@@ -169,6 +172,9 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                    ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+         LEFT JOIN MovementBoolean AS MovementBoolean_NP
+                                   ON MovementBoolean_NP.MovementId = Movement_Sale.Id
+                                  AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 
@@ -189,5 +195,5 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
  13.10.15                                                                        *
 */
 
---select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '3');
+--select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '8720522');
 

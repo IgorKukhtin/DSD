@@ -119,6 +119,7 @@ type
     actExecuteDialog_Update_PriceSale: TExecuteDialog;
     spUpdate_PriceSale: TdsdStoredProc;
     bbactUpdatePriceSale: TdxBarButton;
+    cbIsNP: TcxCheckBox;
   private
     { Private declarations }
   public

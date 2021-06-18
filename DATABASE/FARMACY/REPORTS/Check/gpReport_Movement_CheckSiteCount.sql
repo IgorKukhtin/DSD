@@ -30,6 +30,8 @@ BEGIN
      vbEndDate := inStartDate - INTERVAL '1 DAY';
      vbStartDate := vbEndDate - ((inEndDate::Date - inStartDate::Date)::TVarChar||' day')::Interval;
 
+     --raise notice 'Value 03: % %', vbStartDate, vbEndDate;
+
      -- Результат
      RETURN QUERY
        WITH tmpMovement AS (SELECT Movement_Check.Id                                      AS Id
@@ -56,7 +58,6 @@ BEGIN
                                                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                                        
                                   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', vbStartDate) - INTERVAL '10 DAY' 
-                                    AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                                     AND Movement.DescId = zc_Movement_Check()
                                     AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
                                ) AS Movement_Check
@@ -100,6 +101,7 @@ BEGIN
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
                               
                               WHERE tmpMovementProtocol.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                AND tmpMovementProtocol.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                               GROUP BY Movement.CheckSourceKindName) 
         , tmpMovementPrev AS (SELECT Movement.CheckSourceKindName
                                    , Count(*)                    AS CountCheck
@@ -109,8 +111,8 @@ BEGIN
 
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
 
-                              WHERE tmpMovementProtocol.OperDate <  DATE_TRUNC ('DAY', inStartDate)
-                                AND tmpMovementProtocol.OperDate >=  DATE_TRUNC ('DAY', vbStartDate)
+                              WHERE tmpMovementProtocol.OperDate >=  DATE_TRUNC ('DAY', vbStartDate)
+                                AND tmpMovementProtocol.OperDate <  DATE_TRUNC ('DAY', vbEndDate) + INTERVAL '1 DAY'
                               GROUP BY Movement.CheckSourceKindName) 
 
         SELECT COALESCE(Movement.CheckSourceKindName, tmpMovementPrev.CheckSourceKindName)::TVarChar
@@ -140,4 +142,6 @@ $BODY$
 
 -- тест
 
-select * from gpReport_Movement_CheckSiteCount(inStartDate := ('16.06.2021')::TDateTime , inEndDate := ('16.06.2021')::TDateTime , inSession := '3');
+--select * from gpReport_Movement_CheckSiteCount(inStartDate := ('16.06.2021')::TDateTime , inEndDate := ('16.06.2021')::TDateTime , inSession := '3');
+
+select * FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := '3');     

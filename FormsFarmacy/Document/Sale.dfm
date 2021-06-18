@@ -626,6 +626,13 @@ inherited SaleForm: TSaleForm
       TabOrder = 32
       Width = 69
     end
+    object cbIsNP: TcxCheckBox
+      Left = 161
+      Top = 113
+      Caption = #1044#1086#1089#1090#1072#1074#1082#1072' "'#1053#1086#1074#1086#1081' '#1087#1086#1095#1090#1086#1081'"'
+      TabOrder = 33
+      Width = 186
+    end
   end
   object cxLabel8: TcxLabel [2]
     Left = 379
@@ -1457,6 +1464,13 @@ inherited SaleForm: TSaleForm
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNP'
+        Value = Null
+        Component = cbIsNP
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -1569,6 +1583,14 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisNP'
+        Value = Null
+        Component = cbIsNP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outSPKindName'
         Value = Null
         Component = SPKindGuides
@@ -1633,6 +1655,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edGroupMemberSP
+      end
+      item
+        Control = cbIsNP
       end>
     Left = 208
     Top = 233
