@@ -232,8 +232,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
   end
   object cbTotal: TcxCheckBox
-    Left = 134
-    Top = 163
+    Left = 494
+    Top = 131
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
     TabOrder = 6
@@ -879,7 +879,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -890,7 +890,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -928,7 +928,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'isTotal'
-          Value = 'False'
+          Value = False
           Component = cbTotal
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -962,7 +962,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -973,7 +973,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','

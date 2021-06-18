@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionByContract(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , Value TFloat
+             , Value TFloat, PercentRetBonus TFloat
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar      
              , BonusKindId Integer, BonusKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -31,7 +31,8 @@ BEGIN
      SELECT 
            Object_ContractCondition.Id        AS Id
            
-         , ObjectFloat_Value.ValueData     AS Value  
+         , ObjectFloat_Value.ValueData     AS Value 
+         , COALESCE (ObjectFloat_PercentRetBonus.ValueData,0) :: TFloat AS PercentRetBonus 
                                                         
          , Object_ContractConditionKind.Id          AS ContractConditionKindId
          , Object_ContractConditionKind.ValueData   AS ContractConditionKindName
@@ -112,6 +113,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_PercentRetBonus 
+                                ON ObjectFloat_PercentRetBonus.ObjectId = Object_ContractCondition.Id 
+                               AND ObjectFloat_PercentRetBonus.DescId = zc_ObjectFloat_ContractCondition_PercentRetBonus()
 
           LEFT JOIN ObjectDate AS ObjectDate_StartDate
                                ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id

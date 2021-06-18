@@ -46,10 +46,9 @@ BEGIN
          RETURN;
      END IF;
 
-
      -- –езультат
      RETURN QUERY
-                            -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого мес€ца в долг по прибыли???
+      -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого мес€ца в долг по прибыли???
       WITH /*tmpContainer AS (SELECT ReportContainerLink.ReportContainerId
                                  -- , ReportContainerLink.ChildContainerId   AS ContainerId_inf
                                  , CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
@@ -364,7 +363,7 @@ BEGIN
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Ќиколаев%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Nik
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%„еркассы%'  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Ch
            , CASE WHEN Object_Branch_ProfitLoss.ValueData ILIKE '%Ћьвов%'     THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_Lv
-           , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''  THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
+           , CASE WHEN COALESCE (Object_Branch_ProfitLoss.ValueData,'') =''   THEN tmpReport.Amount ELSE 0 END :: TFloat AS Amount_0
 
            -- доп.группа дл€ промежуточного итога   "итого сумма у покупател€"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
