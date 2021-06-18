@@ -26,7 +26,6 @@ object ReceiptForm: TReceiptForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1152
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -545,7 +544,6 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 1152
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -864,7 +862,7 @@ object ReceiptForm: TReceiptForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -881,7 +879,6 @@ object ReceiptForm: TReceiptForm
     Height = 5
     AlignSplitter = salBottom
     Control = cxGridReceiptChild
-    ExplicitWidth = 1152
   end
   object Panel: TPanel
     Left = 0
@@ -889,8 +886,7 @@ object ReceiptForm: TReceiptForm
     Width = 1065
     Height = 35
     Align = alTop
-    TabOrder = 7
-    ExplicitWidth = 1152
+    TabOrder = 6
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9

@@ -366,6 +366,28 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 200
           end
+          object Value5: TcxGridDBColumn
+            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
+            DataBinding.FieldName = 'Value5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object Value10: TcxGridDBColumn
+            Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'Value10'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -1263,7 +1285,7 @@ inherited ReturnInForm: TReturnInForm
             Width = 166
           end
           object ReturnKindName_ch2: TcxGridDBColumn
-            Caption = #1058#1080#1087
+            Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'ReturnKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -1275,6 +1297,7 @@ inherited ReturnInForm: TReturnInForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 159
           end
           object isErased_ch2: TcxGridDBColumn
@@ -1285,6 +1308,28 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
+          end
+          object Value5_ch2: TcxGridDBColumn
+            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
+            DataBinding.FieldName = 'Value5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object Value10_ch2: TcxGridDBColumn
+            Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'Value10'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
         object cxGridLevelDetail: TcxGridLevel
@@ -1972,7 +2017,8 @@ inherited ReturnInForm: TReturnInForm
     object cxLabel28: TcxLabel
       Left = 1115
       Top = 127
-      Caption = #1058#1080#1087
+      Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Visible = False
     end
     object edReturnKind: TcxButtonEdit
       Left = 1115
@@ -1984,6 +2030,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 44
+      Visible = False
       Width = 144
     end
   end
@@ -7315,6 +7362,7 @@ inherited ReturnInForm: TReturnInForm
   object GuidesReturnKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edReturnKind
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TReturnKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
