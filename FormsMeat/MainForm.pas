@@ -1273,6 +1273,9 @@ type
     actReceiptLevel: TdsdOpenForm;
     miReceiptLevel: TMenuItem;
     N241: TMenuItem;
+    actReport_ProfitLoss_grid: TdsdOpenForm;
+    Grid1: TMenuItem;
+    N243: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

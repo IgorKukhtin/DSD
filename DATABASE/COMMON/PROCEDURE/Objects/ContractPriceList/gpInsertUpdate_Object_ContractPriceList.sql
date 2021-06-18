@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_ContractCondition
+-- Function: gpInsertUpdate_Object_ContractPriceList
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractPriceList (Integer, TVarChar, Integer, Integer, TDateTime, TVarChar);
 

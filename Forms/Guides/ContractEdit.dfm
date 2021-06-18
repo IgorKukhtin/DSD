@@ -337,6 +337,16 @@
           HeaderAlignmentVert = vaCenter
           Width = 53
         end
+        object PercentRetBonus: TcxGridDBColumn
+          Caption = '% '#1074#1086#1079#1074'. '#1087#1083#1072#1085
+          DataBinding.FieldName = 'PercentRetBonus'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '% '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1083#1072#1085
+          Width = 62
+        end
         object InfoMoneyName: TcxGridDBColumn
           Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
           DataBinding.FieldName = 'InfoMoneyName'
@@ -2446,6 +2456,15 @@
         Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentRetBonus'
+        Value = Null
+        Component = ContractConditionCDS
+        ComponentItem = 'PercentRetBonus'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

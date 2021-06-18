@@ -1,5 +1,13 @@
 -- Function: lpInsertUpdate_MovementFloat_TotalSumm_order (Integer)
 
+/*
+1) Итого сумма по документу (без НДС без учета скидок)                     TotalSummMVAT           --SummPriceList
+2) Итого сумма по документу (без НДС с учетом скидки)                      TotalSumm               --OperSumm
+3) Итого сумма по документу (с учетом НДС и скидки)                        TotalSummPVAT
+ 4) итого сумма скидки
+ */
+
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm_order (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm_order(
@@ -15,11 +23,11 @@ $BODY$
   DECLARE vbPaidKindId Integer;
 */
 
-  DECLARE vbTotalCount TFloat;
-  DECLARE vbOperSumm_MVAT TFloat;
-  DECLARE vbOperSumm_PVAT TFloat;
-  DECLARE vbOperSumm_PVAT_original TFloat;    
-              
+  DECLARE vbTotalCount    TFloat;
+  DECLARE vbTotalSumm     TFloat;
+  DECLARE vbTotalSummMVAT TFloat;
+  DECLARE vbTotalSummPVAT TFloat;    
+
 BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
@@ -58,31 +66,19 @@ BEGIN
 
 
      --
-     SELECT SUM (COALESCE(tmpMI.OperCount, 0))          AS TotalCount
+     SELECT SUM (COALESCE(tmpMI.OperCount, 0))      AS TotalCount
          
-           -- Сумма без НДС без скидки
-          , SUM (CASE -- если цены c НДС
-                      WHEN vbPriceWithVAT
-                           
-                           THEN zfCalc_Summ_NoVAT (COALESCE (tmpMI.OperSumm_original, 0), vbVATPercent)
-                      -- если цены без НДС
-                      ELSE
-                          COALESCE (tmpMI.OperSumm_original, 0)
-                 END) AS OperSumm_MVAT
+           -- Сумма без НДС с учетом скидки
+          , SUM (COALESCE (tmpMI.SummPrice, 0))     AS TotalSumm
 
-            -- Сумма с НДС
-          , SUM (CASE -- если цены с НДС
-                      WHEN vbPriceWithVAT
-                           THEN COALESCE (tmpMI.OperSumm_original, 0)
-                      -- если цены без НДС
-                      ELSE zfCalc_SummWVAT (COALESCE (tmpMI.OperSumm_original, 0), vbVATPercent)
-                 END) AS OperSumm_PVAT_original
+           -- Сумма без НДС без учета скидок
+          , SUM (COALESCE (tmpMI.SummPriceList, 0)) AS TotalSummMVAT
 
-            -- Сумма  (с учетом НДС и скидки)
-          , SUM (zfCalc_SummWVAT (COALESCE (tmpMI.OperSumm, 0), vbVATPercent)) AS OperSumm_PVAT
-                               
+           -- Сумма без НДС с учетом скидки
+          , SUM (zfCalc_SummWVAT (COALESCE (tmpMI.SummPrice, 0), vbVATPercent)) AS TotalSummPVAT
+
       INTO vbTotalCount
-         , vbOperSumm_MVAT, vbOperSumm_PVAT_original, vbOperSumm_PVAT
+         , vbTotalSumm, vbTotalSummMVAT, vbTotalSummPVAT
        
        FROM (SELECT MovementItem.Id
                   , MovementItem.ObjectId            AS GoodsId
@@ -90,8 +86,9 @@ BEGIN
                   , MIFloat_OperPrice.ValueData      AS OperPrice                      --Цена с учетом всех скидок без НДС
                   , MIFloat_OperPriceList.ValueData  AS OperPrice_original             --Цена без скидки
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-                  , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 0) )     AS OperSumm
-                  , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 0) ) AS OperSumm_original
+                  , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 0) )     AS SummPrice       --(без НДС с учетом скидки) 
+                  , zfCalc_SummPriceList (COALESCE (MovementItem.Amount, 0), MIFloat_OperPriceList.ValueData)                   ::TFloat AS SummPriceList   --(без НДС без учета скидок)
+
              FROM MovementItem
                       LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                   ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
@@ -112,7 +109,7 @@ BEGIN
 
   /*
 zc_MovementFloat_TotalCount 	Итого количество 	+ 	
-zc_MovementFloat_TotalSummMVAT 	Итого сумма по документу (без НДС) 	+ 	без учета скидок ---------
+zc_MovementFloat_TotalSummMVAT 	Итого сумма по документу (без НДС) 	+ 	без учета скидок
 zc_MovementFloat_TotalSummPVAT 	Итого сумма по документу (с НДС) 	+ 	без учета скидок
 zc_MovementFloat_TotalSumm 	Итого сумма по документу (с учетом НДС и скидки)
 */
@@ -120,11 +117,11 @@ zc_MovementFloat_TotalSumm 	Итого сумма по документу (с учетом НДС и скидки)
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
          -- Сохранили свойство <Итого Сумма>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_PVAT);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
          -- Сохранили свойство <Итого сумма по накладной (без НДС)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
          -- Сохранили свойство <Итого сумма по накладной (с НДС)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT_original);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
 
 END;
 $BODY$

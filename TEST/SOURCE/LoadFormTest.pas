@@ -2102,13 +2102,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_byPackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_byPackDialogForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_RemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Supply_RemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Supply_RemainsDialogForm'));
@@ -2281,7 +2281,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridForm');
+  exit;
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
