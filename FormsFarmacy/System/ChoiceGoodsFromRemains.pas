@@ -54,6 +54,11 @@ type
     colDeferredSendIn: TcxGridDBColumn;
     cbisRetail: TcxCheckBox;
     RetailName: TcxGridDBColumn;
+    colPriceSite: TcxGridDBColumn;
+    actUpdate_PriceSale: TdsdExecStoredProc;
+    actExecuteDialog_Update_PriceSite: TExecuteDialog;
+    spSetGoodsObjectPriceSite: TdsdStoredProc;
+    bbUpdate_PriceSale: TdxBarButton;
   private
     { Private declarations }
   public

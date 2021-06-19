@@ -123,7 +123,8 @@ BEGIN
                                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                                        AND MovementLinkObject_Unit.ObjectId IN (SELECT MI_Master.UnitId FROM MI_Master) 
                                                                        
-                                      WHERE Movement.OperDate = vbCalculation
+                                      WHERE Movement.OperDate >= vbCalculation
+                                        AND Movement.OperDate <= vbCalculation + INTERVAL '6 DAY'
                                         AND Movement.DescId = zc_Movement_OrderInternal() 
                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                                       )
@@ -245,4 +246,4 @@ $BODY$
 */
 -- 
 
-select * from gpSelect_MovementItem_FinalSUA(inMovementId := 22870236 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_FinalSUA(inMovementId := 23672895 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

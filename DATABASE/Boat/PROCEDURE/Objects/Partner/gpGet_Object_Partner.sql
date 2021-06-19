@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , DiscountTax TFloat
              , DayCalendar TFloat
@@ -52,6 +53,8 @@ BEGIN
 
            , 0                        AS TaxKindId
            , '' :: TVarChar           AS TaxKindName
+           , 0                        AS PaidKindId
+           , '' :: TVarChar           AS PaidKindName
            , 0                        AS InfoMoneyId
            , '' :: TVarChar           AS InfoMoneyName
            , 0 ::TFloat               AS DiscountTax
@@ -83,6 +86,8 @@ BEGIN
 
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
+           , Object_PaidKind.Id              AS PaidKindId
+           , Object_PaidKind.ValueData       AS PaidKindName
            , Object_InfoMoney.Id             AS InfoMoneyId
            , Object_InfoMoney.ValueData      AS InfoMoneyName
            , ObjectFloat_DiscountTax.ValueData ::TFloat AS DiscountTax
@@ -154,6 +159,11 @@ BEGIN
                                ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_PaidKind
+                               ON ObjectLink_PaidKind.ObjectId = Object_Partner.Id
+                              AND ObjectLink_PaidKind.DescId = zc_ObjectLink_Partner_PaidKind()
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
        WHERE Object_Partner.Id = inId;
    END IF;
 
@@ -165,6 +175,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.21         *
  02.02.21         *
  09.11.20         *
  22.10.20         *

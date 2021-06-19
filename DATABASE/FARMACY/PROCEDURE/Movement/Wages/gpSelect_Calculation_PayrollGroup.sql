@@ -1,6 +1,7 @@
 -- Function: gpSelect_Ñalculation_PayrollGroup()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inPayrollTypeID    Integer,
@@ -8,26 +9,30 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inMinAccrualAmount TFloat,
     IN inCountDoc         Integer,
     IN inSummBase         TFloat,
+    IN inSummBaseSite     TFloat,
     IN inCountUser        Integer,
     IN inCorrPercentage   TFloat,
     IN inDetals           TVarChar
 )
 RETURNS TABLE (Summa TFloat
              , SummaBase TFloat
+             , SummaBaseSite TFloat
              , Formula TVarChar
              )
 AS
 $BODY$
-   DECLARE vbSumma     TFloat;
-   DECLARE vbSummaBase TFloat;
-   DECLARE vbSummaCalñ TFloat;
-   DECLARE vbFormula   TVarChar;
+   DECLARE vbSumma         TFloat;
+   DECLARE vbSummaBase     TFloat;
+   DECLARE vbSummaBaseSite TFloat;
+   DECLARE vbSummaCalñ     TFloat;
+   DECLARE vbFormula       TVarChar;
 BEGIN
 
   IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS(), zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS(), zc_Enum_PayrollType_WorkI())
   THEN
     vbSummaBase := inSummBase;
-    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
+    vbSummaBaseSite := inSummBaseSite;
+    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2) + ROUND(COALESCE (vbSummaBaseSite * 1 / 100, 0), 2);
     vbSummaCalñ := CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END;
     IF COALESCE (inCorrPercentage, 100) <> 100
     THEN
@@ -35,22 +40,24 @@ BEGIN
     END IF;
 
 
-    vbFormula   := 'Áàçà ðàñ÷åòà: '||inDetals||' = '||
-                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
-                    'Íà÷èñëåíî: Åñëè áàçà % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
+    vbFormula   := ('Áàçà ðàñ÷åòà: '||inDetals||' = '||
+                    TRIM(to_char(vbSummaBase + COALESCE (vbSummaBaseSite, 0), 'G999G999G999G999D99'))||
+                    '; Íà÷èñëåíî: Åñëè áàçà % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||CASE WHEN COALESCE (vbSummaBaseSite, 0) > 0 THEN ' + áàçà ñàéòà 1 % ' ELSE '' END||
                     ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
                     ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
                     ' òî '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
                     ' èíà÷å '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Êîýôôèöèåíò  '||TRIM(to_char(inCorrPercentage / 100, 'G999G999G999G990D99')) ELSE '' END||
-                    '; Íà÷èñëåíî: '||TRIM(to_char(vbSummaCalñ, 'G999G999G999G999D99'));
+                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Êîýôôèöèåíò  '||TRIM(to_char(inCorrPercentage / 100, 'G999G999G999G990D99')) ELSE '' END
+                    --'; Íà÷èñëåíî: '||TRIM(to_char(vbSummaCalñ, 'G999G999G999G999D99'))
+                    )::TVarChar;
 
     RETURN QUERY
-        SELECT vbSummaCalñ, vbSummaBase, vbFormula;
+        SELECT vbSummaCalñ, (vbSummaBase + vbSummaBaseSite)::TFloat, vbSummaBaseSite, vbFormula;
 
   ELSEIF inPayrollTypeID = zc_Enum_PayrollType_WorkNS()
   THEN
     vbSummaBase := inSummBase;
+    vbSummaBaseSite := inSummBaseSite;
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
     vbSummaCalñ := CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END;
     IF COALESCE (inCorrPercentage, 100) <> 100
@@ -69,15 +76,17 @@ BEGIN
                     '; Íà÷èñëåíî: '||TRIM(to_char(vbSummaCalñ, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSummaCalñ, vbSummaBase, vbFormula;
+        SELECT vbSummaCalñ, vbSummaBase, vbSummaBaseSite, vbFormula;
 
   ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkS(), zc_Enum_PayrollType_WorkIS())
   THEN
     IF COALESCE (inCountUser, 0) = 0
     THEN
       vbSummaBase := COALESCE (inSummBase, 0);
+      vbSummaBaseSite := COALESCE (inSummBaseSite, 0);
     ELSE
       vbSummaBase := COALESCE (inSummBase, 0) / COALESCE (inCountUser, 0);
+      vbSummaBaseSite := COALESCE (inSummBaseSite, 0) / COALESCE (inCountUser, 0);
     END IF;
 
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2);
@@ -99,18 +108,18 @@ BEGIN
                     '; Íà÷èñëåíî: '||TRIM(to_char(vbSummaCalñ, 'G999G999G999G999D99'));
 
     RETURN QUERY
-        SELECT vbSummaCalñ, vbSummaBase, vbFormula;
+        SELECT vbSummaCalñ, vbSummaBase, vbSummaBaseSite, vbFormula;
 
   ELSE
 
     RETURN QUERY
-        SELECT Null::TFloat, Null::TFloat, 'Íåèçâåñòíûé òèï ðàñ÷åòà.'::TVarChar;
+        SELECT Null::TFloat, Null::TFloat, Null::TFloat, 'Íåèçâåñòíûé òèï ðàñ÷åòà.'::TVarChar;
   END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 
 /*

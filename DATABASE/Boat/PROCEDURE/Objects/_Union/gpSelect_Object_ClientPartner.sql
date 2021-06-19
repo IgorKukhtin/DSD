@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , TaxKind_Value TFloat
+             , PaidKindId Integer, PaidKindName TVarChar
              , isErased Boolean
 )
 AS
@@ -42,6 +43,8 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationCode
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
+          , Object_PaidKind.Id              AS PaidKindId
+          , Object_PaidKind.ValueData       AS PaidKindName
           , Object_ClientPartner.isErased
         FROM Object AS Object_ClientPartner
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ClientPartner.DescId
@@ -63,6 +66,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                   ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PaidKind
+                               ON ObjectLink_PaidKind.ObjectId = Object_ClientPartner.Id
+                              AND ObjectLink_PaidKind.DescId IN (zc_ObjectLink_Client_PaidKind(),zc_ObjectLink_Partner_PaidKind())
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
 
         WHERE Object_ClientPartner.DescId in (zc_Object_Partner(),zc_Object_Client())
           AND (Object_ClientPartner.isErased = FALSE OR inisShowAll = TRUE);

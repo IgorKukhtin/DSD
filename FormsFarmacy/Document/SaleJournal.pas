@@ -39,6 +39,7 @@ type
     InvNumber_Invoice_Full: TcxGridDBColumn;
     SPKindName: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;
+    isNP: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -24,7 +24,7 @@ BEGIN
     THEN
 
         -- проверка прав пользователя на вызов процедуры
-        IF inSession::Integer NOT IN (3, 758920, 4183126, 9383066)
+        IF inSession::Integer NOT IN (3, 758920, 4183126, 9383066, 8037524)
         THEN
   	      RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
         END IF;
@@ -83,4 +83,3 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
 */
 
 -- select * from gpGet_Movement_EmployeeSchedule(inMovementId := 0 , inOperDate := ('30.07.2018')::TDateTime ,  inSession := '3');
-

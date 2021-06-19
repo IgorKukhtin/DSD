@@ -940,13 +940,9 @@ procedure TMainCashForm2.SaveLocalGoods;
 var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
-  DateTime: TDateTimeInfoRec;
 begin  //+
   // pr вызывается из обновления остатков
   // Проверяем обновляли ли сегодня
-
-  if FileExists(Goods_lcl) and FileGetDateTimeInfo(Goods_lcl, DateTime) and
-    (StartOfTheDay(DateTime.CreationTime) >= Date) then Exit;
 
   tiServise.Hint := 'Получение списка медикаментов';
 

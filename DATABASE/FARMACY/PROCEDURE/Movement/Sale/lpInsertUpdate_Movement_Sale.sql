@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTi
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Boolean, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
@@ -20,7 +21,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inMedicSP               Integer    , -- ФИО врача (Соц. проект)
     IN inMemberSP              Integer    , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
-    IN inUserId                Integer     -- сессия пользователя
+    IN inisNP                  Boolean    , -- Доставка "Новой почтой"
+    IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -137,6 +139,8 @@ BEGIN
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberSP(), ioId, inMemberSP);
 
+    -- сохранили признак
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NP(), ioId, inisNP);
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE

@@ -49,6 +49,7 @@ type
     PaymentDate: TcxGridDBColumn;
     InvNumberBranch: TcxGridDBColumn;
     BranchDate: TcxGridDBColumn;
+    PriceSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

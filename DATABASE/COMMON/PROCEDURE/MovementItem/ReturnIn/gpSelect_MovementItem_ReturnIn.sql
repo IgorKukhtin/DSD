@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , MovementPromo TVarChar, PricePromo TFloat
              , AmountChild TFloat, AmountChildDiff TFloat
+             , Value5 Integer, Value10 Integer
              , isErased Boolean
              )
 AS
@@ -300,6 +301,42 @@ BEGIN
                         AND MovementItem.Amount     <> 0
                       GROUP BY MovementItem.ParentId
                      )
+
+       -- StickerProperty -  кількість діб  + кількість діб - второй срок
+     , tmpStickerProperty AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId              AS GoodsId
+                                   , ObjectLink_StickerProperty_GoodsKind.ChildObjectId  AS GoodsKindId
+                                   , COALESCE (ObjectFloat_Value5.ValueData, 0)          AS Value5
+                                   , COALESCE (ObjectFloat_Value10.ValueData, 0)         AS Value10
+                                     --  № п/п
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Sticker_Goods.ChildObjectId, ObjectLink_StickerProperty_GoodsKind.ChildObjectId ORDER BY COALESCE (ObjectFloat_Value5.ValueData, 0) DESC) AS Ord
+                              FROM Object AS Object_StickerProperty
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                         ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                         ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
+                                                         ON ObjectLink_Sticker_Juridical.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Juridical.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
+                                                         ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
+                                    -- кількість діб
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value5
+                                                          ON ObjectFloat_Value5.ObjectId = Object_StickerProperty.Id
+                                                         AND ObjectFloat_Value5.DescId = zc_ObjectFloat_StickerProperty_Value5()
+                                   -- кількість діб - второй срок
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                                         ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
+                                                        AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
+                                AND Object_StickerProperty.isErased = FALSE
+                                AND ObjectLink_Sticker_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                             )
+
+
        -- Результат
        SELECT
              0                          AS Id
@@ -349,6 +386,9 @@ BEGIN
            , 0 :: TFloat AS AmountChild
            , 0 :: TFloat AS AmountChildDiff
 
+           , tmpStickerProperty.Value5  :: Integer AS Value5
+           , tmpStickerProperty.Value10 :: Integer AS Value10
+
            , FALSE                      AS isErased
 
        FROM tmpGoods
@@ -377,6 +417,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpGoods.GoodsId
+                                         AND tmpStickerProperty.GoodsKindId = tmpGoods.GoodsKindId
+                                         AND tmpStickerProperty.Ord         = 1
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -453,6 +497,9 @@ BEGIN
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
 
+           , tmpStickerProperty.Value5  :: Integer AS Value5
+           , tmpStickerProperty.Value10 :: Integer AS Value10
+
            , tmpResult.isErased                AS isErased
 
        FROM tmpResult
@@ -493,6 +540,10 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
  
             LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
+
+            LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
+                                        AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
+                                        AND tmpStickerProperty.Ord         = 1
            ;
      ELSE
 
@@ -660,6 +711,40 @@ BEGIN
                     GROUP BY MovementItem.ParentId
                    )
 
+       -- StickerProperty -  кількість діб  + кількість діб - второй срок
+     , tmpStickerProperty AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId              AS GoodsId
+                                   , ObjectLink_StickerProperty_GoodsKind.ChildObjectId  AS GoodsKindId
+                                   , COALESCE (ObjectFloat_Value5.ValueData, 0)          AS Value5
+                                   , COALESCE (ObjectFloat_Value10.ValueData, 0)         AS Value10
+                                     --  № п/п
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Sticker_Goods.ChildObjectId, ObjectLink_StickerProperty_GoodsKind.ChildObjectId ORDER BY COALESCE (ObjectFloat_Value5.ValueData, 0) DESC) AS Ord
+                              FROM Object AS Object_StickerProperty
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                         ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                         ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
+                                                         ON ObjectLink_Sticker_Juridical.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Juridical.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
+                                                         ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
+                                    -- кількість діб
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value5
+                                                          ON ObjectFloat_Value5.ObjectId = Object_StickerProperty.Id
+                                                         AND ObjectFloat_Value5.DescId = zc_ObjectFloat_StickerProperty_Value5()
+                                   -- кількість діб - второй срок
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                                         ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
+                                                        AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
+                                AND Object_StickerProperty.isErased = FALSE
+                                AND ObjectLink_Sticker_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                             )
+
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
            , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (ROW_NUMBER() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
@@ -733,6 +818,9 @@ BEGIN
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
 
+           , tmpStickerProperty.Value5  :: Integer AS Value5
+           , tmpStickerProperty.Value10 :: Integer AS Value10
+
            , tmpResult.isErased                AS isErased
 
        FROM tmpResult
@@ -772,6 +860,10 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpResult.MovementId_Promo
 
             LEFT JOIN tmpMIChild ON tmpMIChild.MI_ParentId = tmpResult.MovementItemId
+
+            LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
+                                        AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
+                                        AND tmpStickerProperty.Ord         = 1
            ;
 
      END IF;

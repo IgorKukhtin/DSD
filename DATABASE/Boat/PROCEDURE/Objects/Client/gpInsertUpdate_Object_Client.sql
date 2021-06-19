@@ -10,6 +10,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
@@ -33,6 +37,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
     IN inTaxKindId       Integer ,
+    IN inPaidKindId      Integer ,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -97,6 +102,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_TaxKind(), ioId, inTaxKindId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PaidKind(), ioId, inPaidKindId);
 
 
    IF vbIsInsert = TRUE THEN

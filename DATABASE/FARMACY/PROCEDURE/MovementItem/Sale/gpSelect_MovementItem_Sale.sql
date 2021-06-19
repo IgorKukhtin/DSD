@@ -26,6 +26,8 @@ $BODY$
     DECLARE vbUnitId Integer;
     DECLARE vbSPKindId Integer;
     DECLARE vbStatusId Integer;
+    DECLARE vbRetailId Integer;   
+    DECLARE vbisNP Boolean;   
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -35,7 +37,9 @@ BEGIN
     SELECT MovementLinkObject_Unit.ObjectId
          , MovementLinkObject_SPKind.ObjectId
          , Movement.StatusId
-    INTO vbUnitId, vbSPKindId, vbStatusId
+         , COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4)
+         , COALESCE (MovementBoolean_NP.ValueData, FALSE)
+    INTO vbUnitId, vbSPKindId, vbStatusId, vbRetailId, vbisNP
     FROM Movement
          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -43,6 +47,19 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
                                       ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                      AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                              ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
+                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
+         LEFT JOIN MovementBoolean AS MovementBoolean_NP
+                                   ON MovementBoolean_NP.MovementId = Movement.Id
+                                  AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
+
     WHERE Movement.ID = inMovementId;
 
     -- Результат
@@ -125,6 +142,19 @@ BEGIN
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
+              , tmpPriceSite AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                                      , Price_Goods.ChildObjectId                  AS GoodsId
+                                 FROM Object AS Object_PriceSite
+                                      INNER JOIN ObjectLink AS Price_Goods
+                                              ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                             AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                                      LEFT JOIN ObjectFloat AS Price_Value
+                                             ON Price_Value.ObjectId = Object_PriceSite.Id
+                                            AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                                 WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                                   AND vbRetailId = 4 
+                                   AND vbisNP = TRUE
+                                 )
 
               , tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains
                          UNION 
@@ -193,8 +223,8 @@ BEGIN
                  , MovementItemContainer.Amount::TFloat                  AS AmountDeferred
                  , NULLIF(COALESCE(tmpRemainsFull.Remains, 0) +
                    COALESCE(MovementItemContainer.Amount, 0), 0)::TFloat AS AmountRemains
-                 , COALESCE(tmpRemainsFull.Price, tmpPrice.Price)        AS Price
-                 , COALESCE(tmpRemainsFull.PriceSale, tmpPrice.Price)    AS PriceSale
+                 , COALESCE(tmpRemainsFull.Price, tmpPriceSite.Price, tmpPrice.Price)        AS Price
+                 , COALESCE(tmpRemainsFull.PriceSale, tmpPriceSite.Price, tmpPrice.Price)    AS PriceSale
                  , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (tmpRemainsFull.ChangePercent, 100) ELSE tmpRemainsFull.ChangePercent END :: TFloat AS ChangePercent
                  , tmpRemainsFull.Summ
                  , tmpRemainsFull.isSP        ::Boolean
@@ -203,6 +233,7 @@ BEGIN
             FROM tmpRemainsFull
                 LEFT JOIN MovementItemContainer ON MovementItemContainer.Id = tmpRemainsFull.Id 
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemainsFull.GoodsId
+                LEFT JOIN tmpPriceSite ON tmpPriceSite.GoodsId = tmpRemainsFull.GoodsId
 
                 -- группа товара
                 LEFT JOIN tmpObjectLink_GoodsGroup AS ObjectLink_Goods_GoodsGroup
@@ -389,6 +420,7 @@ $BODY$
  22.02.17         *
  13.10.15                                                          *
 */
--- select * from gpSelect_MovementItem_Sale (inMovementId := 18785591   , inShowAll := 'false' , inIsErased := 'true' ,  inSession := '3');
+-- 
 
+select * from gpSelect_MovementItem_Sale(inMovementId := 23407745  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
 

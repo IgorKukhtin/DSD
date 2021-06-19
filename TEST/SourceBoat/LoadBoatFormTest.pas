@@ -325,7 +325,7 @@ end;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalReserveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalReserveForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceForm');
 

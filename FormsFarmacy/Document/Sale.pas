@@ -115,6 +115,11 @@ type
     OperDate: TcxGridDBColumn;
     PartNDS: TcxGridDBColumn;
     actChoiceNDSKind: TOpenChoiceForm;
+    actExec_Update_PriceSale: TdsdExecStoredProc;
+    actExecuteDialog_Update_PriceSale: TExecuteDialog;
+    spUpdate_PriceSale: TdsdStoredProc;
+    bbactUpdatePriceSale: TdxBarButton;
+    cbIsNP: TcxCheckBox;
   private
     { Private declarations }
   public

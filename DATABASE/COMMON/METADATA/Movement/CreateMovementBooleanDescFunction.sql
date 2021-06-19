@@ -309,9 +309,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_FinalFormation() RETURNS integer A
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_FinalFormation', 'Финальное формирование'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_FinalFormation');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_NP() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_NP'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_NP', 'Отправка новой почтой'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 18.06.21                                                                                    * zc_MovementBoolean_NP
  01.06.21                                                                                    * zc_MovementBoolean_FinalFormation
  25.05.21                                                                                    * zc_MovementBoolean_Supplement
  25.05.21         * zc_MovementBoolean_PrintComment

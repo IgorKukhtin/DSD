@@ -74,6 +74,7 @@ type
     InfoMoneyName: TcxGridDBColumn;
     TaxKindName: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

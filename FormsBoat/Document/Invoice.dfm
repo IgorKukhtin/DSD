@@ -2,9 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 503
   ClientWidth = 351
-  ExplicitTop = -54
   ExplicitWidth = 357
-  ExplicitHeight = 528
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -643,6 +642,21 @@
         Value = Null
         Component = edVATPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 107

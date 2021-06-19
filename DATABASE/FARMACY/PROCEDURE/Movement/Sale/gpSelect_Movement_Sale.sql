@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer
              , isSP Boolean
              , InvNumber_Invoice_Full TVarChar
              , isDeferred Boolean
+             , isNP Boolean
 
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -126,6 +127,7 @@ BEGIN
 
           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
+          , COALESCE (MovementBoolean_NP.ValueData, FALSE) ::Boolean  AS isNP
 
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
@@ -172,6 +174,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                       ON MovementBoolean_Deferred.MovementId = Movement_Sale.Id
                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+            LEFT JOIN MovementBoolean AS MovementBoolean_NP
+                                      ON MovementBoolean_NP.MovementId = Movement_Sale.Id
+                                     AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
        ;
 
 END;

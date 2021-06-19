@@ -9,7 +9,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , TFloat, TFloat, TFloat
                                                      , Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TFloat, TFloat, TFloat
+                                                     , Integer, Integer, Integer, Integer, Integer, TVarChar);
+                                                     
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId              Integer,       -- ключ объекта <>
@@ -33,6 +37,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
     IN inTaxKindId       Integer ,
+    IN inPaidKindId       Integer ,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -97,6 +102,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_TaxKind(), ioId, inTaxKindId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PaidKind(), ioId, inPaidKindId);
    
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -115,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.21         *
  02.02.21         *
  09.11.20         *
  22.10.20         *

@@ -1,9 +1,11 @@
 -- Function: gpReport_PriceCheck()
 
-DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, TFloat, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PriceCheck(
     IN inPercent          TFloat    , -- Процент отклонения
+    IN inPercentSite      TFloat    , -- Процент отклонения для сайта
     IN inUserId           Integer   , -- Сотрудник
     IN inisHideExceptRed  Boolean   , -- Скрыть кроме красных
     IN inisRetail         Boolean   , -- только по сети
@@ -141,7 +143,10 @@ BEGIN
             JuridicalPriceAverage TFLoat,
             PriceAverage          TFLoat,
             PriceMin              TFLoat,
-            PriceMax              TFLoat
+            PriceMax              TFLoat,
+            PriceSite             TFLoat,
+            Color_calcSite        Integer NOT NULL DEFAULT zc_Color_Black(),
+            isBadPriceSite        Boolean Not Null Default False
 
       ) ON COMMIT DROP;
 
@@ -161,10 +166,25 @@ BEGIN
                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
                      AND MovementItem.DescId = zc_MI_Master()
                      AND MovementItem.isErased = False
-                     AND MovementItem.Amount > 0)
+                     AND MovementItem.Amount > 0),
+    tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
+                           , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                           , Object_Goods_Retail.GoodsMainId            AS GoodsId
+                      FROM Object AS Object_PriceSite
+                           INNER JOIN ObjectLink AS Price_Goods
+                                   ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                  AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = Price_Goods.ChildObjectId  
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                  ON Price_Value.ObjectId = Object_PriceSite.Id
+                                 AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                      WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                      )
+
+    
                          
     INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PriceTop, isSP, isPromo,
-                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax)
+                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceSite)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.Name             AS GoodsName
@@ -185,18 +205,28 @@ BEGIN
          , 0
          , MIN(tmpUnitPrice.Price)
          , MAX(tmpUnitPrice.Price)
+         , Price_Site.Price
     FROM tmpUnitPrice
          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
                                       AND Object_Goods_Retail.RetailId = 4
          LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
+         LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpUnitPrice.GoodsId
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
-           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price
-    HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
+           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price, Price_Site.Price
+  --  HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
     ORDER BY tmpUnitPrice.GoodsId;
 
     -- Расчитываем среднюю цену
     UPDATE tmpResult SET PriceAverage = T1.PriceAverage
+                       , Color_calcSite = CASE WHEN COALESCE (tmpResult.PriceSite, 0) > 0
+                                                AND (T1.PriceAverage * (100.0 + inPercentSite) / 100.0 < tmpResult.PriceSite
+                                                 OR T1.PriceAverage * (100.0 - inPercentSite) / 100.0 > tmpResult.PriceSite)
+                                               THEN zc_Color_Red() ELSE zc_Color_Black() END
+                       , isBadPriceSite = CASE WHEN COALESCE (tmpResult.PriceSite, 0) > 0
+                                                AND (T1.PriceAverage * (100.0 + inPercentSite) / 100.0 < tmpResult.PriceSite
+                                                 OR T1.PriceAverage * (100.0 - inPercentSite) / 100.0 > tmpResult.PriceSite)
+                                               THEN True ELSE False END
     FROM (SELECT tmpUnitPrice.GoodsId
                , ROUND(SUM(tmpUnitPrice.Price) / COUNT(*), 2) AS PriceAverage
           FROM tmpUnitPrice
@@ -209,8 +239,9 @@ BEGIN
 
     -- Удаляем что номально
     DELETE FROM tmpResult
-    WHERE tmpResult.PriceAverage * (100.0 + inPercent) / 100.0 <= tmpResult.PriceMax
-       AND tmpResult.PriceAverage * (100.0 - inPercent) / 100.0 >= tmpResult.PriceMin;
+    WHERE tmpResult.PriceAverage * (100.0 + inPercent) / 100.0 >= tmpResult.PriceMax
+       AND tmpResult.PriceAverage * (100.0 - inPercent) / 100.0 <= tmpResult.PriceMin
+       AND isBadPriceSite = False;
 
       -- Подразделения
     CREATE TEMP TABLE tmpUnit (
@@ -262,11 +293,12 @@ BEGIN
         EXECUTE vbQueryText;
 
     END LOOP;
-    CLOSE curUnit;
+    CLOSE curUnit;        
 
     -- Удаляем что номрально
     DELETE FROM tmpResult
-    WHERE tmpResult.BadPriceCount = 0;
+    WHERE tmpResult.BadPriceCount = 0
+      AND isBadPriceSite = False;
 
     -- Удаляем ксли нет аптек менеджера
     IF COALESCE (inUserId, 0) <> 0
@@ -571,3 +603,5 @@ $BODY$
 
 -- тест 
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               
+
+select * from gpReport_PriceCheck(inPercent := 100 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');

@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
                AreaName TVarChar,
                ExpirationDate TDateTime,
                MinimumLot TFloat, NDS TFloat, LinkGoodsId Integer,
-               MarginPercent TFloat, NewPrice TFloat)
+               MarginPercent TFloat, NewPrice TFloat, PriceSite TFloat)
 
 AS
 $BODY$
@@ -105,6 +105,18 @@ BEGIN
                 AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
                 AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
+        , tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
+                                 , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                                 , Price_Goods.ChildObjectId                  AS GoodsId
+                            FROM Object AS Object_PriceSite
+                                 INNER JOIN ObjectLink AS Price_Goods
+                                         ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                        AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                                 LEFT JOIN ObjectFloat AS Price_Value
+                                        ON Price_Value.ObjectId = Object_PriceSite.Id
+                                       AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                            WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                            )
              
    SELECT
          LoadPriceListItem.Id                AS Id,
@@ -147,6 +159,7 @@ BEGIN
                            0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
                            ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
                          )         :: TFloat AS NewPrice
+       , tmpPrice_Site.Price                 AS PriceSite
 
        FROM LoadPriceListItem
 
@@ -193,7 +206,8 @@ BEGIN
             LEFT JOIN Object_Goods_View AS ObjectGoodsView ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
 
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
-
+            
+            LEFT JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = LinkGoodsObject.GoodsId
       WHERE
         LoadPriceListItem.GoodsNameUpper ILIKE ('%' || inGoodsSearch || '%')
         AND
@@ -234,4 +248,4 @@ $BODY$
 
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'линекс%16' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'трайкор' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');

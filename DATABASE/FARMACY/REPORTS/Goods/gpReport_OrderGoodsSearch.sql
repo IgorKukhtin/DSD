@@ -39,6 +39,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,BranchDate TDateTime    --Дата накладной в аптеке
               ,InsertDate TDateTime    --Дата (созд.)
               ,InsertName TVarChar     --Пользователь(созд.)
+              ,PriceSite TFloat
               )
 
 
@@ -71,7 +72,7 @@ BEGIN
     END IF;
 
     RETURN QUERY
-WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+    WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                                  ),
      tmpGoods AS (-- ???временно захардкодил, будет всегда товар сети???
@@ -114,6 +115,7 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                                  WHEN Movement.DescId = zc_Movement_OrderExternal() THEN Object_Update.ValueData
                                  ELSE Object_Insert.ValueData
                             END AS InsertName
+                          , MILinkObject_Goods.ObjectId           AS GoodsJuridicalId
                      FROM tmpMovementItem AS MovementItem
 
                           INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
@@ -150,8 +152,15 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                           LEFT JOIN MovementItemLinkObject AS MILO_Insert
                                                            ON MILO_Insert.MovementItemId = MovementItem.MovementItemId
                                                           AND MILO_Insert.DescId = zc_MILinkObject_Insert()
-                          LEFT JOIN Object AS ObjectMI_Insert ON ObjectMI_Insert.Id = MILO_Insert.ObjectId),
+                          LEFT JOIN Object AS ObjectMI_Insert ON ObjectMI_Insert.Id = MILO_Insert.ObjectId
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                           ON MILinkObject_Goods.MovementItemId = MovementItem.MovementItemId
+                                                          AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()                                                          
+                          ),
      tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId  FROM tmpMovement)
+                         ),
+     tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId  FROM tmpMovement)
                          ),
      tmpMLObject AS (SELECT * FROM MovementLinkObject WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id  FROM tmpMovement)
                          ),
@@ -166,7 +175,22 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                                FROM MovementItemFloat
                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovement.MovementItemId FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_OrderInternal())
                                   AND MovementItemFloat.DescId = zc_MIFloat_ListDiff()
-                               )
+                               ),
+     tmpGoods_Juridical AS (SELECT * FROM Object_Goods_Juridical WHERE Object_Goods_Juridical.Id IN (SELECT DISTINCT tmpMovement.GoodsJuridicalId  FROM tmpMovement)
+                            ),
+     tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
+                            , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                            , Price_Goods.ChildObjectId                  AS GoodsId
+                       FROM Object AS Object_PriceSite
+                            INNER JOIN ObjectLink AS Price_Goods
+                                    ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                   AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                                   AND Price_Goods.ChildObjectId = inGoodsId
+                            LEFT JOIN ObjectFloat AS Price_Value
+                                   ON Price_Value.ObjectId = Object_PriceSite.Id
+                                  AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                       WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                      )
 
       --
       SELECT Movement.Id                              AS MovementId
@@ -181,9 +205,9 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
             ,Goods_NDS.Code                           AS Code
             ,Goods_NDS.Name                           AS Name
             ,COALESCE(MIString_GoodsName.ValueData, 
-                      MI_Income_View.PartnerGoodsName)AS PartnerGoodsName
+                      Object_PartnerGoods.Name)       AS PartnerGoodsName
             ,COALESCE(MIString_MakerName.ValueData, 
-                      MI_Income_View.MakerName)       AS MakerName
+                      Object_PartnerGoods.MakerName)  AS MakerName
 
             ,Goods_NDS.NDSKindName                    AS NDSKindName
             ,Goods_NDS.NDS                            AS NDS
@@ -197,7 +221,7 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                   WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MIFloat_JuridicalPrice.ValueData
                   ELSE MIFloat_Price.ValueData
              END ::TFloat AS Price
-            ,MI_Income_View.PriceWithVAT   ::TFloat
+            ,MIFloat_PriceWithVAT.ValueData ::TFloat  AS PriceWithVAT 
             ,COALESCE (MIFloat_PriceSample.ValueData, 0) ::TFloat AS PriceSample
             ,Status.ValueData                         AS STatusNAme
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
@@ -215,6 +239,8 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
 
             ,Movement.InsertDate
             ,Movement.InsertName
+            
+            ,tmpPrice_Site.Price                      AS PriceSite
 
       FROM tmpMovement AS Movement
 
@@ -231,18 +257,22 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
                                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
-        LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
+        LEFT JOIN tmpGoods_Juridical AS Object_PartnerGoods 
+                                     ON Object_PartnerGoods.Id = Movement.GoodsJuridicalId 
 
-        LEFT JOIN MovementItemString AS MIString_MakerName
+        LEFT JOIN tmpMIString AS MIString_MakerName
                                      ON MIString_MakerName.MovementItemId = Movement.MovementItemId
                                     AND MIString_MakerName.DescId = zc_MIString_Maker()
-        LEFT JOIN MovementItemString AS MIString_GoodsName
-                                     ON MIString_GoodsName.MovementItemId = COALESCE(MI_Income_View.Id, Movement.MovementItemId)
+        LEFT JOIN tmpMIString AS MIString_GoodsName
+                                     ON MIString_GoodsName.MovementItemId = Movement.MovementItemId
                                     AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
 
         LEFT JOIN tmpMIFloat AS MIFloat_Price
                              ON MIFloat_Price.MovementItemId = Movement.MovementItemId
                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+        LEFT JOIN tmpMIFloat AS MIFloat_PriceWithVAT
+                             ON MIFloat_PriceWithVAT.MovementItemId = Movement.MovementItemId
+                            AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
         LEFT JOIN tmpMIFloat AS MIFloat_JuridicalPrice
                              ON MIFloat_JuridicalPrice.MovementItemId = Movement.MovementItemId
@@ -283,11 +313,11 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.DescId = zc_MovementString_Comment()
                                 AND MovementString_Comment.MovementId = Movement.Id
-        LEFT JOIN MovementItemString AS MIString_Comment
+        LEFT JOIN tmpMIString AS MIString_Comment
                                      ON MIString_Comment.DescId = zc_MIString_Comment()
                                     AND MIString_Comment.MovementItemId = Movement.MovementItemId
 
-        LEFT JOIN MovementItemString AS MIString_PartionGoods
+        LEFT JOIN tmpMIString AS MIString_PartionGoods
                                      ON MIString_PartionGoods.MovementItemId = Movement.MovementItemId
                                     AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
         LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
@@ -318,6 +348,8 @@ WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_
 
         LEFT JOIN tmpMIF_ListDiff ON tmpMIF_ListDiff.MovementItemId = Movement.MovementItemId
                                  AND Movement.DescId = zc_Movement_OrderInternal()
+                                 
+        LEFT JOIN tmpPrice_Site ON 1 = 1 
 
     WHERE (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
@@ -348,5 +380,6 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 
 -- тест
 --SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
+--select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
 
-select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
+select * from gpReport_OrderGoodsSearch(inGoodsId := 325 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');

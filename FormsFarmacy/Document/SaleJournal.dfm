@@ -281,6 +281,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
+          object isNP: TcxGridDBColumn
+            Caption = #1044#1086#1089#1090#1072#1074#1082#1072' '#1053#1055
+            DataBinding.FieldName = 'isNP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
         end
       end
     end
@@ -340,7 +348,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

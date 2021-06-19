@@ -33,6 +33,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , DailySale TFloat
              , DeferredSend TFloat
              , DeferredSendIn TFloat
+             , PriceSite TFloat
              , Color_calc Integer
              )
 AS
@@ -404,6 +405,18 @@ BEGIN
                                                        ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.GoodsId
                                                       AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                           )
+      , tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
+                               , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                               , Price_Goods.ChildObjectId                  AS GoodsId
+                          FROM Object AS Object_PriceSite
+                               INNER JOIN ObjectLink AS Price_Goods
+                                       ON Price_Goods.ObjectId = Object_PriceSite.Id
+                                      AND Price_Goods.DescId = zc_ObjectLink_PriceSite_Goods()
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                      ON Price_Value.ObjectId = Object_PriceSite.Id
+                                     AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                          WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                         )
 
 
         --–≈«”À‹“¿“
@@ -435,6 +448,7 @@ BEGIN
              , containerSale.DailySale:: TFloat
              , tmpDeferredSend.Amount:: TFloat AS DeferredSend
              , tmpDeferredSendIn.Amount:: TFloat AS DeferredSendIn
+             , tmpPrice_Site.Price                      AS PriceSite
              , CASE WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) < (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) THEN zc_Color_Red()
                     WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) > (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) * 3 THEN zc_Color_Greenl()
                     ELSE zc_Color_White() END      AS Color_calc
@@ -468,6 +482,8 @@ BEGIN
             LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = tmpGoods.Id
                                        AND tmpDeferredSendIn.UnitId  = Object_Unit.UnitId
 
+            LEFT JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = tmpGoods.Id
+
           WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0 OR COALESCE(tmpDeferredSend.Amount,0)<>0 OR COALESCE(tmpDeferredSendIn.Amount,0)<>0
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
@@ -494,4 +510,4 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', '„Î˛ÍÓÁ', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'Ï‡ÒÍ‡ Á‡˘ËÚ' ,  inSession := '3'); 36584
 
-select * from gpSelect_GoodsSearchRemains(inCodeSearch := '1402' , inGoodsSearch := '' , inisRetail := FALSE,   inSession := '3');
+select * from gpSelect_GoodsSearchRemains(inCodeSearch := '1825' , inGoodsSearch := '' , inisRetail := 'False' ,  inSession := '3');

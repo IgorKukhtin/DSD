@@ -1895,6 +1895,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptLevel_From() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ReceiptLevel_From', 'От кого', zc_Object_ReceiptLevel(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptLevel_From');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Reason_ReturnKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Reason_ReturnKind', 'Тип возврата', zc_Object_Reason(), zc_Object_ReturnKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnKind');
+
 
 --!!! АПТЕКА
 

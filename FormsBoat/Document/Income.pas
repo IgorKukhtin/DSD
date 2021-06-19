@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, cxSplitter;
 
 type
   TIncomeForm = class(TParentForm)
@@ -171,6 +171,26 @@ type
     InfoMoneyDestinationName_Master: TcxGridDBColumn;
     InfoMoneyName_Master: TcxGridDBColumn;
     VATPercent_Master: TcxGridDBColumn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    GoodsCode_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    MeasureName_ch2: TcxGridDBColumn;
+    GoodsKindNamec_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
+    IsErased_ch2: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxTopSplitter: TcxSplitter;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    spSelectMIChild: TdsdStoredProc;
+    spInsertUpdateReceiptChild: TdsdStoredProc;
+    Amount_unit: TcxGridDBColumn;
+    spErasedMIchild: TdsdStoredProc;
+    SetErasedChild: TdsdUpdateErased;
+    bbSetErasedChild: TdxBarButton;
   private
   public
   end;
