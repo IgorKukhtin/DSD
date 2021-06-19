@@ -117,7 +117,7 @@ begin
     end;
     //
     //
-    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) //and (Connection = '')
+   {if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) //and (Connection = '')
         and (fAlan_conn = TRUE) and (gc_ProgramName <> 'Boutique.exe') and (gc_ProgramName <> 'ProjectBoat.exe')
     then
        // 1.1. надо переключиться с integer-srv на colocall
@@ -129,7 +129,7 @@ begin
        // 1.2. надо переключиться с colocall на integer-srv или убрать второго colocall или сделать 3-им colocall
        UpdateConnect('colocall')
 
-    else
+    else}
     if (TStorageFactory.GetStorage.Connection <> Connection) and (fFind = FALSE) and (Connection<>'')
       // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
     then
@@ -198,7 +198,7 @@ begin
     end;
     //
     //
-    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) then
+   {if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) then
        // 2.1. надо переключиться с integer-srv на colocall
        UpdateConnectReport('alan')
 
@@ -207,7 +207,7 @@ begin
        // 2.2. надо переключиться с colocall на integer-srv или убрать второго colocall или сделать 3-им colocall
        UpdateConnectReport('colocall')
 
-    else
+    else}
         if (fFind = FALSE) and (ReportConnection<>'')
         then
            // 2.3. надо как раньше на integer-srv + integer-srv2
@@ -419,7 +419,8 @@ begin
   end
   else
   // 1.2. надо переключиться на integer-srv
-  if (fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0) then
+//if (fAlan_colocall = FALSE)and(Pos(AnsiUpperCase('colocall'), AnsiUpperCase(Connection)) > 0) then
+  if (fAlan_colocall = FALSE) and (AnsiUpperCase(Connection) = AnsiUpperCase('colocall')) then
   begin
     StringList.Add('http://integer-srv-r.alan.dp.ua');
     StringList.Add('http://integer-srv2-r.alan.dp.ua');

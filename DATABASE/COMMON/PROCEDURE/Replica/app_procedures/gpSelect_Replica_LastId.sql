@@ -76,7 +76,7 @@ BEGIN
        OR 1=1
     THEN
         -- делаем задержку на 200 MIN
-        vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
+/*        vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
                               WHERE Id BETWEEN inId_start AND vbId_End
                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 10 AND 16
                                                                                                     THEN INTERVAL '80 MINUTES'
@@ -85,21 +85,42 @@ BEGIN
                                                                                                     ELSE INTERVAL '200 MINUTES'
                                                                                                END -- :: INTERVAL
                              ), inId_start - 1);
-
+*/
        -- нашли время начала этой транзакции - здесь значение без timezone
-     /*vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
+       vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
 
        -- Активные процессы
-       CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity WHERE state ILIKE 'active'
-                                                           AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
-                                                           AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%';
+       CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity
+                                                                 WHERE state ILIKE 'active'
+                                                                   AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
+                                                                   AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
+                                                                   AND query NOT ILIKE '% VACUUM%'
+                                                                   AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
+                                                                  ;
 
 --    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
 
        -- если найдена активная транзакция - для значения без timezone
-       IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity WHERE state ILIKE 'active' AND timezone('utc'::text, query_start) < vbLast_modified + INTERVAL '400 SECOND')
+       IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity
+                  WHERE state ILIKE 'active'
+                    AND timezone('utc'::text, query_start) < vbLast_modified + CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 18
+                                                                                    THEN INTERVAL'800 SECOND'
+                                                                                    ELSE INTERVAL'70 MINUTES'
+                                                                               END
+                 )
        THEN
-           vbId_End:= inId_start - 1;
+         --vbId_End:= inId_start - 1;
+
+         -- делаем задержку на 25/80 MIN
+         vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
+                               WHERE Id BETWEEN inId_start AND vbId_End
+                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 18
+                                                                                                     THEN INTERVAL '25 MINUTES'
+                                                                                                     ELSE INTERVAL '75 MINUTES'
+                                                                                                   --ELSE INTERVAL '55 MINUTES'
+                                                                                                END -- :: INTERVAL
+                              ), inId_start - 1);
+
        END IF;
 
        -- Item
@@ -136,7 +157,7 @@ BEGIN
                , vbId_End
                  -- здесь значение без timezone
                , vbLast_modified
-          FROM _tmp_pg_stat_activity AS tmp;*/
+          FROM _tmp_pg_stat_activity AS tmp;
 
     END IF;
 

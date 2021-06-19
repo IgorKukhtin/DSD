@@ -57,6 +57,23 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
+     -- Только для этого документа
+     IF vbMovementDescId = zc_Movement_Service()
+     THEN
+         -- св-во пишется теперь ЗДЕСЬ
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), MovementItem.Id, ObjectLink_Unit_Branch.ChildObjectId)
+         FROM Movement
+              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                            AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+         WHERE Movement.Id = inMovementId
+        ;
+     END IF;
+
+
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Asset
                          , MovementItemId, ContainerId

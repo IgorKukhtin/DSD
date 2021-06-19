@@ -141,7 +141,7 @@ BEGIN
     --проверка выбрана ли валюта
     IF COALESCE (vbCurrencyDocumentId, 0) = zc_Enum_Currency_Basis() AND vbTotalSumm <> 0
     THEN
-        RAISE EXCEPTION 'Ошибка.Валюта документа должна отличаться от базовой';
+        RAISE EXCEPTION 'Ошибка.Валюта документа должна отличаться от базовой в <%>.', lfGet_Object_ValueData_sh (zc_Enum_Currency_Basis());
     END IF;
     --
     IF COALESCE (vbCurrencyPartnerValue, 0) = 0 AND vbTotalSumm <> 0 AND (vbCurrencyDocumentId <> vbCurrencyPartnerId)

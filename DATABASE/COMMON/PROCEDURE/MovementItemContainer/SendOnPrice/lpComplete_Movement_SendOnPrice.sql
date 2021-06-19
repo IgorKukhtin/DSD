@@ -477,7 +477,7 @@ END IF;
      -- проверка - цена = 0
      vbMovementItemId_check:= (SELECT MIN (_tmpItem.MovementItemId)
                                FROM _tmpItem
-                               WHERE _tmpItem.OperCount_Partner > 0
+                               WHERE (_tmpItem.OperCount_Partner > 0 OR _tmpItem.OperCount > 0)
                                  AND _tmpItem.OperSumm_Partner  = 0
                                  AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                            , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
@@ -488,7 +488,7 @@ END IF;
      IF vbMovementItemId_check > 0 AND 1=1 -- AND inUserId = 5
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
-         RAISE EXCEPTION 'Ошибка.%В документе № <%> от <%> цена = 0%<%> <%>.%Проведение невозможно.'
+         RAISE EXCEPTION 'Ошибка.%В документе № <%> от <%> цена = 0%<%> <%>.%Проведение невозможно.(%)(%)'
                        , CHR (13)
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
                        , zfConvert_DateToString (vbOperDate)
@@ -496,6 +496,14 @@ END IF;
                        , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId)        FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId_check)
                        , (SELECT lfGet_Object_ValueData_sh (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId_check)
                        , CHR (13)
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE (_tmpItem.OperCount_Partner > 0 OR _tmpItem.OperCount > 0)
+                                 AND _tmpItem.OperSumm_Partner  = 0
+                                 AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                           , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                           , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                                                                            ))
+                       , (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId_check)
                         ;
      END IF;
 

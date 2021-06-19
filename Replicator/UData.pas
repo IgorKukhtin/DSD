@@ -296,7 +296,7 @@ begin
       begin
         if FStopped then Exit;
 
-        sAlterSequence := Format(cAlterSequence, [arrSeq[I].Name, arrSeq[I].Increment, arrSeq[I].LastValue]);
+        sAlterSequence := Format(cAlterSequence, [arrSeq[I].Name, arrSeq[I].Increment, arrSeq[I].LastValue + 100000]);
         try
           with conSlave.DbcConnection do
           begin

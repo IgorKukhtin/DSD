@@ -93,10 +93,10 @@ BEGIN
                                    , ObjectDate_StartDate.ValueData                        AS StartDate
                                    , ROW_NUMBER() OVER (ORDER BY ObjectDate_StartDate ASC) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
-                                   LEFT JOIN ObjectLink AS ObjectLink_ContractConditionKind
-                                                        ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
-                                                       AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                       AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                   INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                        AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
                                    INNER JOIN ObjectDate AS ObjectDate_StartDate
@@ -115,7 +115,23 @@ BEGIN
 
    END IF;
    
-   --если Выбран элемент УДАЛЕН нужно изменить дату окончания предыдущего условия договора,   у последнего №п/п всегда получится zc_DateEnd()
+
+   -- Скидка в цене ГСМ +  % Наценки Павильоны (Приход покупателю) 
+   IF inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_ChangePrice(), zc_Enum_ContractConditionKind_ChangePercentPartner())
+   AND 1 < (SELECT COUNT(*)
+            FROM ObjectLink AS ObjectLink_Contract
+                 INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                       ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                      AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                      AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+            WHERE ObjectLink_Contract.ChildObjectId = inContractId
+              AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+           )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для условия договора <%> история не предусмотрена.', lfGet_Object_ValueData_sh (inContractConditionKindId);
+   END IF;
+
+   -- если Выбран элемент УДАЛЕН нужно изменить дату окончания предыдущего условия договора,   у последнего №п/п всегда получится zc_DateEnd()
    -- текущие обнулим
    IF COALESCE (inContractConditionKindId, 0) = 0
    THEN
@@ -128,7 +144,8 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
                                    , ObjectDate_StartDate.ValueData                        AS StartDate
-                                   , ROW_NUMBER() OVER (ORDER BY ObjectDate_StartDate ASC) AS Ord
+                                   , COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) AS ObjectId
+                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_ContractConditionKind.ChildObjectId, ObjectLink_Contract.ObjectId) ORDER BY ObjectDate_StartDate ASC) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
@@ -145,7 +162,8 @@ BEGIN
                              )
              SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord = tmpData.Ord + 1
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord      = tmpData.Ord + 1
+                                                   AND tmpData_next.ObjectId = tmpData.ObjectId
              ) AS tmp
       ;
    END IF;

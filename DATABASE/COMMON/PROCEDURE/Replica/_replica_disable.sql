@@ -29,6 +29,10 @@ END $$;
 -- CREATE EVENT TRIGGER etg ON DDL_COMMAND_END
 --    EXECUTE PROCEDURE _replica.notice_ddl();
 
+ALTER TABLE objectlinkdesc DISABLE TRIGGER trigger_notify_changes_objectlinkdesc;
+ALTER TABLE movementitemlinkobjectdesc DISABLE TRIGGER trigger_notify_changes_movementitemlinkobjectdesc;
+ALTER TABLE MovementBlob DISABLE TRIGGER trigger_notify_changes_MovementBlob;
+
 ALTER TABLE periodclose DISABLE TRIGGER trigger_notify_changes_periodclose;
 
 

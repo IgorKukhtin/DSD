@@ -48,7 +48,7 @@ DECLARE
   vbData TVarChar;
   vbKey   TVarChar;
   vbValue TVarChar;
-  vbCode  TVarChar;
+  vbCode  Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -73,24 +73,24 @@ BEGIN
             CASE vbKey
                 WHEN 'profitlossgroupname' THEN
                    BEGIN
-                      vbCode := split_part(vbValue, ' ', 1);
+                      vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
                       SELECT Id, ValueData INTO vbProfitLossGroupId, vbProfitLossGroupName 
                         FROM Object 
-                       WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = vbCode::Integer;
+                       WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = vbCode;
                    END;
                 WHEN 'profitlossdirectionname' THEN
                    BEGIN
-                      vbCode := split_part(vbValue, ' ', 1);
+                      vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
                       SELECT Id, ValueData INTO vbProfitLossDirectionId, vbProfitLossDirectionName 
                         FROM Object 
-                       WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = vbCode::Integer;
+                       WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = vbCode;
                    END;
                 WHEN 'profitlossname' THEN 
                    BEGIN
-                      vbCode := split_part(vbValue, ' ', 1);
+                      vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
                       SELECT Id, ValueData INTO vbProfitLossId, vbProfitLossName 
                         FROM Object 
-                       WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = vbCode::Integer;
+                       WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = vbCode;
                    END; 
                 WHEN 'businessname' THEN 
                    BEGIN

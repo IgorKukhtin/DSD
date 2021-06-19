@@ -1,5 +1,13 @@
+-- alter table movement DROP CONSTRAINT  fk_movement_parentid;
 -- alter table container DROP CONSTRAINT  fk_container_parentid_container;
+-- alter table movementitem DROP CONSTRAINT  fk_movementitem_movementid;
+-- alter table movementlinkmovement DROP CONSTRAINT  fk_movementlinkmovement_movementchild;
 
+-- alter table movementlinkobject DROP CONSTRAINT  fk_movementlinkobject_object;
+-- alter table movementitemlinkobject DROP CONSTRAINT  fk_movementitemlinkobject_object;
+
+
+alter table movement DROP CONSTRAINT  fk_movement_parentid;
 alter table containerlinkobject DROP CONSTRAINT  fk_containerlinkobject_container;
 alter table historycost DROP CONSTRAINT  fk_historycost_containerid;
 alter table movementitemcontainer DROP CONSTRAINT  fk_movementitemcontainer_containerid;
@@ -7,7 +15,6 @@ alter table container DROP CONSTRAINT  fk_container_descid_containerdesc;
 alter table container DROP CONSTRAINT  fk_container_parentid_container;
 alter table containerlinkobject DROP CONSTRAINT  fk_containerlinkobject_desc;
 alter table defaultvalue DROP CONSTRAINT  fk_defaultvalue_defaultkeyid;
-alter table movement DROP CONSTRAINT  fk_movement_parentid;
 alter table movementblob DROP CONSTRAINT  fk_movementblob_movementid;
 alter table movementdate DROP CONSTRAINT  fk_movementdate_movementid;
 alter table movementfloat DROP CONSTRAINT  fk_movementfloat_movementid;

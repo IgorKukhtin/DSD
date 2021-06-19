@@ -97,7 +97,8 @@ BEGIN
                                         ELSE 0
                                    END AS ObjectId_inf
 
-                                 , MIContainer.WhereObjectId_Analyzer AS DirectionId
+                               --, MIContainer.WhereObjectId_Analyzer AS DirectionId
+                                 , MIContainer.ObjectExtId_Analyzer AS DirectionId
                                  , MIContainer.MovementDescId
                                  , MILinkObject_InfoMoney.ObjectId AS InfoMoney_inf
 
@@ -123,7 +124,8 @@ BEGIN
                                                THEN MIContainer.ObjectExtId_Analyzer
                                           ELSE MIContainer.WhereObjectId_Analyzer
                                      END
-                                   , MIContainer.WhereObjectId_Analyzer
+                                 --, MIContainer.WhereObjectId_Analyzer
+                                   , MIContainer.ObjectExtId_Analyzer
                                    , MIContainer.MovementDescId
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService())
                                                THEN MIContainer.ObjectIntId_Analyzer
