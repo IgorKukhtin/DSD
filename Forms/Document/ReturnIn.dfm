@@ -1269,6 +1269,13 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object ReasonCode_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1082#1086#1076')'
+            DataBinding.FieldName = 'ReasonCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
+          end
           object ReasonName_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'ReasonName'
@@ -4179,6 +4186,13 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS_Reason
+          ComponentItem = 'ReasonCode'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ReturnKindId'
           Value = Null
           Component = DetailCDS_Reason
@@ -6306,8 +6320,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1080
-    Top = 208
+    Left = 1128
+    Top = 216
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'

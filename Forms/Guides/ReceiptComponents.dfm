@@ -336,6 +336,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 100
       end
+      object ReceiptLevelName: TcxGridDBColumn
+        Caption = #1069#1090#1072#1087#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'ReceiptLevelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
@@ -1056,6 +1064,9 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDetail: TdsdPrintAction
       Category = 'Print'
@@ -1082,6 +1093,9 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateTaxExit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1177,6 +1191,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = GroupNumber_Child
@@ -1234,6 +1249,8 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 272
     Top = 184
   end
@@ -1287,7 +1304,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartDate_Child'
         DataType = ftDateTime
@@ -1296,7 +1313,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndDate_Child'
         DataType = ftDateTime

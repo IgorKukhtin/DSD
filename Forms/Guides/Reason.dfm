@@ -352,6 +352,13 @@ object ReasonForm: TReasonForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ReturnKindId'
           Value = Null
           Component = ClientDataSet

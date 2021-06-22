@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , ReasonId Integer, ReasonName  TVarChar
+             , ReasonId Integer, ReasonCode Integer, ReasonName  TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , Value5 Integer, Value10 Integer
              , isErased Boolean
@@ -46,6 +46,7 @@ BEGIN
                                   , MovementItem.ObjectId          AS GoodsId
                                   , MovementItem.Amount
                                   , Object_Reason.Id               AS ReasonId
+                                  , Object_Reason.ObjectCode       AS ReasonCode
                                   , Object_Reason.ValueData        AS ReasonName
                                   , Object_ReturnKind.Id           AS ReturnKindId
                                   , Object_ReturnKind.ValueData    AS ReturnKindName
@@ -78,6 +79,7 @@ BEGIN
                             , tmpMI_Master.GoodsKindId
                             , COALESCE (tmpMI_Detail.Amount, tmpMI_Master.Amount) :: TFloat AS Amount
                             , tmpMI_Detail.ReasonId   ::Integer
+                            , tmpMI_Detail.ReasonCode ::Integer
                             , tmpMI_Detail.ReasonName ::TVarChar
                             , tmpMI_Detail.ReturnKindId   ::Integer
                             , tmpMI_Detail.ReturnKindName ::TVarChar
@@ -92,6 +94,7 @@ BEGIN
                             , tmpMI_Master.GoodsKindId
                             , tmpDiff.Amount :: TFloat AS Amount
                             , 0   ::Integer  AS ReasonId
+                            , 0   ::Integer  AS ReasonCode
                             , ''  ::TVarChar AS ReasonName
                             , 0   ::Integer  AS ReturnKindId
                             , ''  ::TVarChar AS ReturnKindName
@@ -150,6 +153,7 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
  
            , tmpAll.ReasonId   ::Integer
+           , tmpAll.ReasonCode ::Integer
            , tmpAll.ReasonName ::TVarChar
            , tmpAll.ReturnKindId   ::Integer
            , tmpAll.ReturnKindName ::TVarChar

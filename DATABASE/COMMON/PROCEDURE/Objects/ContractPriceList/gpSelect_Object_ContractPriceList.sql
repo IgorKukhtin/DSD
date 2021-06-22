@@ -1,9 +1,9 @@
 -- Function: gpSelect_Object_ContractPriceList(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractPriceList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractPriceList(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPriceList(
-    IN inisShowAll   Boolean,
+    IN inisErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Comment TVarChar
@@ -77,7 +77,7 @@ BEGIN
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
      WHERE Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
-       AND (Object_ContractPriceList.isErased = FALSE OR inisShowAll = TRUE)
+       AND (Object_ContractPriceList.isErased = FALSE OR inisErased = TRUE)
     ;
   
 END;

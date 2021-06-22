@@ -28,6 +28,8 @@ RETURNS TABLE (
                GoodsKindId_Child Integer, GoodsKindCode_Child Integer, GoodsKindName_Child TVarChar,
                MeasureName_Child TVarChar, MeasureName_calc_Child TVarChar,
                GroupNumber_Child Integer,
+               ReceiptLevelId Integer, ReceiptLevelName TVarChar,
+               
                InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar,
                Color_calc Integer,
                InsertName TVarChar, UpdateName TVarChar,
@@ -271,6 +273,9 @@ BEGIN
 
          , tmpReceiptChild.GroupNumber
 
+         , Object_ReceiptLevel.Id        AS ReceiptLevelId
+         , Object_ReceiptLevel.ValueData AS ReceiptLevelName
+
          , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN NULL ELSE tmpReceiptChild.InfoMoneyCode            END :: Integer  AS InfoMoneyCode
          , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN NULL ELSE tmpReceiptChild.InfoMoneyGroupName       END :: TVarChar AS InfoMoneyGroupName
          , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN NULL ELSE tmpReceiptChild.InfoMoneyDestinationName END :: TVarChar AS InfoMoneyDestinationName
@@ -331,6 +336,8 @@ BEGIN
                 , ObjectBoolean_WeightMain.ValueData AS isWeightMain
                 , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
 
+                , ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId AS ReceiptLevelId
+
                 , Object_InfoMoney_View.InfoMoneyCode
                 , Object_InfoMoney_View.InfoMoneyGroupName
                 , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -373,6 +380,10 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+                LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                     ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
+                                    AND ObjectLink_ReceiptChild_ReceiptLevel.DescId = zc_ObjectLink_ReceiptChild_ReceiptLevel()
            WHERE Object_ReceiptChild.DescId = zc_Object_ReceiptChild()
              AND (ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId OR inReceiptId = 0)
           ) AS tmpReceiptChild
@@ -413,6 +424,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpReceiptChild.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpReceiptChild.GoodsKindId
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmpReceiptChild.ReceiptLevelId
  
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpReceiptChild.MeasureId
           LEFT JOIN Object AS Object_Measure_calc ON Object_Measure_calc.Id = zc_Measure_Kg() AND Object_Measure.Id = zc_Measure_Sh()
@@ -503,6 +515,10 @@ BEGIN
          , tmpReceiptChild.MeasureName                      AS MeasureName_Child
          , tmpReceiptChild.MeasureName_calc                 AS MeasureName_calc_Child
          , tmpReceiptChild.GroupNumber                      AS GroupNumber_Child
+
+         , tmpReceiptChild.ReceiptLevelId
+         , tmpReceiptChild.ReceiptLevelName
+
          , tmpReceiptChild.InfoMoneyCode
          , tmpReceiptChild.InfoMoneyGroupName
          , tmpReceiptChild.InfoMoneyDestinationName
@@ -537,6 +553,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.06.21         * ReceiptLevel
  26.02.16         *
 */
 

@@ -25,7 +25,6 @@
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1216
     object deStart: TcxDateEdit
       Left = 238
       Top = 4
@@ -333,7 +332,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitLeft = 724
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -559,7 +557,6 @@
     Height = 5
     AlignSplitter = salTop
     Control = Panel2
-    ExplicitWidth = 1216
   end
   object cxRightSplitter: TcxSplitter
     Left = 778
@@ -568,7 +565,6 @@
     Height = 254
     AlignSplitter = salRight
     Control = Panel
-    ExplicitLeft = 720
   end
   object CCPartner: TcxGrid
     Left = 481
@@ -580,7 +576,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 239
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -668,7 +663,6 @@
     Align = alTop
     Caption = 'Panel2'
     TabOrder = 11
-    ExplicitWidth = 1216
     object Panel3: TPanel
       Left = 1002
       Top = 1
@@ -677,7 +671,6 @@
       Align = alRight
       Caption = 'Panel3'
       TabOrder = 0
-      ExplicitLeft = 944
       object cxGridContractPriceList: TcxGrid
         Left = 1
         Top = 1
@@ -811,7 +804,6 @@
       HotZoneClassName = 'TcxMediaPlayer8Style'
       AlignSplitter = salRight
       Control = Panel3
-      ExplicitLeft = 936
     end
     object cxGrid: TcxGrid
       Left = 1
@@ -821,7 +813,6 @@
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
-      ExplicitWidth = 935
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -1823,6 +1814,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -2054,6 +2049,10 @@
           Visible = True
           ItemName = 'bbOpenForm_ContractPriceList'
         end>
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -3603,6 +3602,25 @@
         end>
       isShowModal = False
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_ContractPriceList
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ContractPriceList
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -4500,8 +4518,9 @@
       end>
     Params = <
       item
-        Name = 'inisShowAll'
+        Name = 'inisErased'
         Value = False
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

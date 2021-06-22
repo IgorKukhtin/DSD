@@ -302,6 +302,8 @@ type
     bbOpenForm_ContractPriceList: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
     UpdateDataSet_ContractPriceList: TdsdUpdateDataSet;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
 
   private
     { Private declarations }
