@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
   ClientHeight = 300
-  ClientWidth = 436
+  ClientWidth = 638
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -85,7 +85,7 @@
   object cxLabel2: TcxLabel
     Left = 234
     Top = 196
-    Caption = #1052#1080#1085' '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+    Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
   end
   object edPayrollGroup: TcxButtonEdit
     Left = 20
@@ -114,6 +114,74 @@
     Top = 99
     Caption = ' '#1050#1086#1088#1086#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '
   end
+  object Panel1: TPanel
+    Left = 435
+    Top = 0
+    Width = 203
+    Height = 300
+    Align = alRight
+    Caption = 'Panel1'
+    TabOrder = 14
+    ExplicitLeft = 440
+    object CorrectMinAmountGrid: TcxGrid
+      Left = 1
+      Top = 18
+      Width = 201
+      Height = 281
+      Align = alClient
+      TabOrder = 0
+      ExplicitTop = 48
+      ExplicitWidth = 168
+      ExplicitHeight = 251
+      object CorrectMinAmountGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = CorrectMinAmountDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.Appending = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object DateStart: TcxGridDBColumn
+          Caption = #1057' '#1076#1072#1090#1099
+          DataBinding.FieldName = 'DateStart'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.InputKind = ikRegExpr
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Properties.WeekNumbers = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 101
+        end
+        object Amount: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 81
+        end
+      end
+      object CorrectMinAmountGridLevel: TcxGridLevel
+        GridView = CorrectMinAmountGridDBTableView
+      end
+    end
+    object cxLabel5: TcxLabel
+      Left = 1
+      Top = 1
+      Align = alTop
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1084#1080#1085'. '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      ExplicitLeft = 24
+      ExplicitTop = 16
+      ExplicitWidth = 202
+    end
+  end
   object ActionList: TActionList
     Left = 252
     Top = 20
@@ -124,6 +192,9 @@
       StoredProcList = <
         item
           StoredProc = spGet
+        end
+        item
+          StoredProc = spSelectCorrectMinAmount
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -145,6 +216,30 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshCorrectMinAmount
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateCorrectMinAmount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateCorrectMinAmount
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = CorrectMinAmountDS
+    end
+    object actRefreshCorrectMinAmount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectCorrectMinAmount
+      StoredProcList = <
+        item
+          StoredProc = spSelectCorrectMinAmount
+        end>
+      Caption = 'actRefreshCorrectMinAmount'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -219,8 +314,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 4
-    Top = 32
+    Left = 36
+    Top = 24
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PayrollType'
@@ -335,5 +430,86 @@
       end>
     Left = 128
     Top = 112
+  end
+  object spSelectCorrectMinAmount: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_CorrectMinAmount'
+    DataSet = CorrectMinAmountCDS
+    DataSets = <
+      item
+        DataSet = CorrectMinAmountCDS
+      end>
+    Params = <
+      item
+        Name = 'inPayrollTypeId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 136
+  end
+  object CorrectMinAmountDS: TDataSource
+    DataSet = CorrectMinAmountCDS
+    Left = 496
+    Top = 88
+  end
+  object CorrectMinAmountCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 496
+    Top = 32
+  end
+  object spInsertUpdateCorrectMinAmount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_CorrectMinAmount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = CorrectMinAmountCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPayrollTypeId'
+        Value = 0.000000000000000000
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = Null
+        Component = CorrectMinAmountCDS
+        ComponentItem = 'DateStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = ''
+        Component = CorrectMinAmountCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 500
+    Top = 192
   end
 end

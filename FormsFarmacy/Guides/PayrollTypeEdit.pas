@@ -20,7 +20,10 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxStyles,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
+  Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid;
 
 type
   TPayrollTypeEditForm = class(TParentForm)
@@ -48,6 +51,19 @@ type
     PayrollGroupGuides: TdsdGuides;
     edShortName: TcxTextEdit;
     cxLabel4: TcxLabel;
+    CorrectMinAmountGrid: TcxGrid;
+    CorrectMinAmountGridDBTableView: TcxGridDBTableView;
+    DateStart: TcxGridDBColumn;
+    CorrectMinAmountGridLevel: TcxGridLevel;
+    Panel1: TPanel;
+    Amount: TcxGridDBColumn;
+    spSelectCorrectMinAmount: TdsdStoredProc;
+    CorrectMinAmountDS: TDataSource;
+    CorrectMinAmountCDS: TClientDataSet;
+    spInsertUpdateCorrectMinAmount: TdsdStoredProc;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
+    actRefreshCorrectMinAmount: TdsdExecStoredProc;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
