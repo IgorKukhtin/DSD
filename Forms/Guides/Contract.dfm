@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 620
-  ClientWidth = 1216
+  ClientWidth = 1274
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1216
+    Width = 1274
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 1216
     object deStart: TcxDateEdit
       Left = 238
       Top = 4
@@ -325,13 +326,14 @@
     end
   end
   object Panel: TPanel
-    Left = 724
+    Left = 782
     Top = 366
     Width = 492
     Height = 254
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 724
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -553,29 +555,32 @@
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 361
-    Width = 1216
+    Width = 1274
     Height = 5
     AlignSplitter = salTop
     Control = Panel2
+    ExplicitWidth = 1216
   end
   object cxRightSplitter: TcxSplitter
-    Left = 720
+    Left = 778
     Top = 366
     Width = 4
     Height = 254
     AlignSplitter = salRight
     Control = Panel
+    ExplicitLeft = 720
   end
   object CCPartner: TcxGrid
     Left = 481
     Top = 366
-    Width = 239
+    Width = 297
     Height = 254
     Align = alClient
     TabOrder = 6
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 239
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -658,19 +663,21 @@
   object Panel2: TPanel
     Left = 0
     Top = 56
-    Width = 1216
+    Width = 1274
     Height = 305
     Align = alTop
     Caption = 'Panel2'
     TabOrder = 11
+    ExplicitWidth = 1216
     object Panel3: TPanel
-      Left = 944
+      Left = 1002
       Top = 1
       Width = 271
       Height = 303
       Align = alRight
       Caption = 'Panel3'
       TabOrder = 0
+      ExplicitLeft = 944
       object cxGridContractPriceList: TcxGrid
         Left = 1
         Top = 1
@@ -797,22 +804,24 @@
       TabOrder = 1
     end
     object cxSplitter3: TcxSplitter
-      Left = 936
+      Left = 994
       Top = 1
       Width = 8
       Height = 303
       HotZoneClassName = 'TcxMediaPlayer8Style'
       AlignSplitter = salRight
       Control = Panel3
+      ExplicitLeft = 936
     end
     object cxGrid: TcxGrid
       Left = 1
       Top = 1
-      Width = 935
+      Width = 993
       Height = 303
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
+      ExplicitWidth = 935
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
