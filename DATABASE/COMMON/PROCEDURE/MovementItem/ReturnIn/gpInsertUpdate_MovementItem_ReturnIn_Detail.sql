@@ -57,7 +57,7 @@ BEGIN
      --получаем тип возврата
      vbReturnKindId := (SELECT  ObjectLink_ReturnKind.ChildObjectId AS ReturnKindId
                         FROM ObjectLink AS ObjectLink_ReturnKind
-                        WHERE ObjectLink_ReturnKind.ObjectId = Object_Reason.Id 
+                        WHERE ObjectLink_ReturnKind.ObjectId = inReasonId
                               AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
                         );
 

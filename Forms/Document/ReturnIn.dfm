@@ -1272,6 +1272,8 @@ inherited ReturnInForm: TReturnInForm
           object ReasonCode_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1082#1086#1076')'
             DataBinding.FieldName = 'ReasonCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 105
@@ -7143,8 +7145,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1064
-    Top = 400
+    Left = 1056
+    Top = 352
   end
   object DBViewAddOnDetail: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7174,8 +7176,8 @@ inherited ReturnInForm: TReturnInForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1110
-    Top = 433
+    Left = 1198
+    Top = 305
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Detail'
@@ -7233,7 +7235,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inReasonCode'
         Value = Null
-        Component = ChildCDS_Reason
+        Component = DetailCDS_Reason
         ComponentItem = 'ReasonCode'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -7406,8 +7408,8 @@ inherited ReturnInForm: TReturnInForm
     FilterOptions = [foCaseInsensitive]
     MasterFields = 'Id'
     Params = <>
-    Left = 1056
-    Top = 504
+    Left = 1128
+    Top = 392
   end
   object DetailDS_Reason: TDataSource
     DataSet = DetailCDS_Reason
