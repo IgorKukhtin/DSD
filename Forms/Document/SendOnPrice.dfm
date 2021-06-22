@@ -11,17 +11,17 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 1369
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 982
+    ExplicitWidth = 1369
     ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1369
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 1369
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1369
         Height = 478
-        ExplicitWidth = 982
+        ExplicitWidth = 1369
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -362,7 +362,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitWidth = 982
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -371,10 +370,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 96
-        ExplicitTop = -95
-        ExplicitWidth = 1304
-        ExplicitHeight = 291
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -624,7 +619,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 1369
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 1369
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2190,6 +2185,21 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Name = 'SubjectDocName'
         Value = Null
         Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonId'
+        Value = Null
+        Component = GuidesReason
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonCode'
+        Value = Null
+        Component = GuidesReason
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
