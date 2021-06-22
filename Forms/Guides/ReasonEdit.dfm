@@ -2,7 +2,7 @@ object ReasonEditForm: TReasonEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103'>'
-  ClientHeight = 190
+  ClientHeight = 307
   ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ReasonEditForm: TReasonEditForm
   end
   object cxButton1: TcxButton
     Left = 39
-    Top = 156
+    Top = 274
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object ReasonEditForm: TReasonEditForm
   end
   object cxButton2: TcxButton
     Left = 183
-    Top = 156
+    Top = 274
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,12 +60,12 @@ object ReasonEditForm: TReasonEditForm
     Width = 273
   end
   object cxLabel11: TcxLabel
-    Left = 8
+    Left = 10
     Top = 101
     Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
   end
   object ceReturnKind: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 120
     Properties.Buttons = <
       item
@@ -75,6 +75,31 @@ object ReasonEditForm: TReasonEditForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 273
+  end
+  object cbisReturnIn: TcxCheckBox
+    Left = 15
+    Top = 165
+    Caption = #1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    TabOrder = 8
+    Width = 258
+  end
+  object cbisSendOnPrice: TcxCheckBox
+    Left = 15
+    Top = 192
+    Caption = #1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1089' '#1092#1080#1083#1080#1072#1083#1072
+    TabOrder = 9
+    Width = 258
+  end
+  object edComment: TcxTextEdit
+    Left = 10
+    Top = 240
+    TabOrder = 10
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 219
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 152
@@ -143,6 +168,30 @@ object ReasonEditForm: TReasonEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReturnIn'
+        Value = Null
+        Component = cbisReturnIn
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendOnPrice'
+        Value = Null
+        Component = cbisSendOnPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -198,6 +247,27 @@ object ReasonEditForm: TReasonEditForm
         Component = GuidesReturnKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReturnIn'
+        Value = Null
+        Component = cbisReturnIn
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSendOnPrice'
+        Value = Null
+        Component = cbisSendOnPrice
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

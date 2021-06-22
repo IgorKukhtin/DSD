@@ -5143,7 +5143,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 224
-    Top = 248
+    Top = 264
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ReturnIn'
@@ -7143,8 +7143,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1040
-    Top = 448
+    Left = 1064
+    Top = 400
   end
   object DBViewAddOnDetail: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7156,7 +7156,13 @@ inherited ReturnInForm: TReturnInForm
     ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch2
+      end
+      item
+        Column = ReasonCode_ch2
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -7217,14 +7223,6 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId_top'
-        Value = ''
-        Component = GuidesReturnKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inReasonId'
         Value = Null
         Component = DetailCDS_Reason
@@ -7233,10 +7231,10 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId'
+        Name = 'inReasonCode'
         Value = Null
-        Component = DetailCDS_Reason
-        ComponentItem = 'ReturnKindId'
+        Component = ChildCDS_Reason
+        ComponentItem = 'ReasonCode'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

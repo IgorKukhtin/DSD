@@ -19,7 +19,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, cxCheckBox;
 
 type
   TReasonEditForm = class(TParentForm)
@@ -41,6 +41,10 @@ type
     cxLabel11: TcxLabel;
     ceReturnKind: TcxButtonEdit;
     GuidesReturnKind: TdsdGuides;
+    cbisReturnIn: TcxCheckBox;
+    cbisSendOnPrice: TcxCheckBox;
+    edComment: TcxTextEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public
