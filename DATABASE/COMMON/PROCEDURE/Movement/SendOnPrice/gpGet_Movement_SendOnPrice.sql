@@ -71,6 +71,8 @@ BEGIN
 
              , 0                                          AS SubjectDocId
              , CAST ('' AS TVarChar)                      AS SubjectDocName
+             , 0                   		          AS ReasonId
+             , CAST ('' AS TVarChar)                      AS ReasonName 
 
              , 0                   			  AS MovementId_TransportGoods 
              , '' :: TVarChar                     	  AS InvNumber_TransportGoods 
@@ -132,6 +134,9 @@ BEGIN
 
            , Object_SubjectDoc.Id                                 AS SubjectDocId
            , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
+
+           , 0                   		            AS ReasonId
+           , CAST ('' AS TVarChar)                          AS ReasonName 
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods

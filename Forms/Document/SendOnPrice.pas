@@ -119,6 +119,33 @@ type
     cxLabel9: TcxLabel;
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    cxTabSheet1: TcxTabSheet;
+    DetailDS_Reason: TDataSource;
+    DetailCDS_Reason: TClientDataSet;
+    spSelect_Detail: TdsdStoredProc;
+    DBViewAddOn_Detail: TdsdDBViewAddOn;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ord: TcxGridDBColumn;
+    GoodsGroupNameFull_ch2: TcxGridDBColumn;
+    GoodsCode_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    GoodsKindName_ch2: TcxGridDBColumn;
+    MeasureName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    ReasonCode_ch2: TcxGridDBColumn;
+    ReasonName_ch2: TcxGridDBColumn;
+    ReturnKindName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    Value5_ch2: TcxGridDBColumn;
+    Value10_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    cxLabel27: TcxLabel;
+    edReason: TcxButtonEdit;
+    GuidesReason: TdsdGuides;
+    spInsertUpdateMI_Detail: TdsdStoredProc;
+    actUpdateDetailDS_Reason: TdsdUpdateDataSet;
+    actReasonOpenForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
