@@ -736,9 +736,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -7157,10 +7154,15 @@ inherited ReturnInForm: TReturnInForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ChartList = <>
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = ReasonCode_ch2
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <
       item
         Column = Amount_ch2

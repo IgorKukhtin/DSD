@@ -3463,10 +3463,15 @@ inherited SendOnPriceForm: TSendOnPriceForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ChartList = <>
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = ReasonCode_ch2
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <
       item
         Column = Amount_ch2
