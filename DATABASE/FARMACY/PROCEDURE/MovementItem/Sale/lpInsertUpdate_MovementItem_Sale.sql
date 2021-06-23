@@ -28,6 +28,11 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
     
+    IF COALESCE (inisSP, False) = TRUE
+    THEN
+      inPriceSale := inPrice;
+    END IF;
+    
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили <>

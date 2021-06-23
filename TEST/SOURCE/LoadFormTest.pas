@@ -2282,6 +2282,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Balance_gridForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Balance_gridForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridForm');
   exit;
@@ -3964,10 +3968,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
+  }
   // составл€ющие рецептур
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
-  }
+
 end;
 
 procedure TLoadFormTest.SetUp;

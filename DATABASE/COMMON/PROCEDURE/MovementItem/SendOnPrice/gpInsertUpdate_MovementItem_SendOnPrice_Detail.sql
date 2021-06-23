@@ -1,9 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_ReturnIn_Detail()
+-- Function: gpInsertUpdate_MovementItem_SendOnPrice_Detail()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Detail (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Detail (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Detail (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Detail(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Detail(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
@@ -79,7 +78,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  22.06.21         *
- 07.04.21         *
 */
 
 -- тест

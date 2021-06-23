@@ -8,6 +8,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Reason(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
+             , Comment TVarChar
+             , isReturnIn Boolean
+             , isSendOnPrice Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -26,7 +29,11 @@ BEGIN
            
            , CAST (0 as Integer)    AS ReturnKindId
            , CAST ('' as TVarChar)  AS ReturnKindName           
-           
+
+           , ''       ::TVarChar    AS Comment
+           , FALSE    ::Boolean     AS isReturnIn
+           , FALSE    ::Boolean     AS isSendOnPrice
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -37,7 +44,11 @@ BEGIN
           
            , Object_ReturnKind.Id        AS ReturnKindId
            , Object_ReturnKind.ValueData AS ReturnKindName            
-           
+
+           , ObjectString_Comment.ValueData AS Comment
+           , COALESCE (ObjectBoolean_ReturnIn.ValueData, FALSE)    ::Boolean AS isReturnIn
+           , COALESCE (ObjectBoolean_SendOnPrice.ValueData, FALSE) ::Boolean AS isSendOnPrice
+
            , Object_Reason.isErased   AS isErased
            
        FROM Object AS Object_Reason
@@ -46,6 +57,17 @@ BEGIN
                               AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
           LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId  
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ReturnIn
+                                  ON ObjectBoolean_ReturnIn.ObjectId = Object_Reason.Id
+                                 AND ObjectBoolean_ReturnIn.DescId = zc_ObjectBoolean_Reason_ReturnIn()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_SendOnPrice
+                                  ON ObjectBoolean_SendOnPrice.ObjectId = Object_Reason.Id
+                                 AND ObjectBoolean_SendOnPrice.DescId = zc_ObjectBoolean_Reason_SendOnPrice()
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_Reason.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Reason_Comment()
        WHERE Object_Reason.Id = inId;
    END IF; 
   

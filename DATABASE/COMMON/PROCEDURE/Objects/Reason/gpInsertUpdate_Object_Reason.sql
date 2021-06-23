@@ -1,12 +1,16 @@
 -- Function: gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Reason(
  INOUT ioId	             Integer,       -- ключ объекта <>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
     IN inReturnKindId        Integer,       -- Тип возврата
+    IN inisReturnIn          Boolean,       -- по умолчанию для возвр. от покуп
+    IN inisSendOnPrice       Boolean,       -- по умолчанию для возвр. с филиала
+    IN inComment             TVarChar,      -- примечание
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -17,13 +21,30 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Reason());
 
+   -- проверка
+   IF COALESCE (inisReturnIn,False) = TRUE AND COALESCE (inisSendOnPrice,False) = TRUE
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение по умолчанию может быть выбрано только одно.';
+   END IF;
+   
    -- Если код не установлен, определяем его каи последний+1
    inCode:=lfGet_ObjectCode (inCode, zc_Object_Reason());
    
-   -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Reason(), inName);
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Reason(), inCode);
+
+   -- проверка прав уникальности для свойства элемента  <Наименование> + <Тип возврата>
+   IF EXISTS (SELECT 1
+              FROM Object
+                   INNER JOIN ObjectLink AS ObjectLink_ReturnKind
+                                         ON ObjectLink_ReturnKind.ObjectId = Object.Id 
+                                        AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
+                                        AND ObjectLink_ReturnKind.ChildObjectId = inReturnKindId
+              WHERE Object.Id <> ioId
+                AND TRIM (Object.ValueData) = TRIM (inName))
+   THEN
+       RAISE EXCEPTION 'Ошибка.Причина не уникальна.';
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Reason(), inCode, inName);
@@ -31,6 +52,14 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Reason_ReturnKind(), ioId, inReturnKindId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_ReturnIn(), ioId, inisReturnIn);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_SendOnPrice(), ioId, inisSendOnPrice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Reason_Comment(), ioId, inComment);
+   
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

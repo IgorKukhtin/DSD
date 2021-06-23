@@ -3185,6 +3185,18 @@ begin
           end;
         end;
 
+        if (FieldByName('MultiplicitySale').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+        begin
+          if Frac(FieldByName('Amount').AsCurrency / FieldByName('MultiplicitySale').AsCurrency) <> 0 then
+          begin
+            if not FieldByName('isMultiplicityError').AsBoolean or (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
+            begin
+              ShowMessage('Деление медикамента разрешено кратно ' + FieldByName('MultiplicitySale').AsString + ' !');
+              exit;
+            end;
+          end;
+        end;
+
         if (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
         begin
           if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then

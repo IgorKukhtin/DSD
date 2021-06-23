@@ -736,6 +736,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1268,6 +1271,15 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object ReasonCode_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1082#1086#1076')'
+            DataBinding.FieldName = 'ReasonCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
           end
           object ReasonName_ch2: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
@@ -4179,6 +4191,13 @@ inherited ReturnInForm: TReturnInForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_Reason
+          ComponentItem = 'ReasonCode'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ReturnKindId'
           Value = Null
           Component = DetailCDS_Reason
@@ -5129,7 +5148,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 224
-    Top = 248
+    Top = 264
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ReturnIn'
@@ -6306,8 +6325,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1080
-    Top = 208
+    Left = 1128
+    Top = 216
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -7129,8 +7148,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1040
-    Top = 448
+    Left = 1056
+    Top = 352
   end
   object DBViewAddOnDetail: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7142,7 +7161,13 @@ inherited ReturnInForm: TReturnInForm
     ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch2
+      end
+      item
+        Column = ReasonCode_ch2
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -7154,8 +7179,8 @@ inherited ReturnInForm: TReturnInForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1110
-    Top = 433
+    Left = 1198
+    Top = 305
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Detail'
@@ -7203,14 +7228,6 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId_top'
-        Value = ''
-        Component = GuidesReturnKind
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inReasonId'
         Value = Null
         Component = DetailCDS_Reason
@@ -7219,10 +7236,10 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReturnKindId'
+        Name = 'inReasonCode'
         Value = Null
         Component = DetailCDS_Reason
-        ComponentItem = 'ReturnKindId'
+        ComponentItem = 'ReasonCode'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -7394,13 +7411,13 @@ inherited ReturnInForm: TReturnInForm
     FilterOptions = [foCaseInsensitive]
     MasterFields = 'Id'
     Params = <>
-    Left = 1056
-    Top = 504
+    Left = 1128
+    Top = 392
   end
   object DetailDS_Reason: TDataSource
     DataSet = DetailCDS_Reason
-    Left = 1120
-    Top = 504
+    Left = 1224
+    Top = 384
   end
   object spSelect_MI_Child_reason: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'

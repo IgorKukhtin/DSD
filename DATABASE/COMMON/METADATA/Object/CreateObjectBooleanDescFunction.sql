@@ -960,9 +960,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PriceSite_Fix() RETURNS Integer AS $
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceSite(), 'zc_ObjectBoolean_PriceSite_Fix', 'фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PriceSite_Fix');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Reason_ReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Reason_ReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Reason(), 'zc_ObjectBoolean_Reason_ReturnIn', 'фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Reason_ReturnIn');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Reason_SendOnPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Reason_SendOnPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Reason(), 'zc_ObjectBoolean_Reason_SendOnPrice', 'фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Reason_SendOnPrice');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 22.06.21         * zc_ObjectBoolean_Reason_SendOnPrice
+                    zc_ObjectBoolean_Reason_ReturnIn
  09.06.21                                                                                                          * zc_ObjectBoolean_PriceSite_Fix
  17.05.21                                                                                                          * zc_ObjectBoolean_GoodsDivisionLock_Lock
  13.05.21         * zc_ObjectBoolean_User_ProjectAuthent

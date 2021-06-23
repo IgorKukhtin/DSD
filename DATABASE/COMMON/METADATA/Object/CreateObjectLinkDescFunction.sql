@@ -2565,10 +2565,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_MethodsAssortment() RETURN
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CashSettings_MethodsAssortment', 'Методы выбора аптек ассортимента', zc_Object_CashSettings(), zc_Object_MethodsAssortment() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_MethodsAssortment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrectMinAmount_PayrollType() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectMinAmount_PayrollType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CorrectMinAmount_PayrollType', 'Связь с типом расчета заработной платы', zc_Object_CorrectMinAmount(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectMinAmount_PayrollType');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.06.21                                                                                      * zc_ObjectLink_CorrectMinAmount_PayrollType
  14.06.21         * zc_ObjectLink_ReceiptChild_ReceiptLevel
  31.05.21                                                                                      * zc_ObjectLink_CashSettings_MethodsAssortment
  27.05.21         * zc_ObjectLink_ContractPriceList_Contract

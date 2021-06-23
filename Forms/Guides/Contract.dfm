@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 620
-  ClientWidth = 1216
+  ClientWidth = 1274
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1216
+    Width = 1274
     Height = 30
     Align = alTop
     BevelOuter = bvNone
@@ -325,7 +325,7 @@
     end
   end
   object Panel: TPanel
-    Left = 724
+    Left = 782
     Top = 366
     Width = 492
     Height = 254
@@ -553,13 +553,13 @@
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 361
-    Width = 1216
+    Width = 1274
     Height = 5
     AlignSplitter = salTop
     Control = Panel2
   end
   object cxRightSplitter: TcxSplitter
-    Left = 720
+    Left = 778
     Top = 366
     Width = 4
     Height = 254
@@ -569,7 +569,7 @@
   object CCPartner: TcxGrid
     Left = 481
     Top = 366
-    Width = 239
+    Width = 297
     Height = 254
     Align = alClient
     TabOrder = 6
@@ -658,13 +658,13 @@
   object Panel2: TPanel
     Left = 0
     Top = 56
-    Width = 1216
+    Width = 1274
     Height = 305
     Align = alTop
     Caption = 'Panel2'
     TabOrder = 11
     object Panel3: TPanel
-      Left = 944
+      Left = 1002
       Top = 1
       Width = 271
       Height = 303
@@ -797,7 +797,7 @@
       TabOrder = 1
     end
     object cxSplitter3: TcxSplitter
-      Left = 936
+      Left = 994
       Top = 1
       Width = 8
       Height = 303
@@ -808,7 +808,7 @@
     object cxGrid: TcxGrid
       Left = 1
       Top = 1
-      Width = 935
+      Width = 993
       Height = 303
       Align = alClient
       TabOrder = 3
@@ -1814,6 +1814,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -2045,6 +2049,10 @@
           Visible = True
           ItemName = 'bbOpenForm_ContractPriceList'
         end>
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -3594,6 +3602,25 @@
         end>
       isShowModal = False
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_ContractPriceList
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ContractPriceList
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -4491,8 +4518,9 @@
       end>
     Params = <
       item
-        Name = 'inisShowAll'
+        Name = 'inisErased'
         Value = False
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

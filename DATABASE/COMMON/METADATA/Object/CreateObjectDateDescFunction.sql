@@ -500,9 +500,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_PercentMarkupDateChange() RET
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_PercentMarkupDateChange', 'Дата изменения % наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_PercentMarkupDateChange');
   
+CREATE OR REPLACE FUNCTION zc_ObjectDate_CorrectMinAmount_Date() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CorrectMinAmount_Date'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CorrectMinAmount(), 'zc_ObjectDate_CorrectMinAmount_Date', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CorrectMinAmount_Date');
+  
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 22.06.21                                                                                     * zc_ObjectDate_CorrectMinAmount_Date
  27.04.21                                                                                     * zc_ObjectDate_PriceSite_...
  27.05.21         * zc_ObjectDate_ContractPriceList_StartDate
                     zc_ObjectDate_ContractPriceList_EndDate

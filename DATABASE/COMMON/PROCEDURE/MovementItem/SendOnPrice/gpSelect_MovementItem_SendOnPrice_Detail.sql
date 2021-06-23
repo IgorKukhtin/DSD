@@ -1,8 +1,8 @@
- -- Function: gpSelect_MovementItem_ReturnIn_Detail()
+ -- Function: gpSelect_MovementItem_SendOnPrice_Detail()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn_Detail (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_SendOnPrice_Detail (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn_Detail(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendOnPrice_Detail(
     IN inMovementId  Integer      , -- ключ Документа
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
@@ -23,7 +23,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SendOnPrice());
      vbUserId:= lpGetUserBySession (inSession);
      
 
@@ -194,4 +194,4 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_MovementItem_ReturnIn_Detail (inMovementId:= 20081622,  inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_SendOnPrice_Detail (inMovementId:= 20081622,  inIsErased:= FALSE, inSession:= '9818')

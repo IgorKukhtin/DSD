@@ -816,6 +816,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptLevel_Comment() RETURNS Intege
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptLevel_Comment', zc_Object_ReceiptLevel(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptLevel_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Reason_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Reason_Comment', zc_Object_Reason(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Comment');
+
 
 ---!!! Аптека
 

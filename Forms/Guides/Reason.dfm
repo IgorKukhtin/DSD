@@ -3,7 +3,7 @@ object ReasonForm: TReasonForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 458
+  ClientWidth = 594
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object ReasonForm: TReasonForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 458
+    Width = 594
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 458
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +41,6 @@ object ReasonForm: TReasonForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,7 +51,7 @@ object ReasonForm: TReasonForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 42
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -59,13 +59,13 @@ object ReasonForm: TReasonForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 243
+        Width = 146
       end
       object ReturnKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
         DataBinding.FieldName = 'ReturnKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 180
+        Width = 109
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,6 +76,32 @@ object ReasonForm: TReasonForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object isReturnIn: TcxGridDBColumn
+        Caption = #1076#1083#1103' '#1042#1086#1079#1074'. '#1086#1090' '#1087#1086#1082#1091#1087'. '
+        DataBinding.FieldName = 'isReturnIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 79
+      end
+      object isSendOnPrice: TcxGridDBColumn
+        Caption = #1076#1083#1103' '#1042#1086#1079#1074'. '#1089' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'isSendOnPrice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1089' '#1092#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 73
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 183
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -349,6 +375,13 @@ object ReasonForm: TReasonForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end
         item

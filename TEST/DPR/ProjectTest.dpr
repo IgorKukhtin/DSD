@@ -1269,7 +1269,8 @@ uses
   ReceiptLevelEdit in '..\..\Forms\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
   Reason in '..\..\Forms\Guides\Reason.pas' {ReasonForm: TParentForm},
   ReasonEdit in '..\..\Forms\Guides\ReasonEdit.pas' {ReasonEditForm: TParentForm},
-  Report_ProfitLoss_grid in '..\..\Forms\Report\Report_ProfitLoss_grid.pas' {Report_ProfitLoss_gridForm: TParentForm};
+  Report_ProfitLoss_grid in '..\..\Forms\Report\Report_ProfitLoss_grid.pas' {Report_ProfitLoss_gridForm: TParentForm},
+  Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

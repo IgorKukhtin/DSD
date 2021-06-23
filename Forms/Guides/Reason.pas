@@ -59,6 +59,9 @@ type
     ReturnKindName: TcxGridDBColumn;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    Comment: TcxGridDBColumn;
+    isReturnIn: TcxGridDBColumn;
+    isSendOnPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

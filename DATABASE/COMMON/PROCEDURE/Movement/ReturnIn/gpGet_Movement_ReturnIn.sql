@@ -29,7 +29,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MemberExpId Integer, MemberExpName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , ReasonId Integer, ReasonName  TVarChar
-             , ReturnKindId Integer, ReturnKindName TVarChar
              , Comment TVarChar
              , isPromo Boolean
              , isList Boolean
@@ -105,8 +104,6 @@ BEGIN
 
              , 0                   		        AS ReasonId
              , CAST ('' AS TVarChar)                    AS ReasonName 
-             , 0                   		        AS ReturnKindId
-             , CAST ('' AS TVarChar)                    AS ReturnKindName
 
              , CAST ('' as TVarChar) 		        AS Comment
              , CAST (FALSE AS Boolean)                  AS isPromo 
@@ -237,8 +234,6 @@ BEGIN
 
            , 0                   		    AS ReasonId
            , CAST ('' AS TVarChar)                  AS ReasonName 
-           , 0                   		    AS ReturnKindId
-           , CAST ('' AS TVarChar)                  AS ReturnKindName
 
            , MovementString_Comment.ValueData       AS Comment
 

@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
-
+             , ReasonId Integer, ReasonName  TVarChar
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
@@ -66,11 +66,13 @@ BEGIN
              , 0                                          AS MovementId_Production
              , CAST ('' AS TVarChar)                      AS InvNumber_ProductionFull
 
-             , 0                   			  AS ReestrKindId
-             , '' :: TVarChar                     	  AS ReestrKindName
+             , 0                                          AS ReestrKindId
+             , '' :: TVarChar                             AS ReestrKindName
 
              , 0                                          AS SubjectDocId
              , CAST ('' AS TVarChar)                      AS SubjectDocName
+             , 0                                          AS ReasonId
+             , CAST ('' AS TVarChar)                      AS ReasonName 
 
              , 0                   			  AS MovementId_TransportGoods 
              , '' :: TVarChar                     	  AS InvNumber_TransportGoods 
@@ -132,6 +134,9 @@ BEGIN
 
            , Object_SubjectDoc.Id                                 AS SubjectDocId
            , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
+
+           , 0                   		            AS ReasonId
+           , CAST ('' AS TVarChar)                          AS ReasonName 
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
