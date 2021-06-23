@@ -26,7 +26,6 @@ object SendForm: TSendForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1027
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -172,14 +171,12 @@ object SendForm: TSendForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1027
     ClientRectBottom = 438
     ClientRectRight = 855
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1027
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -187,7 +184,6 @@ object SendForm: TSendForm
         Height = 261
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1027
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -436,7 +432,7 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object IsErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -460,7 +456,8 @@ object SendForm: TSendForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitWidth = 1027
+        ExplicitLeft = -16
+        ExplicitTop = 275
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -585,7 +582,6 @@ object SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitWidth = 1027
       end
     end
   end
@@ -855,7 +851,7 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbShowErasedCost: TdxBarButton
-      Action = actShowErasedCost
+      Action = actShowErased
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
@@ -958,8 +954,8 @@ object SendForm: TSendForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1632,6 +1628,7 @@ object SendForm: TSendForm
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
       end>
@@ -1947,8 +1944,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 358
-    Top = 464
+    Left = 206
+    Top = 472
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -2191,8 +2188,8 @@ object SendForm: TSendForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 478
-    Top = 493
+    Left = 470
+    Top = 485
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -2201,7 +2198,7 @@ object SendForm: TSendForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 529
+    Left = 521
     Top = 485
   end
   object ChildViewAddOn: TdsdDBViewAddOn

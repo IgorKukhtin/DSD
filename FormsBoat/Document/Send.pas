@@ -149,7 +149,7 @@ type
     Comment: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
-    IsErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
