@@ -47,6 +47,7 @@ END IF;
                     DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
                     -- или vbIsSale
                  OR vbIsSale = TRUE
+               --OR 1=1
                    ;
 
 
