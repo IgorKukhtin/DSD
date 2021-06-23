@@ -2377,8 +2377,13 @@ end if;
                                                  , inUserId     := inUserId
                                                   );
 
+     -- 6.0.7. формируется - 
+     PERFORM lpInsertUpdate_MovementItem_Detail_auto (inMovementId:= inMovementId, inUserId:= inUserId);
+
+
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

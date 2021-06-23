@@ -34,16 +34,18 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
 
-             , 0                                                AS OrderPeriodKindId
-             , CAST ('' AS TVarChar)                            AS OrderPeriodKindName
-             , 0                                                AS PriceListId
-             , CAST ('' AS TVarChar)                            AS PriceListName
+             , Object_OrderPeriodKind.Id                        AS OrderPeriodKindId
+             , Object_OrderPeriodKind.ValueData                 AS OrderPeriodKindName
+             , Object_PriceList.Id                              AS PriceListId
+             , Object_PriceList.ValueData                       AS PriceListName
 
              , CAST ('' AS TVarChar) 		                AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+              LEFT JOIN Object AS Object_Insert          ON Object_Insert.Id          = vbUserId
+              LEFT JOIN Object AS Object_PriceList       ON Object_PriceList.Id       = zc_PriceList_Basis()
+              LEFT JOIN Object AS Object_OrderPeriodKind ON Object_OrderPeriodKind.Id = zc_Enum_OrderPeriodKind_Month()
           ;
      ELSE
 

@@ -34,16 +34,16 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
-     --Данные из шапки документа
-       SELECT Movement.OperDate ::TDateTime       AS OperDate
-            , MovementLinkObject_PriceList.ObjectId     ::Integer  AS PriceListId
-     INTO vbOperDate, vbPriceListId
-       FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-       WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_OrderGoods();
+     -- Данные документа
+     SELECT Movement.OperDate
+          , COALESCE (MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis()) AS PriceListId
+            INTO vbOperDate, vbPriceListId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                       ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                      AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+     WHERE Movement.Id = inMovementId
+       AND Movement.DescId = zc_Movement_OrderGoods();
 
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM ObjectBoolean AS MB WHERE MB.ObjectId = vbPriceListId AND MB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());

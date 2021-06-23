@@ -3,7 +3,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
   ClientHeight = 638
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 676
+  ExplicitHeight = 673
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -216,7 +216,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -321,7 +320,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           Styles.Header = dmMain.cxHeaderStyle
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object ChildGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1089#1090#1086#1088#1080#1103')'
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -332,33 +331,37 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
             Options.Editing = False
             Width = 103
           end
           object ChildAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1089#1090#1086#1088#1080#1103')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1079#1085#1072#1095#1077#1085#1080#1077')'
             Options.Editing = False
             Width = 102
           end
           object ChildInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             Options.Editing = False
             Width = 146
           end
           object ChildInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             Options.Editing = False
             Width = 197
           end
