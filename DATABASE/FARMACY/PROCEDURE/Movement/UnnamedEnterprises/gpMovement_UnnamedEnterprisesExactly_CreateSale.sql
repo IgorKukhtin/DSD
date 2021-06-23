@@ -50,6 +50,7 @@ BEGIN
                                              ' Номер счёта: ' || COALESCE ((SELECT MovementString.ValueData FROM MovementString
                                                   WHERE MovementString.MovementId = inMovementId
                                                   AND MovementString.DescId = zc_MovementString_AccountNumber()), ''),
+                                            False,
                                             vbUserId);
 
   PERFORM lpInsertUpdate_MovementItem_Sale (0,

@@ -605,6 +605,38 @@ BEGIN
      END IF;
    END IF;
 
+   IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)
+   THEN
+     IF inSession::Integer IN (3, 4183126, 374171, 3004360, 10885303, 10885233) AND inNumberPUSH IN (1, 8, 16, 24, 32)
+     THEN
+       vbText := '';
+
+       SELECT string_agg(PartialSale.JuridicalName||'; '||PartialSale.FromName||': '||zfConvert_FloatToString(PartialSale.Summa), Chr(13) ORDER BY PartialSale.JuridicalName, PartialSale.FromName) 
+       INTO vbText
+       FROM gpSelect_Calculation_PartialSale(inOperDate := CURRENT_DATE,  inSession := inSession) AS PartialSale
+       WHERE PartialSale.JuridicalId in (393052,723462,1311462,3457711,13310756)
+         AND PartialSale.JuridicalId in (9526799) AND vbUserId = 4183126          -- Олег
+          
+          OR PartialSale.JuridicalId in (472115, 393054) AND vbUserId = 374171    -- Елисеева Лидия    
+           
+          OR PartialSale.JuridicalId in (393038, 6608394) AND vbUserId = 3004360  -- Ашихмина Татьяна
+
+          OR PartialSale.JuridicalId in (2886776) AND vbUserId = 10885233         -- Василенко Валерия
+
+          OR PartialSale.JuridicalId in (10106457) AND vbUserId = 10885303        -- Грабченко Татьяна
+
+          OR PartialSale.JuridicalId in (13310756) 
+         AND PartialSale.JuridicalId NOT IN (9526799) AND vbUserId = 10885303     -- Грабченко Татьяна
+         ;
+         
+       IF COALESCE (vbText, '') <> ''
+       THEN
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         VALUES (16, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
+       END IF;
+     END IF;
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text

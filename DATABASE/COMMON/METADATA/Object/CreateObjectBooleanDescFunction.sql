@@ -970,9 +970,14 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Reason(), 'zc_ObjectBoolean_Reason_SendOnPrice', 'фиксированная цена' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Reason_SendOnPrice');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiffKind_FormOrder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_FormOrder'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectBoolean_DiffKind_FormOrder', 'Сразу формировать заказ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_FormOrder');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 23.06.21                                                                                                          * zc_ObjectBoolean_DiffKind_FormOrder
  22.06.21         * zc_ObjectBoolean_Reason_SendOnPrice
                     zc_ObjectBoolean_Reason_ReturnIn
  09.06.21                                                                                                          * zc_ObjectBoolean_PriceSite_Fix
