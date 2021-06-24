@@ -1,8 +1,8 @@
-object SendForm: TSendForm
+object LossForm: TLossForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 561
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
+  ClientHeight = 492
   ClientWidth = 855
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -166,24 +166,27 @@ object SendForm: TSendForm
     Left = 0
     Top = 123
     Width = 855
-    Height = 438
+    Height = 369
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 438
+    ExplicitHeight = 438
+    ClientRectBottom = 369
     ClientRectRight = 855
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 414
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 855
-        Height = 261
+        Height = 345
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -446,141 +449,6 @@ object SendForm: TSendForm
           GridView = cxGridDBTableView
         end
       end
-      object cxGridChild: TcxGrid
-        Left = 0
-        Top = 269
-        Width = 855
-        Height = 145
-        Align = alBottom
-        TabOrder = 1
-        LookAndFeel.Kind = lfStandard
-        LookAndFeel.NativeStyle = False
-        LookAndFeel.SkinName = ''
-        object cxGridDBTableViewChild: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ChildDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Filter.Active = True
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch2
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch2
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.IncSearch = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object GoodsCode_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0.;-0.; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object GoodsName_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            DataBinding.FieldName = 'GoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 155
-          end
-          object MeasureName_ch2: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 74
-          end
-          object GoodsKindNamec_ch2: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'GoodsKindChoiceForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object Amount_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074
-            DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 103
-          end
-          object InvNumber_OrderClientFull_ch2: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
-            DataBinding.FieldName = 'InvNumber_OrderClient_Full'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 152
-          end
-          object IsErased_ch2: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            Visible = False
-            Width = 60
-          end
-        end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableViewChild
-        end
-      end
-      object cxTopSplitter: TcxSplitter
-        Left = 0
-        Top = 261
-        Width = 855
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salBottom
-        Control = cxGridChild
-      end
     end
   end
   object FormParams: TdsdFormParams
@@ -711,14 +579,6 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
         end
         item
           BeginGroup = True
@@ -1019,7 +879,6 @@ object SendForm: TSendForm
         item
         end
         item
-          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1072,8 +931,8 @@ object SendForm: TSendForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1093,10 +952,8 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      StoredProc = spErasedMIchild
       StoredProcList = <
         item
-          StoredProc = spErasedMIchild
         end
         item
           StoredProc = spSelectMI
@@ -1552,7 +1409,7 @@ object SendForm: TSendForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1654,7 +1511,7 @@ object SendForm: TSendForm
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Send'
+    StoredProcName = 'gpInsertUpdate_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1761,7 +1618,7 @@ object SendForm: TSendForm
     Top = 217
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1892,7 +1749,7 @@ object SendForm: TSendForm
     Top = 224
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
+    StoredProcName = 'gpMovementItem_Loss_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1917,7 +1774,7 @@ object SendForm: TSendForm
     Top = 280
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    StoredProcName = 'gpMovementItem_Loss_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1939,7 +1796,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 206
-    Top = 472
+    Top = 416
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -1953,7 +1810,7 @@ object SendForm: TSendForm
     Top = 40
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
+    StoredProcName = 'gpUpdate_Status_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1990,7 +1847,7 @@ object SendForm: TSendForm
     Top = 350
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_Print'
+    StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2014,7 +1871,7 @@ object SendForm: TSendForm
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2079,100 +1936,6 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 150
     Top = 343
-  end
-  object ChildDS: TDataSource
-    DataSet = ChildCDS
-    Left = 470
-    Top = 485
-  end
-  object ChildCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'ParentId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 521
-    Top = 485
-  end
-  object ChildViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    OnDblClickActionList = <
-      item
-      end
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 608
-    Top = 456
-  end
-  object spSelectMIChild: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Send_Child'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 698
-    Top = 437
-  end
-  object spErasedMIchild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased_Child'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'IsErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 670
-    Top = 488
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

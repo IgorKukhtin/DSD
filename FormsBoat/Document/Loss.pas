@@ -1,4 +1,4 @@
-unit Send;
+unit Loss;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxSplitter;
 
 type
-  TSendForm = class(TParentForm)
+  TLossForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -123,11 +123,6 @@ type
     edInsertDate: TcxDateEdit;
     cxLabel13: TcxLabel;
     edInsertName: TcxButtonEdit;
-    ChildDS: TDataSource;
-    ChildCDS: TClientDataSet;
-    ChildViewAddOn: TdsdDBViewAddOn;
-    spSelectMIChild: TdsdStoredProc;
-    spErasedMIchild: TdsdStoredProc;
     SetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     GuidesFrom: TdsdGuides;
@@ -151,17 +146,6 @@ type
     InsertDate: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    cxGridChild: TcxGrid;
-    cxGridDBTableViewChild: TcxGridDBTableView;
-    GoodsCode_ch2: TcxGridDBColumn;
-    GoodsName_ch2: TcxGridDBColumn;
-    MeasureName_ch2: TcxGridDBColumn;
-    GoodsKindNamec_ch2: TcxGridDBColumn;
-    Amount_ch2: TcxGridDBColumn;
-    InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
-    IsErased_ch2: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
-    cxTopSplitter: TcxSplitter;
   private
   public
   end;
@@ -171,6 +155,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendForm);
+  RegisterClass(TLossForm);
 
 end.

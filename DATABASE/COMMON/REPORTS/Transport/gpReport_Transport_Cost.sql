@@ -57,6 +57,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , TotalWageKg    TFloat  --Итого расходы на кг             --Расходы ЗП водителей
              , TotalSum_one   TFloat  --Итого расходы на точку грн      --ГСМ+ЗП
              , TotalSum_kg    TFloat  --Итого расходы на кг             --ГСМ+ЗП
+             , SumTotal_calc  TFloat  -- итого затрата пропорционально веса накладной в путевом
              )   
 AS
 $BODY$
@@ -615,6 +616,7 @@ BEGIN
                            , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
                            , (tmpUnion.WeightSale)     :: TFloat  AS TotalWeight_Sale
                            , (tmpSale.Weight)          :: TFloat  AS TotalWeight_Doc
+                           , CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN tmpSale.Weight / tmpUnion.WeightSale ELSE 0 END AS Koeff_kg  -- доля накладной в общем весе путевого
                           -- , SUM (tmpUnion.TotalSummSale)::TFloat AS TotalSumm_Sale
                            , SUM (tmpSale_Goods.AmountSumm)::TFloat AS TotalSumm_Sale
                            ,  (tmpUnion.HoursWork)  :: TFloat  AS HoursWork
@@ -681,6 +683,7 @@ BEGIN
                             , tmpUnion.WeightSale
                             , tmpUnion.Count_TT
                             , tmpSale.Weight
+                            , CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN tmpSale.Weight * 100 / tmpUnion.WeightSale ELSE 0 END
                       )
 
 
@@ -780,6 +783,7 @@ BEGIN
                END
              + (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END) AS NUMERIC (16,2)) :: TFloat AS TotalSum_kg  --ГСМ+ЗП --Итого расходы на кг 
               
+            , CAST (tmpUnion.SumTotal *  Koeff_kg AS NUMERIC (16,2) )::TFloat AS SumTotal_calc  -- затрата пропорционально веса накладной
       FROM tmpData AS tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
 
