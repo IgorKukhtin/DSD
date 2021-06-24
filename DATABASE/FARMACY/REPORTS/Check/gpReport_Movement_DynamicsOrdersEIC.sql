@@ -1,4 +1,4 @@
--- Function: gpReport_Movement_CheckSiteCount()
+-- Function: gpReport_Movement_DynamicsOrdersEIC()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_DynamicsOrdersEIC (TDateTime, TDateTime, TVarChar);
 

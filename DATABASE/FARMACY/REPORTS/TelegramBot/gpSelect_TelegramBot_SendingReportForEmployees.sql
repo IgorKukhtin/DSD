@@ -21,7 +21,10 @@ BEGIN
      
      -- Результат
      RETURN QUERY
-     SELECT 1, (CURRENT_DATE + INTERVAL '12 HOUR')::TDateTime, '568330367'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckSiteCount (''3'')'::TVarChar;
+     SELECT 1, (CURRENT_DATE + INTERVAL '12 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckSiteCount (''3'')'::TVarChar
+     UNION ALL
+     SELECT 2, (CURRENT_DATE + INTERVAL '12 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_DynamicsOrdersEIC (''3'')'::TVarChar
+     ;
 
 END;
 $BODY$

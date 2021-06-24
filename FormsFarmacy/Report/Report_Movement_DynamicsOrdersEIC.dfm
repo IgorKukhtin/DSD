@@ -208,6 +208,7 @@ inherited Report_Movement_DynamicsOrdersEICForm: TReport_Movement_DynamicsOrders
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alBottom
         TabOrder = 3
+        ExplicitTop = 246
         object cxGridDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramLine.Active = True

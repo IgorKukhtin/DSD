@@ -18,7 +18,8 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UtilTelegram,
-  cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges;
+  cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges,
+  dxBarBuiltInMenu, cxGridChartView, cxGridDBChartView, JPEG;
 
 type
   TMainForm = class(TForm)
@@ -54,6 +55,19 @@ type
     slDateSend: TcxGridDBColumn;
     slChatIDList: TcxGridDBColumn;
     slSQL: TcxGridDBColumn;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    grChart2: TcxGrid;
+    cxGridDBChartView1: TcxGridDBChartView;
+    cxGridDBChartDataGroup2: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries10: TcxGridDBChartSeries;
+    cxGridDBChartSeries7: TcxGridDBChartSeries;
+    cxGridDBChartSeries8: TcxGridDBChartSeries;
+    cxGridDBChartSeries9: TcxGridDBChartSeries;
+    cxGridLevel3: TcxGridLevel;
+    dsReport: TDataSource;
+    qryReport: TZQuery;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -146,6 +160,8 @@ begin
     while not qrySendList.Eof do
     begin
 
+      btnExecuteClick(Nil);
+      btnExportClick(Nil);
       btnSendTelegramClick(Nil);
 
       qrySendList.Next;
@@ -180,28 +196,65 @@ begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
 
-  try
-//    FileName := qrySendList.FieldByName('Name').AsString;
-    qryReport_Upload.Close;
-    qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
-    qryReport_Upload.Open;
-  except
-    on E: Exception do Add_Log(E.Message);
+  cxGridDBChartView1.DataController.DataSource := Nil;
+
+  if qrySendList.FieldByName('Id').AsInteger = 2 then
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet2;
+    cxGridDBChartView1.DataController.DataSource := dsReport;
+    try
+      FileName := 'Photo.jpg';
+      qryReport.Close;
+      qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport.Open;
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
+  end else
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet1;
+    try
+      qryReport_Upload.Close;
+      qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport_Upload.Open;
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
   end;
 end;
 
 procedure TMainForm.btnExportClick(Sender: TObject);
 var
-  Urgently : boolean;
+  Urgently : boolean; AGraphic: TGraphic; imJPEG : TJPEGImage;
 begin
-  if not qryReport_Upload.Active then Exit;
-  if qryReport_Upload.IsEmpty then Exit;
+  FMessage.Clear;
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
-  Add_Log('Начало выгрузки отчета');
 
-  FMessage.Clear;
-  FMessage.Text := qryReport_Upload.FieldByName('Message').AsString;
+  if qrySendList.FieldByName('Id').AsInteger = 2 then
+  begin
+    if not qryReport.Active then Exit;
+    if qryReport.IsEmpty then Exit;
+    Add_Log('Начало выгрузки <Динамика заказов по ЕИЦ>');
+    FMessage.Text := 'Динамика заказов по ЕИЦ';
+    AGraphic := cxGridDBChartView1.CreateImage(TBitmap);
+    imJPEG := TJPEGImage.Create;
+    try
+      imJPEG.Assign(AGraphic);
+      imJPEG.SaveToFile(SavePath + FileName);
+    finally
+      AGraphic.Free;
+      imJPEG.Free;
+    end;
+  end else
+  begin
+
+    if not qryReport_Upload.Active then Exit;
+    if qryReport_Upload.IsEmpty then Exit;
+    Add_Log('Начало выгрузки сообщения');
+
+    FMessage.Text := qryReport_Upload.FieldByName('Message').AsString;
+  end;
 
 end;
 
@@ -217,10 +270,26 @@ begin
 
   for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try
-    if not TelegramBot.SendMessage(ChatId, FMessage.Text) then
+
+    if qrySendList.FieldByName('Id').AsInteger = 2 then
     begin
-      FError := True;
-      Add_Log(TelegramBot.ErrorText);
+
+      if not FileExists(SavePath + FileName) then Break;
+
+      if not TelegramBot.SendPhoto(ChatId, SavePath + FileName, FMessage.Text) then
+      begin
+        FError := True;
+        Add_Log(TelegramBot.ErrorText);
+      end;
+
+      DeleteFile(SavePath + FileName);
+    end else
+    begin
+      if not TelegramBot.SendMessage(ChatId, FMessage.Text) then
+      begin
+        FError := True;
+        Add_Log(TelegramBot.ErrorText);
+      end;
     end;
   except
     on E: Exception do
@@ -240,6 +309,8 @@ var
   Ini: TIniFile;
 begin
   FMessage := TStringList.Create;
+  cxPageControl1.Properties.ActivePage := cxTabSheet1;
+
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
 
   try

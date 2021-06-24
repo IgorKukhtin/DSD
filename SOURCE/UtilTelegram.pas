@@ -48,6 +48,7 @@ type
 
     function SendMessage(AChatId : Integer; AMessage : string) : boolean;
     function SendDocument(AChatId : Integer; ADocument : string) : boolean;
+    function SendPhoto(AChatId : Integer; APhoto, ACaption : string) : boolean;
 
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
     property Id : Integer read FId;
@@ -338,6 +339,46 @@ begin
   FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
 //  FRESTRequest.AddParameter('caption', 'ExportFile.xls', TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('document', ADocument, TRESTRequestParameterKind.pkFILE);
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if FRESTResponse.ContentType = 'application/json' then
+  begin
+    jValue := FRESTResponse.JSONValue;
+
+    if jValue.FindValue('ok') = Nil then
+    begin
+      FError := jValue.ToString;
+      Exit;
+    end;
+    Result := jValue.FindValue('ok').ClassNameIs('TJSONTrue');
+
+    if not Result then
+      FError := DelDoubleQuote(jValue.FindValue('description'));
+  end else FError := FRESTResponse.StatusText;;
+
+end;
+
+function TTelegramBot.SendPhoto(AChatId : Integer; APhoto, ACaption : string) : boolean;
+  var jValue : TJSONValue;
+begin
+  Result := False;
+
+
+  FRESTClient.BaseURL := FBaseURL;
+  FRESTClient.ContentType := 'multipart/form-data';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+  FRESTRequest.Resource := '/sendPhoto';
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
+  if ACaption <> '' then
+    FRESTRequest.AddParameter('caption', ACaption, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('photo', APhoto, TRESTRequestParameterKind.pkFILE);
   try
     FRESTRequest.Execute;
   except
