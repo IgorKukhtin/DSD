@@ -1004,12 +1004,16 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesGoods_SUADialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_DynamicsOrdersEICForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_DynamicsOrdersEICForm');
+
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesGoods_SUADialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesGoods_SUADialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SalesGoods_SUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SalesGoods_SUAForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnderreportedDEForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnderreportedDEForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnderreportedDEForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryDialogForm'));
