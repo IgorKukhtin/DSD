@@ -321,8 +321,8 @@ BEGIN
                              , MLO_Route.ObjectId                             AS RouteId
                              , MovementFloat_MovementItemId.MovementId        AS MovementId_Sale
                              , MovementLinkObject_To.ObjectId                 AS PartnerId_Sale
-                             , SUM (MovemenTFloat_TotalCountKg.ValueData)     AS TotalCountKg
-                             , SUM (MovementFloat_TotalSumm.ValueData)        AS TotalSumm
+                             , SUM (COALESCE (MovemenTFloat_TotalCountKg.ValueData,0))     AS TotalCountKg
+                             , SUM (COALESCE (MovementFloat_TotalSumm.ValueData,0))        AS TotalSumm
                              , SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)) AS HoursWork
                         FROM tmpWeight1
 
@@ -354,7 +354,7 @@ BEGIN
                              LEFT JOIN tmpMLO_Route AS MLO_Route
                                                           ON MLO_Route.MovementId = MLM_Order.MovementChildId
                                                          --AND MLO_Route.DescId = zc_MovementLinkObject_Route()
-
+                        WHERE COALESCE (MovemenTFloat_TotalCountKg.ValueData,0) <> 0
                         GROUP BY tmpWeight1.MovementTransportId
                                , tmpWeight1.CarId
                                , tmpWeight1.PersonalDriverId
@@ -388,16 +388,17 @@ BEGIN
                                   WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                                   )
-            , tmpMIF_Price AS (SELECT *
-                                  FROM MovementItemFloat AS MIFloat_AmountPartner
-                                  WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
-                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_Price()
-                                  )
-            , tmpMIF_CountForPrice AS (SELECT *
-                                  FROM MovementItemFloat AS MIFloat_AmountPartner
-                                  WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
-                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_CountForPrice()
-                                  )
+       , tmpMIF_Price AS (SELECT *
+                             FROM MovementItemFloat AS MIFloat_AmountPartner
+                             WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
+                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_Price()
+                             )
+
+       , tmpMIF_CountForPrice AS (SELECT *
+                             FROM MovementItemFloat AS MIFloat_AmountPartner
+                             WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpSale_MI.MI_Id FROM tmpSale_MI)
+                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_CountForPrice()
+                             )
 
         , tmpSale_Goods AS (SELECT tmpSale_MI.MovementId
                                  , CASE WHEN inisGoods = TRUE THEN tmpSale_MI.GoodsId ELSE 0 END AS GoodsId
@@ -467,7 +468,7 @@ BEGIN
                                  , 1 AS Count_doc
                             FROM tmpWeight
                                  LEFT JOIN tmpContainer ON tmpContainer.MovementId = tmpWeight.MovementTransportId
-                                                       --AND tmpContainer.RouteId    = tmpWeight.RouteId
+                                                       AND tmpContainer.RouteId    = tmpWeight.RouteId
                                  LEFT JOIN tmpTT ON tmpTT.MovementTransportId = tmpWeight.MovementTransportId
                             )
                             
@@ -482,7 +483,7 @@ BEGIN
                             --, tmpAll.ProfitLossId
                             , tmpAll.BusinessId
                             , tmpAll.isAccount_50000
-                            , (tmpAll.WeightSale)                 AS WeightSale
+                            , (tmpAll.WeightSale)                    AS WeightSale
                             , SUM(tmpAll.TotalSummsale)              AS TotalSummSale
                             , SUM(tmpAll.HoursWork)                  AS HoursWork
                             , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
@@ -522,7 +523,7 @@ BEGIN
                                   , tmpContainer.BusinessId
                                   , tmpContainer.isAccount_50000
                                   --, tmpWeight_All.TotalCountKg AS WeightSale
-                                  , SUM (tmpWeight_All.TotalCountKg) OVER (PARTITION BY CASE WHEN inisMovement = TRUE THEN tmpWeight_All.MovementTransportId ELSE 1 END
+                                  , SUM (tmpWeight_All.TotalCountKg) OVER (PARTITION BY tmpWeight_All.MovementTransportId/*CASE WHEN inisMovement = TRUE THEN tmpWeight_All.MovementTransportId ELSE 1 END*/
                                                                                       , tmpContainer.CarId
                                                                                       , tmpContainer.UnitId
                                                                                       , tmpContainer.BranchId
@@ -580,18 +581,14 @@ BEGIN
                               , tmpAll.Count_TT
                        )
 
-        , tmpData AS (SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
-                           , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
-                           , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
+        , tmpData1 AS (SELECT tmpUnion.MovementId_Sale
+                            , tmpUnion.MovementId
                             , tmpUnion.RouteId
                             , tmpUnion.UnitId
                             , tmpUnion.PersonalDriverId
                             , tmpUnion.CarId
                             , tmpUnion.BusinessId
                             , tmpUnion.PartnerId_Sale
-                           , Movemen_Sale.Id            AS MovemenId_Sale
-                           , Movemen_Sale.OperDate      AS OperDate_Sale
-                           , Movemen_Sale.Invnumber     AS Invnumber_Sale
 
                            , tmpSale_Goods.GoodsId      AS GoodsId
                            , tmpSale_Goods.GoodsKindId  AS GoodsKindId
@@ -601,7 +598,8 @@ BEGIN
                            , tmpUnion.isAccount_50000 :: Boolean AS isAccount_50000
 
                            , (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
-                           , (tmpUnion.SumAmount_Transport)        :: TFloat  AS SumAmount_Transport
+                           , (tmpUnion.SumAmount_Transport
+                               )        :: TFloat  AS SumAmount_Transport
                            , (tmpUnion.PriceFuel)
                            , (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
                            , (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
@@ -615,41 +613,31 @@ BEGIN
                            , (tmpUnion.Distance)       :: TFloat  AS Distance
                            , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
                            , (tmpUnion.WeightSale)     :: TFloat  AS TotalWeight_Sale
-                           , (tmpSale.Weight)          :: TFloat  AS TotalWeight_Doc
-                           , CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN tmpSale.Weight / tmpUnion.WeightSale ELSE 0 END AS Koeff_kg  -- доля накладной в общем весе путевого
+                           , SUM (COALESCE (tmpSale.Weight,0))          :: TFloat  AS TotalWeight_Doc
+                           ,  (CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN SUM (tmpSale.Weight) / tmpUnion.WeightSale ELSE 1 END) AS Koeff_kg  -- доля накладной в общем весе путевого
                           -- , SUM (tmpUnion.TotalSummSale)::TFloat AS TotalSumm_Sale
-                           , SUM (tmpSale_Goods.AmountSumm)::TFloat AS TotalSumm_Sale
-                           ,  (tmpUnion.HoursWork)  :: TFloat  AS HoursWork
+                           , SUM (COALESCE (tmpSale_Goods.AmountSumm,0))::TFloat  AS TotalSumm_Sale
+                           ,  (COALESCE (tmpUnion.HoursWork,0))      ::TFloat  AS HoursWork
                           
-                           , SUM (tmpSale_Goods.Amount)  ::TFloat AS Amount_Sale
-                           , SUM (tmpSale_Goods.Weight)  ::TFloat AS Weight_Sale
+                           , SUM (COALESCE (tmpSale_Goods.Amount,0))  ::TFloat AS Amount_Sale
+                           , SUM (COALESCE (tmpSale_Goods.Weight,0))  ::TFloat AS Weight_Sale
                            --, SUM (tmpUnion.Count_doc)    :: TFloat AS Count_doc-- кол. накладных
                            , (tmpUnion.Count_doc)  AS Count_doc
                            , tmpUnion.Count_TT
                            
                            --, SUM (tmpSale_Goods.Weight  * 0.05)  :: TFloat AS Wage_kg    --За вес грн/кг (0.05)       --Расходы ЗП водителей
-                           , SUM (tmpSale.Weight     * 0.05)  :: TFloat AS Wage_kg    --За вес грн/кг (0.05)       --Расходы ЗП водителей
-                           ,  (tmpUnion.HoursWork    * 60)    :: TFloat AS Wage_Hours --За время грн/час (60)      --Расходы ЗП водителей
-                           , SUM (tmpUnion.Count_doc * 5)     :: TFloat AS Wage_doc   --За точку доставки грн (5)  --Расходы ЗП водителей
+                           , SUM (COALESCE (tmpSale.Weight,0)     * 0.05)  :: TFloat AS Wage_kg    --За вес грн/кг (0.05)       --Расходы ЗП водителей
+                           ,  (COALESCE (tmpUnion.HoursWork,0) * 60)    :: TFloat AS Wage_Hours --За время грн/час (60)      --Расходы ЗП водителей
+                           , SUM (COALESCE (tmpUnion.Count_doc,0) * 5)     :: TFloat AS Wage_doc   --За точку доставки грн (5)  --Расходы ЗП водителей
                        FROM tmpUnion
-              
-                                LEFT JOIN Movement ON Movement.Id = tmpUnion.MovementId
-                                                  AND inisMovement = TRUE 
-               
-                                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId 
-               
-                                LEFT JOIN Movement AS Movemen_Sale
-                                                   ON Movemen_Sale.Id = tmpUnion.MovementId_Sale
-                                                  AND inisMovement = TRUE 
                
                                 LEFT JOIN tmpSale_Goods ON tmpSale_Goods.MovementId = tmpUnion.MovementId_Sale
-                                LEFT JOIN (SELECT tmpSale_Goods.MovementId, SUM(tmpSale_Goods.Weight) AS Weight 
+                                LEFT JOIN (SELECT tmpSale_Goods.MovementId, SUM(COALESCE (tmpSale_Goods.Weight,0)) AS Weight 
                                            FROM tmpSale_Goods GROUP BY tmpSale_Goods.MovementId
                                            ) AS tmpSale ON tmpSale.MovementId = tmpUnion.MovementId_Sale
                
-                     GROUP BY COALESCE (Movement.Invnumber, '')
-                            , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
-                            , COALESCE (MovementDesc.ItemName, '')
+                     GROUP BY tmpUnion.MovementId_Sale
+                                , tmpUnion.MovementId
                             , tmpUnion.RouteId
                             , tmpUnion.UnitId
                             , tmpUnion.PersonalDriverId
@@ -657,16 +645,13 @@ BEGIN
                             , tmpUnion.BusinessId
                             , tmpUnion.PartnerId_Sale
                             
-                            , Movemen_Sale.Id
-                            , Movemen_Sale.OperDate
-                            , Movemen_Sale.Invnumber
                             , tmpSale_Goods.GoodsId
                             , tmpSale_Goods.GoodsKindId
                             , tmpUnion.One_KM
                             , tmpUnion.One_KG
                             , tmpUnion.isAccount_50000
-                            , (tmpUnion.SumCount_Transport)
-                            , (tmpUnion.SumAmount_Transport)
+                            , tmpUnion.SumCount_Transport
+                            , tmpUnion.SumAmount_Transport
                             , (tmpUnion.PriceFuel)
                             , (tmpUnion.SumAmount_TransportAdd)
                             , (tmpUnion.SumAmount_TransportAddLong)
@@ -682,8 +667,107 @@ BEGIN
                             , tmpUnion.Count_doc
                             , tmpUnion.WeightSale
                             , tmpUnion.Count_TT
-                            , tmpSale.Weight
-                            , CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN tmpSale.Weight * 100 / tmpUnion.WeightSale ELSE 0 END
+                            --, tmpSale.Weight
+                            --, CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN (tmpSale.Weight) * 100 / tmpUnion.WeightSale ELSE 0 END
+                      )
+
+        , tmpData AS ( SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
+                           , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
+                           , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
+                            , tmpUnion.RouteId
+                            , tmpUnion.UnitId
+                            , tmpUnion.PersonalDriverId
+                            , tmpUnion.CarId
+                            , tmpUnion.BusinessId
+                            , tmpUnion.PartnerId_Sale
+                           , Movemen_Sale.Id            AS MovemenId_Sale
+                           , Movemen_Sale.OperDate      AS OperDate_Sale
+                           , Movemen_Sale.Invnumber     AS Invnumber_Sale
+
+                           , tmpUnion.GoodsId      AS GoodsId
+                           , tmpUnion.GoodsKindId  AS GoodsKindId
+
+                           , tmpUnion.One_KM
+                           , tmpUnion.One_KG
+                           , tmpUnion.isAccount_50000 :: Boolean AS isAccount_50000
+
+                            , SUM (tmpUnion.SumCount_Transport * tmpUnion.Koeff_kg) AS SumCount_Transport
+                            , SUM (tmpUnion.SumAmount_Transport * tmpUnion.Koeff_kg) AS SumAmount_Transport
+                           , (tmpUnion.PriceFuel)
+                           , (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
+                           , (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
+                           , (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
+                           , (tmpUnion.SumAmount_TransportService) :: TFloat AS SumAmount_TransportService
+                           , (tmpUnion.SumAmount_ServiceAdd)       :: TFloat AS SumAmount_ServiceAdd
+                           , SUM (tmpUnion.SumAmount_ServiceTotal  * tmpUnion.Koeff_kg) AS SumAmount_ServiceTotal
+                           , (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
+                           , (tmpUnion.SumTotal)
+               
+                           , (tmpUnion.Distance)       :: TFloat  AS Distance
+                           , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
+                           , (tmpUnion.TotalWeight_Sale)     :: TFloat  AS TotalWeight_Sale
+                           , SUM (COALESCE (tmpUnion.TotalWeight_Doc,0))          :: TFloat  AS TotalWeight_Doc
+
+                           , SUM (COALESCE (tmpUnion.TotalSumm_Sale,0))::TFloat  AS TotalSumm_Sale
+                           ,  (COALESCE (tmpUnion.HoursWork,0))      ::TFloat  AS HoursWork
+                          
+                           , SUM (COALESCE (tmpUnion.Amount_Sale,0))  ::TFloat AS Amount_Sale
+                           , SUM (COALESCE (tmpUnion.Weight_Sale,0))  ::TFloat AS Weight_Sale
+                           --, SUM (tmpUnion.Count_doc)    :: TFloat AS Count_doc-- кол. накладных
+                           , (tmpUnion.Count_doc)  AS Count_doc
+                           , tmpUnion.Count_TT
+                           
+                           , SUM (COALESCE (tmpUnion.Wage_kg,0))   :: TFloat AS Wage_kg    --За вес грн/кг (0.05)       --Расходы ЗП водителей
+                           , SUM  (COALESCE (tmpUnion.Wage_Hours,0))    :: TFloat AS Wage_Hours --За время грн/час (60)      --Расходы ЗП водителей
+                           , SUM (COALESCE (tmpUnion.Wage_doc,0))  :: TFloat AS Wage_doc   --За точку доставки грн (5)  --Расходы ЗП водителей
+                       FROM tmpData1 AS tmpUnion
+              
+                                LEFT JOIN Movement ON Movement.Id = tmpUnion.MovementId
+                                                 -- AND inisMovement = TRUE
+
+                                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId 
+               
+                                LEFT JOIN Movement AS Movemen_Sale
+                                                   ON Movemen_Sale.Id = tmpUnion.MovementId_Sale
+                                                 --  AND inisMovement = TRUE
+               
+                     GROUP BY COALESCE (Movement.Invnumber, '')
+                            , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
+                            , COALESCE (MovementDesc.ItemName, '')
+                            , tmpUnion.RouteId
+                            , tmpUnion.UnitId
+                            , tmpUnion.PersonalDriverId
+                            , tmpUnion.CarId
+                            , tmpUnion.BusinessId
+                            , tmpUnion.PartnerId_Sale
+                            
+                            , Movemen_Sale.Id
+                            , Movemen_Sale.OperDate
+                            , Movemen_Sale.Invnumber
+                            , tmpUnion.GoodsId
+                            , tmpUnion.GoodsKindId
+                            , tmpUnion.One_KM
+                            , tmpUnion.One_KG
+                            , tmpUnion.isAccount_50000
+                            --, (tmpUnion.SumCount_Transport)
+                            --, (tmpUnion.SumAmount_Transport)
+                            , (tmpUnion.PriceFuel)
+                            , (tmpUnion.SumAmount_TransportAdd)
+                            , (tmpUnion.SumAmount_TransportAddLong)
+                            , (tmpUnion.SumAmount_TransportTaxi)
+                            , (tmpUnion.SumAmount_TransportService)
+                            , (tmpUnion.SumAmount_ServiceAdd)
+                            --, (tmpUnion.SumAmount_ServiceTotal)
+                            , (tmpUnion.SumAmount_PersonalSendCash)
+                            , (tmpUnion.SumTotal)
+                            , (tmpUnion.Distance)
+                            , (tmpUnion.WeightTransport)
+                            , tmpUnion.HoursWork
+                            , tmpUnion.Count_doc
+                            , tmpUnion.TotalWeight_Sale
+                            , tmpUnion.Count_TT
+                            --, tmpSale.Weight
+                            --, CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN (tmpSale.Weight) * 100 / tmpUnion.WeightSale ELSE 0 END
                       )
 
 
@@ -710,22 +794,22 @@ BEGIN
                  ) OVER (PARTITION BY Object_Route.ValueData) :: TFloat AS SummByPrint
                         
                         
-            , (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
-            , (tmpUnion.SumAmount_Transport)        :: TFloat  AS SumAmount_Transport
+            , CAST (tmpUnion.SumCount_Transport AS NUMERIC (16,2))   :: TFloat  AS SumCount_Transport 
+            , CAST (tmpUnion.SumAmount_Transport AS NUMERIC (16,2))  :: TFloat  AS SumAmount_Transport
             , (tmpUnion.PriceFuel)
             , (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
             , (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
             , (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
             , (tmpUnion.SumAmount_TransportService) :: TFloat AS SumAmount_TransportService
             , (tmpUnion.SumAmount_ServiceAdd)       :: TFloat AS SumAmount_ServiceAdd
-            , (tmpUnion.SumAmount_ServiceTotal)                                                  --20
+            , CAST (tmpUnion.SumAmount_ServiceTotal AS NUMERIC (16,2))       :: TFloat AS SumAmount_ServiceTotal                                           --20 
             , (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
             , CAST (tmpUnion.SumTotal AS NUMERIC (16,2)) :: TFloat AS SumTotal
 
             , (tmpUnion.Distance)       :: TFloat  AS Distance
             , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
             , (tmpUnion.TotalWeight_Sale) :: TFloat  AS TotalWeight_Sale
-            , tmpUnion.TotalWeight_Doc ::TFloat
+            , (tmpUnion.TotalWeight_Doc) ::TFloat
             , (tmpUnion.TotalSumm_Sale)::TFloat AS TotalSumm_Sale
             , (tmpUnion.HoursWork)  :: TFloat  AS HoursWork
             , tmpUnion.One_KM
@@ -783,7 +867,7 @@ BEGIN
                END
              + (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END) AS NUMERIC (16,2)) :: TFloat AS TotalSum_kg  --ГСМ+ЗП --Итого расходы на кг 
               
-            , CAST (tmpUnion.SumTotal *  Koeff_kg AS NUMERIC (16,2) )::TFloat AS SumTotal_calc  -- затрата пропорционально веса накладной
+            , 0 ::TFloat AS SumTotal_calc--, CAST (tmpUnion.SumTotal *  Koeff_kg AS NUMERIC (16,2) )::TFloat AS SumTotal_calc  -- затрата пропорционально веса накладной
       FROM tmpData AS tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
 
@@ -831,3 +915,9 @@ $BODY$
 
 -- тест
 -- select * from gpReport_Transport_Cost  (inStartDate := ('01.10.2019')::TDateTime , inEndDate := ('02.10.2019')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 0, inCarId := 1200072  , inIsMovement := false ,  inIsPartner:=false, inIsGoods:= false, inSession := '5');
+
+/*
+select * from gpReport_Transport_Cost(inStartDate := ('09.05.2021')::TDateTime , inEndDate := ('09.05.2021')::TDateTime , inBusinessId := 0 , inBranchId := 0 , inUnitId := 8396 , inCarId := 0 , inIsMovement := 'False' , inisPartner := 'True' , inisGoods := 'False' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')
+where CarName Like '%АЕ 61-33 НТ%'
+and PartnerName like '%МЕТРО Кеш енд Кері Україна ТОВ РЦ с. Колонщина вул. Київська буд.3К, корп.3Д%'
+*/

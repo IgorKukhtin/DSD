@@ -3,7 +3,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
   ClientHeight = 638
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 673
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -624,6 +624,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -633,8 +634,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_OrderGoods'
+      ReportNameParam.Value = 'PrintMovement_OrderGoods'
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -1073,6 +1074,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1584,19 +1597,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisItem'
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

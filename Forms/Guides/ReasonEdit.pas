@@ -45,6 +45,10 @@ type
     cbisSendOnPrice: TcxCheckBox;
     edComment: TcxTextEdit;
     cxLabel3: TcxLabel;
+    edPeriodTax: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edPeriodDays: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

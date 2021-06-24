@@ -157,17 +157,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSum_kg
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = Count_tt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SumTotal_calc
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -297,17 +291,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSum_kg
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = Count_tt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SumTotal_calc
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -616,18 +604,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object SumTotal_calc: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1087#1086' '#1085#1072#1082#1083'.)'
-        DataBinding.FieldName = 'SumTotal_calc'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1080#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1087#1086' '#1074#1077#1089#1091' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
         Options.Editing = False
         Width = 90
       end
@@ -958,8 +934,8 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
-    Top = 200
+    Left = 304
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Reason(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
+             , PeriodDays TFloat, PeriodTax TFloat
              , Comment TVarChar
              , isReturnIn Boolean
              , isSendOnPrice Boolean
@@ -30,6 +31,9 @@ BEGIN
            , CAST (0 as Integer)    AS ReturnKindId
            , CAST ('' as TVarChar)  AS ReturnKindName           
 
+           , 0  ::TFloat AS PeriodDays
+           , 0  ::TFloat AS PeriodTax
+
            , ''       ::TVarChar    AS Comment
            , FALSE    ::Boolean     AS isReturnIn
            , FALSE    ::Boolean     AS isSendOnPrice
@@ -44,6 +48,9 @@ BEGIN
           
            , Object_ReturnKind.Id        AS ReturnKindId
            , Object_ReturnKind.ValueData AS ReturnKindName            
+
+           , ObjectFloat_PeriodDays.ValueData ::TFloat AS PeriodDays
+           , ObjectFloat_PeriodTax.ValueData  ::TFloat AS PeriodTax
 
            , ObjectString_Comment.ValueData AS Comment
            , COALESCE (ObjectBoolean_ReturnIn.ValueData, FALSE)    ::Boolean AS isReturnIn
@@ -68,6 +75,13 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Reason.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Reason_Comment()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_PeriodDays
+                                ON ObjectFloat_PeriodDays.ObjectId = Object_Reason.Id
+                               AND ObjectFloat_PeriodDays.DescId = zc_ObjectFloat_Reason_PeriodDays()
+          LEFT JOIN ObjectFloat AS ObjectFloat_PeriodTax
+                                ON ObjectFloat_PeriodTax.ObjectId = Object_Reason.Id
+                               AND ObjectFloat_PeriodTax.DescId = zc_ObjectFloat_Reason_PeriodTax()
        WHERE Object_Reason.Id = inId;
    END IF; 
   

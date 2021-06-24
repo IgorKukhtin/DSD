@@ -26,7 +26,6 @@ object ReasonForm: TReasonForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 458
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -94,6 +93,26 @@ object ReasonForm: TReasonForm
         HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1076#1083#1103' '#1042#1086#1079#1074#1088#1072#1090#1072' '#1089' '#1092#1080#1083#1080#1072#1083#1072
         Options.Editing = False
         Width = 73
+      end
+      object PeriodDays: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'.'
+        DataBinding.FieldName = 'PeriodDays'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1086#1090' "'#1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
+        Width = 81
+      end
+      object PeriodTax: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076' '#1074' %'
+        DataBinding.FieldName = 'PeriodTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1080#1086#1076' '#1074' % '#1086#1090' "'#1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
