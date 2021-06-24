@@ -810,25 +810,6 @@ type
     procedure LoadTaxUnitNight;
     procedure LoadGoodsExpirationDate;
 
-    // Сохранение чека в локальной базе. возвращает УИД
-    function SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
-      AManagerName: String; ABayerName, ABayerPhone, AConfirmedKindName,
-      AInvNumberOrder, AConfirmedKindClientName: String;
-      ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
-      APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance,
-      AMedicSP, AInvNumberSP: String; AOperDateSP: TDateTime;
-      ASPKindId: Integer; ASPKindName: String; ASPTax: Currency;
-      APromoCodeID, AManualDiscount: Integer; ASummPayAdd: Currency;
-      AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode: Integer;
-      ASiteDiscount: Currency; ARoundingDown: Boolean;
-      APartionDateKindId: Integer; AConfirmationCodeSP: string;
-      ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
-      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
-      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
-      AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
-      ANeedComplete: Boolean; FiscalCheckNumber: String;
-      out AUID: String): Boolean;
-
     // проверили что есть остаток
     function fCheck_RemainsError: Boolean;
 
@@ -894,6 +875,25 @@ type
 
 
   public
+    // Сохранение чека в локальной базе. возвращает УИД
+    function SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
+      AManagerName: String; ABayerName, ABayerPhone, AConfirmedKindName,
+      AInvNumberOrder, AConfirmedKindClientName: String;
+      ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
+      APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance,
+      AMedicSP, AInvNumberSP: String; AOperDateSP: TDateTime;
+      ASPKindId: Integer; ASPKindName: String; ASPTax: Currency;
+      APromoCodeID, AManualDiscount: Integer; ASummPayAdd: Currency;
+      AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode: Integer;
+      ASiteDiscount: Currency; ARoundingDown: Boolean;
+      APartionDateKindId: Integer; AConfirmationCodeSP: string;
+      ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
+      ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
+      ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
+      AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
+      ANeedComplete: Boolean; FiscalCheckNumber: String;
+      out AUID: String): Boolean;
+
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
       var APartnerMedicalName, AMedicSP: String; var AOperDateSP: TDateTime);
     function pCheck_InvNumberSP(ASPKind: Integer; ANumber: string): Boolean;

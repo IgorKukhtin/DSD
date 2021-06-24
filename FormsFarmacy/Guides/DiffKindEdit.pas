@@ -38,6 +38,7 @@ type
     ceDaysForSale: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cbisLessYear: TcxCheckBox;
+    cbisFormOrder: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -63,7 +63,7 @@
   end
   object cbIsClose: TcxCheckBox
     Left = 161
-    Top = 26
+    Top = 8
     Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
     TabOrder = 6
     Width = 156
@@ -109,7 +109,7 @@
   end
   object cbisLessYear: TcxCheckBox
     Left = 161
-    Top = 44
+    Top = 26
     Hint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1079#1072#1082#1072#1079' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
     Caption = #1047#1072#1082#1072#1079' '#1089#1088#1086#1082#1072' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
     ParentShowHint = False
@@ -117,9 +117,19 @@
     TabOrder = 13
     Width = 156
   end
+  object cbisFormOrder: TcxCheckBox
+    Left = 161
+    Top = 44
+    Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1082#1072#1079
+    Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1082#1072#1079
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 156
+  end
   object ActionList: TActionList
     Left = 120
-    Top = 76
+    Top = 159
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -210,16 +220,24 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isLessYear'
+        Name = 'inisLessYear'
         Value = Null
         Component = cbisLessYear
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFormOrder'
+        Value = Null
+        Component = cbisFormOrder
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
-    Top = 40
+    Top = 123
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -230,7 +248,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 272
-    Top = 72
+    Top = 155
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_DiffKind'
@@ -291,14 +309,21 @@
         Component = cbisLessYear
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isFormOrder'
+        Value = Null
+        Component = cbisFormOrder
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
-    Top = 32
+    Top = 115
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 184
-    Top = 87
+    Top = 170
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -313,6 +338,6 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 40
-    Top = 64
+    Top = 147
   end
 end

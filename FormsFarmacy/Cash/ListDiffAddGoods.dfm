@@ -2,7 +2,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   Left = 367
   Top = 319
   Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1087#1088#1077#1087#1072#1088#1072#1090#1072' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
-  ClientHeight = 425
+  ClientHeight = 436
   ClientWidth = 588
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -58,7 +58,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 232
+    Top = 243
     Width = 588
     Height = 193
     Align = alBottom
@@ -66,6 +66,7 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 0
+    ExplicitTop = 232
     object Panel2: TPanel
       Left = 0
       Top = 0
@@ -256,5 +257,204 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     OnTimer = TimerStartTimer
     Left = 496
     Top = 16
+  end
+  object CheckCDS: TClientDataSet
+    Aggregates = <>
+    Filter = 'Amount > 0'
+    Filtered = True
+    FieldDefs = <
+      item
+        Name = 'Id'
+        DataType = ftInteger
+      end
+      item
+        Name = 'ParentId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'GoodsId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'GoodsCode'
+        DataType = ftInteger
+      end
+      item
+        Name = 'GoodsName'
+        DataType = ftString
+        Size = 250
+      end
+      item
+        Name = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'Price'
+        DataType = ftFloat
+      end
+      item
+        Name = 'Summ'
+        DataType = ftFloat
+      end
+      item
+        Name = 'NDS'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PriceSale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'SummChangePercent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountOrder'
+        DataType = ftFloat
+      end
+      item
+        Name = 'isErased'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'LIST_UID'
+        DataType = ftString
+        Size = 50
+      end
+      item
+        Name = 'Remains'
+        DataType = ftFloat
+      end
+      item
+        Name = 'Color_calc'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Color_ExpirationDate'
+        DataType = ftInteger
+      end
+      item
+        Name = 'AccommodationName'
+        DataType = ftString
+        Size = 200
+      end
+      item
+        Name = 'Multiplicity'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'DoesNotShare'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'IdSP'
+        DataType = ftString
+        Size = 60
+      end
+      item
+        Name = 'ProgramIdSP'
+        DataType = ftString
+        Size = 60
+      end
+      item
+        Name = 'CountSP'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PriceRetSP'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PaymentSP'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PartionDateKindId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'PartionDateKindName'
+        DataType = ftString
+        Size = 100
+      end
+      item
+        Name = 'PricePartionDate'
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountMonth'
+        DataType = ftFloat
+      end
+      item
+        Name = 'TypeDiscount'
+        DataType = ftInteger
+      end
+      item
+        Name = 'PriceDiscount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'NDSKindId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DiscountExternalID'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DiscountExternalName'
+        DataType = ftString
+        Size = 20
+      end
+      item
+        Name = 'UKTZED'
+        DataType = ftString
+        Size = 20
+      end
+      item
+        Name = 'GoodsPairSunId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'GoodsPairSunMainId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DivisionPartiesID'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DivisionPartiesName'
+        DataType = ftString
+        Size = 100
+      end
+      item
+        Name = 'isPresent'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'MultiplicitySale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'isMultiplicityError'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'FixEndDate'
+        DataType = ftDateTime
+      end>
+    IndexDefs = <
+      item
+        Name = 'CheckCDSIndex1'
+      end>
+    Params = <>
+    StoreDefs = True
+    Left = 496
+    Top = 80
   end
 end

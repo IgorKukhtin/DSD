@@ -38,6 +38,7 @@ type
     beDiffKind: TcxButtonEdit;
     actShowListDiff: TAction;
     TimerStart: TTimer;
+    CheckCDS: TClientDataSet;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
@@ -50,6 +51,9 @@ type
     FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
     FAmountDiffKind, FMaxOrderAmount : Currency;
+
+    // Сохранение чека в локальной базе.
+    function SaveLocal(AManagerId: Integer; AManagerName, ABayerName: String; AAmount : Currency): Boolean;
   public
 
     property GoodsCDS : TClientDataSet read FGoodsCDS write FGoodsCDS;
@@ -59,7 +63,7 @@ implementation
 
 {$R *.dfm}
 
-uses CommonData, LocalWorkUnit, MainCash2, ListDiff, PUSHMessage;
+uses CommonData, LocalWorkUnit, MainCash2, ListDiff, PUSHMessage, VIPDialog;
 
 { TListDiffAddGoodsForm }
 
@@ -101,6 +105,7 @@ end;
 procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
   var nAmount, nAmountDiffKind, nMaxOrderAmount : Currency; bSend : boolean;
+      ManagerID: Integer; ManagerName, BayerName: String;
 begin
   if ModalResult <> mrOk then Exit;
 
@@ -207,9 +212,21 @@ begin
 
   if GoodsCDS.FieldByName('Id').AsInteger = 0 then
   begin
+    Action := TCloseAction.caNone;
     ShowMessage('Ошибка Не выбран товар...');
     Exit;
   end;
+
+  if DiffKindCDS.FieldByName('isFormOrder').AsBoolean then
+  begin
+    if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
+    begin
+      Action := TCloseAction.caNone;
+      ceAmount.SetFocus;
+      Exit;
+    end;
+  end;
+
 
   bSend := False;
   WaitForSingleObject(MutexDiffCDS, INFINITE);
@@ -233,6 +250,7 @@ begin
       ListDiffCDS.Post;
 
       SaveLocalData(ListDiffCDS, ListDiff_lcl);
+      if DiffKindCDS.FieldByName('isFormOrder').AsBoolean then SaveLocal(ManagerId, ManagerName, BayerName, nAmount);
       bSend := True;
     Except ON E:Exception do
       ShowMessage('Ошибка сохранения листа отказов:'#13#10 + E.Message);
@@ -501,5 +519,54 @@ begin
   TimerStart.Enabled := False;
   actShowListDiffExecute(Sender);
 end;
+
+// Сохранение чека в локальной базе.
+function TListDiffAddGoodsForm.SaveLocal(AManagerId: Integer; AManagerName, ABayerName: String; AAmount : Currency): Boolean;
+  var UID: String;
+begin
+
+  if CheckCDS.Active then CheckCDS.Close;
+  CheckCDS.CreateDataSet;
+
+  CheckCDS.Append;
+  CheckCDS.FieldByName('Id').AsInteger := 0;
+  CheckCDS.FieldByName('ParentId').AsInteger := 0;
+  CheckCDS.FieldByName('GoodsId').AsInteger := GoodsCDS.FieldByName('ID').AsInteger;
+  CheckCDS.FieldByName('GoodsCode').AsInteger := GoodsCDS.FieldByName('GoodsCode').AsInteger;
+  CheckCDS.FieldByName('GoodsName').AsString := GoodsCDS.FieldByName('GoodsName').AsString;
+  CheckCDS.FieldByName('Amount').asCurrency := AAmount;
+  CheckCDS.FieldByName('Price').asCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
+  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(AAmount, GoodsCDS.FieldByName('Price').AsCurrency, True);
+  CheckCDS.FieldByName('NDS').asCurrency := GoodsCDS.FieldByName('NDS').asCurrency;
+  CheckCDS.FieldByName('NDSKindId').AsInteger := GoodsCDS.FieldByName('NDSKindId').AsInteger;
+  CheckCDS.FieldByName('DiscountExternalID').AsVariant := Null;
+  CheckCDS.FieldByName('DiscountExternalName').AsVariant := Null;
+  CheckCDS.FieldByName('DivisionPartiesID').AsVariant := Null;
+  CheckCDS.FieldByName('DivisionPartiesName').AsVariant :=Null;
+  CheckCDS.FieldByName('isErased').AsBoolean := false;
+  // ***20.07.16
+  CheckCDS.FieldByName('PriceSale').asCurrency := GoodsCDS.FieldByName('Price').AsCurrency;
+  CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+  CheckCDS.FieldByName('SummChangePercent').asCurrency := 0;
+  // ***19.08.16
+  CheckCDS.FieldByName('AmountOrder').asCurrency := 0;
+  // ***10.08.16
+  CheckCDS.FieldByName('List_UID').AsString := GenerateGUID;
+  // ***04.09.18
+  CheckCDS.FieldByName('Remains').asCurrency := 0;
+  // ***31.03.19
+  CheckCDS.FieldByName('DoesNotShare').AsBoolean := False;
+  // ***31.03.19
+  CheckCDS.FieldByName('isPresent').AsBoolean := False;
+
+  CheckCDS.Post;
+
+  MainCashForm.SaveLocal(CheckCDS, AManagerId, AManagerName, ABayerName,
+    '', 'Не подтвержден', '', '', 0, '', '', 0, '', '', '', '', Date, 0,
+    '', 0, 0, 0, 0, 0, 0, 0, 0, True, 0, '', 0, 0, 0, 0, '', '', '', '', '',
+    0, 0, False, False, false, '', UID);
+
+end;
+
 
 end.
