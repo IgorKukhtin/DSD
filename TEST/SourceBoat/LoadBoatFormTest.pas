@@ -39,6 +39,7 @@ type
     procedure LoadInfoMoneyFormTest;
     procedure LoadKindFormTest;
     procedure LoadLanguageFormTest;
+    procedure LoadLossFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadModelEtiketenFormTest;
@@ -190,6 +191,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 
+end;
+
+procedure TLoadFormTest.LoadLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;

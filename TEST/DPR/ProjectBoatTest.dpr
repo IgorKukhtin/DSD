@@ -269,7 +269,9 @@ uses
   IncomeCostJournalByInvoice in '..\..\FormsBoat\Document\IncomeCostJournalByInvoice.pas' {IncomeCostJournalByInvoiceForm: TParentForm},
   OrderClientJournalReserve in '..\..\FormsBoat\Document\OrderClientJournalReserve.pas' {OrderClientJournalReserveForm: TParentForm},
   SendJournal in '..\..\FormsBoat\Document\SendJournal.pas' {SendJournalForm: TParentForm},
-  Send in '..\..\FormsBoat\Document\Send.pas' {SendForm: TParentForm};
+  Send in '..\..\FormsBoat\Document\Send.pas' {SendForm: TParentForm},
+  LossJournal in '..\..\FormsBoat\Document\LossJournal.pas' {LossJournalForm: TParentForm},
+  Loss in '..\..\FormsBoat\Document\Loss.pas' {LossForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
