@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
              , Comment TVarChar
@@ -47,6 +48,9 @@ BEGIN
 
            , Object_PriceList.Id         ::Integer  AS PriceListId
            , Object_PriceList.ValueData  ::TVarChar AS PriceListName
+ 
+           , Object_Unit.Id                         AS UnitId
+           , Object_Unit.ValueData                  AS UnitName
 
            , MovementFloat_TotalCountKg.ValueData   ::TFloat   AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData   ::TFloat   AS TotalCountSh
@@ -101,6 +105,11 @@ BEGIN
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

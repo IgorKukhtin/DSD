@@ -56,15 +56,22 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_PriceList.ValueData                 AS PriceListName
            , Object_OrderPeriodKind.ValueData           AS OrderPeriodKindName
+           , Object_Unit.ValueData                      AS UnitName
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderPeriodKind
                                          ON MovementLinkObject_OrderPeriodKind.MovementId = Movement.Id
                                         AND MovementLinkObject_OrderPeriodKind.DescId = zc_MovementLinkObject_OrderPeriodKind()
             LEFT JOIN Object AS Object_OrderPeriodKind ON Object_OrderPeriodKind.Id = MovementLinkObject_OrderPeriodKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
        WHERE Movement.Id = inMovementId
          -- AND Movement.StatusId = zc_Enum_Status_Complete()
       ;

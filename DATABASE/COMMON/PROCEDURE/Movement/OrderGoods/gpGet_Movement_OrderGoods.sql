@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              )
@@ -39,6 +40,9 @@ BEGIN
              , Object_PriceList.Id                              AS PriceListId
              , Object_PriceList.ValueData                       AS PriceListName
 
+             , Object_Unit.Id                                   AS UnitId
+             , Object_Unit.ValueData                            AS UnitName
+
              , CAST ('' AS TVarChar) 		                AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate
@@ -46,6 +50,7 @@ BEGIN
               LEFT JOIN Object AS Object_Insert          ON Object_Insert.Id          = vbUserId
               LEFT JOIN Object AS Object_PriceList       ON Object_PriceList.Id       = zc_PriceList_Basis()
               LEFT JOIN Object AS Object_OrderPeriodKind ON Object_OrderPeriodKind.Id = zc_Enum_OrderPeriodKind_Month()
+              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = 8459 --"Склад Реализации"
           ;
      ELSE
 
@@ -62,6 +67,9 @@ BEGIN
 
            , Object_PriceList.Id         ::Integer  AS PriceListId
            , Object_PriceList.ValueData  ::TVarChar AS PriceListName
+
+           , Object_Unit.Id                         AS UnitId
+           , Object_Unit.ValueData                  AS UnitName
 
            , MovementString_Comment.ValueData       AS Comment
 
@@ -83,6 +91,11 @@ BEGIN
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
