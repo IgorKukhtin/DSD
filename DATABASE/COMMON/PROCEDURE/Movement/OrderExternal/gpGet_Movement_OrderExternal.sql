@@ -46,6 +46,15 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_OrderExternal_Mask (ioId        := inMovementId
+                                                         , inOperDate  := inOperDate
+                                                         , inSession   := inSession); 
+     END IF;
+
+
      vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
  
      IF COALESCE (inMovementId, 0) = 0
@@ -149,17 +158,17 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             CASE WHEN inMovementId = 0 THEN 0 ELSE Movement.Id END AS Id
-           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
-           , CASE WHEN inMovementId = 0 THEN CURRENT_DATE ELSE Movement.OperDate END AS OperDate
+             Movement.Id                                AS Id
+           , Movement.InvNumber                         AS InvNumber
+           , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , CASE WHEN inMovementId = 0 THEN CURRENT_DATE ELSE MovementDate_OperDatePartner.ValueData END    AS OperDatePartner
-           , CASE WHEN inMovementId = 0 THEN CURRENT_DATE ELSE (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) END:: TDateTime AS OperDatePartner_sale
-           , CASE WHEN inMovementId = 0 THEN CURRENT_DATE ELSE MovementDate_OperDateMark.ValueData END       AS OperDateMark
-           , CASE WHEN inMovementId = 0 THEN (CURRENT_DATE - INTERVAL '7 DAY') ELSE COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) END:: TDateTime      AS OperDateStart
-           , CASE WHEN inMovementId = 0 THEN (CURRENT_DATE - INTERVAL '1 DAY') ELSE COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) END:: TDateTime        AS OperDateEnd           
-           , CASE WHEN inMovementId = 0 THEN '' ELSE MovementString_InvNumberPartner.ValueData END  :: TVarChar AS InvNumberPartner
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , MovementDate_OperDateMark.ValueData        AS OperDateMark
+           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime      AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd           
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                      	        AS ToId
@@ -207,7 +216,7 @@ BEGIN
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -325,7 +334,7 @@ BEGIN
                                         AND MovementLinkObject_Status_wms.DescId = zc_MovementLinkObject_Status_wms()
             LEFT JOIN Object AS Object_Status_wms ON Object_Status_wms.Id = MovementLinkObject_Status_wms.ObjectId
 
-       WHERE Movement.Id = CASE WHEN inMovementId_mask <> 0 THEN inMovementId_mask ELSE inMovementId END
+       WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
 
        END IF;
@@ -339,6 +348,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.06.21         * add inMask
  25.05.21         * isPrintComment
  05.08.20         *
  20.06.18         * add isAuto
