@@ -91,7 +91,8 @@ BEGIN
                               
                                   INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
                                   
-                             WHERE tmpMovementProtocol.OperDate >= inStartDate
+                             WHERE tmpMovementProtocol.OperDate >= inStartDate 
+                               AND tmpMovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                              GROUP BY tmpMovementProtocol.OperDate, Movement.CheckSourceKindId) 
         , tmpMovementSum AS (SELECT Movement.OperDate
                                   , Sum(Movement.CountCheck)    AS CountCheck

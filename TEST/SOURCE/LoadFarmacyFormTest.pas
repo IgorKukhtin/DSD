@@ -2049,8 +2049,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesTechnicalRediscountUnitForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountUnitForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');

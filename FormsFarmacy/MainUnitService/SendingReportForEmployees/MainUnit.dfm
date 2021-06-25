@@ -210,10 +210,6 @@ object MainForm: TMainForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = 184
-    ExplicitTop = 408
-    ExplicitWidth = 289
-    ExplicitHeight = 193
     ClientRectBottom = 441
     ClientRectLeft = 4
     ClientRectRight = 1021
@@ -221,8 +217,10 @@ object MainForm: TMainForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
-      ExplicitWidth = 281
-      ExplicitHeight = 165
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grReport: TcxGrid
         Left = 0
         Top = 0
@@ -230,9 +228,6 @@ object MainForm: TMainForm
         Height = 417
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 257
-        ExplicitWidth = 1025
-        ExplicitHeight = 381
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload
@@ -379,8 +374,6 @@ object MainForm: TMainForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
       ImageIndex = 1
-      ExplicitWidth = 281
-      ExplicitHeight = 165
       object grChart2: TcxGrid
         Left = 0
         Top = 0
@@ -389,9 +382,6 @@ object MainForm: TMainForm
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 246
-        ExplicitWidth = 889
-        ExplicitHeight = 215
         object cxGridDBChartView1: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Values.LineWidth = 2

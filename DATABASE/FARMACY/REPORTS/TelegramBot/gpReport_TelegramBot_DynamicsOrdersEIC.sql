@@ -23,7 +23,7 @@ BEGIN
      -- Результат
      RETURN QUERY
       SELECT * 
-      FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '11.06.2021', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession);
+      FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '16.06.2021', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession);
 
 END;
 $BODY$

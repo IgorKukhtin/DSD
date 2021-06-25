@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesMoneyBoxSun(
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , AccrualPeriod TVarChar
-             , SummaMoneyBoxMonth TFloat, SummaMoneyBox TFloat, SummaMoneyBoxQuite TFloat
+             , SummaMoneyBoxMonth TFloat, SummaMoneyBox TFloat, SummaMoneyBoxUsed TFloat, SummaMoneyBoxQuite TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
              , isErased Boolean
@@ -44,8 +44,13 @@ BEGIN
 
              , MIFloat_SummaMoneyBoxMonth.ValueData  AS SummaMoneyBoxMonth
              , MIFloat_SummaMoneyBox.ValueData       AS SummaMoneyBox
-             , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
-                   MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBoxQuite
+             , MIFloat_SummaMoneyBoxUsed.ValueData   AS SummaMoneyBoxUsed
+             , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) +
+                         COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) -
+                         COALESCE(MIFloat_SummaMoneyBoxUsed.ValueData, 0) > 0 
+                    THEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) +
+                         COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) -
+                         COALESCE(MIFloat_SummaMoneyBoxUsed.ValueData, 0) END::TFloat AS SummaMoneyBoxQuite
 
              , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
              , MIDate_IssuedBy.ValueData             AS DateIssuedBy
@@ -70,6 +75,10 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                           ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                          AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
+                                          ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
               LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                             ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id

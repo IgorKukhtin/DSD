@@ -281,8 +281,6 @@ begin
         FError := True;
         Add_Log(TelegramBot.ErrorText);
       end;
-
-      DeleteFile(SavePath + FileName);
     end else
     begin
       if not TelegramBot.SendMessage(ChatId, FMessage.Text) then
@@ -297,6 +295,8 @@ begin
       Add_Log(E.Message);
     end;
   end;
+
+  if FileExists(SavePath + FileName) then DeleteFile(SavePath + FileName);
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
