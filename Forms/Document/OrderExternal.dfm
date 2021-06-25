@@ -1,26 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
-  ClientHeight = 411
+  ClientHeight = 460
   ClientWidth = 1364
   ExplicitWidth = 1380
-  ExplicitHeight = 449
+  ExplicitHeight = 498
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1364
-    Height = 245
+    Height = 294
     ExplicitTop = 166
     ExplicitWidth = 1364
     ExplicitHeight = 245
-    ClientRectBottom = 245
+    ClientRectBottom = 294
     ClientRectRight = 1364
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1364
       ExplicitHeight = 221
       inherited cxGrid: TcxGrid
         Width = 1364
-        Height = 221
+        Height = 270
         ExplicitWidth = 1364
         ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -750,12 +750,11 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 207
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 1123
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 72
-    Top = 584
+    Left = 1216
+    Top = 256
   end
   inherited ActionList: TActionList
     Left = 15
@@ -1437,9 +1436,15 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 552
+    Left = 1032
+    Top = 280
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1506,6 +1511,30 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end
       item

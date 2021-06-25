@@ -507,6 +507,7 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item

@@ -23,7 +23,7 @@ BEGIN
 
      PERFORM lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId
                                                   , inInvNumber           := vbInvNumber 
-                                                  , inInvNumberPartner    := '' ::TDateTime
+                                                  , inInvNumberPartner    := '' ::TVarChar
                                                   , inOperDate            := inOperDate
                                                   , inOperDatePartner     := inOperDate
                                                   , inOperDateMark        := inOperDate

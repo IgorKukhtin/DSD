@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPrintComment Boolean
              , isPromo Boolean
              , isAuto Boolean
+             , isMask Boolean  -- вернуть обратно False
              , Comment TVarChar
               )
 AS
@@ -119,6 +120,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS isPrintComment
              , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST (TRUE  AS Boolean)                          AS isAuto
+             , CAST (FALSE AS Boolean)                          AS isMask
              , CAST ('' as TVarChar) 		                AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -213,6 +215,7 @@ BEGIN
            , COALESCE (MovementBoolean_PrintComment.ValueData, FALSE) AS isPrintComment
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
            , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
+           , CAST (FALSE AS Boolean)                AS isMask
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement

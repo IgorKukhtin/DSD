@@ -1056,6 +1056,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
   //
