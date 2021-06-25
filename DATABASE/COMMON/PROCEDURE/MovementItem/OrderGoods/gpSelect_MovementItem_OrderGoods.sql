@@ -13,9 +13,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderGoods(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
-             , GoodsKindId Integer, GoodsKindName  TVarChar
              , MeasureName TVarChar
-             , Amount TFloat, Amount_kg TFloat, Amount_sh TFloat
+             , Amount TFloat       --кг
+             , AmountSecond TFloat --штуки
+             , Total_kg TFloat     -- итого вес
              , Price TFloat, Summa TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -24,11 +25,12 @@ RETURNS TABLE (Id Integer
              )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId          Integer;
   DECLARE vbGoodsPropertyId Integer;
-  DECLARE vbPriceWithVAT Boolean;
-  DECLARE vbPriceListId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbPriceWithVAT    Boolean;
+  DECLARE vbPriceListId     Integer;
+  DECLARE vbUnitId          Integer;
+  DECLARE vbOperDate        TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderGoods());
@@ -37,11 +39,16 @@ BEGIN
      -- Данные документа
      SELECT Movement.OperDate
           , COALESCE (MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis()) AS PriceListId
-            INTO vbOperDate, vbPriceListId
+          , MovementLinkObject_Unit.ObjectId AS UnitId
+            INTO vbOperDate, vbPriceListId, vbUnitId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                        ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                       AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_OrderGoods();
 
@@ -63,9 +70,20 @@ BEGIN
                                     , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
                                FROM ObjectBoolean AS ObjectBoolean_Order
                                     LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                         ON ObjectLink_Goods_InfoMoney.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                        AND vbUnitId = 8459 --"Склад Реализации"
+
+                                    LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
                                WHERE ObjectBoolean_Order.ValueData = TRUE
                                  AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                 -- AND vbIsOrderDnepr = TRUE
+                                 AND ( (vbUnitId = 8459 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
+                                                                                                           , zc_Enum_InfoMoneyDestination_30200() -- Тушенка
+                                                                                                             ) 
+                                        ) OR vbUnitId <> 8459)
                               )
 
        -- Существующие MovementItem
@@ -78,16 +96,11 @@ BEGIN
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = tmpIsErased.isErased
                    )
-     , tmpMI_LO AS (SELECT MovementItemLinkObject.*
-                    FROM MovementItemLinkObject
-                    WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
-                      AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                    )
 
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
-                         AND MovementItemFloat.DescId IN (zc_MIFloat_Price())
+                         AND MovementItemFloat.DescId IN (zc_MIFloat_Price(), zc_MIFloat_AmountSecond())
                       )
      , tmpMI_String AS (SELECT MovementItemString.*
                         FROM MovementItemString
@@ -98,17 +111,18 @@ BEGIN
      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                       , MovementItem.GoodsId                          AS GoodsId
                       , MovementItem.Amount                           AS Amount
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      , COALESCE (MIFloat_AmountSecond.ValueData, 0)  AS AmountSecond
                       , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                       , MIString_Comment.ValueData        :: TVarChar AS Comment
                       , MovementItem.isErased
                  FROM tmpMI_G AS MovementItem
-                      LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
                       LEFT JOIN tmpMI_Float AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                      LEFT JOIN tmpMI_Float AS MIFloat_AmountSecond
+                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                       LEFT JOIN tmpMI_String AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -120,12 +134,11 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsKind.Id        	AS GoodsKindId
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
+
            , Object_Measure.ValueData           AS MeasureName
            , 0 :: TFloat AS Amount
-           , 0 :: TFloat AS Amount_kg
-           , 0 :: TFloat AS Amount_sh
+           , 0 :: TFloat AS AmountSecond
+           , 0 :: TFloat AS Total_kg
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) :: TFloat AS Price
            , 0 :: TFloat AS Summa
            , '' :: TVarChar AS Comment
@@ -139,10 +152,9 @@ BEGIN
        FROM tmpGoodsByGoodsKind AS tmpGoods
 
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
-                           AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+                           --AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
             -- привязываем 2 раза по виду товара и без
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
@@ -168,20 +180,16 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsKind.Id        	AS GoodsKindId
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
+
            , Object_Measure.ValueData           AS MeasureName
 
            , tmpMI.Amount            :: TFloat  AS Amount
+           , tmpMI.AmountSecond      :: TFloat  AS AmountSecond
 
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  THEN tmpMI.AmountSecond * COALESCE (ObjectFloat_Weight.ValueData,1)
                   ELSE tmpMI.Amount
-             END                      ::TFloat   AS Amount_kg
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN tmpMI.Amount
-                  ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE tmpMI.Amount END
-             END                      ::TFloat   AS Amount_sh
+             END                      ::TFloat   AS Total_kg
              
            , tmpMI.Price  ::TFloat   AS Price
            , (COALESCE (tmpMI.Amount,0) * tmpMI.Price) ::TFloat AS Summa
@@ -197,7 +205,6 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -238,15 +245,11 @@ BEGIN
            tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                           , MovementItem.Amount                           AS Amount
                           , MovementItem.ObjectId                         AS GoodsId
-                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , MovementItem.isErased                         AS isErased
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                           INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                  AND MovementItem.DescId     = zc_MI_Master()
                                                  AND MovementItem.isErased   = tmpIsErased.isErased
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      )
 
         SELECT
@@ -255,23 +258,22 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsKind.Id        	AS GoodsKindId
-           , Object_GoodsKind.ValueData 	AS GoodsKindName
+
            , Object_Measure.ValueData           AS MeasureName
 
-           , tmpMI.Amount            :: TFloat  AS Amount
+           , tmpMI.Amount                   :: TFloat AS Amount
+           , MIFloat_AmountSecond.ValueData :: TFloat AS AmountSecond
 
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  THEN MIFloat_AmountSecond.ValueData * COALESCE (ObjectFloat_Weight.ValueData,1)
                   ELSE tmpMI.Amount
-             END                      ::TFloat   AS Amount_kg
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN tmpMI.Amount
-                  ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE tmpMI.Amount END
-             END                      ::TFloat   AS Amount_sh
+             END                      ::TFloat   AS Total_kg
              
            , MIFloat_Price.ValueData  ::TFloat   AS Price
-           , (COALESCE (tmpMI.Amount,0) * MIFloat_Price.ValueData) ::TFloat AS Summa
+           , CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0) * MIFloat_Price.ValueData
+                  ELSE COALESCE (tmpMI.Amount,0) * MIFloat_Price.ValueData
+             END ::TFloat AS Summa
            , MIString_Comment.ValueData :: TVarChar AS Comment
 
            , Object_Insert.ValueData    AS InsertName
@@ -283,7 +285,6 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -292,6 +293,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                        ON MIFloat_AmountSecond.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
@@ -332,6 +336,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.06.21         *
  08.06.21         *
 */
 

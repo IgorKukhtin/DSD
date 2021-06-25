@@ -61,7 +61,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_kg
+              Column = Total_kg
             end
             item
               Format = ',0.####'
@@ -71,7 +71,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_sh
+              Column = AmountSecond
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,7 +87,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_kg
+              Column = Total_kg
             end
             item
               Format = ',0.####'
@@ -97,7 +97,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_sh
+              Column = AmountSecond
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -177,7 +177,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Width = 70
           end
           object Amount: TcxGridDBColumn [6]
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -186,21 +186,19 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Amount_kg: TcxGridDBColumn [7]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
-            DataBinding.FieldName = 'Amount_kg'
+          object AmountSecond: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
-          object Amount_sh: TcxGridDBColumn [8]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090
-            DataBinding.FieldName = 'Amount_sh'
+          object Total_kg: TcxGridDBColumn [8]
+            Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1074#1077#1089
+            DataBinding.FieldName = 'Total_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -445,34 +443,32 @@ inherited OrderGoodsForm: TOrderGoodsForm
       TabOrder = 7
       Width = 275
     end
-    object edTo: TcxButtonEdit
-      Left = 929
-      Top = 23
+    object edUnit: TcxButtonEdit
+      Left = 179
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Visible = False
-      Width = 220
+      Width = 275
     end
     object cxLabel4: TcxLabel
-      Left = 929
-      Top = 5
-      Caption = #1050#1086#1084#1091
-      Visible = False
+      Left = 179
+      Top = 45
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel22: TcxLabel
-      Left = 179
+      Left = 467
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 179
+      Left = 467
       Top = 63
       TabOrder = 11
-      Width = 582
+      Width = 294
     end
     object cxLabel8: TcxLabel
       Left = 777
@@ -1303,6 +1299,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1335,7 +1346,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFromId'
+        Name = 'inOrderPeriodKindId'
         Value = ''
         Component = GuidesOrderPeriodKind
         ComponentItem = 'Key'
@@ -1343,9 +1354,17 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsPropertyId'
+        Name = 'inPriceListId'
         Value = 0d
         Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1456,18 +1475,19 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSecond'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecond'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1564,6 +1584,16 @@ inherited OrderGoodsForm: TOrderGoodsForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = edUnit
+      end
+      item
+        Component = edPriceList
+      end
+      item
+        Component = edOrderPeriodKind
+      end
+      item
+        Component = ceComment
       end>
     Left = 512
     Top = 328
@@ -1633,19 +1663,19 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Left = 312
     Top = 16
   end
-  object GuidesTo: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStoragePlace_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1653,14 +1683,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 952
-    Top = 16
+    Left = 296
+    Top = 56
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'

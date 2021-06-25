@@ -30,10 +30,10 @@ type
   TOrderGoodsForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edOrderPeriodKind: TcxButtonEdit;
-    edTo: TcxButtonEdit;
+    edUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesOrderPeriodKind: TdsdGuides;
-    GuidesTo: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;

@@ -63,6 +63,7 @@ type
     spDelete_Movement: TdsdStoredProc;
     actDelete_Movement: TdsdExecStoredProc;
     bb: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

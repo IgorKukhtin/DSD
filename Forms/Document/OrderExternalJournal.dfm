@@ -791,6 +791,30 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TOrderExternalForm'
     end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TOrderExternalForm'
+      FormNameParam.Value = 'TOrderExternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_mask'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderExternalForm'
       GuiParams = <

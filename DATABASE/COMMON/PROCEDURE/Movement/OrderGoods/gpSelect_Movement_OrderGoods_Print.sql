@@ -121,28 +121,36 @@ BEGIN
            , tmpMI.Summa
 
        FROM (SELECT tmpMI.GoodsId
+                  , tmpMI.MeasureId
                   , tmpMI.Amount
                   , tmpMI.AmountSecond
                   , CASE WHEN COALESCE (tmpMI.Amount,0) <> 0 THEN tmpMI.Summa / tmpMI.Amount ELSE 0 END ::TFloat AS Price
                   , COALESCE (tmpMI.Summa,0) ::TFloat AS Summa
              FROM
             (SELECT MovementItem.ObjectId                         AS GoodsId
+                  , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
                   , SUM (MovementItem.Amount)                     AS Amount
                   , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountSecond  --רע
-                  , SUM (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)) AS Summa
+                  , SUM (CASE WHEN  ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                 THEN COALESCE( MIFloat_AmountSecond.ValueData,0) * MIFloat_Price.ValueData
+                               ELSE COALESCE (MovementItem.Amount,0) * MIFloat_Price.ValueData
+                          END) ::TFloat AS Summa
              FROM MovementItem
 
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                       ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
              GROUP BY MovementItem.ObjectId
+                    , ObjectLink_Goods_Measure.ChildObjectId
 
             ) AS tmpMI
             ) AS tmpMI
@@ -156,11 +164,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderType_Unit.ChildObjectId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpMI.MeasureId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -176,7 +180,7 @@ BEGIN
 
             LEFT JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.GoodsId
 
-       WHERE tmpMI.Amount <> 0
+       WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond<> 0
        ;
     RETURN NEXT Cursor2;
 
