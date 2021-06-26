@@ -9,7 +9,7 @@ AS
 $BODY$
 BEGIN
       -- Результат
-    --RETURN 5416834;
+    --RETURN 6120588;
       RETURN 0;
 END;
 $BODY$

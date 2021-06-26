@@ -209,7 +209,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
--- SELECT _replica.gpSelect_Replica_LastId (4168327982, 100000)
+-- SELECT NextId, NextId -6708805066, * FROM _replica.gpSelect_Replica_LastId (6708805066, 100000)
 /*
  WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
 -- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)

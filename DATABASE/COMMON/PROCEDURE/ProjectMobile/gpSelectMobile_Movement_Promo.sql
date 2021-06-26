@@ -123,7 +123,8 @@ BEGIN
                     , tmpPromo.StatusId
                     , (MI_Child.ObjectId IS NULL)
                     , MovementString_CommentMain.ValueData
-             ;
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
       END IF;
 END;
 $BODY$

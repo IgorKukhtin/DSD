@@ -57,9 +57,9 @@ BEGIN
       vbId:= lpInsertUpdate_Movement_StoreReal (ioId        := vbId
                                               , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                               , inOperDate  := inOperDate
-                                              , inUserId    := vbUserId
                                               , inPartnerId := inPartnerId
                                               , inComment   := inComment 
+                                              , inUserId    := vbUserId
                                                );
 
       -- сохранили свойство <Дата/время создания на мобильном устройстве>

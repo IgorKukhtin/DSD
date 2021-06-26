@@ -1,4 +1,4 @@
- -- Function: gpSelect_MovementItem_ReturnIn_Detail()
+-- Function: gpSelect_MovementItem_ReturnIn_Detail()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn_Detail (Integer, Boolean, TVarChar);
 

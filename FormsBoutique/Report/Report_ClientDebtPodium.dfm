@@ -5,7 +5,6 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -292
   ExplicitWidth = 1081
   ExplicitHeight = 460
   PixelsPerInch = 96
@@ -1309,7 +1308,7 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'ClientName;OperDate_Sale;LabelName'
+          IndexFieldNames = 'ClientName;GoodsCode'
           GridView = cxGridDBTableView
         end>
       Params = <

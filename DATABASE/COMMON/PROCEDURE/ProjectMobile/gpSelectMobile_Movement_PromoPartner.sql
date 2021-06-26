@@ -88,7 +88,8 @@ BEGIN
                   , tmpPartner.PartnerId
                   , TRUE :: Boolean       AS isSync
              FROM tmpPartner
-             ;
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
       END IF;
 END;
 $BODY$

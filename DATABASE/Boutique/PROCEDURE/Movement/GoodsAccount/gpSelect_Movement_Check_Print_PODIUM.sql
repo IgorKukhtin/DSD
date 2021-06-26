@@ -438,6 +438,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                         ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+       ORDER BY Object_Goods.ObjectCode
 
        ;
 
