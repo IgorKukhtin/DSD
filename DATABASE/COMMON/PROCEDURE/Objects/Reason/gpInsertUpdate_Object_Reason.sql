@@ -2,12 +2,15 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Reason(
  INOUT ioId	             Integer,       -- ключ объекта <>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
     IN inReturnKindId        Integer,       -- Тип возврата
+    IN inPeriodDays          TFloat,        -- Период в дн. от "Срок годности"
+    IN inPeriodTax           TFloat,        -- Период в % от "Срок годности"
     IN inisReturnIn          Boolean,       -- по умолчанию для возвр. от покуп
     IN inisSendOnPrice       Boolean,       -- по умолчанию для возвр. с филиала
     IN inComment             TVarChar,      -- примечание
@@ -58,7 +61,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_SendOnPrice(), ioId, inisSendOnPrice);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Reason_Comment(), ioId, inComment);
-   
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Reason_PeriodDays(), ioId, inPeriodDays);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Reason_PeriodTax(), ioId, inPeriodTax);   
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

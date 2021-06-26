@@ -60,7 +60,7 @@ BEGIN
       inSumma := 0;
     END IF;
     
-     -- сохранили свойство <Копилка по результатам СУН1 за предыдущий месяц>
+     -- сохранили свойство <Копилка по результатам СУН1 за текущий месяц>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBoxMonth(), vbId, inSumma);
 
      -- сохранили <Элемент документа>

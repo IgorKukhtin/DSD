@@ -1056,6 +1056,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
   //
@@ -2664,13 +2665,13 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportFuelDialogForm'));

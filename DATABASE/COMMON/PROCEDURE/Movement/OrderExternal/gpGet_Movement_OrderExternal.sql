@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа
+    IN inMask              Boolean  , -- добавить по маске
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -31,6 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPrintComment Boolean
              , isPromo Boolean
              , isAuto Boolean
+             , isMask Boolean  -- вернуть обратно False
              , Comment TVarChar
               )
 AS
@@ -43,6 +46,15 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- создаем док по маске
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_OrderExternal_Mask (ioId        := inMovementId
+                                                         , inOperDate  := inOperDate
+                                                         , inSession   := inSession); 
+     END IF;
+
 
      vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
  
@@ -108,6 +120,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS isPrintComment
              , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST (TRUE  AS Boolean)                          AS isAuto
+             , CAST (FALSE AS Boolean)                          AS isMask
              , CAST ('' as TVarChar) 		                AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -202,6 +215,7 @@ BEGIN
            , COALESCE (MovementBoolean_PrintComment.ValueData, FALSE) AS isPrintComment
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
            , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
+           , CAST (FALSE AS Boolean)                AS isMask
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -337,6 +351,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.06.21         * add inMask
  25.05.21         * isPrintComment
  05.08.20         *
  20.06.18         * add isAuto

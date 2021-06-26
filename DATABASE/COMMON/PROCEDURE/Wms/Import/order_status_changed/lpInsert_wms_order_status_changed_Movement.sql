@@ -40,6 +40,7 @@ BEGIN
                                                 , gpGet.PriceListId
                                            FROM gpGet_Movement_OrderExternal (inMovementId := inOrderId
                                                                             , inOperDate   := CURRENT_TIMESTAMP
+                                                                            , inMask       := False
                                                                             , inSession    := inSession
                                                                              ) AS gpGet
                                           )

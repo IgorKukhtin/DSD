@@ -283,6 +283,8 @@ type
     dsdDBViewAddOn3: TdsdDBViewAddOn;
     spUpdateMIChild_reason: TdsdStoredProc;
     actChoiceSale_reason: TOpenChoiceForm;
+    StartDate_ch2: TcxGridDBColumn;
+    EndDate_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

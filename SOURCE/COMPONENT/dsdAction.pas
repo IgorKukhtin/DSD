@@ -1049,6 +1049,8 @@ type
   private
 
     FControlNameParam: TdsdParam;
+    FTimerFocused: TTimer;
+    procedure OnTimerFocused(Sender: TObject);
   protected
     function LocalExecute: Boolean; override;
   public
@@ -4650,18 +4652,23 @@ begin
   inherited;
 
   FControlNameParam := TdsdParam.Create(nil);
+  FTimerFocused := TTimer.Create(Nil);
+  FTimerFocused.Enabled := False;
+  FTimerFocused.Interval := 300;
+  FTimerFocused.OnTimer := OnTimerFocused;
   FControlNameParam.DataType := ftString;
   FControlNameParam.Value := '';
 end;
 
 destructor TdsdSetFocusedAction.Destroy;
 begin
+  FreeAndNil(FTimerFocused);
   FreeAndNil(FControlNameParam);
 
   inherited;
 end;
 
-function TdsdSetFocusedAction.LocalExecute: Boolean;
+procedure TdsdSetFocusedAction.OnTimerFocused(Sender: TObject);
   var I : integer;
 
   function SetFocused(Control: TWinControl; Form : TForm): Boolean;
@@ -4670,7 +4677,7 @@ function TdsdSetFocusedAction.LocalExecute: Boolean;
     if Control.Parent is TcxPageControl then
     begin
       TcxPageControl(Control.Parent).ActivePage := TcxTabSheet(Control);
-    end else if Control.TabStop then ActiveControl := Control;
+    end else if (Control.TabStop or (Control is TcxGrid)) and not (Control is TcxPageControl) then Control.SetFocus;
     Result := ActiveControl = Control;
   end;
 
@@ -4683,14 +4690,12 @@ function TdsdSetFocusedAction.LocalExecute: Boolean;
   end;
 
 begin
-  inherited;
-  Result := False;
+  if csDesigning in Self.ComponentState then
+    exit;
 
-  if FControlNameParam.Value = '' then
-  begin
-    Result := True;
-    Exit;
-  end;
+  if Owner is TForm then if not TForm(Owner).Visible then Exit;
+
+  FTimerFocused.Enabled := false;
 
   if Owner is TForm then
   begin
@@ -4702,7 +4707,20 @@ begin
       Break;
     end;
   end;
+end;
 
+function TdsdSetFocusedAction.LocalExecute: Boolean;
+begin
+  inherited;
+  Result := False;
+
+  if FControlNameParam.Value = '' then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  FTimerFocused.Enabled := True;
 end;
 
 initialization

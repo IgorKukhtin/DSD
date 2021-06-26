@@ -2,7 +2,29 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-
+ lpinsertupdate_movement_orderexternal(
+ ioid := integer, 
+ ininvnumber := tvarchar, 
+ ininvnumberpartner := tdatetime, 
+ inoperdate := tdatetime, 
+ inoperdatepartner := tdatetime, 
+ inoperdatemark := tdatetime, 
+ inpricewithvat := boolean, 
+ invatpercent := tfloat, 
+ inchangepercent := tfloat, 
+ infromid := integer, 
+ intoid := integer, 
+ inpaidkindid := integer, 
+ incontractid := integer, 
+ inrouteid := integer, 
+ inroutesortingid := integer, 
+ inpersonalid := integer, 
+ inpricelistid := integer, 
+ inpartnerid := integer, 
+ inisprintcomment := boolean, 
+ inuserid := integer
+ ) не существует
+ 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа

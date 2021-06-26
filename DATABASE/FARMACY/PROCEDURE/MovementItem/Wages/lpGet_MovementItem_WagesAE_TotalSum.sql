@@ -90,12 +90,12 @@ BEGIN
 
 
       -- —умма кошелька остаток сумм на текущий мес€ц
-      vbSummaTMP := COALESCE((SELECT SUM(MIF_SummaMoneyBoxMonth.ValueData - COALESCE(MIF_SummaMoneyBoxUsed.ValueData, 0))
+      vbSummaTMP := COALESCE((SELECT SUM(COALESCE(MIF_SummaMoneyBoxMonth.ValueData, 0) - COALESCE(MIF_SummaMoneyBoxUsed.ValueData, 0))
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
                                                           AND MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.ObjectId = vbUnitID
-                                   INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
+                                   LEFT JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
                                                                 ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
                                                                AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
                                    LEFT JOIN MovementItemFloat AS MIF_SummaMoneyBoxUsed
@@ -181,4 +181,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpGet_MovementItem_WagesAE_TotalSum (inMovementItemId := 323828208, inUserId := 3)
-

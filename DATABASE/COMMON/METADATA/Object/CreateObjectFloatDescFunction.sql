@@ -1104,6 +1104,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderPeriodKind_Week() RETURNS Integer
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_OrderPeriodKind_Week', zc_Object_WorkTimeKind(), 'Кол-во недель' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderPeriodKind_Week');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Reason_PeriodDays() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Reason_PeriodDays'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Reason_PeriodDays', zc_Object_Reason(), 'Период в дн. от "Срок годности"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Reason_PeriodDays');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Reason_PeriodTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Reason_PeriodTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Reason_PeriodTax', zc_Object_Reason(), 'Период в % от "Срок годности"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Reason_PeriodTax');
+
+
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Contract_Deferment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_Deferment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2028,6 +2039,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.06.21         * zc_ObjectFloat_Reason_PeriodDays
+                    zc_ObjectFloat_Reason_PeriodTax
  22.06.21                                                                                      * zc_ObjectFloat_CorrectMinAmount_Amount
  14.06.21         * zc_ObjectFloat_ReceiptLevel_MovementDesc
  08.06.21         * zc_ObjectFloat_OrderPeriodKind_Week

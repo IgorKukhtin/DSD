@@ -88,6 +88,7 @@ type
     actPrint_2: TdsdPrintAction;
     mactPrint_Order2: TMultiAction;
     bbPrint_Order2: TdxBarButton;
+    actInsertMaskMulti: TMultiAction;
   private
     { Private declarations }
   public

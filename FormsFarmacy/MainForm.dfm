@@ -4375,6 +4375,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Movement_DynamicsOrdersEIC: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1045#1048#1062
+      FormName = 'TReport_Movement_DynamicsOrdersEICForm'
+      FormNameParam.Value = 'TReport_Movement_DynamicsOrdersEICForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5044,6 +5055,9 @@
       end
       object N273: TMenuItem
         Action = actReport_GoodsRemainsUKTZED
+      end
+      object N300: TMenuItem
+        Action = actReport_Movement_DynamicsOrdersEIC
       end
       object N178: TMenuItem
         Caption = '-'

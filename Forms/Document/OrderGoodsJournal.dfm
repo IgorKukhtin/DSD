@@ -195,6 +195,13 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 106
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 121
+          end
           object OrderPeriodKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'OrderPeriodKindName'
@@ -500,6 +507,7 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
@@ -509,8 +517,8 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_OrderGoods'
+      ReportNameParam.Value = 'PrintMovement_OrderGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -843,6 +851,10 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -866,45 +878,6 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
       Action = actPrint
       Category = 0
     end
-    object bbStartLoad: TdxBarButton
-      Action = actStartLoad
-      Category = 0
-    end
-    object bbStartLoadNovus: TdxBarButton
-      Caption = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadMetro: TdxBarButton
-      Caption = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadFora: TdxBarButton
-      Caption = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadSilpo: TdxBarButton
-      Caption = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bb: TdxBarButton
-      Caption = #1042#1040#1056#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1042#1040#1056#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -925,6 +898,8 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
       end>
     Left = 408
     Top = 344
@@ -1005,7 +980,7 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
     Top = 158
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_SaleExternal_Print'
+    StoredProcName = 'gpSelect_Movement_OrderGoods_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1019,21 +994,8 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisItem'
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

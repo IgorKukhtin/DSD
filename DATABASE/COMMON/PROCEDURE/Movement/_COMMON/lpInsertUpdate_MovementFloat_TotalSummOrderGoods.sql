@@ -37,38 +37,53 @@ BEGIN
       AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
     ;
 
-    SELECT SUM (COALESCE(MovementItem.Amount,0)) AS TotalCount
-
-         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                     THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
-                     ELSE MovementItem.Amount
-                END)                             AS TotalCountKg
-
-         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN MovementItem.Amount
-                  ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,1) <> 0 THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE MovementItem.Amount END
+    SELECT SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN MIFloat_AmountSecond.ValueData
+                  ELSE MovementItem.Amount
              END)                                AS TotalCountSh
+             
+             
+         , SUM (MovementItem.Amount)                             AS TotalCountKg
 
-              
+         , SUM (MIFloat_AmountSecond.ValueData)                  AS TotalCountSh
+
            -- Ñóììà áåç ÍÄÑ
          , SUM (CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
                           -- åñëè öåíû áåç ÍÄÑ èëè %ÍÄÑ=0
-                          THEN (COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0))
+                          THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                       THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                                     ELSE COALESCE (MovementItem.Amount,0)
+                                END * COALESCE(MovementItemFloat_Price.ValueData,0))
                      WHEN vbPriceWithVAT = TRUE
                           -- åñëè öåíû c ÍÄÑ
-                          THEN CAST ( (COALESCE (MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0)) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                          THEN CAST ( (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                              THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                                            ELSE COALESCE (MovementItem.Amount,0)
+                                       END * COALESCE(MovementItemFloat_Price.ValueData,0)) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                      WHEN vbPriceWithVAT
                           -- åñëè öåíû c ÍÄÑ
-                          THEN (COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0)) - CAST ( (COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0)) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
+                          THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                  ELSE COALESCE (MovementItem.Amount,0)
+             END*COALESCE(MovementItemFloat_Price.ValueData,0)) - CAST ( (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                  ELSE COALESCE (MovementItem.Amount,0)
+             END*COALESCE(MovementItemFloat_Price.ValueData,0)) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
                 END) AS TotalSummMVAT
 
            -- Ñóììà ñ ÍÄÑ
          ,SUM (CASE -- åñëè öåíû ñ ÍÄÑ
                 WHEN vbPriceWithVAT OR vbVATPercent = 0
-                     THEN (COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0))
+                     THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                  THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                                ELSE COALESCE (MovementItem.Amount,0)
+                           END * COALESCE(MovementItemFloat_Price.ValueData,0))
                 -- åñëè öåíû áåç ÍÄÑ
                 WHEN vbVATPercent > 0
-                     THEN CAST ( (1 + vbVATPercent / 100) * (COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0)) AS NUMERIC (16, 2))
+                     THEN CAST ( (1 + vbVATPercent / 100) * (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                                                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
+                                                                  ELSE COALESCE (MovementItem.Amount,0)
+                                                             END * COALESCE(MovementItemFloat_Price.ValueData,0)) AS NUMERIC (16, 2))
            END) AS TotalSummPVAT
 
      INTO vbTotalCount
@@ -80,7 +95,9 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MovementItemFloat_Price
                                           ON MovementItemFloat_Price.MovementItemId = MovementItem.Id
                                          AND MovementItemFloat_Price.DescId = zc_MIFloat_Price()
-
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

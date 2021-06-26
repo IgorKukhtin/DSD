@@ -198,6 +198,7 @@ type
     actUpdteSendLoss: TdsdExecStoredProc;
     bbUpdteSendLoss: TdxBarButton;
     spUpdateSendLoss: TdsdStoredProc;
+    actSetFocused: TdsdSetFocusedAction;
   private
     { Private declarations }
   public

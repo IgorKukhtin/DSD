@@ -29,11 +29,19 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbUnitKey TVarChar;
+  DECLARE vbUnitId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Send());
      vbUserId := inSession;
+
+     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+     IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+     END IF;
+     vbUnitId := vbUnitKey::Integer;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -121,7 +129,11 @@ BEGIN
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
            , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
-           , CASE WHEN inSession = '3' THEN 'AmountManual' ELSE '' END::TVarChar    AS SetFocused 
+           , CASE WHEN Object_To.Id = vbUnitId
+                   AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = True
+                   AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
+                  THEN 'AmountManual' 
+                  ELSE '' END::TVarChar    AS SetFocused 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

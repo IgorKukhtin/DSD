@@ -988,7 +988,6 @@ inherited MainForm: TMainForm
       end
       object miSend: TMenuItem
         Action = actSend
-        Enabled = False
       end
       object miLine11: TMenuItem
         Caption = '-'
@@ -1010,7 +1009,6 @@ inherited MainForm: TMainForm
       end
       object miLoss: TMenuItem
         Action = actLoss
-        Enabled = False
       end
       object miLine13: TMenuItem
         Caption = '-'

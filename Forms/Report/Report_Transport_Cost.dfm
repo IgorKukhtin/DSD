@@ -157,12 +157,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSum_kg
+          Column = Count_tt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Count_tt
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -292,12 +291,11 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSum_kg
+          Column = Count_tt
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Count_tt
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -936,8 +934,8 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 312
-    Top = 200
+    Left = 304
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1316,10 +1314,13 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 296
   end

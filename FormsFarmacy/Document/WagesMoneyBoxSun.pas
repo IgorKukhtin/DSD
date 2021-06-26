@@ -55,6 +55,7 @@ type
     Color_Calc: TcxGridDBColumn;
     AccrualPeriod: TcxGridDBColumn;
     SummaMoneyBoxQuite: TcxGridDBColumn;
+    SummaMoneyBoxUsed: TcxGridDBColumn;
   private
     { Private declarations }
   public

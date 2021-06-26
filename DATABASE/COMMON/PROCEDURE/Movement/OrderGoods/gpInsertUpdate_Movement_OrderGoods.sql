@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_OrderGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderGoods(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOrderPeriodKindId   Integer   , --
     IN inPriceListId         Integer   , --
+    IN inUnitId              Integer   , --
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -26,6 +28,7 @@ BEGIN
                                             , inOperDate     := inOperDate
                                             , inOrderPeriodKindId := inOrderPeriodKindId
                                             , inPriceListId  := inPriceListId
+                                            , inUnitId       := inUnitId
                                             , inComment      := inComment
                                             , inUserId       := vbUserId
                                              ) AS tmp;
@@ -37,6 +40,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.21         *
  08.06.21         *
 */
 

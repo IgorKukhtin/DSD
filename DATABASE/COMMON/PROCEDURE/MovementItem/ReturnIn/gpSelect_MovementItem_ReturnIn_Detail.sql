@@ -15,17 +15,26 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , ReasonId Integer, ReasonCode Integer, ReasonName  TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
              , Value5 Integer, Value10 Integer
+             , StartDate TDateTime, EndDate TDateTime
              , isErased Boolean
              , Ord Integer
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbOperDatePartner TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
      
+     vbOperDatePartner := (SELECT MovementDate_OperDatePartner.ValueData
+                           FROM MovementDate AS MovementDate_OperDatePartner
+                           WHERE MovementDate_OperDatePartner.MovementId = inMovementId
+                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                           );
+     
+                         
 
      -- Результат
      RETURN QUERY
@@ -160,6 +169,20 @@ BEGIN
 
            , tmpStickerProperty.Value5  :: Integer AS Value5
            , tmpStickerProperty.Value10 :: Integer AS Value10
+           
+           , CASE WHEN COALESCE (ObjectFloat_PeriodDays.ValueData,0) <> 0 
+                      THEN vbOperDatePartner - ( (( COALESCE (tmpStickerProperty.Value5,0)+COALESCE (tmpStickerProperty.Value10,0)) + (COALESCE (ObjectFloat_PeriodDays.ValueData,0)) || ' DAY') :: INTERVAL ) 
+                  WHEN COALESCE (ObjectFloat_PeriodTax.ValueData,0) <> 0
+                      THEN vbOperDatePartner - ( (( COALESCE (tmpStickerProperty.Value5,0)+COALESCE (tmpStickerProperty.Value10,0)) * ObjectFloat_PeriodTax.ValueData / 100  ) || ' DAY') :: INTERVAL
+                  ELSE vbOperDatePartner -  (( COALESCE (tmpStickerProperty.Value5,0)+COALESCE (tmpStickerProperty.Value10,0)) || ' DAY') :: INTERVAL
+             END            ::TDateTime AS StartDate
+             
+           , CASE WHEN COALESCE (ObjectFloat_PeriodDays.ValueData,0) <> 0 
+                      THEN vbOperDatePartner - ( ( COALESCE (tmpStickerProperty.Value5,0)+COALESCE (tmpStickerProperty.Value10,0)) || ' DAY') :: INTERVAL  + (COALESCE (ObjectFloat_PeriodDays.ValueData,0) || ' DAY') :: INTERVAL 
+                  WHEN COALESCE (ObjectFloat_PeriodTax.ValueData,0) <> 0
+                      THEN vbOperDatePartner
+                  ELSE vbOperDatePartner
+             END            ::TDateTime AS EndDate
 
            , FALSE                      AS isErased
              -- № п.п.
@@ -180,6 +203,13 @@ BEGIN
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpAll.GoodsId
                                         AND tmpStickerProperty.GoodsKindId = tmpAll.GoodsKindId
                                         AND tmpStickerProperty.Ord         = 1
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_PeriodDays
+                                  ON ObjectFloat_PeriodDays.ObjectId = tmpAll.ReasonId
+                                 AND ObjectFloat_PeriodDays.DescId = zc_ObjectFloat_Reason_PeriodDays()
+            LEFT JOIN ObjectFloat AS ObjectFloat_PeriodTax
+                                  ON ObjectFloat_PeriodTax.ObjectId = tmpAll.ReasonId
+                                 AND ObjectFloat_PeriodTax.DescId = zc_ObjectFloat_Reason_PeriodTax()
       ;
 
 END;
@@ -192,6 +222,7 @@ $BODY$
  11.06.21         *
 */
 
+
 -- тест
 --
--- SELECT * FROM gpSelect_MovementItem_ReturnIn_Detail (inMovementId:= 20081622,  inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn_Detail (inMovementId:= 20155651 ,  inIsErased:= FALSE, inSession:= '9818')

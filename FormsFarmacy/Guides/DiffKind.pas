@@ -61,6 +61,7 @@ type
     MaxOrderAmountSecond: TcxGridDBColumn;
     DaysForSale: TcxGridDBColumn;
     isLessYear: TcxGridDBColumn;
+    IsFormOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

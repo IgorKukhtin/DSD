@@ -2,7 +2,7 @@ object ReasonEditForm: TReasonEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' / '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103'>'
-  ClientHeight = 307
+  ClientHeight = 378
   ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object ReasonEditForm: TReasonEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 39
-    Top = 274
+    Left = 42
+    Top = 341
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object ReasonEditForm: TReasonEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 183
-    Top = 274
+    Left = 186
+    Top = 341
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -92,14 +92,44 @@ object ReasonEditForm: TReasonEditForm
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 240
+    Top = 307
     TabOrder = 10
     Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 219
+    Top = 286
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edPeriodTax: TcxCurrencyEdit
+    Left = 193
+    Top = 255
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 12
+    Width = 90
+  end
+  object cxLabel4: TcxLabel
+    Left = 15
+    Top = 256
+    Caption = #1055#1077#1088#1080#1086#1076' '#1074' % '#1086#1090' "'#1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
+  end
+  object edPeriodDays: TcxCurrencyEdit
+    Left = 193
+    Top = 221
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 14
+    Width = 90
+  end
+  object cxLabel5: TcxLabel
+    Left = 15
+    Top = 222
+    Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1086#1090' "'#1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
   end
   object ActionList: TActionList
     Left = 152
@@ -166,6 +196,22 @@ object ReasonEditForm: TReasonEditForm
         Value = Null
         Component = GuidesReturnKind
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodDays'
+        Value = Null
+        Component = edPeriodDays
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodTax'
+        Value = Null
+        Component = edPeriodTax
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -268,6 +314,20 @@ object ReasonEditForm: TReasonEditForm
         Value = Null
         Component = cbisSendOnPrice
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodDays'
+        Value = Null
+        Component = edPeriodDays
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodTax'
+        Value = Null
+        Component = edPeriodTax
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

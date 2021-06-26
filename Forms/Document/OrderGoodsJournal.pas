@@ -49,20 +49,15 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
-    bbStartLoad: TdxBarButton;
     PriceListName: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
     spGet_Exception: TdsdStoredProc;
     actGet_Exception: TdsdExecStoredProc;
-    bbStartLoadNovus: TdxBarButton;
-    bbStartLoadMetro: TdxBarButton;
-    bbStartLoadFora: TdxBarButton;
-    bbStartLoadSilpo: TdxBarButton;
     spDelete_Movement: TdsdStoredProc;
     actDelete_Movement: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

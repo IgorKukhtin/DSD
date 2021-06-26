@@ -1,26 +1,26 @@
 inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
   Caption = #1050#1086#1087#1080#1083#1082#1072' '#1087#1086' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1072#1084' '#1057#1059#1053'1'
   ClientHeight = 540
-  ClientWidth = 781
+  ClientWidth = 962
   AddOnFormData.AddOnFormRefresh.ParentList = 'WagesMoneyBoxSun'
-  ExplicitWidth = 797
+  ExplicitWidth = 978
   ExplicitHeight = 579
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 781
+    Width = 962
     Height = 463
     ExplicitTop = 77
     ExplicitWidth = 781
     ExplicitHeight = 463
     ClientRectBottom = 463
-    ClientRectRight = 781
+    ClientRectRight = 962
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 781
       ExplicitHeight = 439
       inherited cxGrid: TcxGrid
-        Width = 781
+        Width = 962
         Height = 439
         ExplicitWidth = 781
         ExplicitHeight = 439
@@ -94,6 +94,11 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaMoneyBoxQuite
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaMoneyBoxUsed
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
@@ -121,7 +126,16 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
             Options.Editing = False
             Width = 84
           end
-          object SummaMoneyBoxMonth: TcxGridDBColumn [2]
+          object SummaMoneyBox: TcxGridDBColumn [2]
+            Caption = #1053#1072#1082#1086#1087#1083#1077#1085#1086
+            DataBinding.FieldName = 'SummaMoneyBox'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
+          object SummaMoneyBoxMonth: TcxGridDBColumn [3]
             Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'SummaMoneyBoxMonth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -131,16 +145,17 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
             Options.Editing = False
             Width = 94
           end
-          object SummaMoneyBox: TcxGridDBColumn [3]
-            Caption = #1053#1072#1082#1086#1087#1083#1077#1085#1086
-            DataBinding.FieldName = 'SummaMoneyBox'
+          object SummaMoneyBoxUsed: TcxGridDBColumn [4]
+            Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086
+            DataBinding.FieldName = 'SummaMoneyBoxUsed'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 89
+            Options.Editing = False
+            Width = 94
           end
-          object SummaMoneyBoxQuite: TcxGridDBColumn [4]
+          object SummaMoneyBoxQuite: TcxGridDBColumn [5]
             Caption = #1044#1086#1089#1090#1091#1087#1085#1086
             DataBinding.FieldName = 'SummaMoneyBoxQuite'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -150,7 +165,7 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
             Options.Editing = False
             Width = 79
           end
-          object isIssuedBy: TcxGridDBColumn [5]
+          object isIssuedBy: TcxGridDBColumn [6]
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
@@ -158,7 +173,7 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
             Options.Editing = False
             Width = 62
           end
-          object MIDateIssuedBy: TcxGridDBColumn [6]
+          object MIDateIssuedBy: TcxGridDBColumn [7]
             Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'MIDateIssuedBy'
             HeaderAlignmentHorz = taCenter
@@ -180,7 +195,7 @@ inherited WagesMoneyBoxSunForm: TWagesMoneyBoxSunForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 781
+    Width = 962
     Height = 51
     TabOrder = 3
     ExplicitWidth = 781

@@ -2,6 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
   ClientWidth = 992
+  AddOnFormData.SetFocusedAction = actSetFocused
   ExplicitWidth = 1008
   ExplicitHeight = 656
   PixelsPerInch = 96
@@ -1924,6 +1925,16 @@ inherited SendForm: TSendForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077'"'
       ImageIndex = 77
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077'"?'
+    end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = ''
+      ControlName.Component = FormParams
+      ControlName.ComponentItem = 'SetFocused'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
