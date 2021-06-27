@@ -103,7 +103,7 @@ BEGIN
        -- если найдена активная транзакция - для значения без timezone
        IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity
                   WHERE state ILIKE 'active'
-                    AND timezone('utc'::text, query_start) < vbLast_modified + CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 18
+                    AND timezone('utc'::text, query_start) < vbLast_modified + CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 15
                                                                                     THEN INTERVAL'800 SECOND'
                                                                                     ELSE INTERVAL'70 MINUTES'
                                                                                END
@@ -114,7 +114,7 @@ BEGIN
          -- делаем задержку на 25/80 MIN
          vbId_End:= COALESCE ((SELECT MAX (Id) FROM _replica.table_update_data
                                WHERE Id BETWEEN inId_start AND vbId_End
-                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 18
+                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 15
                                                                                                      THEN INTERVAL '25 MINUTES'
                                                                                                      ELSE INTERVAL '75 MINUTES'
                                                                                                    --ELSE INTERVAL '55 MINUTES'

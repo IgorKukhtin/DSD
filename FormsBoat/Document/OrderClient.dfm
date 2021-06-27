@@ -137,7 +137,7 @@ object OrderClientForm: TOrderClientForm
       Left = 404
       Top = 45
       Hint = '% '#1057#1082#1080#1076#1082#1080
-      Caption = '% '#1057#1082#1080#1076#1082#1080
+      Caption = '% '#1057#1082#1080#1076#1082#1080' '#8470'1'
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -341,11 +341,6 @@ object OrderClientForm: TOrderClientForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = SummPriceList
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-                Column = SummPriceListWithVAT
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -372,11 +367,6 @@ object OrderClientForm: TOrderClientForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = SummPriceList
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-                Column = SummPriceListWithVAT
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -483,12 +473,12 @@ object OrderClientForm: TOrderClientForm
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+              HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
               Options.Editing = False
               Width = 80
             end
             object BasisPrice: TcxGridDBColumn
-              Caption = '***Total LP (Basis)'
+              Caption = '***Ladenpreis (Basis)'
               DataBinding.FieldName = 'BasisPrice'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -496,7 +486,7 @@ object OrderClientForm: TOrderClientForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
+              HeaderHint = #1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' (Basis)'
               Options.Editing = False
               Width = 104
             end
@@ -510,6 +500,19 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 55
+            end
+            object Summ: TcxGridDBColumn
+              Caption = 'Total LP'
+              DataBinding.FieldName = 'Summ'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Properties.ReadOnly = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+              Options.Editing = False
+              Width = 91
             end
             object SummWithVAT: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
@@ -525,34 +528,8 @@ object OrderClientForm: TOrderClientForm
               Options.Editing = False
               Width = 91
             end
-            object Summ: TcxGridDBColumn
-              Caption = 'Total LP'
-              DataBinding.FieldName = 'Summ'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Properties.ReadOnly = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
-              Options.Editing = False
-              Width = 91
-            end
-            object OperPriceWithVAT: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-              DataBinding.FieldName = 'OperPriceWithVAT'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
-              Options.Editing = False
-              Width = 80
-            end
             object OperPriceList: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+              Caption = '***Ladenpreis'
               DataBinding.FieldName = 'OperPriceList'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -560,24 +537,11 @@ object OrderClientForm: TOrderClientForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1085#1076#1089
-              Width = 80
-            end
-            object OperPriceListWithVAT: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1085#1076#1089
-              DataBinding.FieldName = 'OperPriceWithVAT'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1085#1076#1089
-              Options.Editing = False
+              HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080' '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
               Width = 80
             end
             object SummPriceList: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+              Caption = '***Total LP'
               DataBinding.FieldName = 'SummPriceList'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -585,21 +549,7 @@ object OrderClientForm: TOrderClientForm
               Properties.ReadOnly = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
-              Options.Editing = False
-              Width = 91
-            end
-            object SummPriceListWithVAT: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
-              DataBinding.FieldName = 'SummPriceListWithVAT'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Properties.ReadOnly = False
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
+              HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
               Options.Editing = False
               Width = 91
             end
@@ -2750,7 +2700,7 @@ object OrderClientForm: TOrderClientForm
     Left = 520
     Top = 45
     Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1087#1086#1083#1085#1080#1090'.'
-    Caption = '% '#1057#1082#1080#1076#1082#1080' ('#1076#1086#1087')'
+    Caption = '% '#1057#1082#1080#1076#1082#1080' '#8470'2'
   end
   object edDiscountNextTax: TcxCurrencyEdit
     Left = 520

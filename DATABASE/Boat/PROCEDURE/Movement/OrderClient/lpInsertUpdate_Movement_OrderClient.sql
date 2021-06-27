@@ -187,9 +187,13 @@ BEGIN
                                                                 , inMovementId    := ioId
                                                                 , inGoodsId       := inProductId
                                                                 , inAmount        := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id), 1)
+                                                                  -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
                                                                 , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                                  -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
                                                                 , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                                  -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
                                                                 , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                                  -- 
                                                                 , inCountForPrice := 1  ::TFloat
                                                                 , inComment       := '' ::TVarChar
                                                                 , inUserId        := inUserId

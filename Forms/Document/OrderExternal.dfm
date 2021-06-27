@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 460
   ClientWidth = 1364
   ExplicitWidth = 1380
-  ExplicitHeight = 498
+  ExplicitHeight = 495
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Height = 294
     ExplicitTop = 166
     ExplicitWidth = 1364
-    ExplicitHeight = 245
+    ExplicitHeight = 294
     ClientRectBottom = 294
     ClientRectRight = 1364
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1364
-      ExplicitHeight = 221
+      ExplicitHeight = 270
       inherited cxGrid: TcxGrid
         Width = 1364
         Height = 270
         ExplicitWidth = 1364
-        ExplicitHeight = 221
+        ExplicitHeight = 270
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1877,11 +1877,11 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'ioChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

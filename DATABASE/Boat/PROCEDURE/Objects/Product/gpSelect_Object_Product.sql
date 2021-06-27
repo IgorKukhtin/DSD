@@ -54,14 +54,14 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
                -- ИТОГО Сумма продажи с НДС - без Скидки (options)
              , BasisWVAT_summ2_orig   TFloat
 
-               -- ИТОГО Сумма вх. без НДС
+               -- ИТОГО Сумма вх. без НДС (Basis+options)
              , EKPrice_summ     TFloat
-               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками
+               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
              , Basis_summ       TFloat
-               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками
+               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options)
              , BasisWVAT_summ   TFloat
 
-               -- ИТОГО Сумма продажи без НДС - без Скидки
+               -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
              , Basis_summ_orig       TFloat
                -- ИТОГО Сумма продажи с НДС - без Скидки
              , BasisWVAT_summ_orig   TFloat

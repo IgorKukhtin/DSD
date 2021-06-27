@@ -4,10 +4,12 @@ DROP VIEW IF EXISTS Object_ContractCondition_View;
 
 CREATE OR REPLACE VIEW Object_ContractCondition_View
 AS
-        SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
-             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-             , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
-             , ObjectFloat_Value.ValueData AS Value
+        SELECT ObjectLink_ContractCondition_Contract.ChildObjectId                     AS ContractId
+             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId        AS ContractConditionKindId
+             , ObjectLink_Contract_PaidKind.ChildObjectId                              AS PaidKindId
+             , ObjectFloat_Value.ValueData                                             AS Value
+             , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+             , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
          FROM ObjectLink AS ObjectLink_ContractCondition_Contract
               INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -20,6 +22,12 @@ AS
               LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                    ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_ContractCondition_Contract.ChildObjectId
                                   AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+              LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                   ON ObjectDate_StartDate.ObjectId = ContractCondition.Id
+                                  AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+              LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                   ON ObjectDate_EndDate.ObjectId = ContractCondition.Id
+                                  AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
          WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
            AND ContractCondition.isErased = FALSE;
 

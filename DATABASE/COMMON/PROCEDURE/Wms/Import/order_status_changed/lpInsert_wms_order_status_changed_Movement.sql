@@ -74,6 +74,8 @@ BEGIN
      FROM tmpMovement_OrderExternal AS gpGet
           LEFT JOIN Object AS Object_From ON Object_From.Id = gpGet.FromId
           LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = gpGet.ContractId
+                                                        AND CURRENT_DATE BETWEEN Object_ContractCondition_PercentView.StartDate AND Object_ContractCondition_PercentView.EndDate
+          
           LEFT JOIN tmpToolsWeighing_MovementDesc AS tmpSelect ON tmpSelect.MovementDescId = gpGet.MovementDescId
                                                               AND tmpSelect.FromId = gpGet.ToId_orig
                                                               AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN gpGet.MovementDescId = zc_Movement_SendOnPrice()

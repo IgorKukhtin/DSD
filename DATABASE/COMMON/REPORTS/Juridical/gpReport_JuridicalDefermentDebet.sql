@@ -93,14 +93,15 @@ BEGIN
         , tmpObject_Contract_ContractKey_View AS (SELECT Object_Contract_ContractKey_View.* FROM Object_Contract_ContractKey_View)
 
         , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
-                                      , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
-                                      , ContractConditionKindId
-                                      , Value :: Integer AS DayCount
+                                        , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
+                                        , ContractConditionKindId
+                                        , Value :: Integer AS DayCount
                                    FROM Object_ContractCondition_View
                                         INNER JOIN Object_ContractCondition_DefermentPaymentView
                                                 ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
                                    WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
                                      AND Value <> 0
+                                     AND inOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                 )
 
         , tmpContainer AS (SELECT Container.*
@@ -537,5 +538,5 @@ $BODY$
 */
 
 -- тест zc_Enum_PaidKind_SecondForm
--- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= '01.08.2020', inEmptyParam:= NULL :: TDateTime, inAccountId:= 9128 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inBranchId:= 0, inJuridicalGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentDebet (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 9128 , inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inBranchId:= 0, inJuridicalGroupId:= 0, inSession:= zfCalc_UserAdmin());

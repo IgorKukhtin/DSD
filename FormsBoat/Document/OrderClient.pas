@@ -159,7 +159,6 @@ type
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
     CountForPrice: TcxGridDBColumn;
-    OperPriceWithVAT: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
     SummWithVAT: TcxGridDBColumn;
     Comment: TcxGridDBColumn;

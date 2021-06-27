@@ -261,6 +261,7 @@ BEGIN
                                                    INNER JOIN Object_ContractCondition_View
                                                            ON Object_ContractCondition_View.ContractConditionKindId = Object_ContractCondition_DefermentPaymentView.ConditionKindId
                                               WHERE Object_ContractCondition_View.Value <> 0
+                                                AND inOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                               GROUP BY Object_ContractCondition_View.ContractId
                                                      , Object_ContractCondition_View.ContractConditionKindId
                                              ) AS Object_ContractCondition_View
@@ -446,5 +447,5 @@ and ObjectLink.ChildObjectId  is null
 having count (*) >1)
 */
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());

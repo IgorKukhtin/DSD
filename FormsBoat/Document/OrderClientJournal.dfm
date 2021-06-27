@@ -262,6 +262,26 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object DiscountTax: TcxGridDBColumn
+        Caption = '% '#1089#1082'. '#8470'1'
+        DataBinding.FieldName = 'DiscountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object DiscountNextTax: TcxGridDBColumn
+        Caption = '% '#1089#1082'. '#8470'2'
+        DataBinding.FieldName = 'DiscountNextTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
@@ -284,7 +304,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 80
       end
       object TotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+        Caption = '***Total LP'
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -292,7 +312,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1073#1077#1079' '#1053#1044#1057' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1086#1082')'
+        HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         Width = 60
       end
       object TotalSummPVAT: TcxGridDBColumn
@@ -306,26 +326,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
         Width = 60
-      end
-      object DiscountTax: TcxGridDBColumn
-        Caption = '% '#1089#1082'.'
-        DataBinding.FieldName = 'DiscountTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object DiscountNextTax: TcxGridDBColumn
-        Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
-        DataBinding.FieldName = 'DiscountNextTax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'

@@ -41,6 +41,7 @@ END IF;
                 -- или Суббота
              OR EXTRACT (DOW FROM CURRENT_DATE) = 6
              OR EXTRACT (DAY FROM CURRENT_DATE) <= 15
+           --OR 1=1
                 ;
      -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
      vbIsReturnIn:= -- если последние 2 дня месяца

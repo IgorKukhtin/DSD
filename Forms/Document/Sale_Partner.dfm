@@ -3217,11 +3217,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'ioChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3348,11 +3348,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
