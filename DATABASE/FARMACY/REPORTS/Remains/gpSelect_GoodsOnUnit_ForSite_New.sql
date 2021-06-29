@@ -697,6 +697,19 @@ BEGIN
                                           ON Price_Value.ObjectId = Object_PriceSite.Id
                                          AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
                               WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                                AND Price_Goods.ChildObjectId NOT IN (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
+                                                                      FROM Object AS Object_BarCode
+                                                                           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                                                                ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                                                               AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                                                           LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                                                                ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                                                               AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                                                           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                                                      WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                                                        AND Object_BarCode.isErased = False
+                                                                        AND Object_Object.isErased = False)
                               )
 
           , PromoBonus AS (SELECT MovementItem.ObjectId                           AS GoodsId
@@ -902,7 +915,8 @@ $BODY$
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
 --
 
-SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089,10128935', '26260, 19531', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
+SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089,10128935', 
+  '13516058', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
 
 
 --SELECT p.* FROM gpselect_goodsonunit_forsite_Ol ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '10615,15208,3031,22420,9985,5303682,6970592,14273738,26701,27199,21898,1199196,1199199,2600865,12745,33004', TRUE, zfCalc_UserSite()) AS p

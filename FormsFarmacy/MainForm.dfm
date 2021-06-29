@@ -4386,6 +4386,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actCheckoutTesting: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1073#1085#1086#1074#1072#1083#1077#1085#1080#1077' '#1082#1072#1089#1089#1099' '#1080' '#1089#1077#1088#1074#1080#1089#1072' '#1095#1077#1088#1077#1079' GUID'
+      FormName = 'TCheckoutTestingForm'
+      FormNameParam.Value = 'TCheckoutTestingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5627,6 +5638,9 @@
         end
         object N262: TMenuItem
           Action = actReport_TestingUserAttempts
+        end
+        object GUID2: TMenuItem
+          Action = actCheckoutTesting
         end
       end
       object miTaxUnit: TMenuItem [2]

@@ -416,6 +416,19 @@ BEGIN
                                       ON Price_Value.ObjectId = Object_PriceSite.Id
                                      AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
                           WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
+                            AND Price_Goods.ChildObjectId NOT IN (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
+                                                                  FROM Object AS Object_BarCode
+                                                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                                                            ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                                                           AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                                                       LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                                                  WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                                                    AND Object_BarCode.isErased = False
+                                                                    AND Object_Object.isErased = False)
                          )
 
 

@@ -504,9 +504,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_CorrectMinAmount_Date() RETURNS Integer
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_CorrectMinAmount(), 'zc_ObjectDate_CorrectMinAmount_Date', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CorrectMinAmount_Date');
   
+CREATE OR REPLACE FUNCTION zc_ObjectDate_CheckoutTesting_DateUpdate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CheckoutTesting_DateUpdate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CheckoutTesting(), 'zc_ObjectDate_CheckoutTesting_DateUpdate', 'Дата и время обновления на кассы и сервиса' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CheckoutTesting_DateUpdate');
+  
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.06.21                                                                                     * zc_ObjectDate_CheckoutTesting_DateUpdate
  22.06.21                                                                                     * zc_ObjectDate_CorrectMinAmount_Date
  27.04.21                                                                                     * zc_ObjectDate_PriceSite_...
  27.05.21         * zc_ObjectDate_ContractPriceList_StartDate
