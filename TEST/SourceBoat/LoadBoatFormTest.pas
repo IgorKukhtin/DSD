@@ -614,7 +614,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductEditForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductDocumentPhotoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductDocumentPhotoEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductDocumentPhotoEditForm');
 end;
 
@@ -642,33 +642,33 @@ procedure TLoadFormTest.LoadReceiptProdModelFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptProdModelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptProdModelForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptProdModelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptProdModelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptProdModelEditForm');
-  end;
-  procedure TLoadFormTest.LoadReceiptLevelFormTest;
+end;
 
-  begin
+procedure TLoadFormTest.LoadReceiptLevelFormTest;
+begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelEditForm');
-  end;
+end;
 
-  procedure TLoadFormTest.LoadReceiptGoodsFormTest;
+procedure TLoadFormTest.LoadReceiptGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoodsEditForm');
-  end;
+end;
 
 procedure TLoadFormTest.LoadReceiptServiceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceEditForm');
-  end;
+end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
@@ -705,7 +705,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
 
