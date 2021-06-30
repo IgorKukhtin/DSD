@@ -8039,7 +8039,8 @@ begin
           SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
           FormParams.ParamByName('AddPresent').Value]), []) and
           ((CheckCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
-          (CheckCDS.FieldByName('Price').asCurrency <> lPrice)) then
+          (CheckCDS.FieldByName('Price').asCurrency <> lPrice)) and
+          (CheckCDS.FieldByName('AmountOrder').asCurrency = 0) then
         Begin
 
           if FormParams.ParamByName('isBanAdd').Value and
@@ -8285,7 +8286,8 @@ begin
 
           CheckCDS.Post;
 
-        End;
+        End else if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then 
+          lPriceSale := CheckCDS.FieldByName('PriceSale').asCurrency;
       finally
         CheckCDS.Filtered := True;
         CheckCDS.EnableControls;
@@ -9748,7 +9750,8 @@ begin
         and (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId)
         and (CheckCDS.FieldByName('DiscountExternalID').AsInteger = ADiscountExternalID)
         and (CheckCDS.FieldByName('DivisionPartiesID').AsInteger = ADivisionPartiesID)
-        and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
+        and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)
+        and (CheckCDS.FieldByName('isPresent').AsBoolean = AisPresent)) then
       Begin
         if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
           VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
@@ -9757,6 +9760,14 @@ begin
           CheckCDS.FieldByName('DiscountExternalID').AsVariant,
           CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
         Begin
+
+          if FormParams.ParamByName('isBanAdd').Value and
+            ((CheckCDS.FieldByName('Amount').asCurrency + AAmount) > Ceil(CheckCDS.FieldByName('AmountOrder').asCurrency)) then
+          begin
+            ShowMessage('Увеличивать количество на целые значения запрещено, можно до ближайшего целого. Отпустите клиента отдельтным чеком.');
+            Exit;
+          end;
+
           RemainsCDS.Edit;
           if (AAmount = 0) or
             ((AAmount < 0) AND (abs(AAmount) >= CheckCDS.FieldByName('Amount')
@@ -10074,7 +10085,7 @@ begin
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
         end
-        else
+        else if CheckCDS.FieldByName('AmountOrder').asCurrency = 0 then     // Если это не заказ с сайта
         begin
           // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
           // пересчитаем сумму скидки

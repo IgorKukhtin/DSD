@@ -12,43 +12,52 @@ CREATE OR REPLACE FUNCTION zfCalc_MarketingPlan_Scale (
 RETURNS TFloat
 AS
 $BODY$
+  DECLARE vbTotal TFloat;
 BEGIN
+
+  vbTotal := 0;
 
   IF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_AB()
   THEN
-    RETURN CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
-                WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN inBonusAmountTab - inAmountTheFineTab
-                ELSE inBonusAmountTab  END;  
+    vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                    WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
+                    WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN inBonusAmountTab - inAmountTheFineTab
+                    ELSE inBonusAmountTab  END;  
   ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_CC1()
   THEN
     IF inOperDate < '01.06.2021'
     THEN
-      RETURN CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
-                  ELSE inBonusAmountTab  END;      
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                      ELSE inBonusAmountTab  END;      
     ELSE
-      RETURN CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
-                  ELSE inBonusAmountTab  END;          
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                      ELSE inBonusAmountTab  END;          
     END IF;
   ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_D()
   THEN
     IF inOperDate < '01.06.2021'
     THEN
-      RETURN 0;     
+      vbTotal := 0;     
     ELSE
-      RETURN CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
-                  WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN inBonusAmountTab - inAmountTheFineTab
-                  ELSE inBonusAmountTab  END;          
+      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
+                      WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN inBonusAmountTab - inAmountTheFineTab
+                      ELSE inBonusAmountTab  END;          
     END IF;
   ELSE
-    RETURN 0;
+    vbTotal := 0;
   END IF;  
 
+  IF inOperDate >= '01.06.2021' AND vbTotal < 0
+  THEN
+    vbTotal := vbTotal / 2;   
+  END IF;
+
+  RETURN vbTotal;
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;

@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_CorrectMinAmount()
+-- Function: gpInsertUpdate_Object_CheckoutTesting()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CheckoutTesting (Integer, TVarchar, TVarchar);
 
