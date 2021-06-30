@@ -23,7 +23,6 @@ object CheckoutTestingForm: TCheckoutTestingForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 766
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -194,6 +193,14 @@ object CheckoutTestingForm: TCheckoutTestingForm
           ItemName = 'bbSetUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateClear'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -225,6 +232,14 @@ object CheckoutTestingForm: TCheckoutTestingForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUploadCheckoutTesting'
         end
         item
           Visible = True
@@ -289,6 +304,14 @@ object CheckoutTestingForm: TCheckoutTestingForm
     end
     object dxBarButton1: TdxBarButton
       Action = actInsertUpdate
+      Category = 0
+    end
+    object bbUploadCheckoutTesting: TdxBarButton
+      Action = actUploadCheckoutTesting
+      Category = 0
+    end
+    object bbUpdateClear: TdxBarButton
+      Action = actUpdateClear
       Category = 0
     end
   end
@@ -441,6 +464,33 @@ object CheckoutTestingForm: TCheckoutTestingForm
       ImageIndex = 54
       ShortCut = 45
     end
+    object actUploadCheckoutTesting: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1090#1077#1089#1090#1086#1074#1099#1077' '#1092#1072#1081#1083#1099' '#1082#1072#1089#1089#1099' '#1080' '#1089#1077#1088#1074#1080#1089#1072' '#1085#1072' '#1089#1077#1088#1074#1077#1088
+      ImageIndex = 30
+      FormName = 'TUploadCheckoutTestingForm'
+      FormNameParam.Value = 'TUploadCheckoutTestingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
+    object actUpdateClear: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateClear
+      StoredProcList = <
+        item
+          StoredProc = spUpdateClear
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086
+      ImageIndex = 76
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086'?'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CheckoutTesting'
@@ -556,5 +606,22 @@ object CheckoutTestingForm: TCheckoutTestingForm
     PackSize = 1
     Left = 236
     Top = 264
+  end
+  object spUpdateClear: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_CheckoutTesting_Clear'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 236
+    Top = 328
   end
 end

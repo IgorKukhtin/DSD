@@ -66,6 +66,11 @@ type
     actInsertUpdate: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     UserName: TcxGridDBColumn;
+    actUploadCheckoutTesting: TdsdOpenStaticForm;
+    bbUploadCheckoutTesting: TdxBarButton;
+    bbUpdateClear: TdxBarButton;
+    spUpdateClear: TdsdStoredProc;
+    actUpdateClear: TdsdExecStoredProc;
   private
     { Private declarations }
   public
@@ -76,6 +81,7 @@ type
 implementation
 
 {$R *.dfm}
- initialization
+
+initialization
   RegisterClass(TCheckoutTestingForm);
 end.

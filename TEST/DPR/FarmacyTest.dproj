@@ -3710,12 +3710,15 @@
 				<Form>Report_Movement_DynamicsOrdersEICForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\CheckoutTesting.pas">
-				<Form>CheckoutTestingForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GUIDUnit.pas">
 				<Form>GUIDUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UploadCheckoutTesting.pas">
+				<Form>UploadCheckoutTestingForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CheckoutTesting.pas">
+				<Form>CheckoutTestingForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
