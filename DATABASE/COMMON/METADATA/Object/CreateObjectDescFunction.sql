@@ -1420,6 +1420,10 @@ CREATE OR REPLACE FUNCTION zc_Object_CorrectMinAmount() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CorrectMinAmount', 'Методы выбора аптек ассортимента' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CorrectMinAmount');
 
+CREATE OR REPLACE FUNCTION zc_Object_CheckoutTesting() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CheckoutTesting'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CheckoutTesting', 'Тестированние касс' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CheckoutTesting');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1436,6 +1440,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 25.06.21                                                                                        * zc_Object_CheckoutTesting
  22.06.21                                                                                        * zc_Object_CorrectMinAmount
  14.06.21         * zc_Object_ReceiptLevel
  27.04.21                                                                                        * zc_Object_PriceSite

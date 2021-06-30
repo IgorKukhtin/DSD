@@ -23,6 +23,7 @@ BEGIN
 
      -- Разрешаем только сотрудникам с правами админа
     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       AND vbUserId <> 11263040
     THEN
       RAISE EXCEPTION 'Разрешено только системному администратору';
     END IF;
@@ -60,5 +61,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpUpdate_TechnicalRediscount_RedCheck(inMovementId := 21444137 , ioisRedCheck := 'True' ,  inSession := '3');
+-- select * from gpUpdate_TechnicalRediscount_RedCheck(inMovementId := 21444137 , ioisRedCheck := 'True' ,  inSession := '3');

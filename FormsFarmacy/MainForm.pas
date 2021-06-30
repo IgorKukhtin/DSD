@@ -819,6 +819,8 @@ type
     N299: TMenuItem;
     actReport_Movement_DynamicsOrdersEIC: TdsdOpenForm;
     N300: TMenuItem;
+    actCheckoutTesting: TdsdOpenForm;
+    GUID2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

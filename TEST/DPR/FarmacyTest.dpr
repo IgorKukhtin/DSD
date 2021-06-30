@@ -1040,7 +1040,9 @@ uses
   RepriceSiteJournal in '..\..\FormsFarmacy\Document\RepriceSiteJournal.pas' {RepriceSiteJournalForm: TParentForm},
   RepriceSite in '..\..\FormsFarmacy\Document\RepriceSite.pas' {RepriceSiteForm: TParentForm},
   OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  Report_Movement_DynamicsOrdersEIC in '..\..\FormsFarmacy\Report\Report_Movement_DynamicsOrdersEIC.pas' {Report_Movement_DynamicsOrdersEICForm: TParentForm};
+  Report_Movement_DynamicsOrdersEIC in '..\..\FormsFarmacy\Report\Report_Movement_DynamicsOrdersEIC.pas' {Report_Movement_DynamicsOrdersEICForm: TParentForm},
+  CheckoutTesting in '..\..\FormsFarmacy\Guides\CheckoutTesting.pas' {CheckoutTestingForm: TParentForm},
+  GUIDUnit in '..\..\FormsFarmacy\Guides\GUIDUnit.pas' {GUIDUnitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
