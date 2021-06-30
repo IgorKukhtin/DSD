@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderGoods(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, MonthName TVarChar
              , StatusCode Integer, StatusName TVarChar
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -31,7 +31,8 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_OrderGoods_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
+             , DATE_TRUNC ('Month',inOperDate)                  AS OperDate
+             , zfCalc_MonthName (inOperDate)         ::TVarChar AS MonthName
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
 
@@ -59,6 +60,7 @@ BEGIN
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate ::TDateTime          AS OperDate
+           , zfCalc_MonthName (Movement.OperDate) ::TVarChar AS MonthName
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
 

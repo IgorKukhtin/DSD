@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderGoods(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, MonthName TVarChar
              , StatusCode Integer, StatusName TVarChar
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -40,6 +40,7 @@ BEGIN
              Movement.Id                         AS Id
            , Movement.InvNumber                  AS InvNumber
            , Movement.OperDate ::TDateTime       AS OperDate
+           , zfCalc_MonthName (Movement.OperDate) ::TVarChar AS MonthName
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
@@ -140,4 +141,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderGoods (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inPriceListBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderGoods (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

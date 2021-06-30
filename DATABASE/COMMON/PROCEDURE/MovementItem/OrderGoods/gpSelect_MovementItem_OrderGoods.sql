@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , Amount TFloat       --кг
              , AmountSecond TFloat --штуки
              , Total_kg TFloat     -- итого вес
+             , Total_sh TFloat     -- Итого шт
              , Price TFloat, Summa TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -139,6 +140,7 @@ BEGIN
            , 0 :: TFloat AS Amount
            , 0 :: TFloat AS AmountSecond
            , 0 :: TFloat AS Total_kg
+           , 0 :: TFloat AS Total_sh
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) :: TFloat AS Price
            , 0 :: TFloat AS Summa
            , '' :: TVarChar AS Comment
@@ -191,6 +193,11 @@ BEGIN
                   ELSE tmpMI.Amount
              END                      ::TFloat   AS Total_kg
              
+           , CASE WHEN Object_Measure.Id <> zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,1) <> 0
+                  THEN MIFloat_Amount.ValueData / COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE tmpMI.Amount
+             END                      ::TFloat   AS Total_sh
+
            , tmpMI.Price  ::TFloat   AS Price
            , (COALESCE (tmpMI.Amount,0) * tmpMI.Price) ::TFloat AS Summa
 
@@ -268,7 +275,12 @@ BEGIN
                   THEN MIFloat_AmountSecond.ValueData * COALESCE (ObjectFloat_Weight.ValueData,1)
                   ELSE tmpMI.Amount
              END                      ::TFloat   AS Total_kg
-             
+
+           , CASE WHEN Object_Measure.Id <> zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,1) <> 0
+                  THEN MIFloat_Amount.ValueData / COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE tmpMI.Amount
+             END                      ::TFloat   AS Total_sh
+
            , MIFloat_Price.ValueData  ::TFloat   AS Price
            , CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
                     THEN COALESCE( MIFloat_AmountSecond.ValueData,0) * MIFloat_Price.ValueData

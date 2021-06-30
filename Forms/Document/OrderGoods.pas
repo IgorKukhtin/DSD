@@ -88,6 +88,8 @@ type
     N4: TMenuItem;
     ChildDBViewAddOn: TdsdDBViewAddOn;
     spSelect_Child: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    edMonth: TcxTextEdit;
   private
     { Private declarations }
   public

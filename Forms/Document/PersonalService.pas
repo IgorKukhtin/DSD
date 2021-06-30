@@ -222,6 +222,16 @@ type
     FineSubjectName: TcxGridDBColumn;
     actFineSubjectOpenChoiceForm: TOpenChoiceForm;
     actUnitFineSubjectChoiceForm: TOpenChoiceForm;
+    cxTabSheet1: TcxTabSheet;
+    cxGridChild_all: TcxGrid;
+    cxGridDBTableViewChild_all: TcxGridDBTableView;
+    cxGridLevelChild_all: TcxGridLevel;
+    DBViewAddOnChild_all: TdsdDBViewAddOn;
+    spSelectChild_all: TdsdStoredProc;
+    ChildCDS_all: TClientDataSet;
+    ChildDS_all: TDataSource;
+    actGridToExcel_Child_all: TdsdGridToExcel;
+    bbGridToExcel_Child_all: TdxBarButton;
   private
     { Private declarations }
   public

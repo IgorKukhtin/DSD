@@ -33,7 +33,7 @@ BEGIN
      END IF;
      
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderGoods(), ioInvNumber, inOperDate, NULL, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderGoods(), ioInvNumber, DATE_TRUNC ('Month',inOperDate), NULL, NULL);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderPeriodKind(), ioId, inOrderPeriodKindId);

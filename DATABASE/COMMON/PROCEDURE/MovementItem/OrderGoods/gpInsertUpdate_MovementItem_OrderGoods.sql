@@ -42,6 +42,7 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                              ),0) ;
 
+/*
      --получаем кг или шт
      IF COALESCE (inAmount, 0) = 0 AND vbMeasureId <> zc_Measure_Sh() 
      THEN
@@ -56,6 +57,7 @@ BEGIN
          inAmountSecond := ( CASE WHEN vbWeight <> 0 THEN inAmount /vbWeight ELSE 0 END);
          inAmount := 0;
      END IF;
+     */
      
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_OrderGoods (ioId           := ioId

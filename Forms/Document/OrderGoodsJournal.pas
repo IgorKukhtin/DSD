@@ -58,6 +58,7 @@ type
     spDelete_Movement: TdsdStoredProc;
     actDelete_Movement: TdsdExecStoredProc;
     UnitName: TcxGridDBColumn;
+    MonthName: TcxGridDBColumn;
   private
     { Private declarations }
   public
