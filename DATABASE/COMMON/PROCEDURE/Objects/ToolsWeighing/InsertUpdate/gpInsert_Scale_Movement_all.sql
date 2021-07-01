@@ -1495,6 +1495,19 @@ BEGIN
  end if;*/
 
 
+     -- добавили ReturnIn_Detail
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE )
+     PERFORM gpInsertUpdate_MovementItem_ReturnIn_Detail (MI_Detail.Id, zc_MI_Detail(), MovementItem.ObjectId, inMovementId, MovementItem.Amount, MovementItem.Id)
+     FROM MovementItem
+          LEFT JOIN MovementItem AS MI_Detail ON MI_Detail.MovementId = inMovementId
+                                             AND MI_Detail.DescId     = zc_MI_Detail()
+                                             AND MI_Detail.ParentId   = MovementItem.Id
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.isErased   = FALSE
+       AND MI_Detail.ParentId IS NULL
+    ;
+
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
      THEN

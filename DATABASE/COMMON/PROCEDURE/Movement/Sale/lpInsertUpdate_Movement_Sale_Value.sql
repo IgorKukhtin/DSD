@@ -39,7 +39,7 @@ BEGIN
                                       , inOperDate             := inOperDate
                                       , inOperDatePartner      := inOperDatePartner
                                       , inChecked              := inChecked
-                                      , inChangePercent        := inChangePercent
+                                      , ioChangePercent        := inChangePercent
                                       , inFromId               := inFromId
                                       , inToId                 := inToId
                                       , inPaidKindId           := inPaidKindId

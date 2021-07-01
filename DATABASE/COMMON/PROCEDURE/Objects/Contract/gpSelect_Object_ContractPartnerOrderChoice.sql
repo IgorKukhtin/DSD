@@ -430,7 +430,7 @@ BEGIN
      , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View)
      , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
      , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
-     , tmpObject_ContractCondition_ValueView AS (SELECT * FROM Object_ContractCondition_ValueView)
+     , tmpObject_ContractCondition_ValueView AS (SELECT * FROM Object_ContractCondition_ValueView WHERE CURRENT_DATE BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
      , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId   = zc_ObjectBoolean_Juridical_isBranchAll())
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id

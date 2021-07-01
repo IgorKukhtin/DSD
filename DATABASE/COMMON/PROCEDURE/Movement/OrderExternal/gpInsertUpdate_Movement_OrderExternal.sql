@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inOperDateMark            TDateTime , -- Дата маркировки
    OUT outPriceWithVAT           Boolean   , -- Цена с НДС (да/нет)
    OUT outVATPercent             TFloat    , -- % НДС
-    IN inChangePercent           TFloat    , -- (-)% Скидки (+)% Наценки
+ INOUT ioChangePercent           TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId                  Integer   , -- От кого (в документе)
     IN inToId                    Integer   , -- Кому (в документе)
     IN inPaidKindId              Integer   , -- Виды форм оплаты
@@ -129,27 +129,29 @@ BEGIN
 
 
      -- Сохранение
-     ioId:= lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId
-                                                 , inInvNumber           := inInvNumber
-                                                 , inInvNumberPartner    := inInvNumberPartner
-                                                 , inOperDate            := inOperDate
-                                                 , inOperDatePartner     := outOperDatePartner
-                                                 , inOperDateMark        := inOperDateMark
-                                                 , inPriceWithVAT        := outPriceWithVAT
-                                                 , inVATPercent          := outVATPercent
-                                                 , inChangePercent       := inChangePercent
-                                                 , inFromId              := inFromId
-                                                 , inToId                := inToId
-                                                 , inPaidKindId          := inPaidKindId
-                                                 , inContractId          := inContractId
-                                                 , inRouteId             := inRouteId
-                                                 , inRouteSortingId      := inRouteSortingId
-                                                 , inPersonalId          := ioPersonalId
-                                                 , inPriceListId         := ioPriceListId
-                                                 , inPartnerId           := inPartnerId
-                                                 , inisPrintComment      := inisPrintComment
-                                                 , inUserId              := vbUserId
-                                                  );
+     SELECT tmp.ioId, tmp.ioChangePercent
+            INTO ioId, ioChangePercent
+     FROM lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId
+                                               , inInvNumber           := inInvNumber
+                                               , inInvNumberPartner    := inInvNumberPartner
+                                               , inOperDate            := inOperDate
+                                               , inOperDatePartner     := outOperDatePartner
+                                               , inOperDateMark        := inOperDateMark
+                                               , inPriceWithVAT        := outPriceWithVAT
+                                               , inVATPercent          := outVATPercent
+                                               , ioChangePercent       := ioChangePercent
+                                               , inFromId              := inFromId
+                                               , inToId                := inToId
+                                               , inPaidKindId          := inPaidKindId
+                                               , inContractId          := inContractId
+                                               , inRouteId             := inRouteId
+                                               , inRouteSortingId      := inRouteSortingId
+                                               , inPersonalId          := ioPersonalId
+                                               , inPriceListId         := ioPriceListId
+                                               , inPartnerId           := inPartnerId
+                                               , inisPrintComment      := inisPrintComment
+                                               , inUserId              := vbUserId
+                                                ) AS tmp;
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

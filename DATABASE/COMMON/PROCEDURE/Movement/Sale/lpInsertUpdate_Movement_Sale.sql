@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inChecked               Boolean    , -- Проверен
    OUT outPriceWithVAT         Boolean    , -- Цена с НДС (да/нет)
    OUT outVATPercent           TFloat     , -- % НДС
-    IN inChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
+ INOUT ioChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
     IN inFromId                Integer    , -- От кого (в документе)
     IN inToId                  Integer    , -- Кому (в документе)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
@@ -40,6 +40,23 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbBranchId Integer;
 BEGIN
+
+     -- Проверка/замена Валюта - Договор
+     IF COALESCE (inCurrencyDocumentId, 0) IN (0, zc_Enum_Currency_Basis())
+        AND zc_Enum_Currency_Basis() <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency())
+     THEN
+         inCurrencyPartnerId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency());
+     END IF;
+     -- Проверка/замена Валюта - Прайс
+     IF COALESCE (inCurrencyDocumentId, 0) IN (0, zc_Enum_Currency_Basis())
+        AND zc_Enum_Currency_Basis() <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioPriceListId AND OL.DescId = zc_ObjectLink_PriceList_Currency())
+     THEN
+         inCurrencyDocumentId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioPriceListId AND OL.DescId = zc_ObjectLink_PriceList_Currency());
+     END IF;
+
+     -- замена, т.к. теперь история
+     ioChangePercent:= COALESCE ((SELECT Object_PercentView.ChangePercent FROM Object_ContractCondition_PercentView AS Object_PercentView WHERE Object_PercentView.ContractId = inContractId AND inOperDatePartner BETWEEN Object_PercentView.StartDate AND Object_PercentView.EndDate), 0);
+
      -- нашли Филиал
      vbBranchId:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
 
@@ -167,7 +184,7 @@ BEGIN
      -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, outVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, ioChangePercent);
 
      -- рассчет курса для баланса
      IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
@@ -228,9 +245,9 @@ BEGIN
                                              , CASE WHEN MIFloat_PromoMovement.ValueData > 0
                                                          THEN CASE WHEN zc_Enum_ConditionPromo_ContractChangePercentOff() = (SELECT MI_Child.ObjectId FROM MovementItem AS MI_Child WHERE MI_Child.MovementId = MIFloat_PromoMovement.ValueData AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() AND MI_Child.isErased = FALSE LIMIT 1)
                                                                         THEN 0  -- без учета % скидки по договору
-                                                                   ELSE inChangePercent
+                                                                   ELSE ioChangePercent
                                                               END
-                                                    ELSE inChangePercent
+                                                    ELSE ioChangePercent
                                                END)
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
@@ -275,4 +292,4 @@ update dba.BillItems join dba.Bill on Bill.Id = BillItems.BillId and isnull(Bill
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_Sale (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_Sale (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, ioChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')

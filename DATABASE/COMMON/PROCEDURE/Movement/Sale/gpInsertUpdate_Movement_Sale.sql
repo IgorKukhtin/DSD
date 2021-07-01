@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inChecked               Boolean    , -- Проверен
    OUT outPriceWithVAT         Boolean    , -- Цена с НДС (да/нет)
    OUT outVATPercent           TFloat     , -- % НДС
-    IN inChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
+ INOUT ioChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
     IN inFromId                Integer    , -- От кого (в документе)
     IN inToId                  Integer    , -- Кому (в документе)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
@@ -62,7 +62,7 @@ BEGIN
                                       , inChecked              := inChecked
                                       -- , inPriceWithVAT       := inPriceWithVAT
                                       -- , inVATPercent         := inVATPercent
-                                      , inChangePercent        := inChangePercent
+                                      , ioChangePercent        := ioChangePercent
                                       , inFromId               := inFromId
                                       , inToId                 := inToId
                                       , inPaidKindId           := inPaidKindId
@@ -141,4 +141,4 @@ update dba.BillItems join dba.Bill on Bill.Id = BillItems.BillId and isnull(Bill
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Sale (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_Sale (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, ioChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')

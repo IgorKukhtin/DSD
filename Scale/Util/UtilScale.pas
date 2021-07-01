@@ -58,6 +58,7 @@ type
   TSettingMain = record
     isModeSorting:Boolean;  // ScaleCeh - Режим маркировка/сортировка
     isPartionDate:Boolean;  // Scale
+    isReason     :Boolean;  // Scale
     isSticker:Boolean;      // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
@@ -115,6 +116,7 @@ type
   procedure MyDelay_two(mySec:Integer);
 
   procedure Create_ParamsMovement(var Params:TParams);
+  procedure Create_ParamsReason_global(var Params:TParams);
   procedure Create_ParamsMI(var Params:TParams);
   procedure Create_ParamsLight(var Params:TParams);
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
@@ -125,6 +127,7 @@ type
   procedure Create_ParamsArticleLoss(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
   procedure Create_ParamsSubjectDoc(var Params:TParams);
+  procedure Create_ParamsReason(var Params:TParams);
   procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
@@ -149,6 +152,7 @@ var
   SettingMain   : TSettingMain;
   ParamsMovement: TParams;
   ParamsMI: TParams;
+  ParamsReason: TParams;
   ParamsLight: TParams;
 
   StickerFile_Array   :TArrayStickerFileList;
@@ -329,6 +333,16 @@ begin
 
      ParamAdd(Params,'TotalSumm',ftFloat);
 
+
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsReason_global(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'ReasonId',ftInteger);
+     ParamAdd(Params,'ReasonCode',ftInteger);
+     ParamAdd(Params,'ReasonName',ftString);
+     ParamAdd(Params,'ReturnKindName',ftString);
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsLight(var Params:TParams);
@@ -618,6 +632,15 @@ begin
      ParamAdd(Params,'MeasureId',ftInteger);         //
      ParamAdd(Params,'MeasureCode',ftInteger);       //
      ParamAdd(Params,'MeasureName',ftString);        //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsReason(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'Id', ftInteger);   //
+     ParamAdd(Params,'Code', ftInteger); //
+     ParamAdd(Params,'Name', ftString);  //
+     ParamAdd(Params,'ReturnKindName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsSubjectDoc(var Params:TParams);

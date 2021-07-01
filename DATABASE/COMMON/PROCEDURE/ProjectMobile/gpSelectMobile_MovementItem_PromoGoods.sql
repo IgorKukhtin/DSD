@@ -105,8 +105,8 @@ BEGIN
                                              AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT() 
             ) AS tmp
              WHERE tmp.Ord = 1
-
-             ;
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
             
       END IF;
 END;

@@ -21,14 +21,14 @@ BEGIN
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
     vbId_End := (SELECT NextId FROM _replica.gpSelect_Replica_LastId (inId_start, inRec_count));
 
+
   --RAISE EXCEPTION 'Ошибка. inId_start=<%>  vbId_End=<%>', inId_start, vbId_End;
 
     RETURN QUERY
         SELECT gpSelect.Value 
         FROM   _replica.gpSelect_Replica_union(inId_start := inId_start,
                                                inId_end   := vbId_End
-                                               )
-        AS gpSelect;
+                                              ) AS gpSelect;
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;     

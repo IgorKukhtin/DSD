@@ -110,6 +110,9 @@ BEGIN
              , Object_ProdColor.ValueData            AS ProdColorName
              , Object_Measure.ValueData              AS MeasureName
 
+             , Object_Partner.ValueData              AS PartnerName
+             , Object_Unit.ValueData                 AS UnitName
+
              , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelChildId ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
 
                -- умножили
@@ -172,6 +175,16 @@ BEGIN
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                                  ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Unit
+                                  ON ObjectLink_Goods_Unit.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Unit.DescId   = zc_ObjectLink_Goods_Unit()
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Goods_Unit.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
                                   ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
@@ -272,6 +285,9 @@ BEGIN
          , Object_ProdColor.ValueData                 AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
+         , Object_Partner.ValueData              AS PartnerName
+         , Object_Unit.ValueData                 AS UnitName
+
          , tmpChild.EKPrice            :: TFloat AS EKPrice
          , tmpChild.EKPriceWVAT        :: TFloat AS EKPriceWVAT
 
@@ -342,6 +358,16 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
+                               ON ObjectLink_Goods_Partner.ObjectId = Object_Object.Id
+                              AND ObjectLink_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Unit
+                               ON ObjectLink_Goods_Unit.ObjectId = Object_Object.Id
+                              AND ObjectLink_Goods_Unit.DescId   = zc_ObjectLink_Goods_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Goods_Unit.ChildObjectId
      ;
       RETURN NEXT Cursor1;
 

@@ -137,12 +137,14 @@ BEGIN
                                     AND tmpContract_find.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                  )
 
-                , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
+            , tmpDayInfo_all AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
                                       , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
                                       , tmpContract.PartnerId
                                       , zfCalc_DetermentPaymentDate (ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
                                                                    , MIN (ObjectFloat_ContractCondition_Value.ValueData)::Integer
                                                                    , CURRENT_DATE)::Date AS ContractDate
+                                      , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+                                      , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
                                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                       -- выбрали оригинал"
                                       JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
@@ -164,10 +166,23 @@ BEGIN
                                                   ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_Contract.ObjectId
                                                  AND Object_ContractCondition.isErased = FALSE
 
+                                      LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                           ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                                                          AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractCondition_StartDate()
+                                      LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                           ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                                                          AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractCondition_EndDate()
+
                                  WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                  GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                                         , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
                                         , tmpContract.PartnerId
+                                        , ObjectDate_StartDate.ValueData
+                                        , ObjectDate_EndDate.ValueData
+                                )
+                , tmpDayInfo AS (SELECT tmpDayInfo_all.*
+                                 FROM tmpDayInfo_all
+                                 WHERE CURRENT_DATE BETWEEN tmpDayInfo_all.StartDate AND tmpDayInfo_all.EndDate
                                 )
                 , tmpContainer AS (SELECT Container_Summ.Id          AS ContainerId
                                         , CLO_Partner.ObjectId       AS PartnerId

@@ -57,7 +57,10 @@ BEGIN
              FROM Object AS Object_Route
                   JOIN tmpFilter ON tmpFilter.RouteId = Object_Route.Id
                   LEFT JOIN tmpRoute ON tmpRoute.RouteId = Object_Route.Id
-             WHERE Object_Route.DescId = zc_Object_Route();
+             WHERE Object_Route.DescId = zc_Object_Route()
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
+
       END IF;
 
 END; 

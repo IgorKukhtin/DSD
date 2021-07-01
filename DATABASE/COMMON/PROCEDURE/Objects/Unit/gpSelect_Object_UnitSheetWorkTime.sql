@@ -28,8 +28,9 @@ BEGIN
                FROM ObjectLink_UserRole_View 
                WHERE UserId = vbUserId 
                  AND RoleId IN (zc_Enum_Role_Admin()
-                              , 14473  -- Персонал ввод справочников
-                              , 447972 -- Просмотр СБ
+                              , 14473   -- Персонал ввод справочников
+                              , 6879542 -- Персонал - табель учета р. времени (полный доступ)
+                              , 447972  -- Просмотр СБ
                                ))
     THEN
         vbMemberId:= 0;

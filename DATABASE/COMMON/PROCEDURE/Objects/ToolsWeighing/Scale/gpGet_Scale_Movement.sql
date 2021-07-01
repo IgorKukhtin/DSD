@@ -61,6 +61,11 @@ RETURNS TABLE (MovementId       Integer
              , SubjectDocCode Integer
              , SubjectDocName TVarChar
 
+             , ReasonId       Integer
+             , ReasonCode     Integer
+             , ReasonName     TVarChar
+             , ReturnKindName TVarChar
+
              , TotalSumm TFloat
 
              , Comment TVarChar
@@ -119,6 +124,34 @@ BEGIN
                                              AND Movement.DescId = zc_Movement_WeighingPartner()
                                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                 )
+              , tmpMI_Reason AS (SELECT MILinkObject_Reason.ObjectId AS ReasonId
+                                 FROM tmpMovement_find
+                                      LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement_find.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Reason
+                                                                       ON MILinkObject_Reason.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_Reason.DescId         = zc_MILinkObject_Reason()
+                                 WHERE MILinkObject_Reason.ObjectId > 0
+                                 ORDER BY MovementItem.Id DESC
+                                 LIMIT 1
+                                )
+         , tmpReason AS (SELECT MAX (CASE WHEN ObjectBoolean_ReturnIn.ValueData = TRUE THEN Object_Reason.Id ELSE 0 END) AS ReasonId_ReturnIn
+                              , MAX (CASE WHEN ObjectBoolean_SendOnPrice.ValueData = TRUE THEN Object_Reason.Id ELSE 0 END) AS ReasonId_SendOnPrice
+                         FROM Object AS Object_Reason
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_ReturnIn
+                                                      ON ObjectBoolean_ReturnIn.ObjectId = Object_Reason.Id
+                                                     AND ObjectBoolean_ReturnIn.DescId = zc_ObjectBoolean_Reason_ReturnIn()
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_SendOnPrice
+                                                      ON ObjectBoolean_SendOnPrice.ObjectId = Object_Reason.Id
+                                                     AND ObjectBoolean_SendOnPrice.DescId = zc_ObjectBoolean_Reason_SendOnPrice()
+                         WHERE Object_Reason.DescId   = zc_Object_Reason()
+                           AND Object_Reason.isErased = FALSE
+                           AND (ObjectBoolean_ReturnIn.ValueData = TRUE
+                             OR ObjectBoolean_SendOnPrice.ValueData = TRUE
+                               )
+                           AND NOT EXISTS (SELECT 1 FROM tmpMI_Reason)
+                        )
                , tmpMovement AS (SELECT tmpMovement_find.Id
                                       , Movement.InvNumber
                                       , Movement.OperDate
@@ -330,6 +363,11 @@ BEGIN
             , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
             , Object_SubjectDoc.ValueData     AS SubjectDocName
 
+            , Object_Reason.Id                AS ReasonId
+            , Object_Reason.ObjectCode        AS ReasonCode
+            , Object_Reason.ValueData         AS ReasonName
+            , Object_ReturnKind.ValueData     AS ReturnKindName
+
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
             , MovementString_Comment.ValueData AS Comment
@@ -396,6 +434,18 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  tmpMovement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN tmpMI_Reason ON tmpMovement.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
+            LEFT JOIN tmpReason ON tmpMovement.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
+            LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = CASE WHEN tmpMI_Reason.ReasonId > 0 THEN tmpMI_Reason.ReasonId
+                                                                         WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN tmpReason.ReasonId_ReturnIn
+                                                                         WHEN tmpMovement.MovementDescId = zc_Movement_SendOnPrice() THEN tmpReason.ReasonId_SendOnPrice
+                                                                         ELSE 0 
+                                                                    END
+            LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
+                                 ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id
+                                AND ObjectLink_ReturnKind.DescId   = zc_ObjectLink_Reason_ReturnKind()
+            LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
       ;
 
 END;
@@ -411,5 +461,5 @@ ALTER FUNCTION gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, TRUE,  1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (20258087, CURRENT_TIMESTAMP, TRUE,  1, zfCalc_UserAdmin())
 -- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, FALSE, 1, zfCalc_UserAdmin())

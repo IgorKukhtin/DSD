@@ -40,7 +40,9 @@ BEGIN
                   , (NOT Object_Measure.isErased) AS isSync
              FROM Object AS Object_Measure
                   JOIN tmpProtocol ON tmpProtocol.MeasureId = Object_Measure.Id
-             WHERE Object_Measure.DescId = zc_Object_Measure();
+             WHERE Object_Measure.DescId = zc_Object_Measure()
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+             ;
       ELSE
            -- Результат
            RETURN QUERY
@@ -53,6 +55,7 @@ BEGIN
              WHERE Object_Measure.DescId = zc_Object_Measure()
                -- Убрал - НАДО выгружать ВСЕ
                -- AND Object_Measure.isErased = FALSE
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;  
 
       END IF;

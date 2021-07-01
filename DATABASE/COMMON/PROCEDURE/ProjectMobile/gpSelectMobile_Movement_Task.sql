@@ -49,8 +49,12 @@ BEGIN
                                                AND MIBoolean_Close.DescId = zc_MIBoolean_Close() 
              WHERE Movement_Task.DescId = zc_Movement_Task()
                AND Movement_Task.StatusId = zc_Enum_Status_Complete()
-               AND COALESCE (MIBoolean_Close.ValueData, false) = false;
+               AND COALESCE (MIBoolean_Close.ValueData, false) = false
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
+
       END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

@@ -396,6 +396,7 @@ BEGIN
                                       ON Object_ContractCondition_View.ContractId = vbContractId
                                      AND Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
                                      AND Object_ContractCondition_View.Value <> 0
+                                     AND vbOperDatePartner BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                          );
          -- проверка
          IF vbPaymentDate IS NULL OR vbPaymentDate < vbOperDatePartner

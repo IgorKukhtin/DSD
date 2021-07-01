@@ -117,7 +117,10 @@ BEGIN
    
 
    -- Скидка в цене ГСМ +  % Наценки Павильоны (Приход покупателю) 
-   IF inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_ChangePrice(), zc_Enum_ContractConditionKind_ChangePercentPartner())
+   IF inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_ChangePrice(), zc_Enum_ContractConditionKind_ChangePercentPartner()
+                                      , zc_Enum_ContractConditionKind_ChangePercent()
+                                      , zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank()
+                                       )
    AND 1 < (SELECT COUNT(*)
             FROM ObjectLink AS ObjectLink_Contract
                  INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind

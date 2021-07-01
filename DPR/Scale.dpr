@@ -106,7 +106,8 @@ uses
   Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
-  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas';
+  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm};
 
 {$R *.res}
 
@@ -128,10 +129,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
-  Application.CreateForm(TGuideUnitForm, GuideUnitForm);
-  //
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -157,6 +156,7 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   end
   else
@@ -200,6 +200,7 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   end;
   //

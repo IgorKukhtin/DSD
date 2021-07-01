@@ -933,6 +933,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderGlyphAlignmentHorz = taCenter
           Width = 179
         end
+        object PartnerName_ch1: TcxGridDBColumn
+          Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'PartnerName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object UnitName_ch1: TcxGridDBColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataBinding.FieldName = 'UnitName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
         object isErased_ch1: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
@@ -1137,6 +1155,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
           Options.Editing = False
           Width = 70
+        end
+        object PartnerName_ch3: TcxGridDBColumn
+          Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'PartnerName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object UnitName_ch3: TcxGridDBColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataBinding.FieldName = 'UnitName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
         end
         object ReceiptProdModelChildId_ch3: TcxGridDBColumn
           DataBinding.FieldName = 'GoodsId_parent'

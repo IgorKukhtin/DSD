@@ -112,7 +112,7 @@ BEGIN
                                              ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                                             AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
                    WHERE Object_PLZ.DescId = zc_Object_PLZ() 
-                     AND TRIM (Object_PLZ.ValueData) Like TRIM (inPLZ)
+                     AND TRIM (Object_PLZ.ValueData) ILIKE TRIM (inPLZ)
                      AND COALESCE (ObjectLink_Country.ChildObjectId,0) = COALESCE (vbCountryId,0)
                    );
 
@@ -230,3 +230,15 @@ select * from gpInsertUpdate_Object_Partner_From_Excel(inCode := 38 , inName := 
 , inCodeDB := '' :: TVarChar, inPLZ := 'CM98RY':: TVarChar ,  inSession := '5':: TVarChar);
 
 */
+
+
+ВАЖНО:  закрытие подключения по команде администратора
+CONTEXT:  функция PL/pgSQL gpreport_goodstax(tdatetime,tdatetime,integer,tvarchar), строка 4, оператор RETURN QUERY
+ context: select * from gpReport_GoodsTax(inStartDate := ('01.05.2021')::TDateTime , inEndDate := ('31.05.2021')::TDateTime , inGoodsId := 2140 ,  inSession := '577627');
+ 
+ 
+ select * from gpSelect_Movement_TaxCorrective(instartdate := ('01.06.2021')::TDateTime , inenddate := ('15.06.2021')::TDateTime , inJuridicalBasisId := 9399 , inIsRegisterDate := 'False' , inIsErased := 'False' ,  inSession := '577627');
+ 
+ 
+ 6591649446
+ 100000

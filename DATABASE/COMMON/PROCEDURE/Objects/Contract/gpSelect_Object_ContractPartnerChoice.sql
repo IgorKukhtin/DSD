@@ -384,12 +384,7 @@ BEGIN
        , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
        , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
        , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
-       , tmpObject_ContractCondition_ValueView_all AS (SELECT Object_ContractCondition_ValueView.*
-                                                              -- ¹ ï/ï
-                                                            , ROW_NUMBER() OVER (PARTITION BY Object_ContractCondition_ValueView.ContractId ORDER BY Object_ContractCondition_ValueView.EndDate DESC) AS Ord
-                                                       FROM Object_ContractCondition_ValueView
-                                                      )
-       , tmpObject_ContractCondition_ValueView AS (SELECT * FROM tmpObject_ContractCondition_ValueView_all WHERE tmpObject_ContractCondition_ValueView_all.Ord = 1)
+       , tmpObject_ContractCondition_ValueView AS (SELECT * FROM Object_ContractCondition_ValueView WHERE CURRENT_DATE BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
 
    SELECT DISTINCT
          Object_Contract_View.ContractId      :: Integer   AS Id

@@ -17,6 +17,7 @@ RETURNS TABLE (Number              Integer
              , PriceListId         Integer, PriceListCode    Integer, PriceListName    TVarChar
              , GoodsId_ReWork      Integer, GoodsCode_ReWork Integer, GoodsName_ReWork TVarChar
              , DocumentKindId      Integer, DocumentKindName TVarChar
+             , ReasonId            Integer, ReasonCode       Integer, ReasonName       TVarChar, ReturnKindName TVarChar
              , GoodsKindWeighingGroupId Integer
              , ColorGridValue      Integer
              , MovementDescName        TVarChar
@@ -255,6 +256,22 @@ BEGIN
 
     -- Результат
     RETURN QUERY
+      WITH tmpReason AS (SELECT MAX (CASE WHEN ObjectBoolean_ReturnIn.ValueData = TRUE THEN Object_Reason.Id ELSE 0 END) AS ReasonId_ReturnIn
+                              , MAX (CASE WHEN ObjectBoolean_SendOnPrice.ValueData = TRUE THEN Object_Reason.Id ELSE 0 END) AS ReasonId_SendOnPrice
+                         FROM Object AS Object_Reason
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_ReturnIn
+                                                      ON ObjectBoolean_ReturnIn.ObjectId = Object_Reason.Id
+                                                     AND ObjectBoolean_ReturnIn.DescId = zc_ObjectBoolean_Reason_ReturnIn()
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_SendOnPrice
+                                                      ON ObjectBoolean_SendOnPrice.ObjectId = Object_Reason.Id
+                                                     AND ObjectBoolean_SendOnPrice.DescId = zc_ObjectBoolean_Reason_SendOnPrice()
+                         WHERE Object_Reason.DescId   = zc_Object_Reason()
+                           AND Object_Reason.isErased = FALSE
+                           AND (ObjectBoolean_ReturnIn.ValueData = TRUE
+                             OR ObjectBoolean_SendOnPrice.ValueData = TRUE
+                               )
+                        )
+      -- 
       SELECT _tmpToolsWeighing.Number                        AS Number
            , _tmpToolsWeighing.MovementDescId                AS MovementDescId
            , COALESCE (Object_From.Id, 0) :: Integer         AS FromId
@@ -278,6 +295,11 @@ BEGIN
 
             , _tmpToolsWeighing.DocumentKindId               AS DocumentKindId
             , Object_DocumentKind.ValueData                  AS DocumentKindName
+            
+            , Object_Reason.Id                               AS ReasonId
+            , Object_Reason.ObjectCode                       AS ReasonCode
+            , Object_Reason.ValueData                        AS ReasonName
+            , Object_ReturnKind.ValueData                    AS ReturnKindName
 
            , Object_GoodsKindWeighingGroup.Id                AS GoodsKindWeighingGroupId
            , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
@@ -378,6 +400,16 @@ BEGIN
             LEFT JOIN Object AS Object_DocumentKind           ON Object_DocumentKind.Id           = _tmpToolsWeighing.DocumentKindId
             LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = _tmpToolsWeighing.GoodsKindWeighingGroupId
             -- LEFT JOIN MovementDesc ON MovementDesc.Id = _tmpToolsWeighing.MovementDescId
+            LEFT JOIN tmpReason ON _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
+            LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_ReturnIn() THEN tmpReason.ReasonId_ReturnIn
+                                                                         WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice() THEN tmpReason.ReasonId_SendOnPrice
+                                                                         ELSE 0 
+                                                                    END
+            LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
+                                 ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id
+                                AND ObjectLink_ReturnKind.DescId   = zc_ObjectLink_Reason_ReturnKind()
+            LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
+
        WHERE _tmpToolsWeighing.MovementDescId > 0
       UNION
        -- это группы
@@ -402,6 +434,10 @@ BEGIN
             , '' :: TVarChar                      AS GoodsName_ReWork
             , 0                                   AS DocumentKindId
             , '' :: TVarChar                      AS DocumentKindName
+            , 0                                   AS ReasonId
+            , 0                                   AS ReasonCode
+            , '' :: TVarChar                      AS ReasonName
+            , '' :: TVarChar                      AS ReturnKindName
             , 0                                   AS GoodsKindWeighingGroupId
             , 0                                   AS ColorGridValue
             , CASE WHEN tmp.isReWork        = TRUE

@@ -169,6 +169,10 @@ type
     GuidesModel: TdsdGuides;
     bbcxLabel12: TdxBarControlContainerItem;
     bbbedModel: TdxBarControlContainerItem;
+    PartnerName_ch1: TcxGridDBColumn;
+    UnitName_ch1: TcxGridDBColumn;
+    PartnerName_ch3: TcxGridDBColumn;
+    UnitName_ch3: TcxGridDBColumn;
   private
     { Private declarations }
   public

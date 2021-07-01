@@ -153,6 +153,7 @@ object ProductEditForm: TProductEditForm
   object edEngineNum: TcxTextEdit
     Left = 10
     Top = 305
+    Properties.ReadOnly = True
     TabOrder = 19
     Width = 132
   end

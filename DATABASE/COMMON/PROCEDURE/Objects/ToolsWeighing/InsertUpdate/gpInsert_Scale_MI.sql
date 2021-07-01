@@ -1,7 +1,9 @@
 -- Function: gpInsert_Scale_MI()
 
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -37,6 +39,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inPriceListId           Integer   , --
     IN inBranchCode            Integer   , --
     IN inMovementId_Promo      Integer   , --
+    IN inReasonId              Integer   , --
+    IN inIsReason              Boolean   , --
     IN inIsBarCode             Boolean   , --
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -54,6 +58,7 @@ $BODY$
    DECLARE vbBoxId Integer;
    DECLARE vbTotalSumm TFloat;
    DECLARE vbRetailId Integer;
+   DECLARE vbToId Integer;
 
    DECLARE vbWeightTotal   TFloat;
    DECLARE vbWeightPack    TFloat;
@@ -65,7 +70,7 @@ $BODY$
    DECLARE vbPricePromo            TFloat;
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbChangePercent         TFloat;
-            
+
    DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
 
    DECLARE vbWeight_goods              TFloat;
@@ -107,7 +112,8 @@ BEGIN
      -- определили
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
-            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId
+          , MovementLinkObject_To.ObjectId            AS ToId
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbToId
      FROM Movement
           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
@@ -124,6 +130,17 @@ BEGIN
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
      WHERE Movement.Id = inMovementId;
+
+
+     -- проверка
+     IF inIsReason = TRUE AND (vbMovementDescId = zc_Movement_ReturnIn()
+                                -- Склады База + Реализации + Возвраты общие
+                             OR (vbMovementDescId = zc_Movement_SendOnPrice() AND inBranchCode = 1 AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbToId))
+                              )
+        AND COALESCE (inReasonId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определено значение <Причина возврат>.';
+     END IF;
 
 
      -- если склад Специй + Кол-во втулок - меняем Значение
@@ -147,7 +164,7 @@ BEGIN
              END IF;
              -- если все-таки втулки нет
              IF inCount < 0 THEN inCount:= 0; END IF;
-             
+
              IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
                 IN (zc_Measure_Sht() -- шт.
                    )
@@ -371,7 +388,7 @@ BEGIN
                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney());
      END IF;
 
-                                                                                            
+
      -- проверка кол-во
      IF (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                    THEN vbAmount_byWeightTare_goods
@@ -422,7 +439,7 @@ BEGIN
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                        , inMovementId          := inMovementId
-                                                       , inGoodsId             := inGoodsId 
+                                                       , inGoodsId             := inGoodsId
                                                        , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                             THEN vbAmount_byWeightTare_goods
                                                                                        WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
@@ -543,7 +560,7 @@ BEGIN
                                                                                             THEN vbPriceListId_Dnepr
                                                                                        ELSE inPriceListId
                                                                                   END
-                                                         
+
                                                        , inBoxId               := vbBoxId
                                                        , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
                                                        , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
@@ -553,6 +570,15 @@ BEGIN
      --
      vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
 
+
+     -- дописали св-во <Причина возврата >
+     IF inIsReason = TRUE AND (vbMovementDescId = zc_Movement_ReturnIn()
+                               -- Склады База + Реализации + Возвраты общие
+                            OR (vbMovementDescId = zc_Movement_SendOnPrice() AND inBranchCode = 1 AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbToId))
+                              )
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Reason(), vbId, inReasonId);
+     END IF;
 
      -- дописали св-во <Протокол Дата/время начало>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);

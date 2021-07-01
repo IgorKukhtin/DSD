@@ -29,7 +29,7 @@ BEGIN
                                                   , inOperDateMark        := inOperDate
                                                   , inPriceWithVAT        := tmp.PriceWithVAT
                                                   , inVATPercent          := tmp.VATPercent
-                                                  , inChangePercent       := tmp.ChangePercent
+                                                  , ioChangePercent       := tmp.ChangePercent
                                                   , inFromId              := tmp.FromId
                                                   , inToId                := tmp.ToId
                                                   , inPaidKindId          := tmp.PaidKindId
@@ -42,7 +42,7 @@ BEGIN
                                                   , inisPrintComment      := tmp.isPrintComment
                                                   , inUserId              := vbUserId
                                                    )
-     FROM gpGet_Movement_OrderExternal (ioId, inOperDate, 'False', inSession) AS tmp;
+     FROM gpGet_Movement_OrderExternal (ioId, inOperDate, FALSE, inSession) AS tmp;
 
      --
      SELECT tmp.PriceListId, tmp.OperDate

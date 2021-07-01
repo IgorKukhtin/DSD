@@ -1,4 +1,4 @@
--- Function: gpReport_ProfitLoss()
+ -- Function: gpReport_ProfitLoss()
 
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
 

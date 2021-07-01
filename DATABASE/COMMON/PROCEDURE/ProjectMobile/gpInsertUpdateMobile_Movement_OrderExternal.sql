@@ -118,7 +118,7 @@ BEGIN
       END IF;
       -- !!! ВРЕМЕННО - 04.07.17 !!!
 
-      SELECT CASE 
+    /*SELECT CASE 
                WHEN MIN (ObjectFloat_ContractCondition_Value.ValueData) < 0.0 THEN 
                  (MIN (ABS (ObjectFloat_ContractCondition_Value.ValueData)) * -1.0)::TFloat
                ELSE MIN (ObjectFloat_ContractCondition_Value.ValueData)::TFloat
@@ -142,7 +142,7 @@ BEGIN
       WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
         AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
       GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
-             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId;
+             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId;*/
 
       vbChangePercent:= COALESCE (vbChangePercent, 0)::TFloat;
 
@@ -151,27 +151,29 @@ BEGIN
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
-      vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
-                                                  , inInvNumber       := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
-                                                  , inInvNumberPartner:= COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbId AND MS.DescId = zc_MovementString_InvNumberPartner()), '')
-                                                  , inOperDate        := inOperDate
-                                                  , inOperDatePartner := vbOperDatePartner
-                                                  , inOperDateMark    := inOperDate
-                                                  , inPriceWithVAT    := inPriceWithVAT
-                                                  , inVATPercent      := inVATPercent
-                                                  , inChangePercent   := vbChangePercent    
-                                                  , inFromId          := inPartnerId
-                                                  , inToId            := inUnitId
-                                                  , inPaidKindId      := inPaidKindId
-                                                  , inContractId      := inContractId
-                                                  , inRouteId         := vbRouteId
-                                                  , inRouteSortingId  := NULL
-                                                  , inPersonalId      := vbPersonalId
-                                                  , inPriceListId     := inPriceListId
-                                                  , inPartnerId       := NULL
-                                                  , inisPrintComment  := FALSE ::Boolean
-                                                  , inUserId          := vbUserId
-                                                   );
+      -- создали Документ
+      vbId:= (SELECT tmp.ioId
+              FROM lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
+                                                        , inInvNumber       := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
+                                                        , inInvNumberPartner:= COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbId AND MS.DescId = zc_MovementString_InvNumberPartner()), '')
+                                                        , inOperDate        := inOperDate
+                                                        , inOperDatePartner := vbOperDatePartner
+                                                        , inOperDateMark    := inOperDate
+                                                        , inPriceWithVAT    := inPriceWithVAT
+                                                        , inVATPercent      := inVATPercent
+                                                        , ioChangePercent   := vbChangePercent    
+                                                        , inFromId          := inPartnerId
+                                                        , inToId            := inUnitId
+                                                        , inPaidKindId      := inPaidKindId
+                                                        , inContractId      := inContractId
+                                                        , inRouteId         := vbRouteId
+                                                        , inRouteSortingId  := NULL
+                                                        , inPersonalId      := vbPersonalId
+                                                        , inPriceListId     := inPriceListId
+                                                        , inPartnerId       := NULL
+                                                        , inisPrintComment  := FALSE ::Boolean
+                                                        , inUserId          := vbUserId
+                                                         ) AS tmp);
 
       -- сохранили свойство <Глобальный уникальный идентификатор>                       
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   

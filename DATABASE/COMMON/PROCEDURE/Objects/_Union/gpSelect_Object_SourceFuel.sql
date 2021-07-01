@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_SourceFuel (TDateTime, Integer, TVarChar
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_SourceFuel(
     IN inOperDate          TDateTime  , -- дата на которую показывается договор
-    IN inToId              Integer    , -- вх.кому
+--    IN inToId              Integer    , -- вх.кому
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -23,6 +23,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
+   DECLARE inToId Integer;
    DECLARE vbToName TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -49,22 +50,35 @@ BEGIN
    -- Результат
    RETURN QUERY
    WITH 
-     tmpContract AS (SELECT Object_Contract_View.ContractId
-                          , Object_Contract_View.InvNumber
-                          , Object_Contract_View.ChangePercent
-                          , Object_Contract_View.ChangePrice
-                          , Object_Contract_View.JuridicalId
-                          , Object_Contract_View.PaidKindId
+     tmpContract AS (SELECT Object_Contract_InvNumber_View.ContractId
+                          , Object_Contract_InvNumber_View.InvNumber
+                          , View_ContractCondition_Value.ChangePercent
+                          , View_ContractCondition_Value.ChangePrice
+                          , ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                          , ObjectLink_Contract_PaidKind.ChildObjectId  AS PaidKindId
                      FROM Object_InfoMoney_View
-                          JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
-                                                   -- AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
-                                                   AND inOperDate >= Object_Contract_View.StartDate
-                                                   AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                                   AND Object_Contract_View.isErased = FALSE
-                                                   AND inOperDate BETWEEN Object_Contract_View.StartDate_condition AND Object_Contract_View.EndDate_condition
+                          JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
+                                                             AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                             AND Object_Contract_InvNumber_View.isErased = FALSE
+                          JOIN ObjectDate AS ObjectDate_Start
+                                          ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId
+                                         AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                         AND Object_Contract_InvNumber_View.InvNumber <> '-'
+                                         AND inOperDate >= ObjectDate_Start.ValueData
+                                      -- AND inOperDate BETWEEN Object_Contract_InvNumber_View.StartDate AND Object_Contract_InvNumber_View.EndDate
+                          LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
+                                                                                                      AND inOperDate BETWEEN COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())
+
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                               ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
+                                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                               ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId
+                                              AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ГСМ
                     ) 
-
+     -- 
      SELECT Object_Partner.Id             AS Id
           , Object_Partner.ObjectCode     AS Code
           , Object_Partner.ValueData      AS Name
@@ -232,3 +246,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_SourceFuel (inOperDate := CURRENT_DATE, inToId := 149887, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_SourceFuel (inOperDate := CURRENT_DATE, inSession := zfCalc_UserAdmin())

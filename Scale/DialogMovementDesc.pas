@@ -546,6 +546,11 @@ begin
 
     end;
 
+    ParamsReason.ParamByName('ReasonId').AsInteger:= CDS.FieldByName('ReasonId').AsInteger;
+    ParamsReason.ParamByName('ReasonCode').AsInteger:= CDS.FieldByName('ReasonCode').AsInteger;
+    ParamsReason.ParamByName('ReasonName').AsString:= CDS.FieldByName('ReasonName').AsString;
+    ParamsReason.ParamByName('ReturnKindName').AsString:= CDS.FieldByName('ReturnKindName').AsString;
+
     if(Length(trim(EditBarCode.Text))<=2)
     then EditBarCode.Text:=CDS.FieldByName('Number').asString;
 

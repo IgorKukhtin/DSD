@@ -52,7 +52,9 @@ BEGIN
                                          ON MIFloat_ChangePercent.MovementItemId = MI_ReturnIn.Id
                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent() 
         WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
-          AND MovementString_GUID.ValueData = inMovementGUID;
+          AND MovementString_GUID.ValueData = inMovementGUID
+        LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+       ;
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;

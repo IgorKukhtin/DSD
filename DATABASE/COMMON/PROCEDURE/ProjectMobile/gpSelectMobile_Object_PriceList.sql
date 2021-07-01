@@ -91,7 +91,9 @@ BEGIN
                   LEFT JOIN ObjectFloat AS ObjectFloat_PriceList_VATPercent                                                         
                                         ON ObjectFloat_PriceList_VATPercent.ObjectId = Object_PriceList.Id                          
                                        AND ObjectFloat_PriceList_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()          
-             WHERE Object_PriceList.DescId = zc_Object_PriceList();
+             WHERE Object_PriceList.DescId = zc_Object_PriceList()
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+             ;
 
       END IF; 
 

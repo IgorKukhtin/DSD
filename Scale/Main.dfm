@@ -1149,6 +1149,15 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 70
         end
+        object ReasonName: TcxGridDBColumn
+          Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090
+          DataBinding.FieldName = 'ReasonName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object MeasureName: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
@@ -1296,6 +1305,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1048#1090#1086#1075#1086
+          Options.Editing = False
           Width = 50
         end
         object WeightTareTotal: TcxGridDBColumn
@@ -1341,6 +1351,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Options.Editing = False
           Width = 50
         end
         object CountTare2: TcxGridDBColumn
@@ -1352,6 +1363,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 2'
+          Options.Editing = False
           Width = 50
         end
         object CountTare3: TcxGridDBColumn
@@ -1363,6 +1375,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 3'
+          Options.Editing = False
           Width = 50
         end
         object CountTare4: TcxGridDBColumn
@@ -1374,6 +1387,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Options.Editing = False
           Width = 50
         end
         object CountTare5: TcxGridDBColumn
@@ -1386,6 +1400,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Options.Editing = False
           Width = 50
         end
         object CountTare6: TcxGridDBColumn
@@ -1398,6 +1413,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare1: TcxGridDBColumn
@@ -1409,6 +1425,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare2: TcxGridDBColumn
@@ -1420,6 +1437,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 2'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare3: TcxGridDBColumn
@@ -1431,6 +1449,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 3'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare4: TcxGridDBColumn
@@ -1442,6 +1461,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 41'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare5: TcxGridDBColumn
@@ -1454,6 +1474,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 5'
+          Options.Editing = False
           Width = 50
         end
         object WeightTare6: TcxGridDBColumn
@@ -1466,6 +1487,7 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 6'
+          Options.Editing = False
           Width = 50
         end
         object LevelNumber: TcxGridDBColumn
@@ -1503,6 +1525,7 @@ object MainForm: TMainForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 80
         end
         object BoxCount: TcxGridDBColumn
@@ -1579,11 +1602,12 @@ object MainForm: TMainForm
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
-        Width = 59
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+        ExplicitWidth = 59
       end
       object EditBarCode: TcxCurrencyEdit
         Left = 5
@@ -1620,11 +1644,12 @@ object MainForm: TMainForm
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
-        Width = 91
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = 'Scale.Active = ???'
+        ExplicitWidth = 91
       end
       object PanelWeight_Scale: TPanel
         Left = 1
@@ -1665,11 +1690,12 @@ object MainForm: TMainForm
       object LabelCountPack: TLabel
         Left = 1
         Top = 1
-        Width = 87
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074
+        ExplicitWidth = 87
       end
       object EditCountPack: TcxCurrencyEdit
         Left = 5
@@ -1693,11 +1719,12 @@ object MainForm: TMainForm
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
-        Width = 75
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
+        ExplicitWidth = 75
       end
       object EditHeadCount: TcxCurrencyEdit
         Left = 5
@@ -1721,7 +1748,7 @@ object MainForm: TMainForm
       object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
-        Width = 119
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1732,6 +1759,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 119
       end
       object EditPartionGoods: TEdit
         Left = 6
@@ -1760,11 +1788,12 @@ object MainForm: TMainForm
       object Label1: TLabel
         Left = 1
         Top = 1
-        Width = 99
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1072#1103' '#1090#1072#1088#1072
+        ExplicitWidth = 99
       end
       object Panel2: TPanel
         Left = 65
@@ -1777,7 +1806,7 @@ object MainForm: TMainForm
         object Label2: TLabel
           Left = 0
           Top = 0
-          Width = 36
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1788,6 +1817,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 36
         end
         object EditBoxCount: TcxCurrencyEdit
           Left = 5
@@ -1812,7 +1842,7 @@ object MainForm: TMainForm
         object Label3: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1823,6 +1853,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object EditBoxCode: TcxCurrencyEdit
           Left = 2
@@ -1849,7 +1880,7 @@ object MainForm: TMainForm
       object Label17: TLabel
         Left = 1
         Top = 1
-        Width = 59
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1057#1084#1077#1085#1072' '#1079#1072
@@ -1859,6 +1890,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 59
       end
       object OperDateEdit: TcxDateEdit
         Left = 5
@@ -1880,13 +1912,14 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 481
+      Top = 524
       Width = 130
       Height = 177
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
+      ExplicitTop = 481
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -1899,7 +1932,7 @@ object MainForm: TMainForm
         object BarCodeTransportLabel: TLabel
           Left = 0
           Top = 0
-          Width = 113
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1910,6 +1943,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 113
         end
         object EditBarCodeTransport: TcxButtonEdit
           Left = 4
@@ -1946,7 +1980,7 @@ object MainForm: TMainForm
         object CarLabel: TLabel
           Left = 0
           Top = 0
-          Width = 65
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1957,6 +1991,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 65
         end
         object PanelCar: TPanel
           Left = 0
@@ -1987,7 +2022,7 @@ object MainForm: TMainForm
         object PersonalDriverLabel: TLabel
           Left = 0
           Top = 0
-          Width = 85
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1998,6 +2033,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 85
         end
         object PanelPersonalDriver: TPanel
           Left = 0
@@ -2028,7 +2064,7 @@ object MainForm: TMainForm
         object RouteLabel: TLabel
           Left = 0
           Top = 0
-          Width = 46
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2039,6 +2075,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 46
         end
         object PanelRoute: TPanel
           Left = 0
@@ -2069,7 +2106,7 @@ object MainForm: TMainForm
         object InvNumberTransportLabel: TLabel
           Left = 0
           Top = 0
-          Width = 71
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2080,6 +2117,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelInvNumberTransport: TPanel
           Left = 0
@@ -2111,13 +2149,14 @@ object MainForm: TMainForm
     end
     object infoSubjectDocPanel: TPanel
       Left = 0
-      Top = 438
+      Top = 481
       Width = 130
       Height = 43
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 10
+      ExplicitTop = 438
       object SubjectDocPanel: TPanel
         Left = 1
         Top = 1
@@ -2130,7 +2169,7 @@ object MainForm: TMainForm
         object SubjectDocLabel: TLabel
           Left = 0
           Top = 0
-          Width = 103
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2141,6 +2180,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 103
         end
         object EditSubjectDoc: TcxButtonEdit
           Left = 4
@@ -2161,6 +2201,63 @@ object MainForm: TMainForm
           Style.IsFontAssigned = True
           TabOrder = 0
           Text = 'EditSubjectDoc'
+          Width = 120
+        end
+      end
+    end
+    object infoReasonPanel: TPanel
+      Left = 0
+      Top = 438
+      Width = 130
+      Height = 43
+      Align = alTop
+      Alignment = taLeftJustify
+      BevelOuter = bvSpace
+      TabOrder = 11
+      object ReasonPanel: TPanel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 39
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 0
+        object ReasonLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1055#1088#1080#1095#1080#1085#1072' '#1042#1086#1079#1074#1088#1072#1090
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clMaroon
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 89
+        end
+        object EditReason: TcxButtonEdit
+          Left = 4
+          Top = 15
+          ParentFont = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditReasonPropertiesButtonClick
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditReason'
           Width = 120
         end
       end
@@ -2187,7 +2284,7 @@ object MainForm: TMainForm
       object LabelProduction_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 115
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -2198,6 +2295,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 115
       end
       object GBProduction_GoodsCode: TGroupBox
         Left = 0
@@ -2294,7 +2392,7 @@ object MainForm: TMainForm
       object LabelTare_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 30
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -2305,6 +2403,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 30
       end
       object GBTare_GoodsCode: TGroupBox
         Left = 0
@@ -2563,7 +2662,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 69
+          Width = 360
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2574,6 +2673,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 69
         end
         object PanelPartner: TPanel
           Left = 1
@@ -2605,7 +2705,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 128
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2616,6 +2716,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelPriceList: TPanel
           Left = 1
@@ -2647,7 +2748,7 @@ object MainForm: TMainForm
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
-          Width = 66
+          Width = 318
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2658,6 +2759,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 66
         end
         object PanelOrderExternal: TPanel
           Left = 1
@@ -2689,7 +2791,7 @@ object MainForm: TMainForm
         object LabelContract: TLabel
           Left = 1
           Top = 1
-          Width = 52
+          Width = 170
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2700,6 +2802,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 52
         end
         object PanelContract: TPanel
           Left = 1

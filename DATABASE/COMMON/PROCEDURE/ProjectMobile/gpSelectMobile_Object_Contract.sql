@@ -72,13 +72,15 @@ BEGIN
                                 UNION
                                 SELECT tmpContract.ContractId FROM tmpContract WHERE inSyncDateIn <= zc_DateStart()
                                )
-                , tmpContractCondition AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
+            , tmpContractCondition_all AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
                                                 , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
                                                 , CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                                                         AND MIN (ObjectFloat_ContractCondition_Value.ValueData) < 0.0
                                                             THEN (MIN (ABS (ObjectFloat_ContractCondition_Value.ValueData)) * -1.0)::TFloat
                                                             ELSE MIN (ObjectFloat_ContractCondition_Value.ValueData)::TFloat
                                                   END AS ContractConditionKindValue
+                                                , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+                                                , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
                                            FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                                                 JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                                 ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -98,10 +100,22 @@ BEGIN
                                                             ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
                                                            AND Object_Contract.isErased = FALSE
                                                 JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                                     ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                                                                    AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractCondition_StartDate()
+                                                LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                                     ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                                                                    AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractCondition_EndDate()
                                            WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                            GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                                                   , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+                                                  , ObjectDate_StartDate.ValueData
+                                                  , ObjectDate_EndDate.ValueData
                                           )
+            , tmpContractCondition AS (SELECT tmpContractCondition_all.*
+                                       FROM tmpContractCondition_all
+                                       WHERE CURRENT_DATE BETWEEN tmpContractCondition_all.StartDate AND tmpContractCondition_all.EndDate
+                                      )
              SELECT Object_Contract.Id
                   , Object_Contract.ObjectCode
                   , Object_Contract.ValueData

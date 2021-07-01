@@ -23,6 +23,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , CountForPrice TFloat
              , Price_Return TFloat
              , CountForPrice_Return TFloat
+             , MovementId_Promo Integer
               )
 AS
 $BODY$
@@ -209,9 +210,10 @@ BEGIN
                                                    AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                          )
 
-          , tmpMI_Order AS (SELECT MovementItem.ObjectId                 AS GoodsId
-                                 , COALESCE (MIFloat_Price.ValueData, 0) AS Price
+          , tmpMI_Order AS (SELECT MovementItem.ObjectId                                                                         AS GoodsId
+                                 , COALESCE (MIFloat_Price.ValueData, 0)                                                         AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                                 , COALESCE (MIFloat_PromoMovement.ValueData, 0)                                                 AS MovementId_Promo
                             FROM MovementItem
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -224,6 +226,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                             ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                             WHERE MovementItem.MovementId = inOrderExternalId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
@@ -256,6 +261,7 @@ BEGIN
             , COALESCE (tmpMI_Order.CountForPrice, COALESCE (tmpPrice_Kind.CountForPrice, tmpPrice.CountForPrice)) :: TFloat AS CountForPrice
             , 0 :: TFloat                       AS Price_Return
             , 0 :: TFloat                       AS CountForPrice_Return
+            , tmpMI_Order.MovementId_Promo :: Integer AS MovementId_Promo
        FROM tmpGoods
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId

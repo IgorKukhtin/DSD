@@ -122,6 +122,7 @@ BEGIN
            UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
            UNION SELECT 'isPartionDate'          AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isReason'               AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
 
            -- Режим ScaleCeh - маркировка/сортировка
            UNION SELECT 'isModeSorting'          AS Name WHERE inIsCeh = TRUE

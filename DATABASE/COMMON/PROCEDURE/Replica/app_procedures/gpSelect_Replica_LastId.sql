@@ -15,6 +15,30 @@ $BODY$
     DECLARE vbId_End    BigInt;
     DECLARE vbLast_modified TDateTime;
 BEGIN
+
+    IF inRec_count >= 200000
+    THEN
+        vbId_End:= (SELECT MAX (Id)
+                    FROM _replica.table_update_data
+                    WHERE Id BETWEEN inId_start AND inId_start + inRec_count/4
+                   );
+        IF 8000 > (SELECT COUNT(*)
+                   FROM _replica.table_update_data
+                   WHERE Id BETWEEN inId_start AND vbId_End
+                  )
+        THEN
+            vbId_End:= (SELECT MAX (Id)
+                        FROM _replica.table_update_data
+                        WHERE Id BETWEEN inId_start AND inId_start + inRec_count/2
+                       );
+        END IF;
+
+        --
+        RETURN QUERY
+          SELECT vbId_End AS NextId, (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End) :: TDateTime AS NextDT;
+
+    ELSE
+
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
     -- Для этого нужно определить правую границу, которая будет удовлетворять такому условию.
@@ -197,6 +221,8 @@ BEGIN
     RETURN QUERY
       SELECT vbId_End AS NextId, (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End) :: TDateTime AS NextDT;
 
+    END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -226,3 +252,12 @@ $BODY$
          , (SELECT Rec_count      FROM tmpParams) AS Rec_count
 */
 -- SELECT NextId - 5940705656, * FROM _replica.gpSelect_Replica_LastId (5940705656, 100000) 
+
+-- 1. alter table movementitem DROP CONSTRAINT  fk_movementitem_movementid;
+-- 2. alter table movementlinkobject DROP CONSTRAINT  fk_movementlinkobject_object;
+-- 3. alter table movementlinkmovement DROP CONSTRAINT  fk_movementlinkmovement_movementchild;
+-- 4. alter table objectlink DROP CONSTRAINT  fk_objectlink_childobjectid;
+
+-- Err1 = 6868762052
+-- Err1 = 6869046441
+-- Err2 = 6969343465

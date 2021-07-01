@@ -79,6 +79,8 @@ begin
     //
     Create_ParamsMovement(ParamsMovement);
     //
+    Create_ParamsReason_global(ParamsReason);
+    //
     gpGet_Scale_OperDate(ParamsMovement);
     //
     DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
@@ -200,6 +202,12 @@ begin
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
 
          ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
+
+         ParamsReason.ParamByName('ReasonId').AsInteger:= DataSet.FieldByName('ReasonId').AsInteger;
+         ParamsReason.ParamByName('ReasonCode').AsInteger:= DataSet.FieldByName('ReasonCode').AsInteger;
+         ParamsReason.ParamByName('ReasonName').AsString:= DataSet.FieldByName('ReasonName').AsString;
+         ParamsReason.ParamByName('ReturnKindName').AsString:= DataSet.FieldByName('ReturnKindName').AsString;
+
        end;
 
        {except
@@ -568,6 +576,8 @@ begin
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
+       Params.AddParam('inReasonId', ftInteger, ptInput, ParamsReason.ParamByName('ReasonId').AsInteger);
+       Params.AddParam('inIsReason', ftBoolean, ptInput, SettingMain.isReason);
        Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
        //try
          Execute;
@@ -916,6 +926,7 @@ begin
          ParamByName('CountForPrice_Return').AsFloat:= DataSet.FieldByName('CountForPrice_Return').AsFloat;
          ParamByName('isBarCode').AsBoolean         := TRUE;
 
+         ParamByName('MovementId_Promo').AsInteger  := DataSet.FieldByName('MovementId_Promo').AsInteger;
          //Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
          //Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
 
@@ -1525,7 +1536,9 @@ begin
        SettingMain.WeightTare5:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare5'));
        SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
        //
-       SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE')
+       SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE');
+       //
+       SettingMain.isReason:=GetArrayList_Value_byName(Default_Array,'isReason') = AnsiUpperCase('TRUE');
   end;
   //
   Result:=true;

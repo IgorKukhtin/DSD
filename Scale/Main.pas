@@ -247,6 +247,11 @@ type
     bbSetPartionGoods: TSpeedButton;
     bbReestrKind_Income: TSpeedButton;
     actReestrIncomeStart: TdsdOpenForm;
+    infoReasonPanel: TPanel;
+    ReasonPanel: TPanel;
+    ReasonLabel: TLabel;
+    EditReason: TcxButtonEdit;
+    ReasonName: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -285,6 +290,8 @@ type
       AButtonIndex: Integer);
     procedure bbSetPartionGoodsClick(Sender: TObject);
     procedure EditPartionGoodsEnter(Sender: TObject);
+    procedure EditReasonPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -306,6 +313,7 @@ type
     procedure myActiveControl;
     procedure pSetDriverReturn;
     procedure pSetSubjectDoc;
+    procedure pSetReason;
 
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
@@ -325,7 +333,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, DialogDateValue
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, DialogDateValue
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -492,6 +500,8 @@ begin
           //
           Initialize_afterSave_all;
           Initialize_afterSave_MI;
+          //
+          EmptyValuesParams(ParamsReason);
           //
           RefreshDataSet;
           WriteParamsMovement;
@@ -1363,6 +1373,33 @@ begin
      execParams.Free;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetReason;
+var execParams:TParams;
+begin
+     if SettingMain.isReason = FALSE then exit;
+     //
+     Create_ParamsReason(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('Id').AsInteger:=ParamsReason.ParamByName('ReasonId').AsInteger;
+          ParamByName('Code').AsInteger:=ParamsReason.ParamByName('ReasonCode').AsInteger;
+          ParamByName('Name').asString:=ParamsReason.ParamByName('ReasonName').asString;
+          ParamByName('ReturnKindName').AsString:=ParamsReason.ParamByName('ReturnKindName').AsString;
+     end;
+     if GuideReasonForm.Execute(execParams)
+     then begin
+               ParamsReason.ParamByName('ReasonId').AsInteger:=execParams.ParamByName('Id').AsInteger;
+               ParamsReason.ParamByName('ReasonCode').AsInteger:=execParams.ParamByName('Code').AsInteger;
+               ParamsReason.ParamByName('ReasonName').AsString:=execParams.ParamByName('Name').AsString;
+               ParamsReason.ParamByName('ReturnKindName').AsString:=execParams.ParamByName('ReturnKindName').AsString;
+               //
+               EditReason.Text:=ParamsReason.ParamByName('ReasonName').AsString +  ' (' +  ParamsReason.ParamByName('ReturnKindName').AsString + ')';
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetDriverReturn;
 var execParams:TParams;
 begin
@@ -1392,6 +1429,12 @@ begin
      {if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
       or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
      then} pSetSubjectDoc;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditReasonPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+     pSetReason;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodeTransportPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -1576,6 +1619,11 @@ begin
   PanelPartionGoods.Visible:=((SettingMain.isGoodsComplete = FALSE) or (SettingMain.isPartionDate = TRUE))
                          and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
   bbSetPartionGoods.Visible:= SettingMain.isPartionDate = TRUE;
+  //
+  infoReasonPanel.Visible:= SettingMain.isReason = TRUE;
+  //bbSetReason.Visible:= SettingMain.isReason = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ReasonName').Index].Visible:= SettingMain.isReason = TRUE;
+  //
   if SettingMain.isPartionDate = TRUE then
   begin
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Caption:= 'œ¿–“»ﬂ ƒ‡Ú‡';
@@ -1680,8 +1728,12 @@ begin
      if ParamByName('DocumentComment').asString <> ''
      then EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString + ' / ' + ParamByName('DocumentComment').asString
      else EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
-
+     //
   end;
+  //
+  if ParamsReason.ParamByName('ReasonId').AsInteger > 0
+  then EditReason.Text:=ParamsReason.ParamByName('ReasonName').AsString +  ' (' +  ParamsReason.ParamByName('ReturnKindName').AsString + ')'
+  else EditReason.Text:='';
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.RefreshDataSet;

@@ -75,27 +75,28 @@ BEGIN
 
 
      -- Сохранение
-     ioId:= lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId
-                                                 , inInvNumber           := inInvNumber
-                                                 , inInvNumberPartner    := inInvNumberPartner
-                                                 , inOperDate            := inOperDate
-                                                 , inOperDatePartner     := inOperDatePartner
-                                                 , inOperDateMark        := inOperDateMark
-                                                 , inPriceWithVAT        := outPriceWithVAT
-                                                 , inVATPercent          := outVATPercent
-                                                 , inChangePercent       := inChangePercent
-                                                 , inFromId              := inFromId
-                                                 , inToId                := inToId
-                                                 , inPaidKindId          := inPaidKindId
-                                                 , inContractId          := inContractId
-                                                 , inRouteId             := inRouteId
-                                                 , inRouteSortingId      := inRouteSortingId
-                                                 , inPersonalId          := inPersonalId
-                                                 , inPriceListId         := ioPriceListId
-                                                 , inPartnerId           := inPartnerId
-                                                 , inisPrintComment      := FALSE ::Boolean
-                                                 , inUserId              := vbUserId
-                                                  );
+     ioId:= (SELECT tmp.ioId
+             FROM lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId
+                                                       , inInvNumber           := inInvNumber
+                                                       , inInvNumberPartner    := inInvNumberPartner
+                                                       , inOperDate            := inOperDate
+                                                       , inOperDatePartner     := inOperDatePartner
+                                                       , inOperDateMark        := inOperDateMark
+                                                       , inPriceWithVAT        := outPriceWithVAT
+                                                       , inVATPercent          := outVATPercent
+                                                       , ioChangePercent       := inChangePercent
+                                                       , inFromId              := inFromId
+                                                       , inToId                := inToId
+                                                       , inPaidKindId          := inPaidKindId
+                                                       , inContractId          := inContractId
+                                                       , inRouteId             := inRouteId
+                                                       , inRouteSortingId      := inRouteSortingId
+                                                       , inPersonalId          := inPersonalId
+                                                       , inPriceListId         := ioPriceListId
+                                                       , inPartnerId           := inPartnerId
+                                                       , inisPrintComment      := FALSE ::Boolean
+                                                       , inUserId              := vbUserId
+                                                        ) AS tmp);
 
      -- сохранили свойство <Дата проноз с>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);

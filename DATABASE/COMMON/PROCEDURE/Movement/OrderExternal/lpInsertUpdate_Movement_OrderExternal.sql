@@ -1,30 +1,8 @@
 -- Function: lpInsertUpdate_Movement_OrderExternal()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
- lpinsertupdate_movement_orderexternal(
- ioid := integer, 
- ininvnumber := tvarchar, 
- ininvnumberpartner := tdatetime, 
- inoperdate := tdatetime, 
- inoperdatepartner := tdatetime, 
- inoperdatemark := tdatetime, 
- inpricewithvat := boolean, 
- invatpercent := tfloat, 
- inchangepercent := tfloat, 
- infromid := integer, 
- intoid := integer, 
- inpaidkindid := integer, 
- incontractid := integer, 
- inrouteid := integer, 
- inroutesortingid := integer, 
- inpersonalid := integer, 
- inpricelistid := integer, 
- inpartnerid := integer, 
- inisprintcomment := boolean, 
- inuserid := integer
- ) не существует
- 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -34,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inOperDateMark        TDateTime , -- Дата маркировки
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
+ INOUT ioChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
@@ -44,10 +22,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inPriceListId         Integer   , -- Прайс лист
     IN inPartnerId           Integer   , -- Контрагент
-    IN inisPrintComment      Boolean   , -- печатать Примечание в Расходной накладной (да/нет)
+    IN inIsPrintComment      Boolean   , -- печатать Примечание в Расходной накладной (да/нет)
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
@@ -57,6 +36,11 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+
+     -- замена, т.к. теперь история
+     ioChangePercent:= COALESCE ((SELECT Object_PercentView.ChangePercent FROM Object_ContractCondition_PercentView AS Object_PercentView WHERE Object_PercentView.ContractId = inContractId AND inOperDate BETWEEN Object_PercentView.StartDate AND Object_PercentView.EndDate), 0);
+
 
      -- определяем ключ доступа
    --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -99,12 +83,12 @@ BEGIN
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <печатать Примечание в Расходной накладной(да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PrintComment(), ioId, inisPrintComment);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PrintComment(), ioId, inIsPrintComment);
 
      -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, ioChangePercent);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -151,7 +135,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 25.05.21         * add inisPrintComment
+ 25.05.21         * add inIsPrintComment
  26.05.15         * add inPartnerId
  19.02.15         * add OperDateStart, OperDateEnd
  25.08.14                                        *

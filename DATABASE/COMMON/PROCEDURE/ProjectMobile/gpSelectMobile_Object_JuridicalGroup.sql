@@ -39,7 +39,9 @@ BEGIN
                   , (NOT Object_JuridicalGroup.isErased) AS isSync
              FROM Object AS Object_JuridicalGroup
                   JOIN tmpProtocol ON tmpProtocol.JuridicalGroupId = Object_JuridicalGroup.Id
-             WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup();
+             WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+            ;
       ELSE
            RETURN QUERY
              SELECT Object_JuridicalGroup.Id
@@ -49,7 +51,9 @@ BEGIN
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_JuridicalGroup
              WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
-               AND (NOT Object_JuridicalGroup.isErased);
+               AND (NOT Object_JuridicalGroup.isErased)
+             LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
+               ;
       END IF;
 
 END; 

@@ -31,6 +31,12 @@ BEGIN
       -- определяем признак Создание/Корректировка
       vbIsInsert := COALESCE(ioId, 0) = 0;
 
+-- Каленік Л.Ю.
+IF inPartnerId = 1 OR COALESCE (inPartnerId, 0) = 0 -- OR inUserId = 6120598
+THEN
+    RAISE EXCEPTION 'Ошибка.inPartnerId = <%>', inPartnerId;
+END IF;
+
       -- сохранили <Документ>
       ioId := lpInsertUpdate_Movement(ioId, zc_Movement_StoreReal(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
@@ -41,6 +47,7 @@ BEGIN
            -- сохранили свойство <Дата создания>
            PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
       END IF;
+
 
       -- сохранили связь с <Контрагент>
       PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Partner(), ioId, inPartnerId);    

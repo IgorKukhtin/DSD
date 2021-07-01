@@ -111,7 +111,7 @@ BEGIN
                       AND MI.ObjectId = inPersonalId)
      THEN
          --
-         RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.';
+         RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.Дублирование запрещено.';
      END IF;
      
      

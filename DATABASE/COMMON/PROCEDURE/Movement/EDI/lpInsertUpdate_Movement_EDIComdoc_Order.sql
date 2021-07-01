@@ -43,6 +43,8 @@ $BODY$
 BEGIN
 
      -- ќпредел€ютс€ параметры (отдельно)
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- ќпредел€ютс€ параметры (отдельно)
      vbContractId:= (SELECT MovementLinkObject_Contract.ObjectId
                      FROM MovementLinkObject AS MovementLinkObject_Contract
                      WHERE MovementLinkObject_Contract.MovementId = inMovementId
@@ -62,6 +64,8 @@ BEGIN
                                       );
 
      -- ќпредел€ютс€ параметры
+     WITH tmpObject_ContractCondition_PercentView AS (SELECT * FROM Object_ContractCondition_PercentView WHERE Object_ContractCondition_PercentView.ContractId = vbContractId AND vbOperDate BETWEEN Object_ContractCondition_PercentView.StartDate AND Object_ContractCondition_PercentView.EndDate)
+     -- 
      SELECT TRIM (Movement.InvNumber)             AS InvNumber
           , Movement.OperDate                     AS OperDate
           , COALESCE (MD_OperDatePartner.ValueData
@@ -112,8 +116,8 @@ BEGIN
           LEFT JOIN MovementString AS MovementString_GLNPlaceCode
                                    ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                   AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
-
-          LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+          -- (-)% —кидки (+)% Ќаценки                                  
+          LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                           , ObjectFloat_Value.ValueData AS ChangePercent
                      FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                           INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -125,9 +129,16 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                               AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                          LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                               ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+                          LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                               ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
                      WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                        AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                    ) AS tmpChangePercent ON tmpChangePercent.ContractId = vbContractId
+                       AND vbOperDate BETWEEN COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) AND COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())
+                    )*/ tmpObject_ContractCondition_PercentView AS tmpChangePercent ON tmpChangePercent.ContractId = vbContractId
           LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                ON ObjectLink_Contract_PaidKind.ObjectId = vbContractId
                               AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
@@ -322,43 +333,44 @@ BEGIN
      IF vbIsFind_InvNumberPartner = FALSE
      THEN
          -- сохранили <«а€вки сторонние>
-         vbMovementId_Order:= lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId_Order
-                                                                   , inInvNumber           := CASE WHEN vbMovementId_Order <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Order) ELSE CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) END :: TVarChar
-                                                                   , inInvNumberPartner    := vbInvNumber
-                                                                   , inOperDate            := vbOperDate
-                                                                   , inOperDatePartner     := vbOperDatePartner
-                                                                   , inOperDateMark        := vbOperDatePartner
-                                                                   , inPriceWithVAT        := vbPriceWithVAT
-                                                                   , inVATPercent          := vbVATPercent
-                                                                   , inChangePercent       := vbChangePercent
-                                                                   , inFromId              := vbPartnerId
-                                                                   , inToId                := vbUnitId
-                                                                   , inPaidKindId          := vbPaidKindId
-                                                                   , inContractId          := vbContractId
-                                                                   , inRouteId             := vbRouteId
-                                                                   , inRouteSortingId      := vbRouteSortingId
-                                                                   , inPersonalId          := COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
-                                                                                                         FROM ObjectLink AS ObjectLink_Partner_MemberTake
-                                                                                                         WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
-                                                                                                           AND ObjectLink_Partner_MemberTake.DescId
-                                                      = CASE EXTRACT (DOW FROM vbOperDatePartner + (((--COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
-                                                                                                      COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
-                                                                                              ) :: TVarChar || ' DAY') :: INTERVAL)
-                                                                     )
-                                                           WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
-                                                           WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
-                                                           WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
-                                                           WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
-                                                           WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
-                                                           WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
-                                                           WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
-                                                        END
-                                                                                                        ), vbMemberTakeId)
-                                                                   , inPriceListId         := vbPriceListId
-                                                                   , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
-                                                                   , inisPrintComment      := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementBoolean_PrintComment()), FALSE) ::Boolean
-                                                                   , inUserId              := inUserId
-                                                                    );
+         vbMovementId_Order:= (SELECT tmp.ioId
+                               FROM lpInsertUpdate_Movement_OrderExternal (ioId              := vbMovementId_Order
+                                                                         , inInvNumber       := CASE WHEN vbMovementId_Order <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Order) ELSE CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) END :: TVarChar
+                                                                         , inInvNumberPartner:= vbInvNumber
+                                                                         , inOperDate        := vbOperDate
+                                                                         , inOperDatePartner := vbOperDatePartner
+                                                                         , inOperDateMark    := vbOperDatePartner
+                                                                         , inPriceWithVAT    := vbPriceWithVAT
+                                                                         , inVATPercent      := vbVATPercent
+                                                                         , ioChangePercent   := vbChangePercent
+                                                                         , inFromId          := vbPartnerId
+                                                                         , inToId            := vbUnitId
+                                                                         , inPaidKindId      := vbPaidKindId
+                                                                         , inContractId      := vbContractId
+                                                                         , inRouteId         := vbRouteId
+                                                                         , inRouteSortingId  := vbRouteSortingId
+                                                                         , inPersonalId      := COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                                                                                                               FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                                                                                                               WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
+                                                                                                                 AND ObjectLink_Partner_MemberTake.DescId
+                                                            = CASE EXTRACT (DOW FROM vbOperDatePartner + (((--COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                                            COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                                                                                    ) :: TVarChar || ' DAY') :: INTERVAL)
+                                                                           )
+                                                                 WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                                 WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                                 WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                                 WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                                 WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                                 WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                                 WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                              END
+                                                                                                              ), vbMemberTakeId)
+                                                                         , inPriceListId         := vbPriceListId
+                                                                         , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
+                                                                         , inisPrintComment      := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementBoolean_PrintComment()), FALSE) ::Boolean
+                                                                         , inUserId              := inUserId
+                                                                          ) AS tmp);
     
          -- "обнулили" кол-во <Ёлемент документа>
          /*PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, 0, MovementItem.ParentId)
