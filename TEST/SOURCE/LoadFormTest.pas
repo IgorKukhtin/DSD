@@ -1130,6 +1130,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnDescKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnDescKindForm');
+  exit;
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPSLExportKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPSLExportKindForm');

@@ -40,8 +40,9 @@ BEGIN
       , Object_DocumentKind.isErased     AS isErased
       
    FROM Object AS Object_DocumentKind
-        LEFT JOIN ObjectString AS ObjectString_Enum ON ObjectString_Enum.ObjectId = Object_DocumentKind.Id
-                                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
+        LEFT JOIN ObjectString AS ObjectString_Enum
+                               ON ObjectString_Enum.ObjectId = Object_DocumentKind.Id
+                              AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
 
         LEFT JOIN ObjectLink AS ObjectLink_DocumentKind_Goods
                              ON ObjectLink_DocumentKind_Goods.ObjectId = Object_DocumentKind.Id

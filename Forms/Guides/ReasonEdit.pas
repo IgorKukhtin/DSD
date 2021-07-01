@@ -49,6 +49,9 @@ type
     cxLabel4: TcxLabel;
     edPeriodDays: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edReturnDescKind: TcxButtonEdit;
+    GuidesReturnDescKind: TdsdGuides;
   private
     { Private declarations }
   public

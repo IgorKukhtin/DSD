@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Reason(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ReturnKindId Integer, ReturnKindName TVarChar
+             , ReturnDescKindId Integer, ReturnDescKindName TVarChar
              , PeriodDays TFloat, PeriodTax TFloat
              , Comment TVarChar
              , isReturnIn Boolean
@@ -26,7 +27,9 @@ BEGIN
        
        , Object_ReturnKind.Id           AS ReturnKindId
        , Object_ReturnKind.ValueData    AS ReturnKindName 
-
+       , Object_ReturnDescKind.Id           AS ReturnDescKindId
+       , Object_ReturnDescKind.ValueData    AS ReturnDescKindName 
+       
        , ObjectFloat_PeriodDays.ValueData ::TFloat AS PeriodDays
        , ObjectFloat_PeriodTax.ValueData  ::TFloat AS PeriodTax
 
@@ -41,6 +44,11 @@ BEGIN
                                ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id 
                               AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
           LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReturnDescKind
+                               ON ObjectLink_ReturnDescKind.ObjectId = Object_Reason.Id 
+                              AND ObjectLink_ReturnDescKind.DescId = zc_ObjectLink_Reason_ReturnDescKind()
+          LEFT JOIN Object AS Object_ReturnDescKind ON Object_ReturnDescKind.Id = ObjectLink_ReturnDescKind.ChildObjectId
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_ReturnIn
                                   ON ObjectBoolean_ReturnIn.ObjectId = Object_Reason.Id
