@@ -1272,7 +1272,8 @@ uses
   Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm},
   Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
   Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm},
-  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm};
+  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
+  ReturnDescKind in '..\..\Forms\Kind\ReturnDescKind.pas' {ReturnDescKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

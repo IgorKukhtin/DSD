@@ -65,6 +65,7 @@ type
     isSendOnPrice: TcxGridDBColumn;
     PeriodDays: TcxGridDBColumn;
     PeriodTax: TcxGridDBColumn;
+    ReturnDescKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1051,6 +1051,16 @@ BEGIN
 END $$;
 
 
+DO $$
+BEGIN 
+     -- !!! Типы возврата
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnDescKind_Return(), inDescId:= zc_Object_ReturnDescKind(), inCode:= 1, inName:= 'Возврат', inEnumName:= 'zc_Enum_ReturnDescKind_Return');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnDescKind_Loss(), inDescId:= zc_Object_ReturnDescKind(), inCode:= 2, inName:= 'Брак', inEnumName:= 'zc_Enum_ReturnDescKind_Loss');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReturnDescKind_Diff(), inDescId:= zc_Object_ReturnDescKind(), inCode:= 3, inName:= 'Недовоз', inEnumName:= 'zc_Enum_ReturnDescKind_Diff');
+END $$;
+
+
+
 
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>

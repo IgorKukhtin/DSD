@@ -66,6 +66,13 @@ object ReasonForm: TReasonForm
         HeaderAlignmentVert = vaCenter
         Width = 109
       end
+      object ReturnDescKindName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1074#1086#1079#1074#1088#1072#1090#1072
+        DataBinding.FieldName = 'ReturnDescKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 77
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -415,6 +422,21 @@ object ReasonForm: TReasonForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ReturnKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReturnDescKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReturnDescKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReturnDescKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReturnDescKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

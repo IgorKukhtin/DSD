@@ -2,13 +2,15 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Reason(Integer,Integer,TVarChar,Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Reason(
  INOUT ioId	             Integer,       -- ключ объекта <>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
     IN inReturnKindId        Integer,       -- Тип возврата
+    IN inReturnDescKindId    Integer,       -- причина возврата
     IN inPeriodDays          TFloat,        -- Период в дн. от "Срок годности"
     IN inPeriodTax           TFloat,        -- Период в % от "Срок годности"
     IN inisReturnIn          Boolean,       -- по умолчанию для возвр. от покуп
@@ -36,13 +38,17 @@ BEGIN
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Reason(), inCode);
 
-   -- проверка прав уникальности для свойства элемента  <Наименование> + <Тип возврата>
+   -- проверка прав уникальности для свойства элемента  <Наименование> + <Тип возврата> + <Причина Возврата>
    IF EXISTS (SELECT 1
               FROM Object
                    INNER JOIN ObjectLink AS ObjectLink_ReturnKind
                                          ON ObjectLink_ReturnKind.ObjectId = Object.Id 
                                         AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
                                         AND ObjectLink_ReturnKind.ChildObjectId = inReturnKindId
+                   INNER JOIN ObjectLink AS ObjectLink_ReturnDescKind
+                                        ON ObjectLink_ReturnDescKind.ObjectId = Object.Id 
+                                       AND ObjectLink_ReturnDescKind.DescId = zc_ObjectLink_Reason_ReturnDescKind()
+                                       AND ObjectLink_ReturnDescKind.ChildObjectId = inReturnDescKindId
               WHERE Object.Id <> ioId
                 AND TRIM (Object.ValueData) = TRIM (inName))
    THEN
@@ -54,6 +60,8 @@ BEGIN
    
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Reason_ReturnKind(), ioId, inReturnKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Reason_ReturnDescKind(), ioId, inReturnDescKindId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Reason_ReturnIn(), ioId, inisReturnIn);
@@ -77,6 +85,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.07.21         *
  17.06.21         *
 */
 
