@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StorageLineId Integer, StorageLineName TVarChar
+             , PersonalKVKId Integer, PersonalKVKName TVarChar
+             , KVK TVarChar
              , isErased Boolean
               )
 AS
@@ -82,6 +84,10 @@ BEGIN
  
            , Object_StorageLine.Id        AS StorageLineId
            , Object_StorageLine.ValueData AS StorageLineName
+           
+           , Object_PersonalKVK.Id        AS PersonalKVKId
+           , Object_PersonalKVK.ValueData AS PersonalKVKName
+           , MIString_KVK.ValueData       AS KVK
 
            , MovementItem.isErased
 
@@ -156,6 +162,10 @@ BEGIN
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+            LEFT JOIN MovementItemString AS MIString_KVK
+                                         ON MIString_KVK.MovementItemId = MovementItem.Id
+                                        AND MIString_KVK.DescId = zc_MIString_KVK()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -165,6 +175,11 @@ BEGIN
                                              ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                             AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                             ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+            LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -199,6 +214,7 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boole
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 30.06.21         *
  26.05.17         * add StorageLine
  27.06.15         * add CountPack
  11.03.14         *

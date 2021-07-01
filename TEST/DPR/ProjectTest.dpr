@@ -1112,7 +1112,6 @@ uses
   LabReceiptChildEdit in '..\..\Forms\Guides\LabReceiptChildEdit.pas' {LabReceiptChildEditForm: TParentForm},
   LabMark_Object in '..\..\Forms\Guides\LabMark_Object.pas' {LabMark_ObjectForm: TParentForm},
   Report_Transport_CostDialog in '..\..\Forms\Report\Report_Transport_CostDialog.pas' {Report_Transport_CostDialogForm: TParentForm},
-  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
   Route_Self in '..\..\Forms\Guides\Route_Self.pas' {Route_SelfForm: TParentForm},
   Report_Movement_ProfitLossService in '..\..\Forms\Report\Report_Movement_ProfitLossService.pas' {Report_Movement_ProfitLossServiceForm: TParentForm},
   Report_Movement_ProfitLossServiceDialog in '..\..\Forms\Report\Report_Movement_ProfitLossServiceDialog.pas' {Report_Movement_ProfitLossServiceDialogForm: TParentForm},
@@ -1270,7 +1269,10 @@ uses
   Reason in '..\..\Forms\Guides\Reason.pas' {ReasonForm: TParentForm},
   ReasonEdit in '..\..\Forms\Guides\ReasonEdit.pas' {ReasonEditForm: TParentForm},
   Report_ProfitLoss_grid in '..\..\Forms\Report\Report_ProfitLoss_grid.pas' {Report_ProfitLoss_gridForm: TParentForm},
-  Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm};
+  Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm},
+  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
+  Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm},
+  Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
+             ,  ReasonName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , MovementPromo TVarChar, PricePromo TFloat
@@ -146,6 +147,7 @@ end if;*/
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_PriceList.ObjectId, 0) ELSE 0 END AS PriceListId
+                  , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Reason.ObjectId, 0)    ELSE 0 END AS ReasonId
            
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Insert.ValueData ELSE zc_DateStart() END AS InsertDate
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Update.ValueData ELSE zc_DateStart() END AS UpdateDate
@@ -283,6 +285,9 @@ end if;*/
                                                    ON MILinkObject_PriceList.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PriceList.DescId = zc_MILinkObject_PriceList()
 
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Reason
+                                                   ON MILinkObject_Reason.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Reason.DescId = zc_MILinkObject_Reason()
             UNION ALL
              SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
@@ -332,6 +337,7 @@ end if;*/
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Box.ObjectId, 0)       ELSE 0 END AS BoxId
                   , 0 AS PriceListId
+                  , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Reason.ObjectId, 0)    ELSE 0 END AS ReasonId
            
                   , zc_DateStart()  AS InsertDate
                   , zc_DateStart()  AS UpdateDate
@@ -407,8 +413,10 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                               ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                  
 
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Reason
+                                                   ON MILinkObject_Reason.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Reason.DescId = zc_MILinkObject_Reason()
             ) 
 
        -- Результат     
@@ -465,6 +473,7 @@ end if;*/
            , Object_Measure.ValueData        AS MeasureName
            , Object_Box.ValueData            AS BoxName
            , Object_PriceList.ValueData      AS PriceListName
+           , Object_Reason.ValueData         AS ReasonName
            
            , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
            , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
@@ -531,6 +540,7 @@ end if;*/
                   , tmpMI.GoodsKindId
                   , tmpMI.BoxId
                   , tmpMI.PriceListId
+                  , tmpMI.ReasonId
 
                   , tmpMI.InsertDate
                   , tmpMI.UpdateDate
@@ -556,6 +566,7 @@ end if;*/
                    , tmpMI.GoodsKindId
                    , tmpMI.BoxId
                    , tmpMI.PriceListId
+                   , tmpMI.ReasonId
                    , tmpMI.InsertDate
                    , tmpMI.UpdateDate
                    , tmpMI.isBarCode
@@ -572,6 +583,7 @@ end if;*/
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI.BoxId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMI.PriceListId
+            LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = tmpMI.ReasonId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

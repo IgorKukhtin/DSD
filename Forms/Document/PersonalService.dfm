@@ -1887,6 +1887,338 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
       end
     end
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 2
+      object cxGridChild_all: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1307
+        Height = 542
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableViewChild_all: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS_all
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = MemberCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursDay_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursPlan_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Price_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHours_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PersonalCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GrossOne_pg3
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = MemberCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursDay_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursPlan_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Price_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHours_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WorkTimeHoursOne_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PersonalCount_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GrossOne_pg3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_pg3
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = MemberName_pg3
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object UnitCode_pg3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object UnitName_pg3: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object PositionName_pg3: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object MemberName_pg3: TcxGridDBColumn
+            Caption = #1060#1080#1079'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 276
+          end
+          object PositionLevelName_pg3: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PositionLevelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StaffListName_pg3: TcxGridDBColumn
+            Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+            DataBinding.FieldName = 'StaffListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ModelServiceName_pg3: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'ModelServiceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StorageLineName_pg3: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_pg3: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' 1 '#1095#1077#1083', '#1075#1088#1085
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object MemberCount_pg3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'MemberCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object StaffListSummKindName_pg3: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
+            DataBinding.FieldName = 'StaffListSummKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalServiceListChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object DayCount_pg3: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'DayCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object WorkTimeHoursOne_pg3: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' 1 '#1095#1077#1083
+            DataBinding.FieldName = 'WorkTimeHoursOne'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object WorkTimeHours_pg3: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073'. '#1095#1072#1089#1086#1074' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'WorkTimeHours'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_pg3: TcxGridDBColumn
+            Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object HoursPlan_pg3: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' '#1087#1083#1072#1085' '#1095#1072#1089#1086#1074' '#1074' '#1084#1077#1089#1103#1094' '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+            DataBinding.FieldName = 'HoursPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 97
+          end
+          object HoursDay_pg3: TcxGridDBColumn
+            Caption = #1044#1085#1077#1074#1085#1086#1081' '#1087#1083#1072#1085' '#1095#1072#1089#1086#1074' '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+            DataBinding.FieldName = 'HoursDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object PersonalCount_pg3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082
+            DataBinding.FieldName = 'PersonalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GrossOne_pg3: TcxGridDBColumn
+            Caption = #1041#1072#1079#1072' '#1085#1072' 1-'#1075#1086' '#1095#1077#1083', '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'GrossOne'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object isErased_pg3: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevelChild_all: TcxGridLevel
+          GridView = cxGridDBTableViewChild_all
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1307
@@ -2131,7 +2463,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actRefreshMaster: TdsdDataSetRefresh [4]
+    object actGridToExcel_Child_all: TdsdGridToExcel [4]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridChild_all
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1076#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103')'
+      ImageIndex = 6
+    end
+    object actRefreshMaster: TdsdDataSetRefresh [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -2161,6 +2503,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           StoredProc = spSelectMISign
+        end
+        item
+          StoredProc = spSelectChild_all
         end>
       RefreshOnTabSetChanges = True
     end
@@ -2194,7 +2539,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [12]
+    object actUpdateIsMain: TdsdExecStoredProc [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2213,7 +2558,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [14]
+    object actPrint_Detail: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -2254,7 +2599,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [15]
+    object actPrint_All: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2351,7 +2696,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [23]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2378,7 +2723,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [26]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2971,8 +3316,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       MoveParams = <>
       dsdStoredProcName = spSelect_Export
       FileExt = '.xml'
-      Left = 1208
-      Top = 168
+      Left = 1168
+      Top = 240
     end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_file'
@@ -3227,6 +3572,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel_Child_all'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end>
     end
@@ -3305,6 +3654,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbExportZPDate: TdxBarButton
       Action = actExportZPDate
+      Category = 0
+    end
+    object bbGridToExcel_Child_all: TdxBarButton
+      Action = actGridToExcel_Child_all
       Category = 0
     end
   end
@@ -3645,8 +3998,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 760
+    Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetErased'
@@ -4608,8 +4961,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 640
-    Top = 336
+    Left = 512
+    Top = 352
   end
   object spUpdate_SetNULL: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_NULL'
@@ -4642,8 +4995,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 296
+    Left = 520
+    Top = 304
   end
   object spUpdate_CardSecond: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_CardSecond'
@@ -4659,7 +5012,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
+    Left = 504
     Top = 400
   end
   object spSelectMISign: TdsdStoredProc
@@ -4745,8 +5098,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1008
-    Top = 299
+    Left = 824
+    Top = 267
   end
   object spSelectPrint_All: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'
@@ -5259,5 +5612,69 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 493
     Top = 605
+  end
+  object DBViewAddOnChild_all: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild_all
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 1230
+    Top = 497
+  end
+  object spSelectChild_all: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_PersonalService_Child_detail'
+    DataSet = ChildCDS_all
+    DataSets = <
+      item
+        DataSet = ChildCDS_all
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1224
+    Top = 544
+  end
+  object ChildCDS_all: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1152
+    Top = 504
+  end
+  object ChildDS_all: TDataSource
+    DataSet = ChildCDS_all
+    Left = 1144
+    Top = 552
   end
 end

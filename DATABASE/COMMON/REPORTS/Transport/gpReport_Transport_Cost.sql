@@ -21,7 +21,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , UnitName TVarChar, BranchName TVarChar,  BusinessName TVarChar
              , PartnerName TVarChar
              , SummByPrint TFloat
-             --, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
+             , ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
              , SumCount_Transport TFloat, SumAmount_Transport TFloat, PriceFuel TFloat
              , SumAmount_TransportAdd TFloat, SumAmount_TransportAddLong TFloat, SumAmount_TransportTaxi TFloat
              , SumAmount_TransportService TFloat, SumAmount_ServiceAdd TFloat, SumAmount_ServiceTotal TFloat, SumAmount_PersonalSendCash TFloat
@@ -87,7 +87,7 @@ BEGIN
                                 , tmpContainer.BranchId
                                 , tmpContainer.PersonalDriverId
                                 , tmpContainer.RouteId
-                                --, tmpContainer.ProfitLossId
+                                , tmpContainer.ProfitLossId
                                 , tmpContainer.BusinessId
                                 , tmpContainer.isAccount_50000
                    
@@ -126,7 +126,7 @@ BEGIN
                                        LEFT JOIN ContainerLinkObject AS CLO_Business
                                                                      ON CLO_Business.ContainerId = MIContainer.ContainerId_Analyzer
                                                                     AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
-                                                           
+
                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                                     ON MovementLinkObject_PersonalDriver.MovementId = MIContainer.MovementId
                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -235,7 +235,7 @@ BEGIN
                                        , tmpContainer.BranchId
                                        , tmpContainer.PersonalDriverId
                                        , tmpContainer.RouteId
-                                       --, tmpContainer.ProfitLossId
+                                       , tmpContainer.ProfitLossId
                                        , tmpContainer.BusinessId
                                        , tmpContainer.isAccount_50000
                                 , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
@@ -459,7 +459,7 @@ BEGIN
                                  , tmpContainer.BranchId
                                  , COALESCE (tmpContainer.PersonalDriverId, tmpWeight.PersonalDriverId) AS PersonalDriverId
                                  , tmpContainer.RouteId --tmpWeight.RouteId
-                                 --, tmpContainer.ProfitLossId
+                                 , tmpContainer.ProfitLossId
                                  , tmpContainer.BusinessId
                                  , tmpContainer.isAccount_50000
                                  , tmpWeight.PartnerId_Sale
@@ -480,7 +480,7 @@ BEGIN
                             , tmpAll.BranchId
                             , tmpAll.PersonalDriverId
                             , tmpAll.RouteId
-                            --, tmpAll.ProfitLossId
+                            , tmpAll.ProfitLossId
                             , tmpAll.BusinessId
                             , tmpAll.isAccount_50000
                             , (tmpAll.WeightSale)                    AS WeightSale
@@ -521,6 +521,7 @@ BEGIN
                                   , tmpContainer.PersonalDriverId
                                   , tmpContainer.RouteId
                                   , tmpContainer.BusinessId
+                                  , tmpContainer.ProfitLossId
                                   , tmpContainer.isAccount_50000
                                   --, tmpWeight_All.TotalCountKg AS WeightSale
                                   , SUM (tmpWeight_All.TotalCountKg) OVER (PARTITION BY tmpWeight_All.MovementTransportId/*CASE WHEN inisMovement = TRUE THEN tmpWeight_All.MovementTransportId ELSE 1 END*/
@@ -573,6 +574,7 @@ BEGIN
                               , tmpAll.PersonalDriverId
                               , tmpAll.RouteId
                               , tmpAll.BusinessId
+                              , tmpAll.ProfitLossId
                               , tmpAll.isAccount_50000
                               , tmpAll.MovementId_Sale
                               , tmpAll.PartnerId_Sale
@@ -588,6 +590,7 @@ BEGIN
                             , tmpUnion.PersonalDriverId
                             , tmpUnion.CarId
                             , tmpUnion.BusinessId
+                            , tmpUnion.ProfitLossId
                             , tmpUnion.PartnerId_Sale
 
                            , tmpSale_Goods.GoodsId      AS GoodsId
@@ -643,6 +646,7 @@ BEGIN
                             , tmpUnion.PersonalDriverId
                             , tmpUnion.CarId
                             , tmpUnion.BusinessId
+                            , tmpUnion.ProfitLossId
                             , tmpUnion.PartnerId_Sale
                             
                             , tmpSale_Goods.GoodsId
@@ -679,6 +683,7 @@ BEGIN
                             , tmpUnion.PersonalDriverId
                             , tmpUnion.CarId
                             , tmpUnion.BusinessId
+                            , tmpUnion.ProfitLossId
                             , tmpUnion.PartnerId_Sale
                            , Movemen_Sale.Id            AS MovemenId_Sale
                            , Movemen_Sale.OperDate      AS OperDate_Sale
@@ -739,6 +744,7 @@ BEGIN
                             , tmpUnion.PersonalDriverId
                             , tmpUnion.CarId
                             , tmpUnion.BusinessId
+                            , tmpUnion.ProfitLossId
                             , tmpUnion.PartnerId_Sale
                             
                             , Movemen_Sale.Id
@@ -792,8 +798,12 @@ BEGIN
                  + COALESCE (tmpUnion.Wage_Hours,0)
                  + COALESCE (tmpUnion.Wage_kg,0)
                  ) OVER (PARTITION BY Object_Route.ValueData) :: TFloat AS SummByPrint
-                        
-                        
+
+            , COALESCE (View_ProfitLoss.ProfitLossGroupName, View_Account.AccountGroupName)         :: TVarChar AS ProfitLossGroupName
+            , COALESCE (View_ProfitLoss.ProfitLossDirectionName, View_Account.AccountDirectionName) :: TVarChar AS ProfitLossDirectionName
+            , COALESCE (View_ProfitLoss.ProfitLossName, View_Account.AccountName)                   :: TVarChar AS ProfitLossName
+            , COALESCE (View_ProfitLoss.ProfitLossName_all, View_Account.AccountName_all)           :: TVarChar AS ProfitLossName_all
+
             , CAST (tmpUnion.SumCount_Transport AS NUMERIC (16,2))   :: TFloat  AS SumCount_Transport 
             , CAST (tmpUnion.SumAmount_Transport AS NUMERIC (16,2))  :: TFloat  AS SumAmount_Transport
             , (tmpUnion.PriceFuel)
@@ -878,6 +888,9 @@ BEGIN
                  LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpUnion.CarId
 
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpUnion.BusinessId
+
+                 LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpUnion.ProfitLossId
+                 LEFT JOIN Object_Account_View    AS View_Account    ON View_Account.AccountId       = tmpUnion.ProfitLossId
 
                  LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster 
                                       ON ObjectLink_Car_FuelMaster.ObjectId = Object_Car.Id

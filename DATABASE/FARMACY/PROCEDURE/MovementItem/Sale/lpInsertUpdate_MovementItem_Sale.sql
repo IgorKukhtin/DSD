@@ -28,7 +28,9 @@ BEGIN
     -- сохранили <Ёлемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
     
-    IF COALESCE (inisSP, False) = TRUE
+    IF COALESCE ((SELECT MovementBoolean_NP.ValueData FROM MovementBoolean AS MovementBoolean_NP
+                  WHERE MovementBoolean_NP.MovementId = inMovementId
+                    AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()), False) = TRUE
     THEN
       inPriceSale := inPrice;
     END IF;

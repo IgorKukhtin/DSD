@@ -3759,10 +3759,6 @@
 				<Form>Report_Transport_CostDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Transport_Cost.pas">
-				<Form>Report_Transport_CostForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Route_Self.pas">
 				<Form>Route_SelfForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4363,6 +4359,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Balance_grid.pas">
 				<Form>Report_Balance_gridForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_Olap.pas">
+				<Form>Report_OrderGoods_OlapForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas">
+				<Form>Report_OrderGoods_OlapDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Transport_Cost.pas">
+				<Form>Report_Transport_CostForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

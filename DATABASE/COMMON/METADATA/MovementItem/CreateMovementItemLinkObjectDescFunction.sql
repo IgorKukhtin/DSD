@@ -366,10 +366,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_UnitFineSubject() RETURNS Integer AS 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_UnitFineSubject', 'Кем налагается взыскание' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_UnitFineSubject');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PersonalKVK() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PersonalKVK'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PersonalKVK', 'Оператор КВК(Ф.И.О)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PersonalKVK');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 30.06.21         * zc_MILinkObject_PersonalKVK
  17.06.21         * zc_MILinkObject_Reason
  06.05.21         * zc_MILinkObject_UnitFineSubject
  28.04.21         * zc_MILinkObject_FineSubject

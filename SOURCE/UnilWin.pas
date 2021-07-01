@@ -49,7 +49,7 @@ function GetFilePlatfotm64(aFileName: string): boolean;
 {Функция возвращает суффикс к 64 разрядным EXE файлам}
 function GetBinaryPlatfotmSuffics(aFileName, aSuffics: string): string;
 // Функция возвращает разрядность системы
-function IsWow64: BOOL;
+function IsWow64: Boolean;
 
 implementation
 
@@ -260,18 +260,12 @@ begin
 end;
 
 // Функция возвращает разрядность системы
-function IsWow64: BOOL;
-type
-  TIsWow64Process = function(hProcess: THandle;
-    var Wow64Process: BOOL): BOOL; stdcall;
-var
-  IsWow64Process: TIsWow64Process;
+function IsWow64: Boolean;
 begin
-  Result := False;
-  @IsWow64Process := GetProcAddress(GetModuleHandle(kernel32),
-    'IsWow64Process');
-  if Assigned(@IsWow64Process) then
-    IsWow64Process(GetCurrentProcess, Result);
+  case TOSVersion.Architecture of
+    arIntelX64 : Result := True;
+    ELSE Result := False;
+  end;
 end;
 
 end.

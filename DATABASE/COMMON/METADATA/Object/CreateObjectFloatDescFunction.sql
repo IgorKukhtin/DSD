@@ -2036,9 +2036,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CorrectMinAmount_Amount() RETURNS Inte
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CorrectMinAmount(), 'zc_ObjectFloat_CorrectMinAmount_Amount', 'Сумма корректировки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CorrectMinAmount_Amount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PairSunAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PairSunAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PairSunAmount', 'Количество упаковок товара к единице основного' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PairSunAmount');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.07.21                                                                                      * zc_ObjectFloat_Goods_PairSunAmount
  24.06.21         * zc_ObjectFloat_Reason_PeriodDays
                     zc_ObjectFloat_Reason_PeriodTax
  22.06.21                                                                                      * zc_ObjectFloat_CorrectMinAmount_Amount

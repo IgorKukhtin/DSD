@@ -949,6 +949,9 @@ CREATE OR REPLACE FUNCTION zc_Object_Reason() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Reason', 'Причина возврата / перемещения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Reason');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReturnDescKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReturnDescKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReturnDescKind', 'Типы возврата' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReturnDescKind');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1440,6 +1443,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 01.07.21         * zc_Object_ReturnDescKind
  25.06.21                                                                                        * zc_Object_CheckoutTesting
  22.06.21                                                                                        * zc_Object_CorrectMinAmount
  14.06.21         * zc_Object_ReceiptLevel

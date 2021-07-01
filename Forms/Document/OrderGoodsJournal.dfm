@@ -190,7 +190,15 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 97
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          object MonthName: TcxGridDBColumn [2]
+            Caption = #1052#1077#1089#1103#1094
+            DataBinding.FieldName = 'MonthName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 106

@@ -428,12 +428,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Width = 165
     end
     object cxLabel3: TcxLabel
-      Left = 179
+      Left = 269
       Top = 5
       Caption = #1042#1080#1076' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
     end
     object edOrderPeriodKind: TcxButtonEdit
-      Left = 179
+      Left = 269
       Top = 23
       Properties.Buttons = <
         item
@@ -441,7 +441,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 275
+      Width = 185
     end
     object edUnit: TcxButtonEdit
       Left = 179
@@ -472,7 +472,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
     object cxLabel8: TcxLabel
       Left = 777
-      Top = 4
+      Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
@@ -523,6 +523,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
       TabOrder = 17
       Width = 294
     end
+  end
+  object cxLabel5: TcxLabel [2]
+    Left = 179
+    Top = 5
+    Caption = #1052#1077#1089#1103#1094
+  end
+  object edMonth: TcxTextEdit [3]
+    Left = 179
+    Top = 23
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 82
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 363
@@ -1231,6 +1243,13 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MonthName'
+        Value = Null
+        Component = edMonth
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
