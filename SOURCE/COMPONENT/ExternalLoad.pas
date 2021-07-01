@@ -335,6 +335,8 @@ begin
           if StringList[i] = '' then
              break;
           ElementList := SplitString(StringList[i], #9);
+          if High(ElementList) < 20 then
+            raise Exception.Create('Количество столбцов строке ' + IntToStr(I) + ' файла "' + FileName + '" меньше необходимого.');
           if PriceWithVAT then
              Price := gfStrToFloat(ElementList[19])
           else

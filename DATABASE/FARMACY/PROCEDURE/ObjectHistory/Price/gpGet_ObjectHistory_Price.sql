@@ -33,8 +33,8 @@ BEGIN
         SELECT
             ObjectHistory_Price.Id                                              AS Id
           , COALESCE(ObjectHistory_Price.StartDate, Empty.StartDate)            AS StartDate
-          , ObjectHistoryFloat_Price_MCSValue.ValueData                         AS MCSValue
           , ObjectHistoryFloat_Price_Value.ValueData                            AS Price
+          , ObjectHistoryFloat_Price_MCSValue.ValueData                         AS MCSValue
         FROM 
             ObjectHistory_Price
             FULL JOIN (
