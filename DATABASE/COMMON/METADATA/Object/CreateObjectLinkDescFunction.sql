@@ -1899,6 +1899,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Reason_ReturnKind() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Reason_ReturnKind', 'Тип возврата', zc_Object_Reason(), zc_Object_ReturnKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Reason_ReturnDescKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnDescKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Reason_ReturnDescKind', 'Признак возврата', zc_Object_Reason(), zc_Object_ReturnDescKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnDescKind');
+
+
+
 
 --!!! АПТЕКА
 
@@ -2574,6 +2580,7 @@ SELECT 'zc_ObjectLink_CorrectMinAmount_PayrollType', 'Связь с типом расчета зара
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.07.21         * zc_ObjectLink_Reason_ReturnDescKind
  22.06.21                                                                                      * zc_ObjectLink_CorrectMinAmount_PayrollType
  14.06.21         * zc_ObjectLink_ReceiptChild_ReceiptLevel
  31.05.21                                                                                      * zc_ObjectLink_CashSettings_MethodsAssortment
