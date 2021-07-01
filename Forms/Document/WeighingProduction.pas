@@ -176,6 +176,8 @@ type
     cxLabel20: TcxLabel;
     ed: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    PersonalKVKName: TcxGridDBColumn;
+    KVK: TcxGridDBColumn;
   private
   public
   end;

@@ -17,22 +17,18 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Summ TFloat
-            
+             , MeasureName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupAnalystName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
              , GoodsPlatformName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar, InfoMoneyId Integer
              )   
 AS
 $BODY$
 BEGIN
 
-    -- Ограничения по товару
---    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
---    CREATE TEMP TABLE _tmpFromGroup (UnitId Integer) ON COMMIT DROP;
- 
     -- Результат
     RETURN QUERY
       WITH _tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
@@ -117,6 +113,7 @@ BEGIN
          , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
                                   , Object_GoodsGroup.ValueData                  AS GoodsGroupName
                                   , ObjectLink_Goods_Measure.ChildObjectId       AS MeasureId
+                                  , Object_Measure.ValueData                     AS MeasureName
                                   , ObjectFloat_Weight.ValueData                 AS Weight
                                   , ObjectString_Goods_GoodsGroupFull.ValueData  AS GoodsGroupNameFull
                                   , Object_GoodsGroupAnalyst.ValueData           AS GoodsGroupAnalystName
@@ -128,6 +125,7 @@ BEGIN
                                   , Object_InfoMoney_View.InfoMoneyGroupName
                                   , Object_InfoMoney_View.InfoMoneyDestinationName
                                   , Object_InfoMoney_View.InfoMoneyName
+                                  , Object_InfoMoney_View.InfoMoneyName_all
                                   , Object_InfoMoney_View.InfoMoneyId
                              FROM (SELECT DISTINCT tmpMI.GoodsId
                                    FROM tmpMI
@@ -140,6 +138,7 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                        ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
                                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                         ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
@@ -187,6 +186,8 @@ BEGIN
            , (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpMI.AmountSecond ELSE tmpMI.Amount END)  :: TFloat AS Amount
            , tmpMI.OperSumm  :: TFloat AS Summ
            
+           
+           , tmpGoodsParam.MeasureName
            , tmpGoodsParam.GoodsGroupNameFull
            , tmpGoodsParam.GoodsGroupAnalystName
            , tmpGoodsParam.TradeMarkName
@@ -196,6 +197,7 @@ BEGIN
            , tmpGoodsParam.InfoMoneyGroupName
            , tmpGoodsParam.InfoMoneyDestinationName
            , tmpGoodsParam.InfoMoneyName
+           , tmpGoodsParam.InfoMoneyName_all
            , tmpGoodsParam.InfoMoneyId
         FROM tmpMI
 

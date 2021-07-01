@@ -301,15 +301,12 @@ object WeighingProductionForm: TWeighingProductionForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 126
-    ExplicitHeight = 336
     ClientRectBottom = 307
     ClientRectRight = 1289
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -317,7 +314,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 283
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -617,6 +613,24 @@ object WeighingProductionForm: TWeighingProductionForm
             Options.Editing = False
             Width = 56
           end
+          object PersonalKVKName: TcxGridDBColumn
+            Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
+            DataBinding.FieldName = 'PersonalKVKName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
+            Options.Editing = False
+            Width = 70
+          end
+          object KVK: TcxGridDBColumn
+            Caption = #8470' '#1050#1042#1050
+            DataBinding.FieldName = 'KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1050#1042#1050
+            Options.Editing = False
+            Width = 70
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -712,7 +726,7 @@ object WeighingProductionForm: TWeighingProductionForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 160
   end
   object cxLabel20: TcxLabel
@@ -1574,6 +1588,7 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

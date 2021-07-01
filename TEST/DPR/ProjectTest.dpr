@@ -1270,7 +1270,9 @@ uses
   Reason in '..\..\Forms\Guides\Reason.pas' {ReasonForm: TParentForm},
   ReasonEdit in '..\..\Forms\Guides\ReasonEdit.pas' {ReasonEditForm: TParentForm},
   Report_ProfitLoss_grid in '..\..\Forms\Report\Report_ProfitLoss_grid.pas' {Report_ProfitLoss_gridForm: TParentForm},
-  Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm};
+  Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm},
+  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
+  Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

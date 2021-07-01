@@ -177,10 +177,16 @@ CREATE OR REPLACE FUNCTION zc_MIString_GoodsCode() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_GoodsCode', 'Код товара' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_GoodsCode');
 
+
+CREATE OR REPLACE FUNCTION zc_MIString_KVK() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_KVK'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_KVK', ' 	№ КВК' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_KVK');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
- 26.05.22                                                                                      * zc_MIString_GoodsCode
+ 30.06.21         * zc_MIString_KVK
+ 26.05.21                                                                                      * zc_MIString_GoodsCode
  03.09.20                                                                                      * zc_MIString_InvNumberWeek...
  18.03.20                                                                                      * zc_MIString_ItemId
  05.03.20                                                                                      * zc_MIString_Result
