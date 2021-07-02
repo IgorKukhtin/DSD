@@ -3183,7 +3183,7 @@ begin
             RecNo := nRecNo;
           end;
 
-          if (nAmountPS * RemainsCDS.FieldByName('GoodsDiscountId').AsCurrency) < FieldByName('Amount').AsCurrency then
+          if nAmountPS < FieldByName('Amount').AsCurrency then
           begin
             ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
             exit;
@@ -8518,9 +8518,9 @@ begin
               else nAmount := nAmountPS - nAmountPSM;
               nAmountPSM := nAmountPSM + nAmount;
               SoldRegim := False;
-              edAmount.Text := CurrToStr(nAmount);
               CheckGrid.SetFocus;
               SourceClientDataSet := checkCDS;
+              edAmount.Text := CurrToStr(nAmount);
               InsertUpdateBillCheckItems;
             finally
               FStepSecond := False;
@@ -11864,7 +11864,7 @@ begin
 
   if edAmount.Text = '' then
   begin
-    ActiveControl := edAmount;
+    if edAmount.Enabled then ActiveControl := edAmount;
     ShowMessage
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
   end;
@@ -12012,7 +12012,7 @@ begin
   begin
     if not TryStrToCurr(edAmount.Text, nAmount) then
     begin
-      ActiveControl := edAmount;
+      if edAmount.Enabled then ActiveControl := edAmount;
       ShowMessage('Ошибка. Невозможно преобразовать строку "' + edAmount.Text +
         '" в число.');
     end

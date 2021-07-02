@@ -31,7 +31,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
-             , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
@@ -320,7 +319,6 @@ BEGIN
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN tmpPricelistItems.GoodsNDS IS NOT NULL AND inContractId <> 0 AND
              COALESCE (tmpPricelistItems.GoodsNDS, 0) <> tmpNDS.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
-           , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , Object_Goods_Main.isNotUploadSites
            , Object_Goods_Main.isDoesNotShare                                    AS DoesNotShare
            , Object_Goods_Main.isAllowDivision                                   AS AllowDivision

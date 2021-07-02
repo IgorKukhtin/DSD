@@ -590,14 +590,14 @@ BEGIN
                      , COALESCE (NULLIF (ObjectFloat_PercentMarkup.ValueData, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0)) AS PercentMarkup
                 -- FROM _tmpGoodsMinPrice_List
                 FROM _tmpList
+
+                     INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                           ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                          AND ObjectLink_Price_Unit.ChildObjectId = _tmpList.UnitId
                      INNER JOIN ObjectLink AS ObjectLink_Price_Goods
                                            ON ObjectLink_Price_Goods.ChildObjectId = _tmpList.GoodsId_retail -- _tmpGoodsMinPrice_List.GoodsId
+                                          AND ObjectLink_Price_Unit.ObjectId      = ObjectLink_Price_Goods.ObjectId 
                                           AND ObjectLink_Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
-                     INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                           ON ObjectLink_Price_Unit.ObjectId      = ObjectLink_Price_Goods.ObjectId
-                                          AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                                          AND ObjectLink_Price_Unit.ChildObjectId = _tmpList.UnitId
-                     -- INNER JOIN _tmpUnitMinPrice_List AS tmpList ON tmpList.UnitId = ObjectLink_Price_Unit.ChildObjectId
                      LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
                                            ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Goods.ObjectId
                                           AND ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
@@ -711,6 +711,11 @@ BEGIN
                                                                         AND Object_BarCode.isErased = False
                                                                         AND Object_Object.isErased = False)
                               )
+                              
+          , MovementPromoBonus AS (SELECT Movement.id FROM Movement
+                                   WHERE Movement.OperDate <= CURRENT_DATE
+                                     AND Movement.DescId = zc_Movement_PromoBonus()
+                                     AND Movement.StatusId = zc_Enum_Status_Complete())
 
           , PromoBonus AS (SELECT MovementItem.ObjectId                           AS GoodsId
                                 , Max(MovementItem.Amount)                        AS Amount
@@ -718,14 +723,12 @@ BEGIN
 
                                 INNER JOIN (SELECT DISTINCT _tmpGoodsMinPrice_List.GoodsId FROM _tmpGoodsMinPrice_List) AS _List ON _List.GoodsId = MovementItem.ObjectId  
                                    
-                           WHERE MovementItem.MovementId = (SELECT MAX(Movement.id) FROM Movement
-                                                            WHERE Movement.OperDate <= CURRENT_DATE
-                                                              AND Movement.DescId = zc_Movement_PromoBonus()
-                                                              AND Movement.StatusId = zc_Enum_Status_Complete())
+                           WHERE MovementItem.MovementId = (SELECT MAX(MovementPromoBonus.id) FROM MovementPromoBonus)
                              AND MovementItem.DescId = zc_MI_Master()
                              AND MovementItem.isErased = False
                              AND MovementItem.Amount > 0
                            GROUP BY MovementItem.ObjectId)
+                           
 
         SELECT Object_Goods.Id                                                     AS Id
 
@@ -809,8 +812,7 @@ BEGIN
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) END :: TFloat AS Price_unit_sale_6
 
-        FROM _tmpList AS tmpList -- _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
-             -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1
+        FROM _tmpList AS tmpList 
 
              LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId_retail
                                      AND tmpMI_Deferred.UnitId  = tmpList.UnitId
@@ -839,7 +841,6 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
 
@@ -847,8 +848,6 @@ BEGIN
              LEFT JOIN MarginCategory      ON MinPrice_List.Price >= MarginCategory.MinPrice      AND MinPrice_List.Price < MarginCategory.MaxPrice
                                           AND MarginCategory.UnitId = tmpList.UnitId
              LEFT JOIN MarginCategory_site ON MinPrice_List.Price >= MarginCategory_site.MinPrice AND MinPrice_List.Price < MarginCategory_site.MaxPrice
-             LEFT JOIN Object AS Object_MarginCategory      ON Object_MarginCategory.Id      = MarginCategory.MarginCategoryId
-             LEFT JOIN Object AS Object_MarginCategory_site ON Object_MarginCategory_site.Id = vbMarginCategoryId_site
 
              LEFT JOIN tmpPDGoodsRemains AS PDGoodsRemains
                                          ON PDGoodsRemains.GoodsId = tmpList.GoodsId_retail
@@ -920,3 +919,5 @@ SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,117695
 
 
 --SELECT p.* FROM gpselect_goodsonunit_forsite_Ol ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '10615,15208,3031,22420,9985,5303682,6970592,14273738,26701,27199,21898,1199196,1199199,2600865,12745,33004', TRUE, zfCalc_UserSite()) AS p
+
+-- SELECT p.* FROM gpselect_goodsonunit_forsite ('4135547', '11923', TRUE, zfCalc_UserSite()) AS p
