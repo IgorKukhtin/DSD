@@ -53,7 +53,14 @@ function iniLocalCashRegisterSave(ACashRegister: string): string;
 //Запись информации о старте программы
 procedure InitCashSession(ACheckCashSession : Boolean);
 function UpdateOption : Boolean;
+function NeedTestProgram : Boolean;
+function UpdateTestProgram : Boolean;
+
+// Проверка и обновление программы
 procedure AutomaticUpdateProgram;
+
+// Проверка и обновление программы для теста
+procedure AutomaticUpdateProgramTest;
 
 var gUnitName, gUserName, gPassValue: string;
 var gUnitId, gUnitCode : Integer;
@@ -420,6 +427,7 @@ function UpdateOption : Boolean;
 var
   sp : TdsdStoredProc;
 begin
+  Result := False;
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -442,6 +450,49 @@ begin
   end;
 end;
 
+function NeedTestProgram : Boolean;
+var
+  sp : TdsdStoredProc;
+begin
+  Result := False;
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpGet_CheckoutTesting_CashGUID';
+      sp.Params.Clear;
+      sp.Params.AddParam('inCashSessionId', ftString, ptInput, iniLocalGUIDGet);
+      sp.Params.AddParam('outOk', ftBoolean, ptOutput, False);
+      sp.Execute;
+      Result := sp.Params.ParamByName('outOk').Value;
+    except
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+function UpdateTestProgram : Boolean;
+var
+  sp : TdsdStoredProc;
+begin
+  Result := True;
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpUpdate_Object_CheckoutTesting_Cash';
+      sp.Params.Clear;
+      sp.Params.AddParam('inCashSessionId', ftString, ptInput, iniLocalGUIDGet);
+      sp.Execute;
+    except
+      Result := False;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure AutomaticUpdateProgram;
 var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
 begin
@@ -453,8 +504,30 @@ begin
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
     begin
-      if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
+      if MessageDlg('Обнаружена новая версия программы! Обновить?', mtInformation, mbOKCancel, 0) = mrOk then
         if UpdateOption then TUpdater.AutomaticUpdateProgramStart;
+    end;
+  except
+    on E: Exception do
+       ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику.'#13#10 + E.Message);
+  end;
+end;
+
+// Проверка и обновление программы для теста
+procedure AutomaticUpdateProgramTest;
+begin
+  try
+    Application.ProcessMessages;
+    if NeedTestProgram then
+    begin
+      if MessageDlg('Обнаружена тестовая версия программы! Обновить?', mtInformation, mbOKCancel, 0) = mrOk then
+      begin
+        if TUpdater.AutomaticUpdateProgramTestStart then
+        begin
+          UpdateTestProgram;
+          Application.Terminate
+        end;
+      end;
     end;
   except
     on E: Exception do

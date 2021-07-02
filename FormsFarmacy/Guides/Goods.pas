@@ -284,6 +284,7 @@ type
     spUpdate_isMultiplicityError_Revert: TdsdStoredProc;
     dxBarButton12: TdxBarButton;
     isUkrainianTranslation: TcxGridDBColumn;
+    PairSunAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2623,6 +2623,11 @@ begin
           ShowPUSHMessageCash('Коллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
         end;
 
+        if NeedTestProgram then
+        begin
+          ShowPUSHMessageCash('Коллеги, обновите FCash, для вас доступна тестовая версия (Ctrl+U)!', cResult);
+        end;
+
         if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean and (HourOf(Now) < 15) then
           SaveHardwareData;
       end;
@@ -3178,7 +3183,7 @@ begin
             RecNo := nRecNo;
           end;
 
-          if nAmountPS < FieldByName('Amount').AsCurrency then
+          if (nAmountPS * RemainsCDS.FieldByName('GoodsDiscountId').AsCurrency) < FieldByName('Amount').AsCurrency then
           begin
             ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
             exit;
@@ -6515,6 +6520,41 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
   begin
   if not gc_User.Local then
   Begin
+
+    // Проверка тестовой версии программы
+    try
+      Application.ProcessMessages;
+      if NeedTestProgram then
+      begin
+        if (MessageDlg('Обнаружена тестовая версия программы! Обновить?', mtInformation, mbOKCancel, 0) = mrOk) then
+        begin
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9); // только 2 форма
+          Step := 0;
+          while ProcessExists('FarmacyCashServise.exe') do
+          begin
+            Sleep(2000);
+            Inc(Step);
+            if Step > 5 then
+            begin
+              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 минут.');
+              Exit;
+            end;
+          end;
+          InitCashSession(False);
+          if TUpdater.AutomaticUpdateProgramTestStart then
+          begin
+            UpdateTestProgram;
+            Application.Terminate
+          end;
+        end;
+        Exit;
+      end;
+    except
+      on E: Exception do
+         ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
+    end;
+
+    // Проверка новой версии программы
     try
       Application.ProcessMessages;
       BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
@@ -6546,6 +6586,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
       on E: Exception do
          ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
     end;
+
   End;
 end;
 

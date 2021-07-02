@@ -4,7 +4,7 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
   Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-  ClientHeight = 142
+  ClientHeight = 182
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 53
-    Top = 100
+    Top = 129
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -30,7 +30,7 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
   end
   object cxButton2: TcxButton
     Left = 211
-    Top = 100
+    Top = 129
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,6 +54,20 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
     TabOrder = 3
     Width = 303
   end
+  object cePairSunAmount: TcxCurrencyEdit
+    Left = 209
+    Top = 86
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.000'
+    TabOrder = 4
+    Width = 112
+  end
+  object cxLabel1: TcxLabel
+    Left = 18
+    Top = 87
+    Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1088#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 297
     Top = 97
@@ -68,8 +82,8 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 104
-    Top = 34
+    Left = 120
+    Top = 18
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -96,6 +110,13 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
         Component = FormParams
         ComponentItem = 'GoodsPairSunCode'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPairSunAmount'
+        Value = Null
+        Component = cePairSunAmount
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 151
@@ -135,7 +156,7 @@ object Goods_GoodsPairSun_EditForm: TGoods_GoodsPairSun_EditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 93
-    Top = 89
+    Left = 85
+    Top = 105
   end
 end

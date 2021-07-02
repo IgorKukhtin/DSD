@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar
-             , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar
+             , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar, PairSunAmount TFloat
              , PairSunDate TDateTime
              , isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -265,6 +265,7 @@ BEGIN
            , Object_GoodsPairSun.Id                                                   AS GoodsPairSunId
            , Object_GoodsPairSun.ObjectCode                                           AS GoodsPairSunCode
            , Object_GoodsPairSun.ValueData                                            AS GoodsPairSunName
+           , Object_Goods_Retail.PairSunAmount
            , Object_Goods_Retail.PairSunDate             :: TDateTime                 AS PairSunDate
            , Object_Goods_Retail.isErased
            , Object_Goods_Main.GoodsGroupId

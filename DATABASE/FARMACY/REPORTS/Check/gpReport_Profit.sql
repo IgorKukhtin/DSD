@@ -334,6 +334,31 @@ BEGIN
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpData_ContainerAll.UnitId
                                 WHERE tmpData_ContainerAll.Amount <> 0
                                )
+
+        -- данные из проводок продаж
+        , tmpData_ContainerSale_All AS (SELECT MIContainer.ContainerID                         AS ContainerID
+                                             , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
+                                        FROM MovementItemContainer AS MIContainer
+                                        WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                          AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                          AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+                                        GROUP BY MIContainer.ContainerID
+                               )
+        , tmpData_ContainerSaleAll AS (SELECT MIContainer.ContainerID
+                                            , Container.WhereObjectId                         AS UnitId
+                                            , Container.ObjectId                              AS GoodsId
+                                            , MIContainer.Amount
+                                       FROM tmpData_ContainerSale_All AS MIContainer
+                                       
+                                            INNER JOIN Container ON Container.ID = MIContainer.ContainerID
+                                                                                   
+                                   )
+        , tmpData_ContainerSale AS (SELECT tmpData_ContainerSaleAll.*
+                                    FROM tmpData_ContainerSaleAll
+                                         INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpData_ContainerSaleAll.UnitId
+                                    WHERE tmpData_ContainerSaleAll.Amount <> 0
+                                   )
+
         -- док. соц проекта, если заполнен № рецепта
         , tmpMS_InvNumberSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
                                      , CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN TRUE ELSE FALSE END AS isSP_1303
@@ -428,6 +453,7 @@ BEGIN
                               , SUM (COALESCE (tmpData_Container.Amount, 0))        AS Amount
                               , SUM (COALESCE (tmpData_Container.SummaSale, 0))     AS SummaSale
                               , SUM (COALESCE (tmpData_Container.SummaPromo, 0))    AS SummaPromo
+                              , 0.0                                                 AS AmountSale
 
                          FROM tmpData_Container
                               -- элемент прихода
@@ -444,6 +470,38 @@ BEGIN
                                 , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)  
                                 , tmpData_Container.GoodsId
                                 , tmpData_Container.UnitId
+                         UNION ALL
+                         SELECT COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+                              , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+ 
+                              , tmpData_Container.GoodsId
+                              , tmpData_Container.UnitId
+                              
+                              , 0
+                              , 0
+                              , 0
+                              , SUM (COALESCE (tmpData_Container.Amount, 0))        AS AmountSale
+                              
+                         FROM tmpData_ContainerSale AS tmpData_Container
+                         
+                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                            ON ContainerLinkObject_MovementItem.Containerid = tmpData_Container.ContainerId
+                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                         GROUP BY COALESCE (MI_Income_find.Id,         MI_Income.Id)
+                                , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)  
+                                , tmpData_Container.GoodsId
+                                , tmpData_Container.UnitId
+                         
                          )
 
        , tmpData AS (SELECT MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income  -- ПОСТАВЩИК
@@ -456,6 +514,11 @@ BEGIN
                           , SUM (tmpData_all.Amount)     AS Amount
                           , SUM (tmpData_all.SummaSale)  AS SummaSale
                           , SUM (tmpData_all.SummaPromo) AS SummaPromo
+
+                          , SUM(CASE WHEN MovementLinkObject_From_Income.ObjectId = 59612 
+                                     THEN (COALESCE(tmpData_all.Amount, 0) + COALESCE(tmpData_all.AmountSale, 0))* 
+                                          COALESCE (MIFloat_JuridicalPriceWithVAT.ValueData, 0) 
+                                     ELSE 0 END)                                                              AS SummaVenta
 
                      FROM tmpData_all
                           -- цена с учетом НДС, для элемента прихода от поставщика (и % корректировки наценки zc_Object_Juridical) (или NULL)
@@ -490,7 +553,8 @@ BEGIN
                                      , SUM(tmpData.SummaSale)    AS SummaSale
                                      , SUM(tmpData.SummaPromo)   AS SummaPromo
                                      , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
-                                     
+                                     , SUM(tmpData.SummaVenta)   AS SummaVenta
+
                                      , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
                                      , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
                                      
@@ -537,6 +601,7 @@ BEGIN
                                , tmpData.SummaSale
                                , tmpData.SummaPromo
                                , tmpData.SummaWithVAT
+                               , tmpData.SummaVenta
                                
                                , tmpData.SummaFree
                                , tmpData.SummaSaleFree
@@ -640,6 +705,8 @@ BEGIN
            , tmp.SummaAll              :: TFloat
            , tmp.SummaProfitAll        :: TFloat
            , tmp.PersentProfitAll      :: TFloat
+           
+           , tmp.SummaVenta            :: TFloat
            
            , tmpRemains.SummaRemainsStart :: TFloat
            , tmpRemains.SummaRemainsEnd   :: TFloat
@@ -934,3 +1001,6 @@ $BODY$
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
 --select * from gpReport_Profit22(inStartDate := ('01.02.2020')::TDateTime , inEndDate := ('01.02.2020')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 , inJuridicalOurId:= 0, inUnitId:= 0, inMonth:=1,  inSession := '3');
 --FETCH ALL "<unnamed portal 46>";
+
+
+select * from gpReport_Profit(inStartDate := ('01.06.2021')::TDateTime , inEndDate := ('30.06.2021')::TDateTime , inJuridical1Id := 0 , inJuridical2Id := 0 , inJuridicalOurId := 0 , inUnitId := 183289 , inMonth := 0 ,  inSession := '3');

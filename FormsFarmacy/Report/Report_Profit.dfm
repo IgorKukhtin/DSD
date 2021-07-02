@@ -5,7 +5,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1214
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -237,6 +237,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummSaleDiff_PartionDate
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaVenta
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -437,6 +442,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummSaleDiff_PartionDate
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaVenta
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -652,6 +662,16 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
+          end
+          object SummaVenta: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086' '#1042#1077#1085#1090#1077' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaVenta'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
           end
           object SummaPromo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1072#1088#1082#1077#1090'.) '#1080#1085#1092'.'
@@ -2112,6 +2132,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -2160,6 +2181,8 @@ inherited Report_ProfitForm: TReport_ProfitForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 288
     Top = 424
   end
