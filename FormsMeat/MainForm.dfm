@@ -6,7 +6,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 256
+  ExplicitHeight = 259
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -228,7 +228,7 @@ inherited MainForm: TMainForm
     object actReport_Balance_grid: TdsdOpenForm [5]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
-      Caption = #1041#1072#1083#1072#1085#1089' (Grid)'
+      Caption = #1041#1072#1083#1072#1085#1089' ('#1058#1072#1073#1083#1080#1094#1072')'
       FormName = 'TReport_Balance_gridForm'
       FormNameParam.Value = 'TReport_Balance_gridForm'
       FormNameParam.DataType = ftString
@@ -239,7 +239,7 @@ inherited MainForm: TMainForm
     object actReport_ProfitLoss_grid: TdsdOpenForm [6]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' (Grid)'
+      Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' ('#1058#1072#1073#1083#1080#1094#1072')'
       FormName = 'TReport_ProfitLoss_gridForm'
       FormNameParam.Value = 'TReport_ProfitLoss_gridForm'
       FormNameParam.DataType = ftString

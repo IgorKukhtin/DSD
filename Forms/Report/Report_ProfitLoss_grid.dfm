@@ -1,29 +1,29 @@
 inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
   Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
   ClientHeight = 404
-  ClientWidth = 606
+  ClientWidth = 945
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 622
+  ExplicitWidth = 961
   ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 606
+    Width = 945
     Height = 347
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 606
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 606
+    ClientRectRight = 945
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 606
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 606
+        Width = 945
         Height = 347
-        ExplicitWidth = 1073
+        ExplicitWidth = 606
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -53,14 +53,6 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object UnitName_ProfitLoss: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName_ProfitLoss'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object ProfitLossGroupName: TcxGridDBColumn
             Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ProfitLossGroupName'
@@ -83,6 +75,16 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
             HeaderAlignmentVert = vaCenter
             Width = 144
           end
+          object ProfitLossGroup_dop: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'ProfitLossGroup_dop'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object OnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'OnComplete'
@@ -102,6 +104,21 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
           object JuridicalName_Basis: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_Basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object BranchName_ProfitLoss: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName_ProfitLoss'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UnitName_ProfitLoss: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName_ProfitLoss'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -148,26 +165,33 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
             Width = 70
           end
           object DirectionObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'DirectionObjectName'
             Visible = False
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ProfitLossGroup_dop: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-            DataBinding.FieldName = 'ProfitLossGroup_dop'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          object DirectionDescName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1054#1073#1098#1077#1082#1090#1072' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'DirectionDescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 96
           end
-          object BranchName_ProfitLoss: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName_ProfitLoss'
+          object DestinationObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationObjectName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            Width = 96
+          end
+          object DestinationDescName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1054#1073#1098#1077#1082#1090#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationDescName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -205,6 +229,13 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object UnitDescName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'UnitDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 109
+          end
         end
       end
       object cbTotal: TcxCheckBox
@@ -218,8 +249,8 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
     end
   end
   inherited Panel: TPanel
-    Width = 606
-    ExplicitWidth = 1073
+    Width = 945
+    ExplicitWidth = 606
     inherited deStart: TcxDateEdit
       Left = 97
       EditValue = 43405d
@@ -240,6 +271,22 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
       Left = 189
       ExplicitLeft = 189
     end
+    object cbisDestination: TcxCheckBox
+      Left = 410
+      Top = 5
+      Action = actRefreshDestination
+      Properties.ReadOnly = False
+      TabOrder = 4
+      Width = 192
+    end
+    object cbisDirection: TcxCheckBox
+      Left = 610
+      Top = 5
+      Action = actRefreshDirection
+      Properties.ReadOnly = False
+      TabOrder = 5
+      Width = 199
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 27
@@ -249,7 +296,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
     Top = 144
   end
   inherited ActionList: TActionList
-    object actRefreshUnit: TdsdDataSetRefresh [0]
+    object actRefreshDirection: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -257,10 +304,22 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      Hint = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       ImageIndex = 4
-      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshDestination: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -269,8 +328,8 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_ProfitLossDialogForm'
-      FormNameParam.Value = 'TReport_ProfitLossDialogForm'
+      FormName = 'TReport_ProfitLoss_gridDialogForm'
+      FormNameParam.Value = 'TReport_ProfitLoss_gridDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -287,6 +346,22 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDestination'
+          Value = Null
+          Component = cbisDestination
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDirection'
+          Value = Null
+          Component = cbisDirection
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -887,7 +962,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_ProfitLoss'
+    StoredProcName = 'gpReport_ProfitLoss_grid'
     Params = <
       item
         Name = 'inStartDate'
@@ -902,6 +977,22 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDirection'
+        Value = Null
+        Component = cbisDirection
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDestination'
+        Value = Null
+        Component = cbisDestination
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

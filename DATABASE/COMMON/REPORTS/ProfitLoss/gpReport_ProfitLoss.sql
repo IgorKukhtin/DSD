@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
 RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
              , PL_GroupName_original TVarChar, PL_DirectionName_original TVarChar, PL_Name_original  TVarChar
              , OnComplete Boolean
-             , BusinessName TVarChar, JuridicalName_Basis TVarChar, BranchName_ProfitLoss TVarChar, UnitName_ProfitLoss TVarChar
+             , BusinessName TVarChar, JuridicalName_Basis TVarChar, BranchName_ProfitLoss TVarChar, UnitName_ProfitLoss TVarChar, UnitDescName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , InfoMoneyGroupCode_Detail Integer, InfoMoneyDestinationCode_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar
-             , DirectionObjectCode Integer, DirectionObjectName TVarChar
-             , DestinationObjectCode Integer, DestinationObjectName TVarChar
+             , DirectionObjectCode Integer, DirectionObjectName TVarChar, DirectionDescName TVarChar
+             , DestinationObjectCode Integer, DestinationObjectName TVarChar, DestinationDescName TVarChar
              , MovementDescName TVarChar
              , Amount TFloat
 
@@ -259,6 +259,7 @@ BEGIN
            , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
            , Object_Branch_ProfitLoss.ValueData AS BranchName_ProfitLoss
            , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+           , ObjectDesc_Unit.ItemName           AS UnitDescName
 
            , View_InfoMoney.InfoMoneyGroupCode
            , View_InfoMoney.InfoMoneyDestinationCode
@@ -274,10 +275,12 @@ BEGIN
            , View_InfoMoney_Detail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
            , View_InfoMoney_Detail.InfoMoneyName            AS InfoMoneyName_Detail
 
-           , Object_Direction.ObjectCode   AS DirectionObjectCode
-           , Object_Direction.ValueData    AS DirectionObjectName
-           , Object_Destination.ObjectCode AS DestinationObjectCode
-           , Object_Destination.ValueData  AS DestinationObjectName
+           , Object_Direction.ObjectCode     AS DirectionObjectCode
+           , Object_Direction.ValueData      AS DirectionObjectName
+           , ObjectDesc_Direction.ItemName   AS DirectionDescName
+           , Object_Destination.ObjectCode   AS DestinationObjectCode
+           , Object_Destination.ValueData    AS DestinationObjectName
+           , ObjectDesc_Destination.ItemName AS DestinationDescName
 
            , MovementDesc.ItemName         AS MovementDescName
 
@@ -313,7 +316,11 @@ BEGIN
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
-
+           
+           --desc
+           LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
+           LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
+           LEFT JOIN ObjectDesc AS ObjectDesc_Unit        ON ObjectDesc_Unit.Id        = Object_Unit_ProfitLoss.DescId
       WHERE View_ProfitLoss.ProfitLossCode <> 90101 --
 
      UNION ALL
@@ -332,6 +339,7 @@ BEGIN
            , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
            , Object_Branch_ProfitLoss.ValueData AS BranchName_ProfitLoss
            , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+           , ObjectDesc_Unit.ItemName           AS UnitDescName
 
            , View_InfoMoney.InfoMoneyGroupCode
            , View_InfoMoney.InfoMoneyDestinationCode
@@ -347,10 +355,12 @@ BEGIN
            , View_InfoMoney_Detail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
            , View_InfoMoney_Detail.InfoMoneyName            AS InfoMoneyName_Detail
 
-           , Object_Direction.ObjectCode   AS DirectionObjectCode
-           , Object_Direction.ValueData    AS DirectionObjectName
-           , Object_Destination.ObjectCode AS DestinationObjectCode
-           , Object_Destination.ValueData  AS DestinationObjectName
+           , Object_Direction.ObjectCode     AS DirectionObjectCode
+           , Object_Direction.ValueData      AS DirectionObjectName
+           , ObjectDesc_Direction.ItemName   AS DirectionDescName
+           , Object_Destination.ObjectCode   AS DestinationObjectCode
+           , Object_Destination.ValueData    AS DestinationObjectName
+           , ObjectDesc_Destination.ItemName AS DestinationDescName
 
            , MovementDesc.ItemName         AS MovementDescName
 
@@ -388,6 +398,10 @@ BEGIN
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
+           --desc
+           LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
+           LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
+           LEFT JOIN ObjectDesc AS ObjectDesc_Unit        ON ObjectDesc_Unit.Id        = Object_Unit_ProfitLoss.DescId
       WHERE View_ProfitLoss.ProfitLossId IS NULL
       ;
 

@@ -22,7 +22,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint2: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actRefreshUnit: TdsdDataSetRefresh;
+    actRefreshDestination: TdsdDataSetRefresh;
     spGetProfitLostParam: TdsdStoredProc;
     actGetProfitLostParam: TdsdExecStoredProc;
     actOpenReport_Account: TdsdOpenForm;
@@ -36,6 +36,13 @@ type
     bbReport_AccountMotion: TdxBarButton;
     bbPrintBranch: TdxBarButton;
     bbTotal: TdxBarControlContainerItem;
+    DestinationObjectName: TcxGridDBColumn;
+    cbisDestination: TcxCheckBox;
+    cbisDirection: TcxCheckBox;
+    UnitDescName: TcxGridDBColumn;
+    DirectionDescName: TcxGridDBColumn;
+    DestinationDescName: TcxGridDBColumn;
+    actRefreshDirection: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
