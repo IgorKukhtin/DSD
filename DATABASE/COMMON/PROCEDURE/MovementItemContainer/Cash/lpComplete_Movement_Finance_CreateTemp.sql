@@ -10,7 +10,7 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem')
      THEN
          DELETE FROM _tmpItem;
      ELSE

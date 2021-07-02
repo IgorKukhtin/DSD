@@ -20,7 +20,8 @@ BEGIN
      -- проверка
      IF inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner)
      THEN
-         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+         inOperDatePartner:= DATE_TRUNC ('DAY', inOperDatePartner);
+         -- RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
      IF inIsAuto = TRUE 

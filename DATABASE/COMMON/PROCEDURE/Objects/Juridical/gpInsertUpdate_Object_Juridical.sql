@@ -50,6 +50,18 @@ BEGIN
        PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode);
    END IF;
 
+   -- Проверка
+   IF ioId > 0
+      AND COALESCE (inPriceListId, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Juridical_PriceList()), 0)
+   THEN
+       -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
+   END IF;
+
+
    -- проверка
    IF COALESCE (inInfoMoneyId, 0) = 0
    THEN

@@ -107,6 +107,27 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Категорию ТТ>.';
    END IF;
    
+   -- Проверка
+   IF ioId > 0
+      AND COALESCE (inPriceListId, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Partner_PriceList()), 0)
+   THEN
+       -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   END IF;
+
+   -- Проверка
+   IF ioId > 0
+      AND COALESCE (inPriceListId_30201, 0) <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = ioId AND OL.DescId = zc_ObjectLink_Partner_PriceList30201()), 0)
+   THEN
+       -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId_30201 > 0
+   THEN
+       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_PriceList());
+   END IF;
 
 
    -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)

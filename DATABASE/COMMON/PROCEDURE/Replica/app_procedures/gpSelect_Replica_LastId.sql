@@ -110,8 +110,23 @@ BEGIN
                                                                                                END -- :: INTERVAL
                              ), inId_start - 1);
 */
-       -- нашли время начала этой транзакции - здесь значение без timezone
-       vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
+
+    -- нашли время начала этой транзакции - здесь значение без timezone
+    vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmp_pg_stat_activity')
+    THEN
+        DELETE FROM _tmp_pg_stat_activity;
+
+        INSERT INTO _tmp_pg_stat_activity SELECT * FROM pg_stat_activity
+                                          WHERE state ILIKE 'active'
+                                            AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
+                                            AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
+                                            AND query NOT ILIKE '% VACUUM%'
+                                            AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
+                                           ;
+
+    ELSE
 
        -- Активные процессы
        CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity
@@ -121,7 +136,7 @@ BEGIN
                                                                    AND query NOT ILIKE '% VACUUM%'
                                                                    AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
                                                                   ;
-
+    END IF
 --    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
 
        -- если найдена активная транзакция - для значения без timezone
@@ -260,4 +275,6 @@ $BODY$
 
 -- Err1 = 6868762052
 -- Err1 = 6869046441
--- Err2 = 6969343465
+-- Err2 = 6969343464
+-- Err2 = 6970098890
+-- Err2 = 6971651623

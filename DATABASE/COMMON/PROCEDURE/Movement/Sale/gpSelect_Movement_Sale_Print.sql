@@ -1209,7 +1209,9 @@ BEGIN
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
-     , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
+   --, tmpMI_EDI AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
+     , tmpMI_Order AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
+                            , MovementItem.ObjectId                         AS GoodsId
                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                             , COALESCE (MIFloat_Price.ValueData, 0)         AS Price

@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
     IN inChecked               Boolean    , -- Проверен
    OUT outPriceWithVAT         Boolean    , -- Цена с НДС (да/нет)
    OUT outVATPercent           TFloat     , -- % НДС
-    IN inChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
+ INOUT ioChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
     IN inFromId                Integer    , -- От кого (в документе)
     IN inToId                  Integer    , -- Кому (в документе)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
@@ -103,7 +103,7 @@ BEGIN
                           AND Movement.OperDate = inOperDate
                           AND Movement.InvNumber = inInvNumber
                           -- AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (outVATPercent, 0)
-                          -- AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (inChangePercent, 0)
+                          -- AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (ioChangePercent, 0)
                           AND MovementBoolean_PriceWithVAT.ValueData = outPriceWithVAT
                           AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = COALESCE (inInvNumberOrder, '')
                           -- AND COALESCE (MovementLinkObject_RouteSorting.ObjectId, 0) = COALESCE (inRouteSortingId, 0)
@@ -133,7 +133,7 @@ BEGIN
                                       , inChecked              := inChecked
                                       -- , inPriceWithVAT       := inPriceWithVAT
                                       -- , inVATPercent         := inVATPercent
-                                      , inChangePercent        := inChangePercent
+                                      , ioChangePercent        := ioChangePercent
                                       , inFromId               := inFromId
                                       , inToId                 := inToId
                                       , inPaidKindId           := inPaidKindId
@@ -190,4 +190,4 @@ $BODY$
  07.04.14                                        *
 */
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Sale_Partner (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_Sale_Partner (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, ioChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
