@@ -14,6 +14,20 @@ BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
+-- RAISE EXCEPTION 'Ошибка.<%>', inProgramName;
+
+IF inProgramName ilike 'Project.exe' AND 1=0
+THEN
+   SELECT 
+       ObjectBLOB_ProgramData.ValueData INTO Data
+   FROM Object
+   JOIN ObjectBLOB AS ObjectBLOB_ProgramData 
+     ON ObjectBLOB_ProgramData.DescId = zc_ObjectBlob_Program_Data() 
+    AND ObjectBLOB_ProgramData.ObjectId = Object.Id
+   WHERE Object.ValueData = 'Project.exe.win64' AND Object.DescId = zc_Object_Program();
+
+ELSE
+
    SELECT 
        ObjectBLOB_ProgramData.ValueData INTO Data
    FROM Object
@@ -21,6 +35,8 @@ BEGIN
      ON ObjectBLOB_ProgramData.DescId = zc_ObjectBlob_Program_Data() 
     AND ObjectBLOB_ProgramData.ObjectId = Object.Id
    WHERE Object.ValueData = inProgramName AND Object.DescId = zc_Object_Program();
+
+END IF;
     
    RETURN DATA; 
   

@@ -16,7 +16,8 @@ $BODY$
     DECLARE vbLast_modified TDateTime;
 BEGIN
 
-    IF inRec_count >= 200000
+    -- IF inRec_count >= 200000 OR 1=1
+    IF inId_start < 6981958236
     THEN
         vbId_End:= (SELECT MAX (Id)
                     FROM _replica.table_update_data
@@ -136,7 +137,7 @@ BEGIN
                                                                    AND query NOT ILIKE '% VACUUM%'
                                                                    AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
                                                                   ;
-    END IF
+    END IF;
 --    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
 
        -- если найдена активная транзакция - для значения без timezone
