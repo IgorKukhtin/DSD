@@ -331,6 +331,10 @@ begin
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+    //if ((BaseVersionInfo.VerLow shr 16) = 10)
+    //and(((BaseVersionInfo.VerLow shl 16) shr 16) <= 115)
+    //then
+    //else
         if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
            UpdateProgram;
   except

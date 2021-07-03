@@ -40,6 +40,7 @@ object OrderExternal_DatePartnerDialogForm: TOrderExternal_DatePartnerDialogForm
     Left = 131
     Top = 49
     EditValue = 42705d
+    Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
