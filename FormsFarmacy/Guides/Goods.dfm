@@ -20,6 +20,8 @@ inherited GoodsForm: TGoodsForm
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 417
+        ExplicitLeft = -784
+        ExplicitTop = 3
         ExplicitWidth = 1165
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -147,6 +149,16 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1055#1072#1088#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1057#1059#1053
             Options.Editing = False
             Width = 80
+          end
+          object PairSunAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1088#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'PairSunAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object PairSunDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1080#1085#1093#1088'. '#1074' '#1087#1077#1088#1077#1084'. '#1076#1083#1103' '#1090#1086#1074' ('#1087#1072#1088#1072' '#1074' '#1057#1059#1053')'
@@ -745,6 +757,14 @@ inherited GoodsForm: TGoodsForm
           Component = FormParams
           ComponentItem = 'inGoodsPairSunName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPairSunAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPairSunAmount'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4464,6 +4484,15 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inGoodsPairSunId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPairSunAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPairSunAmount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

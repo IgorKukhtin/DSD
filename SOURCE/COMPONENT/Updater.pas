@@ -10,11 +10,13 @@ type
      class procedure UpdateConnectReport (Connection: string; Restart : boolean = True);
      class procedure UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
      class procedure UpdateProgram;
+     class function UpdateProgramTest : boolean;
      class function ProgramLoadSuffics(aFileName: string) : String;
   public
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
      class procedure AutomaticUpdateProgramStart;
+     class function AutomaticUpdateProgramTestStart : boolean;
   end;
 
   const fAlan_colocall : Boolean = FALSE;
@@ -25,6 +27,7 @@ implementation
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
      MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows,
      StrUtils, CommonData, LocalWorkUnit;
+
 { TUpdater }
 
 class procedure TUpdater.AutomaticCheckConnect;
@@ -354,6 +357,16 @@ begin
   end;
 end;
 
+class function TUpdater.AutomaticUpdateProgramTestStart;
+begin
+  try
+    Application.ProcessMessages;
+    Result := UpdateProgramTest;
+  except
+    on E: Exception do
+       TMessagesForm.Create(nil).Execute('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику', E.Message);
+  end;
+end;
 
 class procedure TUpdater.UpdateConnect (Connection: string);
 var StringList: TStringList;
@@ -559,6 +572,41 @@ begin
 
   ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');
   Application.Terminate
+end;
+
+class function TUpdater.UpdateProgramTest : boolean;
+var S : String;
+begin
+  Result := False;
+
+  //1. Для кассы обновляем сервис
+  S:= ExtractFileName(ParamStr(0));
+  if (UpperCase(S) = UpperCase('FarmacyCash.exe'))
+    // and (not FileExists(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe'))
+    // Пусть FarmacyCashServise.exe обновляеться всегда, а то не обновляют
+  then
+     FileWriteString(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyCashServise_Test.exe'),
+        GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'FarmacyCashServise.exe', '')));
+
+  //2. Загружаем TXT в uTMP нужной разрядности
+  FileWriteString(ParamStr(0)+'.uTMP', TdsdFormStorageFactory.GetStorage.LoadFile(StringReplace(ExtractFileName(ParamStr(0)), '.exe', '_Test.exe', []), GetBinaryPlatfotmSuffics(ParamStr(0), ProgramLoadSuffics(ParamStr(0)))));
+
+  //3. Загружаем Upgrader если надо
+  if (not FileExists(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe')) or (GetFileSizeByName(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe') = 0)
+  then
+     FileWriteString(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Upgrader4.exe'),
+       GetBinaryPlatfotmSuffics(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', '')));
+
+  //4. midas.dll грузим если надо
+  if (gc_ProgramName <> 'FDemo.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'midas.dll'))
+  then
+     FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
+
+  //5. Запускаем Upgrader для замени EXE
+  Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
+
+  ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');
+  Result := True;
 end;
 
 end.

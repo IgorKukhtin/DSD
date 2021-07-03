@@ -32,6 +32,8 @@ type
     cxLabel5: TcxLabel;
     edGoodsPairSun: TcxButtonEdit;
     GuidesGoodsPairSun: TdsdGuides;
+    cePairSunAmount: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public

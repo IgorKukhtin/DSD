@@ -1,9 +1,11 @@
 -- Function: gpSelect_Сalculation_PayrollGroup()
 
---DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
+    IN inOperDate         TDateTime,
     IN inPayrollTypeID    Integer,
     IN inPercent          TFloat,
     IN inMinAccrualAmount TFloat,
@@ -26,13 +28,21 @@ $BODY$
    DECLARE vbSummaBaseSite TFloat;
    DECLARE vbSummaCalс     TFloat;
    DECLARE vbFormula       TVarChar;
+   DECLARE vbPercentSite   TFloat;
 BEGIN
+
+  IF inOperDate >= '01.07.2021'
+  THEN
+    vbPercentSite := 2;
+  ELSE
+    vbPercentSite := 1;
+  END IF;
 
   IF inPayrollTypeID IN (zc_Enum_PayrollType_WorkCS(), zc_Enum_PayrollType_WorkSCS(), zc_Enum_PayrollType_WorkAS(), zc_Enum_PayrollType_WorkSAS(), zc_Enum_PayrollType_WorkI())
   THEN
     vbSummaBase := inSummBase;
     vbSummaBaseSite := inSummBaseSite;
-    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2) + ROUND(COALESCE (vbSummaBaseSite * 1 / 100, 0), 2);
+    vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2) + ROUND(COALESCE (vbSummaBaseSite * vbPercentSite / 100, 0), 2);
     vbSummaCalс := CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END;
     IF COALESCE (inCorrPercentage, 100) <> 100
     THEN
@@ -40,15 +50,14 @@ BEGIN
     END IF;
 
 
-    vbFormula   := ('База расчета: '||inDetals||' = '||
-                    TRIM(to_char(vbSummaBase + COALESCE (vbSummaBaseSite, 0), 'G999G999G999G999D99'))||
-                    '; Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||CASE WHEN COALESCE (vbSummaBaseSite, 0) > 0 THEN ' + база сайта 1 % ' ELSE '' END||
-                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||TRIM(to_char(inCorrPercentage / 100, 'G999G999G999G990D99')) ELSE '' END
-                    --'; Начислено: '||TRIM(to_char(vbSummaCalс, 'G999G999G999G999D99'))
+    vbFormula   := ('База расчета: '||inDetals||' = '||zfConvert_FloatToString(vbSummaBase + COALESCE (vbSummaBaseSite, 0))||
+                    '; Начислено: Если база '||zfConvert_FloatToString(COALESCE (inPercent, 0))||' % '||CASE WHEN COALESCE (vbSummaBaseSite, 0) > 0 THEN ' + база сайта '||zfConvert_FloatToString(vbPercentSite)||' % ' ELSE '' END||
+                    ' = '||zfConvert_FloatToString(vbSumma)||
+                    ' < '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' то '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' иначе '||zfConvert_FloatToString(vbSumma)||
+                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||zfConvert_FloatToString(inCorrPercentage / 100) ELSE '' END
+                    --'; Начислено: '||zfConvert_FloatToString(vbSummaCalс)
                     )::TVarChar;
 
     RETURN QUERY
@@ -66,14 +75,14 @@ BEGIN
     END IF;
 
     vbFormula   := 'База расчета: '||inDetals||' = '||
-                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
-                    'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
-                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||TRIM(to_char(inCorrPercentage / 100, 'G999G999G999G990D99')) ELSE '' END||
-                    '; Начислено: '||TRIM(to_char(vbSummaCalс, 'G999G999G999G999D99'));
+                    zfConvert_FloatToString(vbSummaBase)||'; '||
+                    'Начислено: Если база '||zfConvert_FloatToString(COALESCE (inPercent, 0))||' % '||
+                    ' = '||zfConvert_FloatToString(vbSumma)||
+                    ' < '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' то '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' иначе '||zfConvert_FloatToString(vbSumma)||
+                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||zfConvert_FloatToString(inCorrPercentage / 100) ELSE '' END||
+                    '; Начислено: '||zfConvert_FloatToString(vbSummaCalс);
 
     RETURN QUERY
         SELECT vbSummaCalс, vbSummaBase, vbSummaBaseSite, vbFormula;
@@ -96,16 +105,16 @@ BEGIN
       vbSummaCalс := ROUND(vbSummaCalс * inCorrPercentage / 100, 2);
     END IF;
 
-    vbFormula   := 'База расчета: '||TRIM(to_char(COALESCE (inSummBase, 0), 'G999G999G999G999D99'))||' / ('||
-                    CAST(COALESCE (inCountUser, 1) AS TVarChar)||') = '||
-                    TRIM(to_char(vbSummaBase, 'G999G999G999G999D99'))||'; '||
-                    'Начислено: Если база % '||CAST(COALESCE (inPercent, 0) AS TVarChar)||
-                    ' = '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    ' < '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' то '||TRIM(to_char(inMinAccrualAmount, 'G999G999G999G999D99'))||
-                    ' иначе '||TRIM(to_char(vbSumma, 'G999G999G999G999D99'))||
-                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||TRIM(to_char(inCorrPercentage / 100, 'G999G999G999G990D99')) ELSE '' END||
-                    '; Начислено: '||TRIM(to_char(vbSummaCalс, 'G999G999G999G999D99'));
+    vbFormula   := 'База расчета: '||zfConvert_FloatToString(COALESCE (inSummBase, 0))||' / ('||
+                    zfConvert_FloatToString(COALESCE (inCountUser, 1))||') = '||
+                    zfConvert_FloatToString(vbSummaBase)||'; '||
+                    'Начислено: Если база '||zfConvert_FloatToString(COALESCE (inPercent, 0))||' % '||
+                    ' = '||zfConvert_FloatToString(vbSumma)||
+                    ' < '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' то '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    ' иначе '||zfConvert_FloatToString(vbSumma)||
+                    CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Коэффициент  '||zfConvert_FloatToString(inCorrPercentage / 100) ELSE '' END||
+                    '; Начислено: '||zfConvert_FloatToString(vbSummaCalс);
 
     RETURN QUERY
         SELECT vbSummaCalс, vbSummaBase, vbSummaBaseSite, vbFormula;
@@ -119,7 +128,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -129,4 +138,7 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integ
  23.08.19                                                        *
 */
 
--- select * from gpSelect_Calculation_PayrollGroup(zc_Enum_PayrollType_WorkS(), 3, 0, 3, 1000, 0, '');
+-- 
+select * from gpSelect_Calculation_PayrollGroup('01.07.2021', zc_Enum_PayrollType_WorkCS(), 3, 870, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '');
+
+База расчета: (67,064.10 / 3 = 22,354.70) + сайт (9,709.00 / 3 = 3,236.33) + (23,265.90 / 2 = 11,632.95) + сайт (7,179.30 / 2 = 3,589.65) = 40 813.63; Начислено: Если база 3 %  + база сайта 2 %  = 1 156.15 < 870 то 870 иначе 1 156.15

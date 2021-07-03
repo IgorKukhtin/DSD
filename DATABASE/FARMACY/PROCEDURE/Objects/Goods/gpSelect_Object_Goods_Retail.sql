@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar
-             , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar
+             , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar, PairSunAmount TFloat
              , PairSunDate TDateTime
              , isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -31,7 +31,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
-             , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
@@ -265,6 +264,7 @@ BEGIN
            , Object_GoodsPairSun.Id                                                   AS GoodsPairSunId
            , Object_GoodsPairSun.ObjectCode                                           AS GoodsPairSunCode
            , Object_GoodsPairSun.ValueData                                            AS GoodsPairSunName
+           , Object_Goods_Retail.PairSunAmount
            , Object_Goods_Retail.PairSunDate             :: TDateTime                 AS PairSunDate
            , Object_Goods_Retail.isErased
            , Object_Goods_Main.GoodsGroupId
@@ -319,7 +319,6 @@ BEGIN
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN tmpPricelistItems.GoodsNDS IS NOT NULL AND inContractId <> 0 AND
              COALESCE (tmpPricelistItems.GoodsNDS, 0) <> tmpNDS.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
-           , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , Object_Goods_Main.isNotUploadSites
            , Object_Goods_Main.isDoesNotShare                                    AS DoesNotShare
            , Object_Goods_Main.isAllowDivision                                   AS AllowDivision

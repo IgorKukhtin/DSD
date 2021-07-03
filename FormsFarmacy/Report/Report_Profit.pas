@@ -105,6 +105,7 @@ type
     GuidesJuridicalOur: TdsdGuides;
     cxLabel9: TcxLabel;
     ceMonth: TcxCurrencyEdit;
+    SummaVenta: TcxGridDBColumn;
   private
     { Private declarations }
   public

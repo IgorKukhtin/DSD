@@ -2623,6 +2623,11 @@ begin
           ShowPUSHMessageCash('Коллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
         end;
 
+        if NeedTestProgram then
+        begin
+          ShowPUSHMessageCash('Коллеги, обновите FCash, для вас доступна тестовая версия (Ctrl+U)!', cResult);
+        end;
+
         if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean and (HourOf(Now) < 15) then
           SaveHardwareData;
       end;
@@ -6515,6 +6520,41 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
   begin
   if not gc_User.Local then
   Begin
+
+    // Проверка тестовой версии программы
+    try
+      Application.ProcessMessages;
+      if NeedTestProgram then
+      begin
+        if (MessageDlg('Обнаружена тестовая версия программы! Обновить?', mtInformation, mbOKCancel, 0) = mrOk) then
+        begin
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9); // только 2 форма
+          Step := 0;
+          while ProcessExists('FarmacyCashServise.exe') do
+          begin
+            Sleep(2000);
+            Inc(Step);
+            if Step > 5 then
+            begin
+              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 минут.');
+              Exit;
+            end;
+          end;
+          InitCashSession(False);
+          if TUpdater.AutomaticUpdateProgramTestStart then
+          begin
+            UpdateTestProgram;
+            Application.Terminate
+          end;
+        end;
+        Exit;
+      end;
+    except
+      on E: Exception do
+         ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
+    end;
+
+    // Проверка новой версии программы
     try
       Application.ProcessMessages;
       BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)),
@@ -6546,6 +6586,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
       on E: Exception do
          ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
     end;
+
   End;
 end;
 
@@ -8477,9 +8518,9 @@ begin
               else nAmount := nAmountPS - nAmountPSM;
               nAmountPSM := nAmountPSM + nAmount;
               SoldRegim := False;
-              edAmount.Text := CurrToStr(nAmount);
               CheckGrid.SetFocus;
               SourceClientDataSet := checkCDS;
+              edAmount.Text := CurrToStr(nAmount);
               InsertUpdateBillCheckItems;
             finally
               FStepSecond := False;
@@ -11823,7 +11864,7 @@ begin
 
   if edAmount.Text = '' then
   begin
-    ActiveControl := edAmount;
+    if edAmount.Enabled then ActiveControl := edAmount;
     ShowMessage
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
   end;
@@ -11971,7 +12012,7 @@ begin
   begin
     if not TryStrToCurr(edAmount.Text, nAmount) then
     begin
-      ActiveControl := edAmount;
+      if edAmount.Enabled then ActiveControl := edAmount;
       ShowMessage('Ошибка. Невозможно преобразовать строку "' + edAmount.Text +
         '" в число.');
     end

@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Goods_GoodsPairSun()
 
 DROP FUNCTION IF EXISTS gpUpdate_Goods_GoodsPairSun(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Goods_GoodsPairSun(Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Goods_GoodsPairSun(
     IN inId             Integer   ,    -- ключ объекта <>
     IN inGoodsPairSunId Integer   ,    --
+    IN inPairSunAmount  TFloat    ,    --
     IN inSession        TVarChar       -- текущий пользователь
 )
 RETURNS VOID
@@ -44,10 +46,13 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPairSun(), inId, inGoodsPairSunId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PairSunAmount(), inId, inPairSunAmount);
 
    -- Сохранили в плоскую таблицй
    BEGIN
      UPDATE Object_Goods_Retail SET GoodsPairSunId = inGoodsPairSunId
+                                  , PairSunAmount  = inPairSunAmount
      WHERE Object_Goods_Retail.Id = inId;  
    EXCEPTION
       WHEN others THEN 
@@ -67,3 +72,6 @@ LANGUAGE plpgsql VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  18.05.20         *
 */
+
+
+-- select * from gpUpdate_Goods_GoodsPairSun(inGoodsId := 596529 , inGoodsPairSunId := 42562 , inPairSunAmount := 2 ,  inSession := '3');
