@@ -72,7 +72,47 @@ BEGIN
 
      -- –езультат
      RETURN QUERY
-     WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
+     WITH tmpReport AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
+                        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate) 
+                                                                                   -- тогда здесь последний день мес, берем тек. мес€ц
+                                                                                   THEN DATE_TRUNC ('MONTH', inOperDate)
+                                                                                   -- берем прошлый мес€ц
+                                                                                   ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 MONTH'
+                                                                              END
+                                                          , inEndDate      := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate) 
+                                                                                   -- тогда здесь последний день мес, берем тек. мес€ц
+                                                                                   THEN inOperDate
+                                                                                   -- берем прошлый мес€ц
+                                                                                   ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY'
+                                                                              END
+                                                          , inBranchId     := 0
+                                                          , inAreaId       := 0
+                                                          , inRetailId     := 0
+                                                          , inJuridicalId  := 0
+                                                          , inPaidKindId   := zc_Enum_PaidKind_FirstForm()
+                                                          , inTradeMarkId  := 0
+                                                          , inGoodsGroupId := 0
+                                                          , inInfoMoneyId  := 0
+                                                          , inIsPartner    := FALSE
+                                                          , inIsTradeMark  := FALSE
+                                                          , inIsGoods      := FALSE
+                                                          , inIsGoodsKind  := FALSE
+                                                          , inIsContract   := FALSE
+                                                          , inIsOLAP       := TRUE
+                                                          , inSession      := inSession
+                                                           ) AS tmpReport
+                        GROUP BY tmpReport.BranchId, tmpReport.InfoMoneyId
+                       )
+        , tmpReport_sum AS (SELECT tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
+                            FROM tmpReport
+                            GROUP BY tmpReport.InfoMoneyId
+                           )
+        , tmpReport_res AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId
+                                 , CASE WHEN tmpReport_sum.Sale_Summ > 0 THEN tmpReport.Sale_Summ / tmpReport_sum.Sale_Summ ELSE 1 END AS Koeff
+                            FROM tmpReport
+                                 LEFT JOIN tmpReport_sum ON tmpReport_sum.InfoMoneyId = tmpReport.InfoMoneyId
+                           )
+        , tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
                    UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- ƒебиторы
                         )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
@@ -141,48 +181,49 @@ from (
    , View_Contract.StartDate
    , View_Contract.EndDate
 
-   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 1 * RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
-   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
-   , RESULT.SaleSumm :: TFloat AS SaleSumm
+   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 1 * RESULT.Remains * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END)::TFloat AS DebetRemains
+   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains * COALESCE (tmpReport_res.Koeff, 1.0) END)::TFloat AS KreditRemains
+   , (RESULT.SaleSumm * COALESCE (tmpReport_res.Koeff, 1.0)) :: TFloat AS SaleSumm
 
    , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
-                THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
-           ELSE RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm -- 0
+                THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) * COALESCE (tmpReport_res.Koeff, 1.0)
+           ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm)  * COALESCE (tmpReport_res.Koeff, 1.0)
+                -- 0
       END)::TFloat AS DefermentPaymentRemains
 
    , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0)
                 THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > RESULT.SaleSumm1
-                          THEN RESULT.SaleSumm1
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm)
+                          THEN RESULT.SaleSumm1 * COALESCE (tmpReport_res.Koeff, 1.0)
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) * COALESCE (tmpReport_res.Koeff, 1.0)
                      END
            ELSE 0
       END)::TFloat AS SaleSumm1
 
    , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > 0 AND RESULT.SaleSumm2 > 0)
                 THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > RESULT.SaleSumm2
-                          THEN RESULT.SaleSumm2
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1)
+                          THEN RESULT.SaleSumm2 * COALESCE (tmpReport_res.Koeff, 1.0)
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) * COALESCE (tmpReport_res.Koeff, 1.0)
                      END
       ELSE 0 END)::TFloat AS SaleSumm2
 
    , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > 0 AND RESULT.SaleSumm3 > 0)
                 THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > RESULT.SaleSumm3
-                          THEN RESULT.SaleSumm3
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2)
+                          THEN RESULT.SaleSumm3 * COALESCE (tmpReport_res.Koeff, 1.0)
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) * COALESCE (tmpReport_res.Koeff, 1.0)
                      END
            ELSE 0
       END)::TFloat AS SaleSumm3
 
    , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0)
                 THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4
-                          THEN RESULT.SaleSumm4
-                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3)
+                          THEN RESULT.SaleSumm4 * COALESCE (tmpReport_res.Koeff, 1.0)
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) * COALESCE (tmpReport_res.Koeff, 1.0)
                      END
             ELSE 0
       END)::TFloat AS SaleSumm4
 
    , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0
-                THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4)
+                THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) * COALESCE (tmpReport_res.Koeff, 1.0)
                 ELSE 0
       END )::TFloat AS SaleSumm5
 
@@ -202,7 +243,7 @@ from (
                              END
       )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
    , RESULT.ContractDate :: TDateTime AS StartContractDate
-   , (-1 * RESULT.Remains) :: TFloat AS Remains
+   , (-1 * RESULT.Remains * COALESCE (tmpReport_res.Koeff, 1.0)) :: TFloat AS Remains
 
       , Object_InfoMoney_View.InfoMoneyGroupName
       , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -397,7 +438,31 @@ from (
 
            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = RESULT.JuridicalGroupId
 
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = RESULT.BranchId
+           -- ќтв за договор - сотрудник
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
+                                ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                               AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+           -- ќтв за договор - сотрудник “ѕ
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_trade
+                                ON ObjectLink_Personal_PersonalServiceList_trade.ObjectId = ObjectLink_Contract_PersonalTrade.ChildObjectId
+                               AND ObjectLink_Personal_PersonalServiceList_trade.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch_trade
+                                ON ObjectLink_PersonalServiceList_Branch_trade.ObjectId = ObjectLink_Personal_PersonalServiceList_trade.ChildObjectId
+                               AND ObjectLink_PersonalServiceList_Branch_trade.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+
+           LEFT JOIN Object AS Object_Branch_personal       ON Object_Branch_personal.Id = ObjectLink_PersonalServiceList_Branch.ChildObjectId
+           LEFT JOIN Object AS Object_Branch_personal_trade ON Object_Branch_personal_trade.Id = ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId
+
+         --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (RESULT.BranchId, ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
+
+           LEFT JOIN tmpReport_res ON tmpReport_res.InfoMoneyId = RESULT.InfoMoneyId
+                                  AND tmpReport_res.Koeff > 0
+                                  AND RESULT.PaidKindId      = zc_Enum_PaidKind_FirstForm()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpReport_res.BranchId, RESULT.BranchId)
+
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = RESULT.PartnerId
 

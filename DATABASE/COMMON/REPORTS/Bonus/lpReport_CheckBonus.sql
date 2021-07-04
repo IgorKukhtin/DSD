@@ -218,8 +218,8 @@ BEGIN
                                  --AND COALESCE ((SELECT COUNT(*) FROM tmpCCPartner),0) <> 0
                                  )
 
-         -- формируется список договоров, у которых есть условие по "Бонусам" ежемесячный платеж
-       , tmpCCK_BonusMonthlyPayment AS (SELECT -- условие договора
+    -- формируется список договоров, у которых есть условие по "Бонусам" ежемесячный платеж
+  , tmpCCK_BonusMonthlyPayment_all AS (SELECT -- условие договора
                                              ObjectLink_ContractConditionKind.ChildObjectId AS ContractConditionKindId
                                            , View_Contract.JuridicalId
                                            , View_Contract.InvNumber             AS InvNumber_master
@@ -260,6 +260,9 @@ BEGIN
 
                                              -- если нужно считать по условиям - для НАЛ
                                            , CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN Object_ContractCondition.Id ELSE 0 END AS ContractConditionId
+
+                                           , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+                                           , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
 
                                       FROM ObjectLink AS ObjectLink_ContractConditionKind
                                            -- условие договора, не удалено
@@ -311,11 +314,21 @@ BEGIN
                                                                AND ObjectLink_ContractCondition_PaidKind.DescId = zc_ObjectLink_ContractCondition_PaidKind()
                                            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ContractCondition_PaidKind.ChildObjectId
 
+                                           LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                                ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                                                               AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+                                           LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                                ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                                                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
                                       -- только такое уловия
                                       WHERE ObjectLink_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_BonusMonthlyPayment()
                                         AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                      )
-
+        -- формируется список договоров, у которых есть условие по "Бонусам" ежемесячный платеж
+      , tmpCCK_BonusMonthlyPayment AS (SELECT *
+                                       FROM tmpCCK_BonusMonthlyPayment_all
+                                       WHERE inStartDate BETWEEN tmpCCK_BonusMonthlyPayment_all.StartDate AND tmpCCK_BonusMonthlyPayment_all.EndDate
+                                      )
          -- список договоров, у которых есть условие по "Бонусам"
        , tmpContractConditionKind AS (SELECT -- условие договора
                                              ObjectLink_ContractConditionKind.ChildObjectId AS ContractConditionKindId

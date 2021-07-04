@@ -120,6 +120,7 @@ BEGIN
    IF inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_ChangePrice(), zc_Enum_ContractConditionKind_ChangePercentPartner()
                                       , zc_Enum_ContractConditionKind_ChangePercent()
                                       , zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank()
+                                      , zc_Enum_ContractConditionKind_BonusMonthlyPayment()
                                        )
    AND 1 < (SELECT COUNT(*)
             FROM ObjectLink AS ObjectLink_Contract

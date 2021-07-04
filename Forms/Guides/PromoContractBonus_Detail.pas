@@ -83,7 +83,6 @@ type
     cxGridDBTableViewContract_Child: TcxGridDBTableView;
     cxGridLeveContract_Child: TcxGridLevel;
     dsdDBViewAddOnContract_Child: TdsdDBViewAddOn;
-    cxRightSplitter: TcxSplitter;
     Panel: TPanel;
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
@@ -115,7 +114,6 @@ type
     Contract_ChildDS: TDataSource;
     Contract_ChildCDS: TClientDataSet;
     cxSplitter1: TcxSplitter;
-    cxSplitter2: TcxSplitter;
     cxSplitter3: TcxSplitter;
     InsertRecordCCPartner: TInsertRecord;
     dsdSetErasedCCPartner: TdsdUpdateErased;

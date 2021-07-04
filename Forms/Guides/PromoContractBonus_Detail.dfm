@@ -321,15 +321,17 @@
     end
   end
   object cxGridContractCondition: TcxGrid
-    Left = 6
+    Left = 0
     Top = 198
-    Width = 1206
+    Width = 1216
     Height = 189
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 6
+    ExplicitWidth = 1206
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -592,7 +594,7 @@
     Height = 228
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 4
+    TabOrder = 3
     object cxGridContract_Child: TcxGrid
       Left = 0
       Top = 0
@@ -603,10 +605,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 120
-      ExplicitTop = 88
-      ExplicitWidth = 451
-      ExplicitHeight = 140
       object cxGridDBTableViewContract_Child: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Contract_ChildDS
@@ -1044,21 +1042,6 @@
       Control = cxGridGoods
     end
   end
-  object cxRightSplitter: TcxSplitter
-    Left = 1212
-    Top = 198
-    Width = 4
-    Height = 189
-    AlignSplitter = salRight
-    Control = Panel
-  end
-  object cxSplitter2: TcxSplitter
-    Left = 0
-    Top = 198
-    Width = 6
-    Height = 189
-    Control = cxGridContractCondition
-  end
   object cxSplitter3: TcxSplitter
     Left = 0
     Top = 193
@@ -1438,6 +1421,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1481,6 +1465,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1524,6 +1509,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1567,6 +1553,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

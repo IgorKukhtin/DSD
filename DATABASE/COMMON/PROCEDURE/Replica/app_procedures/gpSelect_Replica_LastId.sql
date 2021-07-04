@@ -17,7 +17,7 @@ $BODY$
 BEGIN
 
     -- IF inRec_count >= 200000 OR 1=1
-    IF inId_start < 6981958236
+    /*IF inId_start < 6981958236
     THEN
         vbId_End:= (SELECT MAX (Id)
                     FROM _replica.table_update_data
@@ -38,7 +38,7 @@ BEGIN
         RETURN QUERY
           SELECT vbId_End AS NextId, (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End) :: TDateTime AS NextDT;
 
-    ELSE
+    ELSE*/
 
     -- Нужно передать в gpSelect_Replica_union значения Id из _replica.table_update_data в диапазоне "inId_start..(inId_start + inRec_count)"
     -- и при этом соблюсти условие - "все соответствующие transaction_id находятся в передаваемом диапазоне".
@@ -234,10 +234,19 @@ BEGIN
          vbId_End:=5602489721;
     END IF;*/
 
+  /*vbId_End:= COALESCE ((SELECT max(id) FROM _replica.table_update_data WHERE Id between vbId_start_save  and  vbId_End
+                                 AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
+                                                                                                     THEN INTERVAL '25 MINUTES'
+                                                                                                     ELSE INTERVAL '75 MINUTES'
+                                                                                                   --ELSE INTERVAL '55 MINUTES'
+                                                                                                END -- :: INTERVAL
+                         ), vbId_start_save - 1);*/
+
+
     RETURN QUERY
       SELECT vbId_End AS NextId, (SELECT last_modified FROM _replica.table_update_data WHERE Id = vbId_End) :: TDateTime AS NextDT;
 
-    END IF;
+  --END IF;
 
 END;
 $BODY$

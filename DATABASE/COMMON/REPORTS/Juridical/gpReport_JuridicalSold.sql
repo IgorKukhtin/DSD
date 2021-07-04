@@ -23,7 +23,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , RetailName TVarChar, RetailReportName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , JuridicalPartnerlName TVarChar
-             , BranchCode Integer, BranchName TVarChar
+             , BranchCode Integer, BranchName TVarChar, BranchName_personal TVarChar, BranchName_personal_trade TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , ContractJuridicalDocId Integer, ContractJuridicalDocCode Integer, ContractJuridicalDocName TVarChar
@@ -82,7 +82,38 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH tmpContractCondition AS
+     WITH tmpReport AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
+                        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 MONTH' ELSE inStartDate END
+                                                          , inEndDate      := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 DAY'   ELSE inEndDate   END
+                                                          , inBranchId     := 0
+                                                          , inAreaId       := 0
+                                                          , inRetailId     := 0
+                                                          , inJuridicalId  := 0
+                                                          , inPaidKindId   := zc_Enum_PaidKind_FirstForm()
+                                                          , inTradeMarkId  := 0
+                                                          , inGoodsGroupId := 0
+                                                          , inInfoMoneyId  := 0
+                                                          , inIsPartner    := FALSE
+                                                          , inIsTradeMark  := FALSE
+                                                          , inIsGoods      := FALSE
+                                                          , inIsGoodsKind  := FALSE
+                                                          , inIsContract   := FALSE
+                                                          , inIsOLAP       := TRUE
+                                                          , inSession      := inSession
+                                                           ) AS tmpReport
+                      --WHERE EXTRACT (MONTH FROM CURRENT_DATE) > EXTRACT (MONTH FROM inEndDate)
+                        GROUP BY tmpReport.BranchId, tmpReport.InfoMoneyId
+                       )
+        , tmpReport_sum AS (SELECT tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
+                            FROM tmpReport
+                            GROUP BY tmpReport.InfoMoneyId
+                           )
+        , tmpReport_res AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId
+                                 , CASE WHEN tmpReport_sum.Sale_Summ > 0 THEN tmpReport.Sale_Summ / tmpReport_sum.Sale_Summ ELSE 1 END AS Koeff
+                            FROM tmpReport
+                                 LEFT JOIN tmpReport_sum ON tmpReport_sum.InfoMoneyId = tmpReport.InfoMoneyId
+                           )
+        , tmpContractCondition AS
                       (SELECT ObjectLink_Contract.ChildObjectId AS ContractId
                             , MAX (ObjectLink_ContractConditionKind.ChildObjectId) AS ContractConditionKindId
                             , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
@@ -116,7 +147,7 @@ BEGIN
                                                                   ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
                                                                  AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                             INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                                                  ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                                 ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
                                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
                                        WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -378,8 +409,12 @@ BEGIN
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData  AS PartnerName,
         CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPartnerlName,
+
         Object_Branch.ObjectCode  AS BranchCode,
         Object_Branch.ValueData   AS BranchName,
+        Object_Branch_personal.ValueData       AS BranchName_personal,
+        Object_Branch_personal_trade.ValueData AS BranchName_personal_trade,
+
         View_Contract.ContractCode,
         View_Contract.InvNumber AS ContractNumber,
         View_Contract.ContractTagGroupName,
@@ -420,73 +455,73 @@ BEGIN
         Object_PaidKind.Id  AS PaidKindId,
         Object_Branch.Id    AS BranchId,
 
-        Operation.StartAmount ::TFloat AS StartAmount_A,
-        (-1 * Operation.StartAmount) ::TFloat AS StartAmount_P,
-        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat AS StartAmount_D,
-        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat AS StartAmount_K,
+        (Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS StartAmount_A,
+        (-1 * Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS StartAmount_P,
+        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END ::TFloat AS StartAmount_D,
+        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END :: TFloat AS StartAmount_K,
 
-        Operation.DebetSumm::TFloat,
-        Operation.KreditSumm::TFloat,
+        (Operation.DebetSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.KreditSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
 
-        Operation.IncomeSumm::TFloat,
-        Operation.ReturnOutSumm::TFloat,
-        Operation.SaleSumm::TFloat,
-        Operation.SaleRealSumm::TFloat,
-        Operation.SaleSumm_10300::TFloat,
+        (Operation.IncomeSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ReturnOutSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.SaleSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.SaleRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.SaleSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
 
-        (Operation.SaleRealSumm + Operation.SaleSumm_10300) ::TFloat AS SaleRealSumm_total,
+        ((Operation.SaleRealSumm + Operation.SaleSumm_10300) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS SaleRealSumm_total,
 
-        Operation.ReturnInSumm::TFloat,
-        Operation.ReturnInRealSumm::TFloat,
-        Operation.ReturnInSumm_10300::TFloat,
-        (Operation.ReturnInRealSumm + Operation.ReturnInSumm_10300) ::TFloat AS ReturnInRealSumm_total,
-        Operation.PriceCorrectiveSumm::TFloat,
-        Operation.MoneySumm::TFloat,
-        Operation.ServiceSumm::TFloat,
-        Operation.ServiceRealSumm::TFloat,
-        Operation.TransferDebtSumm::TFloat,
-        Operation.SendDebtSumm::TFloat,
-        Operation.ChangeCurrencySumm :: TFloat,
-        Operation.OtherSumm::TFloat,
+        (Operation.ReturnInSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ReturnInRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ReturnInSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        ((Operation.ReturnInRealSumm + Operation.ReturnInSumm_10300) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS ReturnInRealSumm_total,
+        (Operation.PriceCorrectiveSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.MoneySumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ServiceSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ServiceRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.TransferDebtSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.SendDebtSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ChangeCurrencySumm * COALESCE (tmpReport_res.Koeff, 1.0)) :: TFloat,
+        (Operation.OtherSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
 
-        Operation.EndAmount ::TFloat AS EndAmount_A,
-        (-1 * Operation.EndAmount) ::TFloat AS EndAmount_P,
-        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat AS EndAmount_D,
-        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat AS EndAmount_K,
+        (Operation.EndAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS EndAmount_A,
+        (-1 * Operation.EndAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS EndAmount_P,
+        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END :: TFloat AS EndAmount_D,
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END :: TFloat AS EndAmount_K,
 ---
-        Operation.StartAmount_Currency        ::TFloat AS StartAmount_Currency_A,
-        (-1 * Operation.StartAmount_Currency) ::TFloat AS StartAmount_Currency_P,
-        CASE WHEN Operation.StartAmount_Currency > 0 THEN Operation.StartAmount_Currency ELSE 0 END      ::TFloat AS StartAmount_Currency_D,
-        CASE WHEN Operation.StartAmount_Currency < 0 THEN -1 * Operation.StartAmount_Currency ELSE 0 END ::TFloat AS StartAmount_Currency_K,
+        (Operation.StartAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0))        ::TFloat AS StartAmount_Currency_A,
+        (-1 * Operation.StartAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS StartAmount_Currency_P,
+        CASE WHEN Operation.StartAmount_Currency > 0 THEN Operation.StartAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END      ::TFloat AS StartAmount_Currency_D,
+        CASE WHEN Operation.StartAmount_Currency < 0 THEN -1 * Operation.StartAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END ::TFloat AS StartAmount_Currency_K,
 
-        Operation.DebetSumm_Currency      ::TFloat,
-        Operation.KreditSumm_Currency     ::TFloat,
+        (Operation.DebetSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))      ::TFloat,
+        (Operation.KreditSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))     ::TFloat,
 
-        Operation.IncomeSumm_Currency     ::TFloat,
-        Operation.ReturnOutSumm_Currency  ::TFloat,
-        Operation.SaleSumm_Currency       ::TFloat,
-        Operation.SaleRealSumm_Currency   ::TFloat,
-        Operation.SaleSumm_10300_Currency ::TFloat,
+        (Operation.IncomeSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))     ::TFloat,
+        (Operation.ReturnOutSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))  ::TFloat,
+        (Operation.SaleSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))       ::TFloat,
+        (Operation.SaleRealSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))   ::TFloat,
+        (Operation.SaleSumm_10300_Currency * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat,
 
-        (Operation.SaleRealSumm_Currency + Operation.SaleSumm_10300_Currency) ::TFloat AS SaleRealSumm_total_Currency,
+        ((Operation.SaleRealSumm_Currency + Operation.SaleSumm_10300_Currency) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS SaleRealSumm_total_Currency,
 
-        Operation.ReturnInSumm_Currency       ::TFloat,
-        Operation.ReturnInRealSumm_Currency   ::TFloat,
-        Operation.ReturnInSumm_10300_Currency ::TFloat,
-        (Operation.ReturnInRealSumm_Currency + Operation.ReturnInSumm_10300_Currency) ::TFloat AS ReturnInRealSumm_total_Currency,
-        Operation.PriceCorrectiveSumm_Currency ::TFloat,
-        Operation.MoneySumm_Currency          ::TFloat,
-        Operation.ServiceSumm_Currency        ::TFloat,
-        Operation.ServiceRealSumm_Currency    ::TFloat,
-        Operation.TransferDebtSumm_Currency   ::TFloat,
-        Operation.SendDebtSumm_Currency       ::TFloat,
-        Operation.ChangeCurrencySumm_Currency ::TFloat,
-        Operation.OtherSumm_Currency          ::TFloat,
+        (Operation.ReturnInSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))       ::TFloat,
+        (Operation.ReturnInRealSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))   ::TFloat,
+        (Operation.ReturnInSumm_10300_Currency * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat,
+        ((Operation.ReturnInRealSumm_Currency + Operation.ReturnInSumm_10300_Currency) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS ReturnInRealSumm_total_Currency,
+        (Operation.PriceCorrectiveSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.MoneySumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))          ::TFloat,
+        (Operation.ServiceSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))        ::TFloat,
+        (Operation.ServiceRealSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))    ::TFloat,
+        (Operation.TransferDebtSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))   ::TFloat,
+        (Operation.SendDebtSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))       ::TFloat,
+        (Operation.ChangeCurrencySumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat,
+        (Operation.OtherSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))          ::TFloat,
 
-        Operation.EndAmount_Currency        ::TFloat AS EndAmount_Currency_A,
-        (-1 * Operation.EndAmount_Currency) ::TFloat AS EndAmount_Currency_P,
-        CASE WHEN Operation.EndAmount_Currency > 0 THEN Operation.EndAmount_Currency ELSE 0 END      ::TFloat AS EndAmount_Currency_D,
-        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END ::TFloat AS EndAmount_Currency_K,
+        (Operation.EndAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0))        ::TFloat AS EndAmount_Currency_A,
+        (-1 * Operation.EndAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0))   ::TFloat AS EndAmount_Currency_P,
+        CASE WHEN Operation.EndAmount_Currency > 0 THEN Operation.EndAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END      ::TFloat AS EndAmount_Currency_D,
+        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency * COALESCE (tmpReport_res.Koeff, 1.0) ELSE 0 END ::TFloat AS EndAmount_Currency_K,
         --
         COALESCE (tmpPartnerTag.PartnerTagName, tmpJuridical_PartnerTag.PartnerTagName,'') :: TVarChar AS PartnerTagName
      FROM
@@ -616,7 +651,32 @@ BEGIN
                                AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
            LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
+           -- Отв за договор - сотрудник
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
+                                ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                               AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+           -- Отв за договор - сотрудник ТП
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_trade
+                                ON ObjectLink_Personal_PersonalServiceList_trade.ObjectId = ObjectLink_Contract_PersonalTrade.ChildObjectId
+                               AND ObjectLink_Personal_PersonalServiceList_trade.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch_trade
+                                ON ObjectLink_PersonalServiceList_Branch_trade.ObjectId = ObjectLink_Personal_PersonalServiceList_trade.ChildObjectId
+                               AND ObjectLink_PersonalServiceList_Branch_trade.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+
+           LEFT JOIN Object AS Object_Branch_personal       ON Object_Branch_personal.Id = ObjectLink_PersonalServiceList_Branch.ChildObjectId
+           LEFT JOIN Object AS Object_Branch_personal_trade ON Object_Branch_personal_trade.Id = ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId
+
+         --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
+         --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
+           
+           LEFT JOIN tmpReport_res ON tmpReport_res.InfoMoneyId = Operation.InfoMoneyId
+                                  AND tmpReport_res.Koeff > 0
+                                  AND Operation.PaidKindId      = zc_Enum_PaidKind_FirstForm()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, tmpReport_res.BranchId)
+           
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
 
@@ -667,4 +727,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
---select * from gpReport_JuridicalSold(inStartDate := ('13.01.2020')::TDateTime , inEndDate := ('13.01.2020')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
+--select * from gpReport_JuridicalSold(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
