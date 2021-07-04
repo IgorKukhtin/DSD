@@ -3,8 +3,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientHeight = 556
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -312
+  ExplicitTop = -134
   ExplicitWidth = 1134
-  ExplicitHeight = 594
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -296,6 +298,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmount_Currency_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_total
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -567,6 +579,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmount_Currency_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_total
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -628,6 +650,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object BranchName_personal: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1079#1072' '#1076#1086#1075'.)'
+            DataBinding.FieldName = 'BranchName_personal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
+            Options.Editing = False
+            Width = 100
+          end
+          object BranchName_personal_trade: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1079#1072' '#1076#1086#1075'.)'
+            DataBinding.FieldName = 'BranchName_personal_trade'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
+            Options.Editing = False
+            Width = 100
           end
           object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -829,19 +869,21 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 60
           end
           object PersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
             Options.Editing = False
             Width = 100
           end
           object PersonalTradeName: TcxGridDBColumn
-            Caption = #1058#1055' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' ('#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'PersonalTradeName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088
             Options.Editing = False
             Width = 70
           end
@@ -851,6 +893,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088
             Options.Editing = False
             Width = 60
           end
@@ -860,6 +903,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088
             Options.Editing = False
             Width = 60
           end
@@ -1041,6 +1085,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object SaleRealSumm_total: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
             DataBinding.FieldName = 'SaleRealSumm_total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1086,6 +1133,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object ReturnInRealSumm_total: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
             DataBinding.FieldName = 'ReturnInRealSumm_total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -4991,7 +5041,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -5272,7 +5322,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -5511,7 +5561,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -6490,14 +6540,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Name = 'inIsInsert'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsUpdate'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

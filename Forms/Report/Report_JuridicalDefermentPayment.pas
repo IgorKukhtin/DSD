@@ -95,6 +95,8 @@ type
     bbExecuteDialog: TdxBarButton;
     ContractJuridicalDocCode: TcxGridDBColumn;
     ContractJuridicalDocName: TcxGridDBColumn;
+    BranchName_personal: TcxGridDBColumn;
+    BranchName_personal_trade: TcxGridDBColumn;
   private
     { Private declarations }
   public

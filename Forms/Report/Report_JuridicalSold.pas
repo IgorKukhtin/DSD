@@ -156,6 +156,8 @@ type
     actReport_JuridicalCollation: TdsdExecStoredProc;
     actJuridicalBalance: TdsdExecStoredProc;
     actPrintReportCollation: TdsdPrintAction;
+    BranchName_personal: TcxGridDBColumn;
+    BranchName_personal_trade: TcxGridDBColumn;
   private
     { Private declarations }
   public
