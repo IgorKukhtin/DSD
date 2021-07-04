@@ -7031,12 +7031,16 @@ inherited MainCashForm2: TMainCashForm2
         Size = 20
       end
       item
-        Name = 'GoodsPairSunId'
-        DataType = ftInteger
+        Name = 'isGoodsPairSun'
+        DataType = ftBoolean
       end
       item
         Name = 'GoodsPairSunMainId'
         DataType = ftInteger
+      end
+      item
+        Name = 'GoodsPairSunAmount'
+        DataType = ftCurrency
       end
       item
         Name = 'DivisionPartiesID'
@@ -7690,9 +7694,6 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataUKTZED: TStringField
       FieldName = 'UKTZED'
     end
-    object MemDataGOODSPSID: TIntegerField
-      FieldName = 'GOODSPSID'
-    end
     object MemDataDIVPARTID: TIntegerField
       FieldName = 'DIVPARTID'
     end
@@ -7706,8 +7707,14 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataGOODSPROJ: TBooleanField
       FieldName = 'GOODSPROJ'
     end
+    object MemDataISGOODSPS: TBooleanField
+      FieldName = 'ISGOODSPS'
+    end
     object MemDataGOODSPMID: TIntegerField
       FieldName = 'GOODSPMID'
+    end
+    object MemDataGOODSPSAM: TCurrencyField
+      FieldName = 'GOODSPSAM'
     end
     object MemDataGOODSDIMP: TFloatField
       FieldName = 'GOODSDIMP'

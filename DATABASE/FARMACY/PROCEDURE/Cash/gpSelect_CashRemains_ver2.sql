@@ -34,9 +34,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat,
-               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice tfloat,
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice TFloat,
                UKTZED TVarChar,
-               GoodsPairSunId Integer, GoodsPairSunMainId Integer,
+               GoodsPairSunId Integer, isGoodsPairSun boolean, GoodsPairSunMainId Integer, GoodsPairSunAmount TFloat, 
                AmountSendIn TFloat,
                NotTransferTime boolean,
                NDSKindId Integer,
@@ -607,8 +607,15 @@ BEGIN
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
+                 , tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
+                                                , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
+                                           FROM Object_Goods_Retail
+                                           WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                             AND Object_Goods_Retail.RetailId = 4
+                                           GROUP BY Object_Goods_Retail.GoodsPairSunId)
                  , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
                                             , Object_Goods_Retail.GoodsPairSunId
+                                            , COALESCE(Object_Goods_Retail.PairSunAmount, 1)::TFloat AS GoodsPairSunAmount
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
@@ -932,8 +939,10 @@ BEGIN
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsDiscount.MaxPrice                              AS GoodsDiscountMaxPrice
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
-          , Object_Goods_PairSun.ID                                AS GoodsPairSunId
-          , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
+          , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
+          , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
+          , Object_Goods_PairSun.GoodsPairSunID                    AS GoodsPairSunMainId
+          , Object_Goods_PairSun.GoodsPairSunAmount                AS GoodsPairSunAmount
 
           , tmpDeferredSendIn.Amount :: TFloat                     AS AmountSendIn
           , COALESCE (Object_Goods_Main.isNotTransferTime, False)  AS NotTransferTime
@@ -956,10 +965,11 @@ BEGIN
             -- получается GoodsMainId
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = CashSessionSnapShot.ObjectId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+            
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
-                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
-                                      ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
+                                      ON Object_Goods_PairSun.Id = Object_Goods_Retail.Id
+            LEFT JOIN tmpGoodsPairSunMain AS Object_Goods_PairSun_Main
+                                         ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
                                       
             LEFT JOIN tmpDistributionPromo ON tmpDistributionPromo.GoodsGroupId =  Object_Goods_Main.GoodsGroupId
             
@@ -1097,4 +1107,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
