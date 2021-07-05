@@ -101,6 +101,7 @@ BEGIN
                                                           , inIsOLAP       := TRUE
                                                           , inSession      := inSession
                                                            ) AS tmpReport
+                        WHERE 1=0
                         GROUP BY tmpReport.BranchId, tmpReport.InfoMoneyId
                        )
         , tmpReport_sum AS (SELECT tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
