@@ -72,6 +72,11 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Total_sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -98,6 +103,11 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Total_sh
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -205,10 +215,23 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
-          object Summa: TcxGridDBColumn [9]
+          object Total_sh: TcxGridDBColumn [9]
+            Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1096#1090
+            DataBinding.FieldName = 'Total_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +242,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [10]
+          object Comment: TcxGridDBColumn [11]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
