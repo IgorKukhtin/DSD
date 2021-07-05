@@ -33,7 +33,9 @@ RETURNS TABLE (
     DivisionPartiesId  Integer,  DivisionPartiesName  TVarChar, isBanFiscalSale Boolean,
     isGoodsForProject boolean,
     GoodsPairSunMainId Integer,
-    GoodsDiscountMaxPrice TFloat
+    GoodsDiscountMaxPrice TFloat, 
+    isGoodsPairSun Boolean, 
+    GoodsPairSunAmount TFloat
 )
 AS
 $BODY$
@@ -405,8 +407,15 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                         AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                                         AND Object_Goods_Juridical.GoodsMainId <> 0
                                       )
+                 , tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
+                                                , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
+                                           FROM Object_Goods_Retail
+                                           WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                             AND Object_Goods_Retail.RetailId = 4
+                                           GROUP BY Object_Goods_Retail.GoodsPairSunId)
                  , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
                                             , Object_Goods_Retail.GoodsPairSunId
+                                            , COALESCE(Object_Goods_Retail.PairSunAmount, 1)::TFloat AS GoodsPairSunAmount
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
@@ -451,14 +460,16 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             tmpGoodsDiscount.GoodsDiscountId                                  AS GoodsDiscountID,
             tmpGoodsDiscount.GoodsDiscountName                                AS GoodsDiscountName,
             tmpGoodsUKTZED.UKTZED                                             AS UKTZED,
-            Object_Goods_PairSun.ID                                           AS GoodsPairSunId,
+            Object_Goods_PairSun_Main.MainID                                  AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
             Object_DivisionParties.ValueData                                  AS DivisionPartiesName,
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
               AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
-            Object_Goods_PairSun_Main.GoodsPairSunId                          AS GoodsPairSunMainId,
-            tmpGoodsDiscount.MaxPrice                                         AS GoodsDiscountMaxPrice
+            Object_Goods_PairSun.GoodsPairSunID                               AS GoodsPairSunMainId,
+            tmpGoodsDiscount.MaxPrice                                         AS GoodsDiscountMaxPrice,
+            COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                AS isGoodsPairSun,
+            Object_Goods_PairSun.GoodsPairSunAmount                           AS GoodsPairSunAmount
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -477,9 +488,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _DIFF.ObjectId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
             LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
-                                      ON Object_Goods_PairSun.GoodsPairSunId = Object_Goods_Retail.Id
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
-                                      ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
+                                      ON Object_Goods_PairSun.Id = Object_Goods_Retail.Id
+            LEFT JOIN tmpGoodsPairSunMain AS Object_Goods_PairSun_Main
+                                          ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
@@ -525,9 +536,11 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
  12.09.15                                                                       *CashSessionSnapShot
 */
 
--- тест
+-- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
+-- тест SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
+
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}' , '3')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')

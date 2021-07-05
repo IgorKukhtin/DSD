@@ -376,20 +376,29 @@ BEGIN
 
     OPEN Cursor2 FOR (
         WITH
-              tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
-                                      , Object_Goods_Retail.GoodsPairSunId
-                                 FROM Object_Goods_Retail 
-                                 WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
-                                   AND Object_Goods_Retail.RetailId = 4)
+            tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
+                                         , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
+                                    FROM Object_Goods_Retail
+                                    WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                      AND Object_Goods_Retail.RetailId = 4
+                                    GROUP BY Object_Goods_Retail.GoodsPairSunId)
+          , tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
+                                     , Object_Goods_Retail.GoodsPairSunId
+                                     , COALESCE(Object_Goods_Retail.PairSunAmount, 1)::TFloat AS GoodsPairSunAmount
+                                FROM Object_Goods_Retail
+                                WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                                  AND Object_Goods_Retail.RetailId = 4)
            , tmpMI_all AS (SELECT MovementItem.Id, MovementItem.Amount, MovementItem.ObjectId, MovementItem.MovementId
-                               , Object_Goods_PairSun.ID                                AS GoodsPairSunId  
-                               , Object_Goods_PairSun_Main.GoodsPairSunId               AS GoodsPairSunMainId
+                               , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
+                               , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
+                               , Object_Goods_PairSun.GoodsPairSunID                    AS GoodsPairSunMainId
+                               , Object_Goods_PairSun.GoodsPairSunAmount                AS GoodsPairSunAmount
                                , COALESCE (MIBoolean_Present.ValueData, False)          AS isPresent                               
                           FROM MovementItem
-                               LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
-                                                         ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.ObjectId
-                               LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
-                                                         ON Object_Goods_PairSun_Main.Id = MovementItem.ObjectId
+                               LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
+                                                         ON Object_Goods_PairSun.Id = MovementItem.ObjectId
+                               LEFT JOIN tmpGoodsPairSunMain AS Object_Goods_PairSun_Main
+                                                             ON Object_Goods_PairSun_Main.Id = MovementItem.ObjectId
                                LEFT JOIN MovementItemBoolean AS MIBoolean_Present
                                                              ON MIBoolean_Present.MovementItemId = MovementItem.Id
                                                             AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
@@ -581,7 +590,9 @@ BEGIN
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
            , MovementItem.GoodsPairSunId                                         AS GoodsPairSunId     
+           , MovementItem.isGoodsPairSun                                         AS isGoodsPairSun
            , MovementItem.GoodsPairSunMainId                                     AS GoodsPairSunMainId
+           , MovementItem.GoodsPairSunAmount                                     AS GoodsPairSunAmount
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
            , MovementItem.isPresent                                              AS isPresent

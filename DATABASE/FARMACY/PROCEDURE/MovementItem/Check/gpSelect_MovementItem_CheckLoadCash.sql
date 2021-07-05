@@ -42,7 +42,9 @@ RETURNS TABLE (Id Integer
              , DiscountExternalName TVarChar
              , UKTZED TVarChar
              , GoodsPairSunId Integer
+             , isGoodsPairSun boolean
              , GoodsPairSunMainId Integer
+             , GoodsPairSunAmount TFloat
              , DivisionPartiesId Integer
              , DivisionPartiesName TVarChar
              , isPresent Boolean
@@ -268,9 +270,16 @@ BEGIN
                           AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                           AND Object_Goods_Juridical.GoodsMainId <> 0
                         ), 
+     tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
+                                  , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
+                             FROM Object_Goods_Retail
+                             WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
+                               AND Object_Goods_Retail.RetailId = 4
+                             GROUP BY Object_Goods_Retail.GoodsPairSunId),
      tmpGoodsPairSun AS (SELECT Object_Goods_Retail.Id
                               , Object_Goods_Retail.GoodsPairSunId
-                         FROM Object_Goods_Retail 
+                              , COALESCE(Object_Goods_Retail.PairSunAmount, 1)::TFloat AS GoodsPairSunAmount
+                         FROM Object_Goods_Retail
                          WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                            AND Object_Goods_Retail.RetailId = 4)
 
@@ -315,8 +324,10 @@ BEGIN
            , Object_DiscountExternal.ID                                          AS DiscountCardId
            , Object_DiscountExternal.ValueData                                   AS DiscountCardName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
-           , Object_Goods_PairSun.ID                                             AS GoodsPairSunId         
-           , Object_Goods_PairSun_Main.GoodsPairSunId                            AS GoodsPairSunMainId
+           , Object_Goods_PairSun_Main.MainID                                    AS GoodsPairSunId
+           , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                  AS isGoodsPairSun
+           , Object_Goods_PairSun.GoodsPairSunID                                 AS GoodsPairSunMainId
+           , Object_Goods_PairSun.GoodsPairSunAmount                             AS GoodsPairSunAmount
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
            , MovementItem.isPresent                                              AS isPresent
@@ -333,10 +344,10 @@ BEGIN
             LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun 
-                                      ON Object_Goods_PairSun.GoodsPairSunId = MovementItem.GoodsId
-            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun_Main
-                                      ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
+            LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
+                                      ON Object_Goods_PairSun.Id = MovementItem.GoodsId
+            LEFT JOIN tmpGoodsPairSunMain AS Object_Goods_PairSun_Main
+                                          ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
 
             --“ипы срок/не срок
             LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
