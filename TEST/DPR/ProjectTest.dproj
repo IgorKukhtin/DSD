@@ -4381,6 +4381,14 @@
 				<Form>Report_ProfitLoss_gridDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold_BranchDialog.pas">
+				<Form>Report_JuridicalSold_BranchDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold_Branch.pas">
+				<Form>Report_JuridicalSold_BranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

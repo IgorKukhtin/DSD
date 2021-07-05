@@ -1274,7 +1274,9 @@ uses
   Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm},
   Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
   ReturnDescKind in '..\..\Forms\Kind\ReturnDescKind.pas' {ReturnDescKindForm: TParentForm},
-  Report_ProfitLoss_gridDialog in '..\..\Forms\Report\Report_ProfitLoss_gridDialog.pas' {Report_ProfitLoss_gridDialogForm: TParentForm};
+  Report_ProfitLoss_gridDialog in '..\..\Forms\Report\Report_ProfitLoss_gridDialog.pas' {Report_ProfitLoss_gridDialogForm: TParentForm},
+  Report_JuridicalSold_BranchDialog in '..\..\Forms\Report\Report_JuridicalSold_BranchDialog.pas' {Report_JuridicalSold_BranchDialogForm: TParentForm},
+  Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,13 +1,12 @@
--- Function: gpReport_JuridicalSold()
+-- Function: gpReport_JuridicalSold_Branch()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold_Branch (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
+CREATE OR REPLACE FUNCTION gpReport_JuridicalSold_Branch(
     IN inStartDate                TDateTime , -- 
     IN inEndDate                  TDateTime , --
+    IN inStartDate_sale           TDateTime , -- 
+    IN inEndDate_sale             TDateTime , --
     IN inAccountId                Integer,    -- Счет  
     IN inInfoMoneyId              Integer,    -- Управленческая статья  
     IN inInfoMoneyGroupId         Integer,    -- Группа управленческих статей
@@ -66,11 +65,12 @@ BEGIN
      -- Результат
      RETURN QUERY
 
+     -- Результат
      SELECT tmpReport.*
      FROM lpReport_JuridicalSold (inStartDate              := inStartDate
                                 , inEndDate                := inEndDate
-                                , inStartDate_sale         := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 MONTH' ELSE inStartDate END
-                                , inEndDate_sale           := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 DAY'   ELSE inEndDate   END
+                                , inStartDate_sale         := inStartDate_sale
+                                , inEndDate_sale           := inEndDate_sale
                                 , inAccountId              := inAccountId
                                 , inInfoMoneyId            := inInfoMoneyId
                                 , inInfoMoneyGroupId       := inInfoMoneyGroupId
@@ -83,6 +83,8 @@ BEGIN
                                 , inUserId                 := vbUserId
                                  ) AS tmpReport
                               ;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -90,26 +92,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.01.20         * add Currency
- 29.08.15         * add inIsPartionMovement
- 14.11.14         * add inCurrencyId
- 10.10.14                                        * add tmpContractCondition
- 13.09.14                                        * add inJuridicalGroupId
- 13.09.14                                        * add PersonalTradeName
- 07.09.14                                        * add Branch...
- 07.09.14                                        * ??? как без GROUP BY Container.Amount ???
- 24.08.14                                        * add Partner...
- 20.05.14                                        * add Object_Contract_View
- 05.05.14                                        * add inPaidKindId
- 26.04.14                                        * add Object_Contract_ContractKey_View
- 15.04.14                                        * add StartDate and EndDate
- 10.04.14                                        * add AreaName
- 10.03.14                                        * add zc_Movement_ProfitLossService
- 13.02.14                                        * add OKPO and ContractCode
- 30.01.14                                        * 
- 15.01.14                        * 
+ 05.07.21         * _Branch + даты для отчета продаж
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
---select * from gpReport_JuridicalSold(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
+-- SELECT * FROM gpReport_JuridicalSold_Branch (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
+--select * from gpReport_JuridicalSold_Branch(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
