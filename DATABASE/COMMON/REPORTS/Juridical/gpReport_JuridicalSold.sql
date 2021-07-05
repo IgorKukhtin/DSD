@@ -672,11 +672,12 @@ BEGIN
 
          --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
          --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
            
            LEFT JOIN tmpReport_res ON tmpReport_res.InfoMoneyId = Operation.InfoMoneyId
                                   AND tmpReport_res.Koeff > 0
                                   AND Operation.PaidKindId      = zc_Enum_PaidKind_FirstForm()
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, tmpReport_res.BranchId)
+         --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (Operation.BranchId, tmpReport_res.BranchId)
            
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId

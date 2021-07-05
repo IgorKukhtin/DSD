@@ -458,11 +458,12 @@ from (
            LEFT JOIN Object AS Object_Branch_personal_trade ON Object_Branch_personal_trade.Id = ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId
 
          --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (RESULT.BranchId, ObjectLink_PersonalServiceList_Branch_trade.ChildObjectId, ObjectLink_PersonalServiceList_Branch.ChildObjectId)
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = RESULT.BranchId
 
            LEFT JOIN tmpReport_res ON tmpReport_res.InfoMoneyId = RESULT.InfoMoneyId
                                   AND tmpReport_res.Koeff > 0
                                   AND RESULT.PaidKindId      = zc_Enum_PaidKind_FirstForm()
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpReport_res.BranchId, RESULT.BranchId)
+         --LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpReport_res.BranchId, RESULT.BranchId)
 
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = RESULT.PartnerId
