@@ -37,9 +37,9 @@ BEGIN
       AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
     ;
 
-    SELECT SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN MIFloat_AmountSecond.ValueData
-                  ELSE MovementItem.Amount
+    SELECT SUM (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                  THEN MovementItem.Amount
+                  ELSE MIFloat_AmountSecond.ValueData
              END)                                AS TotalCountSh
              
              
@@ -50,40 +50,77 @@ BEGIN
            -- Сумма без НДС
          , SUM (CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
                           -- если цены без НДС или %НДС=0
-                          THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                                       THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                                     ELSE COALESCE (MovementItem.Amount,0)
-                                END * COALESCE(MovementItemFloat_Price.ValueData,0))
+                          THEN ( (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                         THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                                   THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                   ELSE MIFloat_AmountSecond.ValueData
+                                              END)
+                                       ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                                  THEN COALESCE (MovementItem.Amount,0)
+                                                  ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                             END )
+                                  END)
+                          * COALESCE(MovementItemFloat_Price.ValueData,0))
                      WHEN vbPriceWithVAT = TRUE
                           -- если цены c НДС
-                          THEN CAST ( (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                                              THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                                            ELSE COALESCE (MovementItem.Amount,0)
-                                       END * COALESCE(MovementItemFloat_Price.ValueData,0)) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                          THEN CAST ( ((CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                              THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                                        THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                        ELSE MIFloat_AmountSecond.ValueData
+                                                   END)
+                                            ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                                       THEN COALESCE (MovementItem.Amount,0)
+                                                       ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                                  END )
+                                       END) * COALESCE(MovementItemFloat_Price.ValueData,0)) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                      WHEN vbPriceWithVAT
                           -- если цены c НДС
-                          THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                  ELSE COALESCE (MovementItem.Amount,0)
-             END*COALESCE(MovementItemFloat_Price.ValueData,0)) - CAST ( (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                  ELSE COALESCE (MovementItem.Amount,0)
-             END*COALESCE(MovementItemFloat_Price.ValueData,0)) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
+                          THEN ((CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                         THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                                   THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                   ELSE MIFloat_AmountSecond.ValueData
+                                              END)
+                                       ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                                  THEN COALESCE (MovementItem.Amount,0)
+                                                  ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                             END )
+                                  END) * COALESCE(MovementItemFloat_Price.ValueData,0)) - CAST ( ((CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                                                                                          THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                                                                                                    THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                                                                                    ELSE MIFloat_AmountSecond.ValueData
+                                                                                                               END)
+                                                                                                        ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                                                                                                   THEN COALESCE (MovementItem.Amount,0)
+                                                                                                                   ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                                                                                              END )
+                                                                                                   END) * COALESCE(MovementItemFloat_Price.ValueData,0)) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
                 END) AS TotalSummMVAT
 
            -- Сумма с НДС
          ,SUM (CASE -- если цены с НДС
                 WHEN vbPriceWithVAT OR vbVATPercent = 0
-                     THEN (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                                  THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                                ELSE COALESCE (MovementItem.Amount,0)
-                           END * COALESCE(MovementItemFloat_Price.ValueData,0))
+                     THEN ((CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                   THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                             THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                             ELSE MIFloat_AmountSecond.ValueData
+                                        END)
+                                 ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                            THEN COALESCE (MovementItem.Amount,0)
+                                            ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                       END )
+                            END) * COALESCE(MovementItemFloat_Price.ValueData,0))
                 -- если цены без НДС
                 WHEN vbVATPercent > 0
-                     THEN CAST ( (1 + vbVATPercent / 100) * (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                                                                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0)
-                                                                  ELSE COALESCE (MovementItem.Amount,0)
-                                                             END * COALESCE(MovementItemFloat_Price.ValueData,0)) AS NUMERIC (16, 2))
+                     THEN CAST ( (1 + vbVATPercent / 100) * ((CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                                                                     THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                                                               THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                                                               ELSE MIFloat_AmountSecond.ValueData
+                                                                          END)
+                                                                   ELSE (CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                                                              THEN COALESCE (MovementItem.Amount,0)
+                                                                              ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                                                                         END )
+                                                              END) * COALESCE(MovementItemFloat_Price.ValueData,0)) AS NUMERIC (16, 2))
            END) AS TotalSummPVAT
 
      INTO vbTotalCount
