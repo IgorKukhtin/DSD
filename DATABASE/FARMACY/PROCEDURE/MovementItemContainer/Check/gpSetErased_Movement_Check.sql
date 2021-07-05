@@ -8,17 +8,47 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbCashRegisterId Integer;
+  DECLARE vbFiscalCheckNumber TVarChar;
+  DECLARE vbJackdawsChecksId Integer;
+  
 BEGIN
     --Если документ уже проведен то проверим права
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-/*    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN
-      RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
+
+      SELECT 
+        COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
+        COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
+        COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
+      INTO
+        vbCashRegisterId,
+        vbFiscalCheckNumber,
+        vbJackdawsChecksId
+      FROM Movement 
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                        ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                       AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                        ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
+                                       AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+           LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                    ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
+                                   AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+      WHERE Id = inMovementId;
+      
+      IF NOT (vbCashRegisterId = 0 OR
+              vbFiscalCheckNumber = '-5' OR
+              vbJackdawsChecksId <> 0)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
+      END IF;
     END IF;     
-*/
+
     IF EXISTS(SELECT 1
               FROM Movement
               WHERE
@@ -30,7 +60,7 @@ BEGIN
         THEN
           RETURN;
         END IF;
-        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
+        RAISE EXCEPTION 'Ошибка. Документ проведен сначала разпроведите его.';     
     END IF;
 
     -- Если есть распределение по партиям удаляем

@@ -1001,6 +1001,9 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SetErasedUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SetErasedUserForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_DynamicsOrdersEICForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_DynamicsOrdersEICForm');
 
@@ -1630,9 +1633,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
 
     //отчет доходности
-}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
     exit;
 

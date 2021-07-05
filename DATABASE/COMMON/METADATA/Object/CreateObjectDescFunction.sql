@@ -1427,6 +1427,10 @@ CREATE OR REPLACE FUNCTION zc_Object_CheckoutTesting() RETURNS Integer AS $BODY$
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CheckoutTesting', 'Тестированние касс' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CheckoutTesting');
 
+CREATE OR REPLACE FUNCTION zc_Object_TopicsTestingTuning() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TopicsTestingTuning'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_TopicsTestingTuning', 'Темы тестирования сотрудников' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TopicsTestingTuning');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1443,6 +1447,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 05.07.21                                                                                        * zc_Object_TopicsTestingTuning
  01.07.21         * zc_Object_ReturnDescKind
  25.06.21                                                                                        * zc_Object_CheckoutTesting
  22.06.21                                                                                        * zc_Object_CorrectMinAmount

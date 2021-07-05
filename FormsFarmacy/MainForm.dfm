@@ -4397,6 +4397,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_SetErasedUser: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072#1084#1080' '#1087#1086' '#1082#1088#1080#1090#1077#1088#1080#1103#1084
+      FormName = 'TReport_Check_SetErasedUserForm'
+      FormNameParam.Value = 'TReport_Check_SetErasedUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5102,6 +5113,9 @@
       end
       object N266: TMenuItem
         Action = actReport_ClippedReprice_SaleForm
+      end
+      object N301: TMenuItem
+        Action = actReport_Check_SetErasedUser
       end
     end
     object N36: TMenuItem [5]
