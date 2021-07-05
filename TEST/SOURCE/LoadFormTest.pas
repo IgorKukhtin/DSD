@@ -2437,6 +2437,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
    }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_BranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchDialogForm'));

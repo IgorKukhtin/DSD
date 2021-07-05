@@ -13,17 +13,17 @@ inherited Report_JuridicalSold_BranchForm: TReport_JuridicalSold_BranchForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 84
-    ExplicitWidth = 1118
+    ExplicitWidth = 1463
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1463
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1118
+      ExplicitWidth = 1463
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1463
         Height = 472
-        ExplicitWidth = 1118
+        ExplicitWidth = 1463
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -1726,7 +1726,7 @@ inherited Report_JuridicalSold_BranchForm: TReport_JuridicalSold_BranchForm
   inherited Panel: TPanel
     Width = 1463
     Height = 58
-    ExplicitWidth = 1118
+    ExplicitWidth = 1463
     ExplicitHeight = 58
     inherited deStart: TcxDateEdit
       Left = 60
@@ -6936,5 +6936,11 @@ inherited Report_JuridicalSold_BranchForm: TReport_JuridicalSold_BranchForm
     Params = <>
     Left = 804
     Top = 230
+  end
+  object PeriodChoice1: TPeriodChoice
+    DateStart = deStart_sale
+    DateEnd = deEnd_sale
+    Left = 248
+    Top = 8
   end
 end

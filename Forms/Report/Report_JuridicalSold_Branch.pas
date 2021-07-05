@@ -162,6 +162,7 @@ type
     deStart_sale: TcxDateEdit;
     deEnd_sale: TcxDateEdit;
     cxLabel12: TcxLabel;
+    PeriodChoice1: TPeriodChoice;
   private
     { Private declarations }
   public
