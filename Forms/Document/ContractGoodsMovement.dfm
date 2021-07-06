@@ -180,7 +180,18 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [6]
+          object Price_curr: TcxGridDBColumn [6]
+            Caption = #1062#1077#1085#1072' ('#1090#1077#1082#1091#1097#1072#1103')'
+            DataBinding.FieldName = 'Price_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -190,7 +201,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Summa: TcxGridDBColumn [7]
+          object Summa: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -201,7 +212,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [8]
+          object Comment: TcxGridDBColumn [9]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -254,8 +265,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 982
     Height = 91
     TabOrder = 3
-    ExplicitLeft = -16
-    ExplicitTop = 5
     ExplicitWidth = 982
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit

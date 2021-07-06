@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , GoodsKindId Integer, GoodsKindName TVarChar
              , Amount TFloat       --
              , Price TFloat
+             , Price_curr TFloat
              , Summa TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -85,6 +86,13 @@ BEGIN
                              , lfSelect.ValuePrice  AS Price_PriceList
                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate) AS lfSelect 
                        )
+
+       -- ÷ены из прайса на тек. дату
+     , tmpPriceList_curr AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                  , lfSelect.GoodsKindId AS GoodsKindId
+                                  , lfSelect.ValuePrice  AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= CURRENT_DATE) AS lfSelect 
+                            )
        -- ќграничение дл€ √ѕ - какие товары показать
      , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                     , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
@@ -167,6 +175,7 @@ BEGIN
 
            , 0                        :: TFloat AS Amount
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) :: TFloat AS Price
+           , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
            , 0                        :: TFloat AS Summa
            , ''                     :: TVarChar AS Comment
 
@@ -200,6 +209,13 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            -- прив€зываем 2 раза по виду товара и без  --на тек дату
+            LEFT JOIN tmpPriceList_curr AS tmpPriceList_Kind_curr 
+                                        ON tmpPriceList_Kind_curr.GoodsId                   = tmpGoods.GoodsId
+                                       AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
+            LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpGoods.GoodsId
+                                       AND tmpPriceList_curr.GoodsKindId IS NULL
+                                  
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
         SELECT
@@ -215,6 +231,7 @@ BEGIN
 
            , tmpMI.Amount            ::TFloat    AS Amount
            , tmpMI.Price             ::TFloat    AS Price
+           , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
            , (tmpMI.Amount * tmpMI.Price) ::TFloat AS Summa
 
            , tmpMI.Comment  :: TVarChar AS Comment
@@ -259,6 +276,13 @@ BEGIN
                                            ON MILO_Update.MovementItemId = tmpMI.MovementItemId
                                           AND MILO_Update.DescId = zc_MILinkObject_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
+            -- прив€зываем 2 раза по виду товара и без  --на тек дату
+            LEFT JOIN tmpPriceList_curr AS tmpPriceList_Kind_curr 
+                                        ON tmpPriceList_Kind_curr.GoodsId                   = tmpMI.GoodsId
+                                       AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpMI.GoodsId
+                                       AND tmpPriceList_curr.GoodsKindId IS NULL
     ;
      ELSE
 
@@ -292,6 +316,12 @@ BEGIN
                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                           AND MovementItemFloat.DescId IN (zc_MIFloat_Price())
                        )
+       -- ÷ены из прайса на тек. дату
+     , tmpPriceList_curr AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                  , lfSelect.GoodsKindId AS GoodsKindId
+                                  , lfSelect.ValuePrice  AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= CURRENT_DATE) AS lfSelect 
+                            )
 
         SELECT
              tmpMI.MovementItemId    :: Integer AS Id
@@ -306,6 +336,7 @@ BEGIN
 
            , tmpMI.Amount              ::TFloat AS Amount
            , MIFloat_Price.ValueData   ::TFloat AS Price
+           , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
            , (COALESCE (tmpMI.Amount,0) * MIFloat_Price.ValueData) ::TFloat AS Summa
 
            , MIString_Comment.ValueData                       :: TVarChar AS Comment
@@ -338,26 +369,33 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-           LEFT JOIN tmpMI_String AS MIString_Comment
-                                  ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
-                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN tmpMI_String AS MIString_Comment
+                                   ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
+                                  AND MIString_Comment.DescId = zc_MIString_Comment()
+ 
+            LEFT JOIN MovementItemDate AS MIDate_Insert
+                                       ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
+            LEFT JOIN MovementItemDate AS MIDate_Update
+                                       ON MIDate_Update.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Update.DescId = zc_MIDate_Update()
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                             ON MILO_Insert.MovementItemId = tmpMI.MovementItemId
+                                            AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                             ON MILO_Update.MovementItemId = tmpMI.MovementItemId
+                                            AND MILO_Update.DescId = zc_MILinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
-           LEFT JOIN MovementItemDate AS MIDate_Insert
-                                      ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
-                                     AND MIDate_Insert.DescId = zc_MIDate_Insert()
-           LEFT JOIN MovementItemDate AS MIDate_Update
-                                      ON MIDate_Update.MovementItemId = tmpMI.MovementItemId
-                                     AND MIDate_Update.DescId = zc_MIDate_Update()
-
-           LEFT JOIN MovementItemLinkObject AS MILO_Insert
-                                            ON MILO_Insert.MovementItemId = tmpMI.MovementItemId
-                                           AND MILO_Insert.DescId = zc_MILinkObject_Insert()
-           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
-
-           LEFT JOIN MovementItemLinkObject AS MILO_Update
-                                            ON MILO_Update.MovementItemId = tmpMI.MovementItemId
-                                           AND MILO_Update.DescId = zc_MILinkObject_Update()
-           LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+            -- прив€зываем 2 раза по виду товара и без  --на тек дату
+            LEFT JOIN tmpPriceList_curr AS tmpPriceList_Kind_curr 
+                                        ON tmpPriceList_Kind_curr.GoodsId                   = tmpMI.GoodsId
+                                       AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpMI.GoodsId
+                                       AND tmpPriceList_curr.GoodsKindId IS NULL
            ;
 
      END IF;
