@@ -152,22 +152,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 182
           end
-          object GoodsKindName: TcxGridDBColumn [3]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object MeasureName: TcxGridDBColumn [4]
+          object MeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -175,7 +160,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 45
           end
-          object Price: TcxGridDBColumn [5]
+          object Price: TcxGridDBColumn [4]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -186,7 +171,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [6]
+          object Amount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -196,7 +181,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [7]
+          object AmountSecond: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -206,7 +191,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Total_kg: TcxGridDBColumn [8]
+          object Total_kg: TcxGridDBColumn [7]
             Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'Total_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +204,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Total_sh: TcxGridDBColumn [9]
+          object Total_sh: TcxGridDBColumn [8]
             Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Total_sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +216,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Summa: TcxGridDBColumn [10]
+          object Summa: TcxGridDBColumn [9]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +227,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [11]
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -1447,6 +1432,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Control = edOrderPeriodKind
       end
       item
+        Control = edUnit
       end
       item
       end
@@ -1454,6 +1440,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Control = ceComment
       end
       item
+        Control = edPriceList
       end
       item
       end

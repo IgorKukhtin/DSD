@@ -68,7 +68,7 @@ BEGIN
                        )
        -- Ограничение для ГП - какие товары показать
      , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                    , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                    , MAX (COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)) AS GoodsKindId
                                FROM ObjectBoolean AS ObjectBoolean_Order
                                     LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
 
@@ -83,8 +83,10 @@ BEGIN
                                  AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                  AND ( (vbUnitId = 8459 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
                                                                                                            , zc_Enum_InfoMoneyDestination_30200() -- Тушенка
+                                                                                                           , zc_Enum_InfoMoneyDestination_20900() --
                                                                                                              ) 
                                         ) OR vbUnitId <> 8459)
+                               GROUP BY Object_GoodsByGoodsKind_View.GoodsId
                               )
 
        -- Существующие MovementItem
@@ -141,6 +143,7 @@ BEGIN
            , 0 :: TFloat AS AmountSecond
            , 0 :: TFloat AS Total_kg
            , 0 :: TFloat AS Total_sh
+           --, COALESCE (tmpPriceList.Price_Pricelist,0) :: TFloat AS Price 
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) :: TFloat AS Price
            , 0 :: TFloat AS Summa
            , '' :: TVarChar AS Comment
