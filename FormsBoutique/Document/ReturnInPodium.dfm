@@ -1758,6 +1758,14 @@ object ReturnInPodiumForm: TReturnInPodiumForm
         end
         item
           Visible = True
+          ItemName = 'bbact_User_Sale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -2703,8 +2711,8 @@ object ReturnInPodiumForm: TReturnInPodiumForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 456
-    Top = 200
+    Left = 472
+    Top = 240
     object N1: TMenuItem
       Action = actRefresh
     end
