@@ -46,6 +46,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadContractPartnerFormTest;
     procedure LoadContractGoodsFormTest;
+    procedure LoadContractGoodsMovementFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractTermKindFormTest;
     procedure LoadContractTradeMarkFormTest;
@@ -496,6 +497,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadContractGoodsMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;
