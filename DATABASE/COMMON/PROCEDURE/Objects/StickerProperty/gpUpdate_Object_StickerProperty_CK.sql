@@ -17,6 +17,11 @@ BEGIN
 
    outisCK := NOT inisCK;
    
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'ќшибка.Ёлемент не определен.';
+   END IF;
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerProperty_CK(), inId, outisCK);
 

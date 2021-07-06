@@ -206,6 +206,11 @@ BEGIN
                                                    , inUserId        := vbUserId);
    END IF;
 
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.test Admin';
+END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
