@@ -497,6 +497,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_OrderPeriodKind() RETURNS Integ
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_OrderPeriodKind', 'Вид периода планирования' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_OrderPeriodKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_TopicsTestingTuning() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TopicsTestingTuning'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_TopicsTestingTuning', 'Темы тестирования сотрудников' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TopicsTestingTuning');
+
 
 /*-------------------------------------------------------------------------------
 
@@ -504,6 +508,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.07.21                                                                                      * zc_MovementLinkObject_TopicsTestingTuning 
  08.06.21         * zc_MovementLinkObject_OrderPeriodKind
  21.04.21                                                                                      * zc_MovementLinkObject_BuyerForSite 
  05.03.21                                                                                      * zc_MovementLinkObject_MedicKashtan, zc_MovementLinkObject_MemberKashtan

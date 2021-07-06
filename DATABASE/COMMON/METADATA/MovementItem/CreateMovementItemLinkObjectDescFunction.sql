@@ -370,9 +370,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_PersonalKVK() RETURNS Integer AS $BOD
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_PersonalKVK', 'Оператор КВК(Ф.И.О)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PersonalKVK');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_TopicsTestingTuning() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_TopicsTestingTuning'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_TopicsTestingTuning', 'Тема тестирования сотрудников' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_TopicsTestingTuning');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 06.07.21                                                                    * zc_MILinkObject_TopicsTestingTuning
  30.06.21         * zc_MILinkObject_PersonalKVK
  17.06.21         * zc_MILinkObject_Reason
  06.05.21         * zc_MILinkObject_UnitFineSubject
