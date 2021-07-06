@@ -57,7 +57,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , TotalWageKg    TFloat  --Итого расходы на кг             --Расходы ЗП водителей
              , TotalSum_one   TFloat  --Итого расходы на точку грн      --ГСМ+ЗП
              , TotalSum_kg    TFloat  --Итого расходы на кг             --ГСМ+ЗП
-             , SumTotal_calc  TFloat  -- итого затрата пропорционально веса накладной в путевом
+             , SumTotal_calc  TFloat  -- итого затрата
              )   
 AS
 $BODY$
@@ -706,7 +706,8 @@ BEGIN
                            , (tmpUnion.SumAmount_ServiceAdd)       :: TFloat AS SumAmount_ServiceAdd
                            , SUM (tmpUnion.SumAmount_ServiceTotal  * tmpUnion.Koeff_kg) AS SumAmount_ServiceTotal
                            , (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
-                           , (tmpUnion.SumTotal)
+                           , SUM (tmpUnion.SumTotal * tmpUnion.Koeff_kg) AS SumTotal
+                           , tmpUnion.SumTotal AS SumTotal_calc
                
                            , (tmpUnion.Distance)       :: TFloat  AS Distance
                            , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
@@ -842,8 +843,8 @@ BEGIN
             , tmpUnion.Count_doc      :: TFloat AS Count_doc-- кол. накладных
             , tmpUnion.Count_TT       :: TFloat AS Count_TT--  кол-во точек по путевому из реестра 	
 
-            , CAST (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT ELSE 0 END  AS NUMERIC (16,2))     :: TFloat AS Sum_one     -- итого расх на 1 точку = итого расходы / кол. тт в реестре
-            , CAST (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END  AS NUMERIC (16,2))   :: TFloat AS Weight_one  -- итого расх на 1 кг = итого расходы / кол. кг
+            , CAST (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 THEN tmpUnion.SumTotal_calc / tmpUnion.Count_TT ELSE 0 END  AS NUMERIC (16,2))     :: TFloat AS Sum_one     -- итого расх на 1 точку = итого расходы / кол. тт в реестре
+            , CAST (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal_calc / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END  AS NUMERIC (16,2))   :: TFloat AS Weight_one  -- итого расх на 1 кг = итого расходы / кол. кг
             
             ---
             , CAST (tmpUnion.Wage_kg    AS NUMERIC (16,2))    :: TFloat AS Wage_kg    --За вес грн/кг (0.05)       --Расходы ЗП водителей
@@ -867,7 +868,7 @@ BEGIN
             --
             , CAST (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Sale,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0
                      THEN (tmpUnion.Wage_kg + tmpUnion.Wage_Hours/tmpUnion.TotalWeight_Sale * tmpUnion.TotalWeight_Doc + tmpUnion.Wage_doc / tmpUnion.Count_TT)
-                        + (tmpUnion.SumTotal / tmpUnion.Count_TT)  
+                        + (tmpUnion.SumTotal_calc / tmpUnion.Count_TT)  
                      ELSE 0 
                 END AS NUMERIC (16,2)) :: TFloat AS TotalSum_one  --ГСМ+ЗП --Итого расходы на точку грн	
             
@@ -875,9 +876,9 @@ BEGIN
                     THEN (tmpUnion.Wage_kg + tmpUnion.Wage_Hours/tmpUnion.TotalWeight_Sale * tmpUnion.TotalWeight_Doc + tmpUnion.Wage_doc / tmpUnion.Count_TT) / tmpUnion.TotalWeight_Doc
                     ELSE 0
                END
-             + (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END) AS NUMERIC (16,2)) :: TFloat AS TotalSum_kg  --ГСМ+ЗП --Итого расходы на кг 
+             + (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 AND COALESCE (tmpUnion.TotalWeight_Doc,0) <> 0 THEN tmpUnion.SumTotal_calc / tmpUnion.Count_TT/ tmpUnion.TotalWeight_Doc ELSE 0 END) AS NUMERIC (16,2)) :: TFloat AS TotalSum_kg  --ГСМ+ЗП --Итого расходы на кг 
               
-            , 0 ::TFloat AS SumTotal_calc--, CAST (tmpUnion.SumTotal *  Koeff_kg AS NUMERIC (16,2) )::TFloat AS SumTotal_calc  -- затрата пропорционально веса накладной
+            , tmpUnion.SumTotal_calc ::TFloat AS SumTotal_calc --, итого затрата транспорта
       FROM tmpData AS tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
 

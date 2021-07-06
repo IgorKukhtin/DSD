@@ -1280,6 +1280,12 @@ type
     miReport_Balance_grid: TMenuItem;
     actReport_OrderGoods_Olap: TdsdOpenForm;
     miReport_OrderGoods_Olap: TMenuItem;
+    actReport_JuridicalSold_Branch: TdsdOpenForm;
+    miReport_JuridicalSold_Branch: TMenuItem;
+    actReport_JuridicalDefermentPayment_Branch: TdsdOpenForm;
+    miReport_JuridicalDefermentPayment_Branch: TMenuItem;
+    actContractGoodsMovement: TdsdOpenForm;
+    miContractGoodsMovement: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

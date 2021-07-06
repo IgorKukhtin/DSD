@@ -571,10 +571,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PercentRet() RETURNS Integer AS $BOD
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PercentRet', '% возврата факт (Вес)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PercentRet');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Time() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Time'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Time', 'Время на тест (сек)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Time');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 05.07.21                                                                                     * zc_MovementFloat_Time
  26.04.21         * zc_MovementFloat_PartnerCount
                     zc_MovementFloat_HoursStop
  05.10.20                                                                                     * zc_MovementFloat_AmountPresent

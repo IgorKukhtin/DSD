@@ -19,6 +19,9 @@ $BODY$
   DECLARE vbLoyaltySMID Integer;
   DECLARE vbLoyaltySMDiscount TFloat;
   DECLARE vbLoyaltySMSumma TFloat;
+  DECLARE vbCashRegisterId Integer;
+  DECLARE vbFiscalCheckNumber TVarChar;
+  DECLARE vbJackdawsChecksId Integer;
 BEGIN
 
     if coalesce(inUserSession, '') <> '' then
@@ -29,13 +32,50 @@ BEGIN
     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
     THEN
 
-      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-
-      -- Разрешаем только сотрудникам с правами админа
-      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
+      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                WHERE Object_RoleUser.ID = inSession::Integer AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
       THEN
-        RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
-      END IF;
+
+        SELECT 
+          Movement.OperDate,
+          COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
+          COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
+          COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
+        INTO
+          vbOperDate,
+          vbCashRegisterId,
+          vbFiscalCheckNumber,
+          vbJackdawsChecksId
+        FROM Movement 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                          ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
+                                         AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+             LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                      ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
+                                     AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+        WHERE Id = inMovementId;
+        
+        IF NOT (vbCashRegisterId = 0 OR
+                vbFiscalCheckNumber = '-5' OR
+                vbJackdawsChecksId <> 0)
+           OR vbOperDate < '05.07.2021'
+           OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY'
+        THEN
+          RAISE EXCEPTION 'Ошибка. Распроведение чеков вам запрещено.';     
+        END IF;
+
+      ELSE
+        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+
+        -- Разрешаем только сотрудникам с правами админа
+        IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_UnComplete()))
+        THEN
+          RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
+        END IF;
+      END IF;     
     ELSE
         vbUserId:=inSession::Integer;
     END IF;
@@ -146,3 +186,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement_Check (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- select * from gpUpdate_Status_Check(inMovementId := 23950999 , ioStatusCode := 1 ,  inSession := '11278106');

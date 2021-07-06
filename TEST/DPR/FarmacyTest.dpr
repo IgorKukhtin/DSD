@@ -1043,7 +1043,8 @@ uses
   Report_Movement_DynamicsOrdersEIC in '..\..\FormsFarmacy\Report\Report_Movement_DynamicsOrdersEIC.pas' {Report_Movement_DynamicsOrdersEICForm: TParentForm},
   GUIDUnit in '..\..\FormsFarmacy\Guides\GUIDUnit.pas' {GUIDUnitForm: TParentForm},
   UploadCheckoutTesting in '..\..\FormsFarmacy\Guides\UploadCheckoutTesting.pas' {UploadCheckoutTestingForm},
-  CheckoutTesting in '..\..\FormsFarmacy\Guides\CheckoutTesting.pas' {CheckoutTestingForm: TParentForm};
+  CheckoutTesting in '..\..\FormsFarmacy\Guides\CheckoutTesting.pas' {CheckoutTestingForm: TParentForm},
+  Report_Check_SetErasedUser in '..\..\FormsFarmacy\Report\Report_Check_SetErasedUser.pas' {Report_Check_SetErasedUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

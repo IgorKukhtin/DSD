@@ -25,7 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 80
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1484,7 +1483,7 @@ object StickerForm: TStickerForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdUpdateDataSet1: TdsdUpdateDataSet
+    object actUpdateDataSetStickerProperty: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2187,7 +2186,7 @@ object StickerForm: TStickerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUpdate_StickerProperty_CK: TdsdUpdateDataSet
+    object actUpdate_StickerProperty_CK: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2195,14 +2194,10 @@ object StickerForm: TStickerForm
       StoredProcList = <
         item
           StoredProc = spUpdate_StickerProperty_CK
-        end
-        item
-          StoredProc = spSelectProperty
         end>
       Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 76
-      DataSource = DataSource
     end
   end
   object spSelect: TdsdStoredProc
@@ -2709,8 +2704,8 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 408
+    Left = 616
+    Top = 456
   end
   object dsdDBViewAddOnStickerProperty: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3240,7 +3235,7 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 523
+    Left = 443
     Top = 518
   end
 end

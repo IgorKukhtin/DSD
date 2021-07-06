@@ -87,7 +87,7 @@ type
     dsdDBViewAddOnStickerProperty: TdsdDBViewAddOn;
     InsertRecordProperty: TInsertRecord;
     bbRecordCP: TdxBarButton;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    actUpdateDataSetStickerProperty: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     cxTopSplitter: TcxSplitter;
@@ -179,8 +179,8 @@ type
     colValue11: TcxGridDBColumn;
     spUpdate_StickerProperty_CK: TdsdStoredProc;
     colisCK: TcxGridDBColumn;
-    actUpdate_StickerProperty_CK: TdsdUpdateDataSet;
     bbUpdate_StickerProperty_CK: TdxBarButton;
+    actUpdate_StickerProperty_CK: TdsdExecStoredProc;
 
   private
     { Private declarations }

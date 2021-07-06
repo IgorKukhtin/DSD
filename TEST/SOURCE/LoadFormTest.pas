@@ -46,6 +46,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadContractPartnerFormTest;
     procedure LoadContractGoodsFormTest;
+    procedure LoadContractGoodsMovementFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractTermKindFormTest;
     procedure LoadContractTradeMarkFormTest;
@@ -496,6 +497,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractGoodsChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadContractGoodsMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractGoodsJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;
@@ -2295,7 +2304,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Balance_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Balance_gridForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridDialogForm'));
@@ -2304,7 +2313,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
   exit;
@@ -2437,10 +2446,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
    }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_BranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_BranchDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationDialogForm');
 
@@ -3299,12 +3319,13 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');

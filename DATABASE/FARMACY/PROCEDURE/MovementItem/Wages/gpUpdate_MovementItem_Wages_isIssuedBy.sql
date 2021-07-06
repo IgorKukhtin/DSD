@@ -58,7 +58,7 @@ BEGIN
                                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
                                              WHERE MovementItem.ID = inId)
                     AND MovementItem.ObjectId = (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = inId)
-                    AND MovementItem.Amount >= 85) OR
+                    AND MovementItem.Amount >= 85) AND
        (COALESCE((SELECT MovementItemBoolean.ValueData FROM MovementItemBoolean WHERE MovementItemBoolean.MovementItemID = inId AND 
                  MovementItemBoolean.DescId = zc_MIBoolean_isTestingUser()), TRUE) = FALSE))
                     
@@ -85,4 +85,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_MovementItem_Wages_isIssuedBy (, inSession:= '2')
-

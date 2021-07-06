@@ -188,18 +188,33 @@ BEGIN
            , tmpMI.Amount            :: TFloat  AS Amount
            , tmpMI.AmountSecond      :: TFloat  AS AmountSecond
 
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN tmpMI.AmountSecond * COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE tmpMI.Amount
+           , CASE WHEN COALESCE (tmpMI.Amount,0) <> 0
+                  THEN COALESCE (tmpMI.Amount,0)
+                  ELSE tmpMI.AmountSecond * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
              END                      ::TFloat   AS Total_kg
-             
-           , CASE WHEN Object_Measure.Id <> zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,1) <> 0
-                  THEN MIFloat_Amount.ValueData / COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE tmpMI.Amount
+
+           , CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                  THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE tmpMI.AmountSecond
              END                      ::TFloat   AS Total_sh
 
+
+
+
            , tmpMI.Price  ::TFloat   AS Price
-           , (COALESCE (tmpMI.Amount,0) * tmpMI.Price) ::TFloat AS Summa
+
+           , CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                    THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                              THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                              ELSE tmpMI.AmountSecond
+                         END) 
+                         * tmpMI.Price
+                  ELSE (CASE WHEN COALESCE (tmpMI.Amount,0) <> 0
+                             THEN COALESCE (tmpMI.Amount,0)
+                             ELSE tmpMI.AmountSecond * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                        END )
+                         * tmpMI.Price
+             END ::TFloat AS Summa
 
            , tmpMI.Comment  :: TVarChar AS Comment
 
@@ -271,20 +286,29 @@ BEGIN
            , tmpMI.Amount                   :: TFloat AS Amount
            , MIFloat_AmountSecond.ValueData :: TFloat AS AmountSecond
 
-           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                  THEN MIFloat_AmountSecond.ValueData * COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE tmpMI.Amount
+           , CASE WHEN COALESCE (tmpMI.Amount,0) <> 0
+                  THEN COALESCE (tmpMI.Amount,0)
+                  ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
              END                      ::TFloat   AS Total_kg
 
-           , CASE WHEN Object_Measure.Id <> zc_Measure_Sh() AND COALESCE (ObjectFloat_Weight.ValueData,1) <> 0
-                  THEN MIFloat_Amount.ValueData / COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE tmpMI.Amount
+           , CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                  THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE MIFloat_AmountSecond.ValueData
              END                      ::TFloat   AS Total_sh
 
            , MIFloat_Price.ValueData  ::TFloat   AS Price
+           
            , CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                    THEN COALESCE( MIFloat_AmountSecond.ValueData,0) * MIFloat_Price.ValueData
-                  ELSE COALESCE (tmpMI.Amount,0) * MIFloat_Price.ValueData
+                    THEN (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                              THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                              ELSE MIFloat_AmountSecond.ValueData
+                         END) 
+                         * MIFloat_Price.ValueData
+                  ELSE (CASE WHEN COALESCE (tmpMI.Amount,0) <> 0
+                             THEN COALESCE (tmpMI.Amount,0)
+                             ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
+                        END )
+                         * MIFloat_Price.ValueData
              END ::TFloat AS Summa
            , MIString_Comment.ValueData :: TVarChar AS Comment
 
