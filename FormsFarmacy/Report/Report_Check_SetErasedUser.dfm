@@ -64,6 +64,14 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
             Options.Editing = False
             Width = 91
           end
+          object DateErase: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1091#1076#1072#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateErase'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1095#1077#1082#1072
             DataBinding.FieldName = 'InvNumber'
@@ -74,7 +82,7 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
             Width = 73
           end
           object UserName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1091#1076#1072#1083#1080#1074#1096#1080#1081' '#1095#1077#1082
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -230,6 +238,76 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
         end>
       isShowModal = False
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 296
@@ -273,10 +351,6 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -286,6 +360,14 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -311,6 +393,16 @@ inherited Report_Check_SetErasedUserForm: TReport_Check_SetErasedUserForm
     object dxBarButton1: TdxBarButton
       Action = MovementProtocolOpenForm
       Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

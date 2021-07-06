@@ -35,6 +35,11 @@ type
     CashRegisterName: TcxGridDBColumn;
     FiscalCheckNumber: TcxGridDBColumn;
     JackdawsChecksName: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    dxBarButton2: TdxBarButton;
+    DateErase: TcxGridDBColumn;
+    dsdOpenForm1: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

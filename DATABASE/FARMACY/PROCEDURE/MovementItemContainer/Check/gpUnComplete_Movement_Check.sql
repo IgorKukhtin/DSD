@@ -37,10 +37,12 @@ BEGIN
       THEN
 
         SELECT 
+          Movement.OperDate,
           COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
           COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
           COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
         INTO
+          vbOperDate,
           vbCashRegisterId,
           vbFiscalCheckNumber,
           vbJackdawsChecksId
@@ -59,6 +61,8 @@ BEGIN
         IF NOT (vbCashRegisterId = 0 OR
                 vbFiscalCheckNumber = '-5' OR
                 vbJackdawsChecksId <> 0)
+           OR vbOperDate < '05.07.2021'
+           OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY'
         THEN
           RAISE EXCEPTION 'Ошибка. Распроведение чеков вам запрещено.';     
         END IF;
@@ -182,5 +186,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement_Check (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
-
-select * from gpUpdate_Status_Check(inMovementId := 23950999 , ioStatusCode := 1 ,  inSession := '11278106');
+-- select * from gpUpdate_Status_Check(inMovementId := 23950999 , ioStatusCode := 1 ,  inSession := '11278106');

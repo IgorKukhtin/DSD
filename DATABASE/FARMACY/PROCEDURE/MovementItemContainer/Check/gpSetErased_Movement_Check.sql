@@ -8,6 +8,7 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbOperDate TDateTime;
   DECLARE vbCashRegisterId Integer;
   DECLARE vbFiscalCheckNumber TVarChar;
   DECLARE vbJackdawsChecksId Integer;
@@ -22,10 +23,12 @@ BEGIN
     THEN
 
       SELECT 
+        Movement.OperDate,
         COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
         COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
         COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
       INTO
+        vbOperDate,
         vbCashRegisterId,
         vbFiscalCheckNumber,
         vbJackdawsChecksId
@@ -44,6 +47,8 @@ BEGIN
       IF NOT (vbCashRegisterId = 0 OR
               vbFiscalCheckNumber = '-5' OR
               vbJackdawsChecksId <> 0)
+         OR vbOperDate < '05.07.2021'
+         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY'
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
       END IF;
