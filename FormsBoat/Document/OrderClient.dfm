@@ -1332,6 +1332,11 @@ object OrderClientForm: TOrderClientForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_real_ch3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_service_ch3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1373,6 +1378,11 @@ object OrderClientForm: TOrderClientForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_real_ch3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_service_ch3
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1575,6 +1585,18 @@ object OrderClientForm: TOrderClientForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1088#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1085#1086' '#1085#1072' '#1089#1082#1083#1072#1076#1077
+            Options.Editing = False
+            Width = 55
+          end
+          object Value_service_ch3: TcxGridDBColumn
+            Caption = 'Value (service)'
+            DataBinding.FieldName = 'Value_service'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
             Options.Editing = False
             Width = 55
           end
@@ -2057,6 +2079,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2114,6 +2139,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0

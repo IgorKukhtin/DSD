@@ -94,7 +94,7 @@ BEGIN
   , tmpGoods AS (SELECT inGoodsId AS GoodsId
                  WHERE COALESCE (inGoodsId,0) <> 0
                 UNION
-                 SELECT Object.Id  AS LocationId
+                 SELECT Object.Id  AS GoodsId
                  FROM Object
                  WHERE Object.DescId = zc_Object_Goods()
                    AND Object.isErased = FALSE
@@ -117,16 +117,17 @@ BEGIN
                                                 AND MovementItem.isErased   = FALSE
                          INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
-                         INNER JOIN MovementItemLinkObject AS MILinkObject_Partner
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                            ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
-                                                          AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                                                         
                          LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                      ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
-                    WHERE (COALESCE (MIFloat_MovementId.ValueData,0) = 0 AND inisEmpty = TRUE)
-                        OR inisEmpty = FALSE
+                    WHERE ((COALESCE (MIFloat_MovementId.ValueData,0) = 0 AND inisEmpty = TRUE)
+                        OR inisEmpty = FALSE)
+                      AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
                    )
 
   , tmpMovement_OrderClient AS (SELECT tmp.MovementId
@@ -412,6 +413,7 @@ BEGIN
            LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
                                 ON MIFloat_CountForPrice.MovementItemId = tmpMI_Child.MovementItemId
                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+      WHERE COALESCE (MIFloat_AmountPartner.ValueData,0) <> 0
       ;
 
 END;

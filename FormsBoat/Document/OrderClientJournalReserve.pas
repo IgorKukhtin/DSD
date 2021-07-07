@@ -123,6 +123,10 @@ type
     bbChoiceGuides: TdxBarButton;
     cbPeriodAll: TcxCheckBox;
     actRefreshPeriod: TdsdDataSetRefresh;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edArticle: TcxTextEdit;
   private
   public
   end;

@@ -1,9 +1,9 @@
-object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
+﻿object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072' ('#1088#1077#1079#1077#1088#1074')>'
   ClientHeight = 492
-  ClientWidth = 1034
+  ClientWidth = 1299
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1034
+    Width = 1299
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1034
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -69,7 +70,7 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 360
+      Width = 265
     end
     object cbPeriodAll: TcxCheckBox
       Left = 405
@@ -81,16 +82,43 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
       TabOrder = 6
       Width = 90
     end
+    object Код: TcxLabel
+      Left = 889
+      Top = 7
+      Caption = 'Interne Nr'
+    end
+    object ceCode: TcxCurrencyEdit
+      Left = 945
+      Top = 5
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 90
+    end
+    object cxLabel18: TcxLabel
+      Left = 1045
+      Top = 7
+      Caption = 'Artikel Nr'
+    end
+    object edArticle: TcxTextEdit
+      Left = 1094
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 90
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1034
+    Width = 1299
     Height = 435
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1034
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -696,6 +724,7 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1796,6 +1825,21 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1908,11 +1952,11 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TClientForm'
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TClientForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1928,8 +1972,21 @@ object OrderClientJournalReserveForm: TOrderClientJournalReserveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 608
+    Left = 704
     Top = 3
   end
 end

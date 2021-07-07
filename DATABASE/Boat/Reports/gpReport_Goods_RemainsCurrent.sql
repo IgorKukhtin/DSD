@@ -160,19 +160,26 @@ BEGIN
    , tmpReserv AS (SELECT MovementItem.PartionId            AS PartionId
                         , MILinkObject_Unit.ObjectId        AS UnitId
                         , MovementItem.ObjectId             AS ObjectId
-                        , COALESCE (MovementItem.Amount, 0) AS Amount
+                        , SUM (COALESCE (MovementItem.Amount, 0)) AS Amount
                    FROM Movement
                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                AND MovementItem.DescId     = zc_MI_Child()
                                                AND MovementItem.isErased   = FALSE
-                                               AND MovementItem.ParentId > 0
                         
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                         AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
                    WHERE Movement.DescId = zc_Movement_OrderClient()
                      AND Movement.StatusId <> zc_Enum_Status_Erased()
-                     AND COALESCE (MovementItem.Amount 0) > 0
+                     AND COALESCE (MovementItem.Amount,0) > 0
+                     AND COALESCE (MILinkObject_Goods.ObjectId, 0) = 0
+                   GROUP BY MovementItem.PartionId
+                          , MILinkObject_Unit.ObjectId
+                          , MovementItem.ObjectId
                    )
 
    -- Остатки + Партии
@@ -228,8 +235,9 @@ BEGIN
                             -- цена из Прайс-листа
                            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Container.ObjectId
                            
-                           LEFT JOIN tmpReserv ON tmpReserv.PartionId = Container.PartionId
-                                              AND tmpReserv.ObjectId = Container.ObjectId
+                           LEFT JOIN tmpReserv ON /*tmpReserv.PartionId = Container.PartionId
+                                              AND */tmpReserv.ObjectId = Container.ObjectId
+                                              AND tmpReserv.UnitId = Container.WhereObjectId
 
                       WHERE (Object_PartionGoods.FromId = inPartnerId  OR inPartnerId = 0)
                       )

@@ -349,7 +349,7 @@ end;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalReserveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalReserveForm');
-  //exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceForm');
 
@@ -682,12 +682,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));

@@ -78,6 +78,10 @@ type
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
     cbPapty: TcxCheckBox;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
+    edArticle: TcxTextEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

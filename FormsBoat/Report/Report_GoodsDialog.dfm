@@ -1,9 +1,9 @@
-object Report_GoodsDialogForm: TReport_GoodsDialogForm
+﻿object Report_GoodsDialogForm: TReport_GoodsDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 187
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
+  ClientHeight = 233
   ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 88
-    Top = 143
+    Left = 120
+    Top = 193
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 253
-    Top = 143
+    Left = 285
+    Top = 193
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,7 +37,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 121
+    Left = 107
     Top = 27
     EditValue = 42005d
     Properties.ShowTime = False
@@ -53,8 +53,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Width = 90
   end
   object edGoods: TcxButtonEdit
-    Left = 252
-    Top = 79
+    Left = 207
+    Top = 135
     Properties.Buttons = <
       item
         Default = True
@@ -62,7 +62,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 200
+    Width = 249
   end
   object edUnitGroup: TcxButtonEdit
     Left = 11
@@ -74,7 +74,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 200
+    Width = 440
   end
   object cxLabel3: TcxLabel
     Left = 11
@@ -82,8 +82,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
   end
   object cxLabel2: TcxLabel
-    Left = 253
-    Top = 59
+    Left = 207
+    Top = 117
     Caption = #1058#1086#1074#1072#1088':'
   end
   object cxLabel6: TcxLabel
@@ -92,7 +92,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 121
+    Left = 107
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
@@ -102,7 +102,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Caption = #1055#1072#1088#1090#1080#1103':'
   end
   object edPartion: TcxButtonEdit
-    Left = 251
+    Left = 207
     Top = 27
     Properties.Buttons = <
       item
@@ -111,17 +111,43 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 200
+    Width = 244
+  end
+  object Код: TcxLabel
+    Left = 11
+    Top = 117
+    Caption = 'Interne Nr'
+  end
+  object ceCode: TcxCurrencyEdit
+    Left = 11
+    Top = 135
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 90
+  end
+  object edArticle: TcxTextEdit
+    Left = 107
+    Top = 135
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 90
+  end
+  object cxLabel18: TcxLabel
+    Left = 107
+    Top = 117
+    Caption = 'Artikel Nr'
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 224
-    Top = 8
+    Left = 280
+    Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 192
-    Top = 72
+    Left = 232
+    Top = 64
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -133,8 +159,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 108
+    Left = 208
+    Top = 158
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -205,9 +231,24 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 40
-    Top = 128
+    Left = 72
+    Top = 178
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -235,9 +276,24 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 79
+    Left = 344
+    Top = 143
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'

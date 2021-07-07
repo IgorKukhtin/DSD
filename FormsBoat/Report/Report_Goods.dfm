@@ -1,5 +1,5 @@
-inherited Report_GoodsForm: TReport_GoodsForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+﻿inherited Report_GoodsForm: TReport_GoodsForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -781,10 +781,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object cxLabel3: TcxLabel
       Left = 536
       Top = 6
-      Caption = #1058#1086#1074#1072#1088':'
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
     object edGoods: TcxButtonEdit
-      Left = 577
+      Left = 629
       Top = 5
       Properties.Buttons = <
         item
@@ -793,7 +793,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 206
+      Width = 239
     end
     object cxLabel5: TcxLabel
       Left = 271
@@ -837,6 +837,32 @@ inherited Report_GoodsForm: TReport_GoodsForm
       TabOrder = 10
       Visible = False
       Width = 95
+    end
+    object Код: TcxLabel
+      Left = 573
+      Top = 31
+      Caption = 'Interne Nr'
+    end
+    object ceCode: TcxCurrencyEdit
+      Left = 629
+      Top = 30
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 90
+    end
+    object edArticle: TcxTextEdit
+      Left = 778
+      Top = 30
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 90
+    end
+    object cxLabel18: TcxLabel
+      Left = 729
+      Top = 31
+      Caption = 'Artikel Nr'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1031,6 +1057,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Value = ''
           Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ceCode
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = edArticle
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1272,9 +1313,24 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 704
-    Top = 3
+    Left = 648
+    Top = 11
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
@@ -1494,6 +1550,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
         DataType = ftString
         MultiSelectSeparator = ','
       end>
