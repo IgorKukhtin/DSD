@@ -136,6 +136,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('Отчет Данные документа взвешивания (КВК)', ReportPath + '\Отчеты (производство)\Отчет Данные документа взвешивания (КВК).fr3');
+  exit;
+
   LoadReportFromFile('PrintMovement_OrderGoods', ReportPath + '\Товарный Учет\PrintMovement_OrderGoods.fr3');
   exit;
 

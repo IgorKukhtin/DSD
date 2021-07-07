@@ -1280,7 +1280,9 @@ uses
   Report_JuridicalDefermentPayment_Branch in '..\..\Forms\Report\Report_JuridicalDefermentPayment_Branch.pas' {Report_JuridicalDefermentPayment_BranchForm: TParentForm},
   Report_JuridicalDefermentPayment_BranchDialog in '..\..\Forms\Report\Report_JuridicalDefermentPayment_BranchDialog.pas' {Report_JuridicalDefermentPayment_BranchDialogForm: TParentForm},
   ContractGoodsJournal in '..\..\Forms\Document\ContractGoodsJournal.pas' {ContractGoodsJournalForm: TParentForm},
-  ContractGoodsMovement in '..\..\Forms\Document\ContractGoodsMovement.pas' {ContractGoodsMovementForm: TParentForm};
+  ContractGoodsMovement in '..\..\Forms\Document\ContractGoodsMovement.pas' {ContractGoodsMovementForm: TParentForm},
+  Report_WeighingProduction_KVK in '..\..\Forms\Report\Report_WeighingProduction_KVK.pas' {Report_WeighingProduction_KVKForm: TParentForm},
+  Report_WeighingProduction_KVKDialog in '..\..\Forms\Report\Report_WeighingProduction_KVKDialog.pas' {Report_WeighingProduction_KVKDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

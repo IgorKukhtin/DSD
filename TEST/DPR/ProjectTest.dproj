@@ -4405,6 +4405,14 @@
 				<Form>ContractGoodsMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WeighingProduction_KVK.pas">
+				<Form>Report_WeighingProduction_KVKForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_WeighingProduction_KVKDialog.pas">
+				<Form>Report_WeighingProduction_KVKDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

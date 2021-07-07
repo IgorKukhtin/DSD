@@ -1286,6 +1286,9 @@ type
     miReport_JuridicalDefermentPayment_Branch: TMenuItem;
     actContractGoodsMovement: TdsdOpenForm;
     miContractGoodsMovement: TMenuItem;
+    actReport_WeighingProduction_KVK: TdsdOpenForm;
+    miReport_WeighingProduction_KVK: TMenuItem;
+    N245: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

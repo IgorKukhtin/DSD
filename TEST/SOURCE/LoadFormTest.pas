@@ -2116,6 +2116,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapForm');
