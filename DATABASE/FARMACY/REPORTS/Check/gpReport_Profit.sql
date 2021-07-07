@@ -443,6 +443,36 @@ BEGIN
                                                                AND MIContainer.DescId = zc_MIContainer_Count() 
                            GROUP BY Movement_Sale.UnitId, tmpSummPrimeCost.TotalSummPrimeCost
                            ) 
+       , tmpDiscount AS (SELECT MovementLinkObject_Unit.ObjectId                     AS UnitID
+                              , sum(MovementFloat_TotalSummChangePercent.ValueData)  AS SummChange
+                         FROM Movement
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                                            ON MovementLinkObject_DiscountCard.MovementID = Movement.ID
+                                                           AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+                                                           AND MovementLinkObject_DiscountCard.ObjectId <> 0
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementID = Movement.ID
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                       ON MovementFloat_TotalSummChangePercent.MovementID = Movement.ID
+                                                      AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                      ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+
+                         WHERE Movement.OperDate >= inStartDate
+                           AND Movement.OperDate < inEndDate
+                           AND Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                         GROUP BY  MovementLinkObject_Unit.ObjectId)
 
        -- находим ИД док.прихода
        , tmpData_all AS (SELECT COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
@@ -572,6 +602,7 @@ BEGIN
                                      , (COALESCE (tmpSale_1303.SummSale_1303, 0)
                                       + COALESCE (tmpSP.SummChangePercent_SP1303, 0))         AS SummSale_1303
                                      , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)          AS SummPrimeCost_1303
+                                     , COALESCE (tmpDiscount.SummChange, 0)                   AS SummDiscount
                                      
                                      , COALESCE (tmpPriceChange.SummaChange,0)                AS SummaChange
                                      , COALESCE (tmpCheckPartionDate.Summ,0)                  AS SummaPartionDate
@@ -581,6 +612,7 @@ BEGIN
                                 FROM tmpData
                                      LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
                                      LEFT JOIN tmpSP        ON tmpSP.UnitId        = tmpData.UnitId
+                                     LEFT JOIN tmpDiscount  ON tmpDiscount.UnitId        = tmpData.UnitId
                                      
                                      LEFT JOIN tmpReport_PriceChange AS tmpPriceChange ON tmpPriceChange.UnitId = tmpData.UnitId  -- продажи по цене со скидкой
                                      LEFT JOIN tmpReport_CheckPartionDate AS tmpCheckPartionDate ON tmpCheckPartionDate.UnitId = tmpData.UnitId  -- продажи сроковых товаров
@@ -590,6 +622,7 @@ BEGIN
                                        , COALESCE (tmpSale_1303.SummSale_1303, 0)
                                        , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)
                                        , COALESCE (tmpSP.SummChangePercent_SP1303, 0)
+                                       , COALESCE (tmpDiscount.SummChange, 0) 
                                        , COALESCE (tmpPriceChange.SummaChange,0)
                                        , COALESCE (tmpCheckPartionDate.Summ,0)
                                        , COALESCE (tmpCheckPartionDate.SumSale,0)
@@ -619,6 +652,7 @@ BEGIN
                                , tmpData.SummSale_SP
                                , tmpData.SummSale_1303
                                , tmpData.SummPrimeCost_1303
+                               , tmpData.SummDiscount
                                , tmpData.SummaChange
                                , tmpData.SummaPartionDate
                                , tmpData.SumSale_PartionDate
@@ -632,12 +666,12 @@ BEGIN
                                       ELSE 0 
                                  END                                                                      AS PersentProfitWithSP
                                
-                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))        AS SummaSaleAll
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0))        AS SummaSaleAll
                                , (COALESCE (tmpData.Summa, 0) + COALESCE (tmpData.SummPrimeCost_1303, 0))                             AS SummaAll
-                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0))  AS SummaProfitAll
-                               , CASE WHEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) <> 0 
-                                      THEN ( (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0)) 
-                                           / (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) ) * 100 
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0))  AS SummaProfitAll
+                               , CASE WHEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0)) <> 0 
+                                      THEN ( (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0)) 
+                                           / (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0)) ) * 100 
                                       ELSE 0
                                  END                                                                                                   AS PersentProfitAll
                           FROM tmpData_Case AS tmpData
@@ -691,6 +725,7 @@ BEGIN
            , tmp.SummSale_SP           :: TFloat
            , tmp.SummSale_1303         :: TFloat
            , tmp.SummPrimeCost_1303    :: TFloat
+           , tmp.SummDiscount          :: TFloat
            , tmp.SummaChange           :: TFloat
            , tmp.SummaPartionDate      :: TFloat
            , tmp.SumSale_PartionDate      :: TFloat
@@ -1002,5 +1037,5 @@ $BODY$
 --select * from gpReport_Profit22(inStartDate := ('01.02.2020')::TDateTime , inEndDate := ('01.02.2020')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 , inJuridicalOurId:= 0, inUnitId:= 0, inMonth:=1,  inSession := '3');
 --FETCH ALL "<unnamed portal 46>";
 
-
 select * from gpReport_Profit(inStartDate := ('01.06.2021')::TDateTime , inEndDate := ('30.06.2021')::TDateTime , inJuridical1Id := 0 , inJuridical2Id := 0 , inJuridicalOurId := 0 , inUnitId := 183289 , inMonth := 0 ,  inSession := '3');
+

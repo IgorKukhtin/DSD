@@ -100,7 +100,7 @@ BEGIN
                             INNER JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                        AND MIFloat_Price.ValueData <= 1.5
+                                                        AND MIFloat_Price.ValueData <= 2.5
                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.isErased   = FALSE
@@ -109,7 +109,7 @@ BEGIN
 
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
-         outMessageText :=  outMessageText ||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 1,5 грн.'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
+         outMessageText :=  outMessageText ||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 2,5 грн.'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
      END IF;
      
 

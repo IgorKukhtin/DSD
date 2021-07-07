@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderGoodsSearch(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer      --ИД Документа
+              ,MovementItemId Integer      --ИД Строки Документа
               ,ItemName TVarChar       --Название(тип) документа
               ,Amount TFloat           --Кол-во товара в документе
               ,Amount_SpecZakaz TFloat   --Кол-во спецзаказ в заявке внутренней
@@ -206,6 +207,7 @@ BEGIN
 
       --
       SELECT Movement.Id                              AS MovementId
+            ,Movement.MovementItemId                  AS MovementItemId
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 'Продажи касс' ELSE MovementDesc.ItemName END   :: TVarChar AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
                       Movement.Amount)            AS Amount

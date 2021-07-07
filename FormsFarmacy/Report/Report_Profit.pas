@@ -106,6 +106,7 @@ type
     cxLabel9: TcxLabel;
     ceMonth: TcxCurrencyEdit;
     SummaVenta: TcxGridDBColumn;
+    SummDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

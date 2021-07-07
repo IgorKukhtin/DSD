@@ -159,6 +159,7 @@ type
     procedure LoadSunExclusionFormTest;
     procedure LoadTaxUnitFormTest;
     procedure LoadTechnicalRediscountFormTest;
+    procedure LoadTestingTuningFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
@@ -1945,6 +1946,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentTREditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentTREditForm');
 end;
+
+procedure TLoadFormTest.LoadTestingTuningFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTestingTuningJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTestingTuningJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTestingTuningForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTestingTuningForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTopicsTestingTuningEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTopicsTestingTuningEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTopicsTestingTuningForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTopicsTestingTuningForm');
+end;
+
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin

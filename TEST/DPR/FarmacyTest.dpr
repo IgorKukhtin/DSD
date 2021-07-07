@@ -1044,7 +1044,11 @@ uses
   GUIDUnit in '..\..\FormsFarmacy\Guides\GUIDUnit.pas' {GUIDUnitForm: TParentForm},
   UploadCheckoutTesting in '..\..\FormsFarmacy\Guides\UploadCheckoutTesting.pas' {UploadCheckoutTestingForm},
   CheckoutTesting in '..\..\FormsFarmacy\Guides\CheckoutTesting.pas' {CheckoutTestingForm: TParentForm},
-  Report_Check_SetErasedUser in '..\..\FormsFarmacy\Report\Report_Check_SetErasedUser.pas' {Report_Check_SetErasedUserForm: TParentForm};
+  Report_Check_SetErasedUser in '..\..\FormsFarmacy\Report\Report_Check_SetErasedUser.pas' {Report_Check_SetErasedUserForm: TParentForm},
+  TestingTuningJournal in '..\..\FormsFarmacy\Document\TestingTuningJournal.pas' {TestingTuningJournalForm: TParentForm},
+  TestingTuning in '..\..\FormsFarmacy\Document\TestingTuning.pas' {TestingTuningForm: TParentForm},
+  TopicsTestingTuningEdit in '..\..\FormsFarmacy\Guides\TopicsTestingTuningEdit.pas' {TopicsTestingTuningEditForm: TParentForm},
+  TopicsTestingTuning in '..\..\FormsFarmacy\Guides\TopicsTestingTuning.pas' {TopicsTestingTuningForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

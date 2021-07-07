@@ -4331,6 +4331,13 @@ begin
     exit;
   end;
 
+  if (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage
+      ('Применен дисконт.'#13#10'Применение программы лояльности запрещено..');
+    exit;
+  end;
+
   SetLoyaltySaveMoney;
   SetLoyaltySaveMoneyDiscount;
 end;
@@ -4880,6 +4887,13 @@ begin
   begin
     ShowMessage
       ('Установлена скидка через сайт.'#13#10'Для променениея программы лояльности обнулите скидку через сайт..');
+    exit;
+  end;
+
+  if (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage
+      ('Применен дисконт.'#13#10'Применение программы лояльности запрещено..');
     exit;
   end;
 
@@ -5474,6 +5488,12 @@ begin
   if DiscountServiceForm.isPrepared then
   begin
     ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
+    exit;
+  end;
+
+  if pnlLoyaltySaveMoney.Visible then
+  begin
+    ShowMessage('В текущем чеке применена программа лояльности . Сначала очистите чек!');
     exit;
   end;
 

@@ -4335,8 +4335,8 @@
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1060#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074
-      FormName = 'TTestingTuningForm'
-      FormNameParam.Value = 'TTestingTuningForm'
+      FormName = 'TTestingTuningJournalForm'
+      FormNameParam.Value = 'TTestingTuningJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4403,6 +4403,17 @@
       Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072#1084#1080' '#1087#1086' '#1082#1088#1080#1090#1077#1088#1080#1103#1084
       FormName = 'TReport_Check_SetErasedUserForm'
       FormNameParam.Value = 'TReport_Check_SetErasedUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTopicsTestingTuning: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1077#1084#1099' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+      FormName = 'TTopicsTestingTuningForm'
+      FormNameParam.Value = 'TTopicsTestingTuningForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -5529,19 +5540,22 @@
         object miRetailCostCredit: TMenuItem [6]
           Action = actRetailCostCredit
         end
-        object N8: TMenuItem [7]
+        object N302: TMenuItem [7]
+          Action = actTopicsTestingTuning
+        end
+        object N8: TMenuItem [8]
           Caption = '-'
         end
-        object N50: TMenuItem [8]
+        object N50: TMenuItem [9]
           Action = actCashRegister
         end
-        object POS1: TMenuItem [9]
+        object POS1: TMenuItem [10]
           Action = actBankPOSTerminal
         end
-        object POS2: TMenuItem [10]
+        object POS2: TMenuItem [11]
           Action = actUnitBankPOSTerminal
         end
-        object N20: TMenuItem [11]
+        object N20: TMenuItem [12]
           Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
           object N21: TMenuItem
             Action = actAccountGroup
@@ -5577,13 +5591,13 @@
             Action = actProfitLoss
           end
         end
-        object N6: TMenuItem [12]
+        object N6: TMenuItem [13]
           Caption = '-'
         end
-        object N97: TMenuItem [13]
+        object N97: TMenuItem [14]
           Action = actColor
         end
-        object N74: TMenuItem [14]
+        object N74: TMenuItem [15]
           Action = actForms
         end
         object miTest: TMenuItem
