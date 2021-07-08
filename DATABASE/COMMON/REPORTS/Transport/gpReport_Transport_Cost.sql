@@ -453,15 +453,15 @@ BEGIN
                                  , tmpWeight.TotalCountKg
                                  , tmpWeight.TotalSumm
                                  , tmpWeight.HoursWork
-                                 , COALESCE (tmpContainer.CarId, tmpWeight.CarId) AS CarId
+                                 , COALESCE (tmpContainer.CarId, tmpContainer2.CarId, tmpWeight.CarId)    AS CarId
                                  --, tmpContainer.FuelId
-                                 , tmpContainer.UnitId
-                                 , tmpContainer.BranchId
-                                 , COALESCE (tmpContainer.PersonalDriverId, tmpWeight.PersonalDriverId) AS PersonalDriverId
-                                 , tmpContainer.RouteId --tmpWeight.RouteId
-                                 , tmpContainer.ProfitLossId
-                                 , tmpContainer.BusinessId
-                                 , tmpContainer.isAccount_50000
+                                 , COALESCE (tmpContainer.UnitId,tmpContainer2.UnitId)                    AS UnitId
+                                 , COALESCE (tmpContainer.BranchId, tmpContainer2.BranchId)               AS BranchId
+                                 , COALESCE (tmpContainer.PersonalDriverId, tmpContainer2.PersonalDriverId, tmpWeight.PersonalDriverId)  AS PersonalDriverId
+                                 , COALESCE (tmpContainer.RouteId, tmpContainer2.RouteId)                 AS RouteId --tmpWeight.RouteId
+                                 , COALESCE (tmpContainer.ProfitLossId,tmpContainer2.ProfitLossId )       AS ProfitLossId
+                                 , COALESCE (tmpContainer.BusinessId, tmpContainer2.BusinessId)           AS BusinessId
+                                 , COALESCE (tmpContainer.isAccount_50000,tmpContainer2.isAccount_50000)  AS isAccount_50000
                                  , tmpWeight.PartnerId_Sale
                                  , tmpWeight.MovementId_Sale
                                  , tmpTT.Count_TT
@@ -469,9 +469,32 @@ BEGIN
                             FROM tmpWeight
                                  LEFT JOIN tmpContainer ON tmpContainer.MovementId = tmpWeight.MovementTransportId
                                                        AND tmpContainer.RouteId    = tmpWeight.RouteId
+
+                                 -- И второй раз если не совпадают маршруты
+                                 LEFT JOIN (SELECT tmpContainer.CarId
+                                                 , tmpContainer.UnitId
+                                                 , tmpContainer.BranchId
+                                                 , tmpContainer.PersonalDriverId
+                                                 , tmpContainer.ProfitLossId
+                                                 , tmpContainer.BusinessId
+                                                 , tmpContainer.isAccount_50000
+                                                 , tmpContainer.MovementId
+                                                 , MAX (tmpContainer.RouteId) AS RouteId
+                                            FROM  tmpContainer
+                                            GROUP BY tmpContainer.CarId
+                                                   , tmpContainer.UnitId
+                                                   , tmpContainer.BranchId
+                                                   , tmpContainer.PersonalDriverId
+                                                   , tmpContainer.ProfitLossId
+                                                   , tmpContainer.BusinessId
+                                                   , tmpContainer.isAccount_50000
+                                                   , tmpContainer.MovementId
+                                            ) AS tmpContainer2 ON tmpContainer2.MovementId = tmpWeight.MovementTransportId
+                                                             -- AND tmpContainer.RouteId IS NULL
+
                                  LEFT JOIN tmpTT ON tmpTT.MovementTransportId = tmpWeight.MovementTransportId
                             )
-                            
+
 
         , tmpUnion AS (SELECT tmpAll.MovementId
                             , tmpAll.CarId
@@ -820,7 +843,7 @@ BEGIN
             , (tmpUnion.Distance)       :: TFloat  AS Distance
             , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
             , (tmpUnion.TotalWeight_Sale) :: TFloat  AS TotalWeight_Sale
-            , (tmpUnion.TotalWeight_Doc) ::TFloat
+            , (tmpUnion.TotalWeight_Doc) ::TFloat  AS TotalWeight_Doc
             , (tmpUnion.TotalSumm_Sale)::TFloat AS TotalSumm_Sale
             , (tmpUnion.HoursWork)  :: TFloat  AS HoursWork
             , tmpUnion.One_KM
