@@ -562,14 +562,14 @@
     Left = 8
     Top = 288
     Caption = #1059#1095#1072#1089#1090#1074#1091#1102#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
-    TabOrder = 17
+    TabOrder = 16
     Width = 270
   end
   object cbPriorityReprice: TcxCheckBox [17]
     Left = 8
     Top = 307
     Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090#1085#1099#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
-    TabOrder = 20
+    TabOrder = 19
     Width = 270
   end
   object ceExpirationDateMonth: TcxCurrencyEdit [18]
@@ -585,6 +585,13 @@
     Left = 8
     Top = 212
     Caption = #1042' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1089#1088#1086#1082#1080' '#1073#1086#1083#1077#1077' '#1084#1077#1089#1103#1094#1077#1074
+  end
+  object cbChangeExpirationDate: TcxCheckBox [20]
+    Left = 8
+    Top = 326
+    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1080#1079#1084#1077#1085#1103#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1074' '#1087#1088#1080#1093#1086#1076#1077
+    TabOrder = 24
+    Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -991,6 +998,14 @@
         Component = ceExpirationDateMonth
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangeExpirationDate'
+        Value = Null
+        Component = cbChangeExpirationDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1163,6 +1178,13 @@
         Name = 'ExpirationDateMonth'
         Value = Null
         Component = ceExpirationDateMonth
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isChangeExpirationDate'
+        Value = Null
+        Component = cbChangeExpirationDate
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -24,10 +24,6 @@ type
     InvNumber: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actGet_MovementFormClass: TdsdExecStoredProc;
-    spGet_MovementFormClass: TdsdStoredProc;
-    mactOpenDocument: TMultiAction;
-    actOpenDocument: TdsdOpenForm;
     MovementProtocolOpenForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     UserName: TcxGridDBColumn;
@@ -40,6 +36,10 @@ type
     DateErase: TcxGridDBColumn;
     dsdOpenForm1: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    actUpdatePierced: TdsdInsertUpdateAction;
+    OperDatePierced: TcxGridDBColumn;
+    InvNumberPierced: TcxGridDBColumn;
   private
     { Private declarations }
   public

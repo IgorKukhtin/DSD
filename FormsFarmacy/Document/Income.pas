@@ -177,6 +177,10 @@ type
     PromoBonus: TcxGridDBColumn;
     MarginPercentUnit: TcxGridDBColumn;
     isLearnWeek: TcxGridDBColumn;
+    spUpdate_ExpirationDate: TdsdStoredProc;
+    actExecuteDialogExpirationDate: TExecuteDialog;
+    actUpdate_ExpirationDate: TdsdExecStoredProc;
+    bbUpdate_ExpirationDate: TdxBarButton;
   private
     { Private declarations }
   public

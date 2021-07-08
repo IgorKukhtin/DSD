@@ -42,6 +42,7 @@ type
     isUseReprice: TcxGridDBColumn;
     isPriorityReprice: TcxGridDBColumn;
     ExpirationDateMonth: TcxGridDBColumn;
+    isChangeExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

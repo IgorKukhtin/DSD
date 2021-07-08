@@ -242,6 +242,14 @@ inherited JuridicalForm: TJuridicalForm
             Options.Editing = False
             Width = 96
           end
+          object isChangeExpirationDate: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1080#1079#1084#1077#1085#1103#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1074' '#1087#1088#1080#1093#1086#1076#1077
+            DataBinding.FieldName = 'isChangeExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

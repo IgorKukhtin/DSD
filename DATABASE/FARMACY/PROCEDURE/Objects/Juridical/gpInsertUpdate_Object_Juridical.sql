@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, Boolean, Boolean, 
-  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Integer, TVarChar);
+  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inisUseReprice            boolean   ,    -- Участвуют в автопереоценке
     IN inisPriorityReprice       boolean   ,    -- Приоритетный поставщик при переоценке
     IN inExpirationDateMonth     Integer   ,    -- Брать в переоценку товар со сроком более месяцев
+    IN inisChangeExpirationDate  boolean   ,    -- Разрешено изменять срок годности в приходе
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -77,6 +78,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_UseReprice(), ioId, inisUseReprice);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_PriorityReprice(), ioId, inisPriorityReprice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_ChangeExpirationDate(), ioId, inisChangeExpirationDate);
 
    -- сохранили свойство <Полное название поставщика для клиент банка>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_CBName(), ioId, inCBName);

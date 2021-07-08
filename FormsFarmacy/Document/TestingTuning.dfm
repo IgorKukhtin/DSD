@@ -23,7 +23,7 @@ inherited TestingTuningForm: TTestingTuningForm
         Width = 873
         Height = 304
         ExplicitWidth = 873
-        ExplicitHeight = 265
+        ExplicitHeight = 304
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = ChildDS
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -37,6 +37,7 @@ inherited TestingTuningForm: TTestingTuningForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
+              Format = '0'
               Kind = skSum
               Column = chReplies
             end
@@ -112,6 +113,8 @@ inherited TestingTuningForm: TTestingTuningForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 3
+        ExplicitTop = 310
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SecondDS
@@ -126,10 +129,6 @@ inherited TestingTuningForm: TTestingTuningForm
               Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Kind = skSum
-              Column = seisCorrectAnswer
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -513,6 +512,9 @@ inherited TestingTuningForm: TTestingTuningForm
           StoredProc = spGetTotalSumm
         end
         item
+          StoredProc = spSelect
+        end
+        item
           StoredProc = spSelectChild
         end>
       Caption = 'actUpdateChildDS'
@@ -531,10 +533,245 @@ inherited TestingTuningForm: TTestingTuningForm
           StoredProc = spGetTotalSumm
         end
         item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
           StoredProc = spSelectSecond
         end>
       Caption = 'actUpdateSecondDS'
       DataSource = SecondDS
+    end
+    object actMISetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1042#1086#1087#1088#1086#1089'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1042#1086#1087#1088#1086#1089'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
+    object actMISetErasedSecond: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMISecond
+      StoredProcList = <
+        item
+          StoredProc = spErasedMISecond
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = SecondDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetUnErasedSecond: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMISecond
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMISecond
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = SecondDS
+    end
+    object actExecuteDialogQuestion: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogQuestion'
+      FormName = 'TTextDialogForm'
+      FormNameParam.Value = 'TTextDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Question'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'QuestionLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actAddQuestion: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDialogQuestion
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1086#1087#1088#1086#1089' '#1074' '#1090#1077#1084#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1086#1087#1088#1086#1089' '#1074' '#1090#1077#1084#1091
+      ImageIndex = 54
+    end
+    object actExecuteDialogPossibleAnswerTrue: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogPossibleAnswerTrue'
+      FormName = 'TTextDialogForm'
+      FormNameParam.Value = 'TTextDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'PossibleAnswer'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1074#1086#1087#1088#1086#1089' '#1074' '#1090#1077#1084#1091
+          Component = FormParams
+          ComponentItem = 'PossibleAnswerLabelTrue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsertMISecondTrue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDialogPossibleAnswerTrue
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMISecondTrue
+      StoredProcList = <
+        item
+          StoredProc = spInsertMISecondTrue
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      ImageIndex = 79
+    end
+    object actExecuteDialogPossibleAnswerFalse: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogPossibleAnswerTrue'
+      FormName = 'TTextDialogForm'
+      FormNameParam.Value = 'TTextDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PossibleAnswer'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+          Component = FormParams
+          ComponentItem = 'PossibleAnswerLabelFalse'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsertMISecondFalse: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDialogPossibleAnswerFalse
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMISecondFalse
+      StoredProcList = <
+        item
+          StoredProc = spInsertMISecondFalse
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      ImageIndex = 7
     end
   end
   inherited MasterDS: TDataSource
@@ -597,11 +834,11 @@ inherited TestingTuningForm: TTestingTuningForm
           ItemName = 'bbShowAll'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbErased'
         end
@@ -614,12 +851,54 @@ inherited TestingTuningForm: TTestingTuningForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -631,23 +910,7 @@ inherited TestingTuningForm: TTestingTuningForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -704,6 +967,34 @@ inherited TestingTuningForm: TTestingTuningForm
       Visible = ivAlways
       ImageIndex = 79
     end
+    object dxBarButton6: TdxBarButton
+      Action = actMISetErasedChild
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actMISetUnErasedChild
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actMISetErasedSecond
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actMISetUnErasedSecond
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = actAddQuestion
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actInsertMISecondTrue
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actInsertMISecondFalse
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView1
@@ -754,22 +1045,34 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameTestingTuning'
-        Value = 'PrintMovement_Sale1'
+        Name = 'Question'
+        Value = ''
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'QuestionLabel'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1074#1086#1087#1088#1086#1089' '#1074' '#1090#1077#1084#1091
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PossibleAnswer'
+        Value = ''
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PossibleAnswerLabelTrue'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameTestingTuningTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameTestingTuningBill'
-        Value = Null
+        Name = 'PossibleAnswerLabelFalse'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -777,12 +1080,6 @@ inherited TestingTuningForm: TTestingTuningForm
       item
         Name = 'CheckID'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SummaFundAvailable'
-        Value = 0.000000000000000000
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 312
@@ -953,13 +1250,13 @@ inherited TestingTuningForm: TTestingTuningForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TestingTuning_SetErased'
-    Left = 718
-    Top = 512
+    Left = 614
+    Top = 288
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TestingTuning_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 614
+    Top = 240
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning'
@@ -1410,5 +1707,239 @@ inherited TestingTuningForm: TTestingTuningForm
     PackSize = 1
     Left = 48
     Top = 576
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TestingTuning_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 694
+    Top = 256
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TestingTuning_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 694
+    Top = 304
+  end
+  object spUnErasedMISecond: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TestingTuning_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 782
+    Top = 232
+  end
+  object spErasedMISecond: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TestingTuning_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 782
+    Top = 280
+  end
+  object spInsertMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQuestion'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Question'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 511
+  end
+  object spInsertMISecondTrue: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 576
+  end
+  object spInsertMISecondFalse: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 568
   end
 end

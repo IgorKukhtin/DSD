@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isDeferred Boolean,
                isUseReprice Boolean, isPriorityReprice Boolean, ExpirationDateMonth Integer, 
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
-               CodeRazom Integer, CodeMedicard Integer, CodeOrangeCard Integer,
+               CodeRazom Integer, CodeMedicard Integer, CodeOrangeCard Integer, isChangeExpirationDate boolean,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -51,6 +51,7 @@ BEGIN
            , NULL::Integer           AS CodeRazom
            , NULL::Integer           AS CodeMedicard
            , NULL::Integer           AS CodeOrangeCard
+           , FALSE                   AS isChangeExpirationDate  
 
            , CAST (NULL AS Boolean)  AS isErased;
    
@@ -82,6 +83,7 @@ BEGIN
            , ObjectFloat_CodeRazom.ValueData::Integer  AS CodeRazom
            , ObjectFloat_CodeMedicard.ValueData::Integer   AS CodeMedicard
            , ObjectFloat_CodeOrangeCard.ValueData::Integer AS CodeOrangeCard
+           , COALESCE (ObjectBoolean_ChangeExpirationDate.ValueData, FALSE)          AS isChangeExpirationDate
            
            , Object_Juridical.isErased                 AS isErased
            
@@ -131,6 +133,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PriorityReprice
                                    ON ObjectBoolean_PriorityReprice.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_PriorityReprice.DescId = zc_ObjectBoolean_Juridical_PriorityReprice()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_ChangeExpirationDate
+                                   ON ObjectBoolean_ChangeExpirationDate.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_ChangeExpirationDate.DescId = zc_ObjectBoolean_Juridical_ChangeExpirationDate()
 
            LEFT JOIN ObjectString AS ObjectString_CBName
                                   ON ObjectString_CBName.ObjectId = Object_Juridical.Id

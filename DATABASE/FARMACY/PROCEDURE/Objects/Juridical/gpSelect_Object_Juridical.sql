@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, --OKPO TVarChar,
                isDeferred Boolean,
                isUseReprice Boolean, isPriorityReprice Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBPurposePayment TVarChar,
-               ExpirationDateMonth Integer, 
+               ExpirationDateMonth Integer,
+               isChangeExpirationDate Boolean, 
                isErased boolean,
                
                StartDate TDateTime, 
@@ -126,6 +127,7 @@ BEGIN
            , ObjectString_CBAccount.ValueData          AS CBAccount
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
            , ObjectFloat_ExpirationDateMonth.ValueData::Integer AS ExpirationDateMonth
+           , COALESCE (ObjectBoolean_ChangeExpirationDate.ValueData, FALSE)          AS isChangeExpirationDate
 
            , Object_Juridical.isErased           AS isErased
            
@@ -183,6 +185,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PriorityReprice
                                    ON ObjectBoolean_PriorityReprice.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_PriorityReprice.DescId = zc_ObjectBoolean_Juridical_PriorityReprice()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_ChangeExpirationDate
+                                   ON ObjectBoolean_ChangeExpirationDate.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_ChangeExpirationDate.DescId = zc_ObjectBoolean_Juridical_ChangeExpirationDate()
 
            LEFT JOIN ObjectString AS ObjectString_CBName
                                   ON ObjectString_CBName.ObjectId = Object_Juridical.Id

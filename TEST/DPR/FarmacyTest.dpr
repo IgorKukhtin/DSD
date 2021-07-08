@@ -1048,7 +1048,8 @@ uses
   TestingTuningJournal in '..\..\FormsFarmacy\Document\TestingTuningJournal.pas' {TestingTuningJournalForm: TParentForm},
   TestingTuning in '..\..\FormsFarmacy\Document\TestingTuning.pas' {TestingTuningForm: TParentForm},
   TopicsTestingTuningEdit in '..\..\FormsFarmacy\Guides\TopicsTestingTuningEdit.pas' {TopicsTestingTuningEditForm: TParentForm},
-  TopicsTestingTuning in '..\..\FormsFarmacy\Guides\TopicsTestingTuning.pas' {TopicsTestingTuningForm: TParentForm};
+  TopicsTestingTuning in '..\..\FormsFarmacy\Guides\TopicsTestingTuning.pas' {TopicsTestingTuningForm: TParentForm},
+  TextDialog in '..\..\FormsFarmacy\Guides\TextDialog.pas' {TextDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -133,6 +133,7 @@ type
     cbPriorityReprice: TcxCheckBox;
     ceExpirationDateMonth: TcxCurrencyEdit;
     cxLabel28: TcxLabel;
+    cbChangeExpirationDate: TcxCheckBox;
   private
     { Private declarations }
   public

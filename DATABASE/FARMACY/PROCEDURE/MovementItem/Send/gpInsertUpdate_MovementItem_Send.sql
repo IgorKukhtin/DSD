@@ -270,6 +270,7 @@ BEGIN
                  WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
                    AND ObjectLink_Unit_Parent.ObjectId = vbUnitId
                    AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0)
+      AND CURRENT_DATE >= '09.07.2021'
     THEN
       vHT_SUN := COALESCE((SELECT Max(ObjectFloat_HT_SUN_v1.ValueData) FROM ObjectFloat AS ObjectFloat_HT_SUN_v1 
                            WHERE ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()), 0);

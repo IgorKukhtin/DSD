@@ -79,6 +79,30 @@ type
     SecondCDS: TClientDataSet;
     spSelectSecond: TdsdStoredProc;
     actUpdateSecondDS: TdsdUpdateDataSet;
+    spUnErasedMIChild: TdsdStoredProc;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMISecond: TdsdStoredProc;
+    spErasedMISecond: TdsdStoredProc;
+    actMISetErasedChild: TdsdUpdateErased;
+    actMISetUnErasedChild: TdsdUpdateErased;
+    actMISetErasedSecond: TdsdUpdateErased;
+    actMISetUnErasedSecond: TdsdUpdateErased;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    actExecuteDialogQuestion: TExecuteDialog;
+    actAddQuestion: TdsdExecStoredProc;
+    dxBarButton10: TdxBarButton;
+    spInsertMIChild: TdsdStoredProc;
+    spInsertMISecondTrue: TdsdStoredProc;
+    spInsertMISecondFalse: TdsdStoredProc;
+    actExecuteDialogPossibleAnswerTrue: TExecuteDialog;
+    actInsertMISecondTrue: TdsdExecStoredProc;
+    actExecuteDialogPossibleAnswerFalse: TExecuteDialog;
+    actInsertMISecondFalse: TdsdExecStoredProc;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public
