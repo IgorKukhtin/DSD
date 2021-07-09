@@ -3,7 +3,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1090#1088#1072#1090#1099' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072'> ('#1088#1077#1077#1089#1090#1088')'
   ClientHeight = 395
-  ClientWidth = 1448
+  ClientWidth = 1362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 115
-    Width = 1448
+    Width = 1362
     Height = 280
     Align = alClient
     TabOrder = 0
@@ -68,10 +68,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = SumAmount_TransportAdd
         end
         item
@@ -158,10 +154,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = Count_tt
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -202,10 +194,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = SumAmount_TransportAdd
         end
         item
@@ -292,10 +280,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
           Format = ',0.####'
           Kind = skSum
           Column = Count_tt
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -805,7 +789,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1448
+    Width = 1362
     Height = 89
     Align = alTop
     TabOrder = 2

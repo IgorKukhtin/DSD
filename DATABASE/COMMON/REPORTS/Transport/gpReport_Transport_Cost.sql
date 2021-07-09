@@ -490,7 +490,8 @@ BEGIN
                                                    , tmpContainer.isAccount_50000
                                                    , tmpContainer.MovementId
                                             ) AS tmpContainer2 ON tmpContainer2.MovementId = tmpWeight.MovementTransportId
-                                                             -- AND tmpContainer.RouteId IS NULL
+                                                             -- AND tmpContainer.RouteId IS NULL 
+                                                             --and 1=0
 
                                  LEFT JOIN tmpTT ON tmpTT.MovementTransportId = tmpWeight.MovementTransportId
                             )
@@ -583,11 +584,12 @@ BEGIN
                                   LEFT JOIN tmpWeight_All ON tmpWeight_All.MovementTransportId = tmpContainer.MovementId
                                                          AND tmpWeight_All.CarId = tmpContainer.CarId
                                                          AND tmpWeight_All.UnitId = tmpContainer.UnitId
-                                                         AND tmpWeight_All.BranchId = tmpContainer.BranchId
+                                                         AND COALESCE (tmpWeight_All.BranchId,0) = COALESCE (tmpContainer.BranchId,0)
                                                          AND tmpWeight_All.PersonalDriverId = tmpContainer.PersonalDriverId
                                                          AND tmpWeight_All.RouteId = tmpContainer.RouteId
-                                                         AND tmpWeight_All.BusinessId = tmpContainer.BusinessId
+                                                         AND COALESCE (tmpWeight_All.BusinessId,0) = COALESCE (tmpContainer.BusinessId,0)
                                                          AND tmpWeight_All.isAccount_50000 = tmpContainer.isAccount_50000
+
                              ) AS tmpAll
 
                        GROUP BY tmpAll.MovementId
