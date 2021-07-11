@@ -122,14 +122,30 @@ BEGIN
                                       , zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank()
                                       , zc_Enum_ContractConditionKind_BonusMonthlyPayment()
                                        )
-   AND 1 < (SELECT COUNT(*)
-            FROM ObjectLink AS ObjectLink_Contract
-                 INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
-                                       ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
-                                      AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                      AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
-            WHERE ObjectLink_Contract.ChildObjectId = inContractId
-              AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+ --AND vbUserId = 5
+   AND 0 < (WITH tmpData AS (SELECT ObjectLink_ContractConditionKind.ChildObjectId                          AS ContractConditionKindId
+                                  , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+                                --, COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
+                             FROM ObjectLink AS ObjectLink_Contract
+                                  INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                                        ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                       AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                       AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                  INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
+                                                                               AND Object_ContractCondition.isErased = FALSE
+                                  LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                       ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                                                      AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractCondition_StartDate()
+                                --LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                --                     ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                                --                    AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractCondition_EndDate()
+                             WHERE ObjectLink_Contract.ChildObjectId = inContractId
+                               AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+                            )
+            SELECT COUNT(*)
+            FROM tmpData
+                 JOIN tmpData AS tmpData_next ON tmpData_next.ContractConditionKindId = tmpData.ContractConditionKindId
+                                             AND tmpData_next.StartDate               > tmpData.StartDate
            )
    THEN
        RAISE EXCEPTION 'Ошибка.Для условия договора <%> история не предусмотрена.', lfGet_Object_ValueData_sh (inContractConditionKindId);

@@ -56,7 +56,8 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_CheckAmount_ReturnInToSale' ORDER BY Id DESC;
+-- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_OrderExternal';
+-- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_OrderExternal' ORDER BY Id DESC;
 -- SELECT *, gpInsertUpdate_Object_ReportExternal (ioId:= Id, inName:= '', inSession:= zfCalc_UserAdmin()) FROM Object WHERE DescId = zc_Object_ReportExternal() AND Id = 0 ORDER BY Id;
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Account',                      inSession:= zfCalc_UserAdmin()); -- +
@@ -89,7 +90,7 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_ReceiptProductionOutAnalyze', inSession:= zfCalc_UserAdmin()); -- - !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_ReceiptSaleAnalyze',          inSession:= zfCalc_UserAdmin()); -- - !!!
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_OrderExternal',                inSession:= zfCalc_UserAdmin()); -- +
+-- -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_OrderExternal',                inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalDefermentPayment',    inSession:= zfCalc_UserAdmin()); -- + !!!
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_JuridicalDefermentDebet',      inSession:= zfCalc_UserAdmin()); -- + !!!

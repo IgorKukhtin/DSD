@@ -69,14 +69,17 @@ BEGIN
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
 
+          , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId OR (UserId = 5 AND vbUserId = 471654) -- ױמכמה ְ.ֲ.
+                              --UNION
+                              -- SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE vbUserId = 471654 -- ױמכמה ְ.ֲ.
+                                ) 
           , tmpMovement AS (SELECT Movement.*
                             FROM tmpStatus
                                  JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
                                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                               AND Movement.StatusId = tmpStatus.StatusId
-                                 JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                                 JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                             )
-
           , tmpMI_Child AS (SELECT tmpMovement.Id            AS MovementId
                                  , SUM (MovementItem.Amount) AS Amount
                             FROM tmpMovement

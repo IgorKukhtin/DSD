@@ -25,8 +25,8 @@ BEGIN
                                   , MovementItem.ObjectId              AS BankAccountId_main
                                   , MILinkObject_BankAccount.ObjectId  AS BankAccountId
                                   , MIString_Comment.ValueData         AS Comment
-                                  , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY MILinkObject_BankAccount.ObjectId DESC ) AS Ord
-                                  , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.Id DESC ) AS Ord_byComment   -- комментарий последнего документа
+                                  , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.Id DESC) AS Ord
+                                  , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.Id DESC) AS Ord_byComment   -- комментарий последнего документа
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                                                          AND MovementItem.DescId = zc_MI_Master()

@@ -207,6 +207,8 @@ BEGIN
                                                  JOIN ObjectLink AS ObjectLink_MemberMinus_From
                                                                  ON ObjectLink_MemberMinus_From.ObjectId = ObjectString.ObjectId
                                                                 AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
+                                                 JOIN Object AS Object_MemberMinus ON Object_MemberMinus.Id       = ObjectString.ObjectId
+                                                                                  AND Object_MemberMinus.isErased = FALSE
                                             WHERE ObjectString.ValueData <> ''
                                               AND ObjectString.DescId = zc_ObjectString_MemberMinus_DetailPayment()
                                            )
@@ -226,7 +228,7 @@ BEGIN
     -- дальше поиск через карту - Алименты
     IF COALESCE(vbJuridicalId, 0) = 0
     THEN
-        vbJuridicalId:= (WITH tmpCardChild_all AS (SELECT OS.ValueData, OS.ObjectId AS MemberId FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Member_CardChild() AND ValueData <> '')
+        vbJuridicalId:= (WITH tmpCardChild_all AS (SELECT OS.ValueData, OS.ObjectId AS MemberId FROM ObjectString AS OS JOIN Object ON Object.Id = OS.ObjectId AND Object.isErased = FALSE WHERE OS.DescId = zc_ObjectString_Member_CardChild() AND OS.ValueData <> '')
                             , tmpCardChild AS (SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 1) AS ValueData FROM tmpCardChild_all
                                              UNION
                                                SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 2) AS ValueData FROM tmpCardChild_all

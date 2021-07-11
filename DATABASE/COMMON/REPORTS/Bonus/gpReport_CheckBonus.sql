@@ -77,6 +77,7 @@ BEGIN
 
      IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
         AND (vbBranchId <> zc_Branch_Basis()) AND (COALESCE (vbBranchId,0) <> 0)
+        AND vbUserId <> 471654 -- ױמכמה ְ.ֲ.
      THEN
          IF (inBranchId <> vbBranchId)
          THEN
