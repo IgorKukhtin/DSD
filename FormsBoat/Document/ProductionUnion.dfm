@@ -181,9 +181,10 @@ object ProductionUnionForm: TProductionUnionForm
         Left = 0
         Top = 0
         Width = 855
-        Height = 261
+        Height = 136
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -331,7 +332,7 @@ object ProductionUnionForm: TProductionUnionForm
             Width = 233
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -397,9 +398,9 @@ object ProductionUnionForm: TProductionUnionForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 269
+        Top = 144
         Width = 855
-        Height = 145
+        Height = 270
         Align = alBottom
         TabOrder = 1
         LookAndFeel.Kind = lfStandard
@@ -469,15 +470,15 @@ object ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 261
+            Width = 273
           end
           object Amount_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Filtering = False
-            Width = 343
+            Width = 133
           end
           object IsErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -492,12 +493,13 @@ object ProductionUnionForm: TProductionUnionForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 261
+        Top = 136
         Width = 855
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 261
       end
     end
   end
