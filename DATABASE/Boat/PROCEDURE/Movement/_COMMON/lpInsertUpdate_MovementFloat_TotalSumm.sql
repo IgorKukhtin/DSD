@@ -150,7 +150,7 @@ BEGIN
                                              AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
                                              
             WHERE MovementItem.MovementId = inMovementId
-              AND MovementItem.DescId     = zc_MI_Master()
+              --AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased = false
              ) AS tmpMI;
 
@@ -158,6 +158,8 @@ BEGIN
   
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount_Master);
+         -- Сохранили свойство <Итого количество("подчиненные элементы")>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountChild(), inMovementId, vbTotalCount_Child);
          -- Сохранили свойство <Итого Сумма>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
          -- Сохранили свойство <Итого сумма по накладной (без НДС)>

@@ -1,8 +1,8 @@
--- Function: gpMovementItem_Send_SetUnErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_ProductionUnion_SetUnErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_Send_SetUnErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_ProductionUnion_SetUnErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_Send_SetUnErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_ProductionUnion_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Ёлемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_Send());
+  --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_ProductionUnion());
   vbUserId := lpGetUserBySession (inSession);
 
   -- устанавливаем новое значение

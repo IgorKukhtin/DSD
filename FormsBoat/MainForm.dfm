@@ -841,8 +841,8 @@ inherited MainForm: TMainForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'-'#1082#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1103
-      FormName = 'TIncomeJournalForm'
-      FormNameParam.Value = 'TIncomeJournalForm'
+      FormName = 'TProductionUnionJournalForm'
+      FormNameParam.Value = 'TProductionUnionJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1028,7 +1028,6 @@ inherited MainForm: TMainForm
       end
       object miProductionUnion: TMenuItem
         Action = actProductionUnion
-        Enabled = False
       end
       object miLine21_: TMenuItem
         Caption = '-'

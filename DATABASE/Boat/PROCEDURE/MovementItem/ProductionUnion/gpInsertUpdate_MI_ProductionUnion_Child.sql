@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId                Integer   , -- Комплектующие
+    IN inObjectId                Integer   , -- Комплектующие
     IN inAmount                 TFloat    , -- Количество резерв
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -31,7 +31,7 @@ BEGIN
      FROM lpInsertUpdate_MI_ProductionUnion_Child (ioId
                                                  , inParentId
                                                  , inMovementId
-                                                 , inGoodsId
+                                                 , inObjectId
                                                  , inAmount
                                                  , vbUserId
                                                  ) AS tmp;

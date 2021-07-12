@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Int
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Лодка/ Комплектующие
+    IN inObjectId            Integer   , -- Лодка/ Комплектующие
     IN inReceiptProdModelId  Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inComment             TVarChar  , --
@@ -30,7 +30,7 @@ BEGIN
             INTO ioId 
      FROM lpInsertUpdate_MovementItem_ProductionUnion (ioId
                                           , inMovementId
-                                          , inGoodsId
+                                          , inObjectId
                                           , inReceiptProdModelId
                                           , inAmount
                                           , inComment
