@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
              , RegionId Integer, RegionName TVarChar
+             , MobilePackId Integer, MobilePackName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -47,6 +48,9 @@ BEGIN
            , CAST (0 as Integer)    AS RegionId
            , CAST ('' as TVarChar)  AS RegionName
 
+           , CAST (0 as Integer)    AS MobilePackId
+           , CAST ('' as TVarChar)  AS MobilePackName 
+
            , CAST (NULL AS Boolean) AS isErased
 ;
    ELSE
@@ -70,6 +74,9 @@ BEGIN
 
            , Object_Region.Id                  AS RegionId
            , Object_Region.ValueData           AS RegionName 
+
+           , Object_MobilePack.Id              AS MobilePackId
+           , Object_MobilePack.ValueData       AS MobilePackName 
 
            , Object_MobileEmployee.isErased    AS isErased
            
@@ -104,6 +111,11 @@ BEGIN
                                 AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
             LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId   
 
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_MobilePack
+                                 ON ObjectLink_MobileEmployee_MobilePack.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_MobilePack.DescId = zc_ObjectLink_MobileEmployee_MobilePack()
+            LEFT JOIN Object AS Object_MobilePack ON Object_MobilePack.Id = ObjectLink_MobileEmployee_MobilePack.ChildObjectId  
+
        WHERE Object_MobileEmployee.Id = inId;
       
    END IF;
@@ -120,4 +132,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_MobileEmployee2 (0,  inPartnerId:= 83665 , inMobileEmployeeKindId := 153273 ,  inSession := '5')
+-- SELECT * FROM gpGet_Object_MobileEmployee2 (0, inSession := '5')

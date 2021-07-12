@@ -79,6 +79,8 @@ type
     RegionName: TcxGridDBColumn;
     OpenChoiceFormRegion: TOpenChoiceForm;
     isDiscard: TcxGridDBColumn;
+    MobilePackName: TcxGridDBColumn;
+    OpenChoiceFormMobilePack: TOpenChoiceForm;
   private
     { Private declarations }
   public

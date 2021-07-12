@@ -1567,6 +1567,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileEmployee_Region() RETURNS Integer
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MobileEmployee_Region', 'Связь c Регионов', zc_Object_MobileEmployee(), zc_Object_Region() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_Region');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileEmployee_MobilePack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_MobilePack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MobileEmployee_MobilePack', 'Связь c названием пакета', zc_Object_MobileEmployee(), zc_Object_MobilePack() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_MobilePack');
+
+
+
 -- GoodsListSale
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsListSale_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
@@ -2580,6 +2586,7 @@ SELECT 'zc_ObjectLink_CorrectMinAmount_PayrollType', 'Связь с типом расчета зара
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.07.21         * zc_ObjectLink_MobileEmployee_MobilePack
  01.07.21         * zc_ObjectLink_Reason_ReturnDescKind
  22.06.21                                                                                      * zc_ObjectLink_CorrectMinAmount_PayrollType
  14.06.21         * zc_ObjectLink_ReceiptChild_ReceiptLevel

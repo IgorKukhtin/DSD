@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchCode Integer, BranchName TVarChar, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
              , RegionId Integer, RegionName TVarChar
+             , MobilePackId Integer, MobilePackName TVarChar
              , isDiscard Boolean
              , isErased  Boolean
              ) AS
@@ -59,6 +60,9 @@ BEGIN
            , Object_Region.Id                  AS RegionId
            , Object_Region.ValueData           AS RegionName 
 
+           , Object_MobilePack.Id              AS MobilePackId
+           , Object_MobilePack.ValueData       AS MobilePackName 
+
            , ObjectBoolean_Discard.ValueData   AS isDiscard
            , Object_MobileEmployee.isErased    AS isErased
            
@@ -98,8 +102,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_Region
                                  ON ObjectLink_MobileEmployee_Region.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
-            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId    
-                              
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_MobilePack
+                                 ON ObjectLink_MobileEmployee_MobilePack.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_MobilePack.DescId = zc_ObjectLink_MobileEmployee_MobilePack()
+            LEFT JOIN Object AS Object_MobilePack ON Object_MobilePack.Id = ObjectLink_MobileEmployee_MobilePack.ChildObjectId                              
 --
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                  ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
@@ -127,6 +135,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.06.21         *
  03.02.17         * 
  05.10.16         * parce
  23.09.16         *

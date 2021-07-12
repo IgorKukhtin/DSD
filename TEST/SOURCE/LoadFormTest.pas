@@ -3617,21 +3617,21 @@ end;
 
 procedure TLoadFormTest.LoadMobileTariffFormTest;
 begin
-  // форма справочника Тарифы мобильных операторов
+  {// форма справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffForm');
-  {// форма правки данных справочника Тарифы мобильных операторов
+  // форма правки данных справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEditForm');
   }
   // форма справочника Мобильные телефоны сотрудников
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeForm');
-  exit;
+
   // форма правки данных справочника Тарифы мобильных операторов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeEditForm');
-
+    exit;
   // форма - OLD
   // форма отчета Отчет Затраты мобильной связи по сотрудникам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MobileKSForm'));
@@ -3666,6 +3666,11 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePackForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePackEditForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
