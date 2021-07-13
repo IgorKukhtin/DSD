@@ -520,6 +520,13 @@ BEGIN
      INSERT INTO _PUSH (Id, Text) VALUES (9, 'Коллеги, удалите распроведенные чеки:'||Chr(13)||Chr(13)||vbText);    
    END IF;
    
+     -- ВНИМАНИЕ!!! ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!! СЕГОДНЯ снять и внести показания в журнал!!!
+   IF date_part('DAY',    CURRENT_DATE)::Integer in (1, 15)
+     AND date_part('HOUR',  CURRENT_TIME)::Integer % 2 = 00
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (10, 'ВНИМАНИЕ!!!'||Chr(13)||'ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!!'||Chr(13)||Chr(13)||'СЕГОДНЯ снять и внести показания в журнал!!!');
+   END IF;
 
    -- PUSH уведомления
    WITH tmpMovementItemUnit AS (SELECT DISTINCT Movement.Id AS MovementId

@@ -81,8 +81,9 @@ BEGIN
                            SELECT Movement.Id
                                 , COALESCE(MovementBoolean_Deferred.ValueData, FALSE) AS  isDeferred
                            FROM tmpMovementCheck AS Movement
-                                LEFT JOIN MovementBoolean AS MovementBoolean_Deferred ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                INNER JOIN MovementBoolean AS MovementBoolean_Deferred ON Movement.Id     = MovementBoolean_Deferred.MovementId
                                                           AND MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                                          AND MovementBoolean_Deferred.ValueData = TRUE
                              )
 
         , tmpMov AS (

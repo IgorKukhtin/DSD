@@ -574,6 +574,8 @@ type
     C1: TMenuItem;
     MemDataISGOODSPS: TBooleanField;
     MemDataGOODSPSAM: TCurrencyField;
+    spisCheckCombine: TdsdStoredProc;
+    actCheckCombine: TOpenChoiceForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -6819,6 +6821,7 @@ begin
 end;
 
 procedure TMainCashForm2.ceVIPLoadExit(Sender: TObject);
+  var cResult: String;
 begin
 
   if ceVIPLoad.Text = '' then Exit;
@@ -6828,6 +6831,27 @@ begin
     ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
     exit;
   End;
+
+  spisCheckCombine.ParamByName('inVIPOrder').Value := ceVIPLoad.Text;
+  spisCheckCombine.ParamByName('outIsCheckCombine').Value := False;
+  spisCheckCombine.ParamByName('outText').Value := '';
+  spisCheckCombine.ParamByName('outBayer').Value := '';
+  spisCheckCombine.Execute;
+
+  if spisCheckCombine.ParamByName('outIsCheckCombine').Value then
+  begin
+    if ShowPUSHMessageCash('У покупателя: ' + spisCheckCombine.ParamByName('outBayer').Value + #13#10#13#10 +
+                           'Есть отобраные чеки: ' + spisCheckCombine.ParamByName('outText').Value + #13#10#13#10 +
+                           'Обеднить чеки в один?', cResult) then
+    begin
+      actCheckCombine.GuiParams.ParamByName('VIPOrder').Value := ceVIPLoad.Text;
+      if not actCheckCombine.Execute then
+      begin
+        ceVIPLoad.Text := '';
+        Exit;
+      end;
+    end;
+  end;
 
   spSelectChechHead.ParamByName('inVIPOrder').Value :=  ceVIPLoad.Text;
   ceVIPLoad.Text := '';
