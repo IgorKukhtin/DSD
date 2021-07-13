@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Movement_ProductionUnion()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inParentId            Integer   , --
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого
@@ -28,7 +30,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL, inUserId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, inParentId, inUserId);
 
      -- сохранили связь с <От кого >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);

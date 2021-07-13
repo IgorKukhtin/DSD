@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , ToId Integer, ToName TVarChar
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
               )
 AS
 $BODY$
@@ -43,6 +45,9 @@ BEGIN
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+
+             , 0                          AS MovementId_parent
+             , CAST ('' as TVarChar)      AS InvNumber_parent
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -69,6 +74,8 @@ BEGIN
           , Object_Insert.ValueData        AS InsertName
           , MovementDate_Insert.ValueData  AS InsertDate
 
+         , Movement_Parent.Id             ::Integer  AS MovementId_parent
+         , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
         FROM Movement AS Movement_ProductionUnion
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ProductionUnion.StatusId
 
@@ -93,6 +100,9 @@ BEGIN
                                          ON MLO_Insert.MovementId = Movement_ProductionUnion.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_ProductionUnion.ParentId
+            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
         WHERE Movement_ProductionUnion.Id = inMovementId
           AND Movement_ProductionUnion.DescId = zc_Movement_ProductionUnion()

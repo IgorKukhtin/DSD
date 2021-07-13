@@ -117,15 +117,15 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 186
+      Left = 385
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 186
+      Left = 385
       Top = 63
       TabOrder = 11
-      Width = 448
+      Width = 249
     end
     object cxLabel12: TcxLabel
       Left = 640
@@ -161,6 +161,23 @@ object ProductionUnionForm: TProductionUnionForm
       TabOrder = 15
       Width = 146
     end
+    object cxLabel5: TcxLabel
+      Left = 186
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+    end
+    object ceParent: TcxButtonEdit
+      Left = 186
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 191
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -171,16 +188,12 @@ object ProductionUnionForm: TProductionUnionForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = -8
-    ExplicitTop = 200
-    ExplicitHeight = 450
     ClientRectBottom = 455
     ClientRectRight = 788
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 426
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -188,7 +201,6 @@ object ProductionUnionForm: TProductionUnionForm
         Height = 128
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 123
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -408,7 +420,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 1
-        ExplicitTop = 123
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
@@ -669,8 +680,6 @@ object ProductionUnionForm: TProductionUnionForm
           Color = clAqua
           ParentBackground = False
           TabOrder = 1
-          ExplicitLeft = 2
-          ExplicitTop = 6
         end
       end
     end
@@ -1792,6 +1801,14 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inInvNumber'
         Value = ''
         Component = edInvNumber
@@ -1983,6 +2000,21 @@ object ProductionUnionForm: TProductionUnionForm
         Name = 'InsertName'
         Value = Null
         Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2430,5 +2462,49 @@ object ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 150
     Top = 463
+  end
+  object GuidesParent: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParent
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 315
+    Top = 39
   end
 end

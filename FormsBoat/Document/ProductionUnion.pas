@@ -175,6 +175,9 @@ type
     Color_Level_ch1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     Panel1: TPanel;
+    cxLabel5: TcxLabel;
+    ceParent: TcxButtonEdit;
+    GuidesParent: TdsdGuides;
   private
   public
   end;

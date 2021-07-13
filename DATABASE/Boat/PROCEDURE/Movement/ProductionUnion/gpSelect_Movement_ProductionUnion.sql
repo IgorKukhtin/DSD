@@ -19,6 +19,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , MovementId_parent Integer
+             , InvNumber_parent TVarChar
+             , DescName_parent TVarChar
              )
 
 AS
@@ -37,25 +40,26 @@ BEGIN
                        )
 
         , Movement_ProductionUnion AS ( SELECT Movement_ProductionUnion.Id
-                                  , Movement_ProductionUnion.InvNumber
-                                  , Movement_ProductionUnion.OperDate             AS OperDate
-                                  , Movement_ProductionUnion.StatusId             AS StatusId
-                                  , MovementLinkObject_To.ObjectId     AS ToId
-                                  , MovementLinkObject_From.ObjectId   AS FromId
-                             FROM tmpStatus
-                                  INNER JOIN Movement AS Movement_ProductionUnion
-                                                      ON Movement_ProductionUnion.StatusId = tmpStatus.StatusId
-                                                     AND Movement_ProductionUnion.OperDate BETWEEN inStartDate AND inEndDate
-                                                     AND Movement_ProductionUnion.DescId = zc_Movement_ProductionUnion()
-
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                               ON MovementLinkObject_To.MovementId = Movement_ProductionUnion.Id
-                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                               ON MovementLinkObject_From.MovementId = Movement_ProductionUnion.Id
-                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                            )
+                                             , Movement_ProductionUnion.ParentId
+                                             , Movement_ProductionUnion.InvNumber
+                                             , Movement_ProductionUnion.OperDate             AS OperDate
+                                             , Movement_ProductionUnion.StatusId             AS StatusId
+                                             , MovementLinkObject_To.ObjectId     AS ToId
+                                             , MovementLinkObject_From.ObjectId   AS FromId
+                                        FROM tmpStatus
+                                             INNER JOIN Movement AS Movement_ProductionUnion
+                                                                 ON Movement_ProductionUnion.StatusId = tmpStatus.StatusId
+                                                                AND Movement_ProductionUnion.OperDate BETWEEN inStartDate AND inEndDate
+                                                                AND Movement_ProductionUnion.DescId = zc_Movement_ProductionUnion()
+           
+                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = Movement_ProductionUnion.Id
+                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+           
+                                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = Movement_ProductionUnion.Id
+                                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                       )
 
         SELECT Movement_ProductionUnion.Id
              , zfConvert_StringToNumber (Movement_ProductionUnion.InvNumber) AS InvNumber
@@ -79,6 +83,10 @@ BEGIN
              , MovementDate_Insert.ValueData        AS InsertDate
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
+
+             , Movement_Parent.Id                         AS MovementId_parent
+             , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+             , MovementDesc_Parent.ItemName               AS DescName_parent
 
         FROM Movement_ProductionUnion
 
@@ -113,6 +121,10 @@ BEGIN
                                      ON MLO_Update.MovementId = Movement_ProductionUnion.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+        
+        -- Parent - если указан
+        LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_ProductionUnion.ParentId
+        LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
        ;
 
