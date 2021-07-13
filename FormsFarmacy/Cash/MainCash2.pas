@@ -9491,7 +9491,7 @@ begin
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
       begin
         AFiscalNumber := Cash.FiscalNumber;
-        if not TryStrToInt64(AFiscalNumber, n) then
+        if not TryStrToInt64(AFiscalNumber, n) OR (Length(AFiscalNumber) < 10) then
         begin
           if ShowPUSHMessageCash('После проведения предыдущего чека возникла ошибка…'#13#10 +
                                  'Повторите пробитие чека!'#13#10 +

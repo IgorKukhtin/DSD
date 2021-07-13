@@ -71,6 +71,9 @@ type
     bbUpdateClear: TdxBarButton;
     spUpdateClear: TdsdStoredProc;
     actUpdateClear: TdsdExecStoredProc;
+    spUpdate_Rewrite: TdsdStoredProc;
+    actUpdate_Rewrite: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

@@ -244,6 +244,10 @@ object CheckoutTestingForm: TCheckoutTestingForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
       OneOnRow = True
       Row = 0
@@ -312,6 +316,10 @@ object CheckoutTestingForm: TCheckoutTestingForm
     end
     object bbUpdateClear: TdxBarButton
       Action = actUpdateClear
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate_Rewrite
       Category = 0
     end
   end
@@ -468,6 +476,7 @@ object CheckoutTestingForm: TCheckoutTestingForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1090#1077#1089#1090#1086#1074#1099#1077' '#1092#1072#1081#1083#1099' '#1082#1072#1089#1089#1099' '#1080' '#1089#1077#1088#1074#1080#1089#1072' '#1085#1072' '#1089#1077#1088#1074#1077#1088
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1090#1077#1089#1090#1086#1074#1099#1077' '#1092#1072#1081#1083#1099' '#1082#1072#1089#1089#1099' '#1080' '#1089#1077#1088#1074#1080#1089#1072' '#1085#1072' '#1089#1077#1088#1074#1077#1088
       ImageIndex = 30
       FormName = 'TUploadCheckoutTestingForm'
       FormNameParam.Value = 'TUploadCheckoutTestingForm'
@@ -490,6 +499,22 @@ object CheckoutTestingForm: TCheckoutTestingForm
       Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086
       ImageIndex = 76
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086'?'
+    end
+    object actUpdate_Rewrite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Rewrite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Rewrite
+        end>
+      Caption = #1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1089#1090#1086#1074#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1085#1072' '#1086#1089#1085#1086#1074#1085#1091#1102
+      Hint = #1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1089#1090#1086#1074#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1085#1072' '#1086#1089#1085#1086#1074#1085#1091#1102
+      ImageIndex = 52
+      QuestionBeforeExecute = #1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1089#1090#1086#1074#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1085#1072' '#1086#1089#1085#1086#1074#1085#1091#1102'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
     end
   end
   object spSelect: TdsdStoredProc
@@ -622,6 +647,15 @@ object CheckoutTestingForm: TCheckoutTestingForm
       end>
     PackSize = 1
     Left = 236
+    Top = 328
+  end
+  object spUpdate_Rewrite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Program_TestRewrite'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 356
     Top = 328
   end
 end

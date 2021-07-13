@@ -199,6 +199,10 @@ type
     bbUpdteSendLoss: TdxBarButton;
     spUpdateSendLoss: TdsdStoredProc;
     actSetFocused: TdsdSetFocusedAction;
+    actSendPartionDateChange: TdsdOpenForm;
+    spGet_SendPartionDateChangeId: TdsdStoredProc;
+    actGet_SendPartionDateChangeId: TdsdExecStoredProc;
+    dxBarButton9: TdxBarButton;
   private
     { Private declarations }
   public

@@ -99,42 +99,19 @@ BEGIN
                     WHERE CLO.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
                       AND CLO.DescId      = zc_ContainerLinkObject_PartionMovementItem()
                    )
-   , tmpRemains AS (SELECT Container.UnitId
-                         , Container.ObjectId
-                         , tmpPartionMI.GoodsId_find
-                         , SUM (Container.Amount)  AS Amount
-                         , MAX(MIString_SertificatNumber.ValueData) AS SertificatNumber
-                    FROM tmpContainer AS Container
-                        LEFT JOIN tmpPartionMI ON tmpPartionMI.ContainerId = Container.Id
-                        LEFT JOIN ObjectBoolean AS ObjectBoolean_isNotUploadSites
-                                                ON ObjectBoolean_isNotUploadSites.ObjectId = Container.ObjectId
-                                               AND ObjectBoolean_isNotUploadSites.DescId   = zc_ObjectBoolean_Goods_isNotUploadSites()
-                        LEFT JOIN MovementItemString AS MIString_SertificatNumber
-                                                     ON MIString_SertificatNumber.MovementItemId = tmpPartionMI.MI_IncomeId
-                                                    AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()
-
-                    WHERE COALESCE (ObjectBoolean_isNotUploadSites.ValueData, FALSE) = FALSE
-                    GROUP BY Container.UnitId
-                           , Container.ObjectId
-                           , tmpPartionMI.GoodsId_find
-                   )
-   , tmpGoods AS (SELECT ObjectString.ObjectId AS GoodsId_find, ObjectString.ValueData AS MakerName
-                    FROM ObjectString
-                    WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpRemains.GoodsId_find FROM tmpRemains)
-                      AND ObjectString.DescId   = zc_ObjectString_Goods_Maker()
-                   )
-   , Remains AS (SELECT tmpRemains.UnitId
-                      , tmpRemains.ObjectId
-                      , MAX (tmpGoods.MakerName)         AS MakerName
-                      , SUM (tmpRemains.Amount)          AS Amount
-                      , MAX(tmpRemains.SertificatNumber) AS SertificatNumber
-                   FROM
-                       tmpRemains
-                       LEFT JOIN tmpGoods ON tmpGoods.GoodsId_find = tmpRemains.GoodsId_find
-                   GROUP BY tmpRemains.UnitId
-                          , tmpRemains.ObjectId
-                   HAVING SUM (tmpRemains.Amount) > 0
-                 )
+   , Remains AS (SELECT Container.UnitId
+                      , Container.ObjectId
+                      , SUM (Container.Amount)  AS Amount
+                      , MAX(MIString_SertificatNumber.ValueData) AS SertificatNumber
+                 FROM tmpContainer AS Container
+                     LEFT JOIN tmpPartionMI ON tmpPartionMI.ContainerId = Container.Id
+                     LEFT JOIN MovementItemString AS MIString_SertificatNumber
+                                                  ON MIString_SertificatNumber.MovementItemId = tmpPartionMI.MI_IncomeId
+                                                 AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()
+ 
+                 GROUP BY Container.UnitId
+                        , Container.ObjectId
+                )
 
    -- выбираем отложенные Чеки (как в кассе колонка VIP)
    , tmpMovementChek AS (SELECT Movement.Id
@@ -171,11 +148,6 @@ BEGIN
                         GROUP BY tmpMovementChek.UnitId,
                                  MovementItem.ObjectId
                         )
-       , T1 AS (SELECT MIN (Remains.ObjectId) AS ObjectId
-                FROM Remains
-                     INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
-                GROUP BY Object_Goods.ObjectCode
-               )
       ,  tmpPrice AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                            , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                            , Price_Goods.ChildObjectId               AS GoodsId
@@ -238,6 +210,7 @@ BEGIN
                            )
       , Goods_Optima AS (SELECT Object_Goods_Retail.Id
                               , Object_Goods_Juridical.Code
+                              , Object_Goods_Juridical.MakerName
                               , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.Id ORDER BY Object_Goods_Juridical.Id DESC) AS Ord
                          FROM (SELECT DISTINCT Remains.ObjectId FROM Remains) AS Remains
                               INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = Remains.ObjectId
@@ -245,9 +218,11 @@ BEGIN
 
                               INNER JOIN Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                                                AND Object_Goods_Juridical.JuridicalId = 59611
+                         WHERE Object_Goods_Juridical.Code <> ''
                         )
       , Goods_Badm AS (SELECT Object_Goods_Retail.Id
                             , Object_Goods_Juridical.Code
+                            , Object_Goods_Juridical.MakerName
                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Retail.Id ORDER BY Object_Goods_Juridical.Id DESC) AS Ord
                        FROM (SELECT DISTINCT Remains.ObjectId FROM Remains) AS Remains
                             INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = Remains.ObjectId
@@ -255,6 +230,7 @@ BEGIN
 
                             INNER JOIN Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                                              AND Object_Goods_Juridical.JuridicalId = 59610
+                       WHERE Object_Goods_Juridical.Code <> ''
                       )
         , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                               , ObjectFloat_NDSKind_NDS.ValueData
@@ -265,7 +241,7 @@ BEGIN
       SELECT Remains.UnitId                 AS PharmacyId
            , Object_Goods_Retail.Id         AS ProductId
            , REPLACE(Object_Goods_Main.Name, ',', ';')::TVarChar                  AS ProductName
-           , REPLACE(Remains.MakerName, ',', ';')::TVarChar                       AS Producer
+           , REPLACE(COALESCE( Object_Goods_Juridical_Badm.MakerName, Object_Goods_Juridical_Optima.MakerName,Object_Goods_Main.MakerName), ',', ';')::TVarChar             AS Producer
            , Object_Goods_Main.MorionCode   AS Morion
            , REPLACE(COALESCE (tmpGoodsBarCode.BarCode, ''), ',', ';')::TVarChar  AS Barcode
            , REPLACE(Remains.SertificatNumber, ',', ';')::TVarChar                AS RegistrationNumber
@@ -281,27 +257,26 @@ BEGIN
            , NULL::Integer                  AS PackSize
            , NULL::Integer                  AS PackDivisor
       FROM Remains
-           INNER JOIN T1 ON T1.ObjectId = Remains.ObjectId
 
            INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = Remains.ObjectId
                                          AND Object_Goods_Retail.RetailId = 4
            INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
-           INNER JOIN Goods_Optima AS Object_Goods_Juridical_Optima
-                                   ON Object_Goods_Juridical_Optima.Id = Remains.ObjectId
-                                  AND Object_Goods_Juridical_Optima.Ord = 1
+           LEFT JOIN Goods_Optima AS Object_Goods_Juridical_Optima
+                                  ON Object_Goods_Juridical_Optima.Id = Remains.ObjectId
+                                 AND Object_Goods_Juridical_Optima.Ord = 1
 
-           INNER JOIN Goods_Badm AS Object_Goods_Juridical_Badm
-                                 ON Object_Goods_Juridical_Badm.Id = Remains.ObjectId
-                                AND Object_Goods_Juridical_Badm.Ord = 1
+           LEFT JOIN Goods_Badm AS Object_Goods_Juridical_Badm
+                                ON Object_Goods_Juridical_Badm.Id = Remains.ObjectId
+                               AND Object_Goods_Juridical_Badm.Ord = 1
 
-           INNER JOIN  ObjectLink AS ObjectLink_Unit_Juridical
-                                  ON ObjectLink_Unit_Juridical.ObjectId = Remains.UnitId
-                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+           LEFT JOIN  ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Remains.UnitId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                                  
-           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                 ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
@@ -321,7 +296,10 @@ BEGIN
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
 
       WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0)) > 0
-        AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%';
+        AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
+        AND Object_Goods_Main.isNotUploadSites = FALSE
+        AND COALESCE(Object_Goods_Juridical_Optima.Code, '') <> ''
+        AND COALESCE(Object_Goods_Juridical_Badm.Code, '') <> '';
 
 END;
 $BODY$
@@ -336,4 +314,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_For103UA (Integer, TVarChar) OWNER TO
 
 -- тест
 -- 
-SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 377606, inSession:= '3')
+SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 0, inSession:= '3')

@@ -25,7 +25,7 @@ object TextDialogForm: TTextDialogForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 0
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 239
@@ -34,7 +34,7 @@ object TextDialogForm: TTextDialogForm
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 1
+    TabOrder = 2
   end
   object cxLabem: TcxMemo
     AlignWithMargins = True
@@ -51,14 +51,15 @@ object TextDialogForm: TTextDialogForm
     Style.Shadow = False
     StyleDisabled.BorderStyle = ebsNone
     StyleDisabled.TextColor = clWindowText
-    TabOrder = 2
+    TabOrder = 3
     Height = 47
     Width = 328
   end
   object cxText: TcxMemo
     Left = 24
     Top = 77
-    TabOrder = 3
+    Properties.AutoSelect = True
+    TabOrder = 0
     Height = 100
     Width = 361
   end

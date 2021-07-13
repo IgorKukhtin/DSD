@@ -38,6 +38,8 @@ type
     ExecuteDialog: TExecuteDialog;
     JuridicalName: TcxGridDBColumn;
     MasterInvNumber: TcxGridDBColumn;
+    actPUSHDiscount: TdsdShowPUSHMessage;
+    spPUSHDiscount: TdsdStoredProc;
   private
     { Private declarations }
   public

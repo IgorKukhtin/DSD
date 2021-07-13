@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbCashRegisterId Integer;
   DECLARE vbFiscalCheckNumber TVarChar;
   DECLARE vbJackdawsChecksId Integer;
-  
+  DECLARE vbInvNumberOrder TVarChar;
+  DECLARE vbCheckSourceKindId Integer;
 BEGIN
     --Если документ уже проведен то проверим права
     -- проверка прав пользователя на вызов процедуры
@@ -26,12 +27,16 @@ BEGIN
         Movement.OperDate,
         COALESCE(MovementLinkObject_CashRegister.ObjectId, 0),
         COALESCE(MovementString_FiscalCheckNumber.ValueData, ''),
-        COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
+        COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0),
+        COALESCE (MovementString_InvNumberOrder.ValueData, ''),
+        COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0)
       INTO
         vbOperDate,
         vbCashRegisterId,
         vbFiscalCheckNumber,
-        vbJackdawsChecksId
+        vbJackdawsChecksId,
+        vbInvNumberOrder,
+        vbCheckSourceKindId
       FROM Movement 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                         ON MovementLinkObject_CashRegister.MovementId = Movement.Id
@@ -42,13 +47,20 @@ BEGIN
            LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                        ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
+                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+           LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                    ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
       WHERE Id = inMovementId;
       
-      IF NOT (vbCashRegisterId = 0 OR
+      IF (NOT (vbCashRegisterId = 0 OR
               vbFiscalCheckNumber = '-5' OR
               vbJackdawsChecksId <> 0)
          OR vbOperDate < '05.07.2021'
-         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY'
+         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY')
+         AND (vbInvNumberOrder <> '' OR vbCheckSourceKindId <> 0)
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
       END IF;

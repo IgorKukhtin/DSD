@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Child(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , Orders Integer, Replies Integer
+             , Orders Integer, Replies Integer, CorrectAnswer Integer
              , Question TBLOB
              , isErased Boolean
               )
@@ -26,6 +26,7 @@ BEGIN
     WITH
     tmpReplies AS (SELECT MovementItem.ParentId         AS Id
                         , count(*)                      AS Replies
+                        , SUM(MovementItem.Amount)      AS CorrectAnswer
                    FROM MovementItem
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId = zc_MI_Second()
@@ -39,6 +40,7 @@ BEGIN
              , MovementItem.ParentId                               AS ParentId
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id)::Integer as Orders
              , tmpReplies.Replies::Integer                         AS Replies 
+             , tmpReplies.CorrectAnswer::Integer                   AS CorrectAnswer 
              , MIBLOB_Question.ValueData                           AS Question
              , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
         FROM MovementItem 
@@ -68,5 +70,4 @@ ALTER FUNCTION gpSelect_MovementItem_TestingTuning_Child (Integer, Boolean, Bool
 */
 
 -- тест
--- 
-select * from gpSelect_MovementItem_TestingTuning_Child(inMovementId := 16461309 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_TestingTuning_Child(inMovementId := 23977600 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

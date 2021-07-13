@@ -18,12 +18,15 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
      
-     SELECT SUM(Report.CountPrev)
-          , SUM(Report.CountCurr)
+     SELECT SUM(Report.CountCurr)
           , SUM(Report.SummCurr)
-     INTO vbCountPrev, vbCountCurr, vbSummCurr
+     INTO vbCountCurr, vbSummCurr
      FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession) AS Report;     
      
+     SELECT SUM(Report.CountCurr)
+     INTO vbCountPrev
+     FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '8 DAY', inEndDate := CURRENT_DATE - INTERVAL '8 DAY', inSession := inSession) AS Report;     
+
      -- Результат
      RETURN QUERY
      SELECT 

@@ -1,27 +1,27 @@
 inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1054#1073#1097#1080#1077' '#1079#1072#1082#1072#1079#1099'>'
   ClientHeight = 535
-  ClientWidth = 828
+  ClientWidth = 794
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 844
+  ExplicitWidth = 810
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 828
+    Width = 794
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 828
+    ExplicitWidth = 794
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 828
+    ClientRectRight = 794
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 828
+      ExplicitWidth = 794
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 828
+        Width = 794
         Height = 478
-        ExplicitWidth = 828
+        ExplicitWidth = 794
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -228,8 +228,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 828
-    ExplicitWidth = 828
+    Width = 794
+    ExplicitWidth = 794
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -379,6 +379,9 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actPUSHDiscount
+        end
+        item
           Action = actCalculateExternalZakaz
         end
         item
@@ -420,6 +423,17 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPUSHDiscount: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHDiscount
+      StoredProcList = <
+        item
+          StoredProc = spPUSHDiscount
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
+      Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
     end
   end
   inherited MasterDS: TDataSource
@@ -747,5 +761,39 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     PackSize = 1
     Left = 712
     Top = 360
+  end
+  object spPUSHDiscount: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Discount_CalculateOrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
+    Top = 352
   end
 end
