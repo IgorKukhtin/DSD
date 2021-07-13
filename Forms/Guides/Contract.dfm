@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 620
+  ClientHeight = 602
   ClientWidth = 1274
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -74,12 +74,13 @@
     Left = 0
     Top = 366
     Width = 476
-    Height = 254
+    Height = 236
     Align = alLeft
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 254
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -328,20 +329,22 @@
     Left = 782
     Top = 366
     Width = 492
-    Height = 254
+    Height = 236
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitHeight = 254
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 317
-      Height = 254
+      Height = 236
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 254
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -418,12 +421,13 @@
       Left = 322
       Top = 0
       Width = 170
-      Height = 254
+      Height = 236
       Align = alRight
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 254
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -545,9 +549,10 @@
       Left = 317
       Top = 0
       Width = 5
-      Height = 254
+      Height = 236
       AlignSplitter = salRight
       Control = cxGridGoods
+      ExplicitHeight = 254
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -562,20 +567,22 @@
     Left = 778
     Top = 366
     Width = 4
-    Height = 254
+    Height = 236
     AlignSplitter = salRight
     Control = Panel
+    ExplicitHeight = 254
   end
   object CCPartner: TcxGrid
     Left = 481
     Top = 366
     Width = 297
-    Height = 254
+    Height = 236
     Align = alClient
     TabOrder = 6
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 254
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -652,8 +659,9 @@
     Left = 476
     Top = 366
     Width = 5
-    Height = 254
+    Height = 236
     Control = cxGridContractCondition
+    ExplicitHeight = 254
   end
   object Panel2: TPanel
     Left = 0
@@ -2954,6 +2962,7 @@
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -3715,8 +3724,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 800
-    Top = 224
+    Left = 760
+    Top = 240
   end
   object ContractConditionDS: TDataSource
     DataSet = CDSContractCondition
@@ -3955,8 +3964,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 408
-    Top = 256
+    Left = 32
+    Top = 480
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -3982,13 +3991,13 @@
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 893
-    Top = 229
+    Left = 853
+    Top = 469
   end
   object DataSourcePartner: TDataSource
     DataSet = CDSContractPartner
-    Left = 814
-    Top = 277
+    Left = 806
+    Top = 469
   end
   object spSelectContractPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractPartner'
@@ -3999,8 +4008,8 @@
       end>
     Params = <>
     PackSize = 1
-    Left = 817
-    Top = 165
+    Left = 937
+    Top = 501
   end
   object spInsertUpdateContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
@@ -4040,8 +4049,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 288
+    Left = 960
+    Top = 392
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4071,8 +4080,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 232
-    Top = 296
+    Left = 936
+    Top = 440
   end
   object CDSContractGoods: TClientDataSet
     Aggregates = <>
@@ -4081,12 +4090,12 @@
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 989
-    Top = 373
+    Left = 1125
+    Top = 413
   end
   object DataSourceGoods: TDataSource
     DataSet = CDSContractGoods
-    Left = 1070
+    Left = 1142
     Top = 357
   end
   object dsdDBViewAddOnGoods: TdsdDBViewAddOn
@@ -4117,8 +4126,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1120
-    Top = 472
+    Left = 1208
+    Top = 464
   end
   object spSelectContractGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractGoods'
@@ -4129,8 +4138,8 @@
       end>
     Params = <>
     PackSize = 1
-    Left = 938
-    Top = 429
+    Left = 1106
+    Top = 469
   end
   object spInsertUpdateContractGoods: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractGoods'
@@ -4187,8 +4196,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1112
-    Top = 416
+    Left = 1176
+    Top = 424
   end
   object spErasedUnErasedPartner: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ContractPartner'
@@ -4204,8 +4213,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 416
+    Left = 848
+    Top = 408
   end
   object spErasedUnErasedGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ContractGoods'
@@ -4396,8 +4405,8 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 576
-    Top = 432
+    Left = 552
+    Top = 504
   end
   object spInsertUpdateCCPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractConditionPartner'

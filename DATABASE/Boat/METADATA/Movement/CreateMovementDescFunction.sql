@@ -63,10 +63,17 @@ INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ProductionUnion', 'Производство - сборка' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProductionUnion');
 
 
+CREATE OR REPLACE FUNCTION zc_Movement_ProductionPersonal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProductionPersonal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProductionPersonal', 'Производство - часы Сотрудников' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProductionPersonal');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.07.21         * zc_Movement_ProductionPersonal
+ 12.07.21         * zc_Movement_ProductionUnion
  15.02.21         * zc_Movement_OrderClient
  02.02.21         * zc_Movement_Invoice
  24.08.20                                        *
