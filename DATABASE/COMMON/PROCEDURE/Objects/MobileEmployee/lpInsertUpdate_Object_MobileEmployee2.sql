@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_MobileEmployee  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer,Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer,Integer,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MobileEmployee2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MobileEmployee2(
     IN inPersonalId               Integer   ,    -- Сотрудники
     IN inMobileTariffId           Integer   ,    -- Тарифы мобильных операторов
     IN inRegionId                 Integer   ,    -- регион
+    IN inMobilePackId             Integer   ,    -- Название пакета
     IN inUserId                   Integer        -- сессия пользователя
 )
  RETURNS Integer AS
@@ -43,7 +45,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_MobileTariff(), ioId, inMobileTariffId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_Region(), ioId, inRegionId);
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_MobilePack(), ioId, inMobilePackId);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
    
@@ -55,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.07.21         *
  05.10.16         * parce
  01.10.16         *
 */

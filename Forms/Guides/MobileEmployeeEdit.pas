@@ -48,6 +48,9 @@ type
     cxLabel2: TcxLabel;
     edRegion: TcxButtonEdit;
     RegionGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edMobilePack: TcxButtonEdit;
+    GuidesMobilePack: TdsdGuides;
   private
     { Private declarations }
   public

@@ -238,6 +238,23 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object MobilePackName: TcxGridDBColumn
+        Caption = #1055#1072#1082#1077#1090' '#1084#1086#1073'. '#1086#1087#1077#1088#1072#1090#1086#1088#1072
+        DataBinding.FieldName = 'MobilePackName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = OpenChoiceFormMobilePack
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.OEMConvert = True
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1082#1077#1090' '#1084#1086#1073'. '#1086#1087#1077#1088#1072#1090#1086#1088#1072
+        Width = 91
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -686,6 +703,33 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Caption = 'actUpdateMainDS'
       DataSource = DataSource
     end
+    object OpenChoiceFormMobilePack: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'MobilePack'
+      FormName = 'TMobilePackForm'
+      FormNameParam.Value = 'TMobilePackForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobilePackId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobilePackName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object OpenChoiceFormRegion: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -927,6 +971,14 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'RegionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobilePackId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MobilePackId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

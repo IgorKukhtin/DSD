@@ -271,7 +271,9 @@ uses
   SendJournal in '..\..\FormsBoat\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\FormsBoat\Document\Send.pas' {SendForm: TParentForm},
   LossJournal in '..\..\FormsBoat\Document\LossJournal.pas' {LossJournalForm: TParentForm},
-  Loss in '..\..\FormsBoat\Document\Loss.pas' {LossForm: TParentForm};
+  Loss in '..\..\FormsBoat\Document\Loss.pas' {LossForm: TParentForm},
+  ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
+  ProductionUnionJournal in '..\..\FormsBoat\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

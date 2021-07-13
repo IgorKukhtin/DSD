@@ -56,8 +56,6 @@ BEGIN
                               AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
           LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_ReceiptProdModel.ChildObjectId 
 
- zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel
-
           LEFT JOIN ObjectLink AS ObjectLink_Object
                                ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
                               AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()

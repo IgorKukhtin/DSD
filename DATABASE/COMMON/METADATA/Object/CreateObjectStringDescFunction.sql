@@ -820,6 +820,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Reason_Comment() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Reason_Comment', zc_Object_Reason(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Reason_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_MobilePack_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MobilePack_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MobilePack_Comment', zc_Object_MobilePack(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MobilePack_Comment');
+
 
 ---!!! Аптека
 
@@ -1264,6 +1268,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 12.07.21         * zc_ObjectString_MobilePack_Comment
  14.06.21         * zc_ObjectString_ReceiptLevel_Comment
  13.05.21         * zc_ObjectString_User_PhoneAuthent
                     zc_ObjectString_User_GUID
