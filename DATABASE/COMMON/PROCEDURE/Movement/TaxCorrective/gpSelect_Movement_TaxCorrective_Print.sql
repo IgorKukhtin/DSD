@@ -185,6 +185,7 @@ BEGIN
 
 
      -- Данные по Всем корректировкам + налоговым: заголовок + строчная часть
+   --CREATE TEMP TABLE tmpCursor1 ON COMMIT DROP AS
      OPEN Cursor1 FOR
      WITH tmpMovement AS
           (SELECT Movement_find.Id
@@ -2138,6 +2139,7 @@ BEGIN
 
 
      -- Данные по разнице Возвратов и Всех корректировок
+   --CREATE TEMP TABLE tmpCursor2 ON COMMIT DROP AS
      OPEN Cursor2 FOR
      WITH tmpMovement AS
           (SELECT Movement_find.Id
@@ -2270,17 +2272,20 @@ BEGIN
                   , Movement.DescId
                   , MovementFloat_ChangePercent.ValueData
           )
-
+         --
+       , tmpMI_all AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementTaxCorrective.Id FROM tmpMovementTaxCorrective))
+         -- строчные корректировок
        , tmpTaxCorrective_MI AS --строчные корректировок
                               (SELECT MovementItem.Id             AS Id
                                     , MovementItem.ObjectId       AS GoodsId
                                     , MovementItem.Amount         AS Amount
                                FROM tmpMovementTaxCorrective
                                     INNER JOIN Movement ON Movement.Id =  tmpMovementTaxCorrective.Id
-                                    INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.Id
-                                                           AND MovementItem.DescId     = zc_MI_Master()
-                                                           AND MovementItem.isErased   = FALSE
-                                                           AND MovementItem.Amount <> 0
+                                    INNER JOIN tmpMI_all AS MovementItem
+                                                         ON MovementItem.MovementId =  Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = FALSE
+                                                        AND MovementItem.Amount <> 0
                               )
 
        , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
@@ -2354,6 +2359,23 @@ BEGIN
        -- WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL
      ;
     RETURN NEXT Cursor2;
+
+     -- Result-1
+   /*OPEN Cursor1 FOR
+      SELECT * FROM tmpCursor1
+      ORDER BY 1
+             , 2
+             , 3
+             , 4
+             , 5
+              ;
+     RETURN NEXT Cursor1;
+
+     -- Result-2
+     OPEN Cursor2 FOR
+      SELECT * FROM tmpCursor2;
+     RETURN NEXT Cursor2;*/
+
 
 END;
 $BODY$
