@@ -6056,6 +6056,24 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 32835
       OnExecute = actSenClipboardNameExecute
     end
+    object actCheckCombine: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actCheckCombine'
+      FormName = 'TCheckCombineForm'
+      FormNameParam.Value = 'TCheckCombineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'VIPOrder'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -9069,8 +9087,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 160
-    Top = 192
+    Left = 184
+    Top = 216
   end
   object PlanEmployeeCDS: TClientDataSet
     Aggregates = <>
@@ -9388,5 +9406,42 @@ inherited MainCashForm2: TMainCashForm2
     object CurrencyField1: TCurrencyField
       FieldName = 'AMOUNT'
     end
+  end
+  object spisCheckCombine: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_isCheckCombine'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inVIPOrder'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsCheckCombine'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBayer'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 304
+    Top = 216
   end
 end

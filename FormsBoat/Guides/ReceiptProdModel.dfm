@@ -37,6 +37,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 0
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -2700,8 +2701,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 376
-    Top = 208
+    Left = 352
+    Top = 184
     object N1: TMenuItem
       Action = actRefresh
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2722,7 +2723,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PopupMenuColor: TPopupMenu
     Images = dmMain.ImageList
     Left = 440
-    Top = 208
+    Top = 184
     object MenuItem2: TMenuItem
       Action = InsertRecordGoods
     end

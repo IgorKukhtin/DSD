@@ -10,17 +10,17 @@ inherited MobilePackForm: TMobilePackForm
   inherited PageControl: TcxPageControl
     Width = 556
     Height = 309
-    ExplicitWidth = 936
+    ExplicitWidth = 556
     ExplicitHeight = 309
     ClientRectBottom = 309
     ClientRectRight = 556
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 936
+      ExplicitWidth = 556
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
         Width = 556
         Height = 309
-        ExplicitWidth = 936
+        ExplicitWidth = 556
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -177,6 +177,10 @@ inherited MobilePackForm: TMobilePackForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
     Left = 392
     Top = 160
   end

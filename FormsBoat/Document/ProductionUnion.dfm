@@ -2,8 +2,8 @@ object ProductionUnionForm: TProductionUnionForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
-  ClientHeight = 561
-  ClientWidth = 855
+  ClientHeight = 578
+  ClientWidth = 788
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object ProductionUnionForm: TProductionUnionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 855
+    Width = 788
     Height = 97
     Align = alTop
     BevelOuter = bvNone
@@ -117,15 +117,15 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 186
+      Left = 385
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 186
+      Left = 385
       Top = 63
       TabOrder = 11
-      Width = 448
+      Width = 249
     end
     object cxLabel12: TcxLabel
       Left = 640
@@ -161,18 +161,35 @@ object ProductionUnionForm: TProductionUnionForm
       TabOrder = 15
       Width = 146
     end
+    object cxLabel5: TcxLabel
+      Left = 186
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+    end
+    object ceParent: TcxButtonEdit
+      Left = 186
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 191
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 855
-    Height = 438
+    Width = 788
+    Height = 455
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 438
-    ClientRectRight = 855
+    ClientRectBottom = 455
+    ClientRectRight = 788
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -180,11 +197,10 @@ object ProductionUnionForm: TProductionUnionForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 855
-        Height = 136
+        Width = 788
+        Height = 128
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -396,110 +412,275 @@ object ProductionUnionForm: TProductionUnionForm
           GridView = cxGridDBTableView
         end
       end
-      object cxGridChild: TcxGrid
+      object Panel2: TPanel
         Left = 0
-        Top = 144
-        Width = 855
-        Height = 270
+        Top = 128
+        Width = 788
+        Height = 303
         Align = alBottom
+        Caption = 'Panel2'
         TabOrder = 1
-        LookAndFeel.Kind = lfStandard
-        LookAndFeel.NativeStyle = False
-        LookAndFeel.SkinName = ''
-        object cxGridDBTableViewChild: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ChildDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Filter.Active = True
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch2
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch2
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.IncSearch = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object ObjectCode_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'ObjectCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0.;-0.; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object ObjectName_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            DataBinding.FieldName = 'ObjectName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
+        object cxGridChild: TcxGrid
+          Left = 1
+          Top = 19
+          Width = 786
+          Height = 283
+          Align = alClient
+          TabOrder = 0
+          LookAndFeel.Kind = lfStandard
+          LookAndFeel.NativeStyle = False
+          LookAndFeel.SkinName = ''
+          object cxGridDBTableViewChild: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ChildDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Filter.Active = True
+            DataController.Summary.DefaultGroupSummaryItems = <
               item
-                Default = True
-                Kind = bkEllipsis
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Amount_ch2
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Value_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Value_service_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Amount_diff_ch2
               end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 273
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Amount_ch2
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Value_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Value_service_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Amount_diff_ch2
+              end>
+            DataController.Summary.SummaryGroups = <>
+            Images = dmMain.SortImageList
+            OptionsBehavior.IncSearch = True
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.Footer = True
+            OptionsView.GroupByBox = False
+            OptionsView.GroupSummaryLayout = gslAlignWithColumns
+            OptionsView.HeaderHeight = 40
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object NPP_ch1: TcxGridDBColumn
+              Caption = #8470' '#1087'/'#1087
+              DataBinding.FieldName = 'NPP'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.##;-,0.##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 40
+            end
+            object DescName_ch1: TcxGridDBColumn
+              Caption = #1069#1083#1077#1084#1077#1085#1090
+              DataBinding.FieldName = 'DescName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
+            object GoodsGroupNameFull_ch1: TcxGridDBColumn
+              Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+              DataBinding.FieldName = 'GoodsGroupNameFull'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 150
+            end
+            object GoodsGroupName_ch1: TcxGridDBColumn
+              Caption = #1043#1088#1091#1087#1087#1072
+              DataBinding.FieldName = 'GoodsGroupName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 172
+            end
+            object ObjectCode_ch1: TcxGridDBColumn
+              Caption = 'Interne Nr'
+              DataBinding.FieldName = 'ObjectCode'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+              Options.Editing = False
+              Width = 60
+            end
+            object Article_ch1: TcxGridDBColumn
+              Caption = 'Artikel Nr'
+              DataBinding.FieldName = 'Article'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 55
+            end
+            object ObjectName_ch1: TcxGridDBColumn
+              Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+              DataBinding.FieldName = 'ObjectName'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 150
+            end
+            object ProdColorName_ch1: TcxGridDBColumn
+              Caption = 'Farbe'
+              DataBinding.FieldName = 'ProdColorName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
+            object MeasureName_ch1: TcxGridDBColumn
+              Caption = #1045#1076'. '#1080#1079#1084'.'
+              DataBinding.FieldName = 'MeasureName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 55
+            end
+            object Value_ch1: TcxGridDBColumn
+              DataBinding.FieldName = 'Value'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 45
+            end
+            object Value_service_ch1: TcxGridDBColumn
+              Caption = 'Value (service)'
+              DataBinding.FieldName = 'Value_service'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+              Options.Editing = False
+              Width = 63
+            end
+            object Amount_ch2: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+              DataBinding.FieldName = 'Amount'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 133
+            end
+            object Amount_diff_ch2: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1082'.)'
+              DataBinding.FieldName = 'Amount_diff'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077')'
+              Options.Editing = False
+              Width = 133
+            end
+            object Comment_ch1: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+              DataBinding.FieldName = 'Comment'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Width = 167
+            end
+            object IsErased_ch2: TcxGridDBColumn
+              Caption = #1059#1076#1072#1083#1077#1085
+              DataBinding.FieldName = 'isErased'
+              Visible = False
+              Width = 60
+            end
+            object Color_value_ch1: TcxGridDBColumn
+              DataBinding.FieldName = 'Color_value'
+              Visible = False
+              Options.Editing = False
+              VisibleForCustomization = False
+              Width = 60
+            end
+            object Color_Level_ch1: TcxGridDBColumn
+              DataBinding.FieldName = 'Color_Level'
+              Visible = False
+              Options.Editing = False
+              VisibleForCustomization = False
+              Width = 30
+            end
           end
-          object Amount_ch2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Filtering = False
-            Width = 133
-          end
-          object IsErased_ch2: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            Visible = False
-            Width = 60
+          object cxGridLevel2: TcxGridLevel
+            GridView = cxGridDBTableViewChild
           end
         end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableViewChild
+        object Panel1: TPanel
+          Left = 1
+          Top = 1
+          Width = 786
+          Height = 18
+          Align = alTop
+          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+          Color = clAqua
+          ParentBackground = False
+          TabOrder = 1
         end
-      end
-      object cxTopSplitter: TcxSplitter
-        Left = 0
-        Top = 136
-        Width = 855
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salBottom
-        Control = cxGridChild
-        ExplicitTop = 261
       end
     end
   end
@@ -547,8 +728,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 263
+    Left = 400
+    Top = 367
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -858,7 +1039,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actShowErasedCost: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
@@ -880,7 +1060,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
@@ -903,7 +1082,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actShowAllChild: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMIChild
       StoredProcList = <
@@ -923,7 +1101,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
@@ -1035,7 +1212,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1044,7 +1220,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIchild
       StoredProcList = <
@@ -1063,7 +1238,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
@@ -1081,7 +1255,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetUnErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIchild
       StoredProcList = <
@@ -1100,7 +1273,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
@@ -1194,7 +1366,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object MovementCostProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
@@ -1221,7 +1392,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object MovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1279,7 +1449,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
@@ -1345,11 +1514,9 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object InsertRecordProduct: TInsertRecord
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      View = cxGridDBTableView
       Action = actProductChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
@@ -1362,7 +1529,6 @@ object ProductionUnionForm: TProductionUnionForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      View = cxGridDBTableView
       Action = actReceiptGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1086#1074'>'
@@ -1442,6 +1608,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spInsertUpdateMIChild
         end
         item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateClientDataMIChild'
       DataSource = ChildDS
@@ -1483,13 +1650,13 @@ object ProductionUnionForm: TProductionUnionForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 46
-    Top = 303
+    Top = 351
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 16
-    Top = 303
+    Top = 351
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1585,12 +1752,11 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 287
+    Left = 78
+    Top = 391
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
     OnDblClickActionList = <
       item
       end>
@@ -1614,12 +1780,12 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 347
-    Top = 337
+    Left = 483
+    Top = 177
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 326
-    Top = 287
+    Top = 367
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProductionUnion'
@@ -1632,6 +1798,14 @@ object ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1828,6 +2002,21 @@ object ProductionUnionForm: TProductionUnionForm
         Component = edInsertName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1838,8 +2027,8 @@ object ProductionUnionForm: TProductionUnionForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 422
-    Top = 306
+    Left = 438
+    Top = 418
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1948,8 +2137,8 @@ object ProductionUnionForm: TProductionUnionForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 548
-    Top = 297
+    Left = 676
+    Top = 313
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -2071,13 +2260,22 @@ object ProductionUnionForm: TProductionUnionForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Value_ch1
+        BackGroundValueColumn = Color_value_ch1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Color_Level_ch1
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 608
+    Left = 312
     Top = 456
   end
   object spSelectMIChild: TdsdStoredProc
@@ -2113,8 +2311,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 698
-    Top = 437
+    Left = 666
+    Top = 405
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_SetErased'
@@ -2138,8 +2336,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 774
-    Top = 440
+    Left = 766
+    Top = 400
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2264,5 +2462,49 @@ object ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 150
     Top = 463
+  end
+  object GuidesParent: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParent
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesParent
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesParent
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 315
+    Top = 39
   end
 end

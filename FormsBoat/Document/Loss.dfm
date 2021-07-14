@@ -171,14 +171,12 @@ object LossForm: TLossForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 438
     ClientRectBottom = 369
     ClientRectRight = 855
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 414
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -186,7 +184,6 @@ object LossForm: TLossForm
         Height = 345
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -471,7 +468,7 @@ object LossForm: TLossForm
     Top = 343
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MovementItem_Loss'
     DataSet = MasterCDS
     DataSets = <
       item

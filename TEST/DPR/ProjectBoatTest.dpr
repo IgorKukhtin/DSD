@@ -273,7 +273,9 @@ uses
   LossJournal in '..\..\FormsBoat\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoat\Document\Loss.pas' {LossForm: TParentForm},
   ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
-  ProductionUnionJournal in '..\..\FormsBoat\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm};
+  ProductionUnionJournal in '..\..\FormsBoat\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm},
+  ProductionPersonalJournal in '..\..\FormsBoat\Document\ProductionPersonalJournal.pas' {ProductionPersonalJournalForm: TParentForm},
+  ProductionPersonal in '..\..\FormsBoat\Document\ProductionPersonal.pas' {ProductionPersonalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

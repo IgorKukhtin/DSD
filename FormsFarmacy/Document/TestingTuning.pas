@@ -103,6 +103,7 @@ type
     actInsertMISecondFalse: TdsdExecStoredProc;
     dxBarButton11: TdxBarButton;
     dxBarButton12: TdxBarButton;
+    chCorrectAnswer: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1936,6 +1936,51 @@ inherited SendForm: TSendForm
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
+    object actSendPartionDateChange: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGet_SendPartionDateChangeId
+      Caption = #1047#1072#1103#1074#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080
+      Hint = #1047#1072#1103#1074#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080
+      ImageIndex = 42
+      FormName = 'TSendPartionDateChangeCashForm'
+      FormNameParam.Value = 'TSendPartionDateChangeCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SendPartionDateChangeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGet_SendPartionDateChangeId: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_SendPartionDateChangeId
+      StoredProcList = <
+        item
+          StoredProc = spGet_SendPartionDateChangeId
+        end>
+      Caption = 'actGet_SendPartionDateChangeId'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2115,6 +2160,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2241,6 +2290,10 @@ inherited SendForm: TSendForm
       Action = actUpdteSendLoss
       Category = 0
     end
+    object dxBarButton9: TdxBarButton
+      Action = actSendPartionDateChange
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -2351,6 +2404,11 @@ inherited SendForm: TSendForm
         Name = 'SetFocused'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SendPartionDateChangeId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -4184,5 +4242,29 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 886
     Top = 496
+  end
+  object spGet_SendPartionDateChangeId: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_SendPartionDateChangeId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SendPartionDateChangeId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 385
+    Top = 325
   end
 end

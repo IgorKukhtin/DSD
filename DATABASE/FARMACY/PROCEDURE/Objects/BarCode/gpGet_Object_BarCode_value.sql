@@ -14,6 +14,19 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
+   
+   IF EXISTS(SELECT * FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId AND Object_Goods_Retail.RetailId <> 4)
+   THEN
+     
+     SELECT Object_Goods_Retail4.Id
+     INTO inGoodsId
+     FROM Object_Goods_Retail 
+          INNER JOIN Object_Goods_Retail AS Object_Goods_Retail4 
+                                         ON Object_Goods_Retail4.GoodsMainId = Object_Goods_Retail.GoodsMainId 
+                                        AND Object_Goods_Retail4.RetailId = 4
+     WHERE Object_Goods_Retail.ID = inGoodsId;
+   
+   END IF;
 
       IF 1 < (SELECT COUNT(*)
               FROM ObjectLink AS ObjectLink_BarCode_Goods
@@ -74,3 +87,5 @@ ALTER FUNCTION gpGet_Object_BarCode_value (Integer, Integer, TVarChar) OWNER TO 
 -- тест
 -- SELECT gpGet_Object_BarCode_value (inObjectId:= 2, inGoodsId:= 1, inSession:= zfCalc_UserAdmin())
 
+
+select * from gpGet_Object_BarCode_value(inObjectId := 4521216 , inGoodsId := 10195093 ,  inSession := '3998209');

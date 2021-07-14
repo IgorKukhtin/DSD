@@ -20,7 +20,10 @@ RETURNS TABLE (
   CashRegisterName   TVarChar,
   FiscalCheckNumber  TVarChar,
   JackdawsChecksName TVarChar,
-  TotalSumm          TFloat
+  TotalSumm          TFloat,
+  IdPierced          integer,
+  OperDatePierced    TDateTime,
+  InvNumberPierced   TVarChar
 )
 AS
 $BODY$
@@ -39,7 +42,7 @@ BEGIN
                               , MovementLinkObject_Unit.ObjectId           AS UnitId
                               , ObjectLink_Unit_Juridical.ChildObjectId    AS JuridicalId
                          FROM Movement 
-                          
+                             
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -47,11 +50,59 @@ BEGIN
                               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                     ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
                                                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                                      
+                                                        
                           WHERE Movement.OperDate >= inDateStart
                             AND Movement.OperDate < inDateFinal + INTERVAL '1 DAY'
                             AND Movement.DescId = zc_Movement_Check()
                             AND Movement.StatusId = zc_Enum_Status_Erased())
+       , tmpMovementItem AS (SELECT Movement.Id
+                                  , MovementItem.ObjectId
+                                  , SUM(MovementItem.Amount) AS Amount
+                             FROM tmpMovement AS Movement 
+                              
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.Amount > 0 
+                                                          
+                              GROUP BY Movement.Id
+                                     , MovementItem.ObjectId)
+       , tmpMovementGoods AS (SELECT Movement.Id
+                                   , string_agg(MovementItem.ObjectId::TVarChar||MovementItem.Amount::TVarChar, ';' order by MovementItem.ObjectId) AS GoodsList
+                             FROM tmpMovementItem AS Movement 
+                              
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.Amount > 0 
+                                                          
+                              GROUP BY Movement.Id)
+       , tmpMovementAll AS (SELECT MovementItemContainer.MovementId                    AS ID
+                                 , MovementItemContainer.OperDate
+                                 , MovementItemContainer.WhereObjectId_Analyzer           AS UnitId
+                                 , MovementItemContainer.ObjectId_Analyzer                AS ObjectId
+                                 , - MovementItemContainer.Amount                         AS Amount
+                            FROM MovementItemContainer 
+                            WHERE MovementItemContainer.OperDate >= inDateStart
+                               AND MovementItemContainer.OperDate < inDateFinal + INTERVAL '4 DAY'
+                               AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                               AND MovementItemContainer.DescId = zc_MIContainer_Count())                                     
+       , tmpMovementItemAll AS (SELECT Movement.Id
+                                     , Movement.OperDate
+                                     , Movement.UnitId 
+                                     , Movement.ObjectId
+                                     , SUM(Movement.Amount) AS Amount
+                                FROM tmpMovementAll AS Movement 
+                                 GROUP BY Movement.Id
+                                        , Movement.OperDate
+                                        , Movement.UnitId 
+                                        , Movement.ObjectId)                                     
+       , tmpMovementGoodsAll AS (SELECT Movement.Id
+                                      , Movement.OperDate
+                                      , Movement.UnitId 
+                                      , string_agg(Movement.ObjectId::TVarChar||Movement.Amount::TVarChar, ';' order by Movement.ObjectId) AS GoodsList
+                                FROM tmpMovementItemAll AS Movement 
+                                 GROUP BY Movement.Id
+                                        , Movement.OperDate
+                                        , Movement.UnitId)                                     
        , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                       , MovementProtocol.OperDate
                                       , MovementProtocol.UserId
@@ -83,6 +134,10 @@ BEGIN
          , Object_JackdawsChecks.ValueData
 
          , MovementFloat_TotalSumm.ValueData
+
+         , tmpMovementGoodsAll.Id
+         , tmpMovementGoodsAll.OperDate
+         , MovementPierced.InvNumber
     FROM tmpMovement AS Movement 
     
          INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -96,6 +151,15 @@ BEGIN
          INNER JOIN tmpMovementComplete ON tmpMovementComplete.MovementId = Movement.Id
                                        
          INNER JOIN tmpUser ON tmpUser.UserId = tmpMovementProtocol.UserId
+         
+         LEFT JOIN tmpMovementGoods ON tmpMovementGoods.ID = Movement.Id
+         
+         LEFT JOIN tmpMovementGoodsAll ON tmpMovementGoodsAll.UnitId = Movement.UnitId
+                                      AND tmpMovementGoodsAll.GoodsList = tmpMovementGoods.GoodsList
+                                      AND tmpMovementGoodsAll.OperDate >= DATE_TRUNC ('DAY', Movement.OperDate)
+                                      AND tmpMovementGoodsAll.OperDate < DATE_TRUNC ('DAY', Movement.OperDate) + INTERVAL '3 DAY'
+         LEFT JOIN Movement AS MovementPierced
+                            ON MovementPierced.ID = tmpMovementGoodsAll.Id
 
          LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = Movement.UnitId
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.ID = Movement.JuridicalId

@@ -37,7 +37,7 @@ inherited TestingTuningForm: TTestingTuningForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = '0'
+              Format = '0.#'
               Kind = skSum
               Column = chReplies
             end
@@ -56,6 +56,11 @@ inherited TestingTuningForm: TTestingTuningForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = '0.#'
+              Kind = skSum
+              Column = chCorrectAnswer
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -88,7 +93,15 @@ inherited TestingTuningForm: TTestingTuningForm
             Options.Editing = False
             Width = 80
           end
-          object chQuestion: TcxGridDBColumn [2]
+          object chCorrectAnswer: TcxGridDBColumn [2]
+            Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
+            DataBinding.FieldName = 'CorrectAnswer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object chQuestion: TcxGridDBColumn [3]
             Caption = #1042#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'Question'
             PropertiesClassName = 'TcxBlobEditProperties'
@@ -97,7 +110,7 @@ inherited TestingTuningForm: TTestingTuningForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 691
+            Width = 630
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -113,8 +126,6 @@ inherited TestingTuningForm: TTestingTuningForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 3
-        ExplicitTop = 310
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SecondDS
@@ -533,9 +544,6 @@ inherited TestingTuningForm: TTestingTuningForm
           StoredProc = spGetTotalSumm
         end
         item
-          StoredProc = spSelect
-        end
-        item
           StoredProc = spSelectChild
         end
         item
@@ -612,8 +620,8 @@ inherited TestingTuningForm: TTestingTuningForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'

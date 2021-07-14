@@ -2557,6 +2557,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayDeferredForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckDelayDeferredForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckCombineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckCombineForm');
 end;
 
 procedure TLoadFormTest.LoadCheckLiki24FormTest;

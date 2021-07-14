@@ -258,6 +258,23 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 101
       end
+      object InvNumber_parent: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079
+        DataBinding.FieldName = 'InvNumber_parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
+      end
+      object DescName_parent: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'DescName_parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 110
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'

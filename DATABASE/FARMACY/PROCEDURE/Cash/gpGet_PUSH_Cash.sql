@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbMovementID Integer;
    DECLARE vbEmployeeShow Boolean;
    DECLARE vbPositionCode Integer;
+   DECLARE vbText TBlob;   
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -465,6 +466,66 @@ BEGIN
       THEN
         INSERT INTO _PUSH (Id, Text) VALUES (8, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
       END IF;
+   END IF;
+   
+   -- Удалить отмененные чеки
+    WITH 
+         tmpMovement AS (SELECT Movement.Id
+                              , Movement.OperDate
+                              , Movement.InvNumber
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                         WHERE Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '5 DAY')
+       , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                      , MovementProtocol.OperDate
+                                      , MovementProtocol.UserId
+                                      , CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П'
+                                             THEN TRUE ELSE FALSE END AS Status
+                                 FROM tmpMovement AS Movement
+
+                                      INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                                                 AND COALESCE(MovementProtocol.UserId, 0) <> 0)
+       , tmpMovementComplete AS (SELECT DISTINCT MovementProtocol.MovementId
+                                 FROM tmpMovementProtocol AS MovementProtocol
+                                 WHERE MovementProtocol.Status = TRUE)
+                  
+                  
+    SELECT string_agg(Movement.InvNumber||' от '||zfConvert_DateShortToString (Movement.OperDate), Chr(13))
+    INTO vbText
+    FROM tmpMovement AS Movement
+         INNER JOIN tmpMovementComplete ON tmpMovementComplete.MovementId = Movement.Id
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                      ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                     AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                                     
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                      ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
+                                     AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+                                     
+         LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                  ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
+                                 AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+    WHERE COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0
+       OR COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0) <> 0
+       OR COALESCE(MovementString_FiscalCheckNumber.ValueData, '') = '-5';
+    
+   IF COALESCE (vbText, '') <> ''
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (9, 'Коллеги, удалите распроведенные чеки:'||Chr(13)||Chr(13)||vbText);    
+   END IF;
+   
+     -- ВНИМАНИЕ!!! ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!! СЕГОДНЯ снять и внести показания в журнал!!!
+   IF date_part('DAY',    CURRENT_DATE)::Integer in (1, 15)
+     AND date_part('HOUR',  CURRENT_TIME)::Integer % 2 = 00
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (10, 'ВНИМАНИЕ!!!'||Chr(13)||'ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!!'||Chr(13)||Chr(13)||'СЕГОДНЯ снять и внести показания в журнал!!!');
    END IF;
 
    -- PUSH уведомления
