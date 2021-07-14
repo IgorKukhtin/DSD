@@ -65,10 +65,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_ReceiptProdModel() RETURNS Integer AS
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_ReceiptProdModel', 'Шаблон сборка Модели' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ReceiptProdModel');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Product() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Product'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Product', 'Product' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Product');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 13.07.21         * zc_MILinkObject_Product
  12.07.21         * zc_MILinkObject_ReceiptProdModel
  10.07.18         * add zc_MILinkObject_MoneyPlace
                       , zc_MILinkObject_InfoMoney

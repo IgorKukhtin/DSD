@@ -61,6 +61,7 @@ type
     procedure LoadProdOptItemsFormTest;
     procedure LoadProdOptPatternFormTest;
     procedure LoadProductFormTest;
+    procedure LoadProductionPersonalFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadReceiptProdModelFormTest;
@@ -369,12 +370,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerForm');
 end;
 
- procedure TLoadFormTest.LoadProductionUnionFormTest;
+procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
+end;
+
+procedure TLoadFormTest.LoadProductionPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPersonalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionPersonalJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionPersonalForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;

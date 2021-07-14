@@ -1,7 +1,7 @@
-object LossForm: TLossForm
+object ProductionPersonalForm: TProductionPersonalForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1095#1072#1089#1099' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
   ClientHeight = 492
   ClientWidth = 855
   Color = clBtnFace
@@ -52,20 +52,8 @@ object LossForm: TLossForm
       Top = 5
       Caption = #1044#1072#1090#1072
     end
-    object edFrom: TcxButtonEdit
+    object edUnit: TcxButtonEdit
       Left = 186
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 3
-      Width = 191
-    end
-    object edTo: TcxButtonEdit
-      Left = 385
       Top = 23
       Properties.Buttons = <
         item
@@ -74,20 +62,15 @@ object LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 249
+      Width = 448
     end
     object cxLabel3: TcxLabel
       Left = 186
       Top = 5
       Hint = #1054#1090' '#1082#1086#1075#1086
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       ParentShowHint = False
       ShowHint = True
-    end
-    object cxLabel4: TcxLabel
-      Left = 385
-      Top = 5
-      Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -113,7 +96,7 @@ object LossForm: TLossForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 9
+      TabOrder = 7
       Width = 170
     end
     object cxLabel16: TcxLabel
@@ -124,7 +107,7 @@ object LossForm: TLossForm
     object ceComment: TcxTextEdit
       Left = 186
       Top = 63
-      TabOrder = 11
+      TabOrder = 9
       Width = 448
     end
     object cxLabel12: TcxLabel
@@ -140,7 +123,7 @@ object LossForm: TLossForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 13
+      TabOrder = 11
       Width = 146
     end
     object cxLabel13: TcxLabel
@@ -158,7 +141,7 @@ object LossForm: TLossForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 15
+      TabOrder = 13
       Width = 146
     end
   end
@@ -179,11 +162,13 @@ object LossForm: TLossForm
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
-        Top = 0
+        Top = 75
         Width = 855
-        Height = 345
+        Height = 270
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 0
+        ExplicitHeight = 345
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -209,7 +194,6 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ
             end
             item
               Format = ',0.####'
@@ -246,7 +230,6 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_unit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -257,7 +240,6 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ
             end
             item
               Format = ',0.####'
@@ -266,7 +248,7 @@ object LossForm: TLossForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = GoodsName
+              Column = PersonalName
             end
             item
               Format = ',0.####'
@@ -279,7 +261,6 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_unit
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -294,42 +275,17 @@ object LossForm: TLossForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object Article: TcxGridDBColumn
-            Caption = 'Artikel Nr'
-            DataBinding.FieldName = 'Article'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object GoodsCode: TcxGridDBColumn
+          object PersonalCode: TcxGridDBColumn
             Caption = 'Interne Nr'
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'PersonalCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 85
           end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-            DataBinding.FieldName = 'GoodsName'
+          object PersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PersonalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -340,7 +296,24 @@ object LossForm: TLossForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 233
+            Options.Editing = False
+            Width = 189
+          end
+          object CIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ProductName: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 132
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -350,69 +323,24 @@ object LossForm: TLossForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object OperPrice: TcxGridDBColumn
-            Caption = 'Netto EK'
-            DataBinding.FieldName = 'OperPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
-            Width = 80
-          end
-          object Amount_unit: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074
-            DataBinding.FieldName = 'Amount_unit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object Summ: TcxGridDBColumn
-            Caption = 'Total EK'
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-            Options.Editing = False
-            Width = 80
-          end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            Visible = False
+          object StartBeginDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
+            DataBinding.FieldName = 'StartBeginDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 94
           end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
+          object EndBeginDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1077
+            DataBinding.FieldName = 'EndBeginDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 125
+            Options.Editing = False
+            Width = 90
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
@@ -446,6 +374,149 @@ object LossForm: TLossForm
           GridView = cxGridDBTableView
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 67
+        Align = alTop
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.Append.Visible = False
+          DataController.DataSource = DataSource
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          FilterRow.ApplyChanges = fracDelayed
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object OrderClientId_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076' '#8470
+            DataBinding.FieldName = 'OrderClientId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 200
+          end
+          object PersonalId_start_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'PersonalId_start'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 219
+          end
+          object PersonalId_end_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'PersonalId_end'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 221
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 67
+        Width = 855
+        Height = 8
+        HotZoneClassName = 'TcxSimpleStyle'
+        HotZone.Visible = False
+        AlignSplitter = salTop
+        Control = cxGrid1
+        ExplicitTop = 59
+      end
     end
   end
   object FormParams: TdsdFormParams
@@ -468,7 +539,7 @@ object LossForm: TLossForm
     Top = 343
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Loss'
+    StoredProcName = 'gpSelect_MovementItem_ProductionPersonal'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -480,14 +551,6 @@ object LossForm: TLossForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -546,20 +609,12 @@ object LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowErasedCost'
         end
         item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
         end
         item
           Visible = True
@@ -863,19 +918,16 @@ object LossForm: TLossForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet
+      StoredProc = spSelectBarCode
       StoredProcList = <
+        item
+          StoredProc = spSelectBarCode
+        end
         item
           StoredProc = spGet
         end
         item
-        end
-        item
           StoredProc = spSelectMI
-        end
-        item
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1355,6 +1407,24 @@ object LossForm: TLossForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ImageIndex = 0
     end
+    object actUpdateMaster_barcode: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelectBarCode
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1367,36 +1437,6 @@ object LossForm: TLossForm
     Left = 16
     Top = 303
   end
-  object GuidesTo: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 528
-    Top = 8
-  end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 448
@@ -1406,15 +1446,13 @@ object LossForm: TLossForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ProductionPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -1427,46 +1465,26 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inPersonalId_start'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId_start'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inPersonalId_end'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId_end'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'inOrderClientId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
+        Component = ClientDataSet
+        ComponentItem = 'OrderClientId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1508,7 +1526,7 @@ object LossForm: TLossForm
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Loss'
+    StoredProcName = 'gpInsertUpdate_Movement_ProductionPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1537,17 +1555,9 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFromId'
+        Name = 'inUnitId'
         Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inToId'
-        Value = ''
-        Component = GuidesTo
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1561,8 +1571,8 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 202
-    Top = 184
+    Left = 42
+    Top = 376
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1582,10 +1592,9 @@ object LossForm: TLossForm
       item
       end
       item
-        Control = edFrom
+        Control = edUnit
       end
       item
-        Control = edTo
       end
       item
       end
@@ -1615,7 +1624,7 @@ object LossForm: TLossForm
     Top = 217
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Loss'
+    StoredProcName = 'gpGet_Movement_ProductionPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1652,14 +1661,14 @@ object LossForm: TLossForm
       item
         Name = 'FromId'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1667,15 +1676,11 @@ object LossForm: TLossForm
       item
         Name = 'ToId'
         Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
         Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1736,7 +1741,6 @@ object LossForm: TLossForm
       item
       end
       item
-        Guides = GuidesTo
       end>
     ActionItemList = <
       item
@@ -1746,7 +1750,7 @@ object LossForm: TLossForm
     Top = 224
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Loss_SetErased'
+    StoredProcName = 'gpMovementItem_ProductionPersonal_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1771,7 +1775,7 @@ object LossForm: TLossForm
     Top = 280
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Loss_SetUnErased'
+    StoredProcName = 'gpMovementItem_ProductionPersonal_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1807,7 +1811,7 @@ object LossForm: TLossForm
     Top = 40
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Loss'
+    StoredProcName = 'gpUpdate_Status_ProductionPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1844,7 +1848,7 @@ object LossForm: TLossForm
     Top = 350
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Loss_Print'
+    StoredProcName = 'gpSelect_Movement_ProductionPersonal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1868,7 +1872,7 @@ object LossForm: TLossForm
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ProductionPersonal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1934,9 +1938,9 @@ object LossForm: TLossForm
     Left = 150
     Top = 343
   end
-  object GuidesFrom: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFrom
+    LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1946,14 +1950,14 @@ object LossForm: TLossForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1982,5 +1986,60 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     Left = 304
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 526
+    Top = 145
+  end
+  object spSelectBarCode: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_ProductionPersonal_BarCode'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 144
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 304
+    Top = 179
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 256
+    Top = 179
   end
 end

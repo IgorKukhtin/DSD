@@ -229,6 +229,8 @@ type
     actDocTag: TdsdOpenForm;
     N16: TMenuItem;
     N17: TMenuItem;
+    actProductionPersonal: TdsdOpenForm;
+    N18: TMenuItem;
   private
     { Private declarations }
   public

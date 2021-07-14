@@ -919,6 +919,14 @@
 				<Form>ProductionUnionJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\ProductionPersonalJournal.pas">
+				<Form>ProductionPersonalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\ProductionPersonal.pas">
+				<Form>ProductionPersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
