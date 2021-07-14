@@ -251,10 +251,8 @@ BEGIN
                , tmpReceiptProdModelChild.Value
        );
 
-     -- Результат
-     OPEN Cursor1 FOR
-
-     SELECT
+     CREATE TEMP TABLE tmpResult ON COMMIT DROP AS
+       (     SELECT
            tmpReceiptProdModelChild.ReceiptProdModelChildId AS Id
          , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelId ORDER BY tmpReceiptProdModelChild.ReceiptProdModelChildId ASC) :: Integer AS NPP
          , tmpReceiptProdModelChild.ValueData               AS Comment
@@ -368,13 +366,22 @@ BEGIN
                                ON ObjectLink_Goods_Unit.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_Unit.DescId   = zc_ObjectLink_Goods_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Goods_Unit.ChildObjectId
-     ;
-      RETURN NEXT Cursor1;
+       );
+
+     -- Результат
+     OPEN Cursor1 FOR
+
+     SELECT *
+     FROM tmpResult;
+     
+     RETURN NEXT Cursor1;
 
      -- Результат
      OPEN Cursor2 FOR
+     
      SELECT *
      FROM tmpReceiptGoodsChild;
+     
      RETURN NEXT Cursor2;
 
 END;

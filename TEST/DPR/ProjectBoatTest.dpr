@@ -275,7 +275,8 @@ uses
   ProductionUnion in '..\..\FormsBoat\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   ProductionUnionJournal in '..\..\FormsBoat\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm: TParentForm},
   ProductionPersonalJournal in '..\..\FormsBoat\Document\ProductionPersonalJournal.pas' {ProductionPersonalJournalForm: TParentForm},
-  ProductionPersonal in '..\..\FormsBoat\Document\ProductionPersonal.pas' {ProductionPersonalForm: TParentForm};
+  ProductionPersonal in '..\..\FormsBoat\Document\ProductionPersonal.pas' {ProductionPersonalForm: TParentForm},
+  ReceiptGoodsChoice in '..\..\FormsBoat\Guides\ReceiptGoodsChoice.pas' {ReceiptGoodsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

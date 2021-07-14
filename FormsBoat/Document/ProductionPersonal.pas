@@ -148,6 +148,10 @@ type
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
     actUpdateMaster_barcode: TdsdUpdateDataSet;
+    OpenChoiceFormOrderClient: TOpenChoiceForm;
+    OpenChoiceFormPersonal_start: TOpenChoiceForm;
+    OpenChoiceFormPersonal_end: TOpenChoiceForm;
+    InvNumber: TcxGridDBColumn;
   private
   public
   end;

@@ -46,6 +46,7 @@ BEGIN
          vbStartBegin := CURRENT_TIMESTAMP;
          vbEndBegin   := NULL ::TDateTime;
          vbAmount     := 0;
+         ioId         := 0;
      END IF;
 
     IF COALESCE (inPersonalId_end,0) <> 0
@@ -75,6 +76,15 @@ BEGIN
            AND MovementItem.ObjectId   = vbPersonalId
            AND MIDate_EndBegin.ValueData IS NULL
          ;   
+         
+         -- если нет строки начала ошибка
+         IF COALESCE (ioId,0) = 0
+         THEN
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Нет строки начала работы для выбранного сотрудника' :: TVarChar
+                                                   , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'   :: TVarChar
+                                                   , inUserId        := vbUserId);
+         END IF;
+         
          --часы работы
          vbAmount := ( CAST ( date_part( 'hours', vbEndBegin -vbStartBegin) + date_part( 'minute' , vbEndBegin - vbStartBegin)/60 AS NUMERIC (16,2)));
      END IF;

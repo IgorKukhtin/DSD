@@ -37,7 +37,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 0
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -2481,8 +2480,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 288
+    Left = 24
+    Top = 320
   end
   object spInsertUpdate_ProdColorPattern: TdsdStoredProc
     DataSet = ProdColorPatternCDS

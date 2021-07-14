@@ -16,6 +16,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbProductId Integer;
+   DECLARE vbProductId_mi Integer;
+   DECLARE vbMovementItemId Integer;
 BEGIN
      -- Проверка
      /*IF COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0
@@ -25,6 +28,7 @@ BEGIN
                                                , inUserId        := inUserId
                                                 );
      END IF;*/
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -66,6 +70,55 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
+     -----строки
+     -- записываем лодку из заказа в мастер если  есть что записывать
+     vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
+                     FROM MovementLinkObject AS MovementLinkObject_Product
+                     WHERE MovementLinkObject_Product.MovementId = inParentId
+                       AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                     );
+
+     IF COALESCE (vbProductId,0) <> 0
+     THEN
+          -- если уже есть строка с лодкой то заменяем лодку, если нет создаем строку
+          SELECT MovementItem.Id
+               , MovementItem.ObjectId
+        INTO vbMovementItemId, vbProductId_mi
+          FROM MovementItem
+              INNER JOIN Object ON Object.Id = MovementItem.ObjectId
+                               AND Object.DescId = zc_Object_Product()
+          WHERE MovementItem.MovementId = ioId
+            AND MovementItem.DescId = zc_MI_Master()
+            AND MovementItem.isErased = FALSE
+          ;
+     
+          -- определяем признак Создание/Корректировка
+          vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+                        
+          -- новая строка
+          vbMovementItemId := lpInsertUpdate_MovementItem (COALESCE (vbMovementItemId,0), zc_MI_Master(), vbProductId, NULL, ioId, 1, NULL, inUserId);
+     
+          -- сохранили связь с <ReceiptProdModel>
+          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptProdModel(), vbMovementItemId, COALESCE (ObjectLink_ReceiptProdModel.ChildObjectId,0));
+          FROM ObjectLink AS ObjectLink_ReceiptProdModel
+          WHERE ObjectLink_ReceiptProdModel.ObjectId = vbProductId
+            AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel();
+                                                  
+          -- сохранили протокол
+          PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
+          
+          --если поменялась лодка удаляем чайлды
+          IF vbIsInsert = FALSE
+          THEN
+              UPDATE MovementItem
+               SET isErased = TRUE
+              WHERE MovementItem.MovementId = ioId
+                AND MovementItem.ParentId = COALESCE (vbMovementItemId,0)
+                AND MovementItem.DescId = zc_MI_Child()
+                AND MovementItem.isErased = FALSE;
+          END IF;
+     END IF;
+     
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

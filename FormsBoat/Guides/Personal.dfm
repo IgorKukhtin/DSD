@@ -752,27 +752,27 @@ object PersonalForm: TPersonalForm
         item
           Name = 'InfoMoneyId'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = 0
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
           Value = ''
           DataType = ftString
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1055,10 +1055,12 @@ object PersonalForm: TPersonalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264

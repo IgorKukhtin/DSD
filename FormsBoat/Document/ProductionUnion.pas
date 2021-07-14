@@ -91,7 +91,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actUnion_Goods_ReceiptServiceChoiceForm: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
@@ -136,23 +136,9 @@ type
     SetUnErasedChild: TdsdUpdateErased;
     bbSetUnErasedChild: TdxBarButton;
     actShowAllChild: TBooleanStoredProcAction;
-    bb: TdxBarButton;
+    bbShowAllChild: TdxBarButton;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    ObjectCode: TcxGridDBColumn;
-    Article: TcxGridDBColumn;
-    CIN: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
-    ReceiptProdModelName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
-    InsertName: TcxGridDBColumn;
-    InsertDate: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
-    cxGridLevel: TcxGridLevel;
     Panel2: TPanel;
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
@@ -178,6 +164,24 @@ type
     cxLabel5: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
+    Panel3: TPanel;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    ObjectCode: TcxGridDBColumn;
+    Article: TcxGridDBColumn;
+    CIN: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    ReceiptProdModelName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    InsertRecordChild: TInsertRecord;
+    bbInsertRecordChild: TdxBarButton;
   private
   public
   end;

@@ -167,8 +167,9 @@ object ProductionPersonalForm: TProductionPersonalForm
         Height = 270
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 0
-        ExplicitHeight = 345
+        ExplicitLeft = -40
+        ExplicitTop = 81
+        ExplicitHeight = 272
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -469,34 +470,68 @@ object ProductionPersonalForm: TProductionPersonalForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object OrderClientId_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076' '#8470
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
             DataBinding.FieldName = 'OrderClientId'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object PersonalId_start_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
             DataBinding.FieldName = 'PersonalId_start'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 219
           end
           object PersonalId_end_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
             DataBinding.FieldName = 'PersonalId_end'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 221
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceFormOrderClient
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Width = 180
+          end
+          object PersonalName_start_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'PersonalName_start'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceFormPersonal_start
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 219
+          end
+          object PersonalName_end_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'PersonalName_end'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceFormPersonal_end
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 221
@@ -515,7 +550,6 @@ object ProductionPersonalForm: TProductionPersonalForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitTop = 59
       end
     end
   end
@@ -1396,6 +1430,33 @@ object ProductionPersonalForm: TProductionPersonalForm
       ImageIndex = 11
       Status = mtUncomplete
     end
+    object OpenChoiceFormPersonal_end: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePersonal_end'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId_end'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalName_end'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object InsertRecordCost: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
@@ -1406,6 +1467,33 @@ object ProductionPersonalForm: TProductionPersonalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ImageIndex = 0
+    end
+    object OpenChoiceFormPersonal_start: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePersonal_start'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId_start'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalName_start'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actUpdateMaster_barcode: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1425,6 +1513,33 @@ object ProductionPersonalForm: TProductionPersonalForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object OpenChoiceFormOrderClient: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdOptions'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OrderClientId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1440,7 +1555,7 @@ object ProductionPersonalForm: TProductionPersonalForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 448
-    Top = 224
+    Top = 256
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -1522,8 +1637,8 @@ object ProductionPersonalForm: TProductionPersonalForm
     Top = 337
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
-    Top = 287
+    Left = 262
+    Top = 319
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProductionPersonal'
@@ -1659,28 +1774,17 @@ object ProductionPersonalForm: TProductionPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromId'
+        Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromName'
+        Name = 'UnitName'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -2027,8 +2131,8 @@ object ProductionPersonalForm: TProductionPersonalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 144
+    Left = 488
+    Top = 272
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>

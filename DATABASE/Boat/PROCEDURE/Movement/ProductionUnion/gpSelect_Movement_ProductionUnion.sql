@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , MovementId_parent Integer
              , InvNumber_parent TVarChar
              , DescName_parent TVarChar
+             , FromName_parent TVarChar
+             , ProductName_parent TVarChar
              )
 
 AS
@@ -87,6 +89,8 @@ BEGIN
              , Movement_Parent.Id                         AS MovementId_parent
              , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
              , MovementDesc_Parent.ItemName               AS DescName_parent
+             , Object_From_parent.ValueData               AS FromName_parent
+             , Object_Product_parent.ValueData            AS ProductName_parent
 
         FROM Movement_ProductionUnion
 
@@ -126,6 +130,16 @@ BEGIN
         LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_ProductionUnion.ParentId
         LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_From_parent
+                                     ON MovementLinkObject_From_parent.MovementId = Movement_Parent.Id
+                                    AND MovementLinkObject_From_parent.DescId = zc_MovementLinkObject_From()
+        LEFT JOIN Object AS Object_From_parent ON Object_From_parent.Id = MovementLinkObject_From_parent.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Product_parent
+                                     ON MovementLinkObject_Product_parent.MovementId = Movement_Parent.Id
+                                    AND MovementLinkObject_Product_parent.DescId = zc_MovementLinkObject_Product()
+        LEFT JOIN Object AS Object_Product_parent ON Object_Product_parent.Id = MovementLinkObject_Product_parent.ObjectId
+                                                                
        ;
 
 END;
