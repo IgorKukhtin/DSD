@@ -143,7 +143,8 @@ uses
   ListGoodsIlliquidMarketing in '..\FormsFarmacy\Cash\ListGoodsIlliquidMarketing.pas' {ListGoodsIlliquidMarketingForm: TParentForm},
   LikiDniproeHealth in '..\FormsFarmacy\Cash\LikiDniproeHealth.pas',
   CallbackHandler in '..\FormsFarmacy\Cash\CallbackHandler.pas' {CallbackHandlerForm},
-  ChoosingPairSun in '..\FormsFarmacy\Cash\ChoosingPairSun.pas' {ChoosingPairSunForm};
+  ChoosingPairSun in '..\FormsFarmacy\Cash\ChoosingPairSun.pas' {ChoosingPairSunForm},
+  TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm};
 
 {$R *.res}
 

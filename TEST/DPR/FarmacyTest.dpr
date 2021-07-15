@@ -1050,7 +1050,8 @@ uses
   TopicsTestingTuningEdit in '..\..\FormsFarmacy\Guides\TopicsTestingTuningEdit.pas' {TopicsTestingTuningEditForm: TParentForm},
   TopicsTestingTuning in '..\..\FormsFarmacy\Guides\TopicsTestingTuning.pas' {TopicsTestingTuningForm: TParentForm},
   TextDialog in '..\..\FormsFarmacy\Guides\TextDialog.pas' {TextDialogForm: TParentForm},
-  CheckCombine in '..\..\FormsFarmacy\Document\CheckCombine.pas' {CheckCombineForm: TParentForm};
+  CheckCombine in '..\..\FormsFarmacy\Document\CheckCombine.pas' {CheckCombineForm: TParentForm},
+  Report_TestingTuning_Manual in '..\..\FormsFarmacy\Report\Report_TestingTuning_Manual.pas' {Report_TestingTuning_ManualForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

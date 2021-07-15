@@ -1958,6 +1958,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTopicsTestingTuningEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTopicsTestingTuningForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTopicsTestingTuningForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingTuning_ManualForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TestingTuning_ManualForm');
 end;
 
 

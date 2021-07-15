@@ -19,7 +19,7 @@ BEGIN
     vbUserId := inSession::Integer;
 
      -- Разрешаем только сотрудникам с правами админа    
-    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_TestingTuning()))
     THEN
       RAISE EXCEPTION 'Вым запрещено изменять настройки тестирования';
     END IF;

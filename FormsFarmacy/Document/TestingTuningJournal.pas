@@ -36,6 +36,8 @@ type
     bbUpdate_OperDateList: TdxBarButton;
     Comment: TcxGridDBColumn;
     spGet: TdsdStoredProc;
+    actManual: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

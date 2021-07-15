@@ -860,10 +860,6 @@ inherited CheckCombineForm: TCheckCombineForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end>
     ColorRuleList = <
       item
         BackGroundValueColumn = Color_CalcDoc

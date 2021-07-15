@@ -1871,6 +1871,7 @@ begin
     ShowMessage('Не установлено свойство Grid');
     exit;
   end;
+  if not Enabled then Exit;
   if DefaultFileName = '' then
     FileName := ConstFileName
   else

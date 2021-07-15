@@ -576,6 +576,11 @@ type
     MemDataGOODSPSAM: TCurrencyField;
     spisCheckCombine: TdsdStoredProc;
     actCheckCombine: TOpenChoiceForm;
+    actManual: TdsdOpenForm;
+    actStartExam: TAction;
+    N58: TMenuItem;
+    N59: TMenuItem;
+    N60: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -731,6 +736,7 @@ type
       Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure actSenClipboardNameExecute(Sender: TObject);
+    procedure actStartExamExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -955,7 +961,8 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
-  LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd;
+  LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
+  TestingUser;
 
 const
   StatusUnCompleteCode = 1;
@@ -6441,6 +6448,17 @@ begin
     FormParams.ParamByName('JackdawsChecksCode').Value := 0;
 end;
 
+procedure TMainCashForm2.actStartExamExecute(Sender: TObject);
+begin
+  if (gc_User.Session <> '3') then
+  begin
+    ShowMessage('В разработке...');
+    Exit;
+  end;
+
+  ShowTestingUser;
+end;
+
 procedure TMainCashForm2.actTechnicalRediscountExecute(Sender: TObject);
 begin
   spGet_Movement_TechnicalRediscount_Id.ParamByName('outMovementId').Value := 0;
@@ -6841,8 +6859,8 @@ begin
   if spisCheckCombine.ParamByName('outIsCheckCombine').Value then
   begin
     if ShowPUSHMessageCash('У покупателя: ' + spisCheckCombine.ParamByName('outBayer').Value + #13#10#13#10 +
-                           'Есть отобраные чеки: ' + spisCheckCombine.ParamByName('outText').Value + #13#10#13#10 +
-                           'Обеднить чеки в один?', cResult) then
+                           'Есть отложенные чеки: ' + spisCheckCombine.ParamByName('outText').Value + #13#10#13#10 +
+                           'Объединить чеки в один?', cResult) then
     begin
       actCheckCombine.GuiParams.ParamByName('VIPOrder').Value := ceVIPLoad.Text;
       if not actCheckCombine.Execute then

@@ -175,6 +175,7 @@ BEGIN
                                                                                           AND MILinkObject_CommentSend.ObjectId = 16978916
                                                     WHERE MovementItem.MovementId = inMovementId
                                                       AND MovementItem.DescId = zc_MI_Master())
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
     
       WITH tmpMI AS (SELECT MovementItem.Id     AS Id

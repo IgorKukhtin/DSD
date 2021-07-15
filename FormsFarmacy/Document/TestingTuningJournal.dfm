@@ -196,6 +196,19 @@ inherited TestingTuningJournalForm: TTestingTuningJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actManual: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      Hint = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      ImageIndex = 26
+      FormName = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.Value = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -302,6 +315,10 @@ inherited TestingTuningJournalForm: TTestingTuningJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -335,6 +352,10 @@ inherited TestingTuningJournalForm: TTestingTuningJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Visible = ivAlways
       ImageIndex = 67
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actManual
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

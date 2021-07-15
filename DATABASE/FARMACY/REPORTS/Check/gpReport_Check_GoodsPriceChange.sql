@@ -128,8 +128,18 @@ BEGIN
                                                             ON ObjectHistoryFloat_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                                            AND ObjectHistoryFloat_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
 
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixPercent
+                                                            ON ObjectHistoryFloat_FixPercent.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                           AND ObjectHistoryFloat_FixPercent.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()
+
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixDiscount
+                                                            ON ObjectHistoryFloat_FixDiscount.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                           AND ObjectHistoryFloat_FixDiscount.DescId = zc_ObjectHistoryFloat_PriceChange_FixDiscount()                
+
                            WHERE COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)  <> 0
                               OR COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0) <> 0
+                              OR COALESCE (ObjectHistoryFloat_FixPercent.ValueData, 0) <> 0
+                              OR COALESCE (ObjectHistoryFloat_FixDiscount.ValueData, 0) <> 0
                            )
 
  , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income

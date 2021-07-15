@@ -162,6 +162,16 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_ViewWages(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_ViewWages'), inName:= 'Просмотр зарплаты', inEnumName:= 'zc_Enum_Role_ViewWages');
    END IF;
 
+   -- zc_Enum_Role_TestingTuning
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Настройка тестирования')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Настройка тестирования')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_TestingTuning');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TestingTuning(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TestingTuning'), inName:= 'Настройка тестирования', inEnumName:= 'zc_Enum_Role_TestingTuning');
+   END IF;
+
 
 END $$;
 /*

@@ -21,7 +21,7 @@ BEGIN
     vbUserId := inSession::Integer;
 
      -- Разрешаем только сотрудникам с правами админа    
-    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_TestingTuning()))
     THEN
       RAISE EXCEPTION 'Вым запрещено изменять настройки тестирования';
     END IF;
@@ -31,6 +31,34 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. Не заполнен вопрос.';
     END IF;    
+
+    --Проверили на корректность кол-ва
+    IF (SELECT count(*)
+        FROM MovementItem 
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.ParentId = inParentId
+          AND MovementItem.DescId = zc_MI_Second()) >= 4
+       AND COALESCE(ioId, 0) = 0 
+    THEN
+      RAISE EXCEPTION 'Ошибка. Выриантов ответов должно быть не более 4.';
+    END IF;    
+    
+    IF inisCorrectAnswer = TRUE 
+       AND EXISTS(SELECT 1
+                  FROM MovementItem 
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.ParentId = inParentId
+                    AND MovementItem.DescId = zc_MI_Second()
+                    AND MovementItem.Amount <> 0
+                    AND MovementItem.Id <> COALESCE(ioId, 0))
+    THEN
+      UPDATE MovementItem SET Amount = 0
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.ParentId = inParentId
+        AND MovementItem.DescId = zc_MI_Second()
+        AND MovementItem.Amount <> 0
+        AND MovementItem.Id <> COALESCE(ioId, 0);
+    END IF;
 
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -59,4 +87,3 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_TestingTuning_Second (Integer, Intege
 
 -- тест
 -- select * from gpInsertUpdate_MovementItem_TestingTuning_Second(ioId := 0 , inMovementId := 23977600 , inParentId := 440869114 , inisCorrectAnswer := 'True' , inPossibleAnswer := ' Для записи Z- отчетов.' ,  inSession := '3');
-

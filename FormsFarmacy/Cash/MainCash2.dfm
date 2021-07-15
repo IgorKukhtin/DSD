@@ -6074,6 +6074,24 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = True
     end
+    object actManual: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      Hint = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      ImageIndex = 26
+      FormName = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.Value = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actStartExam: TAction
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1053#1072#1095#1072#1090#1100' '#1101#1082#1079#1072#1084#1077#1085
+      OnExecute = actStartExamExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6315,6 +6333,15 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N46: TMenuItem
         Action = actReport_HouseholdInventoryRemainsCash
+      end
+    end
+    object N58: TMenuItem
+      Caption = #1069#1082#1079#1072#1084#1077#1085#1072#1094#1080#1103
+      object N59: TMenuItem
+        Action = actStartExam
+      end
+      object N60: TMenuItem
+        Action = actManual
       end
     end
     object N12: TMenuItem
