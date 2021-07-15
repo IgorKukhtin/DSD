@@ -34,6 +34,18 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         
+         --при инсерте zc_MI_Master автоматом формировать zc_MI_Child - по значениям план, при update пока ничего не делаем
+         PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId         := 0
+                                                        , inParentId   := ioId
+                                                        , inMovementId := inMovementId
+                                                        , inObjectId   := tmp.ObjectId
+                                                        , inAmount     := (COALESCE (tmp.Value,0) + COALESCE (tmp.Value_service,0)) :: TFloat
+                                                        , inUserId     := inUserId
+                                                        )
+         FROM gpSelect_MI_ProductionUnion_Child (inMovementId, TRUE, FALSE, inUserId ::TVarChar) AS tmp
+         WHERE tmp.ParentId = ioId;
+         
      END IF;
 
 END;

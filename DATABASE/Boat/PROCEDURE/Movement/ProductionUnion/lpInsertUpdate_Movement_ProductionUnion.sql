@@ -94,21 +94,8 @@ BEGIN
      
           -- определяем признак Создание/Корректировка
           vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
-                        
-          -- новая строка
-          vbMovementItemId := lpInsertUpdate_MovementItem (COALESCE (vbMovementItemId,0), zc_MI_Master(), vbProductId, NULL, ioId, 1, NULL, inUserId);
-     
-          -- сохранили связь с <ReceiptProdModel>
-          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptProdModel(), vbMovementItemId, COALESCE (ObjectLink_ReceiptProdModel.ChildObjectId,0));
-          FROM ObjectLink AS ObjectLink_ReceiptProdModel
-          WHERE ObjectLink_ReceiptProdModel.ObjectId = vbProductId
-            AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel();
-                                                  
-          -- сохранили протокол
-          PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
-          
           --если поменялась лодка удаляем чайлды
-          IF vbIsInsert = FALSE
+          IF vbIsInsert = FALSE AND (COALESCE(vbProductId,0) <> COALESCE(vbProductId_mi,0))
           THEN
               UPDATE MovementItem
                SET isErased = TRUE
@@ -117,6 +104,20 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Child()
                 AND MovementItem.isErased = FALSE;
           END IF;
+
+     --
+     PERFORM lpInsertUpdate_MovementItem_ProductionUnion (COALESCE (vbMovementItemId, 0)
+                                                        , ioId
+                                                        , vbProductId
+                                                        , COALESCE (ObjectLink_ReceiptProdModel.ChildObjectId,0)
+                                                        , 1  :: TFloat
+                                                        , '' :: TVarChar
+                                                        , inUserId
+                                                        )
+     FROM ObjectLink AS ObjectLink_ReceiptProdModel
+     WHERE ObjectLink_ReceiptProdModel.ObjectId = vbProductId
+       AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel();
+
      END IF;
      
 END;

@@ -860,6 +860,14 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbSetUnErasedChild'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_Child'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -1050,6 +1058,10 @@ object ProductionUnionForm: TProductionUnionForm
       Action = MovementItemChildProtocolOpenForm
       Category = 0
     end
+    object bbUpdate_MI_Child: TdxBarButton
+      Action = actUpdate_MI_Child
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1182,6 +1194,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1702,6 +1717,22 @@ object ProductionUnionForm: TProductionUnionForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 11
       Status = mtUncomplete
+    end
+    object actUpdate_MI_Child: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Child
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Child
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1088#1072#1089#1093#1086#1076
+      ImageIndex = 27
     end
   end
   object MasterDS: TDataSource
@@ -2546,5 +2577,30 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     Left = 259
     Top = 47
+  end
+  object spUpdate_MI_Child: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionUnion_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 182
+    Top = 407
   end
 end
