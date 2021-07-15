@@ -55,28 +55,6 @@ BEGIN
                 , tmp.Color_value
                 , tmp.Color_Level
           FROM tmpResult AS tmp
-         UNION 
-          SELECT tmp.ReceiptProdModelId
-               , tmp.NPP
-               , tmp.GoodsId     AS ObjectId
-               , tmp.GoodsCode   AS ObjectCode
-               , tmp.GoodsName   AS ObjectName
-               , ObjectDesc.ItemName AS DescName
-               , '' ::TVarChar AS ReceiptLevelName
-               , tmp.GoodsGroupNameFull
-               , tmp.GoodsGroupName
-               , tmp.Article
-               , tmp.ProdColorName
-               , tmp.MeasureName
-               , tmp.Value ::TFloat
-               , 0  ::TFloat AS Value_service
-               , 15138790      ::Integer       AS Color_value                          --  фон для Value
-               , CASE WHEN ObjectDesc.Id = zc_Object_ReceiptService() THEN 15073510  -- малиновый
-                      ELSE  zc_Color_Blue()
-                 END           ::Integer       AS Color_Level
-          FROM gpSelect_Object_ReceiptProdModelChild_ProdColorPattern (0, FALSE, inSession) AS tmp
-               LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmp.GoodsId
-          WHERE COALESCE (tmp.GoodsId,0) <> 0
           );
      --
      CREATE TEMP TABLE _tmpReceiptGoodsChild ON COMMIT DROP AS
@@ -270,63 +248,6 @@ BEGIN
                                                            AND MILO_ReceiptProdModel.DescId = zc_MILinkObject_ReceiptProdModel()
                      )
 
- /*  , tmpReceiptProdModelChild AS (SELECT tmpMI_Master.Id AS ParentId
-                                       , ObjectFloat_Value.ValueData       ::TFloat   AS Value
-                                       , ObjectDesc.ItemName               ::TVarChar AS DescName
-                                       , Object_Object.Id                  ::Integer  AS ObjectId
-                                       , Object_Object.ObjectCode          ::Integer  AS ObjectCode
-                                       , Object_Object.ValueData           ::TVarChar AS ObjectName
-                                  FROM tmpMI_Master
-                                       INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
-                                                             ON ObjectLink_ReceiptProdModel.ChildObjectId = tmpMI_Master.ReceiptProdModelId  --Object_ReceiptProdModelChild.Id
-                                                            AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
-                                       LEFT JOIN Object AS Object_ReceiptProdModelChild
-                                                        ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModel.ObjectId
-                                                       AND Object_ReceiptProdModelChild.DescId = zc_Object_ReceiptProdModelChild()
-                                                       AND Object_ReceiptProdModelChild.isErased = FALSE
-                             
-                                       LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                             ON ObjectFloat_Value.ObjectId = Object_ReceiptProdModelChild.Id
-                                                            AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value() 
-
-                                       INNER JOIN ObjectLink AS ObjectLink_Object
-                                                            ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
-                                                           AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptProdModelChild_Object()
-                                       INNER JOIN Object AS Object_Object
-                                                        ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-                                                       AND Object_Object.DescId IN (zc_Object_Goods(),zc_Object_ReceiptService())
-                                       LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-                                  WHERE COALESCE (tmpMI_Master.ReceiptProdModelId,0) <> 0
-                                  )
-
-   , tmpReceiptGoodsChild AS (SELECT tmpMI_Master.Id AS ParentId
-                                   , ObjectFloat_Value.ValueData       ::TFloat   AS Value
-                                   , ObjectDesc.ItemName               ::TVarChar AS DescName
-                                   , Object_Object.Id                  ::Integer  AS ObjectId
-                                   , Object_Object.ObjectCode          ::Integer  AS ObjectCode
-                                   , Object_Object.ValueData           ::TVarChar AS ObjectName
-                              FROM tmpMI_Master
-                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                                        ON ObjectLink_ReceiptGoods.ChildObjectId = tmpMI_Master.ObjectId
-                                                       AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-
-                                   LEFT JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id = ObjectLink_ReceiptGoods.ObjectId 
-
-                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                         ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptGoodsChild_Value()  
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Object
-                                                        ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                                       AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-      
-                                   INNER JOIN Object AS Object_Object
-                                                    ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-                                                   AND Object_Object.DescId IN (zc_Object_Goods(),zc_Object_ReceiptService())
-                                   LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-                              WHERE COALESCE (tmpMI_Master.ReceiptProdModelId,0) = 0
-                              )
-*/
    , tmpMI AS (SELECT MovementItem.ObjectId   AS ObjectId
                     , MovementItem.Amount
                     , MovementItem.Id

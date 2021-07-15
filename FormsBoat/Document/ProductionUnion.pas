@@ -118,7 +118,7 @@ type
     actUnCompleteCost: TdsdChangeMovementStatus;
     InsertRecordReceiptGoods: TInsertRecord;
     actReceiptGoodsChoiceForm: TOpenChoiceForm;
-    MovementCostProtocolOpenForm: TdsdOpenForm;
+    MovementItemChildProtocolOpenForm: TdsdOpenForm;
     cxLabel12: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel13: TcxLabel;
@@ -182,6 +182,7 @@ type
     cxSplitter1: TcxSplitter;
     InsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
+    bbChildProtocol: TdxBarButton;
   private
   public
   end;

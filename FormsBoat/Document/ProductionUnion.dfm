@@ -2,7 +2,7 @@ object ProductionUnionForm: TProductionUnionForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
-  ClientHeight = 578
+  ClientHeight = 555
   ClientWidth = 788
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -183,25 +183,28 @@ object ProductionUnionForm: TProductionUnionForm
     Left = 0
     Top = 123
     Width = 788
-    Height = 455
+    Height = 432
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 455
+    ExplicitHeight = 455
+    ClientRectBottom = 432
     ClientRectRight = 788
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 431
       object Panel2: TPanel
         Left = 0
-        Top = 160
+        Top = 137
         Width = 788
         Height = 271
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 0
+        ExplicitTop = 160
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
@@ -477,17 +480,19 @@ object ProductionUnionForm: TProductionUnionForm
         Left = 0
         Top = 0
         Width = 788
-        Height = 152
+        Height = 129
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
+        ExplicitHeight = 152
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
           Width = 786
-          Height = 150
+          Height = 127
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 150
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -702,13 +707,14 @@ object ProductionUnionForm: TProductionUnionForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 152
+        Top = 129
         Width = 788
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
+        ExplicitTop = 152
       end
     end
   end
@@ -888,6 +894,10 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbChildProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1034,6 +1044,10 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbInsertRecordChild: TdxBarButton
       Action = InsertRecordChild
+      Category = 0
+    end
+    object bbChildProtocol: TdxBarButton
+      Action = MovementItemChildProtocolOpenForm
       Category = 0
     end
   end
@@ -1252,6 +1266,7 @@ object ProductionUnionForm: TProductionUnionForm
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGridChild
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -1403,26 +1418,30 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
-    object MovementCostProtocolOpenForm: TdsdOpenForm
+    object MovementItemChildProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 34
-      FormName = 'TMovementProtocolForm'
-      FormNameParam.Value = 'TMovementProtocolForm'
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1452,7 +1471,7 @@ object ProductionUnionForm: TProductionUnionForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'ObjectName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1902,8 +1921,6 @@ object ProductionUnionForm: TProductionUnionForm
         Control = edInvNumber
       end
       item
-      end
-      item
         Control = edOperDate
       end
       item
@@ -1916,29 +1933,10 @@ object ProductionUnionForm: TProductionUnionForm
         Control = edTo
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = ceComment
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     GetStoredProc = spGet
+    ActionAfterExecute = actRefresh
     Left = 344
     Top = 217
   end
@@ -2077,6 +2075,7 @@ object ProductionUnionForm: TProductionUnionForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
       end
       item
         Guides = GuidesTo
