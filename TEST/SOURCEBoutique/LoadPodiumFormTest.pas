@@ -335,19 +335,21 @@ end;
 
 procedure TLoadFormTest.LoadDiscountPeriodItemFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPersentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPersentDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemDialogForm'));
+
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemEditForm');
-
+   }
 end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;

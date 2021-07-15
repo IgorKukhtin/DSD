@@ -167,9 +167,6 @@ object ProductionPersonalForm: TProductionPersonalForm
         Height = 270
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -40
-        ExplicitTop = 81
-        ExplicitHeight = 272
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -298,7 +295,7 @@ object ProductionPersonalForm: TProductionPersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 189
+            Width = 149
           end
           object CIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
@@ -333,7 +330,7 @@ object ProductionPersonalForm: TProductionPersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 94
+            Width = 139
           end
           object EndBeginDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1077
@@ -341,7 +338,7 @@ object ProductionPersonalForm: TProductionPersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 166
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083

@@ -86,7 +86,9 @@ BEGIN
          END IF;
          
          --часы работы
-         vbAmount := ( CAST ( date_part( 'hours', vbEndBegin -vbStartBegin) + date_part( 'minute' , vbEndBegin - vbStartBegin)/60 AS NUMERIC (16,2)));
+         vbAmount := ( CAST ( COALESCE (date_part( 'day', vbEndBegin -vbStartBegin) * 24,0)      -- дни
+                            + COALESCE (date_part( 'hours', vbEndBegin -vbStartBegin),0)      -- часы
+                            + COALESCE (date_part( 'minute' , vbEndBegin - vbStartBegin)/60,0) AS NUMERIC (16,2)));  -- минуты
      END IF;
 
      -- сохранили <Элемент документа>

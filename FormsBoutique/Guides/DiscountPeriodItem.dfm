@@ -198,7 +198,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
-        Options.Editing = False
         Width = 70
       end
       object RemainsAll: TcxGridDBColumn
@@ -893,6 +892,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1255,6 +1255,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -1341,7 +1342,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1365,7 +1366,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1373,7 +1374,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Name = 'outEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1497,7 +1498,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1506,7 +1507,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       end
       item
         Name = 'outEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
