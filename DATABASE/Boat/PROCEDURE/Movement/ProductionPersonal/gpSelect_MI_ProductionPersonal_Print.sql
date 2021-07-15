@@ -56,55 +56,66 @@ OPEN Cursor1 FOR
                    AND MovementItem.isErased   = FALSE
                   )
 
-         -- результат
-            SELECT
-                MovementItem.Id             AS Id
-              , MovementItem.ObjectId       AS PersonalId
-              , Object_Personal.ObjectCode  AS PersonalCode
-              , Object_Personal.ValueData   AS PersonalName
+      -- результат   показываем ш/к сотрудника + фио +  + + + + 
+      SELECT
+          MovementItem.Id             AS Id
+        , MovementItem.ObjectId       AS PersonalId
+        , Object_Personal.ObjectCode  AS PersonalCode
+        , Object_Personal.ValueData   AS PersonalName
 
-              , Object_Product.Id           AS ProductId
-              , Object_Product.ObjectCode   AS ProductCode
-              , Object_Product.ValueData    AS ProductName
-              , ObjectString_CIN.ValueData  AS CIN
+        , Object_Product.Id           AS ProductId
+        , Object_Product.ObjectCode   AS ProductCode
+        , Object_Product.ValueData    AS ProductName
+        , ObjectString_CIN.ValueData  AS CIN
 
-              , MovementItem.Amount           ::TFloat
-              
-              , MIDate_StartBegin.ValueData AS StartBeginDate
-              , MIDate_EndBegin.ValueData   AS EndBeginDate
+        , MovementItem.Amount           ::TFloat
+        
+        , MIDate_StartBegin.ValueData AS StartBeginDate
+        , MIDate_EndBegin.ValueData   AS EndBeginDate
 
-              , Object_Insert.ValueData     AS InsertName
-              , MIDate_Insert.ValueData     AS InsertDate
+        , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient_full
+        , Movement_OrderClient.OperDate          AS OperDate_OrderClient
+        , Movement_OrderClient.InvNumber         AS InvNumber_OrderClient
+        , Object_From_OrderClient.ValueData      AS FromName_OrderClient
+          
+        , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode_OrderClient
+        , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Product.Id)         AS BarCode_Product
+        , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Personal.Id)        AS BarCode_Personal
 
-              , MovementItem.isErased            
-            FROM tmpMI AS MovementItem
-                 LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementItem.ObjectId
+      FROM tmpMI AS MovementItem
+           LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementItem.ObjectId
 
-                 LEFT JOIN MovementItemLinkObject AS MILO_Product
-                                                  ON MILO_Product.MovementItemId = MovementItem.Id
-                                                 AND MILO_Product.DescId = zc_MILinkObject_Product()
-                 LEFT JOIN Object AS Object_Product ON Object_Product.Id = MILO_Product.ObjectId
+           LEFT JOIN MovementItemLinkObject AS MILO_Product
+                                            ON MILO_Product.MovementItemId = MovementItem.Id
+                                           AND MILO_Product.DescId = zc_MILinkObject_Product()
+           LEFT JOIN Object AS Object_Product ON Object_Product.Id = MILO_Product.ObjectId
 
-                 LEFT JOIN MovementItemDate AS MIDate_StartBegin
-                                            ON MIDate_StartBegin.MovementItemId = MovementItem.Id
-                                           AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
-                 LEFT JOIN MovementItemDate AS MIDate_EndBegin
-                                            ON MIDate_EndBegin.MovementItemId = MovementItem.Id
-                                           AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
+           LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                      ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                     AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
+           LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                      ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                     AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
 
-                 LEFT JOIN MovementItemDate AS MIDate_Insert
-                                            ON MIDate_Insert.MovementItemId = MovementItem.Id
-                                           AND MIDate_Insert.DescId = zc_MIDate_Insert()
-                 LEFT JOIN MovementItemLinkObject AS MILO_Insert
-                                                  ON MILO_Insert.MovementItemId = MovementItem.Id
-                                                 AND MILO_Insert.DescId = zc_MILinkObject_Insert()
-                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+           LEFT JOIN ObjectString AS ObjectString_CIN
+                                  ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                 AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
-                 LEFT JOIN ObjectString AS ObjectString_CIN
-                                        ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                       AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Product 
+                                        ON MovementLinkObject_Product.ObjectId = Object_Product.Id
+                                       AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+           LEFT JOIN Movement AS Movement_OrderClient
+                              ON Movement_OrderClient.Id = MovementLinkObject_Product.MovementId
+                             AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
 
-                 LEFR MovementLinkObject AS MovementLinkObject_Product
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_From_OrderClient
+                                        ON MovementLinkObject_From_OrderClient.MovementId = Movement_OrderClient.Id
+                                       AND MovementLinkObject_From_OrderClient.DescId = zc_MovementLinkObject_From()
+           LEFT JOIN Object AS Object_From_OrderClient ON Object_From_OrderClient.Id = MovementLinkObject_From_OrderClient.ObjectId
+      ORDER BY Object_Product.Id
+             , MovementItem.ObjectId
+             , MIDate_StartBegin.ValueData
+            ;
 
     RETURN NEXT Cursor2;
 

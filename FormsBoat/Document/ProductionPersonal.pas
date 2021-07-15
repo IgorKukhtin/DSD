@@ -49,7 +49,6 @@ type
     N1: TMenuItem;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -84,9 +83,6 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
@@ -152,6 +148,10 @@ type
     OpenChoiceFormPersonal_start: TOpenChoiceForm;
     OpenChoiceFormPersonal_end: TOpenChoiceForm;
     InvNumber: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
   private
   public
   end;
