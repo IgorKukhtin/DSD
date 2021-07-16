@@ -89,7 +89,7 @@ type
     actInsertMask: TdsdInsertUpdateAction;
     bbCopy: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbProtocolOpen: TdxBarButton;
     PersonalServiceListOfficialChoice: TOpenChoiceForm;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
@@ -98,6 +98,9 @@ type
     BankSecondName: TcxGridDBColumn;
     actStorageLine: TOpenChoiceForm;
     PersonalServiceListCardSecondChoice: TOpenChoiceForm;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    BarCode_Personal: TcxGridDBColumn;
   private
     { Private declarations }
   public

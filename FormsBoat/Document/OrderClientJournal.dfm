@@ -628,6 +628,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintBarcode'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -711,6 +719,10 @@ object OrderClientJournalForm: TOrderClientJournalForm
     end
     object bbPrintStickerTermo: TdxBarButton
       Action = actPrintStructure
+      Category = 0
+    end
+    object bbPrintBarcode: TdxBarButton
+      Action = actPrintBarcode
       Category = 0
     end
   end
@@ -1270,6 +1282,49 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintBarcode: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_barcode
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_barcode
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Barcode'
+      Hint = 'Print Barcode'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderClientBarcode'
+      ReportNameParam.Value = 'PrintMovement_OrderClientBarcode'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintOffer: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1783,5 +1838,18 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PackSize = 1
     Left = 648
     Top = 312
+  end
+  object spSelectPrint_barcode: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderClient_BarcodePrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <>
+    PackSize = 1
+    Left = 736
+    Top = 168
   end
 end

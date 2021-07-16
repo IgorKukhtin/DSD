@@ -9,8 +9,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar
+RETURNS TABLE (Id Integer, BarCode_Personal TVarChar
+             , MemberId Integer, MemberCode Integer, MemberName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Comment TVarChar
              , InsertName TVarChar
@@ -31,6 +33,7 @@ BEGIN
    RETURN QUERY
      SELECT
            Object_Personal_View.PersonalId   AS Id
+         , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Personal_View.PersonalId) ::TVarChar AS BarCode_Personal
          , Object_Personal_View.MemberId     AS MemberId
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
@@ -90,6 +93,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.06.21         *
  25.10.20         *
 */
 -- тест

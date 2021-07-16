@@ -116,6 +116,9 @@ type
     actPrintOrderConfirmation: TdsdPrintAction;
     actPrintStructure: TdsdPrintAction;
     actPrintOffer: TdsdPrintAction;
+    spSelectPrint_barcode: TdsdStoredProc;
+    actPrintBarcode: TdsdPrintAction;
+    bbPrintBarcode: TdxBarButton;
   private
   public
   end;

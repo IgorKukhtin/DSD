@@ -256,6 +256,12 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 35
       end
+      object BarCode_Personal: TcxGridDBColumn
+        Caption = 'BarCode'
+        DataBinding.FieldName = 'BarCode_Personal'
+        Visible = False
+        Width = 100
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -434,6 +440,14 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -442,7 +456,7 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbProtocolOpen'
         end>
       OneOnRow = True
       Row = 0
@@ -525,8 +539,12 @@ object PersonalForm: TPersonalForm
       Visible = ivAlways
       Control = deEnd
     end
-    object bb: TdxBarButton
+    object bbProtocolOpen: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -967,6 +985,51 @@ object PersonalForm: TPersonalForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1064#1090#1088#1080#1093#1082#1086#1076
+      Hint = 'Print Barcode'
+      ImageIndex = 23
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;MemberName;PositionName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42948d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42948d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintObject_Personal_barcode'
+      ReportNameParam.Value = 'PrintObject_Personal_barcode'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
