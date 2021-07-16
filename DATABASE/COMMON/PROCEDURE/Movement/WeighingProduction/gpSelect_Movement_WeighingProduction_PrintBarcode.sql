@@ -21,7 +21,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- параметры из документа
-     SELECT Movement.DescId, Movement.StatusId
+     SELECT Movement.DescId
+          , Movement.StatusId
           , Object_User.ValueData  :: TVarChar AS StoreKeeperName -- кладовщик
             INTO vbDescId, vbStatusId, vbStoreKeeperName
      FROM Movement
@@ -66,6 +67,11 @@ BEGIN
                    , MIFloat_WeightSkewer1.ValueData AS WeightSkewer1
                    , MIFloat_CountSkewer2.ValueData  AS CountSkewer2
                    , MIFloat_WeightSkewer2.ValueData AS WeightSkewer2
+                   
+                   --
+                   , MIFloat_WeightTare.ValueData    AS WeightTare
+                   , MIString_KVK.ValueData          AS KVK
+                   , MILinkObject_PersonalKVK.ObjectId AS PersonalKVKId
 
               FROM MovementItem
                    LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -78,12 +84,20 @@ BEGIN
                                                ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
 
+                   LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
+                                               ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
+                                              AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
+
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+                   LEFT JOIN MovementItemString AS MIString_KVK
+                                                ON MIString_KVK.MovementItemId = MovementItem.Id
+                                               AND MIString_KVK.DescId = zc_MIString_KVK()
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -92,6 +106,11 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                                    ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+                   --LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
                    LEFT JOIN MovementItemFloat AS MIFloat_CountSkewer1
                                                ON MIFloat_CountSkewer1.MovementItemId = MovementItem.Id
@@ -133,6 +152,7 @@ BEGIN
                   THEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.Count)
                   ELSE 0
              END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
+           , tmpMI.WeightTare
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
            , zfConvert_DateToString (CURRENT_DATE) AS PartionGoodsDate_str
@@ -144,9 +164,12 @@ BEGIN
            , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
 
            , vbStoreKeeperName  :: TVarChar     AS StoreKeeperName
+           , tmpMI.KVK          :: TVarChar     AS KVK
+           , Object_PersonalKVK.ValueData       AS PersonalKVKName
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = tmpMI.PersonalKVKId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id

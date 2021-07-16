@@ -726,7 +726,7 @@ object WeighingProductionForm: TWeighingProductionForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 160
   end
   object cxLabel20: TcxLabel
@@ -934,6 +934,14 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintStikerKVK'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1014,6 +1022,10 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object bbOpenDocumentMain: TdxBarButton
       Action = macOpenDocument
+      Category = 0
+    end
+    object bbPrintStikerKVK: TdxBarButton
+      Action = actPrintStikerKVK
       Category = 0
     end
   end
@@ -1411,6 +1423,38 @@ object WeighingProductionForm: TWeighingProductionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintStikerKVK: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintBarCode
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBarCode
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1050#1042#1050
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1050#1042#1050
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProductionStikerKVK'
+      ReportNameParam.Value = 'PrintMovement_WeighingProductionStikerKVK'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintBarCode: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1536,8 +1580,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 120
+    Left = 408
+    Top = 112
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'

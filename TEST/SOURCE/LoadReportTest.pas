@@ -136,7 +136,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+    {
   LoadReportFromFile('Отчет Данные документа взвешивания (КВК)', ReportPath + '\Отчеты (производство)\Отчет Данные документа взвешивания (КВК).fr3');
   exit;
 
@@ -145,7 +145,7 @@ begin
 
   LoadReportFromFile('Отчет Остатки для упаковки', ReportPath + '\Отчеты (производство)\Отчет Остатки для упаковки.fr3');
   exit;
-{
+
   LoadReportFromFile('Проверка начислений по бонусам для подписи(детально)', ReportPath + '\Отчеты (финансы)\Проверка начислений по бонусам для подписи(детально).fr3');
   exit;
   LoadReportFromFile('PrintMovement_Sale32437180', ReportPath + '\Товарный Учет\PrintMovement_Sale32437180.fr3');
@@ -176,7 +176,10 @@ begin
 
   LoadReportFromFile('Print_Object_BarCodeBox', ReportPath + '\Товарный Учет\Print_Object_BarCodeBox.fr3');
   exit;
-
+  }
+    LoadReportFromFile('PrintMovement_WeighingProductionStikerKVK', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionStikerKVK.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;
 
