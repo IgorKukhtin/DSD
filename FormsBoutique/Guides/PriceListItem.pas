@@ -118,6 +118,7 @@ type
     macPrintSticker_fp: TMultiAction;
     bbPrintSticker_fp: TdxBarButton;
     OperPriceList: TcxGridDBColumn;
+    cbDiscountDelete: TcxCheckBox;
   private
     { Private declarations }
   public

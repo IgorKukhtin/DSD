@@ -3,7 +3,7 @@ object PriceListItemForm: TPriceListItemForm
   Top = 0
   Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 988
+  ClientWidth = 1044
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,13 @@ object PriceListItemForm: TPriceListItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 88
-    Width = 988
+    Width = 1044
     Height = 310
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 988
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -429,11 +430,12 @@ object PriceListItemForm: TPriceListItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 988
+    Width = 1044
     Height = 62
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 988
     object cxLabel1: TcxLabel
       Left = 26
       Top = 11
@@ -554,7 +556,7 @@ object PriceListItemForm: TPriceListItemForm
     end
     object cxLabel9: TcxLabel
       Left = 849
-      Top = 16
+      Top = 20
       Caption = #1050#1086#1101#1092#1092'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
     end
     object edPriceTax: TcxCurrencyEdit
@@ -565,6 +567,15 @@ object PriceListItemForm: TPriceListItemForm
       Properties.UseDisplayFormatWhenEditing = True
       TabOrder = 15
       Width = 105
+    end
+    object cbDiscountDelete: TcxCheckBox
+      Left = 845
+      Top = 0
+      Caption = #1059#1044#1040#1051#1048#1058#1068' '#1089#1077#1079#1086#1085#1085#1091#1102' '#1089#1082#1080#1076#1082#1091
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 16
+      Width = 165
     end
   end
   object cxLabel3: TcxLabel
@@ -1714,6 +1725,14 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inIsLast'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiscountDelete'
+        Value = Null
+        Component = cbDiscountDelete
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

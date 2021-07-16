@@ -202,6 +202,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = HoursPartner_all
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = CountDoc_Reestr_zp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -359,6 +364,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = HoursPartner_all
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = CountDoc_Reestr_zp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
