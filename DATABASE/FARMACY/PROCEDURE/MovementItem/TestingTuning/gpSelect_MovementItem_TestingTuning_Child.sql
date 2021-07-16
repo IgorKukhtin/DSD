@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , Orders Integer, Replies Integer, CorrectAnswer Integer
              , Question TBLOB
+             , RandomID Integer
              , isErased Boolean
               )
 AS
@@ -42,7 +43,8 @@ BEGIN
              , tmpReplies.Replies::Integer                         AS Replies 
              , tmpReplies.CorrectAnswer::Integer                   AS CorrectAnswer 
              , MIBLOB_Question.ValueData                           AS Question
-             , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomID
+             , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
         FROM MovementItem 
             
             LEFT JOIN tmpReplies ON tmpReplies.Id = MovementItem.Id
@@ -70,4 +72,5 @@ ALTER FUNCTION gpSelect_MovementItem_TestingTuning_Child (Integer, Boolean, Bool
 */
 
 -- тест
--- select * from gpSelect_MovementItem_TestingTuning_Child(inMovementId := 23977600 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--
+ select * from gpSelect_MovementItem_TestingTuning_Child(inMovementId := 23977600 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

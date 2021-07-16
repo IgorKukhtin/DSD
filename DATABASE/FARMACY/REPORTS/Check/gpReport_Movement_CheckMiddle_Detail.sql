@@ -211,6 +211,41 @@ BEGIN
                            GROUP BY Movement_Sale.OperDate
                                   , Movement_Sale.UnitId
                            ) 
+       , tmpDiscount AS (SELECT MovementLinkObject_Unit.ObjectId                                                 AS UnitID
+                              , CASE WHEN inisDay = True THEN DATE_TRUNC('day', Movement.OperDate) 
+                                WHEN inisMonth = TRUE THEN DATE_TRUNC('Month', Movement.OperDate) 
+                                ELSE NULL END              ::TDateTime                                           AS OperDate   
+                              , sum(MovementFloat_TotalSummChangePercent.ValueData)                              AS SummChange
+                         FROM Movement
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                                            ON MovementLinkObject_DiscountCard.MovementID = Movement.ID
+                                                           AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+                                                           AND MovementLinkObject_DiscountCard.ObjectId <> 0
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementID = Movement.ID
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
+                                                       ON MovementFloat_TotalSummChangePercent.MovementID = Movement.ID
+                                                      AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                      ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+
+                         WHERE Movement.OperDate >= inDateStart
+                           AND Movement.OperDate < inDateEnd + INTERVAL '1 DAY'
+                           AND Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                         GROUP BY CASE WHEN inisDay = True THEN DATE_TRUNC('day', Movement.OperDate) 
+                                       WHEN inisMonth = TRUE THEN DATE_TRUNC('Month', Movement.OperDate) 
+                                       ELSE NULL END, MovementLinkObject_Unit.ObjectId)
                        
         , tmpPeriod AS (SELECT tmpMI.Unitid
                              , tmpMI.OperDate
@@ -230,6 +265,7 @@ BEGIN
                            , SUM (tmpMI.SummChangePercent_SP) AS SummSale_SP
                            , SUM (tmpMI.SummSale_1303)        AS SummSale_1303
                            , SUM (tmpMI.Count_1303)           AS Count_1303
+                           , SUM (tmpMI.SummDiscount)         AS SummDiscount
                            
                       FROM (SELECT COALESCE (tmpMI.Unitid, tmpSale_1303.Unitid)     AS UnitId
                                    , COALESCE (tmpMI.OperDate, tmpSale_1303.OperDate) AS OperDate
@@ -238,6 +274,7 @@ BEGIN
                                    , COALESCE (tmpMI.SummaSale,0)                     AS SummaSale
                                    , COALESCE (tmpMI.SummSale_1303, 0) + COALESCE (tmpSale_1303.SummSale_1303, 0)  AS SummSale_1303
                                    , COALESCE (tmpSale_1303.Count_1303, 0)            AS Count_1303      
+                                   , COALESCE (tmpDiscount.SummChange, 0)             AS SummDiscount
                             FROM
                                 (SELECT tmpMI.Unitid
                                       , tmpMI.OperDate
@@ -251,6 +288,8 @@ BEGIN
                                  ) AS tmpMI
                                    FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpMI.Unitid
                                                          AND (COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null) OR (inisMonth = FALSE AND inisDay = FALSE))
+                                   LEFT JOIN tmpDiscount  ON tmpDiscount.UnitId = COALESCE (tmpMI.Unitid, tmpSale_1303.Unitid)
+                                                         AND (inisMonth = FALSE AND inisDay = FALSE OR tmpDiscount.OperDate = COALESCE (tmpMI.OperDate, tmpSale_1303.OperDate))
                             ) AS tmpMI
                             GROUP BY tmpMI.Unitid
                                    , tmpMI.OperDate 
@@ -272,13 +311,14 @@ BEGIN
                              , tmpData.SummSale_SP           :: TFloat AS SummSale_SP
                              , tmpData.SummSale_1303         :: TFloat AS SummSale_1303
                              , tmpData.Count_1303            :: TFloat AS Count_1303
+                             , tmpData.SummDiscount          :: TFloat AS SummDiscount
                              
                              , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0))                                                                  :: TFloat AS SummaSaleWithSP
                              , CASE WHEN tmpData.Amount <> 0 THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0)) / tmpData.Amount ELSE 0 END   :: TFloat AS SummaMiddleWithSP
                              , (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))                                                              :: TFloat AS AmountWith_1303 
-                             , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))                            :: TFloat AS SummaSaleAll
+                             , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0)) :: TFloat AS SummaSaleAll
                              , CASE WHEN (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0)) <> 0 
-                                    THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) / (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))
+                                    THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) + COALESCE (tmpData.SummDiscount, 0)) / (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))
                                     ELSE 0 
                                END       :: TFloat   AS SummaMiddleAll
 
@@ -325,6 +365,7 @@ BEGIN
              , tmpData.SummSale_SP           :: TFloat AS SummSale_SP
              , tmpData.SummSale_1303         :: TFloat AS SummSale_1303
              , tmpData.Count_1303            :: TFloat AS Count_1303
+             , tmpData.SummDiscount          :: TFloat AS SummDiscount
              
              , tmpData.SummaSaleWithSP       :: TFloat AS SummaSaleWithSP
              , tmpData.SummaMiddleWithSP     :: TFloat AS SummaMiddleWithSP
@@ -379,4 +420,4 @@ $BODY$
 --select * from gpReport_CheckMiddle_Detail(inUnitId := 183292, inRetailId:=0, inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('31.03.2016')::TDateTime , inisDay := 'FALSE' ::boolean , inisMonth:= 'TRUE' ::boolean , inSession := '3' ::TVarChar);
 -- FETCH ALL "<unnamed portal 18>";
 
---183292
+select * from gpReport_CheckMiddle_Detail(13338606 , 0 , ('01.06.2021')::TDateTime , ('30.06.2021')::TDateTime , 'False' , 'False' ,  '3');
