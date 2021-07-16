@@ -4,7 +4,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 626
+  ExplicitHeight = 627
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,6 +205,11 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.##'
               Kind = skAverage
               Column = SummaMiddleWithSP
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDiscount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -388,6 +393,11 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.##'
               Kind = skAverage
               Column = SummaMiddleWithSP
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDiscount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -535,6 +545,16 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074'  '#1079#1072' '#1087#1077#1088#1080#1086#1076
             Width = 84
+          end
+          object SummDiscount: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1044#1055
+            DataBinding.FieldName = 'SummDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
           end
           object SummaSaleAll: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -2376,6 +2396,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Amount1
@@ -2450,6 +2471,8 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 480
   end

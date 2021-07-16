@@ -178,6 +178,8 @@ type
     GuidesSubjectDoc: TdsdGuides;
     PersonalKVKName: TcxGridDBColumn;
     KVK: TcxGridDBColumn;
+    actPrintStikerKVK: TdsdPrintAction;
+    bbPrintStikerKVK: TdxBarButton;
   private
   public
   end;

@@ -3928,22 +3928,22 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
   exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
-
+   }
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;

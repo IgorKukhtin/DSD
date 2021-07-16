@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Second(
 RETURNS TABLE (Id Integer, ParentId Integer
              , Orders Integer, isCorrectAnswer Boolean
              , PossibleAnswer TBLOB
+             , RandomID Integer
              , isErased Boolean
               )
 AS
@@ -29,6 +30,7 @@ BEGIN
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id)::Integer as Orders
              , MovementItem.Amount = 1                             AS isCorrectAnswer 
              , MIBLOB_PossibleAnswer.ValueData                     AS PossibleAnswer
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomID
              , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
         FROM MovementItem 
             
@@ -56,4 +58,4 @@ ALTER FUNCTION gpSelect_MovementItem_TestingTuning_Second (Integer, Boolean, Boo
 
 -- тест
 -- 
-select * from gpSelect_MovementItem_TestingTuning_Second(inMovementId := 16461309 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_TestingTuning_Second(inMovementId := 23977600 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

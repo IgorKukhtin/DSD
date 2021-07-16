@@ -1647,11 +1647,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailDialogForm');
 
     // средний чек
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
-
+ {
     //Отчет Ценовая интервенция
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
