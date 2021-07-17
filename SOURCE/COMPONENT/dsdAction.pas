@@ -4823,7 +4823,7 @@ begin
   FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
 
   Json := '{"source":"CC Support","destination":"' + FPhonesParam.Value +
-          '","serviceType":"104","bearerType":"sms","contentType":"text/plain","content": "' +
+          '","serviceType":"104","bearerType":"sms","contentType":"text/plain","content":"' +
           StringReplace(StringReplace(FMessageParam.Value, '\', '\\', [rfReplaceAll, rfIgnoreCase]), '"', '\"', [rfReplaceAll, rfIgnoreCase]) + '"}';
 
   JsonToSend := TStringStream.Create(Json, TEncoding.UTF8);
