@@ -6450,12 +6450,6 @@ end;
 
 procedure TMainCashForm2.actStartExamExecute(Sender: TObject);
 begin
-  if (gc_User.Session <> '3') and (gc_User.Session <> '4183126') then
-  begin
-    ShowMessage('В разработке...');
-    Exit;
-  end;
-
   ShowTestingUser;
 end;
 

@@ -3753,6 +3753,14 @@
 				<Form>Report_TestingTuning_ManualForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsCovid_19Dialog.pas">
+				<Form>Report_RemainsCovid_19DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsCovid_19.pas">
+				<Form>Report_RemainsCovid_19Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

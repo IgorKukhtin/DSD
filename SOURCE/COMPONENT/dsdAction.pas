@@ -8,7 +8,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
-  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI
+  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, Winapi.ActiveX
   {$IFDEF DELPHI103RIO}, Actions {$ENDIF}, Vcl.Graphics;
 
 type
@@ -1045,6 +1045,36 @@ type
     property ShowCost: TdsdParam read FShowCostParam write FShowCostParam;
   end;
 
+  TdsdSendSMSCPAAction = class(TdsdCustomAction)
+  private
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+    FHostParam: TdsdParam;
+    FLoginParam: TdsdParam;
+    FPasswordParam: TdsdParam;
+    FPhonesParam: TdsdParam;
+    FMessageParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property Host: TdsdParam read FHostParam write FHostParam;
+    property Login: TdsdParam read FLoginParam write FLoginParam;
+    property Password: TdsdParam read FPasswordParam write FPasswordParam;
+    property Phones: TdsdParam read FPhonesParam write FPhonesParam;
+    property Message: TdsdParam read FMessageParam write FMessageParam;
+  end;
+
   TdsdSetFocusedAction = class(TdsdCustomAction)
   private
 
@@ -1063,6 +1093,21 @@ type
     property ImageIndex;
     property SecondaryShortCuts;
     property ControlName: TdsdParam read FControlNameParam write FControlNameParam;
+  end;
+
+  TdsdLoadListValuesFileAction = class(TdsdCustomAction)
+  private
+    FFileOpenDialog: TFileOpenDialog;
+    FParam: TdsdParam;
+    FStartColumns: Integer;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Param: TdsdParam read FParam write FParam;
+    property StartColumns: Integer read FStartColumns write FStartColumns;
   end;
 
 procedure Register;
@@ -1121,12 +1166,60 @@ begin
   RegisterActions('DSDLib', [TdsdFTP], TdsdFTP);
   RegisterActions('DSDLib', [TdsdDblClickAction], TdsdDblClickAction);
   RegisterActions('DSDLib', [TdsdSendSMSAction], TdsdSendSMSAction);
+  RegisterActions('DSDLib', [TdsdSendSMSCPAAction], TdsdSendSMSCPAAction);
   RegisterActions('DSDLib', [TdsdSetFocusedAction], TdsdSetFocusedAction);
+  RegisterActions('DSDLib', [TdsdLoadListValuesFileAction], TdsdLoadListValuesFileAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
 
+end;
+
+function EncodeBase64(const Input: TBytes): string;
+const
+  Base64: array[0..63] of Char =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+  function Encode3Bytes(const Byte1, Byte2, Byte3: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[((Byte2 shl 2) or (Byte3 shr 6)) and $3F]
+      + Base64[Byte3 and $3F];
+  end;
+
+  function EncodeLast2Bytes(const Byte1, Byte2: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
+      + Base64[(Byte2 shl 2) and $3F] + '=';
+  end;
+
+  function EncodeLast1Byte(const Byte1: Byte): string;
+  begin
+    Result := Base64[Byte1 shr 2]
+      + Base64[(Byte1 shl 4) and $3F] + '==';
+  end;
+
+var
+  i, iLength: Integer;
+begin
+  Result := '';
+  iLength := Length(Input);
+  i := 0;
+  while i < iLength do
+  begin
+    case iLength - i of
+      3..MaxInt:
+        Result := Result + Encode3Bytes(Input[i], Input[i+1], Input[i+2]);
+      2:
+        Result := Result + EncodeLast2Bytes(Input[i], Input[i+1]);
+      1:
+        Result := Result + EncodeLast1Byte(Input[i]);
+    end;
+    Inc(i, 3);
+  end;
 end;
 
 { TdsdCustomDataSetAction }
@@ -4646,6 +4739,115 @@ begin
   end;
 end;
 
+  {TdsdSendSMSCPAAction}
+
+constructor TdsdSendSMSCPAAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+  TIdSSLIOHandlerSocketOpenSSL(FIdHTTP.IOHandler).SSLOptions.Mode := sslmClient;
+  TIdSSLIOHandlerSocketOpenSSL(FIdHTTP.IOHandler).SSLOptions.Method := sslvSSLv23;
+
+  FHostParam := TdsdParam.Create(nil);
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FLoginParam := TdsdParam.Create(nil);
+  FLoginParam.DataType := ftInteger;
+  FLoginParam.Value := '';
+
+  FPasswordParam := TdsdParam.Create(nil);
+  FPasswordParam.DataType := ftString;
+  FPasswordParam.Value := '';
+
+  FPhonesParam := TdsdParam.Create(nil);
+  FPhonesParam.DataType := ftString;
+  FPhonesParam.Value := '';
+
+  FMessageParam := TdsdParam.Create(nil);
+  FMessageParam.DataType := ftString;
+  FMessageParam.Value := '';
+end;
+
+destructor TdsdSendSMSCPAAction.Destroy;
+begin
+  FreeAndNil(FHostParam);
+  FreeAndNil(FLoginParam);
+  FreeAndNil(FPasswordParam);
+  FreeAndNil(FPhonesParam);
+  FreeAndNil(FMessageParam);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+function TdsdSendSMSCPAAction.LocalExecute: Boolean;
+  var S, Json : String;
+  JsonToSend: TStringStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FHostParam.Value = '') or
+     (FLoginParam.Value = '') or
+     (FPasswordParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host, Login или Password.');
+    Exit;
+  end;
+
+  if FPhonesParam.Value = '' then
+  begin
+    ShowMessage('Не заполнен номер телефона.');
+    Exit;
+  end;
+
+  if FMessageParam.Value = '' then
+  begin
+    ShowMessage('Не заполнен текст SMS.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  S :=  FLoginParam.Value + ':' + FPasswordParam.Value;
+  FIdHTTP.Request.Clear;
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+  FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Basic ' + EncodeBase64(BytesOf(S)));
+  FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+  Json := '{"source":"CC Support","destination":"' + FPhonesParam.Value +
+          '","serviceType":"104","bearerType":"sms","contentType":"text/plain","content": "' +
+          StringReplace(StringReplace(FMessageParam.Value, '\', '\\', [rfReplaceAll, rfIgnoreCase]), '"', '\"', [rfReplaceAll, rfIgnoreCase]) + '"}';
+
+  JsonToSend := TStringStream.Create(Json, TEncoding.UTF8);
+  try
+    try
+      S := FIdHTTP.Post(FHostParam.Value, JsonToSend);
+    except
+    end;
+  finally
+    JsonToSend.Free;
+  end;
+
+  case FIdHTTP.ResponseCode of
+    202 : if Pos('mid', LowerCase(S)) = 0 then
+          begin
+            ShowMessage(S);
+          end else Result := True;
+    else begin
+           ShowMessage(FIdHTTP.ResponseText);
+         end;
+  end;
+end;
+
+
   {TdsdSetFocusedAction}
 
 constructor TdsdSetFocusedAction.Create(AOwner: TComponent);
@@ -4723,6 +4925,79 @@ begin
 
   FTimerFocused.Enabled := True;
 end;
+
+{ TdsdLoadListValuesFileAction }
+
+constructor TdsdLoadListValuesFileAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFileOpenDialog := TFileOpenDialog.Create(Self);
+  FFileOpenDialog.SetSubComponent(true);
+  FFileOpenDialog.FreeNotification(Self);
+  FFileOpenDialog.OkButtonLabel := 'Загрузить список товаров';
+  with FFileOpenDialog.FileTypes.Add do
+  begin
+    DisplayName := 'Файл со списком товаров';
+    FileMask := '*.xls;*.xlsx';
+  end;
+  FParam := TdsdParam.Create(nil);
+  FStartColumns := 1;
+end;
+
+destructor TdsdLoadListValuesFileAction.Destroy;
+begin
+  FreeAndNil(FFileOpenDialog);
+  FreeAndNil(FParam);
+  inherited;
+end;
+
+function TdsdLoadListValuesFileAction.LocalExecute: Boolean;
+const
+  ExcelAppName = 'Excel.Application';
+var
+  CLSID: TCLSID;
+  Excel, Sheet: Variant;
+  Row, Code : Integer;
+  S : string;
+begin
+  result := false;
+  S := '';
+  if FFileOpenDialog.Execute then
+  begin
+
+    if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
+    begin
+      Excel := CreateOLEObject(ExcelAppName);
+
+      try
+        Excel.Visible := False;
+        Excel.Application.EnableEvents := False;
+        Excel.DisplayAlerts := False;
+        Excel.WorkBooks.Open(FFileOpenDialog.FileName);
+        Sheet := Excel.WorkBooks[1].WorkSheets[1];
+
+        for Row := FStartColumns to Sheet.UsedRange.Rows.Count do
+        begin
+          if TryStrToInt(Sheet.Cells[Row, 1], Code) then
+          begin
+            if S = '' then S := IntToStr(Code)
+            else S := S + ',' + IntToStr(Code);
+          end;
+        end;
+
+        Param.Value := S;
+
+      finally
+        if not VarIsEmpty(Excel) then
+          Excel.Quit;
+
+        Excel := Unassigned;
+      end;
+    end;
+    result := true
+  end;
+end;
+
 
 initialization
 
