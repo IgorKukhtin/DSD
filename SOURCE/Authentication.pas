@@ -43,6 +43,7 @@ type
     class function CheckLogin(pStorage: IStorage;
       const pUserName, pPassword: string; var pUser: TUser;
       ANeedShowException: Boolean = True): boolean;
+    class function spCheckPhoneAuthentSMS (const pPhoneAuthent: string): boolean;
   end;
 
 implementation
@@ -99,6 +100,12 @@ begin
   FLogin := '';
 end;
 {------------------------------------------------------------------------------}
+class function TAuthentication.spCheckPhoneAuthentSMS (const pPhoneAuthent: string): boolean;
+begin
+     // Send SMS
+     // Check Enter SMS
+end;
+{------------------------------------------------------------------------------}
 class function TAuthentication.CheckLogin(pStorage: IStorage;
   const pUserName, pPassword: string; var pUser: TUser;
   ANeedShowException: Boolean = True): boolean;
@@ -107,10 +114,16 @@ var IP_str:string;
     pXML : String;
     BoutiqueName, IniFileName: String;
     f: TIniFile;
+    isBoutique, isProject : Boolean;
 begin
+   //
+   isBoutique:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
+              or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'));
+   //
+   isProject:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Project.exe'));
+
   {создаем XML вызова процедуры на сервере}
-  if (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
-     or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'))
+  if isBoutique = TRUE
   then begin
       //
       if GetIniFile (IniFileName) then
@@ -137,14 +150,27 @@ begin
       '</xml>';
   end
   else
-      pXML :=
-      '<xml Session = "" >' +
-        '<gpCheckLogin OutputType="otResult">' +
-          '<inUserLogin    DataType="ftString" Value="%s" />' +
-          '<inUserPassword DataType="ftString" Value="%s" />' +
-          '<inIP           DataType="ftString" Value="%s" />' +
-        '</gpCheckLogin>' +
-      '</xml>';
+      // для Project - еще 1 параметр - Телефон для аутентификации
+      if isProject = TRUE
+      then
+        pXML :=
+        '<xml Session = "" >' +
+          '<gpCheckLogin OutputType="otResult">' +
+            '<inUserLogin    DataType="ftString" Value="%s" />' +
+            '<inUserPassword DataType="ftString" Value="%s" />' +
+            '<inIP           DataType="ftString" Value="%s" />' +
+            '<ioPhoneAuthent DataType="ftString" Value="%s" />' +
+          '</gpCheckLogin>' +
+        '</xml>'
+      else
+        pXML :=
+        '<xml Session = "" >' +
+          '<gpCheckLogin OutputType="otResult">' +
+            '<inUserLogin    DataType="ftString" Value="%s" />' +
+            '<inUserPassword DataType="ftString" Value="%s" />' +
+            '<inIP           DataType="ftString" Value="%s" />' +
+          '</gpCheckLogin>' +
+        '</xml>';
 
   with TIdIPWatch.Create(nil) do
   begin
@@ -153,16 +179,22 @@ begin
         Free;
   end;
 
-  if (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
-     or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'))
+  if isBoutique = TRUE
   then
        // для Бутиков - еще 1 параметр
        N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement
-  else
-       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
+  else if isProject = TRUE
+       then
+         // для Project - еще 1 параметр - Телефон для аутентификации
+         N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement
+       else
+         N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
   //
   if Assigned(N) then
   begin
+       // сформировали смс, проверили что он корректный
+       if isProject = TRUE then spCheckPhoneAuthentSMS(N.GetAttribute(AnsiLowerCase('ioPhoneAuthent')));
+       //
        pUser := TUser.Create(N.GetAttribute(AnsiLowerCase(gcSession)));
        pUser.FLogin := pUserName;
   end;
