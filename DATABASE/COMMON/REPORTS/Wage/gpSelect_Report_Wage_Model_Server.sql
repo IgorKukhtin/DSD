@@ -1130,6 +1130,7 @@ BEGIN
              , SUM (CASE WHEN /*tmpMovement_Reestr_notWeight.MovementId > 0*/ 1=0 THEN 0 ELSE COALESCE (MovementFloat_TotalCountKg.ValueData, 0) END) :: TFloat AS TotalCountKg
                -- Кол. док. (компл.)
              , COUNT (DISTINCT Movement_Sale.Id)  :: TFloat AS CountMovement
+           --, COUNT (DISTINCT CASE WHEN vbUserId = 5 THEN MovementLinkObject_To.ObjectId ELSE Movement_Sale.Id END)  :: TFloat AS CountMovement
 
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
@@ -1151,6 +1152,10 @@ BEGIN
              LEFT JOIN ObjectLink AS OL_Car_Unit
                                   ON OL_Car_Unit.ObjectId = MovementLinkObject_Car.ObjectId
                                  AND OL_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
+
+             LEFT JOIN MovementFloat AS MovementFloat_1
+                                     ON MovementFloat_1.MovementId = Movement.Id
+                                    AND MovementFloat_1.DescId         = zc_MovementFloat_PartnerCount()
 
              INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                              ON MovementLinkMovement_Transport.MovementChildId = Movement.Id
@@ -1179,6 +1184,9 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
              LEFT JOIN ObjectLink AS OL_Unit_Parent_0
                                   ON OL_Unit_Parent_0.ObjectId = MovementLinkObject_From.ObjectId
                                  AND OL_Unit_Parent_0.DescId   = zc_ObjectLink_Unit_Parent()

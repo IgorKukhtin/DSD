@@ -2,7 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -23,9 +24,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
     IN inWeightOther         TFloat    , -- Вес, прочее
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inNumberKVK           TVarChar  , -- № КВК
     IN inMovementItemId      Integer   , -- 
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inStorageLineId       Integer   , -- Линия пр-ва
+    IN inPersonalId_KVK      Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -85,11 +88,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+     -- сохранили свойство <№ КВК>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_KVK(), ioId, inNumberKVK);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
      -- сохранили связь с <Линия пр-ва>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), ioId, inStorageLineId);
+     -- сохранили связь с <Оператор КВК(Ф.И.О)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalKVK(), ioId, inPersonalId_KVK);
      
     
      -- пересчитали Итоговые суммы по накладной

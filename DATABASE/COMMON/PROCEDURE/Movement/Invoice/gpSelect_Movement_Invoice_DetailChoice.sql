@@ -37,15 +37,22 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
-if inStartDate < inEndDate - INTERVAL '1 YEAR' THEN inStartDate:= inEndDate; end If;
-
 -- inStartDate:= '01.01.2013';
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Invoice());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- проверка
+     IF inStartDate < inEndDate - INTERVAL '1 YEAR'
+     THEN
+         -- RAISE EXCEPTION 'Ошибка.Выбранный период с <%> по <%> больше 1 года.Необходимо установить меньше период.', zfConvert_DateToString (inStartDate), zfConvert_DateToString (inEndDate);
+         inStartDate:= inEndDate - INTERVAL '6 MONTH';
+     END IF;
+
+
 
      IF COALESCE (inJuridicalId,0) <>0 THEN
          inJuridicalId:= (SELECT CASE WHEN Object.DescId <> zc_Object_Juridical() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE inJuridicalId END

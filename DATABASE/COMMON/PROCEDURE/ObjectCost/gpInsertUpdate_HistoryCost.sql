@@ -638,7 +638,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3502863); -- 04.2021
 
-     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3324068, 3323606, 3325351, 2350884, 2349571, 2354329); -- 07.2021
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3324068, 3323606, 3325351, 2350884, 2349571, 2354329, 2350886, 2354546, 2349569); -- 07.2021
 
 
 

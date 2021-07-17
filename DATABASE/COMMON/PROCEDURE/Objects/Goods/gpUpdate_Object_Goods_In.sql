@@ -30,6 +30,7 @@ BEGIN
         WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                              , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                              , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                             , zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                               );
       --WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
       --                                                      );
