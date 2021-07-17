@@ -303,6 +303,7 @@ BEGIN
                                                                    , inOperDate   := CASE WHEN vbStartDate_plTo_find = zc_DateStart() THEN vbOperDate ELSE vbStartDate_plTo_find END
                                                                    , inValue      := ioOperPriceListTo
                                                                    , inIsLast     := TRUE
+                                                                   , inIsDiscountDelete:= FALSE
                                                                    , inSession    := inSession
                                                                     );
          ELSE

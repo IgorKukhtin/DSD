@@ -418,6 +418,7 @@ BEGIN
                                                                , inOperDate   := zc_DateStart()
                                                                , inValue      := inOperPriceList
                                                                , inIsLast     := TRUE
+                                                               , inIsDiscountDelete:= FALSE
                                                                , inSession    := inUserId :: TVarChar
                                                                 );
      END IF;

@@ -56,6 +56,7 @@ BEGIN
                                                         , inOperDate    := inOperDate    ::TDateTime  -- Дата действия цены
                                                         , inValue       := ioValue       ::TFloat     -- Цена
                                                         , inIsLast      := inIsLast      ::Boolean    --
+                                                        , inIsDiscountDelete:= FALSE
                                                         , inSession     := inSession     ::TVarChar    -- сессия пользователя
                                                         ) AS tmp;
   ELSE

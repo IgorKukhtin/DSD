@@ -61,13 +61,13 @@ BEGIN
      -- таблица остатков
      CREATE TEMP TABLE _tmpData (UnitId Integer, UnitName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, LabelName TVarChar, GoodsInfoName TVarChar
                                , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupId_parent Integer, PartnerName TVarChar
-                               , BrandName TVarChar, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar, CurrencyName_curr TVarChar
+                               , BrandName TVarChar, PeriodId Integer, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar, CurrencyName_curr TVarChar
                                , Amount TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
                                , OperPriceList_grn TFloat, OperPriceList_grn_curr TFloat, OperPriceList_grn_curr_disc TFloat
                                , AmountCurrency TFloat, AmountCurrency_curr TFloat, DiscountTax TFloat
                                 ) ON COMMIT DROP;
      INSERT INTO _tmpData (UnitId, UnitName, GoodsId, GoodsCode, GoodsName, LabelName, GoodsInfoName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
-                         , PartnerName, BrandName, PeriodName, PeriodYear, SizeName, CurrencyName, CurrencyName_curr
+                         , PartnerName, BrandName, PeriodId, PeriodName, PeriodYear, SizeName, CurrencyName, CurrencyName_curr
                          , Amount, OperPriceList, OperPriceList_curr
                          , OperPriceList_grn, OperPriceList_grn_curr, OperPriceList_grn_curr_disc
                          , AmountCurrency, AmountCurrency_curr, DiscountTax)
@@ -266,6 +266,7 @@ BEGIN
           , Object_Parent.Id                                        AS GoodsGroupId_parent -- categoryId
           , zfStrToXmlStr (Object_Partner.ValueData)    :: TVarChar AS PartnerName
           , zfStrToXmlStr (Object_Brand.ValueData)      :: TVarChar AS BrandName
+          , Object_Period.Id                                        AS PeriodId
           , Object_Period.ValueData                                 AS PeriodName
           , tmpContainer.PeriodYear                                 AS PeriodYear
           , Object_GoodsSize.ValueData                              AS SizeName
@@ -453,7 +454,10 @@ BEGIN
                   -- последняя цена в грн
                 , _tmpData.OperPriceList_grn_curr
                   -- последняя цена в грн с учетом сезонной скидки
-                , _tmpData.OperPriceList_grn_curr_disc
+                , CASE WHEN _tmpData.PeriodYear = '2021' AND _tmpData.PeriodId = 1074 -- Весна-Лето
+                            THEN CAST (_tmpData.OperPriceList_grn_curr_disc * 0.8 AS NUMERIC (16, 0))
+                       ELSE _tmpData.OperPriceList_grn_curr_disc
+                  END AS OperPriceList_grn_curr_disc
 
                  -- курс валют - первая цена
                 , _tmpData.CurrencyName
@@ -473,6 +477,7 @@ BEGIN
                   , _tmpData.SizeName
                   , _tmpData.GoodsGroupId
                   , _tmpData.BrandName
+                  , _tmpData.PeriodId
                   , _tmpData.PeriodName
                   , _tmpData.PeriodYear
                   , _tmpData.LabelName
