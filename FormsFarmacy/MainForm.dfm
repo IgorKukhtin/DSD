@@ -4419,6 +4419,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_RemainsCovid_19: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074'  '#1076#1083#1103' '#1044#1077#1088#1083#1110#1082#1089#1083#1091#1078#1073#1080'(Covid-19)'
+      FormName = 'TReport_RemainsCovid_19Form'
+      FormNameParam.Value = 'TReport_RemainsCovid_19Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5127,6 +5138,9 @@
       end
       object N301: TMenuItem
         Action = actReport_Check_SetErasedUser
+      end
+      object Covid191: TMenuItem
+        Action = actReport_RemainsCovid_19
       end
     end
     object N36: TMenuItem [5]

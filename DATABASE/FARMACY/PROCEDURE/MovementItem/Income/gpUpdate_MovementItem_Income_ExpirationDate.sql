@@ -18,11 +18,11 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
      vbUserId := lpGetUserBySession (inSession);
 
-    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
-    THEN
-      RAISE EXCEPTION 'Ошибка. У вас нет прав выполнять эту операцию.';     
-    END IF;     
+--    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+--              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+--    THEN
+--      RAISE EXCEPTION 'Ошибка. У вас нет прав выполнять эту операцию.';     
+--    END IF;     
 
     -- определяется
     SELECT 

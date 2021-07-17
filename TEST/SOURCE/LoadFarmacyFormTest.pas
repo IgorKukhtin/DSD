@@ -1002,10 +1002,16 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsCovid_19Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsCovid_19Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsCovid_19DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsCovid_19DialogForm');
+
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SetErasedUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SetErasedUserForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_DynamicsOrdersEICForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_DynamicsOrdersEICForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_DynamicsOrdersEICForm');
 
 
@@ -1647,11 +1653,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailDialogForm');
 
     // средний чек
-}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
- {
+
     //Отчет Ценовая интервенция
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');

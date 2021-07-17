@@ -1051,7 +1051,9 @@ uses
   TopicsTestingTuning in '..\..\FormsFarmacy\Guides\TopicsTestingTuning.pas' {TopicsTestingTuningForm: TParentForm},
   TextDialog in '..\..\FormsFarmacy\Guides\TextDialog.pas' {TextDialogForm: TParentForm},
   CheckCombine in '..\..\FormsFarmacy\Document\CheckCombine.pas' {CheckCombineForm: TParentForm},
-  Report_TestingTuning_Manual in '..\..\FormsFarmacy\Report\Report_TestingTuning_Manual.pas' {Report_TestingTuning_ManualForm: TParentForm};
+  Report_TestingTuning_Manual in '..\..\FormsFarmacy\Report\Report_TestingTuning_Manual.pas' {Report_TestingTuning_ManualForm: TParentForm},
+  Report_RemainsCovid_19Dialog in '..\..\FormsFarmacy\Report\Report_RemainsCovid_19Dialog.pas' {Report_RemainsCovid_19DialogForm: TParentForm},
+  Report_RemainsCovid_19 in '..\..\FormsFarmacy\Report\Report_RemainsCovid_19.pas' {Report_RemainsCovid_19Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

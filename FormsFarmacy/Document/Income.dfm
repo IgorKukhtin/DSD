@@ -3922,7 +3922,7 @@
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

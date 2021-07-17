@@ -695,7 +695,9 @@ initialization
   RegisterClass (TdsdFTP);
   RegisterClass (TdsdDblClickAction);
   RegisterClass (TdsdSendSMSAction);
+  RegisterClass (TdsdSendSMSCPAAction);
   RegisterClass (TdsdSetFocusedAction);
+  RegisterClass (TdsdLoadListValuesFileAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
