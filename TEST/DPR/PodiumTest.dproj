@@ -1189,6 +1189,17 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountPeriodPodiumItem.pas">
+				<Form>DiscountPeriodPodiumItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItem.pas">
+				<Form>DiscountPeriodGoodsPodiumItemForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItemEdit.pas">
+				<Form>DiscountPeriodGoodsPodiumItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

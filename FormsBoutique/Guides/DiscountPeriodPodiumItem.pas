@@ -104,6 +104,14 @@ type
     ExecuteDialogPersent: TExecuteDialog;
     FormParams: TdsdFormParams;
     cbSize: TcxCheckBox;
+    cxLabel9: TcxLabel;
+    edPersentNext: TcxCurrencyEdit;
+    ExecuteDialogPersentNext: TExecuteDialog;
+    spInsertUpdateListNext: TdsdStoredProc;
+    macUpdateAllNext: TMultiAction;
+    macUpdatePersentNext: TMultiAction;
+    spUpdatePersentNext: TdsdExecStoredProc;
+    bbUpdateAllNext: TdxBarButton;
   private
     { Private declarations }
   public
