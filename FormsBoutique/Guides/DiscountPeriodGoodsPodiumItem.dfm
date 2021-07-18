@@ -57,9 +57,20 @@ object DiscountPeriodGoodsPodiumItemForm: TDiscountPeriodGoodsPodiumItemForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object Price: TcxGridDBColumn
+      object ValuePrice: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'ValuePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 80
+      end
+      object ValueNextPrice: TcxGridDBColumn
+        Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.)'
+        DataBinding.FieldName = 'ValueNextPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -285,8 +296,8 @@ object DiscountPeriodGoodsPodiumItemForm: TDiscountPeriodGoodsPodiumItemForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TDiscountPeriodGoodsItemEditForm'
-      FormNameParam.Value = 'TDiscountPeriodGoodsItemEditForm'
+      FormName = 'TDiscountPeriodGoodsPodiumItemEditForm'
+      FormNameParam.Value = 'TDiscountPeriodGoodsPodiumItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -339,8 +350,8 @@ object DiscountPeriodGoodsPodiumItemForm: TDiscountPeriodGoodsPodiumItemForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TDiscountPeriodGoodsItemEditForm'
-      FormNameParam.Value = 'TDiscountPeriodGoodsItemEditForm'
+      FormName = 'TDiscountPeriodGoodsPodiumItemEditForm'
+      FormNameParam.Value = 'TDiscountPeriodGoodsPodiumItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

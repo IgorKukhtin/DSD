@@ -110,8 +110,8 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 22
-    Top = 51
+    Left = 14
+    Top = 59
   end
   object ActionList: TActionList
     Left = 275

@@ -7,10 +7,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_DiscountPeriodItem_Value() RETU
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
    SELECT zc_ObjectHistory_DiscountPeriodItem(), 'zc_ObjectHistoryFloat_DiscountPeriodItem_Value','% сезонной скидки' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_DiscountPeriodItem_Value());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+   SELECT zc_ObjectHistory_DiscountPeriodItem(), 'zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext','% сезонной скидки (дополнительный)' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext());
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 16.07.21         * zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext
  28.04.17         * add zc_ObjectHistoryFloat_DiscountPeriodItem_Value
  24.02.16         * add zc_ObjectHistoryFloat_Price_MCSPeriod
                       , zc_ObjectHistoryFloat_Price_MCSDay

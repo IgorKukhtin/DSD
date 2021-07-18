@@ -343,7 +343,10 @@ uses
   Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm},
   DatePeriodDialog in '..\..\FormsBoutique\System\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm},
   SmsSettings in '..\..\FormsBoutique\Guides\SmsSettings.pas',
-  SmsSettingsEdit in '..\..\FormsBoutique\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm};
+  SmsSettingsEdit in '..\..\FormsBoutique\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm},
+  DiscountPeriodPodiumItem in '..\..\FormsBoutique\Guides\DiscountPeriodPodiumItem.pas' {DiscountPeriodPodiumItemForm: TParentForm},
+  DiscountPeriodGoodsPodiumItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItem.pas' {DiscountPeriodGoodsPodiumItemForm: TParentForm},
+  DiscountPeriodGoodsPodiumItemEdit in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItemEdit.pas' {DiscountPeriodGoodsPodiumItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
