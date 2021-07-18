@@ -344,11 +344,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_In() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_In', 'Дата принятия на работу' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_In');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectDate_User_GUID() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_GUID'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_GUID', 'дата/время окончания использования UUID-сессии' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_GUID');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_SMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_SMS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_SMS', 'дата/время отправки SMS для идентификации' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_SMS');
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_MemberSP_HappyDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MemberSP_HappyDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)

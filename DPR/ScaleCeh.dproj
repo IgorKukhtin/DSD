@@ -74,11 +74,11 @@
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<Icon_MainIcon>0201.ico</Icon_MainIcon>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.84;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>84</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.87;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>87</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_EXP.ini ves=21</Debugger_RunParams>
+			<Debugger_RunParams>Scale_CEH.ini ves=21</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -260,6 +260,12 @@
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+			<DCCReference Include="..\Scale\GuidePersonal.pas">
+				<Form>GuidePersonalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
+				<Form>DialogPswSmsForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

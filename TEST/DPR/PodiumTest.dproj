@@ -1187,6 +1187,9 @@
 				<Form>SmsSettingsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
+				<Form>DialogPswSmsForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -324,7 +324,8 @@ uses
   SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm},
   Report_Goods_RemainsCurrent_onDate in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas' {Report_Goods_RemainsCurrent_onDateForm: TParentForm},
   Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm},
-  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

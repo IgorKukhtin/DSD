@@ -4796,19 +4796,19 @@ begin
      (FLoginParam.Value = '') or
      (FPasswordParam.Value = '') then
   begin
-    ShowMessage('Не заполнены Host, Login или Password.');
+    ShowMessage('Св-во.Не заполнены Host, Login или Password.');
     Exit;
   end;
 
   if FPhonesParam.Value = '' then
   begin
-    ShowMessage('Не заполнен номер телефона.');
+    ShowMessage('Св-во.Не заполнен номер телефона.');
     Exit;
   end;
 
   if FMessageParam.Value = '' then
   begin
-    ShowMessage('Не заполнен текст SMS.');
+    ShowMessage('Св-во.Не заполнен текст SMS.');
     Exit;
   end;
 

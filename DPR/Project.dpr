@@ -103,7 +103,8 @@ uses
   Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201112 in '..\SOURCE\MeDOC\Medoc_J1201112.pas',
-  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas';
+  Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

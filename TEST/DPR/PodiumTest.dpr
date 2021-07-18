@@ -343,7 +343,8 @@ uses
   Report_GoodsMI_AccountPodium in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountPodium.pas' {Report_GoodsMI_AccountPodiumForm: TParentForm},
   DatePeriodDialog in '..\..\FormsBoutique\System\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm},
   SmsSettings in '..\..\FormsBoutique\Guides\SmsSettings.pas',
-  SmsSettingsEdit in '..\..\FormsBoutique\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm};
+  SmsSettingsEdit in '..\..\FormsBoutique\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm},
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
