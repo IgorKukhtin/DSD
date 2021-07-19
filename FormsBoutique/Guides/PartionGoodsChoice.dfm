@@ -201,16 +201,16 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Width = 50
       end
       object DiscountTaxNext: TcxGridDBColumn
-        Caption = '% '#1089#1082'. '#1076#1086#1087'. '#1057#1077#1079#1086#1085
+        Caption = '% '#1089#1082'.2 '#1057#1077#1079#1086#1085
         DataBinding.FieldName = 'DiscountTaxNext'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+        HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Options.Editing = False
-        Width = 70
+        Width = 55
       end
       object OperPriceList_disc: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' (% '#1089#1082'.)'
