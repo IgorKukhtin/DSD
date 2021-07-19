@@ -393,7 +393,7 @@ object SalePodiumForm: TSalePodiumForm
     object cxLabel20: TcxLabel
       Left = 301
       Top = 85
-      Caption = #1055#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1057#1052#1057
+      Caption = #1055#1072#1088#1086#1083#1100' SMS'
     end
     object edKeySMS: TcxCurrencyEdit
       Left = 302
@@ -1043,6 +1043,18 @@ object SalePodiumForm: TSalePodiumForm
             HeaderHint = '% '#1057#1082#1080#1076#1082#1080' '#1057#1077#1079#1086#1085
             Options.Editing = False
             Width = 35
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1057#1082'.2'
+            DataBinding.FieldName = 'ChangePercentNext'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' '#1057#1077#1079#1086#1085
+            Options.Editing = False
+            Width = 40
           end
           object isChecked: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
@@ -3435,6 +3447,15 @@ object SalePodiumForm: TSalePodiumForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioChangePercentNext'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentNext'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioSummChangePercent'
         Value = Null
         Component = MasterCDS
@@ -4438,6 +4459,13 @@ object SalePodiumForm: TSalePodiumForm
       end
       item
         Name = 'ioChangePercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioChangePercentNext'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput

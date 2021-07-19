@@ -235,6 +235,7 @@ type
     actInsert_SMS: TdsdExecStoredProc;
     bbInsert_SMS: TdxBarButton;
     actSendSMSAction: TdsdSendSMSAction;
+    ChangePercentNext: TcxGridDBColumn;
   private
   public
   end;
