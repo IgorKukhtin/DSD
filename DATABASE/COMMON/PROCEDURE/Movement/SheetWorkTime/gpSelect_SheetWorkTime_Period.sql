@@ -1,15 +1,21 @@
 -- Function: gpSelect_SheetWorkTime_Period()
 
--- DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period22 (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period22(
+CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inJuridicalBasisId  Integer   , -- гл. юр.лицо
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete Boolean, MovementId Integer
+RETURNS TABLE (OperDate TDateTime
+             , InvNumber_detail Integer
+             , OperDate_detail TDateTime
+             , UnitId Integer, UnitName TVarChar, isComplete Boolean, MovementId Integer
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -74,7 +80,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpList AS (/*SELECT DISTINCT ObjectLink.ObjectId AS UnitId
                         FROM ObjectLink
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -100,32 +106,63 @@ BEGIN
                        )*/
 
           , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
-                                          , CASE WHEN vbUserId = zfCalc_UserAdmin() :: Integer THEN Movement.Id ELSE 0 END AS MovementId
+                                          , Movement.InvNumber AS InvNumber_detail
+                                          , Movement.OperDate  AS OperDate_detail
+                                          , (Object_Insert.ValueData)             AS InsertName
+                                          , (MovementDate_Insert.ValueData)       AS InsertDate
+                                          , (Object_Update.ValueData)             AS UpdateName
+                                          , (MovementDate_Update.ValueData)       AS UpdateDate
+                                        --, CASE WHEN vbUserId = zfCalc_UserAdmin() :: Integer THEN Movement.Id ELSE 0 END AS MovementId
+                                        --, 0 AS MovementId
+                                          , Movement.Id                           AS MovementId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                 LEFT JOIN MovementDate AS MovementDate_Insert
+                                                        ON MovementDate_Insert.MovementId = Movement.Id
+                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                 LEFT JOIN MovementDate AS MovementDate_Update
+                                                        ON MovementDate_Update.MovementId = Movement.Id
+                                                       AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                              ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Update
+                                                              ON MovementLinkObject_Update.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
+                                 LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
                                  LEFT JOIN tmpList ON tmpList.UnitId = MovementLinkObject_Unit.ObjectId
                             WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                               AND (tmpList.UnitId > 0 OR vbMemberId = 0)
                            )
           , tmpPeriod AS (SELECT tmp.OperDate, tmpList.UnitId
                           FROM (SELECT generate_series (vbStartDate, vbEndDate, '1 MONTH' :: INTERVAL) AS OperDate) AS tmp
-                               LEFT JOIN tmpList ON 1 =1 
+                               LEFT JOIN tmpList ON 1 =1
                          )
        -- Результат
        SELECT COALESCE (tmpPeriod.OperDate, tmpMovement.OperDate) :: TDateTime AS OperDate
+           , zfConvert_StringToNumber (tmpMovement.InvNumber_detail) AS InvNumber_detail
+           , COALESCE (tmpMovement.OperDate_detail, tmpPeriod.OperDate) :: TDateTime AS OperDate_detail
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
            , CASE WHEN tmpMovement.UnitId IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isComplete
            , tmpMovement.MovementId
+           , tmpMovement.InsertName
+           , tmpMovement.InsertDate
+           , tmpMovement.UpdateName
+           , tmpMovement.UpdateDate
        FROM tmpPeriod
             FULL JOIN tmpMovement ON tmpMovement.UnitId   = tmpPeriod.UnitId
                                  AND tmpMovement.OperDate = tmpPeriod.OperDate
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpPeriod.UnitId, tmpMovement.UnitId)
       ;
-  
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -137,8 +174,47 @@ $BODY$
  23.03.16                                        * all
  01.03.16         * add isComplete
  28.12.13                                        * add zc_ObjectLink_StaffList_Unit
-01.10.13         *
+ 01.10.13         *
 */
 
+/*
+with tmp AS (select Movement.Id AS MovementId
+     , ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementItemProtocol.Id ASC)  AS Ord_ins
+     , ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementItemProtocol.Id DESC) AS Ord_upd
+, MovementItemProtocol.*
+
+       FROM Movement
+            JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+            JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+
+       WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+         AND Movement.OperDate BETWEEN '01.01.2021' AND '01.01.2022'
+     )
+, res as (
+select distinct tmp.MovementId
+, tmp_ins.OperDate as OperDate_ins
+, tmp_upd.OperDate as OperDate_upd
+, tmp_ins.UserId   AS UserId_ins
+, tmp_upd.UserId   AS UserId_upd
+, tmp_ins.Id       AS Id_ins
+, tmp_upd.Id       AS Id_upd
+from tmp
+     join tmp as tmp_ins on tmp_ins.MovementId = tmp.MovementId AND tmp_ins.Ord_ins = 1
+     join tmp as tmp_upd on tmp_upd.MovementId = tmp.MovementId AND tmp_upd.Ord_upd = 1
+)
+
+select res.*
+         -- сохранили свойство
+--         , lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), res.MovementId, OperDate_ins)
+         -- сохранили свойство
+--         , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), res.MovementId, UserId_ins)
+         -- сохранили свойство
+--         , case when Id_ins < Id_upd then lpInsertUpdate_MovementDate (zc_MovementDate_Update(), res.MovementId, OperDate_upd) else null end
+         -- сохранили свойство
+--         , case when Id_ins < Id_upd then lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), res.MovementId, UserId_upd) else null end
+
+from res
+-- where Id_ins < Id_upd
+*/
 -- тест
 -- SELECT * FROM gpSelect_SheetWorkTime_Period (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inSession:= '5')

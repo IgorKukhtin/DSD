@@ -137,12 +137,13 @@ BEGIN
                                                  AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
                                                  AND MovementLinkObject_Unit.ObjectId = inUnitId
                      WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate = inOperDate
+                       AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
                     );
  
     -- сохранили <Документ>
     IF COALESCE (vbMovementId, 0) = 0
     THEN
-        vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
+        vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId, vbUserId);
     END IF;
 
     -- Поиск MovementItemId
@@ -173,16 +174,16 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (inMovementItemId      := vbMovementItemId  -- Ключ объекта <Элемент документа>
-                                                     , inMovementId          := vbMovementId      -- ключ Документа
-                                                     , inMemberId            := inMemberId        -- Физ. лицо
-                                                     , inPositionId          := inPositionId      -- Должность
-                                                     , inPositionLevelId     := inPositionLevelId -- Разряд
-                                                     , inPersonalGroupId     := inPersonalGroupId -- Группировка Сотрудника
-                                                     , inStorageLineId       := inStorageLineId   -- линия производства
-                                                     , inAmount              := vbValue           -- Количество часов факт
-                                                     , inWorkTimeKindId      := ioTypeId          -- Типы рабочего времени
-                                                      );
+    vbMovementItemId:= lpInsertUpdate_MovementItem_SheetWorkTime (inMovementItemId      := vbMovementItemId  -- Ключ объекта <Элемент документа>
+                                                                , inMovementId          := vbMovementId      -- ключ Документа
+                                                                , inMemberId            := inMemberId        -- Физ. лицо
+                                                                , inPositionId          := inPositionId      -- Должность
+                                                                , inPositionLevelId     := inPositionLevelId -- Разряд
+                                                                , inPersonalGroupId     := inPersonalGroupId -- Группировка Сотрудника
+                                                                , inStorageLineId       := inStorageLineId   -- линия производства
+                                                                , inAmount              := vbValue           -- Количество часов факт
+                                                                , inWorkTimeKindId      := ioTypeId          -- Типы рабочего времени
+                                                                 );
 
     -- 
     ioValue := zfGet_ViewWorkHour (vbValue, ioTypeId);
@@ -228,20 +229,31 @@ BEGIN
                        ); 
 
 
+    -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), vbMovementId, CURRENT_TIMESTAMP);
+    -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), vbMovementId, vbUserId);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
-if vbUserId = 5 
+if vbUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>'
+    RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
                       , zfConvert_DateToString (inOperDate)
                       , inUnitId
                       , inMemberId
                       , inPositionId
                       , zfConvert_DateToString (vbEndDate)
+                      , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
+                      , vbMovementItemId
                        ;
 end if;
 
+if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
+then
+    RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)', vbMovementItemId;
+end if;
 
 END;
 $BODY$

@@ -3,7 +3,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
   ClientHeight = 427
-  ClientWidth = 484
+  ClientWidth = 686
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,14 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 484
+    Width = 686
     Height = 50
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
       Left = 116
       Top = 3
-      EditValue = 42370d
+      EditValue = 44197d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.InputKind = ikMask
@@ -39,7 +39,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     object deEnd: TcxDateEdit
       Left = 116
       Top = 27
-      EditValue = 42370d
+      EditValue = 44197d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.InputKind = ikStandard
@@ -79,7 +79,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 76
-    Width = 484
+    Width = 686
     Height = 351
     Align = alClient
     TabOrder = 0
@@ -165,29 +165,49 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object OperDate: TcxGridDBColumn
+      object InvNumber_detail: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'InvNumber_detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Options.Filtering = False
+        Width = 75
+      end
+      object OperDate_detail: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate_detail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Options.Filtering = False
+        Width = 75
+      end
+      object OperDate: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094
         DataBinding.FieldName = 'OperDate'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.DisplayFormat = 'mmmm yyyy'
         Properties.ReadOnly = True
         Properties.SaveTime = False
         Properties.ShowTime = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 152
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 306
+        Width = 200
       end
       object isComplete: TcxGridDBColumn
         Caption = #1057#1086#1093#1088#1072#1085#1077#1085
@@ -195,7 +215,37 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
+      end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 138
+      end
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 101
+      end
+      object UpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -368,7 +418,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       GuiParams = <
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -480,10 +530,13 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

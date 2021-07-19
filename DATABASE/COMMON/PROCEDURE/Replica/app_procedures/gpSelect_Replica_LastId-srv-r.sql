@@ -123,3 +123,7 @@ $BODY$
   ROWS 1000;
 ALTER FUNCTION _replica.gpselect_replica_lastid(bigint, bigint)
   OWNER TO admin;
+
+-- тест
+-- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
+-- SELECT NextId, NextId -6708805066, * FROM _replica.gpSelect_Replica_LastId (6708805066, 100000)

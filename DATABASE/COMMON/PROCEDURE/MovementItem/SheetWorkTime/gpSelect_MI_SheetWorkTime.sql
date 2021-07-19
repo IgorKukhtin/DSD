@@ -83,7 +83,8 @@ BEGIN
                                    END AS Color_Calc
                             FROM tmpOperDate
                                  JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
-                                               AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                              AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()

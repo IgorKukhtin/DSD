@@ -273,6 +273,7 @@ begin
 
            ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
            ParamByName('isSticker_Ceh').asBoolean:= DataSet.FieldByName('isSticker_Ceh').asBoolean;
+           ParamByName('isSticker_KVK').asBoolean:= DataSet.FieldByName('isSticker_KVK').asBoolean;
 
            ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
            ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
@@ -295,6 +296,8 @@ begin
            ParamByName('OrderExternal_DescId').AsInteger   := DataSet.FieldByName('MovementDescId_Order').asInteger;
            ParamByName('OrderExternal_InvNumber').asString := DataSet.FieldByName('InvNumber_Order').asString;
            ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+
+           ParamByName('isKVK').asBoolean:= DataSet.FieldByName('isKVK').asBoolean;
 
          end;
 
@@ -833,6 +836,7 @@ begin
            Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
            Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
            Params.AddParam('inStorageLineId', ftInteger, ptInput, execParamsMI.ParamByName('StorageLineId').AsInteger);
+           Params.AddParam('inPersonalId_KVK', ftInteger, ptInput, execParamsMovement.ParamByName('PersonalId_KVK').AsInteger);
            Params.AddParam('inIsStartWeighing', ftBoolean, ptInput, execParamsMI.ParamByName('isStartWeighing').AsBoolean);
            Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
            Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);
@@ -849,6 +853,7 @@ begin
            Params.AddParam('inWeightOther', ftFloat, ptInput, execParamsMI.ParamByName('WeightOther').AsFloat);
            Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
            Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
+           Params.AddParam('inNumberKVK', ftString, ptInput, execParamsMovement.ParamByName('NumberKVK').AsString);
            Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
            //try
              Execute;

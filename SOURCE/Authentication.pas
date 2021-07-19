@@ -162,15 +162,19 @@ class function TAuthentication.CheckLogin(pStorage: IStorage;
 var IP_str:string;
     N: IXMLNode;
     pXML : String;
-    BoutiqueName, IniFileName: String;
+    BoutiqueName, IniFileName, S: String;
     f: TIniFile;
     isBoutique, isProject : Boolean;
 begin
+   //ловим ProjectTest.exe
+   S:= ExtractFileName(ParamStr(0));
    //
    isBoutique:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
               or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'));
    //
-   isProject:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Project.exe'));
+   isProject:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Project.exe'))
+           and (UpperCase(S) <> UpperCase('ProjectTest.exe'))
+              ;
 
   {создаем XML вызова процедуры на сервере}
   if isBoutique = TRUE

@@ -13,6 +13,14 @@ $BODY$
  DECLARE 
    vbProtocolXML TBlob;
 BEGIN
+
+  -- Проверка
+  IF COALESCE (inMovementItemId, 0) = 0
+  THEN
+      RAISE EXCEPTION 'Ошибка.Протокол не сохранен (%)', inMovementItemId;
+  END IF;
+
+
   -- Подготавливаем XML для записи в протокол
   SELECT '<XML>' || STRING_AGG (D.FieldXML, '') || '</XML>' INTO vbProtocolXML
   FROM

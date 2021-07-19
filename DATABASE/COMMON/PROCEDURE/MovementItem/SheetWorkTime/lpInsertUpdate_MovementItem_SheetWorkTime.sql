@@ -15,14 +15,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
     IN inStorageLineId       Integer   , -- линия произ-ва
     IN inAmount              TFloat    , -- Количество часов факт
     IN inWorkTimeKindId      Integer     -- Типы рабочего времени
-)                              
-RETURNS Integer AS
+)
+RETURNS Integer
+AS
 $BODY$
 BEGIN
-     
+
      -- сохранили <Элемент документа>
      inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inMemberId, inMovementId, inAmount, NULL);
-     
+
      -- сохранили связь с <Группировки Сотрудников>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), InMovementItemId, inPersonalGroupId);
      -- сохранили связь с <Должностью>
@@ -35,6 +36,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), InMovementItemId, inStorageLineId);
 
      RETURN inMovementItemId;
+
  END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -45,8 +47,8 @@ LANGUAGE PLPGSQL VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  25.05.17         * add StorageLine
  07.01.14                         * Replace inPersonalId <> inMemberId
- 25.11.13                         * 
- 03.10.13         * 
+ 25.11.13                         *
+ 03.10.13         *
 
 */
 

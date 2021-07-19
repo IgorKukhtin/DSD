@@ -65,6 +65,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    OperDate_detail: TcxGridDBColumn;
+    InvNumber_detail: TcxGridDBColumn;
   private
   public
   end;

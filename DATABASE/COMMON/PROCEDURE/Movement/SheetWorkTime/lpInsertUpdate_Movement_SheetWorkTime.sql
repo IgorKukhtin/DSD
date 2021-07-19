@@ -1,20 +1,27 @@
 -- Function: lpInsertUpdate_Movement_SheetWorkTime(Integer, TVarChar, TDateTime, Integer, TVarChar)
 
--- DROP FUNCTION lpInsertUpdate_Movement_SheetWorkTime (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SheetWorkTime (Integer, TVarChar, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SheetWorkTime (Integer, TVarChar, TDateTime, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SheetWorkTime(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inUnitId              Integer     -- Подразделения
+    IN inUnitId              Integer   , -- Подразделения
+    IN inUserId              Integer     -- пользователь
 )                              
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
      IF inInvNumber = '' THEN
         inInvNumber := lfGet_InvNumber (0, zc_Movement_SheetWorkTime())::TVarChar;
      END IF;
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SheetWorkTime(), inInvNumber, inOperDate, NULL);
@@ -23,7 +30,20 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     ELSE
+         -- сохранили свойство
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+     END IF;
 
 END;
 $BODY$

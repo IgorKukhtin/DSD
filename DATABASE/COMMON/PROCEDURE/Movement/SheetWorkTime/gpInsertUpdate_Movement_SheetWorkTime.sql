@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_SheetWorkTime(Integer, TVarChar, TDateTime, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Movement_SheetWorkTime (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SheetWorkTime (Integer, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SheetWorkTime(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SheetWorkTime(
     IN inUnitId              Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -18,7 +19,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     PERFORM lpInsertUpdate_Movement_SheetWorkTime(ioId, inInvNumber, inOperDate, inUnitId);
+     PERFORM lpInsertUpdate_Movement_SheetWorkTime (ioId, inInvNumber, inOperDate, inUnitId, vbUserId);
 
 END;
 $BODY$
