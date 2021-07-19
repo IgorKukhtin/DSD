@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
     IN inIsPay                          Boolean   , -- добавить с оплатой
  INOUT ioAmount                         TFloat    , -- Количество
  INOUT ioChangePercent                  TFloat    , -- *** - % Скидки
+ INOUT ioChangePercentNext              TFloat    , -- *** - % Скидки
 
  INOUT ioSummChangePercent              TFloat    , -- *** - Дополнительная скидка в продаже ГРН
  INOUT ioSummChangePercent_curr         TFloat    , -- *** - Дополнительная скидка в продаже в валюте***
@@ -352,10 +353,11 @@ BEGIN
                           )
                    )
          THEN
-             SELECT tmp.ChangePercent, tmp.DiscountSaleKindId INTO ioChangePercent, ioDiscountSaleKindId
+             SELECT tmp.ChangePercent, tmp.ChangePercentNext, tmp.DiscountSaleKindId INTO ioChangePercent, ioChangePercentNext, ioDiscountSaleKindId
              FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, ioGoodsId, vbClientId, vbUserId) AS tmp;
      ELSE
          ioChangePercent     := 0;
+         ioChangePercentNext := 0;
          ioDiscountSaleKindId:= 9; -- Нет скидки
      END IF;
 
@@ -387,7 +389,7 @@ BEGIN
           IF COALESCE (ioId, 0) = 0 AND vbIsOperPriceListReal = TRUE
           THEN
               -- на самом деле возвращается в грид как Цена факт ГРН
-              ioOperPriceList := zfCalc_SummChangePercent (1, vbOperPriceList_pl, ioChangePercent);
+              ioOperPriceList := zfCalc_SummChangePercentNext (1, vbOperPriceList_pl, ioChangePercent, ioChangePercentNext);
           END IF;
      
      END IF;
@@ -411,10 +413,10 @@ BEGIN
                   ioSummChangePercent_curr:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent_curr()), 0);
              ELSE
                  -- посчитали если PriceListReal
-                 ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
+                 ioSummChangePercent     := zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl, ioChangePercent, ioChangePercentNext)
                                           - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
                  --
-                 ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
+                 ioSummChangePercent_curr:= zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext)
                                             -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
                                           - zfCalc_SummPriceList (ioAmount, zfCalc_CurrencySumm (ioOperPriceList, zc_Currency_Basis(), zc_Currency_EUR(), vbCurrencyValue_pl, vbParValue_pl));
              END IF;
@@ -425,10 +427,10 @@ BEGIN
          IF vbIsOperPriceListReal = TRUE
          THEN 
               -- посчитали если PriceListReal
-              ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
+              ioSummChangePercent     := zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl, ioChangePercent, ioChangePercentNext)
                                        - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
               --
-              ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
+              ioSummChangePercent_curr:= zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext)
                                          -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
                                        - zfCalc_SummPriceList (ioAmount, zfCalc_CurrencySumm (ioOperPriceList, zc_Currency_Basis(), zc_Currency_EUR(), vbCurrencyValue_pl, vbParValue_pl));
          END IF;
@@ -451,12 +453,12 @@ BEGIN
      -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
      IF vbIsOperPriceListReal = FALSE
      THEN
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent,      0);
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl,   ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent,      0);
+         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0);
      ELSE
          -- !!!режим!!!
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent, 0);
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_pl,   ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent, 0);
+         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercentNext (ioAmount, vbOperPriceList_curr, ioChangePercent, ioChangePercentNext) + COALESCE (ioSummChangePercent_curr, 0);
      END IF;
 
      -- вернули Итого оплата в продаже ГРН, для грида
@@ -516,6 +518,7 @@ BEGIN
                                               , inDiscountSaleKindId    := ioDiscountSaleKindId
                                               , inAmount                := ioAmount
                                               , inChangePercent         := COALESCE (ioChangePercent, 0)
+                                              , inChangePercentNext     := COALESCE (ioChangePercentNext, 0)
                                               -- , inSummChangePercent     := COALESCE (ioSummChangePercent, 0)
                                               , inOperPrice             := COALESCE (outOperPrice, 0)
                                               , inCountForPrice         := COALESCE (outCountForPrice, 0)
