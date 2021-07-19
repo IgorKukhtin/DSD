@@ -48,6 +48,7 @@ RETURNS TABLE (Id                   Integer
              , isErased             Boolean
              , isArc                Boolean
              , DiscountTax          TFloat
+             , DiscountTaxNext      TFloat
              , PartionId            Integer
              , SybaseId             Integer
              , Color_Calc           Integer
@@ -227,7 +228,7 @@ BEGIN
               -- Цена в прайсе 
             , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END :: TFloat AS OperPriceList
               -- Цена прайса со скидкой
-            , zfCalc_SummChangePercent (1, COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList), tmpDiscount.DiscountTax_all) :: TFloat AS OperPriceList_disc
+            , zfCalc_SummChangePercentNext (1, COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList), tmpDiscount.DiscountTax, tmpDiscount.DiscountTaxNext) :: TFloat AS OperPriceList_disc
 
               -- Цена в прайсе - ГРН
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
