@@ -216,11 +216,6 @@ inherited Report_RemainsCovid_19Form: TReport_RemainsCovid_19Form
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-              Column = JuridicalCode
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -233,8 +228,6 @@ inherited Report_RemainsCovid_19Form: TReport_RemainsCovid_19Form
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'. '#1083#1080#1094#1072' '
             DataBinding.FieldName = 'JuridicalCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -390,7 +383,7 @@ inherited Report_RemainsCovid_19Form: TReport_RemainsCovid_19Form
     StoredProcName = 'gpReport_RemainsCovid_19'
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inOperDate'
         Value = Null
         Component = deStart
         DataType = ftDateTime
