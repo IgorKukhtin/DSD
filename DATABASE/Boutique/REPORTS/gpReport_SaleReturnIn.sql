@@ -38,6 +38,7 @@ RETURNS TABLE (MovementId          Integer
              , PeriodYear          Integer
 
              , ChangePercent       TFloat
+             , ChangePercentNext   TFloat
              , OperPriceList       TFloat
              , Amount              TFloat
              , TotalSummPriceList  TFloat
@@ -101,6 +102,7 @@ BEGIN
                      , MI_Master.Id                        AS MI_Id_Sale
                      , MI_Master.Id                        AS MI_Id
                      , COALESCE (MIFloat_ChangePercent.ValueData, 0)  AS ChangePercent
+                     , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  AS ChangePercentNext
                      , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
                      , MI_Master.Amount                               AS Amount
 
@@ -137,7 +139,10 @@ BEGIN
 
                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
-                                                 AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                                AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                 ON MIFloat_ChangePercentNext.MovementItemId = MI_Master.Id
+                                                AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                      LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -193,6 +198,7 @@ BEGIN
                          , MI_Sale.Id                          AS MI_Id_Sale
                          , MI_Master.Id                        AS MI_Id
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
+                         , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)     AS ChangePercentNext
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
                          , (MI_Master.Amount) * (-1)                             AS Amount
                          , COALESCE (MIFloat_TotalPay.ValueData, 0) * (-1)       AS TotalPay
@@ -240,6 +246,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                     ON MIFloat_ChangePercentNext.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                      ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -274,6 +283,7 @@ BEGIN
                           , tmp.MI_Id_Sale
                           , tmp.MI_Id
                           , tmp.ChangePercent
+                          , tmp.ChangePercentNext
                           , tmp.OperPriceList
                           , tmp.Amount
                           , tmp.TotalPay
@@ -303,6 +313,7 @@ BEGIN
                           , tmp.MI_Id_Sale
                           , tmp.MI_Id
                           , tmp.ChangePercent
+                          , tmp.ChangePercentNext
                           , tmp.OperPriceList
                           , tmp.Amount
                           , tmp.TotalPay
@@ -383,6 +394,7 @@ BEGIN
              , Object_PartionGoods.PeriodYear ::Integer
 
              , tmpData.ChangePercent       ::TFloat
+             , tmpData.ChangePercentNext   ::TFloat
              , tmpData.OperPriceList       ::TFloat
              , tmpData.Amount              ::TFloat
              , zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList) AS TotalSummPriceList
@@ -454,6 +466,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.07.21         *
  23.04.18         *
  10.04.18         *
  19.02.18         *

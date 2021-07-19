@@ -122,8 +122,11 @@ BEGIN
                             )
  , tmpDiscountList AS (SELECT DISTINCT tmpContainer.GoodsId FROM tmpContainer)
 
- , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
-                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+ , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Goods.ChildObjectId         AS GoodsId
+                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData     AS DiscountTax
+                        , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
+                        , (COALESCE (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData,0)
+                         + COALESCE (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData,0)) AS DiscountTax_all
                    FROM tmpDiscountList
                         INNER JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
                                               ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -140,6 +143,9 @@ BEGIN
                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                      ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                     AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_ValueNext
+                                                     ON ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                    AND ObjectHistoryFloat_DiscountPeriodItem_ValueNext.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext()
                   )
    , tmpPriceList AS (SELECT ObjectLink_Unit_PriceList.ObjectId               AS UnitId
                            , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
@@ -221,7 +227,7 @@ BEGIN
               -- Цена в прайсе 
             , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END :: TFloat AS OperPriceList
               -- Цена прайса со скидкой
-            , zfCalc_SummChangePercent (1, COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList), tmpDiscount.DiscountTax) :: TFloat AS OperPriceList_disc
+            , zfCalc_SummChangePercent (1, COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList), tmpDiscount.DiscountTax_all) :: TFloat AS OperPriceList_disc
 
               -- Цена в прайсе - ГРН
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
@@ -260,7 +266,8 @@ BEGIN
             , COALESCE (Object_PartionGoods.isErased, Object_PartionGoods_er.isErased) AS isErased
             , COALESCE (Object_PartionGoods.isArc   , Object_PartionGoods_er.isArc)    AS isArc
 
-            , COALESCE (tmpDiscount.DiscountTax, 0) :: TFloat AS DiscountTax
+            , COALESCE (tmpDiscount.DiscountTax, 0)     :: TFloat AS DiscountTax
+            , COALESCE (tmpDiscount.DiscountTaxNext, 0) :: TFloat AS DiscountTaxNext
 
             , tmpContainer.PartionId
             , Object_PartionGoods.SybaseId
@@ -326,6 +333,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+19.07.21          *
 24.03.18          *
 23.01.18          *
 29.06.17          *

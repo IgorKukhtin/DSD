@@ -33,6 +33,7 @@ RETURNS TABLE (MovementId_Partion   Integer
              , PeriodName       TVarChar
              , PeriodYear       Integer
              , ChangePercent    TFloat
+             , ChangePercentNext TFloat
              , OperPriceList    TFloat
              , Amount           TFloat
              , TotalSummPriceList     TFloat
@@ -144,6 +145,7 @@ BEGIN
 
    , tmpData_All AS (SELECT tmpData.*
                           , COALESCE (MIFloat_ChangePercent.ValueData, 0)                           AS ChangePercent
+                          , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)                       AS ChangePercentNext
                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)                           AS OperPriceList
                           , zfCalc_SummPriceList (tmpData.Amount, MIFloat_OperPriceList.ValueData ) AS TotalSummPriceList
                           , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
@@ -173,6 +175,9 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                       ON MIFloat_ChangePercent.MovementItemId = tmpData.MovementItemId_Sale
                                                      AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                      ON MIFloat_ChangePercentNext.MovementItemId = tmpData.MovementItemId_Sale
+                                                     AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                       ON MIFloat_SummChangePercent.MovementItemId = tmpData.MovementItemId_Sale
                                                      AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -234,6 +239,7 @@ BEGIN
                           , tmp.ClientId
                           , tmp.PartionId
                           , tmp.ChangePercent
+                          , tmp.ChangePercentNext
                           , tmp.OperPriceList
                           , tmp.Amount
                           , tmp.TotalSummPriceList
@@ -296,6 +302,7 @@ BEGIN
              , Object_PartionGoods.PeriodYear ::Integer
 
              , tmpData.ChangePercent            ::TFloat
+             , tmpData.ChangePercentNext        ::TFloat
              , tmpData.OperPriceList            ::TFloat
              , tmpData.Amount                   ::TFloat
              , tmpData.TotalSummPriceList       ::TFloat

@@ -6,7 +6,7 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -445,6 +445,17 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercentNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
