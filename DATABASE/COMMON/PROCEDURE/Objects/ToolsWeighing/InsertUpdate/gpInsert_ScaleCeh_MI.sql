@@ -2,7 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,8 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inGoodsId             Integer   , -- Товары
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inStorageLineId       Integer   , -- Линия пр-ва
+    IN inPersonalId_KVK      Integer   , --
     IN inIsStartWeighing     Boolean   , -- Режим начала взвешивания
-    IN inIsPartionGoodsDate  Boolean   , -- 
+    IN inIsPartionGoodsDate  Boolean   , --
     IN inOperCount           TFloat    , -- Количество
     IN inRealWeight          TFloat    , -- Реальный вес (без учета % скидки для кол-ва)
     IN inWeightTare          TFloat    , -- Вес тары
@@ -26,9 +28,10 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inWeightOther         TFloat    , -- Вес, прочее
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inBranchCode          Integer   , -- 
+    IN inNumberKVK           TVarChar  , -- № КВК
+    IN inBranchCode          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 
 RETURNS TABLE (Id        Integer
               )
@@ -82,7 +85,7 @@ BEGIN
              END IF;
              -- если все-таки втулки нет
              IF inCount < 0 THEN inCount:= 0; END IF;
-             
+
              IF (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure())
                 IN (zc_Measure_Sht() -- шт.
                    )
@@ -153,6 +156,7 @@ BEGIN
                                                                                           ELSE NULL
                                                                                      END :: TDateTime
                                                           , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN '' ELSE inPartionGoods END
+                                                          , inNumberKVK           := inNumberKVK
                                                           , inMovementItemId      := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg()) AND zfConvert_StringToNumber (inPartionGoods) > 0 THEN zfConvert_StringToNumber (inPartionGoods) ELSE 0 END
                                                           , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
                                                                                                 FROM ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -166,9 +170,9 @@ BEGIN
                                                                                           ELSE inGoodsKindId
                                                                                      END
                                                           , inStorageLineId       := inStorageLineId
+                                                          , inPersonalId_KVK      := inPersonalId_KVK
                                                           , inSession             := inSession
                                                            );
-
 
 
      -- дописали св-во <Протокол Дата/время начало>

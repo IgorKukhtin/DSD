@@ -145,6 +145,7 @@ type
     spSelectPrint_Quality_list: TdsdStoredProc;
     actPrint_QualityDoc_list: TdsdPrintAction;
     mactPrint_QualityDoc_list: TMultiAction;
+    actPrintStikerKVK: TdsdPrintAction;
   private
   end;
 
@@ -162,7 +163,7 @@ type
   function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker_Wms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
-  function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+  function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isKVK, isPreview:Boolean):Boolean;
   function Print_QualityDoc_list(MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
 
@@ -223,13 +224,22 @@ begin
   UtilPrintForm.actPrintSticker_Wms.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_Sticker_CehDocument (MovementId,MovementItemId: Integer; isPreview:Boolean);
+procedure Print_Sticker_CehDocument (MovementId,MovementItemId: Integer; isKVK, isPreview:Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementItemId').Value := MovementItemId;
-  UtilPrintForm.actPrintSticker_Ceh.WithOutPreview:= not isPreview;
-  UtilPrintForm.actPrintSticker_Ceh.Printer:= PrinterSticker_Array[0].Name;
-  UtilPrintForm.actPrintSticker_Ceh.Execute;
+  //
+  if isKVK = True then
+  begin
+        UtilPrintForm.actPrintStikerKVK.WithOutPreview:= not isPreview;
+        UtilPrintForm.actPrintStikerKVK.Printer:= PrinterSticker_Array[0].Name;
+        UtilPrintForm.actPrintStikerKVK.Execute;
+  end
+  else begin
+        UtilPrintForm.actPrintSticker_Ceh.WithOutPreview:= not isPreview;
+        UtilPrintForm.actPrintSticker_Ceh.Printer:= PrinterSticker_Array[0].Name;
+        UtilPrintForm.actPrintSticker_Ceh.Execute;
+  end;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
@@ -569,7 +579,7 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isKVK, isPreview:Boolean):Boolean;
 begin
      UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
      UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
@@ -586,7 +596,7 @@ begin
           //
           try
              //Print
-             Print_Sticker_CehDocument (MovementId,MovementItemId,isPreview);
+             Print_Sticker_CehDocument (MovementId,MovementItemId,isKVK,isPreview);
           except
                 ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
                 exit;

@@ -32,7 +32,9 @@ RETURNS TABLE (Number              Integer
              , isPersonalGroup     Boolean -- ScaleCeh - будет проверка на ввод <є бригады>
              , isOrderInternal     Boolean -- ScaleCeh - проверка дл€ операции - разрешаетс€ только через за€вку
              , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатаетс€ —тикер на термопринтере
+             , isSticker_KVK       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатаетс€ —тикер-KVK на термопринтере
              , isLockStartWeighing Boolean -- 
+             , isKVK               Boolean -- ScaleCeh - будет KVK
                )
 AS
 $BODY$
@@ -84,11 +86,13 @@ BEGIN
                                        , isPersonalGroup          Boolean
                                        , isOrderInternal          Boolean
                                        , isSticker_Ceh            Boolean
+                                       , isSticker_KVK            Boolean
                                        , isLockStartWeighing      Boolean
+                                       , isKVK                    Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isPersonalGroup, isOrderInternal, isSticker_Ceh, isLockStartWeighing, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isPersonalGroup, isOrderInternal, isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -143,7 +147,9 @@ BEGIN
             , CASE WHEN tmp.isPersonalGroup     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPersonalGroup
             , CASE WHEN tmp.isOrderInternal     ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
             , CASE WHEN tmp.isSticker_Ceh       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
+            , CASE WHEN tmp.isSticker_KVK       ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_KVK
             , CASE WHEN tmp.isLockStartWeighing ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
+            , CASE WHEN tmp.isKVK               ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isKVK
             
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если ќбвалка
@@ -176,6 +182,8 @@ BEGIN
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPersonalGroup',    'FALSE',                                                     inSession)          END AS isPersonalGroup
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOrderInternal',    'FALSE',                                                     inSession)          END AS isOrderInternal
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSticker_Ceh',      'FALSE',                                                     inSession)          END AS isSticker_Ceh
+                        , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSticker_KVK',      'FALSE',                                                     inSession)          END AS isSticker_KVK
+                        , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isKVK',              'FALSE',                                                     inSession)          END AS isKVK
                         
                    FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
                   ) AS tmp
@@ -388,7 +396,9 @@ BEGIN
            , _tmpToolsWeighing.isPersonalGroup
            , _tmpToolsWeighing.isOrderInternal
            , _tmpToolsWeighing.isSticker_Ceh
+           , _tmpToolsWeighing.isSticker_KVK
            , _tmpToolsWeighing.isLockStartWeighing
+           , _tmpToolsWeighing.isKVK
 
        FROM _tmpToolsWeighing
             LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
@@ -477,7 +487,9 @@ BEGIN
             , FALSE AS isPersonalGroup
             , FALSE AS isOrderInternal
             , FALSE AS isSticker_Ceh
+            , FALSE AS isSticker_KVK
             , FALSE AS isLockStartWeighing
+            , FALSE AS isKVK
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId
                   , _tmpToolsWeighing.OrderById

@@ -109,7 +109,9 @@ begin
            ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
            ParamsMovement.ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
            ParamsMovement.ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
+           ParamsMovement.ParamByName('isSticker_KVK').asBoolean           := CDS.FieldByName('isSticker_KVK').asBoolean;
            ParamsMovement.ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
+           ParamsMovement.ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
 
            ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
            ParamsMovement.ParamByName('FromCode').asString          := CDS.FieldByName('FromCode').asString;
@@ -372,7 +374,9 @@ begin
           ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
           ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
           ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
+          ParamByName('isSticker_KVK').asBoolean           := CDS.FieldByName('isSticker_KVK').asBoolean;
           ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
+          ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
@@ -546,10 +550,13 @@ begin
 
     end;
 
-    ParamsReason.ParamByName('ReasonId').AsInteger:= CDS.FieldByName('ReasonId').AsInteger;
-    ParamsReason.ParamByName('ReasonCode').AsInteger:= CDS.FieldByName('ReasonCode').AsInteger;
-    ParamsReason.ParamByName('ReasonName').AsString:= CDS.FieldByName('ReasonName').AsString;
-    ParamsReason.ParamByName('ReturnKindName').AsString:= CDS.FieldByName('ReturnKindName').AsString;
+    if SettingMain.isCeh = FALSE then
+    begin
+        ParamsReason.ParamByName('ReasonId').AsInteger:= CDS.FieldByName('ReasonId').AsInteger;
+        ParamsReason.ParamByName('ReasonCode').AsInteger:= CDS.FieldByName('ReasonCode').AsInteger;
+        ParamsReason.ParamByName('ReasonName').AsString:= CDS.FieldByName('ReasonName').AsString;
+        ParamsReason.ParamByName('ReturnKindName').AsString:= CDS.FieldByName('ReturnKindName').AsString;
+    end;
 
     if(Length(trim(EditBarCode.Text))<=2)
     then EditBarCode.Text:=CDS.FieldByName('Number').asString;

@@ -19,6 +19,9 @@ RETURNS TABLE (MovementId       Integer
              , MovementDescNumber Integer
 
              , isSticker_Ceh Boolean
+             , isSticker_KVK Boolean
+
+             , isKVK         Boolean
 
              , MovementDescId Integer
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
@@ -137,6 +140,30 @@ BEGIN
                                                       ) AS RetV
                     ) AS tmp
               ) :: Boolean AS isSticker_Ceh
+
+              -- определили <печатать Стикер-KVK на термопринтере>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isSticker_KVK'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isSticker_KVK
+
+              -- определили <KVK>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isKVK'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isKVK
 
             , tmpMovement.MovementDescId :: Integer          AS MovementDescId
             , Object_From.Id                                 AS FromId

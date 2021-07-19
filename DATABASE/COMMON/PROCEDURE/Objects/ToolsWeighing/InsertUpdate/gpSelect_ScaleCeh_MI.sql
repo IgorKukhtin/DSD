@@ -23,6 +23,8 @@ RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, Goods
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
              , LightColor Integer
+             , PersonalId_KVK Integer, PersonalName_KVK TVarChar
+             , NumberKVK TVarChar
               )
 AS
 $BODY$
@@ -68,6 +70,10 @@ BEGIN
 
                   , MovementItem.isErased
 
+                  , Object_PersonalKVK.Id        AS PersonalId_KVK
+                  , Object_PersonalKVK.ValueData AS PersonalName_KVK
+                  , MIString_KVK.ValueData       AS NumberKVK
+
              FROM MovementItem
                   LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -86,6 +92,14 @@ BEGIN
                   LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                  LEFT JOIN MovementItemString AS MIString_KVK
+                                               ON MIString_KVK.MovementItemId = MovementItem.Id
+                                              AND MIString_KVK.DescId = zc_MIString_KVK()
+
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                                   ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+                  LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
                   LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                               ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
@@ -204,6 +218,10 @@ BEGIN
            , tmpMI.isErased
 
            , 0 :: Integer AS LightColor
+
+           , tmpMI.PersonalId_KVK
+           , tmpMI.PersonalName_KVK
+           , tmpMI.NumberKVK
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId

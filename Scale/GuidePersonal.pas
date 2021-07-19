@@ -260,6 +260,8 @@ begin
   with spSelect do
   begin
        StoredProcName:='gpSelect_Scale_Personal';
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        OutputType:=otDataSet;
        Execute;
   end;

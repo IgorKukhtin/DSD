@@ -186,7 +186,7 @@ type
     infoPanel_Weight: TPanel;
     Label_Weight: TLabel;
     Panel_Weight: TPanel;
-    Panel25: TPanel;
+    PanelOperDate: TPanel;
     Label17: TLabel;
     OperDateEdit: TcxDateEdit;
     PanelPartionDate: TPanel;
@@ -245,7 +245,7 @@ type
     infoWeightOnBoxTotal_1Panel: TPanel;
     infoWeightOnBoxTotal_1Label: TLabel;
     Space00Panel: TPanel;
-    Space1Panel: TPanel;
+    Space2Panel: TPanel;
     InfoBoxLabel: TLabel;
     Space0Panel: TPanel;
     WeightOnBoxTotal_1Label: TcxLabel;
@@ -257,7 +257,7 @@ type
     BarCodeOnBox_1Label: TcxLabel;
     BarCodeOnBox_2Label: TcxLabel;
     BarCodeOnBox_3Label: TcxLabel;
-    Panel1: TPanel;
+    Space1Panel: TPanel;
     LightColor: TcxGridDBColumn;
     Timer_GetWeight: TTimer;
     testButton1: TButton;
@@ -279,6 +279,15 @@ type
     EditPersonalGroup: TcxButtonEdit;
     PanelSticker_Ceh: TPanel;
     cbSticker_Ceh: TCheckBox;
+    KVKPanel: TPanel;
+    PanelNumberKVK: TPanel;
+    LabelNumberKVK: TLabel;
+    PanelPersonalKVK: TPanel;
+    LabelPersonalKVK: TLabel;
+    EditPersonalKVK: TcxButtonEdit;
+    EditNumberKVK: TEdit;
+    PersonalName_KVK: TcxGridDBColumn;
+    NumberKVK: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -365,6 +374,12 @@ type
     procedure bbScaleLight_Goods_autoClick(Sender: TObject);
     procedure EditPersonalGroupPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure EditPersonalKVKPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure EditNumberKVKEnter(Sender: TObject);
+    procedure EditNumberKVKExit(Sender: TObject);
+    procedure EditNumberKVKKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -406,6 +421,7 @@ type
 
     procedure pSetSubjectDoc;
     procedure pSetPersonalGroup;
+    procedure pSetPersonalKVK;
 
   public
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
@@ -425,7 +441,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc, GuidePersonalGroup, GuidePersonal
     ,IdIPWatch, LookAndFillSettings
     ,DialogBoxLight, DialogGoodsSeparate
     ,CommonData;
@@ -437,6 +453,7 @@ begin
      oldGoodsId:= 0;
      oldGoodsCode:= 0;
      EditPartionGoods.Text:= '';
+     EditNumberKVK.Text:= '';
      //
      ParamsMI.ParamByName('StorageLineId').AsInteger := 0;
      ParamsMI.ParamByName('StorageLineName').AsString:= '';
@@ -465,6 +482,10 @@ begin
      ParamsMI.ParamByName('StorageLineName').AsString:= oldStorageLineName;
      EditStorageLine.Text:= oldStorageLineName;
      //
+     // обнулили здесь
+     ParamsMovement.ParamByName('PersonalId_KVK').AsInteger:= 0;
+     ParamsMovement.ParamByName('PersonalCode_KVK').AsInteger:= 0;
+     ParamsMovement.ParamByName('PersonalName_KVK').AsString:= '';
      //
      gbStartWeighing.ItemIndex:=0;
      //
@@ -884,6 +905,25 @@ begin
                      exit;
                 end;
 
+       //Проверка
+       if (ParamsMovement.ParamByName('PersonalId_KVK').AsInteger = 0)
+           and(ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+       then begin
+           ShowMessage('Ошибка.Не установлено значение <Оператор КВК>.');
+           pSetPersonalKVK;
+           exit;
+       end;
+       //Проверка
+       if (trim(EditNumberKVK.Text) = '')
+           and(ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+       then begin
+           ActiveControl:=EditNumberKVK;
+           ShowMessage('Ошибка.Не установлено значение <№ КВК>.');
+           exit;
+       end;
+
+       // доопределили параметр
+       ParamsMovement.ParamByName('NumberKVK').AsString:= trim(EditNumberKVK.Text);
 
        // доопределили параметр
        if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
@@ -987,13 +1027,15 @@ begin
 
        //
        // Сразу печатаем Этикетку - для сырья
-       if (Result = TRUE) and (Length(PrinterSticker_Array) > 0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE)
+       if (Result = TRUE) and (Length(PrinterSticker_Array) > 0)
+         and ((ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE) or (ParamsMovement.ParamByName('isSticker_KVK').asBoolean = TRUE))
          and (cbSticker_Ceh.Checked = TRUE)
        then
          if PrinterSticker_Array[0].Name <> ''
          then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                , ParamsMovement.ParamByName('MovementId').AsInteger
                                , ParamsMI.ParamByName('MovementItemId').AsInteger
+                               , ParamsMovement.ParamByName('isSticker_KVK').asBoolean
                                , FALSE);
        //
        //подсветить - № линии на какую складываем
@@ -1142,6 +1184,7 @@ begin
      end;
      //
      //PanelSticker_Ceh.Visible:=ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE;
+     cbSticker_Ceh.Checked:= ParamsMovement.ParamByName('isKVK').asBoolean=true;
      //***myActiveControl;
      if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
       or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
@@ -2087,6 +2130,17 @@ begin
      else WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditNumberKVKExit(Sender: TObject);
+begin
+       if (trim(EditNumberKVK.Text) = '')
+           and(ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+       then begin
+          PanelMovementDesc.Font.Color:=clRed;
+          PanelMovementDesc.Caption:='Ошибка.Не установлено значение <№ КВК>';
+          ActiveControl:=EditNumberKVK;
+       end;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditWeightTare_enterExit(Sender: TObject);
 begin
      if ParamsMI.ParamByName('GoodsId').AsInteger > 0 then
@@ -2170,6 +2224,11 @@ begin
      EditPartionGoods.SelectAll;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditNumberKVKEnter(Sender: TObject);
+begin
+     EditNumberKVK.SelectAll;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsCodeKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 var execParams:TParams;
     GoodsCode_int:Integer;
@@ -2223,13 +2282,42 @@ begin
      begin
           if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
           else if infoPanelCount.Visible then ActiveControl:=EditCount
-               else ActiveControl:=EditGoodsCode;
+               else if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+                    else ActiveControl:=EditGoodsCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditPartionGoodsKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = 13 then ActiveControl:=EditCount;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditNumberKVKKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+     if Key = 13 then ActiveControl:=EditGoodsCode;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainCehForm.pSetPersonalKVK;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isKVK').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsPersonal(execParams,'');
+     //
+     with execParams do
+     begin
+          ParamByName('PersonalId').AsInteger:=ParamsMovement.ParamByName('PersonalId_KVK').AsInteger;
+          ParamByName('PersonalCode').AsInteger:=ParamsMovement.ParamByName('PersonalCode_KVK').AsInteger;
+     end;
+     if GuidePersonalForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('PersonalId_KVK').AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+               ParamsMovement.ParamByName('PersonalCode_KVK').AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+               ParamsMovement.ParamByName('PersonalName_KVK').AsString:=execParams.ParamByName('PersonalName').AsString;
+               EditPersonalKVK.Text:=execParams.ParamByName('PersonalName').AsString;
+     end;
+     //
+     execParams.Free;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.pSetPersonalGroup;
@@ -2271,6 +2359,17 @@ begin
      pSetPersonalGroup;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditPersonalKVKPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+begin
+     if ParamsMovement.ParamByName('isKVK').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <Оператор КВК>.');
+               exit;
+     end;
+     //
+     pSetPersonalKVK;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditCountKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = 13 then
@@ -2297,7 +2396,8 @@ begin
           if infoPanelSkewer1.Visible then ActiveControl:=EditSkewer1
           else if infoPanelSkewer2.Visible then ActiveControl:=EditSkewer2
                else if infoPanelWeightOther.Visible then ActiveControl:=EditWeightOther
-                    else ActiveControl:=EditGoodsCode;
+                    else if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+                         else ActiveControl:=EditGoodsCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -2307,7 +2407,8 @@ begin
      begin
           if infoPanelSkewer2.Visible then ActiveControl:=EditSkewer2
           else if infoPanelWeightOther.Visible then ActiveControl:=EditWeightOther
-               else ActiveControl:=EditGoodsCode;
+               else if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+                    else ActiveControl:=EditGoodsCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -2316,13 +2417,16 @@ begin
      if Key = 13 then
      begin
           if infoPanelWeightOther.Visible then ActiveControl:=EditWeightOther
-          else ActiveControl:=EditGoodsCode;
+          else if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+               else ActiveControl:=EditGoodsCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditWeightOtherKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = 13 then ActiveControl:=EditGoodsCode;
+     if Key = 13
+     then if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+          else ActiveControl:=EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -2428,7 +2532,8 @@ begin
         )
       and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
       and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
-     then ActiveControl:=EditGoodsCode;
+     then if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE) then ActiveControl:=EditNumberKVK
+          else ActiveControl:=EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.gbStartWeighingEnter(Sender: TObject);
@@ -2635,6 +2740,7 @@ begin
 
     SubjectDocPanel.Visible:= false;
     PersonalGroupPanel.Visible:= false;
+    KVKPanel.Visible:= false;
     //
     testButton1.Visible:= gc_User.Session = '5';
     testButton2.Visible:= gc_User.Session = '5';
@@ -2682,7 +2788,8 @@ begin
   end ;
   //
   PanelSticker_Ceh.Visible:=(PrinterSticker_Array[0].Name <> '')
-                        and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202));
+                        //and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 202))
+                            ;
 
   HeadCountPanel.Visible:=SettingMain.isModeSorting = FALSE;
   infoPanelCount.Visible:=SettingMain.isModeSorting = FALSE;
@@ -2756,6 +2863,11 @@ begin
   PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
   PanelArticleLoss.Visible:=ParamsMovement.ParamByName('isArticleLoss').asBoolean=true;
   PersonalGroupPanel.Visible:=ParamsMovement.ParamByName('isPersonalGroup').asBoolean=true;
+  KVKPanel.Visible:=ParamsMovement.ParamByName('isKVK').asBoolean=true;
+  //
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PersonalName_KVK').Index].Visible:= ParamsMovement.ParamByName('isKVK').asBoolean=true;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('NumberKVK').Index].Visible       := ParamsMovement.ParamByName('isKVK').asBoolean=true;
+  //
   PanelMovementInfo.Visible:=(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
@@ -2767,6 +2879,11 @@ begin
   //
   if PersonalGroupPanel.Visible = true
   then EditPersonalGroup.Text:=ParamsMovement.ParamByName('PersonalGroupName').asString;
+  //
+  if KVKPanel.Visible = true then
+  begin EditPersonalKVK.Text:=ParamsMovement.ParamByName('PersonalName_KVK').asString;
+        EditNumberKVK.Text:='';
+  end;
   //
   PanelMovementDesc.Font.Color:=clBlue;
 
@@ -3463,6 +3580,7 @@ begin
            then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                  , ParamsMovement.ParamByName('MovementId').AsInteger
                                  , CDS.FieldByName('MovementItemId').AsInteger
+                                 , ParamsMovement.ParamByName('isSticker_KVK').asBoolean
                                  , TRUE);
 end;
 {------------------------------------------------------------------------}

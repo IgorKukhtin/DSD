@@ -262,6 +262,7 @@ begin
      ParamAdd(Params,'RouteName',ftString);
 
      ParamAdd(Params,'isSticker_Ceh',ftBoolean);
+     ParamAdd(Params,'isSticker_KVK',ftBoolean);
 
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'SubjectDocId',ftInteger);
@@ -273,6 +274,12 @@ begin
      ParamAdd(Params,'PersonalGroupId',ftInteger);
      ParamAdd(Params,'PersonalGroupCode',ftInteger);
      ParamAdd(Params,'PersonalGroupName',ftString);
+
+     ParamAdd(Params,'isKVK',ftBoolean);
+     ParamAdd(Params,'PersonalId_KVK',ftInteger);
+     ParamAdd(Params,'PersonalCode_KVK',ftInteger);
+     ParamAdd(Params,'PersonalName_KVK',ftString);
+     ParamAdd(Params,'NumberKVK',ftString);
 
      ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет

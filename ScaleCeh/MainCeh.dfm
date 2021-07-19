@@ -840,6 +840,22 @@ object MainCehForm: TMainCehForm
           Options.Editing = False
           Width = 40
         end
+        object NumberKVK: TcxGridDBColumn
+          Caption = #8470' '#1050#1042#1050
+          DataBinding.FieldName = 'NumberKVK'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object PersonalName_KVK: TcxGridDBColumn
+          Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050
+          DataBinding.FieldName = 'PersonalName_KVK'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
@@ -1174,9 +1190,8 @@ object MainCehForm: TMainCehForm
       Caption = #1042#1077#1089#1099
       TabOrder = 1
       OnClick = rgScaleClick
-      ExplicitTop = 456
     end
-    object Panel25: TPanel
+    object PanelOperDate: TPanel
       Left = 0
       Top = 0
       Width = 130
@@ -1254,7 +1269,6 @@ object MainCehForm: TMainCehForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 396
       object HeadCountLabel: TLabel
         Left = 0
         Top = 0
@@ -1381,9 +1395,9 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelTotalSorting: TPanel
       Left = 0
-      Top = 200
+      Top = 280
       Width = 130
-      Height = 94
+      Height = 70
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 7
@@ -1697,7 +1711,7 @@ object MainCehForm: TMainCehForm
           ExplicitWidth = 111
         end
       end
-      object Space1Panel: TPanel
+      object Space2Panel: TPanel
         Left = 0
         Top = 283
         Width = 130
@@ -1715,7 +1729,7 @@ object MainCehForm: TMainCehForm
         BevelOuter = bvNone
         TabOrder = 5
       end
-      object Panel1: TPanel
+      object Space1Panel: TPanel
         Left = 0
         Top = 162
         Width = 130
@@ -1785,7 +1799,6 @@ object MainCehForm: TMainCehForm
       ParentFont = False
       TabOrder = 9
       Visible = False
-      ExplicitTop = 573
       object cbSticker_Ceh: TCheckBox
         Left = 7
         Top = 8
@@ -1793,6 +1806,97 @@ object MainCehForm: TMainCehForm
         Height = 17
         Caption = #1055#1077#1095#1072#1090#1100' '#1057#1090#1080#1082#1077#1088#1072
         TabOrder = 0
+      end
+    end
+    object KVKPanel: TPanel
+      Left = 0
+      Top = 200
+      Width = 130
+      Height = 80
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 10
+      object PanelNumberKVK: TPanel
+        Left = 0
+        Top = 40
+        Width = 130
+        Height = 40
+        Align = alClient
+        BevelInner = bvRaised
+        BevelOuter = bvNone
+        TabOrder = 0
+        object LabelNumberKVK: TLabel
+          Left = 1
+          Top = 1
+          Width = 128
+          Height = 14
+          Align = alTop
+          Caption = '   '#8470' '#1050#1042#1050
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 46
+        end
+        object EditNumberKVK: TEdit
+          Left = 4
+          Top = 16
+          Width = 120
+          Height = 23
+          TabOrder = 0
+          Text = 'EditNumberKVK'
+          OnEnter = EditNumberKVKEnter
+          OnExit = EditNumberKVKExit
+          OnKeyDown = EditNumberKVKKeyDown
+        end
+      end
+      object PanelPersonalKVK: TPanel
+        Left = 0
+        Top = 0
+        Width = 130
+        Height = 40
+        Align = alTop
+        BevelInner = bvRaised
+        BevelOuter = bvNone
+        TabOrder = 1
+        object LabelPersonalKVK: TLabel
+          Left = 1
+          Top = 1
+          Width = 128
+          Height = 14
+          Align = alTop
+          Caption = '   '#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 87
+        end
+        object EditPersonalKVK: TcxButtonEdit
+          Left = 4
+          Top = 15
+          ParentFont = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalKVKPropertiesButtonClick
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditPersonalKVK'
+          Width = 120
+        end
       end
     end
   end
@@ -3130,6 +3234,7 @@ object MainCehForm: TMainCehForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = GoodsKindName
