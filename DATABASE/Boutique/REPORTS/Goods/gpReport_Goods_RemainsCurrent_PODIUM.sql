@@ -795,19 +795,19 @@ BEGIN
 
              --c учетом сезонной скидки
              -- Цена по прайсу в ГРН  тек.курс
-           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+           --, CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+           , CAST (zfCalc_SummChangePercentNext (1, tmpData.OperPriceList, tmpDiscount.DiscountTax, tmpDiscount.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_disc
              -- Цена по прайсу в ГРН курс.документа
-           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
+           --, CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
+           , CAST (zfCalc_SummChangePercentNext (1, tmpData.OperPriceList_doc, tmpDiscount.DiscountTax, tmpDiscount.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
            
              -- *Цена по прайсу в валюте по курсу на тек.дату
-           , CAST (tmpData.OperPriceList_curr 
-                          * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100)    
-                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_disc
+           --, CAST (tmpData.OperPriceList_curr * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_disc
+           , CAST (zfCalc_SummChangePercentNext (1, tmpData.OperPriceList_curr, tmpDiscount.DiscountTax, tmpDiscount.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_disc
                    
              -- *Цена по прайсу в валюте по курсу документа
-           , CAST (tmpData.OperPriceList_doc_curr
-                          * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100)
-                   AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc_disc
+           --, CAST (tmpData.OperPriceList_doc_curr * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc_disc
+           , CAST (zfCalc_SummChangePercentNext (1, tmpData.OperPriceList_doc_curr, tmpDiscount.DiscountTax, tmpDiscount.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc_disc
            /***********************/
 
              -- Кол-во - остаток в магазине
