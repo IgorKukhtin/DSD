@@ -26,7 +26,6 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 848
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -202,14 +201,14 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         Width = 70
       end
       object ValueNextDiscount: TcxGridDBColumn
-        Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
+        Caption = '% '#1089#1082'. 2'
         DataBinding.FieldName = 'ValueNextDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
+        HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Width = 70
       end
       object RemainsAll: TcxGridDBColumn
@@ -457,7 +456,6 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 848
     object cxLabel1: TcxLabel
       Left = 4
       Top = 10

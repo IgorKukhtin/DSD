@@ -66,10 +66,11 @@ object DiscountPeriodGoodsPodiumItemForm: TDiscountPeriodGoodsPodiumItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Width = 80
       end
       object ValueNextPrice: TcxGridDBColumn
-        Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.)'
+        Caption = '% '#1089#1082#1080#1076#1082#1080' 2'
         DataBinding.FieldName = 'ValueNextPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -77,6 +78,7 @@ object DiscountPeriodGoodsPodiumItemForm: TDiscountPeriodGoodsPodiumItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         Width = 80
       end
       object isErased: TcxGridDBColumn

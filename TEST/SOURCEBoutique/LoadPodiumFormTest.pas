@@ -98,7 +98,7 @@ type
     procedure LoadReturnOutFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadSaleFormTest;
-        procedure LoadSmsSettingsFormTest;
+    procedure LoadSmsSettingsFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadObjectUnionFormTest;
@@ -833,7 +833,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ClientDebtPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ClientDebtPodiumForm');
-  exit;
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientPodiumForm');

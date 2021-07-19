@@ -100,14 +100,20 @@
   object cxLabel4: TcxLabel
     Left = 177
     Top = 109
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.):'
+    Hint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+    Caption = '% '#1089#1082#1080#1076#1082#1080' 2:'
+    ParentShowHint = False
+    ShowHint = True
   end
   object edValueNext: TcxCurrencyEdit
     Left = 177
     Top = 133
+    Hint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+    ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
+    ShowHint = True
     TabOrder = 11
     Width = 120
   end

@@ -277,7 +277,7 @@ BEGIN
            , tmpPartionGoods.OperPrice     :: TFloat
            , COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList) :: TFloat AS OperPriceList
            --цена со скидкой
-           , CAST (COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList)  * (1 - (COALESCE(tmpDiscount.ValueDiscount, 0)+COALESCE(tmpDiscount.ValueNextDiscount, 0)) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_disc
+           , CAST (zfCalc_SummChangePercentNext (1, COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList), COALESCE(tmpDiscount.ValueDiscount, 0), COALESCE(tmpDiscount.ValueNextDiscount, 0) ) AS NUMERIC (16, 0) ) :: TFloat AS OperPriceList_disc
            -- цена грн
            , CAST (COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList) 
                    * (CASE WHEN tmpPriceList.CurrencyId = zc_Currency_GRN() THEN 1 WHEN tmpCurrency.Amount   <> 0 THEN tmpCurrency.Amount   ELSE 1 END
@@ -285,7 +285,7 @@ BEGIN
                      )
                     AS NUMERIC (16, 0) ) :: TFloat AS OperPriceList_grn
            -- цена грн со скидкой
-           , CAST (COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList)  * (1 - (COALESCE(tmpDiscount.ValueDiscount, 0)+COALESCE(tmpDiscount.ValueNextDiscount, 0)) /100)
+           , CAST ( zfCalc_SummChangePercentNext (1, COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList), COALESCE(tmpDiscount.ValueDiscount, 0), COALESCE(tmpDiscount.ValueNextDiscount, 0) )
                        * (CASE WHEN tmpPriceList.CurrencyId = zc_Currency_GRN() THEN 1 WHEN tmpCurrency.Amount   <> 0 THEN tmpCurrency.Amount   ELSE 1 END
                         / CASE WHEN tmpPriceList.CurrencyId = zc_Currency_GRN() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END
                          )
