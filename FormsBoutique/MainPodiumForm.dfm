@@ -552,8 +552,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
       Hint = #1048#1089#1090#1086#1088#1080#1103' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
-      FormName = 'TDiscountPeriodItemForm'
-      FormNameParam.Value = 'TDiscountPeriodItemForm'
+      FormName = 'TDiscountPeriodPodiumItemForm'
+      FormNameParam.Value = 'TDiscountPeriodPodiumItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

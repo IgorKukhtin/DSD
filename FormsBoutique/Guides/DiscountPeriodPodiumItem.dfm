@@ -3,7 +3,7 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
   Top = 0
   Caption = #1057#1077#1079#1086#1085#1085#1099#1077' '#1089#1082#1080#1076#1082#1080' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1089#1082#1080#1076#1086#1082
   ClientHeight = 398
-  ClientWidth = 848
+  ClientWidth = 963
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 91
-    Width = 848
+    Width = 963
     Height = 307
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 848
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -198,6 +199,17 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+        Width = 70
+      end
+      object ValueNextDiscount: TcxGridDBColumn
+        Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
+        DataBinding.FieldName = 'ValueNextDiscount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
         Width = 70
       end
       object RemainsAll: TcxGridDBColumn
@@ -440,11 +452,12 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 848
+    Width = 963
     Height = 65
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 848
     object cxLabel1: TcxLabel
       Left = 4
       Top = 10
@@ -565,6 +578,18 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       TabOrder = 13
       Width = 131
     end
+    object edPersentNext: TcxCurrencyEdit
+      Left = 915
+      Top = 36
+      EditValue = '0'
+      Properties.AssignedValues.MinValue = True
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.MaxLength = 4
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 31
+    end
   end
   object cxLabel3: TcxLabel
     Left = 530
@@ -584,6 +609,11 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
     Left = 733
     Top = 63
     Caption = '% '#1089#1082#1080#1076#1082#1080':'
+  end
+  object cxLabel9: TcxLabel
+    Left = 830
+    Top = 63
+    Caption = '% '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -733,6 +763,14 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAllNext'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -794,6 +832,10 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbUpdateAllNext: TdxBarButton
+      Action = macUpdateAllNext
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -845,8 +887,8 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
       ImageIndex = 28
-      FormName = 'TDiscountPeriodGoodsItemForm'
-      FormNameParam.Value = 'TDiscountPeriodGoodsItemForm'
+      FormName = 'TDiscountPeriodGoodsPodiumItemForm'
+      FormNameParam.Value = 'TDiscountPeriodGoodsPodiumItemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -985,6 +1027,19 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object spUpdatePersentNext: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateListNext
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateListNext
+        end>
+      Caption = #1044#1086#1087'. '#1057#1082#1080#1076#1082#1072
+      Hint = #1044#1086#1087'. '#1057#1082#1080#1076#1082#1072
+      ImageIndex = 27
+    end
     object spUpdatePersent: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -997,6 +1052,23 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       Caption = #1057#1082#1080#1076#1082#1072
       Hint = #1057#1082#1080#1076#1082#1072
       ImageIndex = 74
+    end
+    object macUpdateAllNext: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPersentNext
+        end
+        item
+          Action = macUpdatePersentNext
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1091
+      ImageIndex = 27
     end
     object macUpdateAll: TMultiAction
       Category = 'DSDLib'
@@ -1015,6 +1087,18 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
     end
+    object macUpdatePersentNext: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdatePersentNext
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1091
+      ImageIndex = 27
+    end
     object macUpdatePersent: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1026,6 +1110,34 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
+    end
+    object ExecuteDialogPersentNext: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080
+      ImageIndex = 35
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = 0.000000000000000000
+          Component = edPersentNext
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = '% '#1076#1086#1087'.'#1089#1082#1080#1076#1082#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object ExecuteDialogPersent: TExecuteDialog
       Category = 'DSDLib'
@@ -1358,6 +1470,15 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inValueNext'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ValueNextDiscount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsLast'
         Value = True
         DataType = ftBoolean
@@ -1485,6 +1606,15 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         Name = 'inValue'
         Value = Null
         Component = edPersent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueNext'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ValueNextDiscount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1666,5 +1796,88 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
       end>
     Left = 478
     Top = 259
+  end
+  object spInsertUpdateListNext: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42856d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'ValueDiscount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueNext'
+        Value = Null
+        Component = edPersentNext
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 304
   end
 end

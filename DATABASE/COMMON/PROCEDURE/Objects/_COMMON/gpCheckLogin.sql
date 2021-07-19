@@ -1,19 +1,22 @@
 -- Function: gpCheckLogin(TVarChar, TVarChar, TVarChar)
 
  DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar);
- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin    TVarChar,
     IN inUserPassword TVarChar,
     IN inIP           TVarChar,
- INOUT Session TVarChar
+ INOUT ioPhoneAuthent TVarChar,
+ INOUT Session        TVarChar
 )
-RETURNS TVarChar
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbIsCreate Boolean;
+  DECLARE vbIsProjectAuthent Boolean;
 BEGIN
 
      -- Определися пользователь + сессия (потом будем шифровать)
@@ -28,7 +31,9 @@ BEGIN
                 ELSE FALSE
            END
          , Object_User.Id
-           INTO vbIsCreate, vbUserId
+         , ObjectBoolean_ProjectAuthent.ValueData
+         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) ELSE '' END
+           INTO vbIsCreate, vbUserId, vbIsProjectAuthent, ioPhoneAuthent
     FROM Object AS Object_User
          JOIN ObjectString AS UserPassword
                            ON UserPassword.ValueData = inUserPassword AND inUserPassword <> ''
@@ -37,6 +42,13 @@ BEGIN
          LEFT JOIN ObjectDate AS ObjectDate_User_GUID
                               ON ObjectDate_User_GUID.ObjectId = Object_User.Id
                              AND ObjectDate_User_GUID.DescId   = zc_ObjectDate_User_GUID()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
+                                 ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
+                                AND ObjectBoolean_ProjectAuthent.DescId   = zc_ObjectBoolean_User_ProjectAuthent()
+         LEFT JOIN ObjectString AS ObjectString_PhoneAuthent
+                                ON ObjectString_PhoneAuthent.ObjectId = Object_User.Id
+                               AND ObjectString_PhoneAuthent.DescId   = zc_ObjectString_User_PhoneAuthent()
 
     WHERE Object_User.ValueData = inUserLogin
       AND Object_User.isErased = FALSE
@@ -48,6 +60,13 @@ BEGIN
        RAISE EXCEPTION 'Неправильный логин или пароль.';
     ELSE
 
+        -- Проверка
+        IF vbIsProjectAuthent = TRUE AND ioPhoneAuthent = ''
+        THEN
+           RAISE EXCEPTION 'Не установлен № телефона для идентификации.';
+        END IF;
+
+        --
         IF vbUserId = 5 OR 1=0
         THEN IF vbIsCreate = TRUE
              THEN
@@ -108,4 +127,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
--- SELECT * FROM gpCheckLogin ('Руденко В.В.', 'rdn132745', '', '')
+-- SELECT * FROM gpCheckLogin ('Админ', 'qsxqsxw1', '', '067-1234567', '')

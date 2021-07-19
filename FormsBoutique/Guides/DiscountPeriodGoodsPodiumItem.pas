@@ -51,7 +51,6 @@ type
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
     EndDate: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;

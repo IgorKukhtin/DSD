@@ -43,13 +43,13 @@ type
     class function CheckLogin(pStorage: IStorage;
       const pUserName, pPassword: string; var pUser: TUser;
       ANeedShowException: Boolean = True): boolean;
-    class function spCheckPhoneAuthentSMS (const pPhoneAuthent: string): boolean;
+    class function spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
   end;
 
 implementation
 
 uses iniFiles, Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, WinAPI.Windows,
-  vcl.Forms, vcl.Dialogs;
+  vcl.Forms, vcl.Dialogs, dsdAction, DialogPswSms;
 
 {------------------------------------------------------------------------------}
 function GetIniFile(out AIniFileName: String):boolean;
@@ -100,10 +100,60 @@ begin
   FLogin := '';
 end;
 {------------------------------------------------------------------------------}
-class function TAuthentication.spCheckPhoneAuthentSMS (const pPhoneAuthent: string): boolean;
+class function TAuthentication.spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
+var SendSMSAction : TdsdSendSMSCPAAction;
+var N: IXMLNode;
+    pXML : String;
 begin
-     // Send SMS
-     // Check Enter SMS
+    Result:= pPhoneAuthent = '';
+    // выход
+    if Result = TRUE then exit;
+
+    //
+    pXML :=
+    '<xml Session = "' + pSession + '" >' +
+      '<gpSelect_Object_User_bySMS OutputType="otResult">' +
+        '<inPhoneAuthent DataType="ftString" Value="%s" />' +
+      '</gpSelect_Object_User_bySMS>' +
+    '</xml>';
+
+    try
+      SendSMSAction:= TdsdSendSMSCPAAction.Create(nil);
+
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pPhoneAuthent]), False, 4, ANeedShowException)).DocumentElement;
+      //
+      if Assigned(N) then Result:= N.GetAttribute(AnsiLowerCase('Message_sms')) <> '' else Result:= false;
+      //
+      if Assigned(N) and (Result = TRUE) then
+      begin
+         try
+           // Send SMS
+           SendSMSAction.Host.Value    := N.GetAttribute(AnsiLowerCase('ServiceName_Sms'));
+           SendSMSAction.Login.Value   := N.GetAttribute(AnsiLowerCase('Login_sms'));
+           SendSMSAction.Password.Value:= N.GetAttribute(AnsiLowerCase('Password_sms'));
+           SendSMSAction.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
+           SendSMSAction.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
+           Result:= SendSMSAction.Execute;
+           //Result:= true;
+           if not Result then begin ShowMessage('Ошибка при отправке СМС на номер <'+pPhoneAuthent+'>.Работа с программой заблокирована.');exit;end;
+         except
+           Result:= false;
+           exit;
+         end;
+         //
+
+         // Check Enter SMS
+         with TDialogPswSmsForm.Create(nil) do
+         begin
+              Result:= Execute (pStorage, pSession) <> '';
+              Free;
+         end;
+
+      end;
+
+    finally
+       SendSMSAction.Free;
+    end;
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.CheckLogin(pStorage: IStorage;
@@ -190,15 +240,20 @@ begin
        else
          N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
   //
+  result := TRUE;
+  //
   if Assigned(N) then
   begin
        // сформировали смс, проверили что он корректный
-       if isProject = TRUE then spCheckPhoneAuthentSMS(N.GetAttribute(AnsiLowerCase('ioPhoneAuthent')));
+       if isProject = TRUE then result := spCheckPhoneAuthentSMS(pStorage, N.GetAttribute(AnsiLowerCase(gcSession)), N.GetAttribute(AnsiLowerCase('ioPhoneAuthent')), ANeedShowException);
        //
        pUser := TUser.Create(N.GetAttribute(AnsiLowerCase(gcSession)));
        pUser.FLogin := pUserName;
   end;
-  result := pUser <> nil
+  //
+  if result = FALSE then pUser:= nil;
+  //
+  result := (pUser <> nil);
 end;
 
 function TUser.GetLocal: Boolean;

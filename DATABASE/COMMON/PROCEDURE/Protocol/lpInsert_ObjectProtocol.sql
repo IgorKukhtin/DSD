@@ -46,6 +46,8 @@ BEGIN
                                                                                 , zc_ObjectDate_User_UpdateMobileTo()
                                                                                 , zc_ObjectDate_Protocol_Insert()
                                                                                 , zc_ObjectDate_Protocol_Update()
+                                                                                , zc_ObjectDate_User_GUID()
+                                                                                , zc_ObjectDate_User_SMS()
                                                                                  )
                                                             THEN zfConvert_DateTimeShortToString (ObjectDate.ValueData)
                                                        ELSE zfConvert_DateToString (ObjectDate.ValueData)

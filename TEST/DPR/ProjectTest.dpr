@@ -1284,7 +1284,8 @@ uses
   Report_WeighingProduction_KVK in '..\..\Forms\Report\Report_WeighingProduction_KVK.pas' {Report_WeighingProduction_KVKForm: TParentForm},
   Report_WeighingProduction_KVKDialog in '..\..\Forms\Report\Report_WeighingProduction_KVKDialog.pas' {Report_WeighingProduction_KVKDialogForm: TParentForm},
   MobilePackEdit in '..\..\Forms\Guides\MobilePackEdit.pas' {MobilePackEditForm: TParentForm},
-  MobilePack in '..\..\Forms\Guides\MobilePack.pas' {MobilePackForm: TParentForm};
+  MobilePack in '..\..\Forms\Guides\MobilePack.pas' {MobilePackForm: TParentForm},
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
