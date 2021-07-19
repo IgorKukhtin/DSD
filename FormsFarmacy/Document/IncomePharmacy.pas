@@ -113,6 +113,10 @@ type
     actspUnConduct_Movement: TdsdExecStoredProc;
     Color_AmountManual: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
+    spUpdate_ExpirationDate: TdsdStoredProc;
+    actExecuteDialogExpirationDate: TExecuteDialog;
+    actUpdate_ExpirationDate: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

@@ -827,6 +827,11 @@ type
     N302: TMenuItem;
     actReport_RemainsCovid_19: TdsdOpenForm;
     Covid191: TMenuItem;
+    N303: TMenuItem;
+    actTestingTuning_Manual: TdsdOpenForm;
+    N304: TMenuItem;
+    actTestingUser: TdsdOpenStaticForm;
+    N305: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

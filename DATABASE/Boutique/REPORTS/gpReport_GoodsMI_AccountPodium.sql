@@ -41,6 +41,7 @@ RETURNS TABLE (-- Документ
              , isOffer          Boolean
                -- % скидки
              , ChangePercent    TFloat
+             , ChangePercentNext TFloat
                -- Цена по прайсу в продаже, ГРН
              , OperPriceList    TFloat
                -- Дополнительная скидка в документе, ГРН
@@ -103,6 +104,7 @@ BEGIN
                       , MI_Master.PartionId                 AS PartionId
                       , MI_Master.Id                        AS MI_Id
                       , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                      , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  AS ChangePercentNext
                       , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                       , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
                       , MI_Master.Amount                                   AS Amount
@@ -125,6 +127,9 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                   ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                  AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                  ON MIFloat_ChangePercentNext.MovementItemId = MI_Master.Id
+                                                 AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                       LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                   ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                  AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -154,6 +159,7 @@ BEGIN
                          , MI_Master.PartionId                 AS PartionId
                          , MI_Master.Id                        AS MI_Id
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                         , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  AS ChangePercentNext
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                          , 0                                                  AS SummChangePercent
 
@@ -193,7 +199,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-
+                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                     ON MIFloat_ChangePercentNext.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                     WHERE Movement_ReturnIn.DescId   = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
                    )
@@ -213,6 +221,7 @@ BEGIN
                              , MI_Sale.PartionId                   AS PartionId
                              , MI_Master.Id                        AS MI_Id
                              , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                             , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  AS ChangePercentNext
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                              , COALESCE (MIFloat_SummChangePercent_master.ValueData, 0) AS SummChangePercent
                              , MI_Master.Amount                                   AS Amount
@@ -251,6 +260,9 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                          ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                         AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                         ON MIFloat_ChangePercentNext.MovementItemId = MI_Sale.Id
+                                                        AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
@@ -273,6 +285,7 @@ BEGIN
                              , tmp.GoodsId
                              , tmp.PartionId
                              , tmp.ChangePercent
+                             , tmp.ChangePercentNext
                              , tmp.OperPriceList
                              , tmp.MI_Id
                              , SUM (tmp.SummChangePercent) AS SummChangePercent
@@ -290,6 +303,7 @@ BEGIN
                                , tmp.GoodsId
                                , tmp.PartionId
                                , tmp.ChangePercent
+                               , tmp.ChangePercentNext
                                , tmp.OperPriceList
                                , tmp.MI_Id
                          UNION ALL
@@ -307,6 +321,7 @@ BEGIN
                                 , tmp.GoodsId
                                 , tmp.PartionId
                                 , tmp.ChangePercent
+                                , tmp.ChangePercentNext
                                 , tmp.OperPriceList
                                 , tmp.MI_Id
                                 , SUM (tmp.SummChangePercent) AS SummChangePercent
@@ -328,6 +343,7 @@ BEGIN
                                   , tmp.GoodsId
                                   , tmp.PartionId
                                   , tmp.ChangePercent
+                                  , tmp.ChangePercentNext
                                   , tmp.OperPriceList
                                   , tmp.MI_Id
 
@@ -346,6 +362,7 @@ BEGIN
                                 , tmp.GoodsId
                                 , tmp.PartionId
                                 , tmp.ChangePercent
+                                , tmp.ChangePercentNext
                                 , tmp.OperPriceList
                                 , tmp.MI_Id
                                 , SUM (tmp.SummChangePercent) AS SummChangePercent
@@ -367,6 +384,7 @@ BEGIN
                                   , tmp.GoodsId
                                   , tmp.PartionId
                                   , tmp.ChangePercent
+                                  , tmp.ChangePercentNext
                                   , tmp.OperPriceList
                                   , tmp.MI_Id
                     )
@@ -486,6 +504,7 @@ BEGIN
                           , tmp.MI_Id_Partion       AS MI_Id_Partion
                           , tmp.Ord                 AS Ord
                           , tmp.ChangePercent       AS ChangePercent
+                          , tmp.ChangePercentNext   AS ChangePercentNext
                           , tmp.OperPriceList       AS OperPriceList
                           , tmp.GoodsId
                           , tmp.CurrencyValue
@@ -514,6 +533,7 @@ BEGIN
                                 , tmp.MI_Id
                                 , tmpDebt.MI_Id AS MI_Id_Partion
                                 , tmp.ChangePercent
+                                , tmp.ChangePercentNext
                                 , tmp.OperPriceList
                                 , tmpMI_Child.CurrencyValue
                                 , tmpMI_Child.CurrencyId
@@ -553,6 +573,7 @@ BEGIN
                                 , 0  AS MI_Id
                                 , 0  AS MI_Id_Partion
                                 , 0    :: TFloat    AS ChangePercent
+                                , 0    :: TFloat    AS ChangePercentNext
                                 , 0    :: TFloat    AS OperPriceList
                                 , tmpMI_Child_Exc.CurrencyValue
                                 , tmpMI_Child_Exc.CurrencyId
@@ -596,6 +617,7 @@ BEGIN
                              , tmp.MI_Id_Partion
                              , tmp.Ord
                              , tmp.ChangePercent
+                             , tmp.ChangePercentNext
                              , tmp.OperPriceList
                              , tmp.GoodsId
                              , tmp.CurrencyValue
@@ -618,6 +640,7 @@ BEGIN
                      , tmp.MI_Id                 AS MI_Id
                      , tmp.MI_Id_Partion         AS MI_Id_Partion
                      , tmp.ChangePercent         AS ChangePercent
+                     , tmp.ChangePercentNext     AS ChangePercentNext
                      , tmp.OperPriceList         AS OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
@@ -648,6 +671,7 @@ BEGIN
                      , tmp.MI_Id
                      , tmp.MI_Id_Partion
                      , tmp.ChangePercent
+                     , tmp.ChangePercentNext
                      , tmp.OperPriceList
                      , tmp.GoodsId
                      , tmp.CurrencyValue
@@ -690,6 +714,7 @@ BEGIN
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer   -- примерка
 
              , tmpData.ChangePercent       ::TFloat
+             , tmpData.ChangePercentNext   ::TFloat
              , tmpData.OperPriceList       ::TFloat
              , CASE WHEN tmpData.Ord = 1 THEN COALESCE (tmpData.SummChangePercent, 0)  ELSE 0 END :: TFloat AS SummChangePercent
              , CASE WHEN tmpData.Ord = 1 THEN tmpData.Amount    ELSE 0 END                        :: TFloat AS Amount
@@ -714,6 +739,7 @@ BEGIN
                     || '_' || tmpData.ClientId   :: TVarChar
                     || '_' || tmpData.PartionId  :: TVarChar
                     || '_' || zfConvert_FloatToString (tmpData.ChangePercent)
+                    || '_' || zfConvert_FloatToString (tmpData.ChangePercentNext)
                     || '_' || zfConvert_FloatToString (tmpData.OperPriceList)
                     || '_' || CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN MovementDesc.Id :: TVarChar ELSE '' END
 

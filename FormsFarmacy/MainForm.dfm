@@ -4430,6 +4430,29 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actTestingTuning_Manual: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      Hint = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      FormName = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.Value = 'TReport_TestingTuning_ManualForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTestingUser: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1053#1072#1095#1072#1090#1100' '#1101#1082#1079#1072#1084#1077#1085
+      FormName = 'TTestingUserForm'
+      FormNameParam.Value = 'TTestingUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4794,6 +4817,15 @@
       end
       object N297: TMenuItem
         Action = actTestingTuning
+      end
+      object N303: TMenuItem
+        Caption = #1069#1082#1079#1072#1084#1077#1085#1072#1094#1080#1103
+        object N305: TMenuItem
+          Action = actTestingUser
+        end
+        object N304: TMenuItem
+          Action = actTestingTuning_Manual
+        end
       end
       object N87: TMenuItem
         Caption = '-'

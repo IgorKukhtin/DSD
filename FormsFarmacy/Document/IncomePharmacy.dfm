@@ -1047,6 +1047,40 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       Caption = 'actspUnConduct_Movement'
     end
+    object actExecuteDialogExpirationDate: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogExpirationDate'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ExpirationDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_ExpirationDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDialogExpirationDate
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ExpirationDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ExpirationDate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1089#1090#1088#1086#1082#1077' '#1090#1086#1074#1072#1088#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1089#1090#1088#1086#1082#1077' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 47
+    end
   end
   inherited MasterDS: TDataSource
     Top = 376
@@ -1202,6 +1236,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1273,6 +1311,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     object dxBarStatic1: TdxBarStatic
       Category = 0
       Visible = ivAlways
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_ExpirationDate
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2182,5 +2224,55 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 832
     Top = 368
+  end
+  object spUpdate_ExpirationDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_ExpirationDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpirationDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExpirationDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ExpirationDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 370
+    Top = 384
   end
 end

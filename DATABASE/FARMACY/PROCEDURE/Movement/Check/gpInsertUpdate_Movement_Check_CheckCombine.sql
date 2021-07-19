@@ -48,7 +48,7 @@ BEGIN
     AND MI_Master.Amount > 0;
     
     
-  PERFORM gpSetErased_Movement_Income (inMovementId:= inMovementAddId, inSession:= inSession);  
+  PERFORM gpSetErased_Movement_Check (inMovementId:= inMovementAddId, inSession:= inSession);  
 
 END;
 $BODY$

@@ -90,6 +90,7 @@ RETURNS TABLE (PartionId            Integer
              , PriceTax                TFloat -- % наценки по курсу на тек дату
              , PriceTax_doc            TFloat -- % наценки по курсу документа  
              , DiscountTax             TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
+             , DiscountTaxNext         TFloat -- % Сезонной скидки дополнительный !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint       TFloat -- Кол-во для печати ценников
 
              , PriceListId_Basis    Integer  --
@@ -613,6 +614,10 @@ BEGIN
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                         , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                        , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
+                        , (COALESCE (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData,0) 
+                         + COALESCE (ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData,0)) AS DiscountTax_all
+
                    FROM tmpDiscountList
                         INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                               ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -628,6 +633,10 @@ BEGIN
                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                      ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                     AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_ValueNext
+                                                     ON ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                    AND ObjectHistoryFloat_DiscountPeriodItem_ValueNext.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext()
                   )
  , tmpGoodsPrint AS (SELECT Object_GoodsPrint.UnitId
                           , CASE WHEN inisPartion = TRUE THEN Object_GoodsPrint.PartionId ELSE 0 END AS PartionId
@@ -786,18 +795,18 @@ BEGIN
 
              --c учетом сезонной скидки
              -- Цена по прайсу в ГРН  тек.курс
-           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
+           , CAST (tmpData.OperPriceList * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0))     :: TFloat AS OperPriceList_disc
              -- Цена по прайсу в ГРН курс.документа
-           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
+           , CAST (tmpData.OperPriceList_doc * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100) AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_doc_disc
            
              -- *Цена по прайсу в валюте по курсу на тек.дату
            , CAST (tmpData.OperPriceList_curr 
-                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)    
+                          * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100)    
                    AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_disc
                    
              -- *Цена по прайсу в валюте по курсу документа
            , CAST (tmpData.OperPriceList_doc_curr
-                          * (1 - COALESCE (tmpDiscount.DiscountTax,0) /100)
+                          * (1 - COALESCE (tmpDiscount.DiscountTax_all,0) /100)
                    AS NUMERIC (16, 0)) :: TFloat AS OperPriceList_curr_doc_disc
            /***********************/
 
@@ -865,6 +874,8 @@ BEGIN
 
              -- % Сезонной скидки !!!НА!!! zc_DateEnd
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
+             -- % Сезонной скидки доп. !!!НА!!! zc_DateEnd
+           , tmpDiscount.DiscountTaxNext     :: TFloat AS DiscountTaxNext
              -- Кол-во для печати ценников
            , tmpGoodsPrint.Amount            :: TFloat AS Amount_GoodsPrint
 
@@ -880,7 +891,7 @@ BEGIN
            , Object_Currency_pl.ValueData AS CurrencyName_pl
 
            , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) <> 0 THEN CAST (100 - tmpData.OperPriceList_orig * 100 / tmpData.OperPriceList_first AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS Persent_diff
-           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList_orig,0) AND COALESCE (tmpDiscount.DiscountTax,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+           , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList_orig,0) AND COALESCE (tmpDiscount.DiscountTax_all,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId

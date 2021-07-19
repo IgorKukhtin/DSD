@@ -313,9 +313,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_NP() RETURNS integer AS $BODY$BEGI
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_NP', 'Отправка новой почтой'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NP');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_RoundingTo50() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_RoundingTo50'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_RoundingTo50', 'Округление до 50 коп.'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RoundingTo50');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 19.07.21                                                                                    * zc_MovementBoolean_RoundingTo50
  18.06.21                                                                                    * zc_MovementBoolean_NP
  01.06.21                                                                                    * zc_MovementBoolean_FinalFormation
  25.05.21                                                                                    * zc_MovementBoolean_Supplement

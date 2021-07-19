@@ -3761,6 +3761,9 @@
 				<Form>Report_RemainsCovid_19Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Cash\TestingUser.pas">
+				<Form>TestingUserForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

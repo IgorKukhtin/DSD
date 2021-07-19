@@ -6,7 +6,7 @@ inherited Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1378
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -347,6 +347,16 @@ inherited Report_GoodsMI_AccountPodiumForm: TReport_GoodsMI_AccountPodiumForm
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1089#1082'.'
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1089#1082'. '#1076#1086#1087'.'
+            DataBinding.FieldName = 'ChangePercentNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
