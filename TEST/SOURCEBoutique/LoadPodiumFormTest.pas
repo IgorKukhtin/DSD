@@ -863,13 +863,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
-  }
+
   //Отчет Текущий остаток товара
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentDialogForm');
   exit;
+
   //Отчет пл списанию
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementLossForm');
@@ -890,6 +891,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
+
+  }
 end;
 
 procedure TLoadFormTest.LoadReportBalanceFormTest;

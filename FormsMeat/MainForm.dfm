@@ -6,7 +6,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 256
+  ExplicitHeight = 259
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -8473,6 +8473,17 @@ inherited MainForm: TMainForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
+    object actSmsSettings: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1057#1052#1057
+      FormName = 'TSmsSettingsForm'
+      FormNameParam.Value = 'TSmsSettingsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 48
@@ -10392,25 +10403,28 @@ inherited MainForm: TMainForm
         object miRouteSorting: TMenuItem [11]
           Action = actRouteSorting
         end
-        object N122: TMenuItem [12]
+        object N244: TMenuItem [12]
+          Action = actSmsSettings
+        end
+        object N122: TMenuItem [13]
           Caption = '-'
         end
-        object miPartionRemains: TMenuItem [13]
+        object miPartionRemains: TMenuItem [14]
           Action = actPartionRemains
         end
-        object miPartionGoods: TMenuItem [14]
+        object miPartionGoods: TMenuItem [15]
           Action = actPartionGoods
         end
-        object N138: TMenuItem [15]
+        object N138: TMenuItem [16]
           Caption = '-'
         end
-        object N137: TMenuItem [16]
+        object N137: TMenuItem [17]
           Action = actGoodsListSale
         end
-        object N165: TMenuItem [17]
+        object N165: TMenuItem [18]
           Action = actGoodsListIncome
         end
-        object miSubMobile: TMenuItem [18]
+        object miSubMobile: TMenuItem [19]
           Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' ('#1087#1077#1088#1074#1072#1103' '#1074#1077#1088#1089#1080#1103')'
           object miMobileTariff_old: TMenuItem
             Action = actMobileTariff_old
@@ -10424,10 +10438,10 @@ inherited MainForm: TMainForm
             Action = actReport_MobileKS_old
           end
         end
-        object N132: TMenuItem [19]
+        object N132: TMenuItem [20]
           Caption = '-'
         end
-        object N40: TMenuItem [20]
+        object N40: TMenuItem [21]
           Action = actGlobalConst
         end
       end

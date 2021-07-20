@@ -452,7 +452,12 @@ BEGIN
         , (tmpMI_Child.Amount_Bank * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_Card
 
         --сумма скидки по % скидки док. продажи
-        , ( (zfCalc_SummPriceList ((tmpData.AmountIn+tmpData.AmountOut), MIFloat_OperPriceList.ValueData) -  COALESCE (MIFloat_ChangePercent.ValueData, 0)/100)
+        , ( (zfCalc_SummPriceList ((tmpData.AmountIn+tmpData.AmountOut), MIFloat_OperPriceList.ValueData) 
+           - zfCalc_SummChangePercentNext(tmpData.AmountIn+tmpData.AmountOut
+                                        , MIFloat_OperPriceList.ValueData
+                                        , COALESCE (MIFloat_ChangePercent.ValueData, 0)
+                                        , COALESCE (MIFloat_ChangePercentNext.ValueData, 0) ) 
+             )
            * CASE WHEN MovementDesc.Id IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN 1
                   WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1)
              END)                                                   :: TFloat   AS SummChangePercent_Calc
