@@ -52,6 +52,7 @@ RETURNS TABLE (BrandName             VarChar (100)
              , ClientName            VarChar (100)
              , DiscountSaleKindName  VarChar (15)
              , ChangePercent         TFloat
+             , ChangePercentNext     TFloat
 
              , UnitName_In           VarChar (100)
              , CurrencyName          VarChar (10)
@@ -489,6 +490,7 @@ BEGIN
                                , CASE WHEN inIsClient_doc   = TRUE THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainerDebt.ClientId END ELSE 0 :: Integer END AS ClientId
 
                                , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
+                               , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)     AS ChangePercentNext
                                , COALESCE (MILinkObject_DiscountSaleKind.ObjectId, 0)  AS DiscountSaleKindId
 
                                , Object_PartionGoods.UnitId     AS UnitId_in
@@ -819,6 +821,11 @@ BEGIN
                                                            ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                           AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
                                                           AND inIsDiscount                         = TRUE
+                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                           ON MIFloat_ChangePercentNext.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
+                                                          AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
+                                                          AND inIsDiscount                         = TRUE
+
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
                                                                 ON MILinkObject_DiscountSaleKind.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                                AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
@@ -862,6 +869,7 @@ BEGIN
                                  , CASE WHEN inIsClient_doc   = TRUE THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainerDebt.ClientId END ELSE 0 END
 
                                  , MIFloat_ChangePercent.ValueData
+                                 , MIFloat_ChangePercentNext.ValueData
                                  , MILinkObject_DiscountSaleKind.ObjectId
 
                                  , Object_PartionGoods.UnitId
@@ -896,6 +904,7 @@ BEGIN
                                , tmpSale_all.ClientId
 
                                , tmpSale_all.ChangePercent
+                               , tmpSale_all.ChangePercentNext
                                , tmpSale_all.DiscountSaleKindId
 
                                , tmpSale_all.UnitId_in
@@ -1069,6 +1078,7 @@ BEGIN
                                , 0 AS ClientId
 
                                , 0 AS ChangePercent
+                               , 0 AS ChangePercentNext
                                , 0 AS DiscountSaleKindId
 
                                , Object_PartionGoods.UnitId     AS UnitId_in
@@ -1252,6 +1262,7 @@ BEGIN
                                , 0 AS ClientId
 
                                , 0 AS ChangePercent
+                               , 0 AS ChangePercentNext
                                , 0 AS DiscountSaleKindId
 
                                , Object_PartionGoods.UnitId     AS UnitId_in
@@ -1471,6 +1482,7 @@ BEGIN
                             , tmpData_all.UnitId
                             , tmpData_all.ClientId
                             , tmpData_all.ChangePercent
+                            , tmpData_all.ChangePercentNext
                             , tmpData_all.DiscountSaleKindId
    
                             , tmpData_all.UnitId_in
@@ -1646,6 +1658,7 @@ BEGIN
                               , tmpData_all.UnitId
                               , tmpData_all.ClientId
                               , tmpData_all.ChangePercent
+                              , tmpData_all.ChangePercentNext
                               , tmpData_all.DiscountSaleKindId
    
                               , tmpData_all.UnitId_in
@@ -1713,6 +1726,7 @@ BEGIN
              , Object_Client.ValueData      :: VarChar (100) AS ClientName
              , Object_DiscountSaleKind.ValueData :: VarChar (15) AS DiscountSaleKindName
              , tmpData.ChangePercent        :: TFloat        AS ChangePercent
+             , tmpData.ChangePercentNext    :: TFloat        AS ChangePercentNext
                                             
              , Object_Unit_In.ValueData     :: VarChar (100) AS UnitName_In
              , Object_Currency.ValueData    :: VarChar (10)  AS CurrencyName

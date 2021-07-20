@@ -5,7 +5,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1184
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -413,6 +413,26 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '% '#1089#1082'.-1'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1089#1082'.-2'
+            DataBinding.FieldName = 'ChangePercentNext'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object DiscountSaleKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
@@ -1109,14 +1129,14 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1213,14 +1233,14 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1303,7 +1323,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1393,7 +1413,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1530,7 +1550,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       end
       item
         Name = 'inisMovement'
-        Value = 'False'
+        Value = False
         Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput

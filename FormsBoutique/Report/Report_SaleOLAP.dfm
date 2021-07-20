@@ -458,8 +458,18 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Area = faRow
       AreaIndex = 4
       IsCaptionAssigned = True
-      Caption = '% '#1089#1082'.'
+      Caption = '% '#1089#1082'.-1'
       DataBinding.FieldName = 'ChangePercent'
+      Visible = True
+      Width = 55
+      UniqueName = '% '#1089#1082'.'
+    end
+    object pvChangePercentNext: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = '% '#1089#1082'.-2'
+      DataBinding.FieldName = 'ChangePercentNext'
       Visible = True
       Width = 55
       UniqueName = '% '#1089#1082'.'

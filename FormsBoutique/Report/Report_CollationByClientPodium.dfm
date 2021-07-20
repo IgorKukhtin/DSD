@@ -529,8 +529,20 @@ inherited Report_CollationByClientPodiumForm: TReport_CollationByClientPodiumFor
             Width = 100
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1057#1082#1080#1076#1082#1080
+            Caption = '% '#1057#1082#1080#1076#1082#1080' 1'
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1057#1082#1080#1076#1082#1080' 2'
+            DataBinding.FieldName = 'ChangePercentNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
