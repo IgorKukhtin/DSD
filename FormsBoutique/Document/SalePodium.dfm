@@ -1040,7 +1040,7 @@ object SalePodiumForm: TSalePodiumForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1057#1082#1080#1076#1082#1080' '#1057#1077#1079#1086#1085
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080' '#1050#1083#1080#1077#1085#1090#1072'/'#1057#1077#1079#1086#1085
             Options.Editing = False
             Width = 35
           end

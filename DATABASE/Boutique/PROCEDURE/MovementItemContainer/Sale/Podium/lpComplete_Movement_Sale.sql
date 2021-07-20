@@ -288,11 +288,11 @@ BEGIN
                    , COALESCE (MIFloat_TotalPay.ValueData, 0)                                    AS TotalPay
 
                      -- Сезонная скидка
-                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Period() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10201
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Period() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10201
                      -- Скидка outlet
-                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Outlet() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10202
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Outlet() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10202
                      -- Скидка клиента
-                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Client() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10203
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Client() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) ELSE 0 END AS Summ_10203
                      -- Скидка дополнительная
                    , COALESCE (MIFloat_SummChangePercent.ValueData, 0) AS Summ_10204
 
@@ -324,6 +324,9 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                               ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()

@@ -39,7 +39,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , CurrencyValue_usd TFloat, ParValue_usd TFloat
              , CurrencyValue_eur TFloat, ParValue_eur TFloat
 
-             , ChangePercent TFloat, SummChangePercent TFloat
+             , ChangePercent TFloat, ChangePercentNext TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
              , TotalSummToPay TFloat, TotalSummToPay_curr TFloat, TotalSummDebt TFloat, TotalSummDebt_curr TFloat
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
@@ -122,6 +122,7 @@ BEGIN
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
+                           , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)     AS ChangePercentNext
                              -- Сумма по входным ценам в валюте
                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
                              -- Сумма по прайсу ГРН, без скидки
@@ -179,6 +180,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                        ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -364,6 +368,7 @@ BEGIN
            , CASE WHEN tmpMI_Child.CurrencyValue_eur > 0 THEN tmpMI_Child.ParValue_eur      ELSE tmpMI.ParValue      END :: TFloat AS ParValue_eur
 
            , tmpMI.ChangePercent                                  :: TFloat AS ChangePercent         -- % Скидки
+           , tmpMI.ChangePercentNext                              :: TFloat AS ChangePercentNext     -- % Скидки Доп.
            , tmpMI.SummChangePercent                              :: TFloat AS SummChangePercent     -- Итого сумма Скидки: 2)дополнительная
            , (tmpMI.TotalChangePercent - tmpMI.SummChangePercent) :: TFloat AS TotalChangePercent    -- Итого сумма Скидки: 1)по %скидки
            , tmpMI.TotalChangePercentPay                          :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН

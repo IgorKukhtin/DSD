@@ -53,9 +53,9 @@ BEGIN
 
                                 , CASE WHEN vbCurrencyId_Client = zc_Currency_EUR()
                                        -- EUR
-                                       THEN zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData)
+                                       THEN zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
                                        -- ÃÐÍ
-                                       ELSE zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData,      MIFloat_ChangePercent.ValueData)
+                                       ELSE zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData,      MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData)
                                   END AS AmountToPay
 
                            FROM MovementItem
@@ -72,6 +72,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
                                                            AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                            ON MIFloat_ChangePercentNext.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
+                                                           AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE

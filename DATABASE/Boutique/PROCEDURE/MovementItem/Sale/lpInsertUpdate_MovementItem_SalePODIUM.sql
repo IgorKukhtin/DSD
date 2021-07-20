@@ -18,6 +18,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Inte
                                                         , TFloat, TFloat, TFloat, TFloat
                                                         , TVarChar, TVarChar, Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat
+                                                        , TVarChar, TVarChar, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>

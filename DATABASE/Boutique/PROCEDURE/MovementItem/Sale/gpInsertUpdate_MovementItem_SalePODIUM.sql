@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePodium (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePodium (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePodium (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePodium_update (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
     IN inIsPay                          Boolean   , -- добавить с оплатой
  INOUT ioAmount                         TFloat    , -- Количество
  INOUT ioChangePercent                  TFloat    , -- *** - % Скидки
- INOUT ioChangePercentNext              TFloat    , -- *** - % Скидки
+ INOUT ioChangePercentNext              TFloat    , -- *** - % Скидки Доп.
 
  INOUT ioSummChangePercent              TFloat    , -- *** - Дополнительная скидка в продаже ГРН
  INOUT ioSummChangePercent_curr         TFloat    , -- *** - Дополнительная скидка в продаже в валюте***

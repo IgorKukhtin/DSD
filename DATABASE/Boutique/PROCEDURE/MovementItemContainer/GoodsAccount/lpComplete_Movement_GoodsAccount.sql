@@ -247,6 +247,7 @@ BEGIN
                            , MI_Sale.Amount AS Amount_Sale
                              -- Скидка % - в самой продаже
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)          AS ChangePercent
+                           , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)      AS ChangePercentNext
                              -- Скидка в самой продаже - суммируется 1)по %скидки + 2)дополнительная
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)     AS TotalChangePercent
                              -- Скидка в самой продаже - дополнительная из Расчеты покупателей
@@ -323,6 +324,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = Object_PartionMI.ObjectCode
                                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                       ON MIFloat_ChangePercentNext.MovementItemId = Object_PartionMI.ObjectCode
+                                                      AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                        ON MIFloat_SummChangePercent.MovementItemId = Object_PartionMI.ObjectCode
                                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -518,7 +522,7 @@ BEGIN
                      -- !!!самое Важное - определить для Amount_begin Скидка - Только для %!!!
                    , CASE WHEN tmp.SummDebt_sale = 0 AND tmpLast.PartionId_MI IS NULL
                                THEN -- то что в продаже
-                                    zfCalc_SummPriceList (tmp.Amount_Sale, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_Sale, tmp.OperPriceList, tmp.ChangePercent)
+                                    zfCalc_SummPriceList (tmp.Amount_Sale, tmp.OperPriceList) - zfCalc_SummChangePercentNext (tmp.Amount_Sale, tmp.OperPriceList, tmp.ChangePercent, tmp.ChangePercentNext)
 
                           -- !!!!
                           -- 2. надо для Sybase отловить если в долге 2 шт. + сначала оплатили за 1шт, потом еще 1 шт вернули, а потом вернули 1шт за которую оплатили
@@ -551,14 +555,14 @@ BEGIN
                               = tmp.TotalPay_curr + tmp.TotalPayOth + tmp.TotalPay
 
                                THEN -- ?пока так, но всегда ЛИ будет корректно ?
-                                    zfCalc_SummPriceList (tmp.OperCount, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.OperCount, tmp.OperPriceList, tmp.ChangePercent)
+                                    zfCalc_SummPriceList (tmp.OperCount, tmp.OperPriceList) - zfCalc_SummChangePercentNext (tmp.OperCount, tmp.OperPriceList, tmp.ChangePercent, tmp.ChangePercentNext)
                           -- !!!!
                           -- 2. надо для Sybase
                           -- !!!!
 
                           WHEN tmp.SummDebt_return = 0 AND tmpLast.PartionId_MI IS NULL
                                THEN -- продажа МИНУС возврат
-                                    zfCalc_SummPriceList (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList) - zfCalc_SummChangePercent (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList, tmp.ChangePercent)
+                                    zfCalc_SummPriceList (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList) - zfCalc_SummChangePercentNext (tmp.Amount_Sale - tmp.Amount_Return, tmp.OperPriceList, tmp.ChangePercent, tmp.ChangePercentNext)
                           ELSE 0
                      END AS SummChangePercent_pl
 

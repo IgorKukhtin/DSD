@@ -859,6 +859,15 @@ object ReturnInPodiumForm: TReturnInPodiumForm
             Options.Editing = False
             Width = 35
           end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1057#1082'.2'
+            DataBinding.FieldName = 'ChangePercentNext'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' '#1057#1077#1079#1086#1085
+            Options.Editing = False
+            Width = 35
+          end
           object isChecked: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088'. > 31'#1076'.'
             DataBinding.FieldName = 'isChecked'

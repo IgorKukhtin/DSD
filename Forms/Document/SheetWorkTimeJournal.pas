@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, cxCheckBox;
 
 type
   TSheetWorkTimeJournalForm = class(TParentForm)
@@ -37,7 +37,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -67,6 +67,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     OperDate_detail: TcxGridDBColumn;
     InvNumber_detail: TcxGridDBColumn;
+    cbDetail: TcxCheckBox;
   private
   public
   end;

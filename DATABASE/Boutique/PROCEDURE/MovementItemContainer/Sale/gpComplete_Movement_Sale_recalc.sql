@@ -60,6 +60,7 @@ BEGIN
                                   , MovementItem.ObjectId               AS GoodsId
                                   , MovementItem.Amount                 AS OperCount
                                   , MIFloat_ChangePercent.ValueData     AS ChangePercent
+                                  , MIFloat_ChangePercentNext.ValueData AS ChangePercentNext
 
                                     -- Цена факт ГРН, со всеми скидками
                                   , MIFloat_OperPriceListReal.ValueData AS OperPriceList
@@ -108,6 +109,9 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                              AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                              ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
@@ -131,10 +135,10 @@ BEGIN
              , tmpMI.OperPriceList_curr
 
                -- SummChangePercent: 10% = 900 - 800 = 100
-             , zfCalc_SummChangePercent (tmpMI.OperCount, tmpMI.OperPriceList_pl, tmpMI.ChangePercent)
+             , zfCalc_SummChangePercentNext (tmpMI.OperCount, tmpMI.OperPriceList_pl, tmpMI.ChangePercent, tmpMI.ChangePercentNext)
              - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList) AS SummChangePercent
                -- SummChangePercent_curr: 10% = 900 - 800 = 100
-             , zfCalc_SummChangePercent (tmpMI.OperCount, tmpMI.OperPriceList_curr, tmpMI.ChangePercent)
+             , zfCalc_SummChangePercentNext (tmpMI.OperCount, tmpMI.OperPriceList_curr, tmpMI.ChangePercent, tmpMI.ChangePercentNext)
              - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceListReal_curr) AS SummChangePercent_curr
 
                -- TotalSummPriceList: 1000

@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , SummDebt TFloat
                -- % Скидки
              , ChangePercent TFloat
+             , ChangePercentNext TFloat
                -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
              , SummChangePercent_sale TFloat
                -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
@@ -434,6 +435,7 @@ BEGIN
 
              -- % Скидки
            , COALESCE (MIFloat_ChangePercent.ValueData, 0)      :: TFloat AS ChangePercent
+           , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  :: TFloat AS ChangePercentNext
 
              -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  :: TFloat AS SummChangePercent_sale
@@ -516,6 +518,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = tmpMI.SaleMI_Id
                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                        ON MIFloat_ChangePercentNext.MovementItemId = tmpMI.SaleMI_Id
+                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = tmpMI.SaleMI_Id
                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -675,6 +680,7 @@ BEGIN
 
              -- % Скидки
            , COALESCE (MIFloat_ChangePercent.ValueData, 0)      :: TFloat AS ChangePercent
+           , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  :: TFloat AS ChangePercentNext
              -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  :: TFloat AS SummChangePercent_sale
              -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
@@ -768,6 +774,9 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                        ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                        ON MIFloat_ChangePercentNext.MovementItemId = MI_Sale.Id
+                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                        ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()

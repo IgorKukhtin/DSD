@@ -75,6 +75,14 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       TabOrder = 5
       Width = 150
     end
+    object cbDetail: TcxCheckBox
+      Left = 484
+      Top = 26
+      Action = actRefresh
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1085#1103#1084
+      TabOrder = 6
+      Width = 141
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -174,6 +182,9 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       object InvNumber_detail: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber_detail'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-,0.; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -384,10 +395,10 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -453,7 +464,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -461,7 +472,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       RefreshOnTabSetChanges = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_SheetWorkTime_Period'
     DataSet = ClientDataSet
     DataSets = <
@@ -490,6 +501,14 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Value = Null
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

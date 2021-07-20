@@ -43,7 +43,7 @@ BEGIN
          INSERT INTO _tmp_MI_Master (MovementItemId, Summa, AmountToPay)
             WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
                                 , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS Summa
-                                , zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) AS AmountToPay
+                                , zfCalc_SummChangePercentNext (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData, MIFloat_ChangePercentNext.ValueData) AS AmountToPay
                            FROM MovementItem
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                                  ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
@@ -55,6 +55,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
                                                            AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                            ON MIFloat_ChangePercentNext.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MovementItem.Id)
+                                                           AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE

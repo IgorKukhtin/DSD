@@ -200,6 +200,7 @@ type
     actGet_Check_ReturnIn_No: TdsdExecStoredProc;
     actGet_Check_ReturnIn_Yes: TdsdExecStoredProc;
     bbact_User_Sale: TdxBarButton;
+    ChangePercentNext: TcxGridDBColumn;
   private
   public
   end;

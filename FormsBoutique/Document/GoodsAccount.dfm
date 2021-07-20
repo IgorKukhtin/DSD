@@ -776,7 +776,16 @@ object GoodsAccountForm: TGoodsAccountForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1057#1082#1080#1076#1082#1080
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080' '#1050#1083#1080#1077#1085#1090#1072'/'#1057#1077#1079#1086#1085
+            Options.Editing = False
+            Width = 35
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1057#1082'.2'
+            DataBinding.FieldName = 'ChangePercentNext'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' '#1057#1077#1079#1086#1085
             Options.Editing = False
             Width = 35
           end
@@ -2346,6 +2355,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2358,6 +2368,7 @@ object GoodsAccountForm: TGoodsAccountForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 363
     Top = 345
@@ -2464,7 +2475,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2538,7 +2549,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2573,7 +2584,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'HappyDate'
-        Value = ''
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2615,7 +2626,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2774,14 +2785,14 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'HappyDate'
-        Value = 'NULL'
+        Value = Null
         Component = edHappyDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'LastDate'
-        Value = 'NULL'
+        Value = Null
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3057,7 +3068,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
         Name = 'inOperDate'
-        Value = 0c
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
