@@ -264,6 +264,7 @@ BEGIN
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
                            , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                           , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)  AS ChangePercentNext
                            , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0) AS TotalChangePercent_curr
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
@@ -287,6 +288,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                                        ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -301,9 +305,9 @@ BEGIN
                                                         ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
-                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
-                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
 
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
@@ -336,14 +340,19 @@ BEGIN
            , Object_CountryBrand.ValueData  AS CountryBrandName
 
            , tmpMI.Amount
-           , COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)      :: TFloat AS ChangePercent
+           , COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)         :: TFloat AS ChangePercent
+           , COALESCE (MIFloat_ChangePercentNext.ValueData, tmpMI.ChangePercentNext) :: TFloat AS ChangePercentNext
 
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , COALESCE (MIFloat_OperPriceList.ValueData,      tmpMI.OperPriceList)      :: TFloat AS OperPriceList
            , COALESCE (MIFloat_OperPriceList_curr.ValueData, tmpMI.OperPriceList_curr) :: TFloat AS OperPriceList_curr
            
-           , zfCalc_SummChangePercent (1, tmpMI.OperPriceList_curr, COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)) :: TFloat AS OperPriceList_curr_real
+           , zfCalc_SummChangePercentNext (1
+                                         , tmpMI.OperPriceList_curr
+                                         , COALESCE (MIFloat_ChangePercent.ValueData, tmpMI.ChangePercent)
+                                         , COALESCE (MIFloat_ChangePercentNext.ValueData, tmpMI.ChangePercentNext)
+                                         ) :: TFloat AS OperPriceList_curr_real
            
 
              -- чек в ценах покупателя
@@ -412,6 +421,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                        ON MIFloat_ChangePercentNext.MovementItemId = MI_Sale.Id
+                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
