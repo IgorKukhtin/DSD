@@ -402,7 +402,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProjectAuthent'
+        Name = 'isProjectAuthent'
         Value = Null
         Component = cbisProjectAuthent
         DataType = ftBoolean
