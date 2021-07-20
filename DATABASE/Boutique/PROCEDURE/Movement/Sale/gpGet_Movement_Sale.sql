@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar, Comment_Client TVarChar
              , isOffer Boolean
              , isDisableSMS Boolean
+             , KeySMS TFloat
              , InsertName TVarChar, InsertDate TDateTime
                )
 AS
@@ -99,6 +100,7 @@ BEGIN
              , CAST ('' as TVarChar)            AS Comment_Client
              , CAST (FALSE AS Boolean)          AS isOffer
              , CAST (FALSE AS Boolean)          AS isDisableSMS
+             , CAST (0 AS TFloat)              AS KeySMS
 
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
@@ -229,6 +231,7 @@ BEGIN
              
              , COALESCE (MovementBoolean_Offer.ValueData, FALSE) ::Boolean AS isOffer
              , COALESCE (MovementBoolean_DisableSMS.ValueData, FALSE) ::Boolean AS isDisableSMS
+             , CAST (0 AS TFloat)                     AS KeySMS
 
              , Object_Insert.ValueData                AS InsertName
              , COALESCE (MovementDate_Insert.ValueData, CURRENT_TIMESTAMP)  :: TDateTime AS InsertDate

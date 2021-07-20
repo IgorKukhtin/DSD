@@ -174,6 +174,7 @@ type
     isLine: TcxGridDBColumn;
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
+    ChangePercentNext: TcxGridDBColumn;
   private
   public
   end;

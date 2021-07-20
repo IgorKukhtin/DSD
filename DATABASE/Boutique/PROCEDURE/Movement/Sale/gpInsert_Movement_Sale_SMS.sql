@@ -44,6 +44,23 @@ BEGIN
      
      
      -- Проверка
+     IF NOT EXISTS (SELECT 1
+                    FROM MovementItem
+                         JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
+                                                     ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+                                                    AND MILinkObject_DiscountSaleKind.ObjectId       = zc_Enum_DiscountSaleKind_Client()
+                    WHERE MovementItem.MovementId = ioId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND MovementItem.Amount     > 0
+                   )
+        AND vbDiscountTax > 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для скидки <%> нет функции отправки SMS.', lfGet_Object_ValueData_sh (zc_Enum_DiscountSaleKind_Period());
+     END IF;
+
+     -- Проверка
      IF COALESCE (TRIM (outPhoneSMS), '') = ''
      THEN
          RAISE EXCEPTION 'Ошибка.У Покупателя <%> не установлен номер телефона для отправки SMS.'

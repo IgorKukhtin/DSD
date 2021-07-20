@@ -22,7 +22,7 @@ object SalePodiumForm: TSalePodiumForm
     Left = 0
     Top = 0
     Width = 1066
-    Height = 161
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -380,103 +380,128 @@ object SalePodiumForm: TSalePodiumForm
       Width = 174
     end
     object cbDisableSMS: TcxCheckBox
-      Left = 169
+      Left = 167
       Top = 103
       Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1088#1086#1074#1077#1088#1082#1091' SMS'
       Caption = #1054#1090#1082#1083'. '#1087#1088#1086#1074#1077#1088#1082#1091' SMS'
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
       TabOrder = 40
-      Width = 127
+      Width = 145
     end
     object cxLabel20: TcxLabel
-      Left = 301
+      Left = 314
       Top = 85
       Caption = #1055#1072#1088#1086#1083#1100' SMS'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edKeySMS: TcxCurrencyEdit
-      Left = 302
+      Left = 314
       Top = 103
-      Hint = #1048#1090#1086#1075#1086' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
       ParentShowHint = False
-      Properties.DecimalPlaces = 4
+      Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       ShowHint = True
       TabOrder = 42
-      Width = 87
+      Width = 74
     end
     object edSmsSettingsName: TcxTextEdit
       Left = 74
       Top = 129
       Properties.ReadOnly = True
       TabOrder = 43
+      Visible = False
       Width = 108
     end
     object cxLabel21: TcxLabel
       Left = 9
       Top = 130
       Caption = 'SmsSettings'
+      Visible = False
     end
     object cxLabel23: TcxLabel
       Left = 334
       Top = 130
       Caption = 'Password '
+      Visible = False
     end
     object edPassword: TcxTextEdit
       Left = 387
       Top = 129
       Properties.ReadOnly = True
       TabOrder = 46
+      Visible = False
       Width = 108
     end
     object cxLabel24: TcxLabel
       Left = 503
       Top = 130
       Caption = 'Message'
+      Visible = False
     end
     object edMessage: TcxTextEdit
       Left = 554
       Top = 129
       Properties.ReadOnly = True
       TabOrder = 48
+      Visible = False
       Width = 108
     end
     object PhoneSMS11: TcxLabel
       Left = 670
       Top = 130
       Caption = 'PhoneSMS'
+      Visible = False
     end
     object edPhoneSMS: TcxTextEdit
       Left = 728
       Top = 129
       Properties.ReadOnly = True
       TabOrder = 50
+      Visible = False
       Width = 108
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 187
+    Top = 155
     Width = 1066
-    Height = 416
+    Height = 448
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 416
+    ExplicitTop = 187
+    ExplicitHeight = 416
+    ClientRectBottom = 448
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 392
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1066
-        Height = 309
+        Height = 341
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 309
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1861,24 +1886,28 @@ object SalePodiumForm: TSalePodiumForm
     Left = 187
     Top = 130
     Caption = 'Login'
+    Visible = False
   end
   object edLogin: TcxTextEdit
     Left = 219
     Top = 129
     Properties.ReadOnly = True
     TabOrder = 5
+    Visible = False
     Width = 108
   end
   object cxLabel26: TcxLabel
     Left = 842
     Top = 130
     Caption = 'MovementId'
+    Visible = False
   end
   object edMovementId: TcxTextEdit
     Left = 909
     Top = 129
     Properties.ReadOnly = True
     TabOrder = 10
+    Visible = False
     Width = 108
   end
   object FormParams: TdsdFormParams
@@ -4044,6 +4073,13 @@ object SalePodiumForm: TSalePodiumForm
         Component = cbDisableSMS
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KeySMS'
+        Value = Null
+        Component = edKeySMS
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -4159,6 +4195,13 @@ object SalePodiumForm: TSalePodiumForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKeySMS'
+        Value = Null
+        Component = edKeySMS
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -4595,6 +4638,13 @@ object SalePodiumForm: TSalePodiumForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKeySMS'
+        Value = Null
+        Component = edKeySMS
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

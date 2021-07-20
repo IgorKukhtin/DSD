@@ -1,9 +1,11 @@
 -- Function: gpComplete_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inKeySMS            Integer               , -- 
     IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
@@ -33,6 +35,7 @@ BEGIN
 
      -- собственно проводки
      PERFORM lpComplete_Movement_Sale (inMovementId  -- Документ
+                                     , inKeySMS
                                      , vbUserId);    -- Пользователь
 
 END;

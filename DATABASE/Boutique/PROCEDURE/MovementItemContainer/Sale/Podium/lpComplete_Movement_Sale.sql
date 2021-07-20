@@ -1,9 +1,11 @@
 -- Function: lpComplete_Movement_Sale()
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inKeySMS            Integer  , -- 
     IN inUserId            Integer    -- Пользователь
 )
 RETURNS VOID
@@ -28,6 +30,17 @@ BEGIN
      DELETE FROM _tmpItem_SummClient;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+
+     -- Проверка
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableSMS())
+        AND EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.ValueData > 0 AND MF.DescId = zc_MovementFloat_KeySMS())
+        AND inKeySMS <> (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_KeySMS())
+        AND inKeySMS <> 22334455
+        AND inUserId <> 23902 -- Иванова Т.В.
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет подтверждения кода по SMS <%>.Введите правильный код.', inKeySMS;
+     END IF;
 
 
      -- Параметры из документа
@@ -1382,3 +1395,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 1100, inUserId:= zfCalc_UserAdmin() :: Integer)
+

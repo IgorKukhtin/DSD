@@ -557,14 +557,6 @@
 				<Form>ReturnOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\SendJournal.pas">
-				<Form>SendJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\Send.pas">
-				<Form>SendForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCEBoutique\LoadPodiumReportTest.pas"/>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
 				<Form>PartionGoodsChoiceForm</Form>
@@ -682,32 +674,8 @@
 				<Form>InfoMoneyDestinationEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\ReturnInJournal.pas">
-				<Form>ReturnInJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\ReturnIn.pas">
-				<Form>ReturnInForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\ReturnInItemEdit.pas">
-				<Form>ReturnInItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyJournal.pas">
 				<Form>CurrencyJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas">
-				<Form>GoodsAccountItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccount.pas">
-				<Form>GoodsAccountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountJournal.pas">
-				<Form>GoodsAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas">

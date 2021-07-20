@@ -1309,6 +1309,12 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKeySMS'
+        Value = 22334455
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
