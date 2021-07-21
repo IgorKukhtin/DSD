@@ -1291,6 +1291,8 @@ type
     N245: TMenuItem;
     actMobilePack: TdsdOpenForm;
     miMobilePack: TMenuItem;
+    actSmsSettings: TdsdOpenForm;
+    N244: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

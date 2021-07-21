@@ -102,6 +102,7 @@ type
     NDS_PriceList: TcxGridDBColumn;
     edLetterSubject: TcxTextEdit;
     cxLabel14: TcxLabel;
+    OrderShedule_Color: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1165,6 +1165,45 @@ begin
   end;
 end;
 
+{
+function GetSumm(Amount, Price: Currency; Down: Boolean): Currency;
+var
+  A, P, RI: Int64;
+  S1: String;
+begin
+  if (Amount = 0) or (Price = 0) then
+  Begin
+    Result := 0;
+    exit;
+  End;
+  A := trunc(Amount * 1000);
+  P := trunc(Price * 100);
+  if Down then
+  begin
+    RI := A * P;
+    S1 := IntToStr(RI);
+    if Length(S1) <= 5 then
+      RI := 0
+    else
+      RI := StrToInt(Copy(S1, 1, Length(S1) - 5));
+    if (Length(S1) >= 5) AND (StrToInt(S1[Length(S1) - 4]) >= 5) then
+      Result := RI + 0.5
+    else Result := RI;
+  end
+  else
+  begin
+    RI := A * P * 2;
+    S1 := IntToStr(RI);
+    if (Length(S1) <= 5) then
+      RI := 0
+    else
+      RI := StrToInt(Copy(S1, 1, Length(S1) - 5));
+    if (Length(S1) >= 5) AND (StrToInt(S1[Length(S1) - 4]) >= 5) then
+      RI := RI + 1;
+    Result := (RI / 2);
+  end;
+end;}
+
 function GetSummFull(Amount, Price: Currency): Currency;
 var
   A, P, RI: Int64;

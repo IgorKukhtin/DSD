@@ -53,12 +53,10 @@ BEGIN
                           , tmpUnit.RetailId                   AS RetailId
                           , MIContainer.MovementId             AS MovementId
                           --, SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
-                          , SUM (CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                                           THEN TRUNC(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0), 1)::TFloat
-                                           ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                                           THEN (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 1))::TFloat
-                                           ELSE (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 2))::TFloat END END *
-                                           COALESCE (-1 * MIContainer.Amount, 0) / COALESCE (MovementItem.Amount, 0)) AS SummaSale
+                          , SUM (zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0)
+                                                 , COALESCE (MB_RoundingDown.ValueData, False)
+                                                 , COALESCE (MB_RoundingTo10.ValueData, False)
+                                                 , COALESCE (MB_RoundingTo50.ValueData, False))) AS SummaSale
                      FROM MovementItemContainer AS MIContainer
                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
 
@@ -70,6 +68,9 @@ BEGIN
                                LEFT JOIN MovementBoolean AS MB_RoundingDown
                                                          ON MB_RoundingDown.MovementId = MIContainer.MovementID
                                                         AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()  
+                               LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                                         ON MB_RoundingTo50.MovementId = MIContainer.MovementID
+                                                        AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
                      WHERE MIContainer.DescId = zc_MIContainer_Count()
                        AND MIContainer.MovementDescId = zc_Movement_Check()

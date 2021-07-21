@@ -59,6 +59,7 @@ RETURNS TABLE (Text_info             TVarChar
              , SummChangePercent      TFloat
              , OperPriceList          TFloat
              , ChangePercent          TFloat
+             , ChangePercentNext      TFloat
              , SummDebt               TFloat
   )
 AS
@@ -451,7 +452,12 @@ BEGIN
         , (tmpMI_Child.Amount_Bank * CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN -1 ELSE 1 END)       :: TFloat AS TotalPay_Card
 
         --сумма скидки по % скидки док. продажи
-        , (zfCalc_SummPriceList ((tmpData.AmountIn+tmpData.AmountOut), MIFloat_OperPriceList.ValueData) * COALESCE (MIFloat_ChangePercent.ValueData, 0)/100
+        , ( (zfCalc_SummPriceList ((tmpData.AmountIn+tmpData.AmountOut), MIFloat_OperPriceList.ValueData) 
+           - zfCalc_SummChangePercentNext(tmpData.AmountIn+tmpData.AmountOut
+                                        , MIFloat_OperPriceList.ValueData
+                                        , COALESCE (MIFloat_ChangePercent.ValueData, 0)
+                                        , COALESCE (MIFloat_ChangePercentNext.ValueData, 0) ) 
+             )
            * CASE WHEN MovementDesc.Id IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN 1
                   WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN (-1)
              END)                                                   :: TFloat   AS SummChangePercent_Calc
@@ -466,6 +472,7 @@ BEGIN
         , COALESCE (MIFloat_OperPriceList.ValueData, 0)             :: TFloat   AS OperPriceList
         -- % скидки из партии док. продажи
         , COALESCE (MIFloat_ChangePercent.ValueData, 0)             :: TFloat   AS ChangePercent
+        , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)         :: TFloat   AS ChangePercentNext
 
         , (CASE WHEN tmpData.NumGroup = 2 
                   THEN tmpDebt.SummDebt
@@ -519,6 +526,9 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                     ON MIFloat_ChangePercent.MovementItemId = MI_PartionMI.Id
                                    AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+        LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                    ON MIFloat_ChangePercentNext.MovementItemId = MI_PartionMI.Id
+                                   AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
 
         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                     ON MIFloat_SummChangePercent.MovementItemId = tmpData.MovementItemId

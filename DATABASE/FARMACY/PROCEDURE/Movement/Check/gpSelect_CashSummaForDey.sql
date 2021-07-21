@@ -72,11 +72,10 @@ BEGIN
        Object_CashRegister.ValueData       AS CashRegisterName
      , Object_Goods.NDS                    AS NDS
 
-     , Sum(CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
-                ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-                ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END) AS AmountSumm
+     , Sum(zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                           , COALESCE (MB_RoundingDown.ValueData, False)
+                           , COALESCE (MB_RoundingTo10.ValueData, False)
+                           , COALESCE (MB_RoundingTo50.ValueData, False))) AS AmountSumm
 
   FROM Movement
 
@@ -96,6 +95,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MB_RoundingDown
                                       ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                      AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+            LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                      ON MB_RoundingTo50.MovementId = MovementItem.MovementId
+                                     AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inDate)

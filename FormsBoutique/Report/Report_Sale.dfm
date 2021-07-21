@@ -5,7 +5,7 @@ inherited Report_SaleForm: TReport_SaleForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1192
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -562,8 +562,18 @@ inherited Report_SaleForm: TReport_SaleForm
             Width = 55
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1089#1082'.'
+            Caption = '% '#1089#1082'.-1'
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object ChangePercentNext: TcxGridDBColumn
+            Caption = '% '#1089#1082'.-2'
+            DataBinding.FieldName = 'ChangePercentNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
@@ -1418,14 +1428,14 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1522,14 +1532,14 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'isPeriod'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartion'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1612,7 +1622,7 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1702,7 +1712,7 @@ inherited Report_SaleForm: TReport_SaleForm
         end
         item
           Name = 'isOperPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -1839,7 +1849,7 @@ inherited Report_SaleForm: TReport_SaleForm
       end
       item
         Name = 'inisMovement'
-        Value = 'False'
+        Value = False
         Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput

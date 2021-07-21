@@ -1345,8 +1345,8 @@ inherited Report_ClientDebtPodiumForm: TReport_ClientDebtPodiumForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintReport_ClientDebt_Check'
-      ReportNameParam.Value = 'PrintReport_ClientDebt_Check'
+      ReportName = 'PrintReport_ClientDebt_CheckPODIUM'
+      ReportNameParam.Value = 'PrintReport_ClientDebt_CheckPODIUM'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

@@ -47,7 +47,7 @@ type
     procedure LoadChatId;
 
     function SendMessage(AChatId : Integer; AMessage : string) : boolean;
-    function SendDocument(AChatId : Integer; ADocument : string) : boolean;
+    function SendDocument(AChatId : Integer; ADocument, ACaption : string) : boolean;
     function SendPhoto(AChatId : Integer; APhoto, ACaption : string) : boolean;
 
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
@@ -322,7 +322,7 @@ begin
   end else FError := FRESTResponse.StatusText;;
 end;
 
-function TTelegramBot.SendDocument(AChatId : Integer; ADocument : string) : boolean;
+function TTelegramBot.SendDocument(AChatId : Integer; ADocument, ACaption : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -337,7 +337,8 @@ begin
   // required parameters
   FRESTRequest.Params.Clear;
   FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
-//  FRESTRequest.AddParameter('caption', 'ExportFile.xls', TRESTRequestParameterKind.pkGETorPOST);
+  if ACaption <> '' then
+    FRESTRequest.AddParameter('caption', ACaption, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('document', ADocument, TRESTRequestParameterKind.pkFILE);
   try
     FRESTRequest.Execute;

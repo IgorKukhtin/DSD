@@ -41,6 +41,7 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
   DECLARE vbChangePrice TFloat;
   DECLARE vbRoundingTo10 Boolean;
+  DECLARE vbRoundingTo50 Boolean;
   DECLARE vbRoundingDown Boolean;
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -57,7 +58,8 @@ BEGIN
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)
           , COALESCE (MB_RoundingTo10.ValueData, FALSE)::boolean
           , COALESCE (MB_RoundingDown.ValueData, FALSE)::boolean
-      INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbRoundingTo10, vbRoundingDown 
+          , COALESCE (MB_RoundingTo50.ValueData, FALSE)::boolean
+      INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbRoundingTo10, vbRoundingDown, vbRoundingTo50 
       FROM Movement
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -77,6 +79,9 @@ BEGIN
            LEFT JOIN MovementBoolean AS MB_RoundingDown
                                      ON MB_RoundingDown.MovementId = Movement.Id
                                     AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+           LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                     ON MB_RoundingTo50.MovementId = Movement.Id
+                                    AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
       WHERE Movement.Id = inMovementId;
 
      -- Расчет Итоговых суммы
@@ -201,17 +206,11 @@ BEGIN
                    -- сумма по Контрагенту с учетом скидки в цене - с округлением до 2-х знаков, в чеках до 1 знака
                  , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                              THEN 
-                                CASE WHEN vbRoundingDown = True
-                                THEN CAST(TRUNC(tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice, 1) AS NUMERIC (16, 2))
-                                ELSE CASE WHEN vbRoundingTo10 = True 
-                                THEN CAST (CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 1)) AS NUMERIC (16, 2))
-                                ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2)) END END
+                                zfCalc_SummaCheck(tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice
+                                                , vbRoundingDown, vbRoundingTo10, vbRoundingTo50)
                              ELSE 
-                                CASE WHEN vbRoundingDown = True
-                                THEN CAST(TRUNC(tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice), 1) AS NUMERIC (16, 2))
-                                ELSE CASE WHEN vbRoundingTo10 = True 
-                                THEN CAST (CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 1)) AS NUMERIC (16, 2))
-                                ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2)) END END
+                                zfCalc_SummaCheck(tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice)
+                                                , vbRoundingDown, vbRoundingTo10, vbRoundingTo50)
                         END
                        ) AS OperSumm_Partner_ChangePrice
                    -- сумма по Заготовителю - с округлением до 2-х знаков

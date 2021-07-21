@@ -284,6 +284,11 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 60
           end
+          object OrderShedule_Color: TcxGridDBColumn
+            DataBinding.FieldName = 'OrderShedule_Color'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxGridExport: TcxGrid
@@ -967,6 +972,7 @@ inherited OrderExternalForm: TOrderExternalForm
     ColorRuleList = <
       item
         ValueColumn = PartionGoodsDateColor
+        BackGroundValueColumn = OrderShedule_Color
         ColorValueList = <>
       end>
     SummaryItemList = <

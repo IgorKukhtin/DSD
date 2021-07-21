@@ -68,6 +68,12 @@ type
     cxGridLevel3: TcxGridLevel;
     dsReport: TDataSource;
     qryReport: TZQuery;
+    cxTabSheet3: TcxTabSheet;
+    cxGrid2: TcxGrid;
+    cxGridDBChartView2: TcxGridDBChartView;
+    cxGridDBChartDataGroup1: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries1: TcxGridDBChartSeries;
+    cxGridLevel4: TcxGridLevel;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -197,7 +203,21 @@ begin
   if qrySendList.IsEmpty then Exit;
 
   cxGridDBChartView1.DataController.DataSource := Nil;
+  cxGridDBChartView2.DataController.DataSource := Nil;
 
+  if qrySendList.FieldByName('Id').AsInteger = 3 then
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet3;
+    cxGridDBChartView2.DataController.DataSource := dsReport;
+    try
+      FileName := 'Photo.jpg';
+      qryReport.Close;
+      qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport.Open;
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
+  end else
   if qrySendList.FieldByName('Id').AsInteger = 2 then
   begin
     cxPageControl1.Properties.ActivePage := cxTabSheet2;
@@ -231,6 +251,22 @@ begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
 
+  if qrySendList.FieldByName('Id').AsInteger = 3 then
+  begin
+    if not qryReport.Active then Exit;
+    if qryReport.IsEmpty then Exit;
+    Add_Log('Начало выгрузки <Динамика изменения по дням недели в %>');
+    FMessage.Text := 'Динамика изменения по дням недели в %';
+    AGraphic := cxGridDBChartView2.CreateImage(TBitmap);
+    imJPEG := TJPEGImage.Create;
+    try
+      imJPEG.Assign(AGraphic);
+      imJPEG.SaveToFile(SavePath + FileName);
+    finally
+      AGraphic.Free;
+      imJPEG.Free;
+    end;
+  end else
   if qrySendList.FieldByName('Id').AsInteger = 2 then
   begin
     if not qryReport.Active then Exit;
@@ -271,7 +307,7 @@ begin
   for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try
 
-    if qrySendList.FieldByName('Id').AsInteger = 2 then
+    if qrySendList.FieldByName('Id').AsInteger in [2, 3] then
     begin
 
       if not FileExists(SavePath + FileName) then Break;

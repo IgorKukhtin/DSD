@@ -22,6 +22,7 @@ RETURNS TABLE (MovementId            Integer
 
              , Amount                TFloat
              , ChangePercent         TFloat
+             , ChangePercentNext     TFloat
              , OperPriceList         TFloat
              , TotalSummPriceList    TFloat
              , SummChangePercent     TFloat
@@ -68,9 +69,7 @@ BEGIN
                                               AND MI_Master.DescId     = zc_MI_Master()
                                               AND MI_Master.isErased   = FALSE
                                               AND MI_Master.Amount    <> 0
-                       LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                   ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
-                                                   AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent() 
+
                        LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                    ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                   AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
@@ -195,6 +194,7 @@ BEGIN
 
              , MI_Master.Amount                                     ::TFloat AS Amount
              , COALESCE (MIFloat_ChangePercent.ValueData, 0)        ::TFloat AS ChangePercent
+             , COALESCE (MIFloat_ChangePercentNext.ValueData, 0)    ::TFloat AS ChangePercentNext
              , COALESCE (MIFloat_OperPriceList.ValueData, 0)        ::TFloat AS OperPriceList
              , (MI_Master.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)) ::TFloat AS TotalSummPriceList
              , COALESCE (MIFloat_SummChangePercent.ValueData, 0)    ::TFloat AS SummChangePercent
@@ -222,36 +222,39 @@ BEGIN
             -- свойства строки документа
             -- все float
             LEFT JOIN tmpMI_Float AS MIFloat_ChangePercent
-                                        ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
-                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent() 
+                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
+                                 AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+            LEFT JOIN tmpMI_Float AS MIFloat_ChangePercentNext
+                                  ON MIFloat_ChangePercentNext.MovementItemId = MI_Master.Id
+                                 AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext() 
             LEFT JOIN tmpMI_Float AS MIFloat_OperPriceList
-                                        ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
-                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
+                                  ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                 AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
             LEFT JOIN tmpMI_Float AS MIFloat_TotalPay
-                                        ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                                  ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
 
             LEFT JOIN tmpMI_Float AS MIFloat_SummChangePercent
-                                        ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
-                                       AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()         
+                                  ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
+                                 AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()         
             LEFT JOIN tmpMI_Float AS MIFloat_TotalChangePercent
-                                        ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
+                                  ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
             LEFT JOIN tmpMI_Float AS MIFloat_TotalChangePercentPay
-                                        ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()    
+                                  ON MIFloat_TotalChangePercentPay.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()    
             LEFT JOIN tmpMI_Float AS MIFloat_TotalPayOth
-                                        ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
+                                  ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
             LEFT JOIN tmpMI_Float AS MIFloat_TotalCountReturn
-                                        ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()    
+                                  ON MIFloat_TotalCountReturn.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()    
             LEFT JOIN tmpMI_Float AS MIFloat_TotalReturn
-                                        ON MIFloat_TotalReturn.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
+                                  ON MIFloat_TotalReturn.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
             LEFT JOIN tmpMI_Float AS MIFloat_TotalPayReturn
-                                        ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
-                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+                                  ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
+                                 AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
 --limit 10
 --where 1=0
 ;

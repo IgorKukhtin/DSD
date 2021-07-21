@@ -197,7 +197,7 @@ type
     procedure LoadSettingsServiceFormTest;
     procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
-
+    procedure LoadSmsSettingsFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
@@ -1139,11 +1139,12 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnDescKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnDescKindForm');
   exit;
 
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPSLExportKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPSLExportKindForm');
   exit;
@@ -3592,6 +3593,14 @@ begin
   //форма выбора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadSmsSettingsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSmsSettingsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSmsSettingsEditForm');
 end;
 
 

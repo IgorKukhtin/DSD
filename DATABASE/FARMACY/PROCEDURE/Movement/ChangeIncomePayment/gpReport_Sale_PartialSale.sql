@@ -132,11 +132,10 @@ BEGIN
         , tmpIncomeList.Price                        AS Price
         , Round(tmpIncomeList.Price * MovementItem.Amount , 2)::TFloat AS  Summa
         , MIFloat_Price.ValueData                    AS PriceSale
-        , CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-               THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
-               ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-               THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-               ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS SummSale
+        , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                          , COALESCE (MB_RoundingDown.ValueData, False)
+                          , COALESCE (MB_RoundingTo10.ValueData, False)
+                          , COALESCE (MB_RoundingTo50.ValueData, False)) AS SummSale
    FROM tmpContainerRemainsAll AS Container
 
         INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
@@ -156,6 +155,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MB_RoundingDown
                                   ON MB_RoundingDown.MovementId = Movement.Id
                                  AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+        LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                  ON MB_RoundingTo50.MovementId = Movement.Id
+                                 AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 

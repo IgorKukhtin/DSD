@@ -188,11 +188,10 @@ BEGIN
            , tmpRemains.Amount_remains :: TFloat AS Amount_remains
            , MovementItem.Amount      AS Amount
            , MIFloat_Price.ValueData  AS Price
-           , CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
-                ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-                ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS AmountSumm
+           , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                             , COALESCE (MB_RoundingDown.ValueData, False)
+                             , COALESCE (MB_RoundingTo10.ValueData, False)
+                             , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
            , Goods_NDS.NDS                       AS NDS
            , MIFloat_PriceSale.ValueData         AS PriceSale
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
@@ -239,6 +238,9 @@ BEGIN
           LEFT JOIN MovementBoolean AS MB_RoundingDown
                                     ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                    AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+          LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                    ON MB_RoundingTo50.MovementId = MovementItem.MovementId
+                                   AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -279,4 +281,3 @@ ALTER FUNCTION gpSelect_MovementItem_CheckVIP (Boolean, TVarChar) OWNER TO postg
 -- тест
 -- 
 SELECT * FROM gpSelect_MovementItem_CheckVIP (False, '3')
-
