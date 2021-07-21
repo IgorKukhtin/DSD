@@ -98,12 +98,10 @@ BEGIN
                                , MIContainer.WhereObjectId_analyzer          AS UnitId
                                , MIContainer.ObjectId_analyzer AS GoodsId
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                               , SUM (CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                                           THEN TRUNC(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0), 1)::TFloat
-                                           ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                                           THEN (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 1))::TFloat
-                                           ELSE (((COALESCE (MovementItem.Amount, 0)) * COALESCE (MIContainer.Price,0))::NUMERIC (16, 2))::TFloat END END *
-                                           COALESCE (-1 * MIContainer.Amount, 0) / COALESCE (MovementItem.Amount, 0)) AS SummaSale
+                               , SUM (zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0)
+                                                      , COALESCE (MB_RoundingDown.ValueData, False)
+                                                      , COALESCE (MB_RoundingTo10.ValueData, False)
+                                                      , COALESCE (MB_RoundingTo50.ValueData, False))) AS SummaSale
 --                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                           FROM MovementItemContainer AS MIContainer
                                INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
@@ -114,6 +112,9 @@ BEGIN
                                LEFT JOIN MovementBoolean AS MB_RoundingDown
                                                          ON MB_RoundingDown.MovementId = MIContainer.MovementID
                                                         AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()                               
+                               LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                                         ON MB_RoundingTo50.MovementId = MIContainer.MovementID
+                                                        AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
                           WHERE MIContainer.DescId = zc_MIContainer_Count()
                             AND MIContainer.MovementDescId = zc_Movement_Check()
                             AND MIContainer.OperDate >= inDateStart AND MIContainer.OperDate < inDateFinal + INTERVAL '1 DAY'
@@ -490,4 +491,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Movement_Check(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
--- SELECT * FROM gpReport_Movement_Check (inUnitId:= 0, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+-- SELECT * FROM gpReport_Movement_Check (inUnitId:= 183292, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')

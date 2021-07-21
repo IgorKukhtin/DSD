@@ -372,11 +372,10 @@ BEGIN
                                  , MIFloat_SummChangePercent.ValueData AS SummChangePercent
                                  , MIFloat_AmountOrder.ValueData       AS AmountOrder
                                  , MIFloat_MovementItem.ValueData      AS PricePartionDate
-                                 , CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                                      THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
-                                      ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                                      THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-                                      ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS AmountSumm
+                                 , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                                                   , COALESCE (MB_RoundingDown.ValueData, False)
+                                                   , COALESCE (MB_RoundingTo10.ValueData, False)
+                                                   , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
                              FROM tmpMI_all AS MovementItem
 
                                 LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
@@ -403,6 +402,9 @@ BEGIN
                                 LEFT JOIN tmpMBoolean AS MB_RoundingDown
                                                           ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                                          AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+                                LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                                          ON MB_RoundingTo50.MovementId = MovementItem.MovementId
+                                                         AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
                             )
 
        -- Результат

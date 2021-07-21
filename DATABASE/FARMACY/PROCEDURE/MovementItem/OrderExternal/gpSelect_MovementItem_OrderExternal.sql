@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer
              , isTOP    Boolean
              , isResolution_224 Boolean
              , PartionGoodsDateColor Integer
+             , OrderShedule_Color    Integer
               )
 AS
 $BODY$
@@ -33,6 +34,7 @@ $BODY$
   DECLARE vbDate180   TDateTime;
   DECLARE vbOperDate  TDateTime;
   DECLARE vbStatusId Integer;
+  DECLARE vbJuridicalId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -48,8 +50,12 @@ BEGIN
 
     SELECT Date_TRUNC('DAY', Movement.OperDate)
          , Movement.StatusId
-    INTO vbOperDate, vbStatusId
+         , MovementLinkObject_From.ObjectId
+    INTO vbOperDate, vbStatusId, vbJuridicalId
     FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
     WHERE Movement.Id =inMovementId;
 
      -- + пол года к текущей для определения сроков годности
@@ -227,6 +233,12 @@ BEGIN
                WHEN COALESCE (GoodsPrice.isTop, GoodsParam_TOP.ValueData, FALSE) = TRUE THEN zc_Color_Blue()        --15993821 -- 16440317    -- для топ голубой
                ELSE 0
              END                                                 AS PartionGoodsDateColor
+           , CASE
+                  WHEN COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%А+%' AND vbJuridicalId = 410822 
+                    OR (COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%СТМ%' 
+                     OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%PL/%') AND vbJuridicalId = 59612  THEN zc_Color_Red()    --красный заказывать нельзя
+                  ELSE zc_Color_White()
+             END  AS OrderShedule_Color
       
        FROM tmpData AS tmpMI
             -- торговая сеть

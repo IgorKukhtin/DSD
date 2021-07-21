@@ -32,7 +32,16 @@ BEGIN
 
      RETURN QUERY
      WITH
-          tmpGoodsPromo AS (SELECT DISTINCT
+          tmpUnit AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId   AS UnitId
+                      FROM Movement
+
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+
+                      WHERE Movement.DescId         = zc_Movement_Check()
+                        AND Movement.OperDate > CURRENT_DATE - INTERVAL '14 DAY')
+       ,  tmpGoodsPromo AS (SELECT DISTINCT
                                      MI_Goods.ObjectId  AS GoodsId        -- здесь товар
                                    , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                                    , MovementDate_EndPromo.ValueData    AS EndDate_Promo
@@ -122,7 +131,8 @@ BEGIN
                                   AND Movement.statusid = zc_Enum_Status_UnComplete() 
                                   AND MovementLinkObject_Unit_To.ObjectId = 11299914
                                   AND COALESCE(MovementLinkObject_PartionDateKind.ObjectId, 0) = zc_Enum_PartionDateKind_0()
-                                  AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0))
+                                  AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0)
+                                  AND MovementLinkObject_Unit.ObjectId in (SELECT tmpUnit.UnitId FROM tmpUnit))
       , tmpMIC AS (SELECT DISTINCT Movement.Id
                    FROM tmpMovementSendAll AS Movement)
       , tmpMovementSend AS (SELECT Movement.ContainerId,
@@ -147,6 +157,7 @@ BEGIN
 
                             WHERE Container.DescId = zc_Container_CountPartionDate()
                               AND (Container.WhereObjectId  = inUnitID OR COALESCE(inUnitID, 0) = 0)
+                              AND Container.WhereObjectId in (SELECT tmpUnit.UnitId FROM tmpUnit)
                               AND COALESCE(tmpMIC.ID, 0) = 0
                             GROUP BY Container.Id
                                    , Container.WhereObjectId

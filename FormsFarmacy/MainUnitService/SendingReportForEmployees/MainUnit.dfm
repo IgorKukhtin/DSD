@@ -217,10 +217,6 @@ object MainForm: TMainForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 0
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grReport: TcxGrid
         Left = 0
         Top = 0
@@ -410,6 +406,38 @@ object MainForm: TMainForm
         end
         object cxGridLevel3: TcxGridLevel
           GridView = cxGridDBChartView1
+        end
+      end
+    end
+    object cxTabSheet3: TcxTabSheet
+      Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
+      ImageIndex = 1
+      ExplicitLeft = 8
+      ExplicitTop = 28
+      object cxGrid2: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1017
+        Height = 417
+        Hint = #1044#1080#1085#1072#1084#1080#1082#1072
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBChartView2: TcxGridDBChartView
+          DiagramLine.Values.LineWidth = 2
+          DiagramStackedArea.Active = True
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object cxGridDBChartDataGroup1: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object cxGridDBChartSeries1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'DeltaAll'
+            DisplayText = #1048#1090#1086#1075#1086
+          end
+        end
+        object cxGridLevel4: TcxGridLevel
+          GridView = cxGridDBChartView2
         end
       end
     end

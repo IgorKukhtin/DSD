@@ -285,11 +285,10 @@ BEGIN
                                      , MIContainer.MovementId                          AS MovementId
                                      , MIContainer.UnitId                              AS UnitId
                                      , SUM (MIContainer.Amount)                        AS Amount
-                                     , CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
-                                        THEN TRUNC(SUM (MIContainer.Amount) * Max(MIContainer.Price), 1)::TFloat
-                                        ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
-                                        THEN (((SUM (MIContainer.Amount)) *  Max(MIContainer.Price))::NUMERIC (16, 1))::TFloat
-                                        ELSE (((SUM (MIContainer.Amount)) *  Max(MIContainer.Price))::NUMERIC (16, 2))::TFloat END END AS SummaSale
+                                     , zfCalc_SummaCheck(SUM (MIContainer.Amount) * Max(MIContainer.Price)
+                                                      , COALESCE (MB_RoundingDown.ValueData, False)
+                                                      , COALESCE (MB_RoundingTo10.ValueData, False)
+                                                      , COALESCE (MB_RoundingTo50.ValueData, False)) AS SummaSale
                                 FROM tmpData_Container_All AS MIContainer
                                      LEFT JOIN MovementBoolean AS MB_RoundingTo10
                                                                ON MB_RoundingTo10.MovementId = MIContainer.MovementID
@@ -297,11 +296,15 @@ BEGIN
                                      LEFT JOIN MovementBoolean AS MB_RoundingDown
                                                                ON MB_RoundingDown.MovementId = MIContainer.MovementID
                                                               AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+                                     LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                                               ON MB_RoundingTo50.MovementId =  MIContainer.MovementID
+                                                              AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
                                 GROUP BY MIContainer.MI_Id
                                        , MIContainer.MovementId  
                                        , MIContainer.UnitId  
                                        , MB_RoundingTo10.ValueData
                                        , MB_RoundingDown.ValueData
+                                       , MB_RoundingTo50.ValueData
                                )
 
         , tmpData_ContainerAll AS (SELECT MIContainer.MI_Id
@@ -1038,4 +1041,3 @@ $BODY$
 --FETCH ALL "<unnamed portal 46>";
 
 select * from gpReport_Profit(inStartDate := ('01.06.2021')::TDateTime , inEndDate := ('30.06.2021')::TDateTime , inJuridical1Id := 0 , inJuridical2Id := 0 , inJuridicalOurId := 0 , inUnitId := 183289 , inMonth := 0 ,  inSession := '3');
-

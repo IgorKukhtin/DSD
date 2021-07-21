@@ -1581,6 +1581,8 @@ begin
                   dsdSave.Params.AddParam('inJackdawsChecksCode', ftInteger, ptInput, Head.JACKCHECK);
                   // ***02.04.19
                   dsdSave.Params.AddParam('inRoundingDown', ftBoolean, ptInput, Head.ROUNDDOWN);
+                  // ***19.07.21
+                  //dsdSave.Params.AddParam('inRoundingTo50', ftBoolean, ptInput, True);
                   // ***15.05.19
                   dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Head.PDKINDID);
                   dsdSave.Params.AddParam('inConfirmationCodeSP', ftString, ptInput, Head.CONFCODESP);

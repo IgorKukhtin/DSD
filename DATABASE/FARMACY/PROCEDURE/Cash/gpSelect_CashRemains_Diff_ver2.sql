@@ -353,7 +353,70 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 */
     --Возвращаем разницу в клиента
     RETURN QUERY
-           WITH tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
+           WITH    tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+                               , MI_IntenalSP.ObjectId         AS IntenalSPId
+                               , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
+                               , MIFloat_PriceSP.ValueData     AS PriceSP
+                               , MIFloat_PaymentSP.ValueData   AS PaymentSP
+                               , MIFloat_CountSP.ValueData     AS CountSP
+                               , MIString_IdSP.ValueData       AS IdSP
+                               , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
+                               , MIString_DosageIdSP.ValueData AS DosageIdSP
+                                                                -- № п/п - на всякий случай
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                          FROM Movement
+                               INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                       ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                      AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                               INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                      AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+
+                               LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                                ON MI_IntenalSP.MovementItemId = MovementItem.Id
+                                                               AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                               -- Роздрібна  ціна за упаковку, грн
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                           ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()
+                               -- Розмір відшкодування за упаковку (Соц. проект) - (15)
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                           ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                               -- Сума доплати за упаковку, грн (Соц. проект) - 16)
+                               LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                           ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+
+                               -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountSP
+                                                           ON MIFloat_CountSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                               -- ID лікарського засобу
+                               LEFT JOIN MovementItemString AS MIString_IdSP
+                                                            ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                               LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                                            ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
+                               -- DosageID лікарського засобу
+                               LEFT JOIN MovementItemString AS MIString_DosageIdSP
+                                                            ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
+
+                          WHERE Movement.DescId = zc_Movement_GoodsSP()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                         )
+
+           
+           
+                 , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
                                             , Object_PartionDateKind.ObjectCode   AS Code
                                             , Object_PartionDateKind.ValueData    AS Name
                                             , COALESCE (ObjectFloatDay.ValueData / 30, 0) :: TFLoat AS AmountMonth
@@ -424,7 +487,9 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             _DIFF.ObjectId,
             Object_Goods_Main.ObjectCode,
             Object_Goods_Main.Name,
-            _DIFF.Price,
+            zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) AS Price,
             _DIFF.Remains,
             _DIFF.MCSValue,
             _DIFF.Reserved,
@@ -493,6 +558,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                           ON Object_Goods_PairSun_Main.Id = Object_Goods_Retail.Id
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
+            -- Соц Проект
+            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
+                                AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
 
             LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
@@ -507,6 +576,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                     ON ObjectBoolean_Goods_TOP.ObjectId = _DIFF.ObjectId
                                    AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+        ORDER BY _DIFF.ObjectId
             ;
 
     -- !!!Протокол - отладка Скорости!!!

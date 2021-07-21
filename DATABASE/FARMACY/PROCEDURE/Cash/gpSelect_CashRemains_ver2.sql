@@ -683,7 +683,9 @@ BEGIN
             Object_Goods_Main.Name,
             Object_Goods_Main.ObjectCode,
             CashSessionSnapShot.Remains,
-            CashSessionSnapShot.Price,
+            zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) AS Price,
 
             --
             -- Цена со скидкой для СП

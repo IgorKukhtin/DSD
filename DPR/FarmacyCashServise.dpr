@@ -87,6 +87,7 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
+  gc_ProgramName := 'FarmacyCashServise.exe';
 
   TdsdApplication.Create;
 

@@ -35,6 +35,7 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbRoundingTo10 Boolean;
   DECLARE vbRoundingDown Boolean;
+  DECLARE vbRoundingTo50 Boolean;
   DECLARE vbDate_6 TDateTime;
   DECLARE vbDate_3 TDateTime;
   DECLARE vbDate_1 TDateTime;
@@ -53,8 +54,9 @@ BEGIN
         , MovementLinkObject_Unit.ObjectId
         , COALESCE (MB_RoundingTo10.ValueData, FALSE)::boolean
         , COALESCE (MB_RoundingDown.ValueData, FALSE)::boolean
+        , COALESCE (MB_RoundingTo50.ValueData, FALSE)::boolean
     INTO
-        vbParentId, vbUnitId, vbRoundingTo10, vbRoundingDown
+        vbParentId, vbUnitId, vbRoundingTo10, vbRoundingDown, vbRoundingTo50
 
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -69,6 +71,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MB_RoundingDown
                                   ON MB_RoundingDown.MovementId = MovementFloat_MovementId.ValueData::Integer
                                  AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+        LEFT JOIN MovementBoolean AS MB_RoundingTo50
+                                  ON MB_RoundingTo50.MovementId = MovementFloat_MovementId.ValueData::Integer
+                                 AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
     WHERE Movement.Id = inMovementId;
 
     -- значения для разделения по срокам
@@ -180,12 +185,9 @@ BEGIN
                  , Object_Goods.ValueData     AS GoodsName
                  , tmpContainer.Amount            AS AmountCheck
                  , MovementItem.Amount        AS Amount
-                 , COALESCE (MIFloat_Price.ValueData, tmpContainer.Price)           AS Price
-                 , CASE WHEN vbRoundingDown = True
-                      THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
-                      ELSE CASE WHEN vbRoundingTo10 = True
-                      THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-                      ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END AS Summ
+                 , COALESCE (MIFloat_Price.ValueData, tmpContainer.Price)            AS Price
+                 , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                                   , vbRoundingDown, vbRoundingTo10, vbRoundingTo50) AS Summ
                  , ObjectFloat_NDSKind_NDS.ValueData  AS NDS
                  , MIString_UID.ValueData     AS List_UID
 
