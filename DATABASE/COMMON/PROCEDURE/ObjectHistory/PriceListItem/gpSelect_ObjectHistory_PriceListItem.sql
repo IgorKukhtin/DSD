@@ -149,10 +149,13 @@ BEGIN
 
    , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                   , Object_GoodsByGoodsKind_View.GoodsKindId
-                             FROM ObjectBoolean AS ObjectBoolean_Order
-                                  LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                             WHERE ObjectBoolean_Order.ValueData = TRUE
-                               AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                             FROM Object_GoodsByGoodsKind_View
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Order ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                               AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ScaleCeh ON ObjectBoolean_ScaleCeh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                                   AND ObjectBoolean_ScaleCeh.DescId   = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
+                             WHERE ObjectBoolean_Order.ValueData    = TRUE
+                               AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                             )
 
    , tmpPrice AS (SELECT ObjectHistory_PriceListItem.Id                   AS PriceListItemId
