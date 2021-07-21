@@ -128,8 +128,8 @@ BEGIN
      SELECT tmp.Name     :: TVarChar
           , tmp.Login    :: TVarChar
           , tmp.Password :: TVarChar
-          , REPLACE (REPLACE (tmp.Message, '%1', vbKeySMS), '%2', zfConvert_FloatToString (vbDiscountTax))
---          , REPLACE (REPLACE (tmp.Message, '%1', vbKeySMS), '%2', zfConvert_FloatToString (50))
+        --, REPLACE (REPLACE (tmp.Message, '%1', vbKeySMS), '%2', zfConvert_FloatToString (vbDiscountTax))
+          , REPLACE (tmp.Message, '%1', vbKeySMS)
         --, outPhoneSMS
             -- !номер для теста!
           , '0674464560'

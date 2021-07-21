@@ -124,7 +124,7 @@ BEGIN
           , '<ROW '
          || 'AMOUNT ="'||tmp.AMOUNT||'" '                                               --Сумма платежа в копейках                         
          --|| 'CORRSNAME="'||COALESCE (tmp.CORRSNAME,'')::TVarChar||'" '                  -- Наименование получателя платежа                 
-         || 'CORRSNAME="'|| replace (substring (COALESCE (tmp.CORRSNAME,''), 1, 36), '"', '&quot;') :: TVarChar||'" ' -- Наименование получателя платежа обрезаем , если больше 36 символов
+         || 'CORRSNAME="'|| replace (replace (substring (COALESCE (tmp.CORRSNAME,''), 1, 36), '"', '&quot;'), CHR (39), '&apos;') :: TVarChar||'" ' -- Наименование получателя платежа обрезаем , если больше 36 символов
          || 'DETAILSOFPAYMENT="'||COALESCE (tmp.DETAILSOFPAYMENT,'')::TVarChar||'" '    --Назначение платежа                               
          || 'CORRACCOUNTNO="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '               --№ счета получателя платежа                       
          || 'CORRIBAN="'||COALESCE (tmp.CORRIBAN,'')::TVarChar||'" '                    --IBAN получателя платежа                          

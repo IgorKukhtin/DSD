@@ -24,6 +24,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
 
+     -- проверка - Установлено
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>.Изменения невозможны', lfGet_Object_ValueData_sh (zc_Enum_Status_Complete());
+     END IF;
+
      -- переопределили
      outisDisableSMS := Not inisDisableSMS;
      
