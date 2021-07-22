@@ -507,6 +507,7 @@ BEGIN
                                                   , inGoodsGroupId          := 0
                                                   , inisGoodsGroupIn        := FALSE
                                                   , inisGoodsGroupExc       := FALSE
+                                                  , inisList                := FALSE
                                                   , inUserId                := vbUserId
                                                    )
 

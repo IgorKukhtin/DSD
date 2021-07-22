@@ -449,6 +449,14 @@ inherited InventoryForm: TInventoryForm
       TabOrder = 13
       Width = 129
     end
+    object cbList: TcxCheckBox
+      Left = 793
+      Top = 63
+      Caption = #1055#1086' '#1074#1089#1077#1084' '#1090#1086#1074'. '#1085#1072#1082#1083'.'
+      Properties.ReadOnly = False
+      TabOrder = 14
+      Width = 122
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1669,6 +1677,13 @@ inherited InventoryForm: TInventoryForm
         Component = cbisGoodsGroupExc
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1741,8 +1756,11 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisList'
         Value = ''
-        ParamType = ptUnknown
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1830,6 +1848,9 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Control = edGoodsGroup
+      end
+      item
+        Control = cbList
       end
       item
       end>

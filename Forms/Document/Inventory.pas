@@ -120,6 +120,7 @@ type
     actInsert_bySale: TdsdExecStoredProc;
     bbInsert_bySale: TdxBarButton;
     bbDelete_bySale: TdxBarButton;
+    cbList: TcxCheckBox;
   private
     { Private declarations }
   public

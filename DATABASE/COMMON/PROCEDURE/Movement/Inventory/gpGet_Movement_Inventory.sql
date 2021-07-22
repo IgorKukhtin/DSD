@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
+             , isList Boolean
              )
 AS
 $BODY$
@@ -42,7 +43,7 @@ BEGIN
   
              , CAST (FALSE as Boolean)          AS isGoodsGroupIn
              , CAST (FALSE as Boolean)          AS isGoodsGroupExc
-             
+             , CAST (FALSE as Boolean)          AS isList
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -67,7 +68,8 @@ BEGIN
            , Object_GoodsGroup.ValueData         AS GoodsGroupName
  
            , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
-           , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc                        
+           , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc 
+           , COALESCE (MovementBoolean_List.ValueData, FALSE)          :: Boolean AS isList
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -86,6 +88,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
                                       ON MovementBoolean_GoodsGroupExc.MovementId =  Movement.Id
                                      AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -115,6 +121,7 @@ ALTER FUNCTION gpGet_Movement_Inventory (Integer, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.07.21         *
  27.01.14                                        * all
  18.07.13         *
 */

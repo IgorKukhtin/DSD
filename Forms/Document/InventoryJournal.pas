@@ -50,6 +50,7 @@ type
     bbPrintStickerTermo: TdxBarButton;
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
+    isList: TcxGridDBColumn;
   private
     { Private declarations }
   public

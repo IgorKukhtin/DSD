@@ -4,9 +4,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -113
   ExplicitWidth = 863
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -215,6 +214,15 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1089#1082#1083#1102#1095#1072#1077#1090' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074
             Width = 92
+          end
+          object isList: TcxGridDBColumn
+            Caption = #1055#1086' '#1074#1089#1077#1084' '#1090#1086#1074'. '#1085#1072#1082#1083'.'
+            DataBinding.FieldName = 'isList'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086' '#1074#1089#1077#1084' '#1090#1086#1074#1072#1088#1072#1084' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -431,13 +439,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrintTermo'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -477,13 +485,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrintTermo'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>

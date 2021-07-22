@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
+             , isList Boolean
              )
 AS
 $BODY$
@@ -58,6 +59,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
            , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc
+           
+           , COALESCE (MovementBoolean_List.ValueData, FALSE)          :: Boolean AS isList
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -82,7 +85,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
                                       ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
                                      AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
-                                           
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -109,6 +116,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 22.07.21         *
  18.09.17         *
  05.10.16         * add inJuridicalBasisId
  01.09.14                                                       *
