@@ -134,11 +134,8 @@ type
     cxGridLevel: TcxGridLevel;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    OrderClientId_ch1: TcxGridDBColumn;
-    PersonalId_start_ch1: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    PersonalId_end_ch1: TcxGridDBColumn;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     spSelectBarCode: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
@@ -147,7 +144,7 @@ type
     OpenChoiceFormOrderClient: TOpenChoiceForm;
     OpenChoiceFormPersonal_start: TOpenChoiceForm;
     OpenChoiceFormPersonal_end: TOpenChoiceForm;
-    InvNumber: TcxGridDBColumn;
+    BarCode_OrderClient_ch1: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

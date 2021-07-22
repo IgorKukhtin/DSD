@@ -121,6 +121,7 @@ type
     GuidesClient: TdsdGuides;
     dsdChoiceGuides1: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    BarCode: TcxGridDBColumn;
   private
   public
   end;

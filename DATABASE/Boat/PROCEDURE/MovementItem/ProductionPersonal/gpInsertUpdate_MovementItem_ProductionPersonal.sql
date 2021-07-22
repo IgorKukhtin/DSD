@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_ProductionPersonal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionPersonal(Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionPersonal(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionPersonal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId_start    Integer   , -- сотрудник Старт
-    IN inPersonalId_end      Integer   , -- сотрудник ФИНИШ
-    IN inOrderClientId       Integer   , -- заказ клиента
+    IN inBarCode_start       TVarChar   , -- сотрудник Старт
+    IN inBarCode_end         TVarChar   , -- сотрудник ФИНИШ
+    IN inBarCode_OrderClient TVarChar   , -- заказ клиента
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -16,6 +17,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPersonalId Integer;
    DECLARE vbProductId Integer;
+   DECLARE vbMovementId_OrderClient Integer;
    DECLARE vbStartBegin TDateTime;
    DECLARE vbEndBegin   TDateTime;
    DECLARE vbAmount     TFloat;
@@ -29,29 +31,93 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- найдем OrderClient
+     IF TRIM (inBarCode_OrderClient) <> ''
+     THEN
+         IF CHAR_LENGTH (inBarCode_OrderClient) >= 12
+         THEN -- по штрих коду, но для "проверки" ограничение - 8 DAY
+              vbMovementId_OrderClient:= (SELECT Movement.Id
+                                          FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_OrderClient, 4, 13-4)) AS MovementId
+                                               ) AS tmp
+                                               INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                                  AND Movement.DescId = zc_Movement_OrderClient()
+                                                                  AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         );
+         ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
+              vbMovementId_OrderClient:= (SELECT Movement.Id
+                                          FROM Movement
+                                          WHERE Movement.InvNumber = TRIM (inBarCode_OrderClient)
+                                            AND Movement.DescId = zc_Movement_OrderClient()
+                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         );
+         END IF;
+
+         -- Проверка
+         IF COALESCE (vbMovementId_OrderClient, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <Заказ Клиента> с № <%> не найден.', inBarCode_OrderClient;
+         END IF;
+
+     END IF;
+
      vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
                      FROM MovementLinkObject AS MovementLinkObject_Product
-                     WHERE MovementLinkObject_Product.MovementId = inOrderClientId
+                     WHERE MovementLinkObject_Product.MovementId = vbMovementId_OrderClient
                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                      );
 
-     IF COALESCE (inPersonalId_start,0) = 0 AND COALESCE (inPersonalId_end,0) = 0
+     IF COALESCE (inBarCode_start, '') = '' AND COALESCE (inBarCode_end, '') = ''
      THEN
          RETURN;
      END IF;
-     
-     IF COALESCE (inPersonalId_start,0) <> 0
+ 
+     IF COALESCE (inBarCode_start,'') <> ''
      THEN
-         vbPersonalId := inPersonalId_start;
+         IF CHAR_LENGTH (inBarCode_start) >= 12
+         THEN -- по штрих коду
+              vbPersonalId:= (SELECT Object.Id
+                              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_start, 4, 13-4)) AS ObjectId
+                                   ) AS tmp
+                                    INNER JOIN Object ON Object.Id = tmp.ObjectId
+                                                     AND Object.DescId = zc_Object_Personal()
+                                                     AND Object.isErased = FALSE
+                              );
+         END IF;
+
+         -- Проверка
+         IF COALESCE (vbPersonalId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
+         END IF;
+
          vbStartBegin := CURRENT_TIMESTAMP;
          vbEndBegin   := NULL ::TDateTime;
          vbAmount     := 0;
          ioId         := 0;
      END IF;
 
-    IF COALESCE (inPersonalId_end,0) <> 0
+    IF COALESCE (inBarCode_end,'') <> ''
      THEN
-         vbPersonalId := inPersonalId_end;
+         IF CHAR_LENGTH (inBarCode_start) >= 12
+         THEN -- по штрих коду
+              vbPersonalId:= (SELECT Object.Id
+                              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_end, 4, 13-4)) AS ObjectId
+                                   ) AS tmp
+                                    INNER JOIN Object ON Object.Id = tmp.ObjectId
+                                                     AND Object.DescId = zc_Object_Personal()
+                                                     AND Object.isErased = FALSE
+                              );
+         END IF;
+
+         -- Проверка
+         IF COALESCE (vbPersonalId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
+         END IF;
+
+         
          vbEndBegin   := CURRENT_TIMESTAMP;
 
          -- находим строку по сотруднику с пустой датой окончания
