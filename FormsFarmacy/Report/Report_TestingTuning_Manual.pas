@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxEditRepositoryItems;
 
 type
   TReport_TestingTuning_ManualForm = class(TAncestorReportForm)
@@ -25,6 +25,11 @@ type
     Question: TcxGridDBColumn;
     actFormClose1: TdsdFormClose;
     actFormClose2: TdsdFormClose;
+    actPreparePictures: TdsdPreparePicturesAction;
+    erPossibleAnswer: TcxEditRepository;
+    erPossibleAnswerBlobItem1: TcxEditRepositoryBlobItem;
+    PropertiesId: TcxGridDBColumn;
+    erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem;
   private
     { Private declarations }
   public

@@ -1108,7 +1108,39 @@ type
   published
     property Param: TdsdParam read FParam write FParam;
     property StartColumns: Integer read FStartColumns write FStartColumns;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
   end;
+
+  // Преобразование датасета с фотографиями
+  TdsdPreparePicturesAction = class(TdsdCustomAction)
+  private
+    FDataSet: TDataSet;
+    FPictureFields: TStrings;     // Поля, в которых находятся фото
+    procedure SetPictureFields(Value: TStrings);
+  protected
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+    procedure PreparePictures;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Lатасет
+    property DataSet: TDataSet read FDataSet write FDataSet;
+    // Поля, в которых находятся фото
+    property PictureFields: TStrings read FPictureFields write SetPictureFields;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+  end;
+
 
 procedure Register;
 
@@ -1169,6 +1201,7 @@ begin
   RegisterActions('DSDLib', [TdsdSendSMSCPAAction], TdsdSendSMSCPAAction);
   RegisterActions('DSDLib', [TdsdSetFocusedAction], TdsdSetFocusedAction);
   RegisterActions('DSDLib', [TdsdLoadListValuesFileAction], TdsdLoadListValuesFileAction);
+  RegisterActions('DSDLib', [TdsdPreparePicturesAction], TdsdPreparePicturesAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -4998,6 +5031,125 @@ begin
   end;
 end;
 
+{ TdsdPrintAction }
+
+constructor TdsdPreparePicturesAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPictureFields := TStringList.Create;
+end;
+
+destructor TdsdPreparePicturesAction.Destroy;
+begin
+  FreeAndNil(FPictureFields);
+  inherited;
+end;
+
+function TdsdPreparePicturesAction.LocalExecute: Boolean;
+begin
+  PreparePictures;
+end;
+
+procedure TdsdPreparePicturesAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var
+  i: Integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) and (FDataSet = AComponent) then FDataSet := Nil;
+end;
+
+procedure TdsdPreparePicturesAction.PreparePictures;
+var I, Len: integer;
+    Data : AnsiString;
+    FMemoryStream: TMemoryStream;
+    Ext, FieldName: string;
+    GraphicClass: TGraphicClass;
+    Field: TField; Graphic: TGraphic;
+    DS : TDataSource;
+begin
+  if FPictureFields.Count = 0 then Exit;
+  if not Assigned(FDataSet) then Exit;
+
+  FMemoryStream := TMemoryStream.Create;
+  try
+    FDataSet.DisableControls;
+    if FDataSet is TClientDataSet then
+    begin
+      DS := TClientDataSet(FDataSet).MasterSource;
+      TClientDataSet(FDataSet).MasterSource := Nil;
+    end;
+    FDataSet.First;
+    while not FDataSet.Eof do
+    begin
+      for I := 0 to FPictureFields.Count - 1 do
+      begin
+        Field := FDataSet.Fields.FieldByName(FPictureFields.Strings[0]);
+        if Assigned(Field) and ((Field.DataType = ftMemo) OR (Field.DataType = ftWideMemo)) then
+        begin
+          try
+            if Length(Field.AsString) > 4 then
+
+            try
+              Data := ReConvertConvert(Field.AsString);
+              Ext := trim(Copy(Data, 1, 255));
+              Ext := AnsiLowerCase(ExtractFileExt(Ext));
+              Delete(Ext, 1, 1);
+
+              if 'wmf' = Ext then GraphicClass := TMetafile;
+              if 'emf' =  Ext then GraphicClass := TMetafile;
+              if 'ico' =  Ext then GraphicClass := TIcon;
+              if 'tiff' = Ext then GraphicClass := TWICImage;
+              if 'tif' = Ext then GraphicClass := TWICImage;
+              if 'png' = Ext then GraphicClass := TWICImage;
+              if 'gif' = Ext then GraphicClass := TWICImage;
+              if 'jpeg' = Ext then GraphicClass := TWICImage;
+              if 'jpg' = Ext then GraphicClass := TWICImage;
+              if 'bmp' = Ext then GraphicClass := Vcl.Graphics.TBitmap;
+              if GraphicClass <> nil then
+              begin
+                Data := Copy(Data, 256, maxint);
+                FDataSet.Edit;
+
+                Len := Length(Data);
+                FMemoryStream.WriteBuffer(Data[1],  Len);
+                FMemoryStream.Position := 0;
+
+    //            Graphic := TGraphicClass(GraphicClass).Create;
+    //            try
+    //              Graphic.LoadFromStream(FMemoryStream);
+    //              FMemoryStream.Clear;
+    //              Graphic.SaveToStream(FMemoryStream);
+    //            finally
+    //              Graphic.Free;
+    //            end;
+
+                TBlobField(Field).LoadFromStream(FMemoryStream);
+                FDataSet.Post;
+              end;
+            except
+            end;
+          finally
+            FMemoryStream.Clear;
+          end;
+        end;
+      end;
+      FDataSet.Next;
+    end;
+    FDataSet.First;
+  finally
+    if Assigned(DS) then TClientDataSet(FDataSet).MasterSource := DS;
+    FDataSet.EnableControls;
+    FMemoryStream.Free;
+  end;
+end;
+
+procedure TdsdPreparePicturesAction.SetPictureFields(Value: TStrings);
+begin
+  FPictureFields.Assign(Value);
+end;
 
 initialization
 

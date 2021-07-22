@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxBlobEdit;
+  cxBlobEdit, Document, cxEditRepositoryItems, cxSplitter, cxMemo;
 
 type
   TTestingTuningForm = class(TAncestorDocumentForm)
@@ -71,7 +71,7 @@ type
     seOrders: TcxGridDBColumn;
     seisCorrectAnswer: TcxGridDBColumn;
     sePossibleAnswer: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
+    seisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     spInsertUpdateMISecond: TdsdStoredProc;
     DBViewAddOnSecond: TdsdDBViewAddOn;
@@ -104,6 +104,33 @@ type
     dxBarButton11: TdxBarButton;
     dxBarButton12: TdxBarButton;
     chCorrectAnswer: TcxGridDBColumn;
+    Photo: TDocument;
+    dxBarButton13: TdxBarButton;
+    actLoadPhotoFile: TdsdSetDefaultParams;
+    sePropertiesId: TcxGridDBColumn;
+    erPossibleAnswer: TcxEditRepository;
+    actPreparePictures: TdsdPreparePicturesAction;
+    erCorrectAnswer: TcxEditRepository;
+    erCorrectAnswerCheckBoxItem1: TcxEditRepositoryCheckBoxItem;
+    erCorrectAnswerCheckBoxItem2: TcxEditRepositoryCheckBoxItem;
+    cxSplitter1: TcxSplitter;
+    erPossibleAnswerBlobItem1: TcxEditRepositoryMemoItem;
+    erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem;
+    spUpdate_CorrectAnswer: TdsdStoredProc;
+    actUpdate_CorrectAnswer: TdsdExecStoredProc;
+    dxBarButton14: TdxBarButton;
+    actExecuteDialogPossibleAnswerUpdate: TExecuteDialog;
+    actUpdate_PossibleAnswer: TdsdExecStoredProc;
+    spUpdate_PossibleAnswer: TdsdStoredProc;
+    dxBarButton15: TdxBarButton;
+    actLoadPhoto: TdsdExecStoredProc;
+    spUpdate_PossibleAnswerPhoto: TdsdStoredProc;
+    spInsertMISecondPhotoFalse: TdsdStoredProc;
+    spInsertMISecondPhotoTrue: TdsdStoredProc;
+    actInsertMISecondPhotoTrue: TdsdExecStoredProc;
+    actInsertMISecondPhotoFalse: TdsdExecStoredProc;
+    dxBarButton16: TdxBarButton;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

@@ -77,9 +77,13 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
             DataBinding.FieldName = 'PossibleAnswer'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 319
+          end
+          object PropertiesId: TcxGridDBColumn
+            DataBinding.FieldName = 'PropertiesId'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -105,6 +109,9 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actPreparePictures
+    end
     inherited actGridToExcel: TdsdGridToExcel
       Enabled = False
       ShortCut = 0
@@ -122,6 +129,14 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
       PostDataSetBeforeExecute = False
       Caption = 'dsdFormClose1'
       ShortCut = 16429
+    end
+    object actPreparePictures: TdsdPreparePicturesAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSet = MasterCDS
+      PictureFields.Strings = (
+        'PossibleAnswer')
+      Caption = 'actPreparePictures'
     end
   end
   inherited MasterDS: TDataSource
@@ -194,6 +209,12 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
     OnDblClickActionList = <
       item
       end>
+    PropertiesCellList = <
+      item
+        Column = PossibleAnswer
+        ValueColumn = PropertiesId
+        EditRepository = erPossibleAnswer
+      end>
   end
   inherited PopupMenu: TPopupMenu
     inherited Excel1: TMenuItem
@@ -251,5 +272,18 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
       end>
     Left = 176
     Top = 264
+  end
+  object erPossibleAnswer: TcxEditRepository
+    Left = 288
+    Top = 272
+    object erPossibleAnswerBlobItem1: TcxEditRepositoryBlobItem
+      Properties.BlobEditKind = bekMemo
+      Properties.BlobPaintStyle = bpsText
+      Properties.ReadOnly = True
+    end
+    object erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem
+      Properties.GraphicClassName = 'TJPEGImage'
+      Properties.ReadOnly = True
+    end
   end
 end

@@ -12,9 +12,13 @@ RETURNS TABLE (Id              Integer
              , QuestionOrd     Integer
              , Question        TBLOB
              , PossibleAnswer1 TBLOB
+             , isGraphics1     Boolean
              , PossibleAnswer2 TBLOB
+             , isGraphics2     Boolean
              , PossibleAnswer3 TBLOB
+             , isGraphics3     Boolean
              , PossibleAnswer4 TBLOB
+             , isGraphics4     Boolean
              , CorrectAnswer   Integer
              , Response        Integer
              , StartTime       TDateTime
@@ -58,9 +62,13 @@ BEGIN
                                , QuestionOrd     Integer
                                , Question        TBLOB
                                , PossibleAnswer1 TBLOB
+                               , isGraphics1     Boolean
                                , PossibleAnswer2 TBLOB
+                               , isGraphics2     Boolean
                                , PossibleAnswer3 TBLOB
+                               , isGraphics3     Boolean
                                , PossibleAnswer4 TBLOB
+                               , isGraphics4     Boolean
                                , CorrectAnswer   Integer
                                , Response        Integer
                                , StartTime       TDateTime
@@ -85,7 +93,8 @@ BEGIN
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
          
-         WITH tmpSecond AS (SELECT *                
+         WITH tmpSecond AS (SELECT *    
+                                 , PropertiesId = 2   AS isGraphics            
                             FROM gpSelect_MovementItem_TestingTuning_Second(inMovementId := vbMovementId 
                                                                           , inShowAll := 'False' 
                                                                           , inIsErased := 'False' 
@@ -98,9 +107,13 @@ BEGIN
                              , QuestionOrd
                              , Question
                              , PossibleAnswer1
+                             , isGraphics1
                              , PossibleAnswer2
+                             , isGraphics2
                              , PossibleAnswer3
+                             , isGraphics3
                              , PossibleAnswer4
+                             , isGraphics4
                              , CorrectAnswer
                              , Response
                              , StartTime
@@ -112,9 +125,13 @@ BEGIN
               , Child.Orders
               , Child.Question  
               , Second1.PossibleAnswer     
+              , Second1.isGraphics     
               , Second2.PossibleAnswer     
+              , Second2.isGraphics     
               , Second3.PossibleAnswer
+              , Second3.isGraphics     
               , Second4.PossibleAnswer
+              , Second4.isGraphics     
               , CASE WHEN Second1.isCorrectAnswer = TRUE THEN 1    
                      WHEN Second2.isCorrectAnswer = TRUE THEN 2
                      WHEN Second3.isCorrectAnswer = TRUE THEN 3
@@ -157,9 +174,13 @@ BEGIN
           , _tmpData.QuestionOrd
           , _tmpData.Question
           , _tmpData.PossibleAnswer1
+          , _tmpData.isGraphics1
           , _tmpData.PossibleAnswer2
+          , _tmpData.isGraphics2
           , _tmpData.PossibleAnswer3
+          , _tmpData.isGraphics3
           , _tmpData.PossibleAnswer4
+          , _tmpData.isGraphics4
           , _tmpData.CorrectAnswer
           , _tmpData.Response
           , _tmpData.StartTime

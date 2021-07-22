@@ -4453,6 +4453,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Movement_CheckWithPennies: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1094#1077#1085#1090' 50 '#1082#1086#1087' '#1095#1077#1082#1086#1074
+      FormName = 'TReport_Movement_CheckWithPenniesForm'
+      FormNameParam.Value = 'TReport_Movement_CheckWithPenniesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5173,6 +5184,9 @@
       end
       object Covid191: TMenuItem
         Action = actReport_RemainsCovid_19
+      end
+      object N501: TMenuItem
+        Action = actReport_Movement_CheckWithPennies
       end
     end
     object N36: TMenuItem [5]

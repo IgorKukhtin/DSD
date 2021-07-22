@@ -20,6 +20,11 @@ BEGIN
 
   -- приводим дату к первому числу месяца
   vbOperDate := date_trunc('month', inDateTest);
+  
+  IF inUserId = 3
+  THEN
+    RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserId, inResult, inDateTest;
+  END IF;
 
   IF NOT EXISTS(SELECT Id FROM Movement WHERE DescId = zc_Movement_TestingUser() AND OperDate = vbOperDate)
   THEN
