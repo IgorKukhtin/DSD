@@ -1,10 +1,8 @@
--- Function: gpInsertUpdate_Movement_Check_Site()
+-- Function: gpInsertUpdate_Movement_CheckDelivery_Site()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TVarChar);
-    
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckDelivery_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+  
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckDelivery_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
     IN inDate              TDateTime , -- Дата/время документа
@@ -13,7 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
     IN inBayerPhone        TVarChar  , -- Контактный телефон (Покупателя)
     IN inInvNumberOrder    TVarChar  , -- Номер заказа (с сайта)
     IN inManagerName       TVarChar  , -- Менеджер – Вип
-    IN inisDelivery        Boolean   , -- Hаша доставка
     IN inDeliveryPrice     TFloat    , -- Цена доставки
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -115,13 +112,10 @@ BEGIN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, True);
 	END IF;
 
-    IF COALESCE(inisDelivery, False) = TRUE
-    THEN
-      -- сохранили <Наша доставка с сайта>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DeliverySite(), ioId, inisDelivery);
-      -- сохранили <Сумма доставки>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummaDelivery(), ioId, inDeliveryPrice);
-    END IF;
+    -- сохранили <Наша доставка с сайта>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DeliverySite(), ioId, True);
+    -- сохранили <Сумма доставки>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummaDelivery(), ioId, inDeliveryPrice);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -133,9 +127,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
- 29.01.19                                                                                      *
- 17.12.15                                                                       *
+ 23.07.21                                                                                      *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Check_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayerId := 333, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inSession := '3'::TVarChar); -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpInsertUpdate_Movement_CheckDelivery_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayerId := 64068, inBayer := 'V S D'::TVarChar, inBayerPhone:= '+38(095) 183-1969', inInvNumberOrder:= '12345', inManagerName:= '5', inDeliveryPrice := 25, inSession := '3'::TVarChar); -- Аптека_1 пр_Правды_6

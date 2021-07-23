@@ -58,6 +58,11 @@ inherited CheckJournalForm: TCheckJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = TotalSummPayAdd
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaDelivery
             end>
           OptionsView.GroupByBox = True
           Styles.Content = nil
@@ -489,6 +494,24 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object isDeliverySite: TcxGridDBColumn
+            Caption = 'H'#1072#1096#1072' '#1076#1086#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'isDeliverySite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object SummaDelivery: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'SummaDelivery'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
         end
       end

@@ -412,8 +412,6 @@ object MainForm: TMainForm
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1074' %'
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 28
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0

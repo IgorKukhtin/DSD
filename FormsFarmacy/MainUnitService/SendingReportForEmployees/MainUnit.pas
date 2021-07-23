@@ -205,7 +205,7 @@ begin
   cxGridDBChartView1.DataController.DataSource := Nil;
   cxGridDBChartView2.DataController.DataSource := Nil;
 
-  if qrySendList.FieldByName('Id').AsInteger = 3 then
+  if qrySendList.FieldByName('Id').AsInteger in [3, 4] then
   begin
     cxPageControl1.Properties.ActivePage := cxTabSheet3;
     cxGridDBChartView2.DataController.DataSource := dsReport;
@@ -251,12 +251,19 @@ begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
 
-  if qrySendList.FieldByName('Id').AsInteger = 3 then
+  if qrySendList.FieldByName('Id').AsInteger in [3, 4] then
   begin
     if not qryReport.Active then Exit;
     if qryReport.IsEmpty then Exit;
-    Add_Log('Начало выгрузки <Динамика изменения по дням недели в %>');
-    FMessage.Text := 'Динамика изменения по дням недели в %';
+    if qrySendList.FieldByName('Id').AsInteger = 3 then
+    begin
+      Add_Log('Начало выгрузки <Динамика изменения по дням недели в %>');
+      FMessage.Text := 'Динамика изменения по дням недели в %';
+    end else
+    begin
+      Add_Log('Начало выгрузки <Динамика изменения по дням недели в % (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')');
+      FMessage.Text := 'Динамика изменения по дням недели в % (' + FormatDateTime('dddd', IncDay(Date, - 1)) + ')';
+    end;
     AGraphic := cxGridDBChartView2.CreateImage(TBitmap);
     imJPEG := TJPEGImage.Create;
     try
@@ -307,7 +314,7 @@ begin
   for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try
 
-    if qrySendList.FieldByName('Id').AsInteger in [2, 3] then
+    if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4] then
     begin
 
       if not FileExists(SavePath + FileName) then Break;

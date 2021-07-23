@@ -1002,10 +1002,13 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckWithPenniesForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckDeliverySiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_CheckDeliverySiteForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckWithPenniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_CheckWithPenniesForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsCovid_19Form'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsCovid_19Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsCovid_19Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsCovid_19DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsCovid_19DialogForm');

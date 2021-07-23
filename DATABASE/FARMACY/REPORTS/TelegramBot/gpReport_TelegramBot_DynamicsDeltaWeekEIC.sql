@@ -1,8 +1,8 @@
--- Function: gpReport_TelegramBot_DynamicsDeltaEIC()
+-- Function: gpReport_TelegramBot_DynamicsDeltaWeekEIC()
 
-DROP FUNCTION IF EXISTS gpReport_TelegramBot_DynamicsDeltaEIC (TVarChar);
+DROP FUNCTION IF EXISTS gpReport_TelegramBot_DynamicsDeltaWeekEIC (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_TelegramBot_DynamicsDeltaEIC(
+CREATE OR REPLACE FUNCTION gpReport_TelegramBot_DynamicsDeltaWeekEIC(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
@@ -30,10 +30,11 @@ BEGIN
      
      -- Результат
      RETURN QUERY
-     WITH tmpDynamicsOrdersEIC AS (SELECT * 
+     WITH tmpDynamicsOrdersEIC AS (SELECT DynamicsOrdersEIC.* 
+                                        , date_part('DOW', DynamicsOrdersEIC.OperDate) AS WeekId
                                    FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '08.06.2021'::TDateTime - INTERVAL '7 DAY'
                                                                           , inEndDate := CURRENT_DATE - INTERVAL '1 DAY'
-                                                                          , inSession := inSession))
+                                                                          , inSession := inSession) AS DynamicsOrdersEIC)
      SELECT tmpDynamicsOrdersEIC.OperDate
           , tmpDynamicsOrdersEIC.CountNeBoley
           , tmpDynamicsOrdersEIC.CountTabletki
@@ -52,7 +53,8 @@ BEGIN
           LEFT JOIN tmpDynamicsOrdersEIC AS DynamicsOrdersEIC
                                          ON DynamicsOrdersEIC.OperDate =  tmpDynamicsOrdersEIC.OperDate - INTERVAL '7 DAY'
           
-     WHERE tmpDynamicsOrdersEIC.OperDate >= '09.06.2021'::TDateTime;
+     WHERE tmpDynamicsOrdersEIC.OperDate >= '09.06.2021'::TDateTime
+       AND tmpDynamicsOrdersEIC.WeekId = date_part('DOW', CURRENT_DATE - INTERVAL '1 DAY');
 
 END;
 $BODY$
@@ -67,4 +69,4 @@ $BODY$
 
 -- тест
 
-select * FROM gpReport_TelegramBot_DynamicsDeltaEIC(inSession := '3');
+select * FROM gpReport_TelegramBot_DynamicsDeltaWeekEIC(inSession := '3');

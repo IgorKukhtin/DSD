@@ -668,22 +668,22 @@ BEGIN
 
        ;
        
-     IF CURRENT_DATE <= '20.07.2021'
+     IF CURRENT_DATE <= '27.07.2021'
      THEN
 
        ---------
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (25335089, 25348334, 25381003))
-       WHERE _tmpRemains_all_Supplement.UnitId = 1781716
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (25449147, 29078317, 29078318))
+       WHERE _tmpRemains_all_Supplement.UnitId = 377610
          AND _tmpRemains_all_Supplement.GoodsId = 13515345 ;
        
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (25335089, 25348334, 25381003)) / 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (25449147, 29078317, 29078318)) / 
                                                                (SELECT count(*) FROM _tmpRemains_all_Supplement
-                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 1781716
+                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 377610
                                                                   AND _tmpRemains_all_Supplement.GoodsId = 13515345 ))
-       WHERE _tmpRemains_all_Supplement.UnitId <> 1781716
+       WHERE _tmpRemains_all_Supplement.UnitId <> 377610
          AND _tmpRemains_all_Supplement.GoodsId = 13515345 ;
 
-       ---------
+/*       ---------
        UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (28561767))
        WHERE _tmpRemains_all_Supplement.UnitId = 11152911
          AND _tmpRemains_all_Supplement.GoodsId = 2485 ;
@@ -706,7 +706,7 @@ BEGIN
                                                                   AND _tmpRemains_all_Supplement.GoodsId = 25516 ))
        WHERE _tmpRemains_all_Supplement.UnitId <> 8156016
          AND _tmpRemains_all_Supplement.GoodsId = 25516 ;
-
+*/
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса

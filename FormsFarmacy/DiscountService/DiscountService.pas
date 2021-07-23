@@ -491,11 +491,8 @@ begin
                  ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
                  ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
                  Execute;
-                 //Номер прихода
-                 aSaleRequest.OrderCode := ParamByName('outInvoiceNumber').Value;
-                 //Дата прихода
-                 aSaleRequest.OrderDate:= TXSDateTime.Create;
-                 aSaleRequest.OrderDate.AsDateTime:= ParamByName('outInvoiceDate').Value;
+                 FInvoiceNumber := ParamByName('outInvoiceNumber').Value;
+                 FInvoiceDate := ParamByName('outInvoiceDate').Value;
               end;
 
               try
@@ -525,6 +522,12 @@ begin
                 //Сумма за кол-во товара (с учетом скидки)
 //                Item.RequestedAmount := TXSDecimal.Create;
 //                Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat, False)));
+
+                 //Номер прихода
+                 Item.OrderCode := FInvoiceNumber;
+                 //Дата прихода
+                 Item.OrderDate:= TXSDateTime.Create;
+                 Item.OrderDate.AsDateTime:= FInvoiceDate;
 
                 // Подготовили список для отправки
                 SetLength(SendList, i);
@@ -1419,7 +1422,6 @@ begin
             Item.OrderCode := FInvoiceNumber;
             Item.OrderDate := TXSDateTime.Create;
             Item.OrderDate.AsDateTime := FInvoiceDate;
-
 
             // Подготовили список для отправки
             SetLength(SendList, i);

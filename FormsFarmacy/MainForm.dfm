@@ -4464,6 +4464,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Movement_CheckDeliverySite: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088' '#1087#1086' '#1076#1086#1089#1090#1072#1074#1082#1077' '#1089' '#1089#1072#1081#1090#1072
+      FormName = 'TReport_Movement_CheckDeliverySiteForm'
+      FormNameParam.Value = 'TReport_Movement_CheckDeliverySiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5145,6 +5156,9 @@
       end
       object N300: TMenuItem
         Action = actReport_Movement_DynamicsOrdersEIC
+      end
+      object N306: TMenuItem
+        Action = actReport_Movement_CheckDeliverySite
       end
       object N178: TMenuItem
         Caption = '-'

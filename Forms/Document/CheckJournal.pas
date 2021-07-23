@@ -89,6 +89,8 @@ type
     BuyerForSaleName: TcxGridDBColumn;
     isCorrectMarketing: TcxGridDBColumn;
     isCorrectIlliquidMarketing: TcxGridDBColumn;
+    isDeliverySite: TcxGridDBColumn;
+    SummaDelivery: TcxGridDBColumn;
   private
     { Private declarations }
   public

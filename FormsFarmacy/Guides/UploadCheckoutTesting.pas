@@ -77,6 +77,7 @@ procedure TUploadThread.Execute;
       result.Password := List.Values['password'];
       result.Database := List.Values['dbname'];
       result.Protocol := 'postgresql-9';
+      result.Properties.Add('timeout=12');
     finally
       List.Free
     end;
