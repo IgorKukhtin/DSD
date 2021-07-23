@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPersonalId Integer;
    DECLARE vbProductId Integer;
+   DECLARE vbProductId_end Integer;
    DECLARE vbMovementId_OrderClient Integer;
    DECLARE vbStartBegin TDateTime;
    DECLARE vbEndBegin   TDateTime;
@@ -57,16 +58,22 @@ BEGIN
          -- Проверка
          IF COALESCE (vbMovementId_OrderClient, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Документ <Заказ Клиента> с № <%> не найден.', inBarCode_OrderClient;
+             --RAISE EXCEPTION '', inBarCode_OrderClient;
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> с № <%> не найден.' :: TVarChar
+                                                   , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'     :: TVarChar
+                                                   , inUserId        := vbUserId
+                                                   , inParam1        := inBarCode_OrderClient                                :: TVarChar
+                                                   );
          END IF;
 
+         vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
+                         FROM MovementLinkObject AS MovementLinkObject_Product
+                         WHERE MovementLinkObject_Product.MovementId = vbMovementId_OrderClient
+                           AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                         );
      END IF;
 
-     vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
-                     FROM MovementLinkObject AS MovementLinkObject_Product
-                     WHERE MovementLinkObject_Product.MovementId = vbMovementId_OrderClient
-                       AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-                     );
+
 
      IF COALESCE (inBarCode_start, '') = '' AND COALESCE (inBarCode_end, '') = ''
      THEN
@@ -89,8 +96,62 @@ BEGIN
          -- Проверка
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
+            -- RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с № <%> не найден.' :: TVarChar
+                                                   , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'   :: TVarChar
+                                                   , inUserId        := vbUserId
+                                                   , inParam1        := inBarCode_start                       :: TVarChar
+                                                   );
          END IF;
+
+         --перед открытием новой смены проверяем нет ли открытой, если есть закрываем
+         -- пробуем найти строку по сотруднику с пустой датой окончания
+         SELECT MovementItem.Id
+              , MIDate_StartBegin.ValueData
+              , MILO_Product.ObjectId
+        INTO ioId, vbStartBegin, vbProductId_end
+         FROM MovementItem
+              LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                         ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                        AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
+              LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                         ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                        AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
+              LEFT JOIN MovementItemLinkObject AS MILO_Product
+                                               ON MILO_Product.MovementItemId = MovementItem.Id
+                                              AND MILO_Product.DescId = zc_MILinkObject_Product()
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     =  zc_MI_Master()
+           AND MovementItem.isErased   = FALSE
+           AND MovementItem.ObjectId   = vbPersonalId
+           AND MIDate_EndBegin.ValueData IS NULL
+         ;   
+         -- Если нашли закрываем
+         IF COALESCE (ioId,0) <> 0
+         THEN
+             vbEndBegin   := CURRENT_TIMESTAMP;
+
+             --часы работы
+             vbAmount := ( CAST ( COALESCE (date_part( 'day', vbEndBegin -vbStartBegin) * 24,0)      -- дни
+                                + COALESCE (date_part( 'hours', vbEndBegin -vbStartBegin),0)      -- часы
+                                + COALESCE (date_part( 'minute' , vbEndBegin - vbStartBegin)/60,0) AS NUMERIC (16,2)));  -- минуты
+
+             -- сохранили <Элемент документа>
+             SELECT tmp.ioId
+                    INTO ioId 
+             FROM lpInsertUpdate_MovementItem_ProductionPersonal (ioId
+                                                                , inMovementId
+                                                                , vbPersonalId
+                                                                , vbProductId_end
+                                                                , vbStartBegin
+                                                                , vbEndBegin
+                                                                , vbAmount
+                                                                , vbUserId
+                                                                ) AS tmp;
+         END IF;
+         
+         
+
 
          vbStartBegin := CURRENT_TIMESTAMP;
          vbEndBegin   := NULL ::TDateTime;
@@ -100,7 +161,7 @@ BEGIN
 
     IF COALESCE (inBarCode_end,'') <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode_start) >= 12
+         IF CHAR_LENGTH (inBarCode_end) >= 12
          THEN -- по штрих коду
               vbPersonalId:= (SELECT Object.Id
                               FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_end, 4, 13-4)) AS ObjectId
@@ -114,7 +175,12 @@ BEGIN
          -- Проверка
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с № <%> не найден.' :: TVarChar
+                                                   , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'   :: TVarChar
+                                                   , inUserId        := vbUserId
+                                                   , inParam1        := inBarCode_end                         :: TVarChar
+                                                   );
+
          END IF;
 
          
@@ -123,19 +189,18 @@ BEGIN
          -- находим строку по сотруднику с пустой датой окончания
          SELECT MovementItem.Id
               , MIDate_StartBegin.ValueData
-        INTO ioId, vbStartBegin
+              , MILO_Product.ObjectId
+        INTO ioId, vbStartBegin, vbProductId
          FROM MovementItem
-              INNER JOIN MovementItemLinkObject AS MILO_Product
-                                                ON MILO_Product.MovementItemId = MovementItem.Id
-                                               AND MILO_Product.DescId = zc_MILinkObject_Product()
-                                               AND MILO_Product.ObjectId = vbProductId
-
               LEFT JOIN MovementItemDate AS MIDate_StartBegin
                                          ON MIDate_StartBegin.MovementItemId = MovementItem.Id
                                         AND MIDate_StartBegin.DescId = zc_MIDate_StartBegin()
               LEFT JOIN MovementItemDate AS MIDate_EndBegin
                                          ON MIDate_EndBegin.MovementItemId = MovementItem.Id
                                         AND MIDate_EndBegin.DescId = zc_MIDate_EndBegin()
+              LEFT JOIN MovementItemLinkObject AS MILO_Product
+                                               ON MILO_Product.MovementItemId = MovementItem.Id
+                                              AND MILO_Product.DescId = zc_MILinkObject_Product()
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId     =  zc_MI_Master()
            AND MovementItem.isErased   = FALSE

@@ -1618,7 +1618,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides1
       end>
     ActionItemList = <
       item
