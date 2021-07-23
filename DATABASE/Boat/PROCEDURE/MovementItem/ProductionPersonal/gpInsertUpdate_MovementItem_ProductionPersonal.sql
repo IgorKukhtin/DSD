@@ -71,6 +71,14 @@ BEGIN
                          WHERE MovementLinkObject_Product.MovementId = vbMovementId_OrderClient
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                          );
+         IF COALESCE (vbProductId,0) = 0
+         THEN
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не определена лодка в Документе <Заказ Клиента> с № <%>.' :: TVarChar
+                                                   , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'     :: TVarChar
+                                                   , inUserId        := vbUserId
+                                                   , inParam1        := inBarCode_OrderClient                                :: TVarChar
+                                                   );
+         END IF;
      END IF;
 
 
