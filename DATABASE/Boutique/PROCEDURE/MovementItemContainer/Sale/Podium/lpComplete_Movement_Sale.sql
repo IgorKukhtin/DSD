@@ -34,12 +34,36 @@ BEGIN
 
      -- Проверка
      IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableSMS())
+        AND NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.ValueData > 0 AND MF.DescId = zc_MovementFloat_KeySMS())
+        AND EXISTS (SELECT 1
+                    FROM MovementItem
+                         JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
+                                                     ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+                                                    AND MILinkObject_DiscountSaleKind.ObjectId       = zc_Enum_DiscountSaleKind_Client()
+                         JOIN MovementItemFloat AS MIF
+                                                ON MIF.MovementItemId = MovementItem.Id
+                                               AND MIF.DescId         = zc_MIFloat_ChangePercent()
+                                               AND MIF.ValueData      > 0
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND MovementItem.Amount     > 0
+                   )
+        AND inUserId <> 23902 -- Иванова Т.В.
+      --AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет кода подтверждения.%Необходимо отправить SMS на телефон Покупателя.', CHR (13);
+     END IF;
+
+     -- Проверка
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableSMS())
         AND EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.ValueData > 0 AND MF.DescId = zc_MovementFloat_KeySMS())
         AND inKeySMS <> (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_KeySMS())
         AND inKeySMS <> 22334455
         AND inUserId <> 23902 -- Иванова Т.В.
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет подтверждения кода по SMS <%>.Введите правильный код.', inKeySMS;
+         RAISE EXCEPTION 'Ошибка.Нет подтверждения кода по SMS <%>.%Введите правильный код.', inKeySMS, CHR (13);
      END IF;
 
 
@@ -1395,4 +1419,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 1100, inUserId:= zfCalc_UserAdmin() :: Integer)
-

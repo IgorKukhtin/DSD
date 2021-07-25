@@ -108,7 +108,9 @@ BEGIN
                                        , isErased                  Boolean
                                        , GoodsCode_packTo          Integer
                                        , GoodsName_packTo          TVarChar
-                                       , GoodsKindName_packTo      TVarChar) ON COMMIT DROP;
+                                       , GoodsKindName_packTo      TVarChar
+                                       , GoodsId_complete Integer, GoodsKindId_complete Integer
+                                        ) ON COMMIT DROP;
 
     INSERT INTO _tmpResult_Child (Id, ContainerId, KeyId
                                 , GoodsId, GoodsCode, GoodsName, GoodsKindId, GoodsKindName, MeasureName, GoodsGroupNameFull
@@ -130,7 +132,9 @@ BEGIN
                                 , DayCountForecast, DayCountForecastOrder, DayCountForecast_calc, DayCountForecast_new, DayCountForecast_new_new
 
                                 , ReceiptId, ReceiptCode, ReceiptName, ReceiptId_basis, ReceiptCode_basis, ReceiptName_basis, isErased
-                                , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo)
+                                , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo
+                                , GoodsId_complete, GoodsKindId_complete
+                                 )
 
             WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
                  tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
@@ -310,6 +314,9 @@ BEGIN
             , Object_Goods_packTo.ValueData      AS GoodsName_packTo
             , Object_GoodsKind_packTo.ValueData  AS GoodsKindName_packTo
 
+            , _Result_Child.GoodsId_complete
+            , _Result_Child.GoodsKindId_complete
+
        FROM (SELECT _Result_Child.Id
                   , _Result_Child.ContainerId
                   , _Result_Child.KeyId
@@ -320,6 +327,8 @@ BEGIN
                   , COALESCE (Object_GoodsKind.ValueData, _Result_Child.GoodsKindName) :: TVarChar AS GoodsKindName
                   , _Result_Child.MeasureName
                   , _Result_Child.GoodsGroupNameFull
+                  , _Result_Child.GoodsId_complete
+                  , _Result_Child.GoodsKindId_complete
 
                     -- ***План1 заказ факт (с Ост.) - Приход с УПАК
                   , SUM (_Result_Child.AmountPack)
@@ -1066,6 +1075,7 @@ BEGIN
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+       WHERE _Result_Child.GoodsId_complete > 0
        ;
        RETURN NEXT Cursor2;
 

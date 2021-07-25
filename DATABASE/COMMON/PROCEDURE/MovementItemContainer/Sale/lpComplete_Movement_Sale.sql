@@ -2698,6 +2698,7 @@ END IF;*/
                   END AS ContainerId_ProfitLoss_20200
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_From
+                , _tmpItem_byProfitLoss.isLossMaterials
            FROM (SELECT -- определяем ProfitLossId_CountChange - для учета разница в весе : с/с2 - с/с3
                         CASE WHEN _tmpItem_group.isLossMaterials = TRUE -- !!!если списание!!!
                                   THEN 0
@@ -2861,6 +2862,7 @@ END IF;*/
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
                                      AND _tmpItem_byDestination.BusinessId_From        = _tmpItem.BusinessId_From
+                                     AND _tmpItem_byDestination.isLossMaterials        = _tmpItem.isLossMaterials
      WHERE _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
        AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
      ;
@@ -3455,6 +3457,14 @@ END IF;*/
            GROUP BY _tmpItem.MovementItemId
           ) AS _tmpItem;
 
+
+     --
+     IF EXISTS (SELECT FROM _tmpMIContainer_insert WHERE _tmpMIContainer_insert.ContainerId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для товара <%> необходимо ввести цену.'
+                        , lfGet_Object_ValueData_sh ((SELECT _tmpItem.GoodsId FROM _tmpMIContainer_insert JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpMIContainer_insert.ContainerIntId_Analyzer WHERE _tmpMIContainer_insert.ContainerId = 0 LIMIT 1))
+                         ;
+     END IF;
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

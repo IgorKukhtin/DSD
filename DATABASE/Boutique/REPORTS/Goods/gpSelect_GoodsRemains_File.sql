@@ -64,13 +64,13 @@ BEGIN
                                , BrandName TVarChar, PeriodId Integer, PeriodName TVarChar, PeriodYear TVarChar, SizeName TVarChar, CurrencyName TVarChar, CurrencyName_curr TVarChar
                                , Amount TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
                                , OperPriceList_grn TFloat, OperPriceList_grn_curr TFloat, OperPriceList_grn_curr_disc TFloat
-                               , AmountCurrency TFloat, AmountCurrency_curr TFloat, DiscountTax TFloat
+                               , AmountCurrency TFloat, AmountCurrency_curr TFloat, DiscountTax TFloat, DiscountTaxNext TFloat
                                 ) ON COMMIT DROP;
      INSERT INTO _tmpData (UnitId, UnitName, GoodsId, GoodsCode, GoodsName, LabelName, GoodsInfoName, GoodsGroupId, GoodsGroupName, GoodsGroupId_parent
                          , PartnerName, BrandName, PeriodId, PeriodName, PeriodYear, SizeName, CurrencyName, CurrencyName_curr
                          , Amount, OperPriceList, OperPriceList_curr
                          , OperPriceList_grn, OperPriceList_grn_curr, OperPriceList_grn_curr_disc
-                         , AmountCurrency, AmountCurrency_curr, DiscountTax)
+                         , AmountCurrency, AmountCurrency_curr, DiscountTax, DiscountTaxNext)
        WITH
            -- все цены
            tmpPriceList_all AS (SELECT _tmpUnit.UnitId                                  AS UnitId
@@ -171,6 +171,7 @@ BEGIN
    , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                           , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                           , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+                          , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
                      FROM tmpDiscountList
                           INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                                 ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -185,6 +186,9 @@ BEGIN
                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                        ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                       AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_ValueNext
+                                                       ON ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                      AND ObjectHistoryFloat_DiscountPeriodItem_ValueNext.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext()
                     )
      -- Остатки + Партии
    , tmpContainer AS (SELECT tmpContainer_all.UnitId
@@ -216,6 +220,7 @@ BEGIN
 
                             -- % Сезонной скидки !!!для последней цены!!! НА zc_DateEnd
                            , COALESCE (tmpDiscount.DiscountTax, 0)       AS DiscountTax
+                           , COALESCE (tmpDiscount.DiscountTaxNext, 0)   AS DiscountTaxNext
 
                       FROM tmpContainer_all
                            -- магазин PODIUM
@@ -293,7 +298,7 @@ BEGIN
             -- последняя цена в грн с учетом сезонной скидки
           , CAST (tmpContainer.OperPriceList_curr
                  * CASE WHEN tmpContainer.CurrencyId_pl_curr = zc_Currency_Basis() THEN 1 ELSE tmpCurrency_curr.Amount / COALESCE (tmpCurrency_curr.ParValue, 1)
-                   END * (1 - tmpContainer.DiscountTax / 100) AS NUMERIC (16, 0)) AS OperPriceList_grn_curr_disc
+                   END * (1 - tmpContainer.DiscountTax / 100) * (1 - tmpContainer.DiscountTaxNext / 100) AS NUMERIC (16, 0)) AS OperPriceList_grn_curr_disc
 
            -- курс валют - первая цена
           , tmpCurrency.Amount / COALESCE (tmpCurrency.ParValue, 1) AS AmountCurrency
@@ -302,6 +307,7 @@ BEGIN
 
            -- % Сезонной скидки !!!НА!!! zc_DateEnd
           , tmpContainer.DiscountTax
+          , tmpContainer.DiscountTaxNext
 
      FROM tmpContainer
           LEFT JOIN Object AS Object_Unit       ON Object_Unit.Id       = tmpContainer.UnitId
@@ -416,6 +422,7 @@ BEGIN
 
             -- % сез. скидки
          || '<discount>'|| COALESCE (tmp.DiscountTax, 0) :: TVarChar ||'</discount>'
+         || '<discount_two>'|| COALESCE (tmp.DiscountTaxNext, 0) :: TVarChar ||'</discount_two>'
 
          || '<vat>NO_VAT</vat>'
          || '<categoryId>'|| COALESCE (tmp.GoodsGroupId, 0) :: TVarChar ||'</categoryId>'
@@ -455,6 +462,7 @@ BEGIN
                 , _tmpData.OperPriceList_grn_curr
                   -- последняя цена в грн с учетом сезонной скидки
                 , CASE WHEN _tmpData.PeriodYear = '2021' AND _tmpData.PeriodId = 1074 -- Весна-Лето
+                            AND 1=0
                             THEN CAST (_tmpData.OperPriceList_grn_curr_disc * 0.8 AS NUMERIC (16, 0))
                        ELSE _tmpData.OperPriceList_grn_curr_disc
                   END AS OperPriceList_grn_curr_disc
@@ -467,6 +475,7 @@ BEGIN
                 , _tmpData.AmountCurrency_curr
 
                 , _tmpData.DiscountTax
+                , _tmpData.DiscountTaxNext
 
                 , SUM (_tmpData.Amount) AS Amount
 
@@ -503,6 +512,7 @@ BEGIN
                   , _tmpData.AmountCurrency_curr
 
                   , _tmpData.DiscountTax
+                  , _tmpData.DiscountTaxNext
            ) AS tmp
      ORDER BY tmp.GoodsCode :: Integer
      ;

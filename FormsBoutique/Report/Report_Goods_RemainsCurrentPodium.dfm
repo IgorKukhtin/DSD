@@ -6,8 +6,9 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -358
   ExplicitWidth = 1147
-  ExplicitHeight = 601
+  ExplicitHeight = 598
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -649,14 +650,14 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             Width = 40
           end
           object DiscountTaxNext: TcxGridDBColumn
-            Caption = '% '#1076#1086#1087'. '#1089#1082'.'
+            Caption = '% '#1089#1082'.2'
             DataBinding.FieldName = 'DiscountTaxNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 55
           end

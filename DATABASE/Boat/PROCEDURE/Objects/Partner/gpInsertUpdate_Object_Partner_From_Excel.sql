@@ -158,6 +158,14 @@ BEGIN
                                            , inSession  := inSession       :: TVarChar
                                             );
    ELSE
+       IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbPartnerId AND Object.isErased = TRUE)
+       THEN
+           PERFORM lpUpdate_Object_isErased (inObjectId:= vbPartnerId
+                                           , inIsErased:= FALSE
+                                           , inUserId  := vbUserId
+                                            );
+       END IF;
+
        -- обновляем данные
        PERFORM gpInsertUpdate_Object_Partner(ioId       := tmp.Id
                                            , ioCode     := tmp.Code
@@ -183,9 +191,10 @@ BEGIN
                                            , inPaidKindId   := COALESCE (tmp.PaidKindId, zc_Enum_PaidKind_FirstForm() ::Integer) 
                                            , inSession      := inSession                              :: TVarChar
                                             )
-       FROM gpSelect_Object_Partner(FALSE, inSession) AS tmp
+       FROM gpSelect_Object_Partner (TRUE, inSession) AS tmp
        WHERE tmp.Id = vbPartnerId;
    END IF;
+
 
 END;
 $BODY$
@@ -230,15 +239,3 @@ select * from gpInsertUpdate_Object_Partner_From_Excel(inCode := 38 , inName := 
 , inCodeDB := '' :: TVarChar, inPLZ := 'CM98RY':: TVarChar ,  inSession := '5':: TVarChar);
 
 */
-
-
-ВАЖНО:  закрытие подключения по команде администратора
-CONTEXT:  функция PL/pgSQL gpreport_goodstax(tdatetime,tdatetime,integer,tvarchar), строка 4, оператор RETURN QUERY
- context: select * from gpReport_GoodsTax(inStartDate := ('01.05.2021')::TDateTime , inEndDate := ('31.05.2021')::TDateTime , inGoodsId := 2140 ,  inSession := '577627');
- 
- 
- select * from gpSelect_Movement_TaxCorrective(instartdate := ('01.06.2021')::TDateTime , inenddate := ('15.06.2021')::TDateTime , inJuridicalBasisId := 9399 , inIsRegisterDate := 'False' , inIsErased := 'False' ,  inSession := '577627');
- 
- 
- 6591649446
- 100000

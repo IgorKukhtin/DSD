@@ -11,8 +11,6 @@ CREATE OR REPLACE FUNCTION zfCalc_SummChangePercentNext(
 RETURNS TFloat
 AS
 $BODY$
-   DECLARE vbSumm TFloat;
-   DECLARE vbOperPrice TFloat;
 BEGIN
 
      RETURN zfCalc_SummChangePercent (1, zfCalc_SummChangePercent (inAmount, inOperPriceList, inChangePercent), inChangePercentNext);

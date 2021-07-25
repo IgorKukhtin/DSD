@@ -662,6 +662,7 @@ BEGIN
                                      , AmountPrIn                TFloat
                                      , AmountPartnerOld          TFloat
                                      , AmountPartnerPromoOld     TFloat
+                                     , AmountPartnerOldTotal     TFloat
 
                                      , CountForecast             TFloat
                                      , CountForecastOrder        TFloat
@@ -1177,6 +1178,8 @@ BEGIN
                                         , GoodsName_basis            TVarChar
                                         , GoodsKindId                Integer
                                         , GoodsKindName              TVarChar
+                                        , GoodsId_complete           Integer
+                                        , GoodsKindId_complete       Integer
                                         , MeasureId                  Integer
                                         , MeasureName                TVarChar
                                         , MeasureName_basis          TVarChar
@@ -1257,6 +1260,10 @@ BEGIN
                                         , GoodsName
                                         , GoodsKindId
                                         , GoodsKindName
+
+                                        , GoodsId_complete
+                                        , GoodsKindId_complete
+
                                         , MeasureId
                                         , MeasureName
                                         , GoodsGroupNameFull
@@ -1363,6 +1370,10 @@ BEGIN
 
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
+           
+           , tmpMI.GoodsId_complete
+           , tmpMI.GoodsKindId_complete
+
            , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
 

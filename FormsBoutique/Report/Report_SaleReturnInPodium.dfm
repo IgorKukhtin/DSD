@@ -6,7 +6,7 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -395,16 +395,18 @@ inherited Report_SaleReturnInPodiumForm: TReport_SaleReturnInPodiumForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1057#1082#1080#1076#1082#1080' '#1050#1083#1080#1077#1085#1090#1072'/'#1057#1077#1079#1086#1085
             Width = 40
           end
           object ChangePercentNext: TcxGridDBColumn
-            Caption = '% '#1089#1082'. '#1076#1086#1087'.'
+            Caption = '% '#1089#1082'.2'
             DataBinding.FieldName = 'ChangePercentNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Width = 45
           end
           object SummChangePercent: TcxGridDBColumn
