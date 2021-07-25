@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar)
 
--- DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
@@ -12,7 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
    OUT outEndDate               TDateTime,  -- Дата действия цены
     IN inValue                  TFloat,     -- Цена
     IN inIsLast                 Boolean,    -- 
-    IN inIsDiscountDelete       Boolean,    -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -107,22 +105,10 @@ BEGIN
           AND inValue < (SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_PriceListItem_Value() WHERE OH.DescId = zc_ObjectHistory_PriceListItem() AND OH.ObjectId = vbPriceListItemId AND OH.EndDate = inOperDate)
           AND 0 < (SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate)
        THEN
-           IF inIsDiscountDelete = TRUE
-           THEN
-               PERFORM gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast (ioId         := (SELECT OH.Id FROM ObjectHistory AS OH WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate) --  ORDER BY OH.Id DESC LIMIT 1
-                                                                          , inUnitId     := (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.ChildObjectId = inPriceListId AND OL.DescId = zc_ObjectLink_Unit_PriceList())
-                                                                          , inGoodsId    := inGoodsId
-                                                                          , inOperDate   := inOperDate
-                                                                          , inValue      := 0
-                                                                          , inIsLast     := TRUE
-                                                                          , inSession    := inSession
-                                                                           );
-           ELSE
-               RAISE EXCEPTION 'Ошибка.Для товара найдена сезонная скидка = <% %>.Переоценку провести нельзя.'
-                             , zfConvert_FloatToString((SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate))
-                             , '%'
-                              ;
-           END IF;
+           RAISE EXCEPTION 'Ошибка.Для товара найдена сезонная скидка = <% %>.Переоценку провести нельзя.'
+                         , zfConvert_FloatToString((SELECT COALESCE (OFl.ValueData, 0) FROM ObjectHistory AS OH LEFT JOIN ObjectHistoryFloat AS OFl ON OFl.ObjectHistoryId = OH.Id AND OFl.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() WHERE OH.DescId = zc_ObjectHistory_DiscountPeriodItem() AND OH.ObjectId = vbDiscountPeriodItemId AND OH.StartDate <= inOperDate AND inOperDate < OH.EndDate))
+                         , '%'
+                          ;
        END IF;
 
    END IF;
