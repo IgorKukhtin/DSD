@@ -1,12 +1,12 @@
--- Function: gpSelect_Movement_CheckSummCard()
+-- Function: gpReport_Movement_CheckDeliverySite()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_CheckSummCard (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_CheckDeliverySite (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckSummCard(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpReport_Movement_CheckDeliverySite (
+    IN inStartDate       TDateTime , --
+    IN inEndDate         TDateTime , --
+    IN inIsErased        Boolean ,
+    IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
@@ -19,9 +19,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
+             , CommentError TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , OperDateSP TDateTime
              , PartnerMedicalName TVarChar
+             , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , Ambulance TVarChar
              , SPKindName TVarChar
@@ -36,18 +38,18 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Passport_MemberSP TVarChar
              , BankPOSTerminalName TVarChar
              , JackdawsChecksName TVarChar
+             , PartionDateKindName TVarChar
              , Delay Boolean, DateDelay TDateTime
              , CheckSourceKindName TVarChar
-             , SummCard TFloat
-             , CancelReason TVarChar
-             , isDeliverySite Boolean
+             , MedicForSaleName TVarChar
+             , BuyerForSaleName TVarChar
+             , isCorrectMarketing Boolean
+             , isCorrectIlliquidMarketing Boolean
              , SummaDelivery TFloat
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
-   DECLARE vbRetailId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -62,7 +64,7 @@ BEGIN
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
 
-         SELECT
+         SELECT       
              Movement_Check.Id
            , Movement_Check.InvNumber
            , Movement_Check.OperDate
@@ -73,7 +75,7 @@ BEGIN
            , MovementFloat_TotalSummChangePercent.ValueData     AS TotalSummChangePercent
            , Object_Unit.ValueData                              AS UnitName
            , Object_CashRegister.ValueData                      AS CashRegisterName
-           , Object_PaidType.ValueData                          AS PaidTypeName
+           , Object_PaidType.ValueData                          AS PaidTypeName 
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
            , COALESCE(Object_BuyerForSite.ValueData,
                       MovementString_Bayer.ValueData)           AS Bayer
@@ -91,16 +93,18 @@ BEGIN
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
+           , Movement_Check.CommentError                        AS CommentError
            , Object_Insert.ValueData                            AS InsertName
            , MovementDate_Insert.ValueData                      AS InsertDate
 
            , MovementDate_OperDateSP.ValueData                  AS OperDateSP
            , Object_PartnerMedical.ValueData                    AS PartnerMedicalName
+           , Movement_Check.InvNumberSP                         AS InvNumberSP
            , MovementString_MedicSP.ValueData                   AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
-           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full
-
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full 
+           
            , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
            , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
@@ -114,46 +118,71 @@ BEGIN
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
            , Object_BankPOSTerminal.ValueData                             AS BankPOSTerminalName
            , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
+           , Object_PartionDateKind.ValueData                :: TVarChar  AS PartionDateKindName
            , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
            , MovementDate_Delay.ValueData                                 AS DateDelay
            , Object_CheckSourceKind.ValueData                             AS CheckSourceKindName
-           , MovementFloat_TotalSummCard.ValueData                        AS SummCard
-           , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Erased()
-                  THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
-           , COALESCE(MovementBoolean_DeliverySite.ValueData, False)      AS isDeliverySite
+           
+           , Object_MedicForSale.ValueData                                AS MedicForSaleName
+           , Object_BuyerForSale.ValueData                                AS BuyerForSaleName
+           , COALESCE(MovementBoolean_CorrectMarketing.ValueData, False)  AS isCorrectMarketing
+           , COALESCE(MovementBoolean_CorrectIlliquidMarketing.ValueData, False)  AS isCorrectIlliquidMarketing
+           
            , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
+
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
+                   , MovementString_CommentError.ValueData               AS CommentError
+                   , MovementString_InvNumberSP.ValueData                AS InvNumberSP
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
+                   , MovementLinkObject_PartionDateKind.ObjectId         AS PartionDateKindId
                    , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
               FROM Movement
+
                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
+                   INNER JOIN MovementBoolean AS MovementBoolean_DeliverySite
+                                              ON MovementBoolean_DeliverySite.MovementId = Movement.Id
+                                             AND MovementBoolean_DeliverySite.DescId = zc_MovementBoolean_DeliverySite()
+                                             AND MovementBoolean_DeliverySite.ValueData = True
+                                             
+                   LEFT JOIN MovementString AS MovementString_CommentError
+                                            ON MovementString_CommentError.MovementId = Movement.Id
+                                           AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                   LEFT JOIN MovementString AS MovementString_InvNumberSP
+                                            ON MovementString_InvNumberSP.MovementId = Movement.Id
+                                           AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP() 
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+                                                                         
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                 ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                                AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
 
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                                ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                               AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+
                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                   
+   		                      
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
-                AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = TRUE
-           ) AS Movement_Check
+                AND Movement.StatusId <> zc_Enum_Status_Complete()
+           ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
+
+             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = Movement_Check.PartionDateKindId
 
              LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-
+ 
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_Check.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -161,22 +190,17 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_Check.Id
                                     AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
+ 
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
-                                     ON MovementFloat_TotalSummCard.MovementId = Movement_Check.Id
-                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
-
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
                                      ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                      ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
-
+ 
              LEFT JOIN MovementFloat AS MovementFloat_SummaDelivery
                                      ON MovementFloat_SummaDelivery.MovementId =  Movement_Check.Id
                                     AND MovementFloat_SummaDelivery.DescId = zc_MovementFloat_SummaDelivery()
@@ -220,20 +244,16 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Site
                                        ON MovementBoolean_Site.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
-
-	         LEFT JOIN MovementBoolean AS MovementBoolean_DeliverySite
-                                       ON MovementBoolean_DeliverySite.MovementId = Movement_Check.Id
-                                      AND MovementBoolean_DeliverySite.DescId = zc_MovementBoolean_DeliverySite()
-
+                                                  
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                           ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
-
+ 
    	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
-             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
+             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
 
              LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
 
@@ -246,11 +266,11 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
              LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
-
+                        
              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
-             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
+             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId 
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
@@ -266,11 +286,11 @@ BEGIN
                                   ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountCard.Id
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
-
+                           
              LEFT JOIN MovementLinkObject AS MLO_Insert
                                           ON MLO_Insert.MovementId = Movement_Check.Id
                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
 
              LEFT JOIN MovementLinkMovement AS MLM_Child
                                             ON MLM_Child.MovementId = Movement_Check.Id
@@ -281,7 +301,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.MovementId = Movement_Check.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-            LEFT JOIN MovementItem AS MI_PromoCode
+            LEFT JOIN MovementItem AS MI_PromoCode 
                                    ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                   AND MI_PromoCode.isErased = FALSE
             LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
@@ -337,25 +357,36 @@ BEGIN
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
-                                         ON MovementLinkObject_CancelReason.MovementId = Movement_Check.Id
-                                        AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
-            LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicForSale
+                                         ON MovementLinkObject_MedicForSale.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_MedicForSale.DescId = zc_MovementLinkObject_MedicForSale()
+            LEFT JOIN Object AS Object_MedicForSale ON Object_MedicForSale.Id = MovementLinkObject_MedicForSale.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSale
+                                         ON MovementLinkObject_BuyerForSale.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_BuyerForSale.DescId = zc_MovementLinkObject_BuyerForSale()
+            LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForSale.Id = MovementLinkObject_BuyerForSale.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_CorrectMarketing
+                                      ON MovementBoolean_CorrectMarketing.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_CorrectMarketing.DescId = zc_MovementBoolean_CorrectMarketing()
                                      
-            LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 = 1 
+            LEFT JOIN MovementBoolean AS MovementBoolean_CorrectIlliquidMarketing
+                                      ON MovementBoolean_CorrectIlliquidMarketing.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_CorrectIlliquidMarketing.DescId = zc_MovementBoolean_CorrectIlliquidMarketing()
       ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_Movement_CheckDeliverySite (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 21.04.21                                                       * add BuyerForSite
- 01.07.20                                                       *
+ 23.07.21                                                       * 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
+--
+select * from gpReport_Movement_CheckDeliverySite(inStartDate:= '27.07.2021', inEndDate:= '27.07.2021', inIsErased := FALSE, inSession:= '3');

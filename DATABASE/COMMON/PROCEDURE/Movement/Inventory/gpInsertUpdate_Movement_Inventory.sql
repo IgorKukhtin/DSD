@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат поставщику>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
     IN inGoodsGroupId        Integer   , -- Группа товара
  INOUT ioisGoodsGroupIn      Boolean   , -- Только выбр. группа
  INOUT ioisGoodsGroupExc     Boolean   , -- Кроме выбр. группы
+    IN inisList              Boolean   , -- по всем товарам накладной
     IN inSession             TVarChar    -- сессия пользователя
 )                               
 RETURNS RECORD AS
@@ -57,6 +59,7 @@ BEGIN
                                               , inGoodsGroupId     := inGoodsGroupId
                                               , inisGoodsGroupIn   := ioisGoodsGroupIn
                                               , inisGoodsGroupExc  := ioisGoodsGroupExc
+                                              , inisList           := inisList
                                               , inUserId           := vbUserId
                                                );
 END;
@@ -66,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.21         *
  18.09.17         *
  29.05.15                                        *
 */

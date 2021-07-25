@@ -832,6 +832,10 @@ type
     N304: TMenuItem;
     actTestingUser: TdsdOpenStaticForm;
     N305: TMenuItem;
+    actReport_Movement_CheckWithPennies: TdsdOpenForm;
+    N501: TMenuItem;
+    actReport_Movement_CheckDeliverySite: TdsdOpenForm;
+    N306: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

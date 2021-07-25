@@ -216,6 +216,8 @@ BEGIN
                                                          ON Juridical.GoodsMainId = Object_Goods_Main.Id
 
                         WHERE COALESCE (Object_Goods_Main.isNotUploadSites, FALSE) = FALSE
+                          AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
+                          AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)
 
                       UNION ALL
                       -- подва

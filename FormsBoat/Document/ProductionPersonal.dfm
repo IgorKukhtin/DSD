@@ -26,7 +26,6 @@ object ProductionPersonalForm: TProductionPersonalForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 855
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -155,14 +154,12 @@ object ProductionPersonalForm: TProductionPersonalForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 855
     ClientRectBottom = 369
     ClientRectRight = 864
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 855
       object cxGrid: TcxGrid
         Left = 0
         Top = 75
@@ -170,7 +167,6 @@ object ProductionPersonalForm: TProductionPersonalForm
         Height = 270
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 855
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -384,7 +380,6 @@ object ProductionPersonalForm: TProductionPersonalForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 855
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False
@@ -471,33 +466,9 @@ object ProductionPersonalForm: TProductionPersonalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object OrderClientId_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
-            DataBinding.FieldName = 'OrderClientId'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 200
-          end
-          object PersonalId_start_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
-            DataBinding.FieldName = 'PersonalId_start'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 219
-          end
-          object PersonalId_end_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076' '#1048#1044
-            DataBinding.FieldName = 'PersonalId_end'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 221
-          end
-          object InvNumber: TcxGridDBColumn
+          object BarCode_OrderClient_ch1: TcxGridDBColumn
             Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'> '#1080#1083#1080' '#1074#1074#1086#1076
-            DataBinding.FieldName = 'InvNumber'
+            DataBinding.FieldName = 'BarCode_OrderClient'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -505,12 +476,11 @@ object ProductionPersonalForm: TProductionPersonalForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             Width = 180
           end
-          object PersonalName_start_ch1: TcxGridDBColumn
+          object BarCode_start_ch1: TcxGridDBColumn
             Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1057#1090#1072#1088#1090'> '#1080#1083#1080' '#1074#1074#1086#1076
-            DataBinding.FieldName = 'PersonalName_start'
+            DataBinding.FieldName = 'BarCode_start'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -518,14 +488,13 @@ object ProductionPersonalForm: TProductionPersonalForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 219
           end
-          object PersonalName_end_ch1: TcxGridDBColumn
+          object BarCode_end_ch1: TcxGridDBColumn
             Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1060#1080#1085#1080#1096'> '#1080#1083#1080' '#1074#1074#1086#1076
-            DataBinding.FieldName = 'PersonalName_end'
+            DataBinding.FieldName = 'BarCode_end'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -533,7 +502,6 @@ object ProductionPersonalForm: TProductionPersonalForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 221
@@ -552,7 +520,6 @@ object ProductionPersonalForm: TProductionPersonalForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 855
       end
     end
   end
@@ -1390,17 +1357,10 @@ object ProductionPersonalForm: TProductionPersonalForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'BarCode_Personal'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PersonalId_end'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalName_end'
+          ComponentItem = 'BarCode_end'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1428,17 +1388,10 @@ object ProductionPersonalForm: TProductionPersonalForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'BarCode_Personal'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PersonalId_start'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalName_start'
+          ComponentItem = 'BarCode_start'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1452,9 +1405,6 @@ object ProductionPersonalForm: TProductionPersonalForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spSelectBarCode
         end
         item
           StoredProc = spSelectMI
@@ -1473,17 +1423,10 @@ object ProductionPersonalForm: TProductionPersonalForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'BarCode'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'OrderClientId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InvNumber'
+          ComponentItem = 'BarCode_OrderClient'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1570,26 +1513,29 @@ object ProductionPersonalForm: TProductionPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId_start'
+        Name = 'inBarCode_start'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'PersonalId_start'
+        ComponentItem = 'BarCode_start'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId_end'
+        Name = 'inBarCode_end'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'PersonalId_end'
+        ComponentItem = 'BarCode_end'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOrderClientId'
+        Name = 'inBarCode_OrderClient'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'OrderClientId'
+        ComponentItem = 'BarCode_OrderClient'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2062,6 +2008,13 @@ object ProductionPersonalForm: TProductionPersonalForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
+        Column = BarCode_OrderClient_ch1
+      end
+      item
+        Column = BarCode_start_ch1
+      end
+      item
+        Column = BarCode_end_ch1
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>

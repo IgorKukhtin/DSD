@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
     IN inInvNumberOrder    TVarChar  , -- Номер заказа (с сайта)
     IN inManagerName       TVarChar  , -- Менеджер – Вип
     IN inPromoCodeId       Integer   , -- ID Промокода
-    -- IN inConfirmedKindName   TVarChar  , -- Статус заказа (Состояние VIP-чека)
+    IN inisDelivery        Boolean   , -- Hаша доставка
+    IN inDeliveryPrice     TFloat    , -- Цена доставки
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -215,6 +217,13 @@ BEGIN
 	-- сохранили Id промокода
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), ioId, inPromoCodeId);
 
+    IF COALESCE(inisDelivery, False) = TRUE
+    THEN
+      -- сохранили <Наша доставка с сайта>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DeliverySite(), ioId, inisDelivery);
+      -- сохранили <Сумма доставки>
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummaDelivery(), ioId, inDeliveryPrice);
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

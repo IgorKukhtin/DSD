@@ -5,7 +5,7 @@
 //  >Import : https://exim.mdmworld.com/CardService.asmx?WSDL>0
 // Encoding : utf-8
 // Version  : 1.0
-// (26.08.2020 0:49:44 - - $Rev: 98209 $)
+// (22.07.2021 23:48:42 - - $Rev: 103843 $)
 // ************************************************************************ //
 
 unit uCardService;
@@ -27,7 +27,7 @@ type
   // The following types, referred to in the WSDL document are not being represented
   // in this file. They are either aliases[@] of other types represented or were referred
   // to but never[!] declared in the document. The types from the latter category
-  // typically map to predefined/known XML or Embarcadero types; however, they could also
+  // typically map to predefined/known XML or Embarcadero types; however, they could also 
   // indicate incorrect WSDL documents that failed to declare or import a schema type.
   // ************************************************************************ //
   // !:boolean         - "http://www.w3.org/2001/XMLSchema"[Gbl]
@@ -37,65 +37,26 @@ type
   // !:dateTime        - "http://www.w3.org/2001/XMLSchema"[Gbl]
   // !:int             - "http://www.w3.org/2001/XMLSchema"[Gbl]
 
-  CardSaleRequestItem  = class;                 { "http://tempuri.org/"[GblCplx] }
   CardCheckItem        = class;                 { "http://tempuri.org/"[GblCplx] }
+  CardSaleRequestItem  = class;                 { "http://tempuri.org/"[GblCplx] }
   CardSaleRequest      = class;                 { "http://tempuri.org/"[GblCplx] }
   CardCheckResultItem  = class;                 { "http://tempuri.org/"[GblCplx] }
   SynevoResult         = class;                 { "http://tempuri.org/"[GblCplx] }
-  OrderResult          = class;                 { "http://tempuri.org/"[GblCplx] }
   RequestResult        = class;                 { "http://tempuri.org/"[GblCplx] }
   CardCodeResult       = class;                 { "http://tempuri.org/"[GblCplx] }
   AuthHeader2          = class;                 { "http://tempuri.org/"[Hdr][GblCplx] }
   AuthHeader           = class;                 { "http://tempuri.org/"[Hdr][GblElm] }
-  OrderRequestItem     = class;                 { "http://tempuri.org/"[GblCplx] }
+  OrderResult          = class;                 { "http://tempuri.org/"[GblCplx] }
   CardSaleResult       = class;                 { "http://tempuri.org/"[GblCplx] }
   CardSaleResultItem   = class;                 { "http://tempuri.org/"[GblCplx] }
   OrderRequest         = class;                 { "http://tempuri.org/"[GblCplx] }
+  OrderRequestItem     = class;                 { "http://tempuri.org/"[GblCplx] }
 
   ArrayOfSynevoResult = array of SynevoResult;   { "http://tempuri.org/"[GblCplx] }
   ArrayOfCardSaleRequestItem = array of CardSaleRequestItem;   { "http://tempuri.org/"[GblCplx] }
   ArrayOfCardCheckResultItem = array of CardCheckResultItem;   { "http://tempuri.org/"[GblCplx] }
   ArrayOfCardCheckItem = array of CardCheckItem;   { "http://tempuri.org/"[GblCplx] }
-  ArrayOfString = array of string;              { "http://tempuri.org/"[GblCplx] }
-
-
-  // ************************************************************************ //
-  // XML       : CardSaleRequestItem, global, <complexType>
-  // Namespace : http://tempuri.org/
-  // ************************************************************************ //
-  CardSaleRequestItem = class(TRemotable)
-  private
-    FItemId: string;
-    FItemId_Specified: boolean;
-    FMdmCode: string;
-    FMdmCode_Specified: boolean;
-    FSaleType: string;
-    FSaleType_Specified: boolean;
-    FProductFormCode: string;
-    FProductFormCode_Specified: boolean;
-    FPrimaryPrice: TXSDecimal;
-    FRequestedQuantity: TXSDecimal;
-    FRequestedPrice: TXSDecimal;
-    procedure SetItemId(Index: Integer; const Astring: string);
-    function  ItemId_Specified(Index: Integer): boolean;
-    procedure SetMdmCode(Index: Integer; const Astring: string);
-    function  MdmCode_Specified(Index: Integer): boolean;
-    procedure SetSaleType(Index: Integer; const Astring: string);
-    function  SaleType_Specified(Index: Integer): boolean;
-    procedure SetProductFormCode(Index: Integer; const Astring: string);
-    function  ProductFormCode_Specified(Index: Integer): boolean;
-  public
-    destructor Destroy; override;
-  published
-    property ItemId:            string      Index (IS_OPTN) read FItemId write SetItemId stored ItemId_Specified;
-    property MdmCode:           string      Index (IS_OPTN) read FMdmCode write SetMdmCode stored MdmCode_Specified;
-    property SaleType:          string      Index (IS_OPTN) read FSaleType write SetSaleType stored SaleType_Specified;
-    property ProductFormCode:   string      Index (IS_OPTN) read FProductFormCode write SetProductFormCode stored ProductFormCode_Specified;
-    property PrimaryPrice:      TXSDecimal  read FPrimaryPrice write FPrimaryPrice;
-    property RequestedQuantity: TXSDecimal  read FRequestedQuantity write FRequestedQuantity;
-    property RequestedPrice:    TXSDecimal  read FRequestedPrice write FRequestedPrice;
-  end;
-
+  string_         =  type string;      { "http://tempuri.org/"[GblElm] }
 
 
   // ************************************************************************ //
@@ -133,6 +94,52 @@ type
     property RequestedPrice:    TXSDecimal   read FRequestedPrice write FRequestedPrice;
     property RequestedQuantity: TXSDecimal   read FRequestedQuantity write FRequestedQuantity;
     property RequestedAmount:   TXSDecimal   read FRequestedAmount write FRequestedAmount;
+    property OrderCode:         string       Index (IS_OPTN) read FOrderCode write SetOrderCode stored OrderCode_Specified;
+    property OrderDate:         TXSDateTime  Index (IS_NLBL) read FOrderDate write FOrderDate;
+  end;
+
+
+
+  // ************************************************************************ //
+  // XML       : CardSaleRequestItem, global, <complexType>
+  // Namespace : http://tempuri.org/
+  // ************************************************************************ //
+  CardSaleRequestItem = class(TRemotable)
+  private
+    FItemId: string;
+    FItemId_Specified: boolean;
+    FMdmCode: string;
+    FMdmCode_Specified: boolean;
+    FSaleType: string;
+    FSaleType_Specified: boolean;
+    FProductFormCode: string;
+    FProductFormCode_Specified: boolean;
+    FPrimaryPrice: TXSDecimal;
+    FRequestedQuantity: TXSDecimal;
+    FRequestedPrice: TXSDecimal;
+    FOrderCode: string;
+    FOrderCode_Specified: boolean;
+    FOrderDate: TXSDateTime;
+    procedure SetItemId(Index: Integer; const Astring: string);
+    function  ItemId_Specified(Index: Integer): boolean;
+    procedure SetMdmCode(Index: Integer; const Astring: string);
+    function  MdmCode_Specified(Index: Integer): boolean;
+    procedure SetSaleType(Index: Integer; const Astring: string);
+    function  SaleType_Specified(Index: Integer): boolean;
+    procedure SetProductFormCode(Index: Integer; const Astring: string);
+    function  ProductFormCode_Specified(Index: Integer): boolean;
+    procedure SetOrderCode(Index: Integer; const Astring: string);
+    function  OrderCode_Specified(Index: Integer): boolean;
+  public
+    destructor Destroy; override;
+  published
+    property ItemId:            string       Index (IS_OPTN) read FItemId write SetItemId stored ItemId_Specified;
+    property MdmCode:           string       Index (IS_OPTN) read FMdmCode write SetMdmCode stored MdmCode_Specified;
+    property SaleType:          string       Index (IS_OPTN) read FSaleType write SetSaleType stored SaleType_Specified;
+    property ProductFormCode:   string       Index (IS_OPTN) read FProductFormCode write SetProductFormCode stored ProductFormCode_Specified;
+    property PrimaryPrice:      TXSDecimal   read FPrimaryPrice write FPrimaryPrice;
+    property RequestedQuantity: TXSDecimal   read FRequestedQuantity write FRequestedQuantity;
+    property RequestedPrice:    TXSDecimal   read FRequestedPrice write FRequestedPrice;
     property OrderCode:         string       Index (IS_OPTN) read FOrderCode write SetOrderCode stored OrderCode_Specified;
     property OrderDate:         TXSDateTime  Index (IS_NLBL) read FOrderDate write FOrderDate;
   end;
@@ -271,29 +278,6 @@ type
 
 
   // ************************************************************************ //
-  // XML       : OrderResult, global, <complexType>
-  // Namespace : http://tempuri.org/
-  // ************************************************************************ //
-  OrderResult = class(TRemotable)
-  private
-    FResultStatus: string;
-    FResultStatus_Specified: boolean;
-    FResultDescription: string;
-    FResultDescription_Specified: boolean;
-    FResultTransactionId: Integer;
-    procedure SetResultStatus(Index: Integer; const Astring: string);
-    function  ResultStatus_Specified(Index: Integer): boolean;
-    procedure SetResultDescription(Index: Integer; const Astring: string);
-    function  ResultDescription_Specified(Index: Integer): boolean;
-  published
-    property ResultStatus:        string   Index (IS_OPTN) read FResultStatus write SetResultStatus stored ResultStatus_Specified;
-    property ResultDescription:   string   Index (IS_OPTN) read FResultDescription write SetResultDescription stored ResultDescription_Specified;
-    property ResultTransactionId: Integer  Index (IS_NLBL) read FResultTransactionId write FResultTransactionId;
-  end;
-
-
-
-  // ************************************************************************ //
   // XML       : RequestResult, global, <complexType>
   // Namespace : http://tempuri.org/
   // ************************************************************************ //
@@ -359,34 +343,29 @@ type
   published
   end;
 
+  ArrayOfString2 = array of string;             { "http://tempuri.org/"[GblCplx] }
+  ArrayOfString   =  type ArrayOfString2;      { "http://tempuri.org/"[GblElm] }
 
 
   // ************************************************************************ //
-  // XML       : OrderRequestItem, global, <complexType>
+  // XML       : OrderResult, global, <complexType>
   // Namespace : http://tempuri.org/
   // ************************************************************************ //
-  OrderRequestItem = class(TRemotable)
+  OrderResult = class(TRemotable)
   private
-    FProductFormCode: string;
-    FProductFormCode_Specified: boolean;
-    FProjectId: string;
-    FProjectId_Specified: boolean;
-    FSaleType: string;
-    FSaleType_Specified: boolean;
-    FQuantity: TXSDecimal;
-    procedure SetProductFormCode(Index: Integer; const Astring: string);
-    function  ProductFormCode_Specified(Index: Integer): boolean;
-    procedure SetProjectId(Index: Integer; const Astring: string);
-    function  ProjectId_Specified(Index: Integer): boolean;
-    procedure SetSaleType(Index: Integer; const Astring: string);
-    function  SaleType_Specified(Index: Integer): boolean;
-  public
-    destructor Destroy; override;
+    FResultStatus: string;
+    FResultStatus_Specified: boolean;
+    FResultDescription: string;
+    FResultDescription_Specified: boolean;
+    FResultTransactionId: Integer;
+    procedure SetResultStatus(Index: Integer; const Astring: string);
+    function  ResultStatus_Specified(Index: Integer): boolean;
+    procedure SetResultDescription(Index: Integer; const Astring: string);
+    function  ResultDescription_Specified(Index: Integer): boolean;
   published
-    property ProductFormCode: string      Index (IS_OPTN) read FProductFormCode write SetProductFormCode stored ProductFormCode_Specified;
-    property ProjectId:       string      Index (IS_OPTN) read FProjectId write SetProjectId stored ProjectId_Specified;
-    property SaleType:        string      Index (IS_OPTN) read FSaleType write SetSaleType stored SaleType_Specified;
-    property Quantity:        TXSDecimal  read FQuantity write FQuantity;
+    property ResultStatus:        string   Index (IS_OPTN) read FResultStatus write SetResultStatus stored ResultStatus_Specified;
+    property ResultDescription:   string   Index (IS_OPTN) read FResultDescription write SetResultDescription stored ResultDescription_Specified;
+    property ResultTransactionId: Integer  Index (IS_NLBL) read FResultTransactionId write FResultTransactionId;
   end;
 
   ArrayOfCardSaleResultItem = array of CardSaleResultItem;   { "http://tempuri.org/"[GblCplx] }
@@ -575,6 +554,36 @@ type
   end;
 
 
+
+  // ************************************************************************ //
+  // XML       : OrderRequestItem, global, <complexType>
+  // Namespace : http://tempuri.org/
+  // ************************************************************************ //
+  OrderRequestItem = class(TRemotable)
+  private
+    FProductFormCode: string;
+    FProductFormCode_Specified: boolean;
+    FProjectId: string;
+    FProjectId_Specified: boolean;
+    FSaleType: string;
+    FSaleType_Specified: boolean;
+    FQuantity: TXSDecimal;
+    procedure SetProductFormCode(Index: Integer; const Astring: string);
+    function  ProductFormCode_Specified(Index: Integer): boolean;
+    procedure SetProjectId(Index: Integer; const Astring: string);
+    function  ProjectId_Specified(Index: Integer): boolean;
+    procedure SetSaleType(Index: Integer; const Astring: string);
+    function  SaleType_Specified(Index: Integer): boolean;
+  public
+    destructor Destroy; override;
+  published
+    property ProductFormCode: string      Index (IS_OPTN) read FProductFormCode write SetProductFormCode stored ProductFormCode_Specified;
+    property ProjectId:       string      Index (IS_OPTN) read FProjectId write SetProjectId stored ProjectId_Specified;
+    property SaleType:        string      Index (IS_OPTN) read FSaleType write SetSaleType stored SaleType_Specified;
+    property Quantity:        TXSDecimal  read FQuantity write FQuantity;
+  end;
+
+
   // ************************************************************************ //
   // Namespace : http://tempuri.org/
   // soapAction: http://tempuri.org/%operationName%
@@ -595,13 +604,49 @@ type
 
     // Headers: AuthHeader:pIn
     function  getCodeByPhone(const projectId: Integer; const phoneNum: string; const isViber: Boolean): CardCodeResult; stdcall;
-    function  checkCardSynevo(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): ArrayOfString; stdcall;
+    function  checkCardSynevo(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): ArrayOfString2; stdcall;
     function  commitCardSynevo(const aMdmCode: string; const synevoResult: ArrayOfSynevoResult; const aLoginName: string; const aLoginPassword: string): string; stdcall;
     function  commitCardChange(const aMdmCodeOld: string; const aMdmCodeNew: string; const aLoginName: string; const aLoginPassword: string): string; stdcall;
     function  GetErrorInfoStack: string; stdcall;
   end;
 
+
+  // ************************************************************************ //
+  // Namespace : http://tempuri.org/
+  // style     : ????
+  // use       : ????
+  // binding   : CardServiceHttpGet
+  // service   : CardService
+  // port      : CardServiceHttpGet
+  // ************************************************************************ //
+  CardServiceHttpGet = interface(IInvokable)
+  ['{E0247BE9-8A0C-D05A-3FF1-882A97B14E7E}']
+    function  checkCard(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): string_; stdcall;
+    function  checkCardSynevo(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): ArrayOfString; stdcall;
+    function  commitCardChange(const aMdmCodeOld: string; const aMdmCodeNew: string; const aLoginName: string; const aLoginPassword: string): string_; stdcall;
+    function  GetErrorInfoStack: string_; stdcall;
+  end;
+
+
+  // ************************************************************************ //
+  // Namespace : http://tempuri.org/
+  // style     : ????
+  // use       : ????
+  // binding   : CardServiceHttpPost
+  // service   : CardService
+  // port      : CardServiceHttpPost
+  // ************************************************************************ //
+  CardServiceHttpPost = interface(IInvokable)
+  ['{83C4CFBB-1117-5957-4F0F-9645406A79EA}']
+    function  checkCard(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): string_; stdcall;
+    function  checkCardSynevo(const aMdmCode: string; const aLoginName: string; const aLoginPassword: string): ArrayOfString; stdcall;
+    function  commitCardChange(const aMdmCodeOld: string; const aMdmCodeNew: string; const aLoginName: string; const aLoginPassword: string): string_; stdcall;
+    function  GetErrorInfoStack: string_; stdcall;
+  end;
+
 function GetCardServiceSoap(UseWSDL: Boolean=System.False; Addr: string=''; HTTPRIO: THTTPRIO = nil): CardServiceSoap;
+function GetCardServiceHttpGet(UseWSDL: Boolean=System.False; Addr: string=''; HTTPRIO: THTTPRIO = nil): CardServiceHttpGet;
+function GetCardServiceHttpPost(UseWSDL: Boolean=System.False; Addr: string=''; HTTPRIO: THTTPRIO = nil): CardServiceHttpPost;
 
 
 implementation
@@ -644,57 +689,79 @@ begin
 end;
 
 
-destructor CardSaleRequestItem.Destroy;
+function GetCardServiceHttpGet(UseWSDL: Boolean; Addr: string; HTTPRIO: THTTPRIO): CardServiceHttpGet;
+const
+  defWSDL = 'https://exim.mdmworld.com/CardService.asmx?WSDL';
+  defURL  = '';
+  defSvc  = 'CardService';
+  defPrt  = 'CardServiceHttpGet';
+var
+  RIO: THTTPRIO;
 begin
-  System.SysUtils.FreeAndNil(FPrimaryPrice);
-  System.SysUtils.FreeAndNil(FRequestedQuantity);
-  System.SysUtils.FreeAndNil(FRequestedPrice);
-  inherited Destroy;
+  Result := nil;
+  if (Addr = '') then
+  begin
+    if UseWSDL then
+      Addr := defWSDL
+    else
+      Addr := defURL;
+  end;
+  if HTTPRIO = nil then
+    RIO := THTTPRIO.Create(nil)
+  else
+    RIO := HTTPRIO;
+  try
+    Result := (RIO as CardServiceHttpGet);
+    if UseWSDL then
+    begin
+      RIO.WSDLLocation := Addr;
+      RIO.Service := defSvc;
+      RIO.Port := defPrt;
+    end else
+      RIO.URL := Addr;
+  finally
+    if (Result = nil) and (HTTPRIO = nil) then
+      RIO.Free;
+  end;
 end;
 
-procedure CardSaleRequestItem.SetItemId(Index: Integer; const Astring: string);
+
+function GetCardServiceHttpPost(UseWSDL: Boolean; Addr: string; HTTPRIO: THTTPRIO): CardServiceHttpPost;
+const
+  defWSDL = 'https://exim.mdmworld.com/CardService.asmx?WSDL';
+  defURL  = '';
+  defSvc  = 'CardService';
+  defPrt  = 'CardServiceHttpPost';
+var
+  RIO: THTTPRIO;
 begin
-  FItemId := Astring;
-  FItemId_Specified := True;
+  Result := nil;
+  if (Addr = '') then
+  begin
+    if UseWSDL then
+      Addr := defWSDL
+    else
+      Addr := defURL;
+  end;
+  if HTTPRIO = nil then
+    RIO := THTTPRIO.Create(nil)
+  else
+    RIO := HTTPRIO;
+  try
+    Result := (RIO as CardServiceHttpPost);
+    if UseWSDL then
+    begin
+      RIO.WSDLLocation := Addr;
+      RIO.Service := defSvc;
+      RIO.Port := defPrt;
+    end else
+      RIO.URL := Addr;
+  finally
+    if (Result = nil) and (HTTPRIO = nil) then
+      RIO.Free;
+  end;
 end;
 
-function CardSaleRequestItem.ItemId_Specified(Index: Integer): boolean;
-begin
-  Result := FItemId_Specified;
-end;
-
-procedure CardSaleRequestItem.SetMdmCode(Index: Integer; const Astring: string);
-begin
-  FMdmCode := Astring;
-  FMdmCode_Specified := True;
-end;
-
-function CardSaleRequestItem.MdmCode_Specified(Index: Integer): boolean;
-begin
-  Result := FMdmCode_Specified;
-end;
-
-procedure CardSaleRequestItem.SetSaleType(Index: Integer; const Astring: string);
-begin
-  FSaleType := Astring;
-  FSaleType_Specified := True;
-end;
-
-function CardSaleRequestItem.SaleType_Specified(Index: Integer): boolean;
-begin
-  Result := FSaleType_Specified;
-end;
-
-procedure CardSaleRequestItem.SetProductFormCode(Index: Integer; const Astring: string);
-begin
-  FProductFormCode := Astring;
-  FProductFormCode_Specified := True;
-end;
-
-function CardSaleRequestItem.ProductFormCode_Specified(Index: Integer): boolean;
-begin
-  Result := FProductFormCode_Specified;
-end;
 
 destructor CardCheckItem.Destroy;
 begin
@@ -745,6 +812,70 @@ begin
 end;
 
 function CardCheckItem.OrderCode_Specified(Index: Integer): boolean;
+begin
+  Result := FOrderCode_Specified;
+end;
+
+destructor CardSaleRequestItem.Destroy;
+begin
+  System.SysUtils.FreeAndNil(FPrimaryPrice);
+  System.SysUtils.FreeAndNil(FRequestedQuantity);
+  System.SysUtils.FreeAndNil(FRequestedPrice);
+  System.SysUtils.FreeAndNil(FOrderDate);
+  inherited Destroy;
+end;
+
+procedure CardSaleRequestItem.SetItemId(Index: Integer; const Astring: string);
+begin
+  FItemId := Astring;
+  FItemId_Specified := True;
+end;
+
+function CardSaleRequestItem.ItemId_Specified(Index: Integer): boolean;
+begin
+  Result := FItemId_Specified;
+end;
+
+procedure CardSaleRequestItem.SetMdmCode(Index: Integer; const Astring: string);
+begin
+  FMdmCode := Astring;
+  FMdmCode_Specified := True;
+end;
+
+function CardSaleRequestItem.MdmCode_Specified(Index: Integer): boolean;
+begin
+  Result := FMdmCode_Specified;
+end;
+
+procedure CardSaleRequestItem.SetSaleType(Index: Integer; const Astring: string);
+begin
+  FSaleType := Astring;
+  FSaleType_Specified := True;
+end;
+
+function CardSaleRequestItem.SaleType_Specified(Index: Integer): boolean;
+begin
+  Result := FSaleType_Specified;
+end;
+
+procedure CardSaleRequestItem.SetProductFormCode(Index: Integer; const Astring: string);
+begin
+  FProductFormCode := Astring;
+  FProductFormCode_Specified := True;
+end;
+
+function CardSaleRequestItem.ProductFormCode_Specified(Index: Integer): boolean;
+begin
+  Result := FProductFormCode_Specified;
+end;
+
+procedure CardSaleRequestItem.SetOrderCode(Index: Integer; const Astring: string);
+begin
+  FOrderCode := Astring;
+  FOrderCode_Specified := True;
+end;
+
+function CardSaleRequestItem.OrderCode_Specified(Index: Integer): boolean;
 begin
   Result := FOrderCode_Specified;
 end;
@@ -933,28 +1064,6 @@ begin
   Result := FCode_Specified;
 end;
 
-procedure OrderResult.SetResultStatus(Index: Integer; const Astring: string);
-begin
-  FResultStatus := Astring;
-  FResultStatus_Specified := True;
-end;
-
-function OrderResult.ResultStatus_Specified(Index: Integer): boolean;
-begin
-  Result := FResultStatus_Specified;
-end;
-
-procedure OrderResult.SetResultDescription(Index: Integer; const Astring: string);
-begin
-  FResultDescription := Astring;
-  FResultDescription_Specified := True;
-end;
-
-function OrderResult.ResultDescription_Specified(Index: Integer): boolean;
-begin
-  Result := FResultDescription_Specified;
-end;
-
 procedure RequestResult.SetResultDescription(Index: Integer; const Astring: string);
 begin
   FResultDescription := Astring;
@@ -999,43 +1108,26 @@ begin
   Result := FPassword_Specified;
 end;
 
-destructor OrderRequestItem.Destroy;
+procedure OrderResult.SetResultStatus(Index: Integer; const Astring: string);
 begin
-  System.SysUtils.FreeAndNil(FQuantity);
-  inherited Destroy;
+  FResultStatus := Astring;
+  FResultStatus_Specified := True;
 end;
 
-procedure OrderRequestItem.SetProductFormCode(Index: Integer; const Astring: string);
+function OrderResult.ResultStatus_Specified(Index: Integer): boolean;
 begin
-  FProductFormCode := Astring;
-  FProductFormCode_Specified := True;
+  Result := FResultStatus_Specified;
 end;
 
-function OrderRequestItem.ProductFormCode_Specified(Index: Integer): boolean;
+procedure OrderResult.SetResultDescription(Index: Integer; const Astring: string);
 begin
-  Result := FProductFormCode_Specified;
+  FResultDescription := Astring;
+  FResultDescription_Specified := True;
 end;
 
-procedure OrderRequestItem.SetProjectId(Index: Integer; const Astring: string);
+function OrderResult.ResultDescription_Specified(Index: Integer): boolean;
 begin
-  FProjectId := Astring;
-  FProjectId_Specified := True;
-end;
-
-function OrderRequestItem.ProjectId_Specified(Index: Integer): boolean;
-begin
-  Result := FProjectId_Specified;
-end;
-
-procedure OrderRequestItem.SetSaleType(Index: Integer; const Astring: string);
-begin
-  FSaleType := Astring;
-  FSaleType_Specified := True;
-end;
-
-function OrderRequestItem.SaleType_Specified(Index: Integer): boolean;
-begin
-  Result := FSaleType_Specified;
+  Result := FResultDescription_Specified;
 end;
 
 destructor CardSaleResult.Destroy;
@@ -1338,6 +1430,45 @@ begin
   Result := FItems_Specified;
 end;
 
+destructor OrderRequestItem.Destroy;
+begin
+  System.SysUtils.FreeAndNil(FQuantity);
+  inherited Destroy;
+end;
+
+procedure OrderRequestItem.SetProductFormCode(Index: Integer; const Astring: string);
+begin
+  FProductFormCode := Astring;
+  FProductFormCode_Specified := True;
+end;
+
+function OrderRequestItem.ProductFormCode_Specified(Index: Integer): boolean;
+begin
+  Result := FProductFormCode_Specified;
+end;
+
+procedure OrderRequestItem.SetProjectId(Index: Integer; const Astring: string);
+begin
+  FProjectId := Astring;
+  FProjectId_Specified := True;
+end;
+
+function OrderRequestItem.ProjectId_Specified(Index: Integer): boolean;
+begin
+  Result := FProjectId_Specified;
+end;
+
+procedure OrderRequestItem.SetSaleType(Index: Integer; const Astring: string);
+begin
+  FSaleType := Astring;
+  FSaleType_Specified := True;
+end;
+
+function OrderRequestItem.SaleType_Specified(Index: Integer): boolean;
+begin
+  Result := FSaleType_Specified;
+end;
+
 initialization
   { CardServiceSoap }
   InvRegistry.RegisterInterface(TypeInfo(CardServiceSoap), 'http://tempuri.org/', 'utf-8');
@@ -1381,23 +1512,36 @@ initialization
   { CardServiceSoap.GetErrorInfoStack }
   InvRegistry.RegisterMethodInfo(TypeInfo(CardServiceSoap), 'GetErrorInfoStack', '',
                                  '[ReturnName="GetErrorInfoStackResult"]', IS_OPTN);
+  { CardServiceHttpGet }
+  InvRegistry.RegisterInterface(TypeInfo(CardServiceHttpGet), 'http://tempuri.org/', 'utf-8');
+  InvRegistry.RegisterDefaultSOAPAction(TypeInfo(CardServiceHttpGet), '');
+  { CardServiceHttpGet.checkCardSynevo }
+  InvRegistry.RegisterParamInfo(TypeInfo(CardServiceHttpGet), 'checkCardSynevo', 'Body', '',
+                                '[ArrayItemName="string"]');
+  { CardServiceHttpPost }
+  InvRegistry.RegisterInterface(TypeInfo(CardServiceHttpPost), 'http://tempuri.org/', 'utf-8');
+  InvRegistry.RegisterDefaultSOAPAction(TypeInfo(CardServiceHttpPost), '');
+  { CardServiceHttpPost.checkCardSynevo }
+  InvRegistry.RegisterParamInfo(TypeInfo(CardServiceHttpPost), 'checkCardSynevo', 'Body', '',
+                                '[ArrayItemName="string"]');
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfSynevoResult), 'http://tempuri.org/', 'ArrayOfSynevoResult');
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfCardSaleRequestItem), 'http://tempuri.org/', 'ArrayOfCardSaleRequestItem');
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfCardCheckResultItem), 'http://tempuri.org/', 'ArrayOfCardCheckResultItem');
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfCardCheckItem), 'http://tempuri.org/', 'ArrayOfCardCheckItem');
-  RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfString), 'http://tempuri.org/', 'ArrayOfString');
-  RemClassRegistry.RegisterXSClass(CardSaleRequestItem, 'http://tempuri.org/', 'CardSaleRequestItem');
+  RemClassRegistry.RegisterXSInfo(TypeInfo(string_), 'http://tempuri.org/', 'string_', 'string');
   RemClassRegistry.RegisterXSClass(CardCheckItem, 'http://tempuri.org/', 'CardCheckItem');
+  RemClassRegistry.RegisterXSClass(CardSaleRequestItem, 'http://tempuri.org/', 'CardSaleRequestItem');
   RemClassRegistry.RegisterXSClass(CardSaleRequest, 'http://tempuri.org/', 'CardSaleRequest');
   RemClassRegistry.RegisterExternalPropName(TypeInfo(CardSaleRequest), 'Items', '[ArrayItemName="CardSaleRequestItem"]');
   RemClassRegistry.RegisterXSClass(CardCheckResultItem, 'http://tempuri.org/', 'CardCheckResultItem');
   RemClassRegistry.RegisterXSClass(SynevoResult, 'http://tempuri.org/', 'SynevoResult');
-  RemClassRegistry.RegisterXSClass(OrderResult, 'http://tempuri.org/', 'OrderResult');
   RemClassRegistry.RegisterXSClass(RequestResult, 'http://tempuri.org/', 'RequestResult');
   RemClassRegistry.RegisterXSClass(CardCodeResult, 'http://tempuri.org/', 'CardCodeResult');
   RemClassRegistry.RegisterXSClass(AuthHeader2, 'http://tempuri.org/', 'AuthHeader2', 'AuthHeader');
   RemClassRegistry.RegisterXSClass(AuthHeader, 'http://tempuri.org/', 'AuthHeader');
-  RemClassRegistry.RegisterXSClass(OrderRequestItem, 'http://tempuri.org/', 'OrderRequestItem');
+  RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfString2), 'http://tempuri.org/', 'ArrayOfString2', 'ArrayOfString');
+  RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfString), 'http://tempuri.org/', 'ArrayOfString');
+  RemClassRegistry.RegisterXSClass(OrderResult, 'http://tempuri.org/', 'OrderResult');
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfCardSaleResultItem), 'http://tempuri.org/', 'ArrayOfCardSaleResultItem');
   RemClassRegistry.RegisterXSClass(CardSaleResult, 'http://tempuri.org/', 'CardSaleResult');
   RemClassRegistry.RegisterExternalPropName(TypeInfo(CardSaleResult), 'Items', '[ArrayItemName="CardSaleResultItem"]');
@@ -1405,5 +1549,6 @@ initialization
   RemClassRegistry.RegisterXSInfo(TypeInfo(ArrayOfOrderRequestItem), 'http://tempuri.org/', 'ArrayOfOrderRequestItem');
   RemClassRegistry.RegisterXSClass(OrderRequest, 'http://tempuri.org/', 'OrderRequest');
   RemClassRegistry.RegisterExternalPropName(TypeInfo(OrderRequest), 'Items', '[ArrayItemName="OrderRequestItem"]');
+  RemClassRegistry.RegisterXSClass(OrderRequestItem, 'http://tempuri.org/', 'OrderRequestItem');
 
 end.

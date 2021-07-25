@@ -1,29 +1,29 @@
 inherited TestingTuningForm: TTestingTuningForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1089#1090#1088#1086#1082#1072' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1060#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074'>'
-  ClientHeight = 668
-  ClientWidth = 873
+  ClientHeight = 686
+  ClientWidth = 1026
   AddOnFormData.AddOnFormRefresh.ParentList = 'TestingTuning'
-  ExplicitWidth = 889
-  ExplicitHeight = 707
+  ExplicitWidth = 1042
+  ExplicitHeight = 725
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
-    Width = 873
-    Height = 513
+    Width = 1026
+    Height = 531
     ExplicitTop = 155
-    ExplicitWidth = 873
-    ExplicitHeight = 513
-    ClientRectBottom = 513
-    ClientRectRight = 873
+    ExplicitWidth = 1026
+    ExplicitHeight = 531
+    ClientRectBottom = 531
+    ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 873
-      ExplicitHeight = 489
+      ExplicitWidth = 1026
+      ExplicitHeight = 507
       inherited cxGrid: TcxGrid
-        Width = 873
-        Height = 304
-        ExplicitWidth = 873
-        ExplicitHeight = 304
+        Width = 576
+        Height = 507
+        ExplicitWidth = 576
+        ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = ChildDS
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -42,33 +42,20 @@ inherited TestingTuningForm: TTestingTuningForm
               Column = chReplies
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = '0.#'
               Kind = skSum
               Column = chCorrectAnswer
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
+          OptionsCustomize.ColumnHiding = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = True
+          OptionsView.CellEndEllipsis = True
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -82,7 +69,7 @@ inherited TestingTuningForm: TTestingTuningForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 36
           end
           object chReplies: TcxGridDBColumn [1]
             Caption = #1050#1086#1083'-'#1074#1086' '#1086#1090#1074#1077#1090#1086#1074
@@ -91,7 +78,7 @@ inherited TestingTuningForm: TTestingTuningForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 62
           end
           object chCorrectAnswer: TcxGridDBColumn [2]
             Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
@@ -99,18 +86,15 @@ inherited TestingTuningForm: TTestingTuningForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 60
           end
           object chQuestion: TcxGridDBColumn [3]
             Caption = #1042#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'Question'
-            PropertiesClassName = 'TcxBlobEditProperties'
-            Properties.BlobEditKind = bekMemo
-            Properties.BlobPaintStyle = bpsText
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 630
+            Width = 387
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -119,11 +103,11 @@ inherited TestingTuningForm: TTestingTuningForm
         end
       end
       object cxGridSecond: TcxGrid
-        Left = 0
-        Top = 304
-        Width = 873
-        Height = 185
-        Align = alBottom
+        Left = 584
+        Top = 0
+        Width = 442
+        Height = 507
+        Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableView2: TcxGridDBTableView
@@ -157,14 +141,11 @@ inherited TestingTuningForm: TTestingTuningForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
-          OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.Footer = True
+          OptionsView.CellEndEllipsis = True
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -176,7 +157,7 @@ inherited TestingTuningForm: TTestingTuningForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 50
           end
           object seisCorrectAnswer: TcxGridDBColumn
             Caption = #1042#1077#1088#1085#1099#1081' '#1086#1090#1074#1077#1090
@@ -184,20 +165,18 @@ inherited TestingTuningForm: TTestingTuningForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 68
           end
           object sePossibleAnswer: TcxGridDBColumn
             Caption = #1042#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072
             DataBinding.FieldName = 'PossibleAnswer'
-            PropertiesClassName = 'TcxBlobEditProperties'
-            Properties.BlobEditKind = bekMemo
-            Properties.BlobPaintStyle = bpsText
+            PropertiesClassName = 'TcxMemoProperties'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 691
+            Width = 290
           end
-          object cxGridDBColumn4: TcxGridDBColumn
+          object seisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -206,61 +185,75 @@ inherited TestingTuningForm: TTestingTuningForm
             Options.Editing = False
             Width = 50
           end
+          object sePropertiesId: TcxGridDBColumn
+            DataBinding.FieldName = 'PropertiesId'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
         object cxGridLevel2: TcxGridLevel
           GridView = cxGridDBTableView2
         end
       end
+      object cxSplitter1: TcxSplitter
+        Left = 576
+        Top = 0
+        Width = 8
+        Height = 507
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salRight
+        Control = cxGridSecond
+      end
     end
   end
   inherited DataPanel: TPanel
-    Width = 873
+    Width = 1026
     Height = 129
     TabOrder = 3
-    ExplicitWidth = 873
+    ExplicitWidth = 1026
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
-      Left = 678
+      Left = 831
       Anchors = [akTop, akRight]
-      ExplicitLeft = 678
+      ExplicitLeft = 831
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 678
+      Left = 831
       Anchors = [akTop, akRight]
-      ExplicitLeft = 678
+      ExplicitLeft = 831
     end
     inherited edOperDate: TcxDateEdit
-      Left = 762
+      Left = 915
       Anchors = [akTop, akRight]
       EditValue = 42951d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 762
+      ExplicitLeft = 915
       ExplicitWidth = 86
       Width = 86
     end
     inherited cxLabel2: TcxLabel
-      Left = 762
+      Left = 915
       Anchors = [akTop, akRight]
-      ExplicitLeft = 762
+      ExplicitLeft = 915
     end
     inherited cxLabel15: TcxLabel
-      Left = 504
+      Left = 657
       Anchors = [akTop, akRight]
-      ExplicitLeft = 504
+      ExplicitLeft = 657
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 504
+      Left = 657
       Anchors = [akTop, akRight]
-      ExplicitLeft = 504
+      ExplicitLeft = 657
       ExplicitWidth = 166
       ExplicitHeight = 22
       Width = 166
     end
     object edComment: TcxTextEdit
-      Left = 504
+      Left = 657
       Top = 64
       Anchors = [akTop, akRight]
       Properties.ReadOnly = False
@@ -268,7 +261,7 @@ inherited TestingTuningForm: TTestingTuningForm
       Width = 344
     end
     object cxLabel7: TcxLabel
-      Left = 504
+      Left = 657
       Top = 45
       Anchors = [akTop, akRight]
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -276,7 +269,7 @@ inherited TestingTuningForm: TTestingTuningForm
     object cxTopicsTestingTuning: TcxGrid
       Left = 0
       Top = 0
-      Width = 485
+      Width = 638
       Height = 129
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -334,7 +327,7 @@ inherited TestingTuningForm: TTestingTuningForm
       end
     end
     object edTotalCount: TcxTextEdit
-      Left = 644
+      Left = 797
       Top = 105
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
@@ -342,13 +335,13 @@ inherited TestingTuningForm: TTestingTuningForm
       Width = 74
     end
     object cxLabel3: TcxLabel
-      Left = 644
+      Left = 797
       Top = 87
       Anchors = [akTop, akRight]
       Caption = #1042#1086#1087#1088#1086#1089#1086#1074
     end
     object edQuestion: TcxTextEdit
-      Left = 774
+      Left = 927
       Top = 105
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
@@ -356,20 +349,20 @@ inherited TestingTuningForm: TTestingTuningForm
       Width = 74
     end
     object cxLabel4: TcxLabel
-      Left = 773
+      Left = 926
       Top = 87
       Anchors = [akTop, akRight]
       Caption = #1076#1083#1103' '#1090#1077#1089#1090#1072
     end
     object edTimeTest: TcxTextEdit
-      Left = 504
+      Left = 657
       Top = 105
       Anchors = [akTop, akRight]
       TabOrder = 13
       Width = 74
     end
     object cxLabel5: TcxLabel
-      Left = 504
+      Left = 657
       Top = 86
       Anchors = [akTop, akRight]
       Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' ('#1089#1077#1082')'
@@ -380,6 +373,20 @@ inherited TestingTuningForm: TTestingTuningForm
     Top = 448
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
+        Component = cxGridSecond
+        Properties.Strings = (
+          'Width')
+      end>
     Left = 184
     Top = 448
   end
@@ -387,6 +394,7 @@ inherited TestingTuningForm: TTestingTuningForm
     Left = 55
     Top = 295
     inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actPreparePictures
       StoredProcList = <
         item
           StoredProc = spGet
@@ -710,6 +718,7 @@ inherited TestingTuningForm: TTestingTuningForm
     object actInsertMISecondTrue: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actPreparePictures
       BeforeAction = actExecuteDialogPossibleAnswerTrue
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMISecondTrue
@@ -761,6 +770,7 @@ inherited TestingTuningForm: TTestingTuningForm
     object actInsertMISecondFalse: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actPreparePictures
       BeforeAction = actExecuteDialogPossibleAnswerFalse
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMISecondFalse
@@ -779,6 +789,184 @@ inherited TestingTuningForm: TTestingTuningForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      ImageIndex = 7
+    end
+    object actPreparePictures: TdsdPreparePicturesAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSet = SecondCDS
+      PictureFields.Strings = (
+        'PossibleAnswer')
+      Caption = 'actPreparePictures'
+    end
+    object actLoadPhotoFile: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = Photo
+          FromParam.ComponentItem = 'Name'
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.Component = Photo
+          FromParam.ComponentItem = 'Data'
+          FromParam.DataType = ftWideString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PossibleAnswer'
+          ToParam.DataType = ftWideString
+          ToParam.MultiSelectSeparator = ','
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1086#1090#1086' '#1074#1072#1088#1080#1072#1085#1090#1072' '#1086#1090#1074#1077#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1086#1090#1086' '#1074#1072#1088#1080#1072#1085#1090#1072' '#1086#1090#1074#1077#1090#1072
+      DefaultParams = <>
+    end
+    object actLoadPhoto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      BeforeAction = actLoadPhotoFile
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PossibleAnswerPhoto
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PossibleAnswerPhoto
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1086#1090#1086' '#1074#1072#1088#1080#1072#1085#1090#1072' '#1086#1090#1074#1077#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1086#1090#1086' '#1074#1072#1088#1080#1072#1085#1090#1072' '#1086#1090#1074#1077#1090#1072
+      ImageIndex = 60
+    end
+    object actUpdate_CorrectAnswer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CorrectAnswer
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CorrectAnswer
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1074#1077#1090' '#1082#1072#1082' '#1087#1088#1072#1074#1077#1083#1100#1085#1099#1081
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1074#1077#1090' '#1082#1072#1082' '#1087#1088#1072#1074#1077#1083#1100#1085#1099#1081
+      ImageIndex = 80
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1090#1074#1077#1090' '#1082#1072#1082' '#1087#1088#1072#1074#1077#1083#1100#1085#1099#1081'?'
+    end
+    object actExecuteDialogPossibleAnswerUpdate: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogPossibleAnswerUpdate'
+      FormName = 'TTextDialogForm'
+      FormNameParam.Value = 'TTextDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'PossibleAnswer'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+          Component = FormParams
+          ComponentItem = 'PossibleAnswerLabelUpdate'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_PossibleAnswer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      BeforeAction = actExecuteDialogPossibleAnswerUpdate
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PossibleAnswer
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PossibleAnswer
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1077#1082#1089#1090#1086#1074#1099#1081' '#1074#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1077#1082#1089#1090#1086#1074#1099#1081' '#1074#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072
+      ImageIndex = 43
+    end
+    object actInsertMISecondPhotoTrue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      BeforeAction = actLoadPhotoFile
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMISecondPhotoTrue
+      StoredProcList = <
+        item
+          StoredProc = spInsertMISecondPhotoTrue
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1092#1086#1090#1086' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1092#1086#1090#1086' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      ImageIndex = 79
+    end
+    object actInsertMISecondPhotoFalse: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      BeforeAction = actLoadPhotoFile
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMISecondPhotoFalse
+      StoredProcList = <
+        item
+          StoredProc = spInsertMISecondPhotoFalse
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1092#1086#1090#1086' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1092#1086#1090#1086' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
       ImageIndex = 7
     end
   end
@@ -898,7 +1086,27 @@ inherited TestingTuningForm: TTestingTuningForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton17'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton14'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton15'
         end
         item
           Visible = True
@@ -1003,6 +1211,26 @@ inherited TestingTuningForm: TTestingTuningForm
       Action = actInsertMISecondFalse
       Category = 0
     end
+    object dxBarButton13: TdxBarButton
+      Action = actLoadPhoto
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Action = actUpdate_CorrectAnswer
+      Category = 0
+    end
+    object dxBarButton15: TdxBarButton
+      Action = actUpdate_PossibleAnswer
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = actInsertMISecondPhotoTrue
+      Category = 0
+    end
+    object dxBarButton17: TdxBarButton
+      Action = actInsertMISecondPhotoFalse
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView1
@@ -1083,6 +1311,12 @@ inherited TestingTuningForm: TTestingTuningForm
         Value = #1042#1074#1077#1076#1080#1090#1077' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PossibleAnswerLabelUpdate'
+        Value = #1042#1074#1077#1076#1080#1090#1077' '#1074#1072#1088#1080#1072#1085#1090' '#1086#1090#1074#1077#1090#1072' '#1085#1072' '#1074#1086#1087#1088#1086#1089
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1530,15 +1764,7 @@ inherited TestingTuningForm: TTestingTuningForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
@@ -1633,6 +1859,15 @@ inherited TestingTuningForm: TTestingTuningForm
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isPhoto'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
@@ -1649,18 +1884,20 @@ inherited TestingTuningForm: TTestingTuningForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     SearchAsFilter = False
-    PropertiesCellList = <>
+    PropertiesCellList = <
+      item
+        Column = sePossibleAnswer
+        ValueColumn = sePropertiesId
+        EditRepository = erPossibleAnswer
+      end
+      item
+        Column = seisCorrectAnswer
+        ValueColumn = sePropertiesId
+        EditRepository = erCorrectAnswer
+      end>
     Left = 382
     Top = 577
   end
@@ -1898,6 +2135,13 @@ inherited TestingTuningForm: TTestingTuningForm
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 656
@@ -1945,9 +2189,296 @@ inherited TestingTuningForm: TTestingTuningForm
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 776
+    Left = 784
+    Top = 576
+  end
+  object Photo: TDocument
+    Left = 528
+    Top = 352
+  end
+  object erPossibleAnswer: TcxEditRepository
+    Left = 328
+    Top = 400
+    object erPossibleAnswerBlobItem1: TcxEditRepositoryMemoItem
+    end
+    object erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem
+      Properties.GraphicClassName = 'TJPEGImage'
+      Properties.ReadOnly = True
+    end
+  end
+  object erCorrectAnswer: TcxEditRepository
+    Left = 432
+    Top = 400
+    object erCorrectAnswerCheckBoxItem1: TcxEditRepositoryCheckBoxItem
+    end
+    object erCorrectAnswerCheckBoxItem2: TcxEditRepositoryCheckBoxItem
+      Properties.ReadOnly = True
+    end
+  end
+  object spUpdate_CorrectAnswer: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingTuning_CorrectAnswer'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 344
+  end
+  object spUpdate_PossibleAnswer: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = True
+        Component = SecondCDS
+        ComponentItem = 'isCorrectAnswer'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 400
+  end
+  object spUpdate_PossibleAnswerPhoto: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isCorrectAnswer'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 456
+  end
+  object spInsertMISecondPhotoFalse: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
     Top = 568
+  end
+  object spInsertMISecondPhotoTrue: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TestingTuning_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectAnswer'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPossibleAnswer'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PossibleAnswer'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPhoto'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 512
   end
 end

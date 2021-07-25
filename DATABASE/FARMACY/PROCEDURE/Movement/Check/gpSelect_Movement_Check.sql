@@ -50,6 +50,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BuyerForSaleName TVarChar
              , isCorrectMarketing Boolean
              , isCorrectIlliquidMarketing Boolean
+             , isDeliverySite Boolean
+             , SummaDelivery TFloat
               )
 AS
 $BODY$
@@ -154,6 +156,10 @@ BEGIN
            , Object_BuyerForSale.ValueData                                AS BuyerForSaleName
            , COALESCE(MovementBoolean_CorrectMarketing.ValueData, False)  AS isCorrectMarketing
            , COALESCE(MovementBoolean_CorrectIlliquidMarketing.ValueData, False)  AS isCorrectIlliquidMarketing
+           
+           , COALESCE(MovementBoolean_DeliverySite.ValueData, False)      AS isDeliverySite
+           , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
+
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -228,6 +234,10 @@ BEGIN
                                      ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
  
+             LEFT JOIN MovementFloat AS MovementFloat_SummaDelivery
+                                     ON MovementFloat_SummaDelivery.MovementId =  Movement_Check.Id
+                                    AND MovementFloat_SummaDelivery.DescId = zc_MovementFloat_SummaDelivery()
+
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
                                      AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
@@ -268,10 +278,10 @@ BEGIN
                                        ON MovementBoolean_Site.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
                                       
-	    /* LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                       ON MovementBoolean_Deferred.MovementId = Movement_Check.Id
-                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-            */
+	         LEFT JOIN MovementBoolean AS MovementBoolean_DeliverySite
+                                       ON MovementBoolean_DeliverySite.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_DeliverySite.DescId = zc_MovementBoolean_DeliverySite()
+            
             
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                           ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id

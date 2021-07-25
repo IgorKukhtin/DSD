@@ -1,4 +1,4 @@
-unit CheckSummCard;
+unit Report_Movement_CheckDeliverySite;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinXmas2008Blue, cxCheckBox, DataModul;
 
 type
-  TCheckSummCardForm = class(TAncestorJournalForm)
+  TReport_Movement_CheckDeliverySiteForm = class(TAncestorJournalForm)
     colUnitName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
@@ -46,12 +46,9 @@ type
     actShowMessage: TShowMessageAction;
     bbPrint: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    CheckSourceKindName: TcxGridDBColumn;
     colSummCard: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
     spUpdateMovement: TdsdStoredProc;
     CancelReason: TcxGridDBColumn;
-    isDeliverySite: TcxGridDBColumn;
     SummaDelivery: TcxGridDBColumn;
   private
     { Private declarations }
@@ -65,6 +62,6 @@ implementation
 
 initialization
 
-  RegisterClass(TCheckSummCardForm)
+  RegisterClass(TReport_Movement_CheckDeliverySiteForm)
 
 end.

@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumberPartner TVarChar
+             , BarCode TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -95,6 +96,7 @@ BEGIN
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
              , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_Full
              , Movement_OrderClient.InvNumberPartner
+             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode
              , Movement_OrderClient.OperDate
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName

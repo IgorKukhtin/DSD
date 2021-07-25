@@ -17,6 +17,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbName TVarChar;
+   DECLARE vbCode Integer;
+   DECLARE vbPersonal Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -29,6 +32,13 @@ BEGIN
     -- Если код не установлен, определяем его как последний+1
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Member()); 
    
+   IF COALESCE (vbIsInsert, FALSE) = FALSE
+   THEN
+       -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <сотрудники>
+       SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = ioId;
+   END IF;
+
+
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Member(), inName, vbUserId); 
 
@@ -48,6 +58,23 @@ BEGIN
       -- сохранили свойство <Пользователь (создание)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
    END IF;
+   
+   --Когда меняется ФИО zc_Object_Member - автоматом менять ValueData у сотрудника
+   IF COALESCE (vbName,'') <> COALESCE (inName,'')
+   THEN
+       vbPersonal:= (SELECT ObjectLink.ObjectId
+                     FROM ObjectLink
+                     WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member()
+                       AND ObjectLink.ChildObjectId = ioId
+                       );
+
+       IF COALESCE (vbPersonal,0) <> 0
+       THEN
+           -- сохранили <Объект>
+           PERFORM lpInsertUpdate_Object (vbPersonal, zc_Object_Personal(), vbCode, inName);
+       END IF;
+
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -63,6 +90,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+22.07.21          *
 22.10.20          *
 */
 

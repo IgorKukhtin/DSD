@@ -833,6 +833,7 @@ BEGIN
                                                   , inGoodsGroupId          := 0
                                                   , inisGoodsGroupIn        := FALSE
                                                   , inisGoodsGroupExc       := FALSE
+                                                  , inisList                := FALSE
                                                   , inUserId                := vbUserId
                                                    )
 
@@ -1494,7 +1495,7 @@ BEGIN
     RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
  end if;*/
 
-
+/*
      -- добавили ReturnIn_Detail
      IF EXISTS (SELECT 1 FROM MovementItem WHERE )
      PERFORM gpInsertUpdate_MovementItem_ReturnIn_Detail (MI_Detail.Id, zc_MI_Detail(), MovementItem.ObjectId, inMovementId, MovementItem.Amount, MovementItem.Id)
@@ -1507,7 +1508,7 @@ BEGIN
        AND MovementItem.isErased   = FALSE
        AND MI_Detail.ParentId IS NULL
     ;
-
+*/
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
      THEN

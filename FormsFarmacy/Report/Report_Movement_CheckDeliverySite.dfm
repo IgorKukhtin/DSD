@@ -1,5 +1,5 @@
-inherited CheckSummCardForm: TCheckSummCardForm
-  Caption = #1047#1072#1087#1086#1083#1077#1085#1080#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099' '#1085#1072' '#1082#1072#1088#1090#1091
+inherited Report_Movement_CheckDeliverySiteForm: TReport_Movement_CheckDeliverySiteForm
+  Caption = #1058#1086#1074#1072#1088' '#1087#1086' '#1076#1086#1089#1090#1072#1074#1082#1077' '#1089' '#1089#1072#1081#1090#1072
   ClientHeight = 554
   ClientWidth = 911
   AddOnFormData.RefreshAction = actRefreshStart
@@ -111,6 +111,16 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 79
           end
+          object SummaDelivery: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'SummaDelivery'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object colSummCard: TcxGridDBColumn
             Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103')'
             DataBinding.FieldName = 'SummCard'
@@ -118,8 +128,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Styles.Content = dmMain.cxHeaderL1Style
-            Styles.Header = dmMain.cxHeaderL1Style
             Width = 104
           end
           object colBayer: TcxGridDBColumn
@@ -182,14 +190,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 102
           end
-          object CheckSourceKindName: TcxGridDBColumn
-            Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1095#1077#1082#1072
-            DataBinding.FieldName = 'CheckSourceKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 96
-          end
           object CancelReason: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1086#1090#1082#1072#1079#1072
             DataBinding.FieldName = 'CancelReason'
@@ -197,24 +197,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
-          end
-          object isDeliverySite: TcxGridDBColumn
-            Caption = 'H'#1072#1096#1072' '#1076#1086#1089#1090#1072#1074#1082#1072
-            DataBinding.FieldName = 'isDeliverySite'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
-          object SummaDelivery: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
-            DataBinding.FieldName = 'SummaDelivery'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
           end
         end
       end
@@ -266,6 +248,7 @@ inherited CheckSummCardForm: TCheckSummCardForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      CheckIDRecords = True
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
@@ -371,21 +354,9 @@ inherited CheckSummCardForm: TCheckSummCardForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMovement
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = MasterDS
-    end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_CheckSummCard'
+    StoredProcName = 'gpReport_Movement_CheckDeliverySite'
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

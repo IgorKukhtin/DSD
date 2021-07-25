@@ -11,6 +11,7 @@ RETURNS TABLE (TopicsTestingTuningId Integer
              , Orders Integer
              , Question TBLOB
              , PossibleAnswer TBLOB
+             , PropertiesId Integer
               )
 AS
 $BODY$
@@ -59,6 +60,7 @@ BEGIN
           , tmpChild.Orders
           , tmpChild.Question
           , tmpSecond.PossibleAnswer
+          , tmpSecond.PropertiesId
      FROM tmpMaster
      
           INNER JOIN tmpChild ON tmpChild.ParentId = tmpMaster.Id

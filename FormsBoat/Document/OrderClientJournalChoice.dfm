@@ -417,6 +417,11 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Options.Editing = False
         Width = 95
       end
+      object BarCode: TcxGridDBColumn
+        DataBinding.FieldName = 'BarCode'
+        Visible = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1453,6 +1458,14 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'MovementId_Invoice'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BarCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BarCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1605,7 +1618,7 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides1
       end>
     ActionItemList = <
       item

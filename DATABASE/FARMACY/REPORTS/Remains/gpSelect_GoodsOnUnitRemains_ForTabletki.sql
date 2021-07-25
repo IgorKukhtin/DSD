@@ -236,6 +236,7 @@ BEGIN
                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
                         WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
                           AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
+                          AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)
                       UNION ALL
                       -- подва
                       SELECT '</Offers>')

@@ -698,6 +698,7 @@ initialization
   RegisterClass (TdsdSendSMSCPAAction);
   RegisterClass (TdsdSetFocusedAction);
   RegisterClass (TdsdLoadListValuesFileAction);
+  RegisterClass (TdsdPreparePicturesAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

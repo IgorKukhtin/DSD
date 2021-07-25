@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TestingTuning_Second()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TestingTuning_Second (Integer, Integer, Integer, Boolean, TBLOB, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TestingTuning_Second (Integer, Integer, Integer, Boolean, TBLOB, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TestingTuning_Second(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TestingTuning_Second(
     IN inParentId              Integer   , -- Ключ объекта <Документ>
     IN inisCorrectAnswer       Boolean   , -- Правельный ответ
     IN inPossibleAnswer        TBLOB     , -- Вариант ответа
+    IN inisPhoto               Boolean   , -- Фльл ответ
     IN inSession               TVarChar    -- сессия пользователя
 )
 AS
@@ -25,6 +26,13 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Вым запрещено изменять настройки тестирования';
     END IF;
+
+    --Проверили на корректность кол-ва
+    IF COALESCE(inMovementId, 0) = 0 or COALESCE(inParentId, 0) = 0
+    THEN
+      RAISE EXCEPTION 'Ошибка. Не сохранен документ.';
+    END IF;    
+
 
     --Проверили на корректность кол-ва
     IF COALESCE(inPossibleAnswer, '') = ''
@@ -69,6 +77,9 @@ BEGIN
     -- сохранили свойство <Вариант ответа>
     PERFORM lpInsertUpdate_MovementItemBLOB (zc_MIBLOB_PossibleAnswer(), ioId, inPossibleAnswer);
 
+    -- сохранили свойство <Фото ответ>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Photo(), ioId, inisPhoto);
+
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummTestingTuning (inMovementId);
 
@@ -78,7 +89,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_TestingTuning_Second (Integer, Integer, Integer, Boolean, TBLOB, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_TestingTuning_Second (Integer, Integer, Integer, Boolean, TBLOB, Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
