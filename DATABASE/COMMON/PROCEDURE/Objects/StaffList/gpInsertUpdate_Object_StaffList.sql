@@ -27,7 +27,16 @@ BEGIN
    -- vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffList());
    vbUserId:= lpGetUserBySession (inSession);
 
-   
+   -- проверка прав
+   IF NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_StaffList())
+   THEN
+        RAISE EXCEPTION 'Ошибка.%Нет прав корректировать = <%>.'
+                      , CHR (13)
+                      , (SELECT ObjectDesc.ItemName FROM ObjectDesc WHERE ObjectDesc.Id = zc_Object_StaffList())
+                       ;
+   END IF;
+
+
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 

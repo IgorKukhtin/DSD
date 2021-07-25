@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_UserOrderBasis() RETURNS In
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_PriceListItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_PriceListItem' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_OperPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_OperPrice' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_ModelService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_ModelService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_StaffList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_StaffList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -114,6 +117,20 @@ BEGIN
                                    , inName:= 'Разрешено изменение цены в любом прайсе.'
                                    , inEnumName:= 'zc_Enum_Process_Update_PriceListItem');
                                    
+ -- для ....
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_ModelService()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1
+                                   , inName:= 'Разрешена корректировка Модели начисления.'
+                                   , inEnumName:= 'zc_Enum_Process_Update_Object_ModelService');
+
+ -- для ....
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_StaffList()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 2
+                                   , inName:= 'Разрешено изменение Штатное расписание.'
+                                   , inEnumName:= 'zc_Enum_Process_Update_Object_StaffList');
+
  -- для заявок ограничиваются Контрагенты
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_UserOrder()
                                    , inDescId:= zc_Object_Process()
