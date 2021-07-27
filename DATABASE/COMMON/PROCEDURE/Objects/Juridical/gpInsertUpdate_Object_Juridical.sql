@@ -6,8 +6,6 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
-
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
     IN inCode                Integer   ,    -- свойство <Код Юридического лица>
@@ -56,7 +54,7 @@ BEGIN
    THEN
        -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
        PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
-   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0
+   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0 AND inPriceListId <> zc_PriceList_Basis()
    THEN
        PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
    END IF;

@@ -29,7 +29,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Juridic
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Juridical_PriceList()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'> - сохранение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'> - установка ПРАЙСА.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Juridical_PriceList');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Juridical_GLN()
