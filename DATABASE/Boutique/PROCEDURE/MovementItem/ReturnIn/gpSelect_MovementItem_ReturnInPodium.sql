@@ -93,7 +93,6 @@ BEGIN
      FROM Movement
      WHERE Movement.Id = inMovementId;
 
-
      IF inShowAll = TRUE
      THEN
      -- Результат такой
@@ -610,9 +609,6 @@ BEGIN
                                   AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMI.DescId_Sale
-            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                        ON MIFloat_ChangePercent.MovementItemId = tmpMI.SaleMI_Id
-                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = tmpMI.SaleMI_Id
                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
