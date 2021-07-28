@@ -63,10 +63,10 @@
   end
   object cbIsClose: TcxCheckBox
     Left = 161
-    Top = 8
+    Top = 2
     Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
     TabOrder = 6
-    Width = 156
+    Width = 175
   end
   object ceMaxOrderAmount: TcxCurrencyEdit
     Left = 21
@@ -109,23 +109,33 @@
   end
   object cbisLessYear: TcxCheckBox
     Left = 161
-    Top = 26
+    Top = 17
     Hint = #1056#1072#1079#1088#1077#1096#1077#1085' '#1079#1072#1082#1072#1079' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
     Caption = #1047#1072#1082#1072#1079' '#1089#1088#1086#1082#1072' '#1084#1077#1085#1077#1077' '#1075#1086#1076#1072
     ParentShowHint = False
     ShowHint = True
     TabOrder = 13
-    Width = 156
+    Width = 175
   end
   object cbisFormOrder: TcxCheckBox
     Left = 161
-    Top = 44
+    Top = 32
     Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1082#1072#1079
     Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1082#1072#1079
     ParentShowHint = False
     ShowHint = True
     TabOrder = 14
-    Width = 156
+    Width = 175
+  end
+  object cbFindLeftovers: TcxCheckBox
+    Left = 161
+    Top = 48
+    Hint = #1055#1086#1080#1089#1082' '#1086#1089#1090#1072#1090#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084
+    Caption = #1055#1086#1080#1089#1082' '#1086#1089#1090#1072#1090#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 15
+    Width = 175
   end
   object ActionList: TActionList
     Left = 120
@@ -234,10 +244,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFindLeftovers'
+        Value = Null
+        Component = cbFindLeftovers
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 123
+    Left = 184
+    Top = 99
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -316,10 +334,17 @@
         Component = cbisFormOrder
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isFindLeftovers'
+        Value = Null
+        Component = cbFindLeftovers
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 115
+    Left = 272
+    Top = 99
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 184

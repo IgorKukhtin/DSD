@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
  INOUT ioId	                  Integer   ,    -- ключ объекта <> 
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
     IN inDaysForSale          Integer   ,    -- Дней для продажы
     IN inIsLessYear           Boolean   ,    -- Разрешен заказ товара с сроком менее года
     IN inIsFormOrder          Boolean   ,    -- Сразу формировать заказ
+    IN inisFindLeftovers      Boolean   ,    -- Поиск остатков по аптекам
     IN inSession              TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -49,6 +51,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_LessYear(), ioId, inIsLessYear);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_FormOrder(), ioId, inIsFormOrder);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DiffKind_FindLeftovers(), ioId, inisFindLeftovers);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MaxOrderAmount(), ioId, inMaxOrderAmount);
    -- сохранили

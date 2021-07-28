@@ -1,11 +1,12 @@
 -- Function: gpUpdate_Object_Maker_SendDate (Integer,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Maker_SendDate (Integer,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Maker_SendDate (Integer,Integer,Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Maker_SendDate(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
     IN inAddMonth        Integer   ,    -- Добавить месяц к отправке
     IN inAddDay          Integer   ,    -- Добавить дни к отправке
+    IN inisCurrMonth     Boolean   ,    -- Отправка текущего месяца
     IN inSession         TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -23,6 +24,7 @@ BEGIN
    END IF;
 
    IF EXISTS(SELECT * FROM ObjectDate WHERE ObjectDate.DescId = zc_ObjectDate_Maker_SendPlan() and ObjectDate.ObjectId = ioId)
+      AND COALESCE (inisCurrMonth, FALSE) = FALSE
    THEN
      SELECT 
        ObjectDate.ValueData

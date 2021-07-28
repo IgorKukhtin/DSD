@@ -10,8 +10,22 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_CheckSiteCount(
 RETURNS TABLE (CheckSourceKindName TVarChar
              , CountPrev Integer
              , SummPrev TFloat
+             , DeliveryCheckPrev Integer
+             , DeliveryCountPrev Integer
+             , DeliverySummPrev TFloat
+             , DeliveryPayCheckPrev Integer
+             , DeliveryPayCountPrev Integer
+             , DeliveryPaySummPrev TFloat
+             , DeliveryPaySummDeliveryPrev TFloat
              , CountCurr Integer
              , SummCurr TFloat
+             , DeliveryCheckCurr Integer
+             , DeliveryCountCurr Integer
+             , DeliverySummCurr TFloat
+             , DeliveryPayCheckCurr Integer
+             , DeliveryPayCountCurr Integer
+             , DeliveryPaySummCurr TFloat
+             , DeliveryPaySummDeliveryCurr TFloat
              , CountDiff TFloat
              , SummDiff TFloat
              
@@ -34,10 +48,12 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpMovement AS (SELECT Movement_Check.Id                                      AS Id
-                                 , COALESCE(Object_CheckSourceKind.ValueData, 'Не болей') AS CheckSourceKindName
-                                 , MovementFloat_TotalCount.ValueData                     AS TotalCount
-                                 , MovementFloat_TotalSumm.ValueData                      AS TotalSumm
+       WITH tmpMovement AS (SELECT Movement_Check.Id                                       AS Id
+                                 , COALESCE(Object_CheckSourceKind.ValueData, 'Не болей')  AS CheckSourceKindName
+                                 , MovementFloat_TotalCount.ValueData                      AS TotalCount
+                                 , MovementFloat_TotalSumm.ValueData                       AS TotalSumm
+                                 , COALESCE(MovementBoolean_DeliverySite.ValueData, False) AS isDeliverySite
+                                 , MovementFloat_SummaDelivery.ValueData                   AS SummaDelivery
                             FROM (SELECT Movement.*
                                        , MovementLinkObject_Unit.ObjectId                    AS UnitId
                                        , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
@@ -83,6 +99,14 @@ BEGIN
                                                        ON MovementDate_Insert.MovementId = Movement_Check.Id
                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
                                                             
+                                LEFT JOIN MovementBoolean AS MovementBoolean_DeliverySite
+                                                          ON MovementBoolean_DeliverySite.MovementId = Movement_Check.Id
+                                                         AND MovementBoolean_DeliverySite.DescId = zc_MovementBoolean_DeliverySite()
+
+                                LEFT JOIN MovementFloat AS MovementFloat_SummaDelivery
+                                                        ON MovementFloat_SummaDelivery.MovementId =  Movement_Check.Id
+                                                       AND MovementFloat_SummaDelivery.DescId = zc_MovementFloat_SummaDelivery()
+
                                 LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
                             WHERE COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0
                                OR COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
@@ -96,6 +120,20 @@ BEGIN
                                    , Count(*)                    AS CountCheck
                                    , Sum(Movement.TotalCount)    AS TotalCount
                                    , Sum(Movement.TotalSumm)     AS TotalSumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0 
+                                              THEN 1 ELSE 0 END)               AS TotalDeliveryCheck
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0 
+                                              THEN Movement.TotalCount END)    AS TotalDeliveryCount
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0  
+                                              THEN Movement.TotalSumm END)     AS TotalDeliverySumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0 
+                                              THEN 1 ELSE 0 END)               AS TotalDeliveryPayCheck
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0 
+                                              THEN Movement.TotalCount END)    AS TotalDeliveryPayCount
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0  
+                                              THEN Movement.TotalSumm END)     AS TotalDeliveryPaySumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0  
+                                              THEN Movement.SummaDelivery END) AS TotalDeliveryPaySummDelivery
                               FROM tmpMovement AS Movement
                               
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
@@ -107,6 +145,20 @@ BEGIN
                                    , Count(*)                    AS CountCheck
                                    , Sum(Movement.TotalCount)    AS TotalCount
                                    , Sum(Movement.TotalSumm)     AS TotalSumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0 
+                                              THEN 1 ELSE 0 END)               AS TotalDeliveryCheck
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0 
+                                              THEN Movement.TotalCount END)    AS TotalDeliveryCount
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) = 0  
+                                              THEN Movement.TotalSumm END)     AS TotalDeliverySumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0 
+                                              THEN 1 ELSE 0 END)               AS TotalDeliveryPayCheck
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0 
+                                              THEN Movement.TotalCount END)    AS TotalDeliveryPayCount
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0  
+                                              THEN Movement.TotalSumm END)     AS TotalDeliveryPaySumm
+                                   , Sum(CASE WHEN COALESCE(Movement.isDeliverySite) = TRUE AND COALESCE(Movement.SummaDelivery, 0) <> 0  
+                                              THEN Movement.SummaDelivery END) AS TotalDeliveryPaySummDelivery
                               FROM tmpMovement AS Movement
 
                                    INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.Id = Movement.Id
@@ -118,8 +170,22 @@ BEGIN
         SELECT COALESCE(Movement.CheckSourceKindName, tmpMovementPrev.CheckSourceKindName)::TVarChar
              , tmpMovementPrev.CountCheck::Integer
              , tmpMovementPrev.TotalSumm::TFloat   
+             , tmpMovementPrev.TotalDeliveryCheck::Integer   
+             , tmpMovementPrev.TotalDeliveryCount::Integer
+             , tmpMovementPrev.TotalDeliverySumm::TFloat 
+             , tmpMovementPrev.TotalDeliveryPayCheck::Integer   
+             , tmpMovementPrev.TotalDeliveryPayCount::Integer
+             , tmpMovementPrev.TotalDeliveryPaySumm::TFloat 
+             , tmpMovementPrev.TotalDeliveryPaySummDelivery::TFloat 
              , Movement.CountCheck::Integer   
              , Movement.TotalSumm::TFloat  
+             , Movement.TotalDeliveryCheck::Integer   
+             , Movement.TotalDeliveryCount::Integer
+             , Movement.TotalDeliverySumm::TFloat 
+             , Movement.TotalDeliveryPayCheck::Integer   
+             , Movement.TotalDeliveryPayCount::Integer
+             , Movement.TotalDeliveryPaySumm::TFloat 
+             , Movement.TotalDeliveryPaySummDelivery::TFloat 
              , CASE WHEN COALESCE(Movement.CountCheck, 0) = 0 THEN 0 ELSE Movement.CountCheck:: TFloat / tmpMovementPrev.CountCheck:: TFloat * 100 - 100 END :: TFloat
              , CASE WHEN COALESCE(Movement.TotalSumm, 0) = 0 THEN 0 ELSE Movement.TotalSumm / tmpMovementPrev.TotalSumm * 100 - 100 END :: TFloat
 

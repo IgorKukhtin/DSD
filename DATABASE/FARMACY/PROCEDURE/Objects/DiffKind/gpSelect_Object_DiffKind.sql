@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isClose Boolean
              , isLessYear Boolean
              , isFormOrder Boolean
+             , isFindLeftovers Boolean
              , isErased boolean
              , MaxOrderAmount TFloat
              , MaxOrderAmountSecond TFloat
@@ -26,6 +27,7 @@ BEGIN
           , COALESCE(ObjectBoolean_DiffKind_Close.ValueData, False)               AS isClose
           , COALESCE(ObjectBoolean_DiffKind_LessYear.ValueData, False)            AS isLessYear
           , COALESCE(ObjectBoolean_DiffKind_FormOrder.ValueData, False)           AS isFormOrder            
+          , COALESCE(ObjectBoolean_DiffKind_FindLeftovers.ValueData, False)       AS isFindLeftovers           
           , Object_DiffKind.isErased                             AS isErased
           , ObjectFloat_DiffKind_MaxOrderAmount.ValueData        AS MaxOrderAmount
           , ObjectFloat_DiffKind_MaxOrderAmountSecond.ValueData  AS MaxOrderAmount
@@ -40,6 +42,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_FormOrder
                                   ON ObjectBoolean_DiffKind_FormOrder.ObjectId = Object_DiffKind.Id
                                  AND ObjectBoolean_DiffKind_FormOrder.DescId = zc_ObjectBoolean_DiffKind_FormOrder()   
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_FindLeftovers
+                                  ON ObjectBoolean_DiffKind_FindLeftovers.ObjectId = Object_DiffKind.Id
+                                 AND ObjectBoolean_DiffKind_FindLeftovers.DescId = zc_ObjectBoolean_DiffKind_FindLeftovers()   
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
                                AND ObjectFloat_DiffKind_MaxOrderAmount.DescId = zc_ObjectFloat_MaxOrderAmount() 

@@ -65,6 +65,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat, isSUA Boolean
              , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
              , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean
+             , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean
 ) AS
 $BODY$
 BEGIN
@@ -243,12 +244,14 @@ BEGIN
       , COALESCE (ObjectFloat_PercentSAUA.ValueData,0) ::TFloat                          AS  PercentSAUA
       , COALESCE (ObjectBoolean_SUA.ValueData, FALSE)     :: Boolean                     AS isSUA
 
-      , COALESCE (ObjectBoolean_ShareFromPrice.ValueData, FALSE)     :: Boolean          AS isShareFromPrice
-      , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)     :: Boolean          AS isOutUKTZED_SUN1
-      , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)        :: Boolean          AS isCheckUKTZED
-      , COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE)     :: Boolean          AS isGoodsUKTZEDRRO
-      , COALESCE (ObjectBoolean_MessageByTime.ValueData, FALSE)      :: Boolean          AS isMessageByTime
-      , COALESCE (ObjectBoolean_MessageByTimePD.ValueData, FALSE)    :: Boolean          AS isMessageByTimePD
+      , COALESCE (ObjectBoolean_ShareFromPrice.ValueData, FALSE)          :: Boolean     AS isShareFromPrice
+      , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)          :: Boolean     AS isOutUKTZED_SUN1
+      , COALESCE (ObjectBoolean_CheckUKTZED.ValueData, FALSE)             :: Boolean     AS isCheckUKTZED
+      , COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE)          :: Boolean     AS isGoodsUKTZEDRRO
+      , COALESCE (ObjectBoolean_MessageByTime.ValueData, FALSE)           :: Boolean     AS isMessageByTime
+      , COALESCE (ObjectBoolean_MessageByTimePD.ValueData, FALSE)         :: Boolean     AS isMessageByTimePD
+      , COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE) :: Boolean     AS isParticipDistribListDiff
+      , COALESCE (ObjectBoolean_PauseDistribListDiff.ValueData, FALSE)    :: Boolean     AS isPauseDistribListDiff
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -579,6 +582,13 @@ BEGIN
                                 ON ObjectBoolean_MessageByTimePD.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MessageByTimePD.DescId = zc_ObjectBoolean_Unit_MessageByTimePD()
                                
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
+                                ON ObjectBoolean_ParticipDistribListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ParticipDistribListDiff.DescId = zc_ObjectBoolean_Unit_ParticipDistribListDiff()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PauseDistribListDiff
+                                ON ObjectBoolean_PauseDistribListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_PauseDistribListDiff.DescId = zc_ObjectBoolean_Unit_PauseDistribListDiff()
+
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()

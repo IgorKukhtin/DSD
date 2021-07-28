@@ -10,20 +10,41 @@ RETURNS TABLE (Message Text
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   
    DECLARE vbCountPrev Integer;
    DECLARE vbCountCurr Integer;
    DECLARE vbSummCurr TFloat;
+
+   DECLARE vbDeliveryCheckCurr Integer;
+   DECLARE vbDeliveryCountCurr Integer;
+   DECLARE vbDeliverySummCurr TFloat;
+   DECLARE vbDeliveryPayCheckCurr Integer;
+   DECLARE vbDeliveryPayCountCurr Integer;
+   DECLARE vbDeliveryPaySummCurr TFloat;
+   DECLARE vbDeliveryPaySummDeliveryCurr TFloat;
+   
    DECLARE vbCountPrevM Integer;
    DECLARE vbCountCurrM Integer;
    DECLARE vbSummCurrM TFloat;
+
+   DECLARE vbDeliveryCheckCurrM Integer;
+   DECLARE vbDeliveryCountCurrM Integer;
+   DECLARE vbDeliverySummCurrM TFloat;
+   DECLARE vbDeliveryPayCheckCurrM Integer;
+   DECLARE vbDeliveryPayCountCurrM Integer;
+   DECLARE vbDeliveryPaySummCurrM TFloat;
+   DECLARE vbDeliveryPaySummDeliveryCurrM TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
      
-     SELECT SUM(Report.CountCurr)
-          , SUM(Report.SummCurr)
-     INTO vbCountCurr, vbSummCurr
+     SELECT SUM(Report.CountCurr), SUM(Report.SummCurr),
+            SUM(Report.DeliveryCheckCurr), SUM(Report.DeliveryCountCurr), SUM(Report.DeliverySummCurr),
+            SUM(Report.DeliveryPayCheckCurr), SUM(Report.DeliveryPayCountCurr), SUM(Report.DeliveryPaySummCurr), SUM(Report.DeliveryPaySummDeliveryCurr)
+     INTO vbCountCurr, vbSummCurr,
+          vbDeliveryCheckCurr, vbDeliveryCountCurr, vbDeliverySummCurr,
+          vbDeliveryPayCheckCurr, vbDeliveryPayCountCurr, vbDeliveryPaySummCurr, vbDeliveryPaySummDeliveryCurr
      FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession) AS Report;     
      
      SELECT SUM(Report.CountCurr)
@@ -33,9 +54,12 @@ BEGIN
    
      IF date_part('DAY',  CURRENT_DATE)::Integer = 1
      THEN
-       SELECT SUM(Report.CountCurr)
-            , SUM(Report.SummCurr)
-       INTO vbCountCurrM, vbSummCurrM
+       SELECT SUM(Report.CountCurr), SUM(Report.SummCurr),
+              SUM(Report.DeliveryCheckCurr), SUM(Report.DeliveryCountCurr), SUM(Report.DeliverySummCurr),
+              SUM(Report.DeliveryPayCheckCurr), SUM(Report.DeliveryPayCountCurr), SUM(Report.DeliveryPaySummCurr), SUM(Report.DeliveryPaySummDeliveryCurr)
+       INTO vbCountCurrM, vbSummCurrM,
+            vbDeliveryCheckCurrM, vbDeliveryCountCurrM, vbDeliverySummCurrM,
+            vbDeliveryPayCheckCurrM, vbDeliveryPayCountCurrM, vbDeliveryPaySummCurrM, vbDeliveryPaySummDeliveryCurrM
        FROM gpReport_Movement_CheckSiteCount(inStartDate := DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY')
                                            , inEndDate := DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY'
                                            , inSession := inSession) AS Report;     
@@ -54,13 +78,33 @@ BEGIN
        ' на сумму '||zfConvert_FloatToString (COALESCE(vbSummCurr, 0)::TFloat)||
        ' грн. процент изменения '||CASE WHEN vbCountPrev < vbCountCurr THEN ' + ' ELSE '' END||
        zfConvert_FloatToString (COALESCE(CASE WHEN COALESCE(vbCountPrev, 0) = 0 THEN 0 ELSE Round(vbCountCurr::TFloat / vbCountPrev::TFloat * 100.0 - 100.0, 2) END, 0)::TFloat)||' %'
-       
+       ||CASE WHEN COALESCE(vbDeliveryPayCheckCurr, 0) <> 0 
+              THEN CHR(13)||'Платная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryPayCheckCurr, 0))||
+                   ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummCurr, 0)::TFloat)||
+                   ' сумма доставки '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummDeliveryCurr, 0)::TFloat)
+              ELSE '' END
+       ||CASE WHEN COALESCE(vbDeliveryCheckCurr, 0) <> 0 
+              THEN CHR(13)||'Бесплатная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryCheckCurr, 0))||
+                   ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliverySummCurr, 0)::TFloat)
+              ELSE '' END
+      
+      
+          -- За предыдущий месяц 
        ||CASE WHEN date_part('DAY',  CURRENT_DATE)::Integer = 1 THEN CHR(13)||CHR(13)||
          
          'За '||zfCalc_MonthYearName(DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY'))||CHR(13)||'Чеков '||zfConvert_IntToString (COALESCE(vbCountCurrM, 0))||
          ' на сумму '||zfConvert_FloatToString (COALESCE(vbSummCurrM, 0)::TFloat)||
          ' грн. процент изменения '||CASE WHEN vbCountPrevM < vbCountCurrM THEN ' + ' ELSE '' END||
          zfConvert_FloatToString (COALESCE(CASE WHEN COALESCE(vbCountPrevM, 0) = 0 THEN 0 ELSE Round(vbCountCurrM::TFloat / vbCountPrevM::TFloat * 100.0 - 100.0, 2) END, 0)::TFloat)||' %'      
+         ||CASE WHEN COALESCE(vbDeliveryPayCheckCurrM, 0) <> 0 
+                THEN CHR(13)||'Платная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryPayCheckCurrM, 0))||
+                     ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummCurrM, 0)::TFloat)||
+                     ' сумма доставки '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummDeliveryCurrM, 0)::TFloat)
+                ELSE '' END
+         ||CASE WHEN COALESCE(vbDeliveryCheckCurrM, 0) <> 0
+                THEN CHR(13)||'Бесплатная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryCheckCurrM, 0))||
+                     ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliverySummCurrM, 0)::TFloat)
+                ELSE '' END
        ELSE '' END
        )::Text;
 

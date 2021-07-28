@@ -62,6 +62,7 @@ type
     DaysForSale: TcxGridDBColumn;
     isLessYear: TcxGridDBColumn;
     IsFormOrder: TcxGridDBColumn;
+    isFindLeftovers: TcxGridDBColumn;
   private
     { Private declarations }
   public

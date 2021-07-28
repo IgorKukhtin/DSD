@@ -2024,9 +2024,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentSales() RETURNS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentSales', 'Аптек аналитиков по продажам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AssortmentSales() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_CustomerThreshold() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_CustomerThreshold'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AssortmentSales', 'Аптек аналитиков по продажам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AssortmentSales');
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_CustomerThreshold', 'Порог срабатывание при заказе под клиента' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_CustomerThreshold');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptLevel_MovementDesc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptLevel_MovementDesc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -2043,6 +2043,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.07.21                                                                                      * zc_ObjectFloat_CashSettings_CustomerThreshold
  01.07.21                                                                                      * zc_ObjectFloat_Goods_PairSunAmount
  24.06.21         * zc_ObjectFloat_Reason_PeriodDays
                     zc_ObjectFloat_Reason_PeriodTax

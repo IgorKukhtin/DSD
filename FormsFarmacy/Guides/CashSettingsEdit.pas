@@ -60,6 +60,8 @@ type
     cxLabel14: TcxLabel;
     ceAssortmentSales: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
+    ceCustomerThreshold: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

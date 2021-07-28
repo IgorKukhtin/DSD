@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                Color_IPE Integer, 
                MultiplicitySale TFloat,
                isMultiplicityError boolean,
+               isStaticCode boolean,
 
                PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -693,21 +694,33 @@ BEGIN
             CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                  -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -718,8 +731,12 @@ BEGIN
             --
             -- Цена без скидки для СП
             --
-            CASE WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
+            CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
 
                  /*WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения + цена доплаты "округлили в меньшую"
@@ -732,21 +749,33 @@ BEGIN
             CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                  -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -758,29 +787,47 @@ BEGIN
 
             -- временно для проверки1
            (CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN 0 ELSE
-            COALESCE (CashSessionSnapShot.Price, 0)
-          - CASE WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
+            COALESCE (zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0), 0)
+          - CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
 
                  ELSE
             CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                  -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -795,29 +842,45 @@ BEGIN
             ) :: TFloat AS DiffSP1,
 
             -- временно для проверки2
-           (CASE WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
+           (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
 
                  ELSE
 
             CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                  -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -830,21 +893,33 @@ BEGIN
           - CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                  -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -921,13 +996,23 @@ BEGIN
             ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
           , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                   AND ObjectFloat_Goods_Price.ValueData > 0
-                 THEN  CashSessionSnapShot.Price
+                 THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
             ELSE
             CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
-                     CASE WHEN CashSessionSnapShot.Price > CashSessionSnapShot.PriceWithVAT
-                          THEN ROUND(CashSessionSnapShot.Price - (CashSessionSnapShot.Price - CashSessionSnapShot.PriceWithVAT) *
+                     CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
+                          THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - CashSessionSnapShot.PriceWithVAT) *
                                      CashSessionSnapShot.PartionDateDiscount / 100, 2)
-                          ELSE CashSessionSnapShot.Price
+                          ELSE zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                      END
                  ELSE NULL
             END END                                      :: TFloat AS PricePartionDate
@@ -955,9 +1040,13 @@ BEGIN
           , 0                                                      AS Color_IPE
           , Object_Goods_Main.Multiplicity                         AS MultiplicitySale
           , Object_Goods_Main.isMultiplicityError                  AS isMultiplicityError
+          , (COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 or 
+             COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0)::Boolean                     AS isStaticCode
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
-          , CashSessionSnapShot.Price               AS Price_check
+          , zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
 

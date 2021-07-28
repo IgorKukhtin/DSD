@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inMethodsAssortmentGuidesId  Integer   ,     -- Методы выбора аптек ассортимента
     IN inAssortmentGeograph         Integer   ,     -- Аптек аналитиков по географии
     IN inAssortmentSales            Integer   ,     -- Аптек аналитиков по продажам
+    IN inCustomerThreshold          TFloat    ,     -- Порог срабатывание при заказе под клиента
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -72,6 +73,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_MinPercentPromoBonus(), vbID, inMinPercentPromoBonus);
       -- сохранили Дней до компенсации по дисконтным проектам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DayCompensDiscount(), vbID, inDayCompensDiscount);
+      -- сохранили Порог срабатывание при заказе под клиента
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_CustomerThreshold(), vbID, inCustomerThreshold);
 
       -- сохранили Аптек аналитиков по географии
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentGeograph(), vbID, inAssortmentGeograph);

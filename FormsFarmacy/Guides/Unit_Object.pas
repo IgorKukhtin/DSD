@@ -397,6 +397,16 @@ type
     macExecUpdate_isMessageByTimePD: TMultiAction;
     actExecUpdate_isMessageByTimePD: TdsdExecStoredProc;
     dxBarButton19: TdxBarButton;
+    spUnit_isParticipDistribListDiff: TdsdStoredProc;
+    spUnit_isPauseDistribListDiff: TdsdStoredProc;
+    macactUnit_isParticipDistribListDiff: TMultiAction;
+    actUnit_isParticipDistribListDiff: TdsdExecStoredProc;
+    macUnit_isPauseDistribListDiff: TMultiAction;
+    actUnit_isPauseDistribListDiff: TdsdExecStoredProc;
+    dxBarButton20: TdxBarButton;
+    dxBarButton21: TdxBarButton;
+    isParticipDistribListDiff: TcxGridDBColumn;
+    isPauseDistribListDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

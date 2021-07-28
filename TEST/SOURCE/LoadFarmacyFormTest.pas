@@ -3075,22 +3075,23 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
+
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGUIDUnitForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckoutTestingForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCheckoutTestingForm');
 
-       {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMethodsAssortmentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMethodsAssortmentForm');
 
