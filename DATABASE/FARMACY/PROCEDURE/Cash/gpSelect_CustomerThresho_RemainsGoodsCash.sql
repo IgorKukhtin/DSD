@@ -101,16 +101,16 @@ BEGIN
                                                      AND MovementItem.Amount > 0
                          WHERE MovementItem.ObjectId = inGoodsId
                         ),
-           tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
-                                  , MovementItem.ObjectId              AS UnitId
-                                  , MovementItem.Amount                AS Amount
+           tmpLayoutUnit AS (SELECT MovementItem.ObjectId              AS UnitId
+                                  , Max(MovementItem.Amount)           AS Amount
                              FROM tmpLayoutMovement AS Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId = zc_MI_Child()
                                                          AND MovementItem.isErased = FALSE
                                                          AND MovementItem.Amount > 0
+                             GROUP BY MovementItem.ObjectId 
                             )
-
+                           
         SELECT Container.ObjectId                                    AS UnitId
              , Object_Unit.ObjectCode                                AS UnitCode
              , Object_Unit.ValueData                                 AS UnitName
@@ -121,7 +121,7 @@ BEGIN
                 COALESCE (tmpLayoutUnit.Amount, 0))::TFloat          AS Amount
                 
              , tmpObject_Price.MCSValue                              AS MCSValue 
-             , tmpLayoutUnit.Amount                                  AS Layout 
+             , tmpLayoutUnit.Amount::TFloat                          AS Layout 
 
         FROM tmpContainer AS Container
 
@@ -130,6 +130,7 @@ BEGIN
             LEFT JOIN tmpObject_Price ON tmpObject_Price.UnitId = Container.WhereObjectId
             
             LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.UnitId = Container.WhereObjectId
+            
         WHERE FLOOR(Container.Amount - 
                     COALESCE (tmpObject_Price.MCSValue, 0) - 
                     COALESCE (tmpLayoutUnit.Amount, 0)) > 0
@@ -150,4 +151,3 @@ $BODY$
 -- 
 
 SELECT * FROM gpSelect_CustomerThresho_RemainsGoodsCash (inGoodsId := 13303, inSession:= '3')
-

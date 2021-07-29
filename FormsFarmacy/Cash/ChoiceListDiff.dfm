@@ -1,22 +1,23 @@
 inherited ChoiceListDiffForm: TChoiceListDiffForm
   BorderIcons = [biSystemMenu]
   Caption = #1042#1099#1073#1086#1088' '#1042#1080#1076#1072' '#1086#1090#1082#1072#1079#1072
-  ClientHeight = 249
-  ClientWidth = 361
+  ClientHeight = 276
+  ClientWidth = 398
   Position = poScreenCenter
-  ExplicitWidth = 377
-  ExplicitHeight = 288
+  ExplicitWidth = 414
+  ExplicitHeight = 315
   PixelsPerInch = 96
   TextHeight = 13
   object ListDiffGrid: TcxGrid [0]
     Left = 0
-    Top = 0
-    Width = 361
-    Height = 208
+    Top = 41
+    Width = 398
+    Height = 194
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 360
-    ExplicitHeight = 181
+    ExplicitTop = 0
+    ExplicitWidth = 361
+    ExplicitHeight = 208
     object ListDiffGridDBTableView: TcxGridDBTableView
       OnDblClick = ListDiffGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -38,7 +39,7 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 232
+        Width = 286
       end
       object colMaxOrderAmount: TcxGridDBColumn
         Caption = #1052#1072#1082#1089'. '#1089#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -55,13 +56,13 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
   end
   object Panel1: TPanel [1]
     Left = 0
-    Top = 208
-    Width = 361
+    Top = 235
+    Width = 398
     Height = 41
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 181
-    ExplicitWidth = 360
+    ExplicitTop = 208
+    ExplicitWidth = 361
     object bbCancel: TcxButton
       Left = 221
       Top = 6
@@ -81,6 +82,51 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
       Default = True
       ModalResult = 1
       TabOrder = 1
+    end
+  end
+  object Panel2: TPanel [2]
+    Left = 0
+    Top = 0
+    Width = 398
+    Height = 41
+    Align = alTop
+    Caption = 'Panel2'
+    ShowCaption = False
+    TabOrder = 2
+    ExplicitLeft = 160
+    ExplicitTop = 64
+    ExplicitWidth = 185
+    object Label6: TLabel
+      Left = 1
+      Top = 17
+      Width = 396
+      Height = 16
+      Align = alTop
+      Alignment = taCenter
+      Caption = #1053#1077' '#1089#1090#1072#1074#1100#1090#1077' '#1074#1089#1077' '#1087#1086#1076#1088#1103#1076' - '#1087#1086#1076' '#1082#1083#1080#1077#1085#1090#1072'!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitWidth = 280
+    end
+    object Label1: TLabel
+      Left = 1
+      Top = 1
+      Width = 396
+      Height = 16
+      Align = alTop
+      Alignment = taCenter
+      Caption = #1050#1086#1083#1083#1077#1075#1080', '#1080#1089#1087#1086#1083#1100#1079#1091#1081#1090#1077' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1080' '#1087#1086' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1102'!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitWidth = 391
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

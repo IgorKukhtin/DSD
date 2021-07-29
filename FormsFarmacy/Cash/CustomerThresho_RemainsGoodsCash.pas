@@ -27,7 +27,6 @@ type
     cxLabel2: TcxLabel;
     edAmount: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
     dsdExecStoredProc1: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     spSetRequestDistribListDiff: TdsdStoredProc;

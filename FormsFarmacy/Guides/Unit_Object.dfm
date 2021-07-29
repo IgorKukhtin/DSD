@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -961,24 +960,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1080' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1079#1072#1082#1072#1079#1077' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             Options.Editing = False
             Width = 80
-          end
-          object isRequestDistribListDiff: TcxGridDBColumn
-            Caption = #1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103
-            DataBinding.FieldName = 'isRequestDistribListDiff'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
-            Options.Editing = False
-            Width = 80
-          end
-          object isPauseDistribListDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103
-            DataBinding.FieldName = 'isPauseDistribListDiff'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
-            Options.Editing = False
-            Width = 84
           end
         end
       end
@@ -4376,14 +4357,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarButton20'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton21'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton22'
         end
         item
           Visible = True

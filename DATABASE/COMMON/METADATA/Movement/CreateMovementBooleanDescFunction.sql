@@ -321,9 +321,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_DeliverySite() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_DeliverySite', 'Наша доставка с сайта.'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DeliverySite');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_RetrievedAccounting() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_RetrievedAccounting'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_RetrievedAccounting', 'Получено бухгалтерией'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RetrievedAccounting');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 29.07.21                                                                                    * zc_MovementBoolean_RetrievedAccounting
  23.07.21                                                                                    * zc_MovementBoolean_DeliverySite
  19.07.21                                                                                    * zc_MovementBoolean_RoundingTo50
  18.06.21                                                                                    * zc_MovementBoolean_NP

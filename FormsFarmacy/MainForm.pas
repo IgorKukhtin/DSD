@@ -836,8 +836,8 @@ type
     N501: TMenuItem;
     actReport_Movement_CheckDeliverySite: TdsdOpenForm;
     N306: TMenuItem;
-    actUnit_PauseDistribListDiff: TdsdOpenForm;
-    N307: TMenuItem;
+    actReport_Check_JackdawsSum: TdsdOpenForm;
+    N308: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

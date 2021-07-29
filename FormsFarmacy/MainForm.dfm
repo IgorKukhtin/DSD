@@ -4475,12 +4475,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actUnit_PauseDistribListDiff: TdsdOpenForm
-      Category = 'DSDLib'
+    object actReport_Check_JackdawsSum: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1080#1077' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
-      FormName = 'TUnit_PauseDistribListDiffForm'
-      FormNameParam.Value = 'TUnit_PauseDistribListDiffForm'
+      Caption = #1043#1072#1083#1082#1080' '#1095#1077#1082#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_Check_JackdawsSumForm'
+      FormNameParam.Value = 'TReport_Check_JackdawsSumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4943,9 +4943,6 @@
       object miReport_Movement_ListDiff: TMenuItem
         Action = actReport_Movement_ListDiff
       end
-      object N307: TMenuItem
-        Action = actUnit_PauseDistribListDiff
-      end
       object N33: TMenuItem
         Caption = '-'
       end
@@ -5173,6 +5170,9 @@
       end
       object N306: TMenuItem
         Action = actReport_Movement_CheckDeliverySite
+      end
+      object N308: TMenuItem
+        Action = actReport_Check_JackdawsSum
       end
       object N178: TMenuItem
         Caption = '-'

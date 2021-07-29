@@ -14,7 +14,8 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
   cxBlobEdit, cxCheckBox, cxNavigator,
-  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions,
+  dxDateRanges;
 
 type
   TChoiceListDiffForm = class(TAncestorBaseForm)
@@ -27,6 +28,9 @@ type
     Panel1: TPanel;
     bbCancel: TcxButton;
     bbOk: TcxButton;
+    Panel2: TPanel;
+    Label6: TLabel;
+    Label1: TLabel;
     procedure ListDiffGridDBTableViewDblClick(Sender: TObject);
   private
     { Private declarations }

@@ -406,8 +406,6 @@ type
     dxBarButton20: TdxBarButton;
     dxBarButton21: TdxBarButton;
     isParticipDistribListDiff: TcxGridDBColumn;
-    isPauseDistribListDiff: TcxGridDBColumn;
-    isRequestDistribListDiff: TcxGridDBColumn;
     spUnit_isRequestDistribListDiff: TdsdStoredProc;
     macUnit_isRequestDistribListDiff: TMultiAction;
     actUnit_isRequestDistribListDiff: TdsdExecStoredProc;

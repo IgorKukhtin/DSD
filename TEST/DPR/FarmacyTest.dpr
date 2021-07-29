@@ -1058,7 +1058,9 @@ uses
   Report_Movement_CheckWithPennies in '..\..\FormsFarmacy\Report\Report_Movement_CheckWithPennies.pas' {Report_Movement_CheckWithPenniesForm: TParentForm},
   Report_Movement_CheckDeliverySite in '..\..\FormsFarmacy\Report\Report_Movement_CheckDeliverySite.pas' {Report_Movement_CheckDeliverySiteForm: TParentForm},
   CustomerThresho_RemainsGoodsCash in '..\..\FormsFarmacy\Cash\CustomerThresho_RemainsGoodsCash.pas' {CustomerThresho_RemainsGoodsCashForm: TParentForm},
-  Unit_PauseDistribListDiff in '..\..\FormsFarmacy\Guides\Unit_PauseDistribListDiff.pas' {Unit_PauseDistribListDiffForm: TParentForm};
+  Unit_PauseDistribListDiff in '..\..\FormsFarmacy\Guides\Unit_PauseDistribListDiff.pas' {Unit_PauseDistribListDiffForm: TParentForm},
+  Report_Check_JackdawsSumDialog in '..\..\FormsFarmacy\Report\Report_Check_JackdawsSumDialog.pas' {Report_Check_JackdawsSumDialogForm: TParentForm},
+  Report_Check_JackdawsSum in '..\..\FormsFarmacy\Report\Report_Check_JackdawsSum.pas' {Report_Check_JackdawsSumForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

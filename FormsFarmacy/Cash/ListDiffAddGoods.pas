@@ -229,18 +229,14 @@ begin
       spExistsRemainsGoods.Execute;
       if spExistsRemainsGoods.ParamByName('outThereIs').Value then
       begin
-        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
-        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsCode').Value := GoodsCDS.FieldByName('GoodsCode').AsInteger;
-        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsName').Value := GoodsCDS.FieldByName('GoodsName').AsString;
-        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('Amount').Value := nAmount;
-        actCustomerThresho_RemainsGoodsCash.Execute;
-        Exit;
+        ShowMessage('Заказываемый товар есть в наличии по другим аптекам.'#13#10#13#10 +
+                    'Менеджер по возможности создаст на вас перемещение либо разблокирует товар для заказа у поставщика.');
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsCode').Value := GoodsCDS.FieldByName('GoodsCode').AsInteger;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsName').Value := GoodsCDS.FieldByName('GoodsName').AsString;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('Amount').Value := nAmount;
+//        actCustomerThresho_RemainsGoodsCash.Execute;
       end;
-    end else
-    begin
-      ShowMessage('В отложенном режиме заказ по виду отказа <' + DiffKindCDS.FieldByName('Name').AsString + '>  на сумму более <' +
-        MainCashForm.UnitConfigCDS.FindField('CustomerThreshold').AsString + '> запрещен....');
-      Exit;
     end;
   end;
 
@@ -253,7 +249,6 @@ begin
       Exit;
     end;
   end;
-
 
   bSend := False;
   WaitForSingleObject(MutexDiffCDS, INFINITE);

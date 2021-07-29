@@ -3780,6 +3780,14 @@
 				<Form>Unit_PauseDistribListDiffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_JackdawsSumDialog.pas">
+				<Form>Report_Check_JackdawsSumDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_JackdawsSum.pas">
+				<Form>Report_Check_JackdawsSumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
