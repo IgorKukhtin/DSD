@@ -208,7 +208,7 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 441
     ClientRectLeft = 4
@@ -352,6 +352,8 @@ object MainForm: TMainForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
+          OptionsView.CellEndEllipsis = True
+          OptionsView.CellAutoHeight = True
           OptionsView.Footer = True
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True

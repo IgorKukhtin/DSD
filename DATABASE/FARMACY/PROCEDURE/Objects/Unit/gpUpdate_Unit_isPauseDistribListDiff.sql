@@ -20,6 +20,11 @@ BEGIN
 
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PauseDistribListDiff(), inId, not inisPauseDistribListDiff);
+   
+   IF COALESCE (inisPauseDistribListDiff, FALSE) = FALSE
+   THEN
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_RequestDistribListDiff(), inId, False);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);

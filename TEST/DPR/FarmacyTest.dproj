@@ -3772,6 +3772,14 @@
 				<Form>Report_Movement_CheckDeliverySiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Cash\CustomerThresho_RemainsGoodsCash.pas">
+				<Form>CustomerThresho_RemainsGoodsCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_PauseDistribListDiff.pas">
+				<Form>Unit_PauseDistribListDiffForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

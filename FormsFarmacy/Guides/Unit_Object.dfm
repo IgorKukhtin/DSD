@@ -962,6 +962,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 80
           end
+          object isRequestDistribListDiff: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103
+            DataBinding.FieldName = 'isRequestDistribListDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
+            Options.Editing = False
+            Width = 80
+          end
           object isPauseDistribListDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103
             DataBinding.FieldName = 'isPauseDistribListDiff'
@@ -969,7 +978,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
             Options.Editing = False
-            Width = 80
+            Width = 84
           end
         end
       end
@@ -3612,6 +3621,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actExecUpdate_isMessageByTime'
     end
+    object macUnit_isRequestDistribListDiff: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUnit_isRequestDistribListDiff
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082 +
+        #1072' '#1087#1086' '#1089#1077#1090#1080'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082 +
+        #1072' '#1087#1086' '#1089#1077#1090#1080'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1087#1088#1086#1089' '#1085#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1080#1103' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082 +
+        #1072' '#1087#1086' '#1089#1077#1090#1080'"'
+      ImageIndex = 79
+    end
+    object actUnit_isRequestDistribListDiff: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUnit_isRequestDistribListDiff
+      StoredProcList = <
+        item
+          StoredProc = spUnit_isRequestDistribListDiff
+        end>
+      Caption = 'actExecUpdate_isMessageByTime'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4343,6 +4383,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton22'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4442,6 +4486,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton21: TdxBarButton
       Action = macUnit_isPauseDistribListDiff
+      Category = 0
+    end
+    object dxBarButton22: TdxBarButton
+      Action = macUnit_isRequestDistribListDiff
       Category = 0
     end
   end
@@ -5723,7 +5771,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end>
     PackSize = 1
     Left = 944
-    Top = 203
+    Top = 179
   end
   object spUpdate_Unit_SunIncome: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_SunIncome'
@@ -7203,8 +7251,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 251
+    Left = 944
+    Top = 219
   end
   object spUnit_isPauseDistribListDiff: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isPauseDistribListDiff'
@@ -7229,7 +7277,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 291
+    Left = 944
+    Top = 259
+  end
+  object spUnit_isRequestDistribListDiff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isRequestDistribListDiff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRequestDistribListDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPauseDistribListDiff'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 299
   end
 end

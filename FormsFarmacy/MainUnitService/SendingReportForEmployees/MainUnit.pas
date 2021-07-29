@@ -153,22 +153,26 @@ end;
 procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
+  DtartDate : TDateTime;
 begin
+  DtartDate := Now;
   try
     FError := False;
-    btnExecuteClick(Nil);
-    btnExportClick(Nil);
 
-    if not qryReport_Upload.Active then Exit;
-    if qryReport_Upload.IsEmpty then Exit;
+    if not qrySendList.Active then Exit;
+    if qrySendList.IsEmpty then Exit;
 
     qrySendList.First;
     while not qrySendList.Eof do
     begin
 
-      btnExecuteClick(Nil);
-      btnExportClick(Nil);
-      btnSendTelegramClick(Nil);
+      if (qrySendList.FieldByName('DateSend').AsDateTime < DtartDate) and
+         (qrySendList.FieldByName('DateSend').AsDateTime > FDate) then
+      begin
+        btnExecuteClick(Nil);
+        btnExportClick(Nil);
+        btnSendTelegramClick(Nil);
+      end;
 
       qrySendList.Next;
       Application.ProcessMessages;
@@ -176,9 +180,9 @@ begin
 
     if not FError then
     begin
+      FDate := DtartDate;
       Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
       try
-        FDate := Now;
         Ini.WriteDateTime('Options', 'Date', FDate);
       finally
         Ini.Free;

@@ -52,6 +52,8 @@ type
     actExecuteDialogDateCompensation: TExecuteDialog;
     bbUpdateDateCompensation: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    InvNumberIncome: TcxGridDBColumn;
+    OperDateIncome: TcxGridDBColumn;
   private
     { Private declarations }
   public

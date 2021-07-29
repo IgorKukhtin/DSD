@@ -1056,7 +1056,9 @@ uses
   Report_RemainsCovid_19 in '..\..\FormsFarmacy\Report\Report_RemainsCovid_19.pas' {Report_RemainsCovid_19Form: TParentForm},
   TestingUser in '..\..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm},
   Report_Movement_CheckWithPennies in '..\..\FormsFarmacy\Report\Report_Movement_CheckWithPennies.pas' {Report_Movement_CheckWithPenniesForm: TParentForm},
-  Report_Movement_CheckDeliverySite in '..\..\FormsFarmacy\Report\Report_Movement_CheckDeliverySite.pas' {Report_Movement_CheckDeliverySiteForm: TParentForm};
+  Report_Movement_CheckDeliverySite in '..\..\FormsFarmacy\Report\Report_Movement_CheckDeliverySite.pas' {Report_Movement_CheckDeliverySiteForm: TParentForm},
+  CustomerThresho_RemainsGoodsCash in '..\..\FormsFarmacy\Cash\CustomerThresho_RemainsGoodsCash.pas' {CustomerThresho_RemainsGoodsCashForm: TParentForm},
+  Unit_PauseDistribListDiff in '..\..\FormsFarmacy\Guides\Unit_PauseDistribListDiff.pas' {Unit_PauseDistribListDiffForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

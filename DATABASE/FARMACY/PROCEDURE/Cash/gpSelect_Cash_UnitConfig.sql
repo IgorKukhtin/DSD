@@ -19,6 +19,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isSpotter boolean,
                LoyaltyID Integer, LoyaltySummCash TFloat,
                ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar,
+               CustomerThreshold TFloat,
                PermanentDiscountID Integer, PermanentDiscountPercent TFloat,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
@@ -180,6 +181,7 @@ BEGIN
                                   , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE) 
                                     AND (vbRetailId = 4)                                                     AS isGetHardwareData
                                   , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
+                                  , COALESCE(ObjectBoolean_CashSettings_CustomerThreshold.ValueData, 0)::TFLoat  AS CustomerThreshold
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -193,6 +195,9 @@ BEGIN
                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
                                                           ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
                                                          AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
+                                  LEFT JOIN ObjectFloat AS ObjectBoolean_CashSettings_CustomerThreshold
+                                                        ON ObjectBoolean_CashSettings_CustomerThreshold.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectBoolean_CashSettings_CustomerThreshold.DescId = zc_ObjectFloat_CashSettings_CustomerThreshold()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -257,6 +262,7 @@ BEGIN
        , tmpLoyalty.LoyaltySummCash
        , tmpCashSettings.ShareFromPriceName
        , tmpCashSettings.ShareFromPriceCode
+       , tmpCashSettings.CustomerThreshold
 
        , tmpPermanentDiscount.PermanentDiscountID          AS PermanentDiscountID
        , tmpPermanentDiscount.PermanentDiscountPercent     AS PermanentDiscountPercent

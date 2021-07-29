@@ -4475,6 +4475,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actUnit_PauseDistribListDiff: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1080#1077' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1089#1077#1090#1080
+      FormName = 'TUnit_PauseDistribListDiffForm'
+      FormNameParam.Value = 'TUnit_PauseDistribListDiffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4931,6 +4942,9 @@
       end
       object miReport_Movement_ListDiff: TMenuItem
         Action = actReport_Movement_ListDiff
+      end
+      object N307: TMenuItem
+        Action = actUnit_PauseDistribListDiff
       end
       object N33: TMenuItem
         Caption = '-'

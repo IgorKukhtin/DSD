@@ -76,6 +76,12 @@ BEGIN
                                  AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
     WHERE Movement.Id = inMovementId;
 
+    IF inMovementId = 24249552 
+    THEN
+       vbRoundingTo10 := False;
+       vbRoundingDown := False; 
+       vbRoundingTo50 := False;
+    END IF;
 
     -- значения для разделения по срокам
     SELECT Date_6, Date_3, Date_1, Date_0

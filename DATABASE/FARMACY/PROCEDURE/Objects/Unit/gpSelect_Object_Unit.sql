@@ -65,7 +65,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TypeSAUA TVarChar, MasterSAUA TVarChar, PercentSAUA TFloat, isSUA Boolean
              , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
              , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean
-             , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean
+             , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
 ) AS
 $BODY$
 BEGIN
@@ -252,6 +252,7 @@ BEGIN
       , COALESCE (ObjectBoolean_MessageByTimePD.ValueData, FALSE)         :: Boolean     AS isMessageByTimePD
       , COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE) :: Boolean     AS isParticipDistribListDiff
       , COALESCE (ObjectBoolean_PauseDistribListDiff.ValueData, FALSE)    :: Boolean     AS isPauseDistribListDiff
+      , COALESCE (ObjectBoolean_RequestDistribListDiff.ValueData, FALSE)  :: Boolean     AS isRequestDistribListDiff
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -588,6 +589,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PauseDistribListDiff
                                 ON ObjectBoolean_PauseDistribListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_PauseDistribListDiff.DescId = zc_ObjectBoolean_Unit_PauseDistribListDiff()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RequestDistribListDiff
+                                ON ObjectBoolean_RequestDistribListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_RequestDistribListDiff.DescId = zc_ObjectBoolean_Unit_RequestDistribListDiff()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

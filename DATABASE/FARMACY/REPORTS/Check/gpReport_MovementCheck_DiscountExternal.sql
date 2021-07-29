@@ -25,6 +25,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , ChangePercent TFloat
              , SummChangePercent TFloat
              , FromName TVarChar
+             , InvNumberIncome TVarChar
+             , OperDateIncome TDateTime
              , PriceWithVAT TFloat
               )
 AS
@@ -90,6 +92,8 @@ BEGIN
            , MovementItem.ChangePercent
            ,( MovementItem.SummChangePercent * (-1.0 * MovementItemContainer.Amount)/ MovementItem.Amount) :: TFloat
            , Object_From.ValueData                      AS FromName
+           , Movement_Income.InvNumber                  AS InvNumberIncome
+           , Movement_Income.OperDate                   AS OperDateIncome
            , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT
 
         FROM (SELECT Movement.*
@@ -182,6 +186,8 @@ BEGIN
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+             
+             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
              ;
 
 
@@ -195,4 +201,5 @@ $BODY$
  29.10.19                                                       *
 */
 
-select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('15.04.2021')::TDateTime , inEndDate := ('15.04.2021')::TDateTime , inUnitId := 183292 , inDiscountExternalId := 0 ,  inSession := '3');
+select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('25.06.2021')::TDateTime , inEndDate := ('19.07.2021')::TDateTime , inUnitId := 0 , inDiscountExternalId := 0 ,  inSession := '3');
+

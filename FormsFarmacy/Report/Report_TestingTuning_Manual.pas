@@ -27,8 +27,8 @@ type
     actFormClose2: TdsdFormClose;
     actPreparePictures: TdsdPreparePicturesAction;
     erPossibleAnswer: TcxEditRepository;
-    erPossibleAnswerBlobItem1: TcxEditRepositoryBlobItem;
     PropertiesId: TcxGridDBColumn;
+    erPossibleAnswerBlobItem1: TcxEditRepositoryMemoItem;
     erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem;
   private
     { Private declarations }

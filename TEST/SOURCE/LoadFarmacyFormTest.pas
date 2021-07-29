@@ -387,6 +387,9 @@ end;
 
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCustomerThresho_RemainsGoodsCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCustomerThresho_RemainsGoodsCashForm');
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
@@ -1978,6 +1981,19 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PauseDistribListDiffForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_PauseDistribListDiffForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SUN_LockDialogForm');
 
@@ -2001,16 +2017,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
-  }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDaySUNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TListDaySUNDialogForm');
 
