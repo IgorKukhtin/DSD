@@ -54,6 +54,13 @@ type
     actUpdate_RetrievedAccounting: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     ColorRA_calc: TcxGridDBColumn;
+    chSummaReceivedFact: TcxGridDBColumn;
+    SummaReceived: TcxGridDBColumn;
+    SummaReceivedDelta: TcxGridDBColumn;
+    spUpdate_SummaReceivedFact: TdsdStoredProc;
+    actSummaDialogForm: TExecuteDialog;
+    actUpdate_SummaReceivedFact: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

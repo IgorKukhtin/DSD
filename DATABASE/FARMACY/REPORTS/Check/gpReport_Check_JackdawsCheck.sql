@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , JackdawsChecksName TVarChar
              , isRetrievedAccounting Boolean
              , TotalSumm TFloat
+             , SummaReceivedFact TFloat
              )
 AS
 $BODY$
@@ -46,8 +47,9 @@ BEGIN
                           AND Movement.DescId = zc_Movement_Check())
       , tmpMovement AS (SELECT
                                Movement.*
-                             , Object_JackdawsChecks.ValueData     AS JackdawsChecksName
-                             , MovementFloat_TotalSumm.ValueData   AS TotalSumm
+                             , Object_JackdawsChecks.ValueData             AS JackdawsChecksName
+                             , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+                             , MovementFloat_SummaReceivedFact.ValueData   AS SummaReceivedFact
                         FROM tmpMovementAll AS Movement
 
                              INNER JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
@@ -58,6 +60,10 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_SummaReceivedFact
+                                                     ON MovementFloat_SummaReceivedFact.MovementId =  Movement.Id
+                                                    AND MovementFloat_SummaReceivedFact.DescId = zc_MovementFloat_SummaReceivedFact()
                         )
 
 
@@ -72,6 +78,7 @@ BEGIN
        , Movement.JackdawsChecksName AS JackdawsChecksName
        , COALESCE(MovementBoolean_RetrievedAccounting.ValueData,FALSE)   AS isRetrievedAccounting
        , Movement.TotalSumm          AS TotalSumm
+       , Movement.SummaReceivedFact  AS SummaReceivedFact
   FROM tmpMovement AS Movement 
   
        INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical

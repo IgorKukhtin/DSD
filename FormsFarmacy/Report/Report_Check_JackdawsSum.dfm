@@ -93,6 +93,16 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = RetrievedAccounting
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaReceived
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaReceivedDelta
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -169,6 +179,28 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 90
+          end
+          object SummaReceived: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1092#1072#1082#1090#1091
+            DataBinding.FieldName = 'SummaReceived'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
+            Width = 90
+          end
+          object SummaReceivedDelta: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'SummaReceivedDelta'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 90
           end
           object SummaJackdaws1: TcxGridDBColumn
@@ -268,6 +300,11 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = chSummaReceivedFact
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -333,6 +370,16 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
+          end
+          object chSummaReceivedFact: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091
+            DataBinding.FieldName = 'SummaReceivedFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -546,6 +593,49 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       ImageIndex = 79
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>?'
     end
+    object actSummaDialogForm: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSummaDialogForm'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SummaReceivedFact'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SummaReceivedFactLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SummaReceivedFact: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actSummaDialogForm
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SummaReceivedFact
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SummaReceivedFact
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
+      ImageIndex = 56
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -637,6 +727,10 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -674,6 +768,10 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       Action = actUpdate_RetrievedAccounting
       Category = 0
     end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdate_SummaReceivedFact
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -702,7 +800,19 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     Top = 144
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'SummaReceivedFact'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaReceivedFactLabel'
+        Value = #1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
     Left = 232
     Top = 176
   end
@@ -836,7 +946,33 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 618
+    Left = 658
     Top = 456
+  end
+  object spUpdate_SummaReceivedFact: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SummaReceivedFact'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = JackdawsCheckCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaReceivedFact'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummaReceivedFact'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 658
+    Top = 512
   end
 end

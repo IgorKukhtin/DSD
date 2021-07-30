@@ -2298,6 +2298,7 @@ begin
           end;
           ZReportLogCDS.Next;
         end;
+        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
 
       Except ON E:Exception do
         Add_Log('Ошибка отправки данных по Z отчетам:' + E.Message);

@@ -25,7 +25,7 @@ object SummaDialogForm: TSummaDialogForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 0
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 215
@@ -34,7 +34,7 @@ object SummaDialogForm: TSummaDialogForm
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 1
+    TabOrder = 2
   end
   object ceSumma: TcxCurrencyEdit
     Left = 41
@@ -42,7 +42,7 @@ object SummaDialogForm: TSummaDialogForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 2
+    TabOrder = 0
     Width = 249
   end
   object cxMemo1: TcxMemo

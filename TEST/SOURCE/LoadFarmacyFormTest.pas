@@ -2979,7 +2979,6 @@ procedure TLoadFormTest.LoadSystemFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTextDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTextDialogForm');
-  Exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');

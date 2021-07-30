@@ -265,17 +265,17 @@ begin
 
     cName := ExtractFilePath(Application.ExeName) + 'ZRepot\' + AFileName + '.txt';
 
-//    try
-//      if FileExists(cName) then DeleteFile(cName);
-//      AssignFile(F,cName);
-//      Rewrite(F);
-//
-//      Writeln(F, AText);
-//    finally
-//      Flush(F);
-//      CloseFile(F);
-//    end;
-//    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
+    try
+      if FileExists(cName) then DeleteFile(cName);
+      AssignFile(F,cName);
+      Rewrite(F);
+
+      Writeln(F, AText);
+    finally
+      Flush(F);
+      CloseFile(F);
+    end;
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
   except on E: Exception do
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;

@@ -208,7 +208,7 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheet4
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 441
     ClientRectLeft = 4
@@ -438,6 +438,36 @@ object MainForm: TMainForm
         end
         object cxGridLevel4: TcxGridLevel
           GridView = cxGridDBChartView2
+        end
+      end
+    end
+    object cxTabSheet4: TcxTabSheet
+      Caption = #1056#1086#1089#1090'/'#1087#1072#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1084#1077#1089#1103#1094#1072' '#1082' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1084#1091' '#1084#1077#1089#1103#1094#1091' '#1074' %'
+      ImageIndex = 3
+      object cxGrid3: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1017
+        Height = 417
+        Hint = #1044#1080#1085#1072#1084#1080#1082#1072
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBChartView3: TcxGridDBChartView
+          DiagramLine.Active = True
+          DiagramLine.Values.LineWidth = 2
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object cxGridDBChartDataGroup3: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object cxGridDBChartSeries2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'CountAll'
+            DisplayText = #1048#1090#1086#1075#1086
+          end
+        end
+        object cxGridLevel5: TcxGridLevel
+          GridView = cxGridDBChartView3
         end
       end
     end

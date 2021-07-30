@@ -14,6 +14,8 @@ RETURNS TABLE (OperDate TDateTime
              , SummaChech TFloat
              , SummaReturnIn TFloat
              , RetrievedAccounting TFloat
+             , SummaReceived TFloat
+             , SummaReceivedDelta TFloat
              , SummaJackdaws1 TFloat
              , SummaJackdaws2 TFloat
              , ColorRA_calc Integer
@@ -49,7 +51,12 @@ BEGIN
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 0 
                                          AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) <> 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaChech
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
-                                         AND COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS RetrievedAccounting
+                                         AND (COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True 
+                                          OR   COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0) THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS RetrievedAccounting
+                             , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                                         AND COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True THEN MovementFloat_TotalSumm.ValueData
+                                        WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                                         AND COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0 THEN MovementFloat_SummaReceivedFact.ValueData END)::TFloat AS SummaReceived
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 1 
                                          AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaJackdaws1
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 2 
@@ -69,6 +76,10 @@ BEGIN
                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
                                                     
+                             LEFT JOIN MovementFloat AS MovementFloat_SummaReceivedFact
+                                                     ON MovementFloat_SummaReceivedFact.MovementId =  Movement.Id
+                                                    AND MovementFloat_SummaReceivedFact.DescId = zc_MovementFloat_SummaReceivedFact()
+
                              LEFT JOIN MovementBoolean AS MovementBoolean_RetrievedAccounting
                                                        ON MovementBoolean_RetrievedAccounting.MovementId = Movement.Id
                                                       AND MovementBoolean_RetrievedAccounting.DescId = zc_MovementBoolean_RetrievedAccounting()
@@ -96,6 +107,29 @@ BEGIN
                         GROUP BY DATE_TRUNC ('DAY', Movement_ReturnIn.OperDate)
                                , MovementLinkObject_Unit.ObjectId
                       )
+      , tmpZReport AS (SELECT DATE_TRUNC ('DAY', ObjectDate_Date.ValueData)     AS OperDate
+                             , ObjectLink_ZReportLog_Unit.ChildObjectId         AS UnitId
+                             , Sum(COALESCE(ObjectFloat_SummaCash.ValueData, 0) + COALESCE(ObjectFloat_SummaCard.ValueData, 0))::TFloat   AS SummaRRO
+                        FROM ObjectDate AS ObjectDate_Date
+                                       
+
+                            LEFT JOIN ObjectFloat AS ObjectFloat_SummaCash
+                                                  ON ObjectFloat_SummaCash.ObjectId = ObjectDate_Date.ObjectId
+                                                 AND ObjectFloat_SummaCash.DescId = zc_ObjectFloat_ZReportLog_SummaCash()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_SummaCard
+                                                  ON ObjectFloat_SummaCard.ObjectId = ObjectDate_Date.ObjectId
+                                                 AND ObjectFloat_SummaCard.DescId = zc_ObjectFloat_ZReportLog_SummaCard()
+
+                            LEFT JOIN ObjectLink AS ObjectLink_ZReportLog_Unit
+                                                 ON ObjectLink_ZReportLog_Unit.ObjectId = ObjectDate_Date.ObjectId
+                                                AND ObjectLink_ZReportLog_Unit.DescId = zc_ObjectLink_ZReportLog_Unit()
+
+                        WHERE ObjectDate_Date.ValueData >= DATE_TRUNC ('DAY', inStartDate) 
+                          AND ObjectDate_Date.ValueData < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                          AND ObjectDate_Date.DescId = zc_ObjectDate_ZReportLog_Date()
+                        GROUP BY DATE_TRUNC ('DAY', ObjectDate_Date.ValueData)
+                               , ObjectLink_ZReportLog_Unit.ChildObjectId
+                      )
 
 
   SELECT Movement.OperDate
@@ -103,10 +137,13 @@ BEGIN
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
 
-       , 0::TFloat                 AS SummaRRO
+       , tmpZReport.SummaRRO       AS SummaRRO
        , Movement.SummaChech       AS SummaChech
        , tmpReturnIn.TotalSumm     AS SummaReturnIn
        , Movement.RetrievedAccounting AS RetrievedAccounting
+       , Movement.SummaReceived AS SummaReceived
+       , (Movement.RetrievedAccounting - Movement.SummaReceived)::TFloat AS SummaReceivedDelta
+
        , Movement.SummaJackdaws1   AS SummaJackdaws1
        , Movement.SummaJackdaws2   AS SummaJackdaws2
        , zc_Color_Yelow()          AS ColorRA_calc
@@ -122,6 +159,9 @@ BEGIN
                             
        LEFT JOIN tmpReturnIn ON tmpReturnIn.OperDate = Movement.OperDate
                             AND tmpReturnIn.UnitId = Movement.UnitId
+                            
+       LEFT JOIN tmpZReport ON tmpZReport.OperDate = Movement.OperDate
+                           AND tmpZReport.UnitId = Movement.UnitId
 
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
 
@@ -141,4 +181,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_Check_JackdawsSum(inStartDate:= '01.05.2021', inEndDate:= '31.05.2021', inUnitId := 0, inSession := '3');
+select * from gpReport_Check_JackdawsSum(inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inUnitId := 0, inSession := '3');
