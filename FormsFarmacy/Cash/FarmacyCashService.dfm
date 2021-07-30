@@ -26202,4 +26202,71 @@ object MainCashForm2: TMainCashForm2
     Left = 168
     Top = 280
   end
+  object ZReportLogCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 536
+    Top = 272
+  end
+  object spSendZReportLog: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ZReportLog_cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inZReport'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'ZReport'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFiscalNumber'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'FiscalNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDate'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'Date'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaCash'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'SummaCash'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaCard'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'SummaCard'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ZReportLogCDS
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 272
+  end
 end

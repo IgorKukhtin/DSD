@@ -59,65 +59,30 @@ implementation
 
   uses CommonData, EmployeeWorkLog, PUSHMessage, LocalWorkUnit, MainCash2;
 
-function CheckListDiffStrucnureCDS : boolean;
-  var ListDiffCDS, ListDiffNewCDS : TClientDataSet;
+function CheckZReportLogCDS : boolean;
+  var ZReportLogCDS : TClientDataSet;
 begin
-  Result := False;
+  Result := FileExists(ZReportLog_lcl);
+  if Result then Exit;
+  ZReportLogCDS :=  TClientDataSet.Create(Nil);
   try
-    ListDiffCDS :=  TClientDataSet.Create(Nil);
-    ListDiffNewCDS :=  TClientDataSet.Create(Nil);
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
     try
-      LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
-
-      if not Assigned(ListDiffCDS.FindField('DiffKindId')) then
-      begin
-        ListDiffNewCDS.FieldDefs.Add('ID', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('Code', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('Name', ftString, 200);
-        ListDiffNewCDS.FieldDefs.Add('Amount', ftCurrency);
-        ListDiffNewCDS.FieldDefs.Add('Price', ftCurrency);
-        ListDiffNewCDS.FieldDefs.Add('DiffKindId', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('Comment', ftString, 400);
-        ListDiffNewCDS.FieldDefs.Add('UserID', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('UserName', ftString, 80);
-        ListDiffNewCDS.FieldDefs.Add('DateInput', ftDateTime);
-        ListDiffNewCDS.FieldDefs.Add('IsSend', ftBoolean);
-        ListDiffNewCDS.CreateDataSet;
-        ListDiffNewCDS.Open;
-
-        ListDiffCDS.First;
-        while not ListDiffCDS.Eof do
-        begin
-          ListDiffNewCDS.Append;
-          ListDiffNewCDS.FieldByName('ID').AsVariant := ListDiffCDS.FieldByName('ID').AsVariant;
-          ListDiffNewCDS.FieldByName('Code').AsVariant := ListDiffCDS.FieldByName('Code').AsVariant;
-          ListDiffNewCDS.FieldByName('Name').AsVariant := ListDiffCDS.FieldByName('Name').AsVariant;
-          ListDiffNewCDS.FieldByName('Amount').AsVariant := ListDiffCDS.FieldByName('Amount').AsVariant;
-          ListDiffNewCDS.FieldByName('Price').AsVariant := ListDiffCDS.FieldByName('Price').AsVariant;
-          ListDiffNewCDS.FieldByName('DiffKindId').AsVariant := Null;
-          ListDiffNewCDS.FieldByName('Comment').AsVariant := ListDiffCDS.FieldByName('Comment').AsVariant;
-          ListDiffNewCDS.FieldByName('UserID').AsVariant := ListDiffCDS.FieldByName('UserID').AsVariant;
-          ListDiffNewCDS.FieldByName('UserName').AsVariant := ListDiffCDS.FieldByName('UserName').AsVariant;
-          ListDiffNewCDS.FieldByName('DateInput').AsVariant := ListDiffCDS.FieldByName('DateInput').AsVariant;
-          ListDiffNewCDS.FieldByName('IsSend').AsVariant := ListDiffCDS.FieldByName('IsSend').AsVariant;
-          ListDiffNewCDS.Post;
-          ListDiffCDS.Next;
-        end;
-
-        SaveLocalData(ListDiffNewCDS, ListDiff_lcl);
-      end;
+      ZReportLogCDS.FieldDefs.Add('ZReport', ftInteger);
+      ZReportLogCDS.FieldDefs.Add('FiscalNumber', ftString, 20);
+      ZReportLogCDS.FieldDefs.Add('Date', ftDateTime);
+      ZReportLogCDS.FieldDefs.Add('SummaCash', ftCurrency);
+      ZReportLogCDS.FieldDefs.Add('SummaCard', ftCurrency);
+      ZReportLogCDS.FieldDefs.Add('UserId', ftInteger);
+      ZReportLogCDS.FieldDefs.Add('isSend', ftBoolean);
+      ZReportLogCDS.CreateDataSet;
+      SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
       Result := True;
-    finally
-      ReleaseMutex(MutexDiffCDS);
-      if ListDiffCDS.Active then ListDiffCDS.Close;
-      ListDiffCDS.Free;
-      if ListDiffNewCDS.Active then ListDiffNewCDS.Close;
-      ListDiffNewCDS.Free;
+    Except ON E:Exception do
+      ShowMessage('Ошибка создания файла данных по Z отчетам:'#13#10 + E.Message);
     end;
-  Except ON E:Exception do
-    ShowMessage('Ошибка создания листа отказов:'#13#10 + E.Message);
+  finally
+    if ZReportLogCDS.Active then ZReportLogCDS.Close;
+    ZReportLogCDS.Free;
   end;
 end;
 
@@ -289,7 +254,7 @@ end;
 
 procedure TCashWorkForm.SaveZReport(AFileName, AText, AFiscalNumber : string;
                                     AZReport : Integer; ASummaCash, ASummaCard : Currency);
-  var F: TextFile; cName : string;
+  var F: TextFile; cName : string; nUserId : Integer; ZReportLogCDS: TClientDataSet;
 begin
   try
     if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'ZRepot') then
@@ -300,19 +265,51 @@ begin
 
     cName := ExtractFilePath(Application.ExeName) + 'ZRepot\' + AFileName + '.txt';
 
-    try
-      if FileExists(cName) then DeleteFile(cName);
-      AssignFile(F,cName);
-      Rewrite(F);
-
-      Writeln(F, AText);
-    finally
-      Flush(F);
-      CloseFile(F);
-    end;
-    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
+//    try
+//      if FileExists(cName) then DeleteFile(cName);
+//      AssignFile(F,cName);
+//      Rewrite(F);
+//
+//      Writeln(F, AText);
+//    finally
+//      Flush(F);
+//      CloseFile(F);
+//    end;
+//    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
   except on E: Exception do
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
+
+  if CheckZReportLogCDS then
+  begin
+    if not TryStrToInt(gc_User.Session, nUserId) then nUserId := 0;
+
+    ZReportLogCDS :=  TClientDataSet.Create(Nil);
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      try
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
+        if not ZReportLogCDS.Active then ZReportLogCDS.Open;
+        ZReportLogCDS.Append;
+        ZReportLogCDS.FieldByName('ZReport').AsInteger := AZReport;
+        ZReportLogCDS.FieldByName('FiscalNumber').AsString := AFiscalNumber;
+        ZReportLogCDS.FieldByName('Date').AsDateTime := Now;
+        ZReportLogCDS.FieldByName('SummaCash').AsCurrency := ASummaCash;
+        ZReportLogCDS.FieldByName('SummaCard').AsCurrency := ASummaCard;
+        ZReportLogCDS.FieldByName('UserId').AsInteger := nUserId;
+        ZReportLogCDS.FieldByName('isSend').AsBoolean := False;
+        ZReportLogCDS.Post;
+
+        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+      Except ON E:Exception do
+        ShowMessage('Ошибка сохранения данных по Z отчетам:'#13#10 + E.Message);
+      end;
+    finally
+      ReleaseMutex(MutexDiffCDS);
+      ZReportLogCDS.Free;
+        // отправка сообщения о необходимости отправки
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 6);
+    end;
   end;
 end;
 

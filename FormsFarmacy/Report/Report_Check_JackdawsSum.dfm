@@ -12,17 +12,17 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     Width = 1007
     Height = 555
     ExplicitTop = 77
-    ExplicitWidth = 915
+    ExplicitWidth = 1007
     ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 1007
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 915
+      ExplicitWidth = 1007
       ExplicitHeight = 555
       inherited cxGrid: TcxGrid
         Width = 1007
         Height = 306
-        ExplicitWidth = 915
+        ExplicitWidth = 1007
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -191,6 +191,11 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             Options.Editing = False
             Width = 90
           end
+          object ColorRA_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorRA_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -201,7 +206,6 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 915
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JackdawsCheckDS
@@ -342,14 +346,13 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 915
       end
     end
   end
   inherited Panel: TPanel
     Width = 1007
     Height = 51
-    ExplicitWidth = 915
+    ExplicitWidth = 1007
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42491d
@@ -671,6 +674,14 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       Action = actUpdate_RetrievedAccounting
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = RetrievedAccounting
+        BackGroundValueColumn = ColorRA_calc
+        ColorValueList = <>
+      end>
   end
   inherited PopupMenu: TPopupMenu
     Left = 168

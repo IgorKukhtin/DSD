@@ -626,12 +626,12 @@ end;
 
 function TCashEmulation.SummaCash : Currency;
 begin
-  Result := 19999;
+  Result := 49343;
 end;
 
 function TCashEmulation.SummaCard : Currency;
 begin
-  Result := 1444;
+  Result := 20567;
 end;
 
 function TCashEmulation.ReceiptsSales : Integer;

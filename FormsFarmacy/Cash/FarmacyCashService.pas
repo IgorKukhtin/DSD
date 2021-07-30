@@ -168,6 +168,8 @@ type
     spEmployeeSchedule: TdsdStoredProc;
     spPauseUpdateRemains: TdsdStoredProc;
     spPauseUpdateCheck: TdsdStoredProc;
+    ZReportLogCDS: TClientDataSet;
+    spSendZReportLog: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -221,6 +223,7 @@ type
     procedure SaveBuyer;
     procedure SaveDistributionPromo;
     procedure SaveImplementationPlanEmployee;
+    procedure SaveZReportLog;
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -308,6 +311,11 @@ begin
 
         5: begin
              if SetFarmacyNameByUser then SendZReport;  // попросили отправить Z отчеты
+             tiServise.Hint := '';
+           end;
+
+        6: begin
+             if SetFarmacyNameByUser then SaveZReportLog;  // попросили отправить Z отчеты
              tiServise.Hint := '';
            end;
 
@@ -639,6 +647,7 @@ begin
                   // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
     SaveListDiff; // Отправляем листы отказов
     SendZReport;  // Отправляем Z отчеты
+    SaveZReportLog;  // Отправляем данных по Z отчетам
     SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
     SendEmployeeSchedule;  // Отправляем времени работы сотрудников
   end;
@@ -1057,6 +1066,7 @@ begin
       SaveRealAll;
       SaveListDiff;
       SendZReport;
+      SaveZReportLog;
       SendEmployeeWorkLog;
       SendEmployeeSchedule;
     end;
@@ -2248,6 +2258,55 @@ begin
   finally
     freeAndNil(sp);
     tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
+procedure TMainCashForm2.SaveZReportLog;
+begin
+  // Отправка данных по Z отчетам
+  if FileExists(ZReportLog_lcl) then
+  begin
+    Add_Log('Start MutexZReportLog');
+    WaitForSingleObject(MutexZReportLog, INFINITE);
+    try
+      try
+
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
+        if not ZReportLogCDS.Active then ZReportLogCDS.Open;
+
+        ZReportLogCDS.First;
+        while not ZReportLogCDS.Eof do
+        begin
+          if not ZReportLogCDS.FieldByName('IsSend').AsBoolean then
+          begin
+            spSendZReportLog.Execute;
+            ZReportLogCDS.Edit;
+            ZReportLogCDS.FieldByName('IsSend').AsBoolean := True;
+            ZReportLogCDS.Post;
+          end;
+          ZReportLogCDS.Next;
+        end;
+        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+
+        ZReportLogCDS.First;
+        while not ZReportLogCDS.Eof do
+        begin
+          if ZReportLogCDS.FieldByName('IsSend').AsBoolean then
+          begin
+            ZReportLogCDS.Delete;
+            Continue;
+          end;
+          ZReportLogCDS.Next;
+        end;
+
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки данных по Z отчетам:' + E.Message);
+      end;
+    finally
+      Add_Log('End ZReportLogCDS');
+      ReleaseMutex(MutexZReportLog);
+      ZReportLogCDS.Close;
+    end;
   end;
 end;
 

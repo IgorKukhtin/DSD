@@ -53,6 +53,7 @@ type
     spUpdate_RetrievedAccounting: TdsdStoredProc;
     actUpdate_RetrievedAccounting: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    ColorRA_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

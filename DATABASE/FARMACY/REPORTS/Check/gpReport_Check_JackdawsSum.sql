@@ -16,6 +16,7 @@ RETURNS TABLE (OperDate TDateTime
              , RetrievedAccounting TFloat
              , SummaJackdaws1 TFloat
              , SummaJackdaws2 TFloat
+             , ColorRA_calc Integer
              )
 AS
 $BODY$
@@ -108,6 +109,7 @@ BEGIN
        , Movement.RetrievedAccounting AS RetrievedAccounting
        , Movement.SummaJackdaws1   AS SummaJackdaws1
        , Movement.SummaJackdaws2   AS SummaJackdaws2
+       , zc_Color_Yelow()          AS ColorRA_calc
   FROM tmpMovement AS Movement 
   
        INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical

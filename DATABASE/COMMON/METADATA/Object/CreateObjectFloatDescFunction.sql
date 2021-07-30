@@ -2040,9 +2040,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PairSunAmount() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PairSunAmount', 'Количество упаковок товара к единице основного' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PairSunAmount');
 
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ZReportLog_SummaCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ZReportLog_SummaCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ZReportLog(), 'zc_ObjectFloat_ZReportLog_SummaCash', 'Оборот наличный' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ZReportLog_SummaCash');
+  
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_ZReportLog_SummaCard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ZReportLog_SummaCard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ZReportLog(), 'zc_ObjectFloat_ZReportLog_SummaCard', 'Оборот карта' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ZReportLog_SummaCard');
+  
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 30.07.21                                                                                      * zc_ObjectFloat_ZReportLog_Summa...
  27.07.21                                                                                      * zc_ObjectFloat_CashSettings_CustomerThreshold
  01.07.21                                                                                      * zc_ObjectFloat_Goods_PairSunAmount
  24.06.21         * zc_ObjectFloat_Reason_PeriodDays
