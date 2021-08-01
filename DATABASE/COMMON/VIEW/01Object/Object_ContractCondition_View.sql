@@ -5,6 +5,7 @@ DROP VIEW IF EXISTS Object_ContractCondition_View;
 CREATE OR REPLACE VIEW Object_ContractCondition_View
 AS
         SELECT ObjectLink_ContractCondition_Contract.ChildObjectId                     AS ContractId
+             , ObjectLink_ContractCondition_Contract.ObjectId                          AS ContractConditionId
              , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId        AS ContractConditionKindId
              , ObjectLink_Contract_PaidKind.ChildObjectId                              AS PaidKindId
              , ObjectFloat_Value.ValueData                                             AS Value
