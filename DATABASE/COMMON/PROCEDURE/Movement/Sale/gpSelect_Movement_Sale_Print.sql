@@ -1433,11 +1433,15 @@ BEGIN
                                  AS NUMERIC (16, 2))
 
                   WHEN tmpMI.CountForPrice <> 0
-                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                       THEN CASE WHEN vbPriceWithVAT = TRUE
+                                 THEN CAST (tmpMI.AmountPartner * (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100))) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                 ELSE CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                            END
 
-                  WHEN tmpMI.CountForPrice <> 0
-                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
-                  ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
+                  ELSE CASE WHEN vbPriceWithVAT = TRUE
+                                 THEN CAST (tmpMI.AmountPartner * (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100))) AS NUMERIC (16, 2))
+                                 ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
+                            END
              END AS AmountSumm
 
              -- расчет цены без НДС, до 4 знаков
