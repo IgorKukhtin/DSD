@@ -612,9 +612,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = tmpMI.SaleMI_Id
                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercentNext
-                                        ON MIFloat_SummChangePercentNext.MovementItemId = tmpMI.SaleMI_Id
-                                       AND MIFloat_SummChangePercentNext.DescId         = zc_MIFloat_SummChangePercentNext()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
+                                        ON MIFloat_ChangePercentNext.MovementItemId = tmpMI.SaleMI_Id
+                                       AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
+           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                       ON MIFloat_SummChangePercent.MovementItemId = tmpMI.SaleMI_Id
+                                      AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Offer
                                       ON MovementBoolean_Offer.MovementId = tmpMI.MovementId_Sale
