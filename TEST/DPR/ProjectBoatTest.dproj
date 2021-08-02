@@ -934,6 +934,14 @@
 			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_ProductionPersonalDialog.pas">
+				<Form>Report_ProductionPersonalDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_ProductionPersonal.pas">
+				<Form>Report_ProductionPersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
