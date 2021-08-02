@@ -144,8 +144,8 @@ BEGIN
                         WHERE COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = 0
                           AND COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
                           AND Movement_Check.UnitId  = vbUnitId
-                          AND COALESCE(Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData) = vbBayer
-                          AND COALESCE (ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData) = vbBayerPhone
+                          AND COALESCE(ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData, '') <> '' 
+                          AND COALESCE(ObjectString_BuyerForSite_Phone.ValueData, MovementString_BayerPhone.ValueData) = vbBayerPhone
 
                         )
                               

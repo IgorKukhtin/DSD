@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MethodsAssortmentName TVarChar
              , AssortmentGeograph Integer
              , AssortmentSales Integer
+             , CustomerThreshold TFloat
              ) AS
 $BODY$
 BEGIN
@@ -55,6 +56,7 @@ BEGIN
         , Object_MethodsAssortment.ValueData                                       AS MethodsAssortmentName
         , ObjectFloat_CashSettings_AssortmentGeograph.ValueData::Integer           AS AssortmentGeograph
         , ObjectFloat_CashSettings_AssortmentSales.ValueData::Integer              AS AssortmentSales
+        , ObjectFloat_CashSettings_CustomerThreshold.ValueData                     AS CustomerThreshold
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -102,6 +104,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AssortmentSales
                               ON ObjectFloat_CashSettings_AssortmentSales.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AssortmentSales.DescId = zc_ObjectFloat_CashSettings_AssortmentSales()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_CustomerThreshold
+                              ON ObjectFloat_CashSettings_CustomerThreshold.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_CustomerThreshold.DescId = zc_ObjectFloat_CashSettings_CustomerThreshold()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 

@@ -982,9 +982,29 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_ChangeExpirationDate() RET
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_ChangeExpirationDate', 'Разрешено изменять срок годности в приходе' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_ChangeExpirationDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiffKind_FindLeftovers() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_FindLeftovers'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectBoolean_DiffKind_FindLeftovers', 'Поиск остатков по аптекам' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiffKind_FindLeftovers');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ParticipDistribListDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ParticipDistribListDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ParticipDistribListDiff', 'Участвует в распределении товара при заказе для покупателя' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ParticipDistribListDiff');
+  
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PauseDistribListDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PauseDistribListDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_PauseDistribListDiff', 'Разрешить заказ без контроля остатка по сети' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PauseDistribListDiff');  
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_RequestDistribListDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_RequestDistribListDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_RequestDistribListDiff', 'Запрос на разрешения заказ без контроля остатка по сети' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_RequestDistribListDiff');  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 27.07.21                                                                                                          * zc_ObjectBoolean_Unit_ParticipDistribListDiff, zc_ObjectBoolean_Unit_ParticipDistribListDiff
+ 27.07.21                                                                                                          * zc_ObjectBoolean_DiffKind_FindLeftovers
  07.07.21                                                                                                          * zc_ObjectBoolean_Juridical_ChangeExpirationDate
  25.06.21                                                                                                          * zc_ObjectBoolean_CheckoutTesting_Updates
  23.06.21                                                                                                          * zc_ObjectBoolean_DiffKind_FormOrder

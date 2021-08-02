@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons,
+  Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons, Datasnap.DBClient,
   Gauges, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
@@ -49,14 +49,42 @@ type
   public
     constructor Create(Cash: ICash; DataSet: TDataSet; ZReportName: string);
 
-    procedure SaveZReport(AFileName, AText : string);
+    procedure SaveZReport(AFileName, AText, AFiscalNumber : string;
+                          AZReport : Integer; ASummaCash, ASummaCard : Currency);
   end;
 
 implementation
 
 {$R *.dfm}
 
-  uses CommonData, EmployeeWorkLog, PUSHMessage, MainCash2;
+  uses CommonData, EmployeeWorkLog, PUSHMessage, LocalWorkUnit, MainCash2;
+
+function CheckZReportLogCDS : boolean;
+  var ZReportLogCDS : TClientDataSet;
+begin
+  Result := FileExists(ZReportLog_lcl);
+  if Result then Exit;
+  ZReportLogCDS :=  TClientDataSet.Create(Nil);
+  try
+    try
+      ZReportLogCDS.FieldDefs.Add('ZReport', ftInteger);
+      ZReportLogCDS.FieldDefs.Add('FiscalNumber', ftString, 20);
+      ZReportLogCDS.FieldDefs.Add('Date', ftDateTime);
+      ZReportLogCDS.FieldDefs.Add('SummaCash', ftCurrency);
+      ZReportLogCDS.FieldDefs.Add('SummaCard', ftCurrency);
+      ZReportLogCDS.FieldDefs.Add('UserId', ftInteger);
+      ZReportLogCDS.FieldDefs.Add('isSend', ftBoolean);
+      ZReportLogCDS.CreateDataSet;
+      SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+      Result := True;
+    Except ON E:Exception do
+      ShowMessage('Ошибка создания файла данных по Z отчетам:'#13#10 + E.Message);
+    end;
+  finally
+    if ZReportLogCDS.Active then ZReportLogCDS.Close;
+    ZReportLogCDS.Free;
+  end;
+end;
 
 { TCashWorkForm }
 
@@ -111,12 +139,14 @@ begin
      if m_Cash.SensZReportBefore then
        SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
                    m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
-                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
+                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport,
+                   m_Cash.FiscalNumber, m_Cash.ZReport, m_Cash.SummaCash, m_Cash.SummaCard);
      m_Cash.ClosureFiscal;
      if not m_Cash.SensZReportBefore then
        SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
                    m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
-                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
+                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport,
+                   m_Cash.FiscalNumber, m_Cash.ZReport, m_Cash.SummaCash, m_Cash.SummaCard);
      EmployeeWorkLog_ZReport;
      if not gc_User.Local then
      try
@@ -222,8 +252,9 @@ begin
   {}
 end;
 
-procedure TCashWorkForm.SaveZReport(AFileName, AText : string);
-  var F: TextFile; cName : string;
+procedure TCashWorkForm.SaveZReport(AFileName, AText, AFiscalNumber : string;
+                                    AZReport : Integer; ASummaCash, ASummaCard : Currency);
+  var F: TextFile; cName : string; nUserId : Integer; ZReportLogCDS: TClientDataSet;
 begin
   try
     if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'ZRepot') then
@@ -247,6 +278,38 @@ begin
     PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
   except on E: Exception do
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
+
+  if CheckZReportLogCDS then
+  begin
+    if not TryStrToInt(gc_User.Session, nUserId) then nUserId := 0;
+
+    ZReportLogCDS :=  TClientDataSet.Create(Nil);
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      try
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
+        if not ZReportLogCDS.Active then ZReportLogCDS.Open;
+        ZReportLogCDS.Append;
+        ZReportLogCDS.FieldByName('ZReport').AsInteger := AZReport;
+        ZReportLogCDS.FieldByName('FiscalNumber').AsString := AFiscalNumber;
+        ZReportLogCDS.FieldByName('Date').AsDateTime := Now;
+        ZReportLogCDS.FieldByName('SummaCash').AsCurrency := ASummaCash;
+        ZReportLogCDS.FieldByName('SummaCard').AsCurrency := ASummaCard;
+        ZReportLogCDS.FieldByName('UserId').AsInteger := nUserId;
+        ZReportLogCDS.FieldByName('isSend').AsBoolean := False;
+        ZReportLogCDS.Post;
+
+        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+      Except ON E:Exception do
+        ShowMessage('Ошибка сохранения данных по Z отчетам:'#13#10 + E.Message);
+      end;
+    finally
+      ReleaseMutex(MutexDiffCDS);
+      ZReportLogCDS.Free;
+        // отправка сообщения о необходимости отправки
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 6);
+    end;
   end;
 end;
 

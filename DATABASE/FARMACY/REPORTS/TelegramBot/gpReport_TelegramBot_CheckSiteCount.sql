@@ -10,9 +10,11 @@ RETURNS TABLE (Message Text
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   
    DECLARE vbCountPrev Integer;
    DECLARE vbCountCurr Integer;
    DECLARE vbSummCurr TFloat;
+   
    DECLARE vbCountPrevM Integer;
    DECLARE vbCountCurrM Integer;
    DECLARE vbSummCurrM TFloat;
@@ -21,8 +23,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
      
-     SELECT SUM(Report.CountCurr)
-          , SUM(Report.SummCurr)
+     SELECT SUM(Report.CountCurr), SUM(Report.SummCurr)
      INTO vbCountCurr, vbSummCurr
      FROM gpReport_Movement_CheckSiteCount(inStartDate := CURRENT_DATE - INTERVAL '1 DAY', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession) AS Report;     
      
@@ -33,8 +34,7 @@ BEGIN
    
      IF date_part('DAY',  CURRENT_DATE)::Integer = 1
      THEN
-       SELECT SUM(Report.CountCurr)
-            , SUM(Report.SummCurr)
+       SELECT SUM(Report.CountCurr), SUM(Report.SummCurr)
        INTO vbCountCurrM, vbSummCurrM
        FROM gpReport_Movement_CheckSiteCount(inStartDate := DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY')
                                            , inEndDate := DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY'
@@ -54,7 +54,9 @@ BEGIN
        ' на сумму '||zfConvert_FloatToString (COALESCE(vbSummCurr, 0)::TFloat)||
        ' грн. процент изменения '||CASE WHEN vbCountPrev < vbCountCurr THEN ' + ' ELSE '' END||
        zfConvert_FloatToString (COALESCE(CASE WHEN COALESCE(vbCountPrev, 0) = 0 THEN 0 ELSE Round(vbCountCurr::TFloat / vbCountPrev::TFloat * 100.0 - 100.0, 2) END, 0)::TFloat)||' %'
-       
+      
+      
+          -- За предыдущий месяц 
        ||CASE WHEN date_part('DAY',  CURRENT_DATE)::Integer = 1 THEN CHR(13)||CHR(13)||
          
          'За '||zfCalc_MonthYearName(DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY'))||CHR(13)||'Чеков '||zfConvert_IntToString (COALESCE(vbCountCurrM, 0))||

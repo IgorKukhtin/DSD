@@ -74,6 +74,12 @@ type
     cxGridDBChartDataGroup1: TcxGridDBChartDataGroup;
     cxGridDBChartSeries1: TcxGridDBChartSeries;
     cxGridLevel4: TcxGridLevel;
+    cxTabSheet4: TcxTabSheet;
+    cxGrid3: TcxGrid;
+    cxGridDBChartView3: TcxGridDBChartView;
+    cxGridDBChartDataGroup3: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries2: TcxGridDBChartSeries;
+    cxGridLevel5: TcxGridLevel;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -153,22 +159,26 @@ end;
 procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
+  DtartDate : TDateTime;
 begin
+  DtartDate := Now;
   try
     FError := False;
-    btnExecuteClick(Nil);
-    btnExportClick(Nil);
 
-    if not qryReport_Upload.Active then Exit;
-    if qryReport_Upload.IsEmpty then Exit;
+    if not qrySendList.Active then Exit;
+    if qrySendList.IsEmpty then Exit;
 
     qrySendList.First;
     while not qrySendList.Eof do
     begin
 
-      btnExecuteClick(Nil);
-      btnExportClick(Nil);
-      btnSendTelegramClick(Nil);
+      if (qrySendList.FieldByName('DateSend').AsDateTime < DtartDate) and
+         (qrySendList.FieldByName('DateSend').AsDateTime > FDate) then
+      begin
+        btnExecuteClick(Nil);
+        btnExportClick(Nil);
+        btnSendTelegramClick(Nil);
+      end;
 
       qrySendList.Next;
       Application.ProcessMessages;
@@ -176,9 +186,9 @@ begin
 
     if not FError then
     begin
+      FDate := DtartDate;
       Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees.ini');
       try
-        FDate := Now;
         Ini.WriteDateTime('Options', 'Date', FDate);
       finally
         Ini.Free;
@@ -204,6 +214,7 @@ begin
 
   cxGridDBChartView1.DataController.DataSource := Nil;
   cxGridDBChartView2.DataController.DataSource := Nil;
+  cxGridDBChartView3.DataController.DataSource := Nil;
 
   if qrySendList.FieldByName('Id').AsInteger in [3, 4] then
   begin
@@ -218,10 +229,23 @@ begin
       on E: Exception do Add_Log(E.Message);
     end;
   end else
-  if qrySendList.FieldByName('Id').AsInteger = 2 then
+  if qrySendList.FieldByName('Id').AsInteger in [2] then
   begin
     cxPageControl1.Properties.ActivePage := cxTabSheet2;
     cxGridDBChartView1.DataController.DataSource := dsReport;
+    try
+      FileName := 'Photo.jpg';
+      qryReport.Close;
+      qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport.Open;
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
+  end else
+  if qrySendList.FieldByName('Id').AsInteger in [6] then
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet4;
+    cxGridDBChartView3.DataController.DataSource := dsReport;
     try
       FileName := 'Photo.jpg';
       qryReport.Close;
@@ -274,13 +298,35 @@ begin
       imJPEG.Free;
     end;
   end else
-  if qrySendList.FieldByName('Id').AsInteger = 2 then
+  if qrySendList.FieldByName('Id').AsInteger in [2] then
   begin
     if not qryReport.Active then Exit;
     if qryReport.IsEmpty then Exit;
-    Add_Log('Начало выгрузки <Динамика заказов по ЕИЦ>');
-    FMessage.Text := 'Динамика заказов по ЕИЦ';
+    if qrySendList.FieldByName('Id').AsInteger = 2 then
+    begin
+      Add_Log('Начало выгрузки <Динамика заказов по ЕИЦ>');
+      FMessage.Text := 'Динамика заказов по ЕИЦ';
+    end;
     AGraphic := cxGridDBChartView1.CreateImage(TBitmap);
+    imJPEG := TJPEGImage.Create;
+    try
+      imJPEG.Assign(AGraphic);
+      imJPEG.SaveToFile(SavePath + FileName);
+    finally
+      AGraphic.Free;
+      imJPEG.Free;
+    end;
+  end else
+  if qrySendList.FieldByName('Id').AsInteger in [6] then
+  begin
+    if not qryReport.Active then Exit;
+    if qryReport.IsEmpty then Exit;
+    if qrySendList.FieldByName('Id').AsInteger = 6 then
+    begin
+      Add_Log('Начало выгрузки <Рост/падение заказов месяца к предыдущему месяцу в %>');
+      FMessage.Text := 'Рост/падение заказов месяца к предыдущему месяцу в %';
+    end;
+    AGraphic := cxGridDBChartView3.CreateImage(TBitmap);
     imJPEG := TJPEGImage.Create;
     try
       imJPEG.Assign(AGraphic);

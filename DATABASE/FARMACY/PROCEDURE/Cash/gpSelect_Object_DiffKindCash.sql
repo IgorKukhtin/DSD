@@ -11,13 +11,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MaxOrderAmountSecond TFloat
              , DaysForSale Integer
              , isLessYear Boolean
-             , isFormOrder Boolean) 
+             , isFormOrder Boolean
+             , isFindLeftovers Boolean
+             ) 
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbNotCashListDiff Boolean;
+   DECLARE vbParticipDistribListDiff Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -34,6 +37,11 @@ BEGIN
                                   WHERE ObjectBoolean_NotCashListDiff.ObjectId = vbUnitId
                                     AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()), FALSE);
 
+   vbParticipDistribListDiff := COALESCE((SELECT COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE)
+                                          FROM ObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
+                                          WHERE ObjectBoolean_ParticipDistribListDiff.ObjectId = vbUnitId
+                                            AND ObjectBoolean_ParticipDistribListDiff.DescId = zc_ObjectBoolean_Unit_ParticipDistribListDiff()), FALSE);
+
    RETURN QUERY 
      SELECT Object_DiffKind.Id                                                   AS Id
           , Object_DiffKind.ObjectCode                                           AS Code
@@ -46,6 +54,8 @@ BEGIN
           , 0 /*ObjectFloat_DiffKind_DaysForSale.ValueData::Integer*/            AS DaysForSale
           , COALESCE(ObjectBoolean_DiffKind_LessYear.ValueData, FALSE)           AS isLessYear
           , COALESCE(ObjectBoolean_DiffKind_FormOrder.ValueData, False)          AS isFormOrder            
+          , COALESCE(ObjectBoolean_DiffKind_FindLeftovers.ValueData, False) AND 
+            COALESCE(vbParticipDistribListDiff, False)                           AS isFindLeftovers           
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
@@ -62,6 +72,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_FormOrder
                                   ON ObjectBoolean_DiffKind_FormOrder.ObjectId = Object_DiffKind.Id
                                  AND ObjectBoolean_DiffKind_FormOrder.DescId = zc_ObjectBoolean_DiffKind_FormOrder()   
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_FindLeftovers
+                                  ON ObjectBoolean_DiffKind_FindLeftovers.ObjectId = Object_DiffKind.Id
+                                 AND ObjectBoolean_DiffKind_FindLeftovers.DescId = zc_ObjectBoolean_DiffKind_FindLeftovers()   
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
        AND Object_DiffKind.isErased = FALSE
      ORDER BY Object_DiffKind.ValueData;
@@ -79,4 +92,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiffKindCash('3')
+-- 
+SELECT * FROM gpSelect_Object_DiffKindCash('3')

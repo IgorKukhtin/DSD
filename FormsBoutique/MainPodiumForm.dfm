@@ -1070,8 +1070,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
-      FormName = 'TPriceListItemForm'
-      FormNameParam.Value = ''
+      FormName = 'TPriceListItemPodiumForm'
+      FormNameParam.Value = 'TPriceListItemPodiumForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

@@ -39,6 +39,7 @@ type
     cxLabel3: TcxLabel;
     cbisLessYear: TcxCheckBox;
     cbisFormOrder: TcxCheckBox;
+    cbFindLeftovers: TcxCheckBox;
   private
     { Private declarations }
   public

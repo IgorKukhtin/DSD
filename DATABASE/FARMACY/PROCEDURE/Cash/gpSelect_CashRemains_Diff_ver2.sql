@@ -505,13 +505,23 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                  ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth,
             CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                   AND ObjectFloat_Goods_Price.ValueData > 0
-                 THEN _DIFF.Price 
+                 THEN zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) 
             ELSE
             CASE WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0 AND COALESCE(_DIFF.PartionDateDiscount, 0) <> 0 THEN
-                     CASE WHEN _DIFF.Price > _DIFF.PriceWithVAT
-                          THEN ROUND(_DIFF.Price - (_DIFF.Price - _DIFF.PriceWithVAT) *
+                     CASE WHEN zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > _DIFF.PriceWithVAT
+                          THEN ROUND(zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - _DIFF.PriceWithVAT) *
                                      _DIFF.PartionDateDiscount / 100, 2)
-                          ELSE _DIFF.Price
+                          ELSE zfCalc_PriceCash(_DIFF.Price, 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                      END
                  ELSE NULL
             END END                                          :: TFloat AS PricePartionDate,

@@ -59,7 +59,6 @@ uses
   CompositionGroup in '..\..\FormsBoutique\Guides\CompositionGroup.pas' {CompositionGroupForm: TParentForm},
   CompositionGroupEdit in '..\..\FormsBoutique\Guides\CompositionGroupEdit.pas' {CompositionGroupEditForm: TParentForm},
   Composition in '..\..\FormsBoutique\Guides\Composition.pas' {CompositionForm: TParentForm},
-  CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
   CountryBrand in '..\..\FormsBoutique\Guides\CountryBrand.pas' {CountryBrandForm: TParentForm},
   CountryBrandEdit in '..\..\FormsBoutique\Guides\CountryBrandEdit.pas' {CountryBrandEditForm: TParentForm},
   Brand in '..\..\FormsBoutique\Guides\Brand.pas' {BrandForm: TParentForm},
@@ -339,7 +338,11 @@ uses
   DiscountPeriodPodiumItem in '..\..\FormsBoutique\Guides\DiscountPeriodPodiumItem.pas' {DiscountPeriodPodiumItemForm: TParentForm},
   DiscountPeriodGoodsPodiumItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItem.pas' {DiscountPeriodGoodsPodiumItemForm: TParentForm},
   DiscountPeriodGoodsPodiumItemEdit in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsPodiumItemEdit.pas' {DiscountPeriodGoodsPodiumItemEditForm: TParentForm},
-  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
+  PriceListItemPodium in '..\..\FormsBoutique\Guides\PriceListItemPodium.pas' {PriceListItemPodiumForm: TParentForm},
+  PriceListGoodsItemPodium in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodium.pas' {PriceListGoodsItemPodiumForm: TParentForm},
+  PriceListGoodsItemPodiumEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas' {PriceListGoodsItemPodiumEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

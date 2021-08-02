@@ -258,6 +258,22 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
             Width = 136
           end
+          object InvNumberIncome: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'InvNumberIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object OperDateIncome: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'OperDateIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end

@@ -2581,11 +2581,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrectMinAmount_PayrollType() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CorrectMinAmount_PayrollType', 'Связь с типом расчета заработной платы', zc_Object_CorrectMinAmount(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectMinAmount_PayrollType');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ZReportLog_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ZReportLog_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ZReportLog_Unit', 'Подразделение', zc_Object_ZReportLog(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ZReportLog_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ZReportLog_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ZReportLog_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ZReportLog_User', 'Сотрудник', zc_Object_ZReportLog(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ZReportLog_User');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 30.07.21                                                                                      * zc_ObjectLink_ZReportLog_...
  12.07.21         * zc_ObjectLink_MobileEmployee_MobilePack
  01.07.21         * zc_ObjectLink_Reason_ReturnDescKind
  22.06.21                                                                                      * zc_ObjectLink_CorrectMinAmount_PayrollType

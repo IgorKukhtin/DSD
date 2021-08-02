@@ -106,6 +106,8 @@ object MainForm: TMainForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -216
+    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsMaker
@@ -188,6 +190,14 @@ object MainForm: TMainForm
         HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
         Options.Editing = False
         Width = 52
+      end
+      object isCurrMonth: TcxGridDBColumn
+        Caption = #1058#1077#1082'. '#1084#1077#1089#1103#1094
+        DataBinding.FieldName = 'isCurrMonth'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 56
       end
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
@@ -336,10 +346,24 @@ object MainForm: TMainForm
   object qryMaker: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'select * from gpSelect_Object_Maker( '#39'3'#39')'
+      'SELECT * '
       
-        'WHERE SendPlan <= CURRENT_TIMESTAMP AND (SendReal < SendPlan OR ' +
-        'SendReal IS NULL) AND'
+        '     , CASE WHEN COALESCE(AmountDay, 0) <> 25 THEN COALESCE(Amou' +
+        'ntDay, 0) ELSE 0 END  AS AmountDaySend'
+      
+        '     , CASE WHEN COALESCE(AmountDay, 0) = 25 THEN 1 ELSE COALESC' +
+        'E(AmountMonth, 0) END AS AmountMonthSend'
+      
+        '     , COALESCE(AmountDay, 0) = 25                              ' +
+        '                      AS isCurrMonth'
+      'FROM gpSelect_Object_Maker( '#39'3'#39')'
+      'WHERE '
+      
+        '(SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, 0) NOT I' +
+        'N (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR '
+      
+        'SendReal < CURRENT_DATE AND COALESCE(AmountDay, 0) = 25 AND DATE' +
+        '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1) AND'
       
         '(COALESCE (isReport1, FALSE) = TRUE OR COALESCE (isReport2, FALS' +
         'E) = TRUE OR'
@@ -427,7 +451,7 @@ object MainForm: TMainForm
     SQL.Strings = (
       
         'select * from gpUpdate_Object_Maker_SendDate (:inMaker, :inAddMo' +
-        'nth, :inAddDay, '#39'3'#39');')
+        'nth, :inAddDay, :inisCurrMonth, '#39'3'#39');')
     Params = <
       item
         DataType = ftUnknown
@@ -442,6 +466,11 @@ object MainForm: TMainForm
       item
         DataType = ftUnknown
         Name = 'inAddDay'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inisCurrMonth'
         ParamType = ptUnknown
       end>
     Left = 144
@@ -460,6 +489,11 @@ object MainForm: TMainForm
       item
         DataType = ftUnknown
         Name = 'inAddDay'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inisCurrMonth'
         ParamType = ptUnknown
       end>
   end

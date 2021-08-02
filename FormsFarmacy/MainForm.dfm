@@ -4475,6 +4475,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_JackdawsSum: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1043#1072#1083#1082#1080' '#1095#1077#1082#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_Check_JackdawsSumForm'
+      FormNameParam.Value = 'TReport_Check_JackdawsSumForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5159,6 +5170,9 @@
       end
       object N306: TMenuItem
         Action = actReport_Movement_CheckDeliverySite
+      end
+      object N308: TMenuItem
+        Action = actReport_Check_JackdawsSum
       end
       object N178: TMenuItem
         Caption = '-'

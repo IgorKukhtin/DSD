@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inObjectId               Integer   , -- Комплектующие
-    IN inAmount                 TFloat    , -- Количество резерв
+    IN inAmount                 TFloat    , -- Количество 
     IN inUserId                 Integer     -- сессия пользователя
 )
 RETURNS Integer

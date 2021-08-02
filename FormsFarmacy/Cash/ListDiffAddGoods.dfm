@@ -66,7 +66,6 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 0
-    ExplicitTop = 232
     object Panel2: TPanel
       Left = 0
       Top = 0
@@ -249,6 +248,39 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     object actShowListDiff: TAction
       Caption = 'actShowListDiff'
       OnExecute = actShowListDiffExecute
+    end
+    object actCustomerThresho_RemainsGoodsCash: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actCustomerThresho_RemainsGoodsCash'
+      FormName = 'TCustomerThresho_RemainsGoodsCashForm'
+      FormNameParam.Value = 'TCustomerThresho_RemainsGoodsCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object TimerStart: TTimer
@@ -456,5 +488,29 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     StoreDefs = True
     Left = 496
     Top = 80
+  end
+  object spExistsRemainsGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_CustomerThresho_ExistsRemainsGoodsCash'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outThereIs'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 496
+    Top = 144
   end
 end

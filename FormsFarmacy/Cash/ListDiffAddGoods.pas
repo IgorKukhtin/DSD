@@ -10,7 +10,7 @@ uses
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
   Datasnap.DBClient, Vcl.Menus, cxButtons, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, cxMaskEdit, Vcl.ExtCtrls, System.Actions,
-  Vcl.ActnList, cxButtonEdit, ChoiceListDiff;
+  Vcl.ActnList, cxButtonEdit, ChoiceListDiff, dsdDB, dsdAction;
 
 type
   TListDiffAddGoodsForm = class(TForm)
@@ -39,6 +39,8 @@ type
     actShowListDiff: TAction;
     TimerStart: TTimer;
     CheckCDS: TClientDataSet;
+    spExistsRemainsGoods: TdsdStoredProc;
+    actCustomerThresho_RemainsGoodsCash: TdsdOpenForm;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
@@ -217,6 +219,27 @@ begin
     Exit;
   end;
 
+  if DiffKindCDS.FieldByName('isFindLeftovers').AsBoolean and
+     (GoodsCDS.FieldByName('Price').AsCurrency >= MainCashForm.UnitConfigCDS.FindField('CustomerThreshold').AsCurrency) then
+  begin
+    if not gc_User.Local then
+    begin
+      spExistsRemainsGoods.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      spExistsRemainsGoods.ParamByName('outThereIs').Value := False;
+      spExistsRemainsGoods.Execute;
+      if spExistsRemainsGoods.ParamByName('outThereIs').Value then
+      begin
+        ShowMessage('Заказываемый товар есть в наличии по другим аптекам.'#13#10#13#10 +
+                    'Менеджер по возможности создаст на вас перемещение либо разблокирует товар для заказа у поставщика.');
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsCode').Value := GoodsCDS.FieldByName('GoodsCode').AsInteger;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('GoodsName').Value := GoodsCDS.FieldByName('GoodsName').AsString;
+//        actCustomerThresho_RemainsGoodsCash.GuiParams.ParamByName('Amount').Value := nAmount;
+//        actCustomerThresho_RemainsGoodsCash.Execute;
+      end;
+    end;
+  end;
+
   if DiffKindCDS.FieldByName('isFormOrder').AsBoolean then
   begin
     if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
@@ -226,7 +249,6 @@ begin
       Exit;
     end;
   end;
-
 
   bSend := False;
   WaitForSingleObject(MutexDiffCDS, INFINITE);

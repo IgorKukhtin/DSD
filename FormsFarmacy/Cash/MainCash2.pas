@@ -743,6 +743,7 @@ type
     fShift: Boolean;
     fPrint: Boolean;
     FTotalSumm: Currency;
+    FSummLoyalty: Currency;
     Cash: ICash;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
@@ -8857,7 +8858,7 @@ end;
 
 procedure TMainCashForm2.CalcTotalSumm;
 var
-  B: TBookmark;
+  B: TBookmark;  nID : Integer;
 Begin
 
   if (FormParams.ParamByName('LoyaltyChangeSumma').Value +
@@ -8865,27 +8866,41 @@ Begin
     PromoCodeLoyaltyCalc;
 
   FTotalSumm := 0;
-  WITH CheckCDS DO
-  Begin
-    B := GetBookmark;
-    DisableControls;
-    try
-      First;
-      while Not Eof do
-      Begin
-        if not FieldByName('isPresent').AsBoolean then
-          FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
-        Next;
-      End;
-      GotoBookmark(B);
-      FreeBookmark(B);
-    finally
-      EnableControls;
-    end;
+  FSummLoyalty := 0;
+  try
+    RemainsCDS.DisableControls;
+    nID := RemainsCDS.RecNo;
+    RemainsCDS.Filtered := false;
+    WITH CheckCDS DO
+    Begin
+      B := GetBookmark;
+      DisableControls;
+      try
+        First;
+        while Not Eof do
+        Begin
+          if not FieldByName('isPresent').AsBoolean then
+            FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
+          if not FieldByName('isPresent').AsBoolean and
+             RemainsCDS.Locate('ID', FieldByName('GoodsId').AsInteger, []) and
+             not RemainsCDS.FieldByName('isStaticCode').AsBoolean then
+            FSummLoyalty := FSummLoyalty + FieldByName('Summ').asCurrency;
+          Next;
+        End;
+        GotoBookmark(B);
+        FreeBookmark(B);
+      finally
+        EnableControls;
+      end;
+    End;
+    lblTotalSumm.Caption := FormatFloat(',0.00', FTotalSumm);
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.RecNo := nID;
+    RemainsCDS.EnableControls;
   End;
-  lblTotalSumm.Caption := FormatFloat(',0.00', FTotalSumm);
 
-  Check_LoyaltySumma(FTotalSumm);
+  Check_LoyaltySumma(FSummLoyalty);
 
 End;
 
@@ -9751,10 +9766,10 @@ begin
         Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
 
       if isFiscal and not actSpec.Checked and not actSpecCorr.Checked then
-        Check_Loyalty(FTotalSumm);
+        Check_Loyalty(FSummLoyalty);
 
       if isFiscal { and not actSpec.Checked and not actSpecCorr.Checked } then
-        Check_LoyaltySM(FTotalSumm);
+        Check_LoyaltySM(FSummLoyalty);
 
       // Непосредственно печать чека
       str_log_xml := '';

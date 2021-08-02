@@ -276,9 +276,7 @@ inherited Report_TestingTuning_ManualForm: TReport_TestingTuning_ManualForm
   object erPossibleAnswer: TcxEditRepository
     Left = 288
     Top = 272
-    object erPossibleAnswerBlobItem1: TcxEditRepositoryBlobItem
-      Properties.BlobEditKind = bekMemo
-      Properties.BlobPaintStyle = bpsText
+    object erPossibleAnswerBlobItem1: TcxEditRepositoryMemoItem
       Properties.ReadOnly = True
     end
     object erPossibleAnswerBlobItem2: TcxEditRepositoryImageItem

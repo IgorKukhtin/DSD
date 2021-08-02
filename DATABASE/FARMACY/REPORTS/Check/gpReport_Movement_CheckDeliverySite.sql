@@ -172,7 +172,6 @@ BEGIN
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
-                AND Movement.StatusId <> zc_Enum_Status_Complete()
            ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId

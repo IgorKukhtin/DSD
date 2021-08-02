@@ -188,14 +188,12 @@ object ProductionUnionForm: TProductionUnionForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 455
     ClientRectBottom = 432
     ClientRectRight = 788
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 431
       object Panel2: TPanel
         Left = 0
         Top = 137
@@ -204,7 +202,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 0
-        ExplicitTop = 160
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
@@ -484,7 +481,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
-        ExplicitHeight = 152
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -492,7 +488,6 @@ object ProductionUnionForm: TProductionUnionForm
           Height = 127
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 150
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -714,7 +709,6 @@ object ProductionUnionForm: TProductionUnionForm
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
-        ExplicitTop = 152
       end
     end
   end
@@ -1541,8 +1535,8 @@ object ProductionUnionForm: TProductionUnionForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ProductForm'
-      FormName = 'TReceiptGoodsChoiceForm'
-      FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+      FormName = 'TProductForm'
+      FormNameParam.Value = 'TProductForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

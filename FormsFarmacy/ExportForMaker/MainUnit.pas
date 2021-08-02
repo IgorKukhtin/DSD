@@ -65,6 +65,7 @@ type
     N6: TMenuItem;
     isReport7: TcxGridDBColumn;
     N7: TMenuItem;
+    isCurrMonth: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -357,8 +358,9 @@ begin
     begin
       try
         qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonthSend').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDaySend').AsInteger;
+        qrySetDateSend.Params.ParamByName('inisCurrMonth').Value :=  qryMaker.FieldByName('isCurrMonth').AsBoolean;
         qrySetDateSend.ExecSQL;
       except
         on E: Exception do
@@ -790,9 +792,9 @@ begin
     grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
 
   FormAddFile := False; FormQuarterFile := False; Form4MonthFile := False;
-  if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
+  if qryMaker.FieldByName('AmountDaySend').AsInteger <> 0 then
   begin
-     if qryMaker.FieldByName('AmountDay').AsInteger = 14 then
+     if qryMaker.FieldByName('AmountDaySend').AsInteger = 14 then
      begin
        if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
        begin
@@ -807,7 +809,7 @@ begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
          DateEnd := IncDay(DateStart, 13);
        end;
-     end else if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
+     end else if qryMaker.FieldByName('AmountDaySend').AsInteger = 15 then
      begin
        if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
        begin
@@ -825,14 +827,21 @@ begin
      end else
      begin
        DateEnd := IncDay(StartOfTheDay(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-       DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDay').AsInteger);
+       DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDaySend').AsInteger);
      end;
   end else
   begin
-    DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-    DateStart := StartOfTheMonth(DateEnd);
-    if qryMaker.FieldByName('AmountMonth').AsInteger > 1 then
-      DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
+    if qryMaker.FieldByName('isCurrMonth').AsBoolean then
+    begin
+      DateEnd := IncDay(Date, -1);
+      DateStart := StartOfTheMonth(DateEnd);
+    end else
+    begin
+      DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+      DateStart := StartOfTheMonth(DateEnd);
+      if qryMaker.FieldByName('AmountMonthSend').AsInteger > 1 then
+        DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonthSend').AsInteger);
+    end;
   end;
 
   if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) and
@@ -1349,7 +1358,7 @@ procedure TMainForm.Timer1Timer(Sender: TObject);
 begin
   try
     timer1.Enabled := False;
-    btnAllClick(nil);
+    if ZConnection1.Connected then btnAllClick(nil);
   finally
     Close;
   end;
