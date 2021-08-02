@@ -5,7 +5,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -411,6 +411,15 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'

@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut_Order(
     IN inInvNumberOrder        TVarChar  , -- Номер заявки контрагента
     IN inOperDate              TDateTime , -- Дата документа
     IN inChecked               Boolean   , -- Проверен
-    IN inPriceWithVAT          Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent            TFloat    , -- % НДС
+ INOUT ioPriceWithVAT          Boolean   , -- Цена с НДС (да/нет)
+ INOUT ioVATPercent            TFloat    , -- % НДС
     IN inChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId                Integer   , -- От кого (в документе)
     IN inToId                  Integer   , -- Кому (в документе)
@@ -22,10 +22,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut_Order(
     IN inPartnerId             Integer   , -- Контрагент (кому)
     IN inPartnerFromId         Integer   , -- Контрагент (от кого)
     IN inDocumentTaxKindId_inf Integer   , -- Тип формирования налогового документа
+   OUT outPriceListName        TVarChar  , -- Прайс лист
     IN inMovementId_Order      Integer   , -- ключ Документа
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId_Tax Integer;
@@ -40,14 +41,16 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_TransferDebtOut (ioId               := ioId
+     SELECT tmp.ioId, tmp.ioPriceWithVAT, tmp.ioVATPercent, tmp.outPriceListName
+      INTO ioId, ioPriceWithVAT, ioVATPercent, outPriceListName
+     FROM lpInsertUpdate_Movement_TransferDebtOut (ioId               := ioId
                                                    , inInvNumber        := inInvNumber
                                                    , inInvNumberPartner := inInvNumberPartner
                                                    , inInvNumberOrder   := inInvNumberOrder
                                                    , inOperDate         := inOperDate
                                                    , inChecked          := inChecked
-                                                   , inPriceWithVAT     := inPriceWithVAT
-                                                   , inVATPercent       := inVATPercent
+                                                   , ioPriceWithVAT     := ioPriceWithVAT
+                                                   , ioVATPercent       := ioVATPercent
                                                    , inChangePercent    := inChangePercent
                                                    , inFromId           := inFromId
                                                    , inToId             := inToId
@@ -58,7 +61,7 @@ BEGIN
                                                    , inPartnerId        := inPartnerId
                                                    , inPartnerFromId    := inPartnerFromId
                                                    , inUserId           := vbUserId
-                                                    );
+                                                    ) AS tmp;
 
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order); 

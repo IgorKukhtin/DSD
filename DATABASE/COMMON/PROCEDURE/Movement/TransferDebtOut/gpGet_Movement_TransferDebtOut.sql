@@ -300,7 +300,13 @@ BEGIN
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpParams ON 1 = 1
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (tmpParams.PriceListId, zc_PriceList_Basis())
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, tmpParams.PriceListId, zc_PriceList_Basis())
+
+--            LEFT JOIN tmpParams ON 1 = 1
+--            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (tmpParams.PriceListId, zc_PriceList_Basis())
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransferDebtOut();
@@ -316,6 +322,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, Boolean, TDateTime, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.08.21         * 
  13.01.16         * add inMask
  14.01.15         * add MovementId_Order
  17.12.14         * add InvNumberOrder
@@ -330,4 +337,4 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, Boolean, TDateTime, TVar
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransferDebtOut(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_TransferDebtOut(inMovementId := 40859 , inMask:= FALSE, inOperDate := '25.01.2014',  inSession := '5'::TVarChar);
