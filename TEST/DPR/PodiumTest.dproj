@@ -176,10 +176,6 @@
 				<Form>CompositionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\CompositionEdit.pas">
-				<Form>CompositionEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\CountryBrand.pas">
 				<Form>CountryBrandForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1169,6 +1165,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CompositionEdit.pas">
+				<Form>CompositionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListItemPodium.pas">
+				<Form>PriceListItemPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListGoodsItemPodium.pas">
+				<Form>PriceListGoodsItemPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas">
+				<Form>PriceListGoodsItemPodiumEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

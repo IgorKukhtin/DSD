@@ -1936,6 +1936,13 @@ object ProductForm: TProductForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'BrandId'
           Value = Null
           Component = MasterCDS

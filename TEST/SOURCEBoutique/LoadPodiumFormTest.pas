@@ -719,6 +719,15 @@ end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemPodiumForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemPodiumForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemPodiumEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemPodiumEditForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
