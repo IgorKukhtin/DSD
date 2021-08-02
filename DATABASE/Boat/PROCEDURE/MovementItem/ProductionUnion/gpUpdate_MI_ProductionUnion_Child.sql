@@ -22,7 +22,7 @@ BEGIN
                                                     , inParentId   := inParentId
                                                     , inMovementId := inMovementId
                                                     , inObjectId   := tmp.ObjectId
-                                                    , inAmount     := (COALESCE (tmp.Value,0) + COALESCE (tmp.Value_service,0)) :: TFloat
+                                                    , inAmount     := COALESCE (tmp.Value,0) :: TFloat
                                                     , inUserId     := vbUserId
                                                     )
      FROM gpSelect_MI_ProductionUnion_Child (inMovementId, TRUE, FALSE, inSession) AS tmp

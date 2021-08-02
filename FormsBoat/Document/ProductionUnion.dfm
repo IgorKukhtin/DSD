@@ -415,7 +415,6 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
               Width = 133
             end
             object Amount_diff_ch2: TcxGridDBColumn
