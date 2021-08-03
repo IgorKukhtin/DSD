@@ -16,6 +16,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     ClientRectBottom = 502
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1268
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -186,6 +187,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0

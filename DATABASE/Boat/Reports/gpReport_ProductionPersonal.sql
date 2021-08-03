@@ -30,6 +30,11 @@ RETURNS TABLE  (
               , BarCode_OrderClient TVarChar
               , BarCode_Product TVarChar
               , BarCode_Personal TVarChar
+
+              , InvNumber_OrderClient_full TVarChar
+              , OperDate_OrderClient TDateTime
+              , InvNumber_OrderClient TVarChar
+              , FromName_OrderClient TVarChar
 )
 AS
 $BODY$
@@ -105,6 +110,10 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Product.Id)         AS BarCode_Product
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Personal.Id)        AS BarCode_Personal
 
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient_full
+           , Movement_OrderClient.OperDate          AS OperDate_OrderClient
+           , Movement_OrderClient.InvNumber         AS InvNumber_OrderClient
+           , Object_From_OrderClient.ValueData      AS FromName_OrderClient
       FROM tmpMovement
            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
 
@@ -132,6 +141,11 @@ BEGIN
            LEFT JOIN Movement AS Movement_OrderClient
                               ON Movement_OrderClient.Id = MovementLinkObject_Product.MovementId
                              AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_From_OrderClient
+                                        ON MovementLinkObject_From_OrderClient.MovementId = Movement_OrderClient.Id
+                                       AND MovementLinkObject_From_OrderClient.DescId = zc_MovementLinkObject_From()
+           LEFT JOIN Object AS Object_From_OrderClient ON Object_From_OrderClient.Id = MovementLinkObject_From_OrderClient.ObjectId
       ;
 
 END;

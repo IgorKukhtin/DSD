@@ -137,6 +137,67 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
             Options.Editing = False
             Width = 166
           end
+          object BarCode_OrderClient: TcxGridDBColumn
+            DataBinding.FieldName = 'BarCode_OrderClient'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object BarCode_Product: TcxGridDBColumn
+            DataBinding.FieldName = 'BarCode_Product'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object BarCode_Personal: TcxGridDBColumn
+            DataBinding.FieldName = 'BarCode_Personal'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object InvNumber_OrderClient_full: TcxGridDBColumn
+            DataBinding.FieldName = 'InvNumber_OrderClient_full'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object OperDate_OrderClient: TcxGridDBColumn
+            DataBinding.FieldName = 'OperDate_OrderClient'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object InvNumber_OrderClient: TcxGridDBColumn
+            DataBinding.FieldName = 'InvNumber_OrderClient'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object FromName_OrderClient: TcxGridDBColumn
+            DataBinding.FieldName = 'FromName_OrderClient'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object ProductId: TcxGridDBColumn
+            DataBinding.FieldName = 'ProductId'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object PersonalId: TcxGridDBColumn
+            DataBinding.FieldName = 'PersonalId'
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -448,7 +509,21 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
           UserName = 'frxDBDMaster'
           GridView = cxGridDBTableView
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
       ReportName = 'PrintReport_ProductionPersonal'
       ReportNameParam.Value = 'PrintReport_ProductionPersonal'
       ReportNameParam.DataType = ftString

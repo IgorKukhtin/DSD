@@ -50,6 +50,15 @@ type
     bbOpenFormPartner: TdxBarButton;
     actRefreshEmpty: TdsdDataSetRefresh;
     actPrintReport: TdsdPrintAction;
+    BarCode_OrderClient: TcxGridDBColumn;
+    BarCode_Product: TcxGridDBColumn;
+    BarCode_Personal: TcxGridDBColumn;
+    InvNumber_OrderClient_full: TcxGridDBColumn;
+    OperDate_OrderClient: TcxGridDBColumn;
+    InvNumber_OrderClient: TcxGridDBColumn;
+    FromName_OrderClient: TcxGridDBColumn;
+    ProductId: TcxGridDBColumn;
+    PersonalId: TcxGridDBColumn;
   private
     { Private declarations }
   public
