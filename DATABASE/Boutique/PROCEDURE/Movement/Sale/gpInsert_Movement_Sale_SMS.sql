@@ -132,7 +132,7 @@ BEGIN
           , REPLACE (tmp.Message, '%1', vbKeySMS)
           , outPhoneSMS
             -- !номер для теста!
-        --, '0674464560'
+         --, '0674464560'
 --          , '0965592230'
             INTO outSmsSettingsName, outLogin, outPassword, outMessage, outPhoneSMS
      FROM gpSelect_Object_SmsSettings (inIsShowAll := FALSE, inSession := inSession) AS tmp

@@ -117,10 +117,12 @@ BEGIN
    
 
    -- Скидка в цене ГСМ +  % Наценки Павильоны (Приход покупателю) 
-   IF inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_ChangePrice(), zc_Enum_ContractConditionKind_ChangePercentPartner()
-                                      , zc_Enum_ContractConditionKind_ChangePercent()
-                                      , zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank()
-                                      , zc_Enum_ContractConditionKind_BonusMonthlyPayment()
+   IF inContractConditionKindId NOT IN (WITH tmpOS AS (SELECT * FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Enum())
+                                        SELECT zc_Enum_ContractConditionKind_ChangePrice() UNION SELECT zc_Enum_ContractConditionKind_ChangePercentPartner()
+                                  UNION SELECT zc_Enum_ContractConditionKind_ChangePercent()
+                                  UNION SELECT zc_Enum_ContractConditionKind_DelayDayCalendar() UNION SELECT zc_Enum_ContractConditionKind_DelayDayBank()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusMonthlyPayment()
+                                  UNION SELECT tmpOS.ObjectId FROM tmpOS WHERE tmpOS.ValueData ILIKE 'zc_Enum_ContractConditionKind_Transport%'
                                        )
  --AND vbUserId = 5
    AND 0 < (WITH tmpData AS (SELECT ObjectLink_ContractConditionKind.ChildObjectId                          AS ContractConditionKindId

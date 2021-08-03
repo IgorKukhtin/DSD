@@ -134,6 +134,14 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 158
       end
+      object Name_BUH: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.)'
+        DataBinding.FieldName = 'Name_BUH'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
@@ -840,7 +848,7 @@ object GoodsForm: TGoodsForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inStartDate'
           DataType = ftDateTime
@@ -849,7 +857,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inEndDate'
           DataType = ftDateTime
@@ -1044,7 +1052,7 @@ object GoodsForm: TGoodsForm
     Params = <
       item
         Name = 'inShowAll'
-        Value = 'True'
+        Value = True
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -1095,10 +1103,13 @@ object GoodsForm: TGoodsForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 232
     Top = 184
   end
@@ -1161,7 +1172,7 @@ object GoodsForm: TGoodsForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inStartDate'
         DataType = ftDateTime
@@ -1170,7 +1181,7 @@ object GoodsForm: TGoodsForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inEndDate'
         DataType = ftDateTime

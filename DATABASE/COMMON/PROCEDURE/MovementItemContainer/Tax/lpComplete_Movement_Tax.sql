@@ -50,14 +50,14 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND MovementItem.Amount     <> 0
                       AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
-                   ) 
-         THEN 
+                   )
+         THEN
              RAISE EXCEPTION 'Ошибка.Для документа <%> должна быть цена = <%>'
                             , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()))
                             , vbPrice
                              ;
          END IF;
-     END IF; 
+     END IF;
 
      -- поиск
      vbObjectId:= (SELECT MovementItem.ObjectId
@@ -105,33 +105,39 @@ BEGIN
 
 
      -- № п/п НН
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), tmp.Id, tmp.LineNum)
-     FROM (SELECT MovementItem.Id
-                , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
-                            THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                       ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
-                                                                  THEN ObjectString_Goods_RUS.ValueData
-                                                             ELSE Object_Goods.ValueData
-                                                        END
-                                                      , Object_GoodsKind.ValueData
-                                                      , MovementItem.Id
-                                              )
-                  END AS LineNum
-           FROM MovementItem
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-                LEFT JOIN ObjectString AS ObjectString_Goods_RUS
-                                       ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
-                                      AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
-                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-           WHERE MovementItem.MovementId = inMovementId
-             AND MovementItem.DescId     = zc_MI_Master()
-             AND MovementItem.isErased   = FALSE
-             AND MovementItem.Amount     <> 0
-          ) AS tmp
-    ;
+     IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableNPP_auto())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), tmp.Id, tmp.LineNum)
+         FROM (SELECT MovementItem.Id
+                    , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
+                                THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                           ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                                      THEN ObjectString_Goods_RUS.ValueData
+                                                                 ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                            END
+                                                          , Object_GoodsKind.ValueData
+                                                          , MovementItem.Id
+                                                  )
+                      END AS LineNum
+               FROM MovementItem
+                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                    LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                           ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                          AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
+                            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                                   ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.isErased   = FALSE
+                 AND MovementItem.Amount     <> 0
+              ) AS tmp
+         ;
+     END IF:
 
 
      -- Обязательно меняем статус документа + сохранили протокол

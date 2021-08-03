@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , Comment TVarChar 
              , PersonalSigningName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , isDisableNPP Boolean
               )
 AS
 $BODY$
@@ -146,6 +147,8 @@ BEGIN
 
            , Object_ReestrKind.Id                     AS ReestrKindId
            , Object_ReestrKind.ValueData              AS ReestrKindName
+           
+           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean isDisableNPP
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -185,6 +188,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DisableNPP_auto
+                                      ON MovementBoolean_DisableNPP_auto.MovementId = Movement.Id
+                                     AND MovementBoolean_DisableNPP_auto.DescId = zc_MovementBoolean_DisableNPP_auto()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id

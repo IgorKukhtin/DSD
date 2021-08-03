@@ -3084,6 +3084,7 @@ begin
   end;
 
   ComSigner.SetUIMode(false);
+//ComSigner.SetUIMode(TRUE);
 
   try
   	ComSigner.ResetPrivateKey(euKeyTypeAccountant);
@@ -3120,14 +3121,16 @@ begin
         E.Message);
     end;
   end;
-
+// exit;
   try
-    // Установка ключей
+    // 1.Установка ключей
     if UserSign <> ''
     then if ExtractFilePath(UserSign) <> ''
          then FileName := UserSign
          else FileName := ExtractFilePath(ParamStr(0)) + UserSign
     else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
+    // проверка
+    if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
 
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
     Error := ComSigner.GetLastErrorDescription;
@@ -3137,17 +3140,19 @@ begin
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
+      raise Exception.Create('Ошибка библиотеки Exite.ComSigner.SetPrivateKeyFile.euKeyTypeAccountant'
         + FileName + #10#13 + E.Message);
     end;
   end;
 
   try
-    // Установка ключей
+    // 2.Установка ключей
     if UserSeal <> ''
     then FileName := UserSeal
     else FileName := ExtractFilePath(ParamStr(0))
                   + 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    // проверка
+    if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
 
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
@@ -3157,17 +3162,20 @@ begin
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
+      raise Exception.Create('Ошибка библиотеки Exite.ComSigner.SetPrivateKeyFile.euKeyTypeDigitalStamp'
         + FileName + #10#13 + E.Message);
     end;
   end;
 
   try
-    // Установка ключей
+    //3. Установка ключей
     if UserKey <> ''
     then FileName := UserKey
     else FileName := ExtractFilePath(ParamStr(0))
                    + 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    // проверка
+    if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
+
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
     if Error <> okError then
@@ -3176,7 +3184,7 @@ begin
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
+      raise Exception.Create('Ошибка библиотеки Exite.ComSigner.SetPrivateKeyFile.euKeyTypeDigitalStamp'
         + FileName + #10#13 + E.Message);
     end;
   end;
@@ -3886,6 +3894,7 @@ begin
     FInsertEDIEvents.Execute;
 
     // перекинуть на FTP
+    //ShowMessage(FileName);exit;
     PutFileToFTP(ReplaceStr(FileName, '.xml', '.p7s'), Directory);
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
@@ -3911,7 +3920,8 @@ var
   EUTaxService_СертификатExite, EUTaxService_СертификатМДС: string;
   ddd: OleVariant;
 begin
-  if VarIsNull(ComSigner) then
+
+if VarIsNull(ComSigner) then
     InitializeComSigner(DebugMode, UserSign, UserSeal, UserKey);
 
   if SignType = stDeclar then
@@ -3923,10 +3933,14 @@ begin
   for i := 1 to 10 do
     try
       if SignType = stComDoc then begin
-          ComSigner.SetFilesOptions(False);
+          //ShowMessage('start FileName');
+          ComSigner.SetFilesOptions(false);
           Error := ComSigner.GetLastErrorDescription;
           if Error <> okError then
              raise Exception.Create('ComSigner.SetFilesOptions(False) ' + Error);
+
+          // проверка
+          if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
 
           ComSigner.SignFilesByAccountant(FileName);
           Error := ComSigner.GetLastErrorDescription;

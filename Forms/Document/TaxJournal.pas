@@ -148,6 +148,7 @@ type
     bbUpdateINN: TdxBarButton;
     actOpenFormTaxCorrective: TdsdOpenForm;
     bb: TdxBarButton;
+    isDisableNPP: TcxGridDBColumn;
   private
     { Private declarations }
   public

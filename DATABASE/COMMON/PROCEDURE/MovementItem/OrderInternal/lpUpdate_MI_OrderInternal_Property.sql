@@ -204,8 +204,8 @@ end if;
                 , COALESCE (tmpReceiptChild.GoodsId_child, tmpMI.GoodsId_child)         AS GoodsId_child
                 , COALESCE (tmpReceiptChild.GoodsKindId_child, tmpMI.GoodsKindId_child) AS GoodsKindId_child
                 , tmpReceiptChild.ReceiptId
-                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN tmpReceiptChild.Value * inAmount_Param      / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_Param
-                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN tmpReceiptChild.Value * inAmount_ParamOrder / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_ParamOrder
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 AND tmpReceiptChild.Value > 0 THEN tmpReceiptChild.Value * inAmount_Param      / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_Param
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 AND tmpReceiptChild.Value > 0 THEN tmpReceiptChild.Value * inAmount_ParamOrder / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_ParamOrder
            FROM tmpMI
                 FULL JOIN tmpReceiptChild ON tmpReceiptChild.GoodsId           = tmpMI.GoodsId
                                          AND tmpReceiptChild.GoodsKindId       = tmpMI.GoodsKindId
@@ -897,12 +897,23 @@ end if;
      END IF;
 
 
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpParentMulti WHERE _tmpParentMulti.Amount_Param IS NULL)
+     THEN
+          RAISE EXCEPTION 'Ошибка._tmpParentMulti.Amount_Param IS NULL <%> <%>', ioId, (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti WHERE _tmpParentMulti.Amount_Param IS NULL LIMIT 1);
+     END IF;
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, _tmpParentMulti.MovementItemId, _tmpParentMulti.Amount_Param)
      FROM _tmpParentMulti;
      -- сохранили свойство
      IF inDescId_ParamOrder <> 0
      THEN
+          -- Проверка
+          IF EXISTS (SELECT 1 FROM _tmpParentMulti WHERE _tmpParentMulti.Amount_Param IS NULL)
+          THEN
+               RAISE EXCEPTION 'Ошибка._tmpParentMulti.Amount_ParamOrder IS NULL <%> <%>', ioId, (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti WHERE _tmpParentMulti.Amount_ParamOrder IS NULL LIMIT 1);
+          END IF;
+          -- сохранили
           PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamOrder, _tmpParentMulti.MovementItemId, _tmpParentMulti.Amount_ParamOrder)
           FROM _tmpParentMulti;
      END IF;
@@ -917,6 +928,11 @@ end if;
          THEN
               IF inAmount_ParamSecond > 0 OR EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = inDescId_ParamSecond)
               THEN
+                  -- Проверка
+                  IF inAmount_ParamSecond IS NULL
+                  THEN
+                       RAISE EXCEPTION 'Ошибка.inAmount_ParamSecond IS NULL<%>', ioId;
+                  END IF;
                   --
                   PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
               END IF;
@@ -931,6 +947,11 @@ end if;
      THEN
          -- вернулись к старой схеме, за одно и проверим
          ioId:= (SELECT _tmpParentMulti.MovementItemId FROM _tmpParentMulti);
+         -- Проверка
+         IF inAmount_ParamAdd IS NULL
+         THEN
+              RAISE EXCEPTION 'Ошибка.inAmount_ParamAdd IS NULL<%>', ioId;
+         END IF;
          --
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamAdd, ioId, inAmount_ParamAdd);
      END IF;

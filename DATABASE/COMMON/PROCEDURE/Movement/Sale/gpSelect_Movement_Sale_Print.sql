@@ -1370,6 +1370,7 @@ BEGIN
                    WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
                    WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                   WHEN ObjectString_Goods_BUH.ValueData             <> '' THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
               END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -1379,6 +1380,7 @@ BEGIN
                    WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
                    WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                   WHEN ObjectString_Goods_BUH.ValueData             <> '' THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
               END) :: TVarChar AS GoodsName_two
 
@@ -1560,6 +1562,9 @@ BEGIN
                                            AND tmpMI_WeighingPartner.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -1618,7 +1623,7 @@ BEGIN
                      ELSE '0'
                 END :: Integer
               , CASE WHEN vbIsGoodsCode = TRUE THEN Object_Goods.ObjectCode ELSE 0 END
-              , Object_Goods.ValueData, Object_GoodsKind.ValueData
+              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END, Object_GoodsKind.ValueData
        ;
 
     RETURN NEXT Cursor2;

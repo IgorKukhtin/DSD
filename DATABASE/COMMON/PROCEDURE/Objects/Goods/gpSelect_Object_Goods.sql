@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inShowAll     Boolean,
     IN inSession     TVarChar       -- сесси€ пользовател€
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar, Name_BUH TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -48,6 +48,7 @@ BEGIN
             , Object_Goods.ObjectCode     AS Code
             , zfCalc_Text_replace (Object_Goods.ValueData, CHR (39), '`' ) :: TVarChar AS Name
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_RUS.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_RUS
+            , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
 
             , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
             , Object_Goods_basis.ValueData      AS GoodsName_basis
@@ -146,6 +147,9 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_RUS
                                     ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
+             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                    ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -222,6 +226,7 @@ BEGIN
             -- , 'ќчистить значение' :: TVarChar AS Name
             , '”ƒјЋ»“№ «начение'  :: TVarChar AS Name
             , ''                  :: TVarChar AS Name_RUS
+            , ''                  :: TVarChar AS Name_BUH
 
             , 0                   :: Integer  AS GoodsCode_basis
             , ''                  :: TVarChar AS GoodsName_basis

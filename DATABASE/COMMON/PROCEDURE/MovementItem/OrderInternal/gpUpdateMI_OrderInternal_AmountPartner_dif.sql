@@ -241,12 +241,12 @@ BEGIN
                                   ON ObjectFloat_Weight.ObjectId = tmpAll.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
       ;
-/*
-IF inSession = '5'
+
+IF vbUserId = 5 AND 1=1
 THEN
     RAISE EXCEPTION 'OK';
     -- 'Повторите действие через 3 мин.'
-END IF;*/
+END IF;
 
 
 END;

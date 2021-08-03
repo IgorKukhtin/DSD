@@ -338,7 +338,7 @@ BEGIN
         )
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
                         , Object_Goods.ObjectCode                  AS GoodsCode
-                        , Object_Goods.ValueData                   AS GoodsName
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
                         , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
                         , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
@@ -351,6 +351,9 @@ BEGIN
                    FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
                        ) AS tmp
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                               ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
                         LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                                ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
                                               AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -2309,7 +2312,7 @@ BEGIN
        SELECT COALESCE (tmp.GoodsId, 1) AS GoodsId
             , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
             , Object_Goods.ObjectCode         AS GoodsCode
-            , Object_Goods.ValueData          AS GoodsName
+            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
             , tmp.Price
             , tmp.ReturnInAmount
             , tmp.TaxCorrectiveAmount
@@ -2354,6 +2357,9 @@ BEGIN
                        HAVING SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
                       ) AS tmp ON 1 = 1
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
             LEFT JOIN tmpMovementTaxCorrectiveCount ON 1 = 1
        -- !!! print all !!!
        -- WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL

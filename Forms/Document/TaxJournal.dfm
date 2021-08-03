@@ -4,9 +4,10 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -37
+  ExplicitLeft = -337
+  ExplicitTop = -113
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -454,6 +455,15 @@ inherited TaxJournalForm: TTaxJournalForm
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object isDisableNPP: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087
+            DataBinding.FieldName = 'isDisableNPP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080
+            Options.Editing = False
+            Width = 70
           end
         end
       end

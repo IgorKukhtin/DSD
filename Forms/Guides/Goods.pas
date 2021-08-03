@@ -108,6 +108,7 @@ type
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
+    Name_BUH: TcxGridDBColumn;
   private
     { Private declarations }
   public

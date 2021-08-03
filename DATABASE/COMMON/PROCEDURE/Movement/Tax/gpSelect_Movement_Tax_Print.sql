@@ -846,7 +846,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
-                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
 
@@ -862,7 +862,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
-                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END END
                         END
              END) :: TVarChar AS GoodsName_two
 
@@ -949,6 +949,9 @@ order by 4*/
             LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = tmpMI.GoodsGroupId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
@@ -989,7 +992,13 @@ order by 4*/
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-       ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
+       ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                          THEN ObjectString_Goods_RUS.ValueData
+                     ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> ''
+                                    THEN ObjectString_Goods_BUH.ValueData
+                               ELSE Object_Goods.ValueData
+                          END
+                END
               , Object_GoodsKind.ValueData
               , tmpMI.Id
       ;

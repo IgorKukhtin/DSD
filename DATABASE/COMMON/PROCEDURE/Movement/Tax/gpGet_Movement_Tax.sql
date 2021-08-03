@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , InvNumberBranch TVarChar
              , Comment TVarChar
              , isINN Boolean
+             , isDisableNPP Boolean
               )
 AS
 $BODY$
@@ -84,6 +85,7 @@ BEGIN
              , tmpInvNumber.InvNumberBranch
              , ''                           :: TVarChar AS Comment
              , FALSE                        :: Boolean  AS isINN
+             , FALSE                        :: Boolean  AS isDisableNPP
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -187,16 +189,21 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
+           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean isDisableNPP
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Document
-                                      ON MovementBoolean_Document.MovementId = Movement.Id
-                                     AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+                                         ON MovementBoolean_Document.MovementId = Movement.Id
+                                        AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Electron
-                                      ON MovementBoolean_Electron.MovementId = Movement.Id
-                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+                                         ON MovementBoolean_Electron.MovementId = Movement.Id
+                                        AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_DisableNPP_auto
+                                         ON MovementBoolean_DisableNPP_auto.MovementId = Movement.Id
+                                        AND MovementBoolean_DisableNPP_auto.DescId = zc_MovementBoolean_DisableNPP_auto()
+                                     
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId = Movement.Id

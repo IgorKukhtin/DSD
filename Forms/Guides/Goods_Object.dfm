@@ -76,6 +76,13 @@ object Goods_ObjectForm: TGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object Name_BUH: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.)'
+        DataBinding.FieldName = 'Name_BUH'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
       object TradeMarkName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
@@ -473,10 +480,13 @@ object Goods_ObjectForm: TGoods_ObjectForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 160
     Top = 184
   end

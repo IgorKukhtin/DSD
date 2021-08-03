@@ -1,8 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Tax()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (integer, integer, integer, tfloat, tfloat, integer, TVarChar);
-
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Tax(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inLineNumTax          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -35,6 +35,16 @@ BEGIN
                                          , inGoodsKindId        := inGoodsKindId
                                          , inUserId             := vbUserId
                                           ) AS tmp;
+
+     -- Проверка
+     IF inLineNumTax <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_NPP()), 0)
+        AND NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableNPP_auto())
+     THEN
+          RAISE EXCEPTION 'Ошибка.Не установлен признак <Отключить пересчет № п/п> = Да.';
+     END IF;
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), ioId, inLineNumTax);
 
 END;
 $BODY$

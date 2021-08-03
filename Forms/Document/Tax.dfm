@@ -2,7 +2,6 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitLeft = -294
   ExplicitWidth = 1083
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -76,7 +75,6 @@ inherited TaxForm: TTaxForm
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object GoodsGroupNameFull: TcxGridDBColumn [1]
@@ -317,7 +315,7 @@ inherited TaxForm: TTaxForm
     end
     object edIsChecked: TcxCheckBox
       Left = 666
-      Top = 63
+      Top = 68
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 19
       Width = 118
@@ -335,7 +333,7 @@ inherited TaxForm: TTaxForm
     end
     object edIsDocument: TcxCheckBox
       Left = 795
-      Top = 63
+      Top = 68
       Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 22
       Width = 124
@@ -413,6 +411,14 @@ inherited TaxForm: TTaxForm
       TabOrder = 32
       Width = 24
     end
+    object cbDisableNPP_auto: TcxCheckBox
+      Left = 666
+      Top = 51
+      Caption = #1054#1090#1082#1083'. '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 197
+    end
   end
   object cxLabel22: TcxLabel [2]
     Left = 499
@@ -475,6 +481,21 @@ inherited TaxForm: TTaxForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actDisableNPP_auto: TdsdExecStoredProc [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTax_DisableNPP_auto
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTax_DisableNPP_auto
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' " '#1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080'  ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' " '#1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1087#1077#1088#1077#1089#1095#1077#1090' '#8470' '#1087'/'#1087' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080'  ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 52
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -498,7 +519,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Tax: TMultiAction [9]
+    object mactPrint_Tax: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -511,7 +532,7 @@ inherited TaxForm: TTaxForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 16
     end
-    object actPrintTax: TdsdPrintAction [10]
+    object actPrintTax: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -562,7 +583,7 @@ inherited TaxForm: TTaxForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -589,7 +610,7 @@ inherited TaxForm: TTaxForm
         end>
       isShowModal = True
     end
-    object actPrintTax_Us: TdsdPrintAction [18]
+    object actPrintTax_Us: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -633,7 +654,7 @@ inherited TaxForm: TTaxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertMaskMulti: TMultiAction [19]
+    object actInsertMaskMulti: TMultiAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -646,7 +667,7 @@ inherited TaxForm: TTaxForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 27
     end
-    object actPrintTax_Client: TdsdPrintAction [20]
+    object actPrintTax_Client: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -690,7 +711,7 @@ inherited TaxForm: TTaxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertMaskDoc: TdsdInsertUpdateAction [22]
+    object actInsertMaskDoc: TdsdInsertUpdateAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
@@ -710,7 +731,7 @@ inherited TaxForm: TTaxForm
         end
         item
           Name = 'inMask'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
@@ -993,6 +1014,14 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbDisableNPP_auto'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1048,6 +1077,9 @@ inherited TaxForm: TTaxForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbPrint_Us: TdxBarButton [4]
       Action = mactPrint_Tax_Us
       Category = 0
@@ -1055,6 +1087,9 @@ inherited TaxForm: TTaxForm
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    inherited bbStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbTax: TdxBarButton
       Action = actTax
@@ -1070,6 +1105,10 @@ inherited TaxForm: TTaxForm
     end
     object bbUpdateINN: TdxBarButton
       Action = macUpdateINN
+      Category = 0
+    end
+    object bbDisableNPP_auto: TdxBarButton
+      Action = actDisableNPP_auto
       Category = 0
     end
   end
@@ -1140,7 +1179,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inMask'
-        Value = '0'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1170,7 +1209,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inMask'
-        Value = '0'
+        Value = False
         Component = FormParams
         ComponentItem = 'inMask'
         DataType = ftBoolean
@@ -1179,7 +1218,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1232,21 +1271,21 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'Document'
-        Value = 'False'
+        Value = False
         Component = edIsDocument
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isElectron'
-        Value = 'False'
+        Value = False
         Component = edIsElectron
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1267,7 +1306,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1377,14 +1416,14 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'StartDateTax'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1411,6 +1450,13 @@ inherited TaxForm: TTaxForm
         Name = 'isINN'
         Value = Null
         Component = cbINN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDisableNPP'
+        Value = Null
+        Component = cbDisableNPP_auto
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -1462,7 +1508,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -1470,7 +1516,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inDocument'
-        Value = 'False'
+        Value = False
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
@@ -1478,7 +1524,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -1683,38 +1729,11 @@ inherited TaxForm: TTaxForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'del8'
+        Name = 'inLineNumTax'
         Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'del9'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'del10'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'del11'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'del12'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'del13'
-        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LineNum'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 160
@@ -1747,7 +1766,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1772,7 +1791,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'outAmountSumm'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2083,7 +2102,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inRegistered'
-        Value = 'False'
+        Value = False
         Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
@@ -2206,7 +2225,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
@@ -2302,8 +2321,8 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 800
-    Top = 16
+    Left = 808
+    Top = 8
   end
   object spUpdateIsMedoc: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc'
@@ -2353,5 +2372,30 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 594
     Top = 280
+  end
+  object spUpdateTax_DisableNPP_auto: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Tax_DisableNPP_auto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsDisableNPP_auto'
+        Value = Null
+        Component = cbDisableNPP_auto
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 251
   end
 end

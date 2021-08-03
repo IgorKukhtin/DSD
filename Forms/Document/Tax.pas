@@ -110,6 +110,10 @@ type
     bbUpdateINN: TdxBarButton;
     cxLabel13: TcxLabel;
     edInvNumberRegistered: TcxTextEdit;
+    cbDisableNPP_auto: TcxCheckBox;
+    spUpdateTax_DisableNPP_auto: TdsdStoredProc;
+    actDisableNPP_auto: TdsdExecStoredProc;
+    bbDisableNPP_auto: TdxBarButton;
   private
     { Private declarations }
   public

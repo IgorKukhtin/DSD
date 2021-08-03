@@ -61,6 +61,7 @@ type
     GoodsName_main: TcxGridDBColumn;
     isCheck_basis: TcxGridDBColumn;
     isCheck_main: TcxGridDBColumn;
+    Name_BUH: TcxGridDBColumn;
   private
     { Private declarations }
   public
