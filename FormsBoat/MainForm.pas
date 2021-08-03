@@ -231,6 +231,9 @@ type
     N17: TMenuItem;
     actProductionPersonal: TdsdOpenForm;
     N18: TMenuItem;
+    actReport_ProductionPersonal: TdsdOpenForm;
+    miReport_ProductionPersonal: TMenuItem;
+    N19: TMenuItem;
   private
     { Private declarations }
   public

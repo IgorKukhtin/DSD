@@ -27,8 +27,8 @@ BEGIN
                                                    , inInvNumberOrder   := '' ::TVarChar
                                                    , inOperDate         := inOperDate
                                                    , inChecked          := False
-                                                   , inPriceWithVAT     := tmp.PriceWithVAT
-                                                   , inVATPercent       := tmp.VATPercent
+                                                   , ioPriceWithVAT     := tmp.PriceWithVAT
+                                                   , ioVATPercent       := tmp.VATPercent
                                                    , inChangePercent    := COALESCE(tmp.ChangePercent, 0) ::TFloat
                                                    , inFromId           := tmp.FromId
                                                    , inToId             := tmp.ToId

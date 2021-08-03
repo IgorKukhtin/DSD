@@ -2,10 +2,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1268
-  ExplicitLeft = -265
-  ExplicitTop = -188
   ExplicitWidth = 1284
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,6 +16,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     ClientRectBottom = 502
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1268
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -877,20 +876,20 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
           ParamType = ptInput
@@ -1064,6 +1063,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction [17]
       Category = 'DSDLib'
@@ -1105,6 +1107,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TransferDebtOut: TdsdPrintAction [18]
       Category = 'DSDLib'
@@ -1140,6 +1145,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -1186,6 +1194,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -1384,7 +1395,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -1425,6 +1436,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
@@ -1809,7 +1823,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inMask'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1873,7 +1887,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1942,14 +1956,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2134,7 +2148,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -2195,26 +2209,26 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'InChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceWithVAT'
-        Value = 'False'
+        Name = 'ioPriceWithVAT'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVATPercent'
+        Name = 'ioVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2303,6 +2317,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceListName'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -2663,7 +2685,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3301,7 +3323,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3602,7 +3624,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 8
+    Left = 360
+    Top = 40
   end
 end

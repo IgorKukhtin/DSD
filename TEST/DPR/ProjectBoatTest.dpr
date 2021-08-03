@@ -1,5 +1,7 @@
 program ProjectBoatTest;
 
+
+
 uses
   Forms,
   DUnitTestRunner,
@@ -277,7 +279,9 @@ uses
   ProductionPersonalJournal in '..\..\FormsBoat\Document\ProductionPersonalJournal.pas' {ProductionPersonalJournalForm: TParentForm},
   ProductionPersonal in '..\..\FormsBoat\Document\ProductionPersonal.pas' {ProductionPersonalForm: TParentForm},
   ReceiptGoodsChoice in '..\..\FormsBoat\Guides\ReceiptGoodsChoice.pas' {ReceiptGoodsChoiceForm: TParentForm},
-  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  Report_ProductionPersonalDialog in '..\..\FormsBoat\Report\Report_ProductionPersonalDialog.pas' {Report_ProductionPersonalDialogForm: TParentForm},
+  Report_ProductionPersonal in '..\..\FormsBoat\Report\Report_ProductionPersonal.pas' {Report_ProductionPersonalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

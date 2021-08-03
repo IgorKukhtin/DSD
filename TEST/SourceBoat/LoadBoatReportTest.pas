@@ -59,6 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+    LoadReportFromFile('PrintReport_ProductionPersonal', ReportPath + '\PrintReport_ProductionPersonal.fr3');
+    exit;
 
     LoadReportFromFile('PrintObject_Personal_barcode', ReportPath + '\PrintObject_Personal_barcode.fr3');
     LoadReportFromFile('PrintMovement_OrderClientBarcode', ReportPath + '\PrintMovement_OrderClientBarcode.fr3');

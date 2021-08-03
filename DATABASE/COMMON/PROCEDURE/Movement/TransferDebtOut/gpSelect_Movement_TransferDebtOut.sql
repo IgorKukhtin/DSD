@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractFromId Integer, ContractFromCode Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
              , ContractToId Integer, ContractToCode Integer, ContractToName TVarChar, ContractTagToName TVarChar
              , PaidKindFromName TVarChar, PaidKindToName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , InfoMoneyGroupName_from TVarChar, InfoMoneyDestinationName_from TVarChar, InfoMoneyCode_from Integer, InfoMoneyName_from TVarChar
              , InfoMoneyGroupName_to TVarChar, InfoMoneyDestinationName_to TVarChar, InfoMoneyCode_to Integer, InfoMoneyName_to TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
@@ -99,6 +100,9 @@ BEGIN
 
            , Object_PaidKindFrom.ValueData        AS PaidKindFromName
            , Object_PaidKindTo.ValueData          AS PaidKindToName
+
+           , Object_PriceList.id                  AS PriceListId
+           , Object_PriceList.valuedata           AS PriceListName
 
            , View_InfoMoneyFrom.InfoMoneyGroupName            AS InfoMoneyGroupName_from
            , View_InfoMoneyFrom.InfoMoneyDestinationName      AS InfoMoneyDestinationName_from
@@ -239,6 +243,11 @@ BEGIN
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
@@ -279,6 +288,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtOut (TDateTime, TDateTime, Integer,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.08.21         *
  06.10.16         * add inJuridicalBasisId
  14.01.15         * add MovementId_Order
  17.12.14         * add InvNumberOrder
@@ -293,4 +303,4 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtOut (TDateTime, TDateTime, Integer,
  */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_TransferDebtOut (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransferDebtOut (inStartDate:= '01.02.2014'::TDateTime, inEndDate:= '01.02.2014'::TDateTime, inJuridicalBasisId:=0, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
