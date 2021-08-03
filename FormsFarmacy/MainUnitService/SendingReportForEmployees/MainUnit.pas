@@ -350,7 +350,6 @@ end;
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
   var Res : TArray<string>; I, ChatId : Integer;
 begin
-
   if FMessage.Count = 0 then Exit;
 
   Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
@@ -360,7 +359,7 @@ begin
   for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
   try
 
-    if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4] then
+    if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
     begin
 
       if not FileExists(SavePath + FileName) then Break;

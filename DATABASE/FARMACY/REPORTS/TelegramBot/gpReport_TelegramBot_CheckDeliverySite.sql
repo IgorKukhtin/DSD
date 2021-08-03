@@ -90,12 +90,12 @@ BEGIN
            'За '||zfCalc_MonthYearName(DATE_TRUNC ('month', DATE_TRUNC ('month', CURRENT_DATE) - INTERVAL '1 DAY'))||CHR(13)
            ||CASE WHEN COALESCE(vbDeliveryPayCheckCurrM, 0) <> 0 
                   THEN CHR(13)||'Платная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryPayCheckCurrM, 0))||
-                       ' грн. на сумму '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummCurrM, 0)::TFloat)||
-                       ' сумма доставки '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummDeliveryCurrM, 0)::TFloat)||' грн.'
+                       ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummCurrM, 0)::TFloat)||
+                       ' грн. сумма доставки '||zfConvert_FloatToString (COALESCE(vbDeliveryPaySummDeliveryCurrM, 0)::TFloat)||' грн.'
                   ELSE '' END
            ||CASE WHEN COALESCE(vbDeliveryCheckCurrM, 0) <> 0
                   THEN CHR(13)||'Бесплатная доставка - количество заказов '||zfConvert_IntToString (COALESCE(vbDeliveryCheckCurrM, 0))||
-                       ' грн. на сумму '||zfConvert_FloatToString (COALESCE(vbDeliverySummCurrM, 0)::TFloat)||' грн.'
+                       ' на сумму '||zfConvert_FloatToString (COALESCE(vbDeliverySummCurrM, 0)::TFloat)||' грн.'
                   ELSE '' END
          ELSE '' END
          )::Text;

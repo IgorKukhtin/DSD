@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, Winapi.ActiveX
-  {$IFDEF DELPHI103RIO}, Actions {$ENDIF}, Vcl.Graphics;
+  {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
 
@@ -1075,7 +1075,51 @@ type
     property Message: TdsdParam read FMessageParam write FMessageParam;
   end;
 
-  TdsdSetFocusedAction = class(TdsdCustomAction)
+  TdsdSendSMSKyivstarAction = class(TdsdCustomAction)
+  private
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    FUnauthorized: Boolean;
+
+    FAlphaName: TdsdParam;
+    FHostParam: TdsdParam;
+    FEnvironmentParam: TdsdParam;
+    FClientIdParam: TdsdParam;
+    FClientSecretParam: TdsdParam;
+    FTokenParam: TdsdParam;
+    FVersionParam: TdsdParam;
+
+
+    FPhonesParam: TdsdParam;
+    FMessageParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+    procedure CreateIdHTTP;
+    function Authentication: Boolean;
+    function SendSMS: Boolean;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property AlphaName: TdsdParam read FAlphaName write FAlphaName;
+    property Host: TdsdParam read FHostParam write FHostParam;
+    property Environment: TdsdParam read FEnvironmentParam write FEnvironmentParam;
+    property ClientId: TdsdParam read FClientIdParam write FClientIdParam;
+    property ClientSecret: TdsdParam read FClientSecretParam write FClientSecretParam;
+    property Token: TdsdParam read FTokenParam write FTokenParam;
+    property Phones: TdsdParam read FPhonesParam write FPhonesParam;
+    property Message: TdsdParam read FMessageParam write FMessageParam;
+    property Version: TdsdParam read FVersionParam write FVersionParam;
+  end;
+
+TdsdSetFocusedAction = class(TdsdCustomAction)
   private
 
     FControlNameParam: TdsdParam;
@@ -1199,6 +1243,7 @@ begin
   RegisterActions('DSDLib', [TdsdDblClickAction], TdsdDblClickAction);
   RegisterActions('DSDLib', [TdsdSendSMSAction], TdsdSendSMSAction);
   RegisterActions('DSDLib', [TdsdSendSMSCPAAction], TdsdSendSMSCPAAction);
+  RegisterActions('DSDLib', [TdsdSendSMSKyivstarAction], TdsdSendSMSKyivstarAction);
   RegisterActions('DSDLib', [TdsdSetFocusedAction], TdsdSetFocusedAction);
   RegisterActions('DSDLib', [TdsdLoadListValuesFileAction], TdsdLoadListValuesFileAction);
   RegisterActions('DSDLib', [TdsdPreparePicturesAction], TdsdPreparePicturesAction);
@@ -4655,7 +4700,7 @@ begin
   FHostParam.Value := '';
 
   FLoginParam := TdsdParam.Create(nil);
-  FLoginParam.DataType := ftInteger;
+  FLoginParam.DataType := ftString;
   FLoginParam.Value := '';
 
   FPasswordParam := TdsdParam.Create(nil);
@@ -4778,18 +4823,18 @@ constructor TdsdSendSMSCPAAction.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FIdHTTP := TIdHTTP.Create(Nil);
+  FIdHTTP := TIdHTTP.Create;
   FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
   FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
-  TIdSSLIOHandlerSocketOpenSSL(FIdHTTP.IOHandler).SSLOptions.Mode := sslmClient;
-  TIdSSLIOHandlerSocketOpenSSL(FIdHTTP.IOHandler).SSLOptions.Method := sslvSSLv23;
 
-  FHostParam := TdsdParam.Create(nil);
+  FHostParam := TdsdParam.Create;
   FHostParam.DataType := ftString;
   FHostParam.Value := '';
 
   FLoginParam := TdsdParam.Create(nil);
-  FLoginParam.DataType := ftInteger;
+  FLoginParam.DataType := ftString;
   FLoginParam.Value := '';
 
   FPasswordParam := TdsdParam.Create(nil);
@@ -4880,6 +4925,210 @@ begin
   end;
 end;
 
+  {TdsdSendSMSKyivstarAction}
+
+constructor TdsdSendSMSKyivstarAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := Nil;
+  FIdSSLIOHandlerSocketOpenSSL := Nil;
+  FUnauthorized := False;
+
+  FAlphaName := TdsdParam.Create(nil);
+  FAlphaName.DataType := ftString;
+  FAlphaName.Value := '';
+
+  FHostParam := TdsdParam.Create(nil);
+  FHostParam.DataType := ftString;
+  FHostParam.Value := 'https://api-gateway.kyivstar.ua';
+
+  FEnvironmentParam := TdsdParam.Create(nil);
+  FEnvironmentParam.DataType := ftString;
+  FEnvironmentParam.Value := '';
+
+  FClientIdParam := TdsdParam.Create(nil);
+  FClientIdParam.DataType := ftString;
+  FClientIdParam.Value := '';
+
+  FClientSecretParam := TdsdParam.Create(nil);
+  FClientSecretParam.DataType := ftString;
+  FClientSecretParam.Value := '';
+
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftString;
+  FTokenParam.Value := '';
+
+  FPhonesParam := TdsdParam.Create(nil);
+  FPhonesParam.DataType := ftString;
+  FPhonesParam.Value := '';
+
+  FMessageParam := TdsdParam.Create(nil);
+  FMessageParam.DataType := ftString;
+  FMessageParam.Value := '';
+
+  FVersionParam := TdsdParam.Create(nil);
+  FVersionParam.DataType := ftString;
+  FVersionParam.Value := 'v1beta';
+end;
+
+destructor TdsdSendSMSKyivstarAction.Destroy;
+begin
+  FreeAndNil(FAlphaName);
+  FreeAndNil(FHostParam);
+  FreeAndNil(FEnvironmentParam);
+  FreeAndNil(FPhonesParam);
+  FreeAndNil(FMessageParam);
+  FreeAndNil(FClientIdParam);
+  FreeAndNil(FClientSecretParam);
+  FreeAndNil(FTokenParam);
+  FreeAndNil(FVersionParam);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+procedure TdsdSendSMSKyivstarAction.CreateIdHTTP;
+begin
+  if Assigned(FIdSSLIOHandlerSocketOpenSSL) then FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  if Assigned(FIdHTTP) then FreeAndNil(FIdHTTP);
+
+  FIdHTTP := TIdHTTP.Create(Nil);
+  FIdHTTP.HTTPOptions := [hoKeepOrigProtocol]; // при выполнении POST Indy попытается применить протокол HTTP 1.0
+  FIdHTTP.ProtocolVersion := pv1_1;            // эти настройки сохранят использование HTTP 1.1
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+end;
+
+function TdsdSendSMSKyivstarAction.Authentication: Boolean;
+  var S : String; tmpStream: TStringStream;
+      jsonObj: TJSONObject;
+      jsonPair: TJSONPair;
+begin
+
+  // Authentication
+
+  CreateIdHTTP;
+  FIdHTTP.Request.Clear;
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+  FIdHTTP.Request.Accept := '*/*';
+  FIdHTTP.Request.AcceptEncoding := 'gzip, deflate';
+  FIdHTTP.Request.Connection := 'keep-alive';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+  FIdHTTP.Request.BasicAuthentication := True;
+  FIdHTTP.Request.Username := FClientIdParam.Value;
+  FIdHTTP.Request.Password := FClientSecretParam.Value;
+  FIdHTTP.Request.UserAgent:='';
+
+  tmpStream := TStringStream.Create('grant_type=client_credentials');
+  try
+    try
+      S := FIdHTTP.Post(FHostParam.Value + '/idp/oauth2/token', tmpStream);
+    except
+    end;
+  finally
+    tmpStream.Free;
+  end;
+
+  if FIdHTTP.ResponseCode = 200 then
+  begin
+    jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+    try
+      jsonPair := jsonObj.Get('access_token');
+      if jsonPair <> nil then
+      begin
+        FTokenParam.Value := jsonPair.JsonValue.Value;
+        Result := True;
+      end;
+    finally
+      FreeAndNil(jsonObj);
+    end;
+  end else ShowMessage(FIdHTTP.ResponseText);
+
+end;
+
+function TdsdSendSMSKyivstarAction.SendSMS: Boolean;
+  var S, url,  Json : String; tmpStream: TStringStream;
+begin
+  //   Непосредственно отправка
+
+  CreateIdHTTP;
+  FIdHTTP.Request.Clear;
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+  FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Bearer ' + FTokenParam.Value);
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.Accept := '*/*';
+  FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+  FIdHTTP.Request.Connection := 'keep-alive';
+  FIdHTTP.Request.CharSet := 'utf-8';
+  FIdHTTP.Request.UserAgent:='';
+
+  Json := '{"from":"' + FAlphaName.Value + '","to":"' + FPhonesParam.Value +
+          '","text":"' + StringReplace(StringReplace(FMessageParam.Value, '\', '\\', [rfReplaceAll, rfIgnoreCase]), '"', '\"', [rfReplaceAll, rfIgnoreCase]) + '"}';
+
+  tmpStream := TStringStream.Create(Json, TEncoding.UTF8);
+  try
+    try
+      url := FHostParam.Value;
+      if FEnvironmentParam.Value <> '' then url := url + '/' + FEnvironmentParam.Value;
+      url := url + '/rest/';
+      if FVersionParam.Value <> '' then url := url + '/' + FVersionParam.Value;
+      url := url + '/sms';
+
+      S := FIdHTTP.Post(url, tmpStream);
+    except
+    end;
+  finally
+    tmpStream.Free;
+  end;
+
+  case FIdHTTP.ResponseCode of
+    200 : Result := True;
+    401 : FUnauthorized := True;
+    else ShowMessage(FIdHTTP.ResponseText);
+  end;
+end;
+
+function TdsdSendSMSKyivstarAction.LocalExecute: Boolean;
+  var S, Json : String;
+  JsonToSend: TStringStream;
+begin
+  Result := False;
+  FUnauthorized := False;
+
+  if (FHostParam.Value = '') then
+  begin
+    ShowMessage('Св-во.Не заполнены Host.');
+    Exit;
+  end;
+
+  if FPhonesParam.Value = '' then
+  begin
+    ShowMessage('Св-во.Не заполнен номер телефона.');
+    Exit;
+  end;
+
+  if FMessageParam.Value = '' then
+  begin
+    ShowMessage('Св-во.Не заполнен текст SMS.');
+    Exit;
+  end;
+
+  // Получаем токен если пусто
+  if Trim(FTokenParam.Value) = '' then
+    if not Authentication then Exit;
+
+  if not SendSMS and FUnauthorized then
+  begin
+    if not Authentication then Exit;
+    SendSMS;
+  end;
+
+end;
 
   {TdsdSetFocusedAction}
 
@@ -5031,7 +5280,7 @@ begin
   end;
 end;
 
-{ TdsdPrintAction }
+{ TdsdPreparePicturesAction }
 
 constructor TdsdPreparePicturesAction.Create(AOwner: TComponent);
 begin

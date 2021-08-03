@@ -130,7 +130,7 @@ BEGIN
                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                         AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                            )
-      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+/*      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                                , Price_Goods.ChildObjectId                  AS GoodsId
                           FROM Object AS Object_PriceSite
                                INNER JOIN ObjectLink AS Price_Goods
@@ -155,7 +155,7 @@ BEGIN
                                                                     AND Object_BarCode.isErased = False
                                                                     AND Object_Object.isErased = False)
                           )
-
+*/
       , tmpPrice_View AS (SELECT tmpPrice.GoodsId 
                                , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                        AND ObjectFloat_Goods_Price.ValueData > 0
@@ -213,10 +213,12 @@ BEGIN
                             '<Offer Code="'||CAST(Object_Goods_Main.ObjectCode AS TVarChar)
                                ||'" Name="'||replace(replace(replace(Object_Goods_Main.Name, '"', ''),'&','&amp;'),'''','')
                                ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
-                               ||'" Price="'||to_char(CASE WHEN COALESCE(Price_Site.Price, 0) > 0 AND Price_Site.Price > Object_Price.Price 
-                                                           THEN Price_Site.Price ELSE Object_Price.Price END,'FM9999990.00')
+                               ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
+--                               ||'" Price="'||to_char(CASE WHEN COALESCE(Price_Site.Price, 0) > 0 AND Price_Site.Price > Object_Price.Price 
+--                                                           THEN Price_Site.Price ELSE Object_Price.Price END,'FM9999990.00')
                                ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
-                               ||'" PriceReserve="'||to_char(COALESCE(Price_Site.Price, Object_Price.PriceReserve),'FM9999990.00')
+--                               ||'" PriceReserve="'||to_char(COALESCE(Price_Site.Price, Object_Price.PriceReserve),'FM9999990.00')
+                               ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
                                ||'" Barcode="'||COALESCE (tmpGoodsBarCode.BarCode, '')
                                ||'" />'
 
@@ -228,7 +230,7 @@ BEGIN
 
                              LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
                              
-                             LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
+--                             LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
 
                              LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 

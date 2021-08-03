@@ -696,6 +696,7 @@ initialization
   RegisterClass (TdsdDblClickAction);
   RegisterClass (TdsdSendSMSAction);
   RegisterClass (TdsdSendSMSCPAAction);
+  RegisterClass (TdsdSendSMSKyivstarAction);
   RegisterClass (TdsdSetFocusedAction);
   RegisterClass (TdsdLoadListValuesFileAction);
   RegisterClass (TdsdPreparePicturesAction);

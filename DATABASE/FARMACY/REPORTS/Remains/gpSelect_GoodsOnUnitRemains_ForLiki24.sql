@@ -167,7 +167,7 @@ BEGIN
                                                      ON Price_Value.ObjectId = tmpPrice.Id
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                           )
-      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+/*      , tmpPrice_Site AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                                , Price_Goods.ChildObjectId                  AS GoodsId
                           FROM Object AS Object_PriceSite
                                INNER JOIN ObjectLink AS Price_Goods
@@ -191,7 +191,7 @@ BEGIN
                                                                     AND Object_BarCode.isErased = False
                                                                     AND Object_Object.isErased = False)
                           )
-        -- Штрих-коды производителя
+*/        -- Штрих-коды производителя
       , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
                                  , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
                             FROM ObjectLink AS ObjectLink_Main_BarCode
@@ -248,8 +248,10 @@ BEGIN
            , REPLACE(Object_Goods_Juridical_Optima.Code, ',', ';')::TVarChar      AS Optima
            , REPLACE(Object_Goods_Juridical_Badm.Code, ',', ';')::TVarChar        AS Badm
            , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
-           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS Price
-           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS OfflinePrice
+           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS Price
+           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS OfflinePrice
+--           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS Price
+--           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS OfflinePrice
            , NULL::TVarChar                   AS PickupPrice
            , NULL::TVarChar                 AS "10000001 - insurance company #1 id"
            , NULL::TVarChar                 AS "10000002 - insurance company #2 id"
@@ -284,7 +286,7 @@ BEGIN
            LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
                                                         AND Object_Price.UnitId = Remains.UnitId
 
-           LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
+--           LEFT OUTER JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = Remains.ObjectId
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
                                                       AND Reserve_Goods.UnitId = Remains.UnitId
@@ -314,4 +316,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_For103UA (Integer, TVarChar) OWNER TO
 
 -- тест
 -- 
-SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 0, inSession:= '3')
+SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (inUnitId := 183292, inSession:= '3')
