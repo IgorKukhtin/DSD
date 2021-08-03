@@ -27,6 +27,9 @@ RETURNS TABLE  (
               , Amount TFloat
               , StartBeginDate TDateTime
               , EndBeginDate TDateTime
+              , BarCode_OrderClient TVarChar
+              , BarCode_Product TVarChar
+              , BarCode_Personal TVarChar
 )
 AS
 $BODY$
@@ -98,6 +101,10 @@ BEGIN
            , MIDate_StartBegin.ValueData AS StartBeginDate
            , MIDate_EndBegin.ValueData   AS EndBeginDate
 
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode_OrderClient
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Product.Id)         AS BarCode_Product
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Personal.Id)        AS BarCode_Personal
+
       FROM tmpMovement
            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
 
@@ -118,6 +125,13 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_CIN
                                   ON ObjectString_CIN.ObjectId = Object_Product.Id
                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Product 
+                                        ON MovementLinkObject_Product.ObjectId = Object_Product.Id
+                                       AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+           LEFT JOIN Movement AS Movement_OrderClient
+                              ON Movement_OrderClient.Id = MovementLinkObject_Product.MovementId
+                             AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
       ;
 
 END;

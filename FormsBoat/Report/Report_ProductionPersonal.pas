@@ -49,6 +49,7 @@ type
     actOpenFormProductionPersonal: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
     actRefreshEmpty: TdsdDataSetRefresh;
+    actPrintReport: TdsdPrintAction;
   private
     { Private declarations }
   public

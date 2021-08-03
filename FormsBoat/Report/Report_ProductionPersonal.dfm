@@ -14,17 +14,17 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 851
+    ExplicitWidth = 836
     ExplicitHeight = 261
     ClientRectBottom = 261
     ClientRectRight = 836
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 851
+      ExplicitWidth = 836
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 836
         Height = 261
-        ExplicitWidth = 851
+        ExplicitWidth = 836
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -144,7 +144,7 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
   inherited Panel: TPanel
     Width = 836
     Height = 54
-    ExplicitWidth = 851
+    ExplicitWidth = 836
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -245,14 +245,11 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint: TdsdPrintAction
+    object actPrint: TdsdPrintAction [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -428,6 +425,39 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
         end>
       isShowModal = False
     end
+    object actPrintReport: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = 'Print'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <>
+      ReportName = 'PrintReport_ProductionPersonal'
+      ReportNameParam.Value = 'PrintReport_ProductionPersonal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -523,6 +553,18 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -531,7 +573,7 @@ inherited Report_ProductionPersonalForm: TReport_ProductionPersonalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = actPrintReport
       Category = 0
     end
     object bbSumm_branch: TdxBarControlContainerItem
