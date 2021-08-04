@@ -546,6 +546,14 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_SN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -641,6 +649,10 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actStartLoad
       Category = 0
     end
+    object bbStartLoad_SN: TdxBarButton
+      Action = actStartLoad_SN
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -660,6 +672,18 @@ object IncomeJournalForm: TIncomeJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetImportSetting_Income_SN: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_SN
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_SN
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072' '#1089' S/N'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072' '#1089' S/N'
+    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
@@ -668,6 +692,26 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actStartLoad_SN: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Income_SN
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1080#1093#1086#1076#1072' '#1089' S/N '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1089' S/N '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1089' S/N '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 74
+      WithoutNext = True
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1561,5 +1605,37 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 632
     Top = 176
+  end
+  object spGetImportSettingId_SN: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TIncomeJournalForm;zc_Object_ImportSetting_IncomeSNJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_SN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 240
   end
 end

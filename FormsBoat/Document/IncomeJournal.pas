@@ -115,6 +115,10 @@ type
     actGetImportSetting_Income: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    spGetImportSettingId_SN: TdsdStoredProc;
+    actGetImportSetting_Income_SN: TdsdExecStoredProc;
+    actStartLoad_SN: TMultiAction;
+    bbStartLoad_SN: TdxBarButton;
   private
   public
   end;
