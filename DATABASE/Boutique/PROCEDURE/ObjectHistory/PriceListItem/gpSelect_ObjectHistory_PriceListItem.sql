@@ -54,6 +54,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ParValue         TFloat
                 , OperPriceBalance TFloat
                 , PriceTax         TFloat
+                , isDiscount       Boolean
 
 
                 , InsertName TVarChar, UpdateName TVarChar
@@ -82,6 +83,7 @@ BEGIN
                         , ObjectHistory_PriceListItem.StartDate            AS StartDate
                         , ObjectHistory_PriceListItem.EndDate              AS EndDate
                         , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+                        , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 0 THEN TRUE ELSE FALSE END AS isDiscount
  
                    FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
                         LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -96,6 +98,10 @@ BEGIN
                                                      ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                     AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
  
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_isDiscount
+                                                     ON ObjectHistoryFloat_isDiscount.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                    AND ObjectHistoryFloat_isDiscount.DescId          = zc_ObjectHistoryFloat_PriceListItem_isDiscount()
+
                         LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                                     ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                    AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
@@ -321,6 +327,8 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
+           , tmpPrice.isDiscount ::Boolean
+
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName
            , ObjectDate_Protocol_Insert.ValueData AS InsertDate
@@ -379,6 +387,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.08.21         * 
  25.05.18         *
  15.03.18         *
  06.03.18         *

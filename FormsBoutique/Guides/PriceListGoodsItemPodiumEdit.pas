@@ -43,6 +43,7 @@ type
     GoodsGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     cePrice: TcxCurrencyEdit;
+    cbisDiscount: TcxCheckBox;
   private
     { Private declarations }
   public

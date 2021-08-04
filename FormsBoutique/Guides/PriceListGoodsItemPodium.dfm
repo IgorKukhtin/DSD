@@ -81,6 +81,14 @@ object PriceListGoodsItemPodiumForm: TPriceListGoodsItemPodiumForm
         VisibleForCustomization = False
         Width = 20
       end
+      object isDiscount: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        DataBinding.FieldName = 'isDiscount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

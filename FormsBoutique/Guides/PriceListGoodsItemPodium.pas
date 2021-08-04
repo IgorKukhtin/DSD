@@ -74,6 +74,7 @@ type
     macPrintSticker_fp: TMultiAction;
     bbPrintSticker_fp: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
+    isDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

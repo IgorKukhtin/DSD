@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1091'>'
-  ClientHeight = 160
+  ClientHeight = 196
   ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 66
-    Top = 122
+    Left = 74
+    Top = 138
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,8 +27,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 122
+    Left = 216
+    Top = 138
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -69,18 +69,28 @@
     Width = 338
   end
   object cxLabel1: TcxLabel
-    Left = 208
-    Top = 55
+    Left = 134
+    Top = 59
     Caption = #1062#1077#1085#1072' :'
   end
   object cePrice: TcxCurrencyEdit
-    Left = 208
+    Left = 134
     Top = 79
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 7
-    Width = 120
+    Width = 100
+  end
+  object cbisDiscount: TcxCheckBox
+    Left = 250
+    Top = 79
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    Width = 109
   end
   object ActionList: TActionList
     Left = 304
@@ -188,10 +198,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDiscount'
+        Value = Null
+        Component = cbisDiscount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 259
-    Top = 54
+    Left = 171
+    Top = 134
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -302,10 +320,17 @@
         Component = cePrice
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscount'
+        Value = Null
+        Component = cbisDiscount
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 70
+    Left = 32
+    Top = 110
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -319,12 +344,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 162
-    Top = 80
+    Left = 98
+    Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 272
-    Top = 104
+    Left = 280
+    Top = 120
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

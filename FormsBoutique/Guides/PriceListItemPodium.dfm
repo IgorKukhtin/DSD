@@ -170,6 +170,15 @@ object PriceListItemPodiumForm: TPriceListItemPodiumForm
         Options.Editing = False
         Width = 45
       end
+      object isDiscount: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        DataBinding.FieldName = 'isDiscount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 73
+      end
       object RemainsAll: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
         DataBinding.FieldName = 'RemainsAll'

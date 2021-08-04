@@ -119,6 +119,7 @@ type
     bbPrintSticker_fp: TdxBarButton;
     OperPriceList: TcxGridDBColumn;
     cbDiscountDelete: TcxCheckBox;
+    isDiscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -41,7 +41,7 @@ BEGIN
            , CASE WHEN COALESCE (inId,0) = 0 THEN CURRENT_DATE ELSE ObjectHistory_PriceListItem.StartDate END :: TDateTime AS StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 1) = 1 THEN FALSE ELSE TRUE END AS isDiscount
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 0 THEN TRUE ELSE FALSE END AS isDiscount
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
