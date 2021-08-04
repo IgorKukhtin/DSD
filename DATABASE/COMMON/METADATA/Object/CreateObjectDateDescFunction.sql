@@ -327,6 +327,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_PairSun() RETURNS Integer AS $BOD
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_PairSun', 'Дата с которой синхр. в перемещении для Пара товара' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_PairSun');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_BUH() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_BUH'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_BUH', 'Дата до которой действует Название товара(бухг.)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_BUH');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_User_UpdateMobileFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_UpdateMobileFrom', 'Дата/время успешной синхронизации с Мобильного устройства' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileFrom');

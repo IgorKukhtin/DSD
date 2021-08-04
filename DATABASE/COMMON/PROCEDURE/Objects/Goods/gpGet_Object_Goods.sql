@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Name_BUH TVarChar, Date_BUH TDateTime
              , Weight TFloat
              , WeightTare TFloat
              , CountForWeight TFloat
@@ -44,6 +45,8 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Goods()) AS Code
            , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS Name_BUH
+           , CAST (Null as TDateTime) AS Date_BUH
            , CAST (0 as TFloat)     AS Weight
            , CAST (0 as TFloat)     AS WeightTare
            , CAST (0 as TFloat)     AS CountForWeight
@@ -87,6 +90,8 @@ BEGIN
              Object_Goods.Id              AS Id
            , Object_Goods.ObjectCode      AS Code
            , Object_Goods.ValueData       AS Name
+           , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
+           , COALESCE (ObjectDate_BUH.ValueData,Null)   :: TDateTime AS Date_BUH
            
            , ObjectFloat_Weight.ValueData     AS Weight
            , ObjectFloat_WeightTare.ValueData AS WeightTare
@@ -162,6 +167,13 @@ BEGIN
                                 ON ObjectFloat_CountForWeight.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_CountForWeight.DescId = zc_ObjectFloat_Goods_CountForWeight()
 
+          LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                 ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+          LEFT JOIN ObjectDate AS ObjectDate_BUH
+                               ON ObjectDate_BUH.ObjectId = Object_Goods.Id
+                              AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -199,6 +211,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.08.21         * _BUH
  23.10.19         * CountForWeight
  09.10.19         * add WeightTare
  24.11.14         * add inGoodsGroupAnalystId               

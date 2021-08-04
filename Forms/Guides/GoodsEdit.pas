@@ -81,6 +81,10 @@ type
     edWeightTare: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
     edCountForWeight: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edName_BUH: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edDate_BUH: TcxDateEdit;
   private
     { Private declarations }
   public

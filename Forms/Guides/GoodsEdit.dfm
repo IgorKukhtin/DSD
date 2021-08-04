@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 484
+  ClientHeight = 535
   ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 74
-    Top = 448
+    Left = 67
+    Top = 495
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 210
-    Top = 448
+    Left = 203
+    Top = 495
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -302,6 +302,31 @@
     TabOrder = 35
     Width = 75
   end
+  object cxLabel17: TcxLabel
+    Left = 39
+    Top = 443
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.)'
+  end
+  object edName_BUH: TcxTextEdit
+    Left = 39
+    Top = 460
+    TabOrder = 37
+    Width = 175
+  end
+  object cxLabel18: TcxLabel
+    Left = 222
+    Top = 443
+    Caption = #1044#1072#1090#1072' '#1076#1086' ('#1073#1091#1093#1075'.) :'
+  end
+  object edDate_BUH: TcxDateEdit
+    Left = 222
+    Top = 460
+    EditValue = 42005d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 39
+    Width = 91
+  end
   object ActionList: TActionList
     Left = 304
     Top = 80
@@ -470,7 +495,7 @@
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -522,6 +547,20 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name_BUH'
+        Value = Null
+        Component = edName_BUH
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_BUH'
+        Value = Null
+        Component = edDate_BUH
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -704,7 +743,7 @@
       end
       item
         Name = 'ValuePrice'
-        Value = 0
+        Value = 0.000000000000000000
         Component = cePrice
         DataType = ftFloat
         MultiSelectSeparator = ','

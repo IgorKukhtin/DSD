@@ -109,6 +109,7 @@ type
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
     Name_BUH: TcxGridDBColumn;
+    Date_BUH: TcxGridDBColumn;
   private
     { Private declarations }
   public

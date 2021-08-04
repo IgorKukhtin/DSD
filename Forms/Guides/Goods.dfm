@@ -142,6 +142,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 80
       end
+      object Date_BUH: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086' ('#1053#1072#1079#1074'. '#1090#1086#1074'. '#1041#1091#1093#1075'.)'
+        DataBinding.FieldName = 'Date_BUH'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1073#1091#1093#1075'.)'
+        Options.Editing = False
+        Width = 102
+      end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
