@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsNameFull TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , ValuePrice TFloat)
+             , ValuePrice TFloat
+             , isDiscount Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -40,6 +41,7 @@ BEGIN
            , CASE WHEN COALESCE (inId,0) = 0 THEN CURRENT_DATE ELSE ObjectHistory_PriceListItem.StartDate END :: TDateTime AS StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 1) = 1 THEN FALSE ELSE TRUE END AS isDiscount
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -54,6 +56,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_isDiscount
+                                         ON ObjectHistoryFloat_isDiscount.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                        AND ObjectHistoryFloat_isDiscount.DescId          = zc_ObjectHistoryFloat_PriceListItem_isDiscount()
 
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                         ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id

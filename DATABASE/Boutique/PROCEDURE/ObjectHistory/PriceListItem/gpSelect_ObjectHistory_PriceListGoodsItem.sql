@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , CurrencyId Integer, CurrencyName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , ValuePrice TFloat
+             , isDiscount Boolean
              , isErased Boolean)
 AS
 $BODY$
@@ -31,6 +32,8 @@ BEGIN
            , CASE WHEN ObjectHistory_PriceListItem.EndDate   = zc_DateEnd() THEN NULL ELSE ObjectHistory_PriceListItem.EndDate END :: TDateTime AS EndDate
            , ObjectHistoryFloat_Value.ValueData AS ValuePrice
 
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 1) = 1 THEN FALSE ELSE TRUE END AS isDiscount
+
            , FALSE AS isErased
        FROM ObjectLink AS ObjectLink_PriceList
             INNER JOIN ObjectLink AS ObjectLink_Goods
@@ -44,6 +47,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                          ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_isDiscount
+                                         ON ObjectHistoryFloat_isDiscount.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                        AND ObjectHistoryFloat_isDiscount.DescId          = zc_ObjectHistoryFloat_PriceListItem_isDiscount()
 
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                         ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
