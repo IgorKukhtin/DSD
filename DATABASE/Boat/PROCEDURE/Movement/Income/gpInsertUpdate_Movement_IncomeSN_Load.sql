@@ -24,7 +24,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
-   IF COALESCE (inArticle,0) <> 0
+   IF COALESCE (inArticle,'') <> ''
    THEN
           -- поиск в спр. товара
           vbGoodsId := (SELECT ObjectString_Article.ObjectId
@@ -184,7 +184,7 @@ BEGIN
                                     ON ObjectLink_Goods_ProdColor.ObjectId = Object.Id
                                    AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                     ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                                     ON ObjectFloat_EmpfPrice.ObjectId = Object.Id
                                     AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
           WHERE Object.Id = vbGoodsId;
 
