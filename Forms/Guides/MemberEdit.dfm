@@ -372,27 +372,10 @@
         TabOrder = 12
         Width = 105
       end
-      object увBirthday: TcxLabel
+      object cxLabel21Birthday: TcxLabel
         Left = 226
-        Top = 15
+        Top = 13
         Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
-      end
-      object cxLabel23: TcxLabel
-        Left = 10
-        Top = 150
-        Caption = #1054#1073#1083#1072#1089#1090#1100', '#1087#1088#1086#1087#1080#1089#1082#1072
-      end
-      object edRegion: TcxButtonEdit
-        Left = 10
-        Top = 166
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 15
-        Width = 150
       end
       object cxLabel24: TcxLabel
         Left = 10
@@ -408,7 +391,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 17
+        TabOrder = 15
         Width = 150
       end
       object cxLabel25: TcxLabel
@@ -425,7 +408,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 19
+        TabOrder = 17
         Width = 161
       end
       object cxLabel26: TcxLabel
@@ -442,7 +425,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 21
+        TabOrder = 19
         Width = 161
       end
       object cxLabel27: TcxLabel
@@ -453,7 +436,7 @@
       object edStreet: TcxTextEdit
         Left = 10
         Top = 211
-        TabOrder = 23
+        TabOrder = 21
         Width = 321
       end
       object cxLabel28: TcxLabel
@@ -464,8 +447,25 @@
       object edStreet_Real: TcxTextEdit
         Left = 10
         Top = 300
-        TabOrder = 25
+        TabOrder = 23
         Width = 321
+      end
+      object cxLabel23: TcxLabel
+        Left = 10
+        Top = 150
+        Caption = #1054#1073#1083#1072#1089#1090#1100', '#1087#1088#1086#1087#1080#1089#1082#1072
+      end
+      object edRegion: TcxButtonEdit
+        Left = 10
+        Top = 166
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 25
+        Width = 150
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -678,12 +678,12 @@
       end
       object cxLabel44: TcxLabel
         Left = 10
-        Top = 151
+        Top = 155
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1078#1076#1077#1085#1080#1103' '#1082#1072#1088#1099' '#1080' '#1090'.'#1087'.'
       end
       object edDriverCertificateAdd: TcxTextEdit
         Left = 10
-        Top = 169
+        Top = 173
         TabOrder = 7
         Width = 303
       end
@@ -1476,6 +1476,7 @@
   end
   object GuidesGender: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edGender
     FormNameParam.Value = 'TGenderForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1500,46 +1501,16 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 71
+    Left = 256
+    Top = 199
   end
-  object GuidesRegion: TdsdGuides
+  object GuidesRegion_Real: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edRegion
+    LookupControl = edRegion_Real
     FormNameParam.Value = 'TRegionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRegionForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRegion
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRegion
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 53
-    Top = 182
-  end
-  object GuidesRegion_Real: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRegion
-    FormNameParam.Value = 'TAreaForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAreaForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1590,12 +1561,12 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 221
-    Top = 182
+    Left = 197
+    Top = 190
   end
   object GuidesCity_real: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCity
+    LookupControl = edCity_real
     FormNameParam.Value = 'TCityForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1626,10 +1597,10 @@
   object GuidesMemberSkill: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMemberSkill
-    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.Value = 'TMemberSkillForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAreaForm'
+    FormName = 'TMemberSkillForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1650,16 +1621,16 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 61
+    Left = 109
     Top = 54
   end
   object GuidesJobSource: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJobSource
-    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.Value = 'TJobSourceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAreaForm'
+    FormName = 'TJobSourceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1939,5 +1910,35 @@
     PackSize = 1
     Left = 128
     Top = 424
+  end
+  object GuidesRegion: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRegion
+    FormNameParam.Value = 'TRegionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRegionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRegion
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRegion
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 61
+    Top = 182
   end
 end

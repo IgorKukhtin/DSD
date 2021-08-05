@@ -78,7 +78,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_PSP_D(), inId, inPSP_D);
       
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Birthday(), inId, inEMailSign);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Birthday(), inId, inBirthday_date);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children1(), inId, inChildren1_date);
    -- сохранили свойство <>
@@ -99,19 +99,19 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Dekret_End(), inId, inDekret_EndDate);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Gender(), ioId, inGenderId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Gender(), inId, inGenderId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_MemberSkill(), ioId, inMemberSkillId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_MemberSkill(), inId, inMemberSkillId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_JobSource(), ioId, inJobSourceId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_JobSource(), inId, inJobSourceId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region(), ioId, inRegionId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region(), inId, inRegionId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City(), ioId, inCityId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City(), inId, inCityId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region_Real(), ioId, inRegionId_Real);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region_Real(), inId, inRegionId_Real);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City_Real(), ioId, inCityId_Real);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City_Real(), inId, inCityId_Real);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

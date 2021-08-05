@@ -72,10 +72,7 @@ type
     edPSP_End: TcxDateEdit;
     cxLabel22: TcxLabel;
     edBirthday: TcxDateEdit;
-    Û‚Birthday: TcxLabel;
-    cxLabel23: TcxLabel;
-    edRegion: TcxButtonEdit;
-    GuidesRegion: TdsdGuides;
+    cxLabel21Birthday: TcxLabel;
     cxLabel24: TcxLabel;
     edRegion_Real: TcxButtonEdit;
     GuidesRegion_Real: TdsdGuides;
@@ -126,6 +123,9 @@ type
     cxLabel44: TcxLabel;
     edDriverCertificateAdd: TcxTextEdit;
     spInsertUpdateIts: TdsdStoredProc;
+    GuidesRegion: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edRegion: TcxButtonEdit;
   private
     { Private declarations }
   public
