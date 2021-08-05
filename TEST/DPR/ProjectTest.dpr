@@ -1287,7 +1287,13 @@ uses
   MobilePack in '..\..\Forms\Guides\MobilePack.pas' {MobilePackForm: TParentForm},
   DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   SmsSettings in '..\..\Forms\Guides\SmsSettings.pas' {SmsSettingsForm: TParentForm},
-  SmsSettingsEdit in '..\..\Forms\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm};
+  SmsSettingsEdit in '..\..\Forms\Guides\SmsSettingsEdit.pas' {SmsSettingsEditForm: TParentForm},
+  Gender in '..\..\Forms\Guides\Gender.pas' {GenderForm: TParentForm},
+  GenderEdit in '..\..\Forms\Guides\GenderEdit.pas' {GenderEditForm: TParentForm},
+  MemberSkill in '..\..\Forms\Guides\MemberSkill.pas' {MemberSkillForm: TParentForm},
+  JobSourceEdit in '..\..\Forms\Guides\JobSourceEdit.pas' {JobSourceEditForm: TParentForm},
+  JobSource in '..\..\Forms\Guides\JobSource.pas' {JobSourceForm: TParentForm},
+  MemberSkillEdit in '..\..\Forms\Guides\MemberSkillEdit.pas' {MemberSkillEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

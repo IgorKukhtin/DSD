@@ -961,6 +961,18 @@ CREATE OR REPLACE FUNCTION zc_Object_SmsSettings() RETURNS integer AS $BODY$BEGI
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_SmsSettings', 'Установки для СМС' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SmsSettings');
 
+CREATE OR REPLACE FUNCTION zc_Object_MemberSkill() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MemberSkill'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MemberSkill', 'Квалификация' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberSkill');
+
+CREATE OR REPLACE FUNCTION zc_Object_Gender() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Gender'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Gender', 'Пол' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Gender');
+
+CREATE OR REPLACE FUNCTION zc_Object_JobSource() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JobSource'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_JobSource', 'Источник информации о вакансии' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JobSource');
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека

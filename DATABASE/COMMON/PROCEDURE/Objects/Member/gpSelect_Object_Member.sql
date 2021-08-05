@@ -27,6 +27,45 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ObjectToId Integer, ObjectToName TVarChar, DescName TVarChar
              , isDateOut Boolean, PersonalId Integer
              , isErased Boolean
+             
+             , GenderId Integer
+             , GenderName TVarChar
+             , MemberSkillId Integer
+             , MemberSkillName TVarChar
+             , JobSourceId Integer
+             , JobSourceName TVarChar
+             , RegionId Integer
+             , RegionName TVarChar
+             , RegionId_Real Integer
+             , RegionName_Real TVarChar
+             , CityId Integer
+             , CityName TVarChar
+             , CityId_Real Integer
+             , CityName_Real TVarChar
+             , Birthday_Date TDateTime
+             , Children1_Date TDateTime
+             , Children2_Date TDateTime
+             , Children3_Date TDateTime
+             , Children4_Date TDateTime
+             , Children5_Date TDateTime
+             , PSP_StartDate TDateTime
+             , PSP_EndDate TDateTime
+             , Dekret_StartDate TDateTime
+             , Dekret_EndDate TDateTime
+  
+             , Street TVarChar
+             , Street_Real TVarChar
+             , Children1 TVarChar
+             , Children2 TVarChar
+             , Children3 TVarChar
+             , Children4 TVarChar
+             , Children5 TVarChar
+             , Law TVarChar
+             , DriverCertificateAdd TVarChar
+             , PSP_S TVarChar
+             , PSP_N TVarChar
+             , PSP_W TVarChar
+             , PSP_D TVarChar
               )
 AS
 $BODY$
@@ -137,6 +176,47 @@ end if;
 
          , Object_Member.isErased                   AS isErased
 
+--
+         , Object_Gender.Id       AS GenderId
+         , Object_Gender.ValueData       AS GenderName
+         , Object_MemberSkill.Id         AS MemberSkillId
+         , Object_MemberSkill.ValueData  AS MemberSkillName
+         , Object_JobSource.Id           AS JobSourceId
+         , Object_JobSource.ValueData    AS JobSourceName
+         , Object_Region.Id              AS RegionId
+         , Object_Region.ValueData       AS RegionName
+         , Object_Region_Real.Id         AS RegionId_Real
+         , Object_Region_Real.ValueData  AS RegionName_Real
+         , Object_City.Id                AS CityId
+         , Object_City.ValueData         AS CityName
+         , Object_City_Real.Id           AS CityId_Real
+         , Object_City_Real.ValueData    AS CityName_Real
+         
+         , COALESCE(ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
+         , COALESCE(ObjectDate_Children1.ValueData, Null)  ::TDateTime  AS Children1_Date
+         , COALESCE(ObjectDate_Children2.ValueData, Null)  ::TDateTime  AS Children2_Date
+         , COALESCE(ObjectDate_Children3.ValueData, Null)  ::TDateTime  AS Children3_Date
+         , COALESCE(ObjectDate_Children4.ValueData, Null)  ::TDateTime  AS Children4_Date
+         , COALESCE(ObjectDate_Children5.ValueData, Null)  ::TDateTime  AS Children5_Date
+         , COALESCE(ObjectDate_PSP_Start.ValueData, Null)  ::TDateTime  AS PSP_StartDate
+         , COALESCE(ObjectDate_PSP_End.ValueData, Null)    ::TDateTime  AS PSP_EndDate
+         , COALESCE(ObjectDate_Dekret_Start.ValueData, Null)  ::TDateTime  AS Dekret_StartDate
+         , COALESCE(ObjectDate_Dekret_End.ValueData, Null)    ::TDateTime  AS Dekret_EndDate
+         
+         , ObjectString_Street.ValueData               AS Street
+         , ObjectString_Street_Real.ValueData          AS Street_Real
+         , ObjectString_Children1.ValueData            AS Children1
+         , ObjectString_Children2.ValueData            AS Children2
+         , ObjectString_Children3.ValueData            AS Children3
+         , ObjectString_Children4.ValueData            AS Children4
+         , ObjectString_Children5.ValueData            AS Children5
+         , ObjectString_Law.ValueData                  AS Law
+         , ObjectString_DriverCertificateAdd.ValueData AS DriverCertificateAdd
+         , ObjectString_PSP_S.ValueData                AS PSP_S
+         , ObjectString_PSP_N.ValueData                AS PSP_N
+         , ObjectString_PSP_W.ValueData                AS PSP_W
+         , ObjectString_PSP_D.ValueData                AS PSP_D
+
      FROM Object AS Object_Member
           LEFT JOIN (SELECT View_Personal.MemberId
                      FROM Object_Personal_View AS View_Personal
@@ -202,6 +282,42 @@ end if;
          LEFT JOIN Object AS ObjectTo ON ObjectTo.Id = ObjectLink_Member_ObjectTo.ChildObjectId
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = ObjectTo.DescId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Gender
+                              ON ObjectLink_Member_Gender.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Gender.DescId = zc_ObjectLink_Member_Gender()
+         LEFT JOIN Object AS Object_Gender ON Object_Gender.Id = ObjectLink_Member_Gender.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_MemberSkill
+                              ON ObjectLink_Member_MemberSkill.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_MemberSkill.DescId = zc_ObjectLink_Member_MemberSkill()
+         LEFT JOIN Object AS Object_MemberSkill ON Object_MemberSkill.Id = ObjectLink_Member_MemberSkill.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_JobSource
+                              ON ObjectLink_Member_JobSource.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_JobSource.DescId = zc_ObjectLink_Member_JobSource()
+         LEFT JOIN Object AS Object_JobSource ON Object_JobSource.Id = ObjectLink_Member_JobSource.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Region
+                              ON ObjectLink_Member_Region.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Region.DescId = zc_ObjectLink_Member_Region()
+         LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_Member_Region.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_City
+                              ON ObjectLink_Member_City.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_City.DescId = zc_ObjectLink_Member_City()
+         LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Member_City.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Region_Real
+                              ON ObjectLink_Member_Region_Real.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Region_Real.DescId = zc_ObjectLink_Member_Region_Real()
+         LEFT JOIN Object AS Object_Region_Real ON Object_Region_Real.Id = ObjectLink_Member_Region_Real.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_City_Real
+                              ON ObjectLink_Member_City_Real.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_City_Real.DescId = zc_ObjectLink_Member_City_Real()
+         LEFT JOIN Object AS Object_City_Real ON Object_City_Real.Id = ObjectLink_Member_City_Real.ChildObjectId
+
+
          LEFT JOIN ObjectDate AS ObjectDate_StartSummer
                               ON ObjectDate_StartSummer.ObjectId = Object_Member.Id
                              AND ObjectDate_StartSummer.DescId = zc_ObjectDate_Member_StartSummer()
@@ -209,6 +325,77 @@ end if;
          LEFT JOIN ObjectDate AS ObjectDate_EndSummer
                               ON ObjectDate_EndSummer.ObjectId = Object_Member.Id
                              AND ObjectDate_EndSummer.DescId = zc_ObjectDate_Member_EndSummer()
+
+         LEFT JOIN ObjectDate AS ObjectDate_Birthday
+                              ON ObjectDate_Birthday.ObjectId = Object_Member.Id
+                             AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
+         LEFT JOIN ObjectDate AS ObjectDate_Children1
+                              ON ObjectDate_Children1.ObjectId = Object_Member.Id
+                             AND ObjectDate_Children1.DescId = zc_ObjectDate_Member_Children1()
+         LEFT JOIN ObjectDate AS ObjectDate_Children2
+                              ON ObjectDate_Children2.ObjectId = Object_Member.Id
+                             AND ObjectDate_Children2.DescId = zc_ObjectDate_Member_Children2()
+         LEFT JOIN ObjectDate AS ObjectDate_Children3
+                              ON ObjectDate_Children3.ObjectId = Object_Member.Id
+                             AND ObjectDate_Children3.DescId = zc_ObjectDate_Member_Children3()
+         LEFT JOIN ObjectDate AS ObjectDate_Children4
+                              ON ObjectDate_Children4.ObjectId = Object_Member.Id
+                             AND ObjectDate_Children4.DescId = zc_ObjectDate_Member_Children4()
+         LEFT JOIN ObjectDate AS ObjectDate_Children5
+                              ON ObjectDate_Children5.ObjectId = Object_Member.Id
+                             AND ObjectDate_Children5.DescId = zc_ObjectDate_Member_Children5()
+         LEFT JOIN ObjectDate AS ObjectDate_PSP_Start
+                              ON ObjectDate_PSP_Start.ObjectId = Object_Member.Id
+                             AND ObjectDate_PSP_Start.DescId = zc_ObjectDate_Member_PSP_Start()
+         LEFT JOIN ObjectDate AS ObjectDate_PSP_End
+                              ON ObjectDate_PSP_End.ObjectId = Object_Member.Id
+                             AND ObjectDate_PSP_End.DescId = zc_ObjectDate_Member_PSP_End()
+         LEFT JOIN ObjectDate AS ObjectDate_Dekret_Start
+                              ON ObjectDate_Dekret_Start.ObjectId = Object_Member.Id
+                             AND ObjectDate_Dekret_Start.DescId = zc_ObjectDate_Member_Dekret_Start()
+         LEFT JOIN ObjectDate AS ObjectDate_Dekret_End
+                              ON ObjectDate_Dekret_End.ObjectId = Object_Member.Id
+                             AND ObjectDate_Dekret_End.DescId = zc_ObjectDate_Member_Dekret_End()
+
+         LEFT JOIN ObjectString AS ObjectString_Street
+                                ON ObjectString_Street.ObjectId = Object_Member.Id
+                               AND ObjectString_Street.DescId = zc_ObjectString_Member_Street()
+         LEFT JOIN ObjectString AS ObjectString_Street_Real
+                                ON ObjectString_Street_Real.ObjectId = Object_Member.Id
+                               AND ObjectString_Street_Real.DescId = zc_ObjectString_Member_Street_Real()
+         LEFT JOIN ObjectString AS ObjectString_Children1
+                                ON ObjectString_Children1.ObjectId = Object_Member.Id
+                               AND ObjectString_Children1.DescId = zc_ObjectString_Member_Children1()
+         LEFT JOIN ObjectString AS ObjectString_Children2
+                                ON ObjectString_Children2.ObjectId = Object_Member.Id
+                               AND ObjectString_Children2.DescId = zc_ObjectString_Member_Children2()
+         LEFT JOIN ObjectString AS ObjectString_Children3
+                                ON ObjectString_Children3.ObjectId = Object_Member.Id
+                               AND ObjectString_Children3.DescId = zc_ObjectString_Member_Children3()
+         LEFT JOIN ObjectString AS ObjectString_Children4
+                                ON ObjectString_Children4.ObjectId = Object_Member.Id
+                               AND ObjectString_Children4.DescId = zc_ObjectString_Member_Children4()
+         LEFT JOIN ObjectString AS ObjectString_Children5
+                                ON ObjectString_Children5.ObjectId = Object_Member.Id
+                               AND ObjectString_Children5.DescId = zc_ObjectString_Member_Children5()
+         LEFT JOIN ObjectString AS ObjectString_Law
+                                ON ObjectString_Law.ObjectId = Object_Member.Id
+                               AND ObjectString_Law.DescId = zc_ObjectString_Member_Law()
+         LEFT JOIN ObjectString AS ObjectString_DriverCertificateAdd
+                                ON ObjectString_DriverCertificateAdd.ObjectId = Object_Member.Id
+                               AND ObjectString_DriverCertificateAdd.DescId = zc_ObjectString_Member_DriverCertificateAdd()
+         LEFT JOIN ObjectString AS ObjectString_PSP_S
+                                ON ObjectString_PSP_S.ObjectId = Object_Member.Id
+                               AND ObjectString_PSP_S.DescId = zc_ObjectString_Member_PSP_S()
+         LEFT JOIN ObjectString AS ObjectString_PSP_N
+                                ON ObjectString_PSP_N.ObjectId = Object_Member.Id
+                               AND ObjectString_PSP_N.DescId = zc_ObjectString_Member_PSP_N()
+         LEFT JOIN ObjectString AS ObjectString_PSP_W
+                                ON ObjectString_PSP_W.ObjectId = Object_Member.Id
+                               AND ObjectString_PSP_W.DescId = zc_ObjectString_Member_PSP_W()
+         LEFT JOIN ObjectString AS ObjectString_PSP_D
+                                ON ObjectString_PSP_D.ObjectId = Object_Member.Id
+                               AND ObjectString_PSP_D.DescId = zc_ObjectString_Member_PSP_D()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_SummerFuel
                                ON ObjectFloat_SummerFuel.ObjectId = Object_Member.Id
@@ -323,6 +510,45 @@ end if;
 
            , FALSE AS isErased
 
+           , CAST (0 as Integer)   AS GenderId
+           , CAST ('' as TVarChar) AS GenderName
+           , CAST (0 as Integer)   AS MemberSkillId
+           , CAST ('' as TVarChar) AS MemberSkillName
+           , CAST (0 as Integer)   AS JobSourceId
+           , CAST ('' as TVarChar) AS JobSourceName
+           , CAST (0 as Integer)   AS RegionId
+           , CAST ('' as TVarChar) AS RegionName
+           , CAST (0 as Integer)   AS RegionId_Real
+           , CAST ('' as TVarChar) AS RegionName_Real
+           , CAST (0 as Integer)   AS CityId
+           , CAST ('' as TVarChar) AS CityName
+           , CAST (0 as Integer)   AS CityId_Real
+           , CAST ('' as TVarChar) AS CityName_Real
+
+           , CAST (Null as TDateTime) AS Birthday_Date
+           , CAST (Null as TDateTime) AS Children1_Date
+           , CAST (Null as TDateTime) AS Children2_Date
+           , CAST (Null as TDateTime) AS Children3_Date
+           , CAST (Null as TDateTime) AS Children4_Date
+           , CAST (Null as TDateTime) AS Children5_Date
+           , CAST (Null as TDateTime) AS PSP_StartDate
+           , CAST (Null as TDateTime) AS PSP_EndDate
+           , CAST (Null as TDateTime) AS Dekret_StartDate
+           , CAST (Null as TDateTime) AS Dekret_EndDate
+
+           , CAST ('' as TVarChar) AS Street
+           , CAST ('' as TVarChar) AS Street_Real
+           , CAST ('' as TVarChar) AS Children1
+           , CAST ('' as TVarChar) AS Children2
+           , CAST ('' as TVarChar) AS Children3
+           , CAST ('' as TVarChar) AS Children4
+           , CAST ('' as TVarChar) AS Children5
+           , CAST ('' as TVarChar) AS Law
+           , CAST ('' as TVarChar) AS DriverCertificateAdd
+           , CAST ('' as TVarChar) AS PSP_S
+           , CAST ('' as TVarChar) AS PSP_N
+           , CAST ('' as TVarChar) AS PSP_W
+           , CAST ('' as TVarChar) AS PSP_D
 
     ;
 
