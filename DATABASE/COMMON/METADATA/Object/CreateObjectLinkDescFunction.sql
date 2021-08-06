@@ -1910,7 +1910,17 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Reason_ReturnDescKind', 'Признак возврата', zc_Object_Reason(), zc_Object_ReturnDescKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnDescKind');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_Member_Refer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Refer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_Member_Refer', 'Фамилия рекомендателя', zc_Object_Personal(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Refer');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_Member_Mentor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Mentor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_Member_Mentor', 'Фамилия наставника', zc_Object_Personal(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Mentor');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_ReasonOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_ReasonOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_ReasonOut', 'Причина увольнения', zc_Object_Personal(), zc_Object_ReasonOut() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_ReasonOut');
 
 --!!! АПТЕКА
 
@@ -2623,6 +2633,7 @@ SELECT 'zc_ObjectLink_ZReportLog_User', 'Сотрудник', zc_Object_ZReportLog(), zc_
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.08.21         * zc_ObjectLink_Personal_ ....
  05.08.21         * zc_ObjectLink_Member_....
  30.07.21                                                                                      * zc_ObjectLink_ZReportLog_...
  12.07.21         * zc_ObjectLink_MobileEmployee_MobilePack

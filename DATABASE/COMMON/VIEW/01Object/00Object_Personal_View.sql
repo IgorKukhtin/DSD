@@ -40,6 +40,18 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , Object_StorageLine.Id                            AS StorageLineId
        , Object_StorageLine.ObjectCode                    AS StorageLineCode
        , Object_StorageLine.ValueData                     AS StorageLineName
+       
+       , Object_Member_Refer.Id                           AS Member_ReferId
+       , Object_Member_Refer.ObjectCode                   AS Member_ReferCode
+       , Object_Member_Refer.ValueData                    AS Member_ReferName
+       , Object_Member_Mentor.Id                          AS Member_MentorId
+       , Object_Member_Mentor.ObjectCode                  AS Member_MentorCode
+       , Object_Member_Mentor.ValueData                   AS Member_MentorName
+       , Object_ReasonOut.Id                              AS ReasonOutId
+       , Object_ReasonOut.ObjectCode                      AS ReasonOutCode
+       , Object_ReasonOut.ValueData                       AS ReasonOutName
+       
+       , ObjectString_Comment.ValueData                   AS Comment
          
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -76,6 +88,21 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                            AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
        LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
 
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Refer
+                            ON ObjectLink_Personal_Member_Refer.ObjectId = Object_Personal.Id
+                           AND ObjectLink_Personal_Member_Refer.DescId = zc_ObjectLink_Personal_Member_Refer()
+       LEFT JOIN Object AS Object_Member_Refer ON Object_Member_Refer.Id = ObjectLink_Personal_Member_Refer.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Mentor
+                            ON ObjectLink_Personal_Member_Mentor.ObjectId = Object_Personal.Id
+                           AND ObjectLink_Personal_Member_Mentor.DescId = zc_ObjectLink_Personal_Member_Mentor()
+       LEFT JOIN Object AS Object_Member_Mentor ON Object_Member_Mentor.Id = ObjectLink_Personal_Member_Mentor.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_ReasonOut
+                            ON ObjectLink_Personal_ReasonOut.ObjectId = Object_Personal.Id
+                           AND ObjectLink_Personal_ReasonOut.DescId = zc_ObjectLink_Personal_ReasonOut()
+       LEFT JOIN Object AS Object_ReasonOut ON Object_ReasonOut.Id = ObjectLink_Personal_ReasonOut.ChildObjectId
+
        LEFT JOIN ObjectDate AS ObjectDate_DateIn
                             ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
                            AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
@@ -89,6 +116,11 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                               AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+
+       LEFT JOIN ObjectString AS ObjectString_Comment
+                              ON ObjectString_Comment.ObjectId = Object_Personal.Id
+                             AND ObjectString_Comment.DescId = zc_ObjectString_Personal_Comment()
+
  WHERE Object_Personal.DescId = zc_Object_Personal();
 
 ALTER TABLE Object_Personal_View  OWNER TO postgres;
@@ -97,6 +129,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.08.21         *
  25.05.17         * add StorageLine
  20.01.15                                        * add Branch...
  12.09.14                                        * add isOffical and isDateOut and isMain

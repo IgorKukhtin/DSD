@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Personal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                                Integer   , -- ключ объекта <Сотрудники>
@@ -14,10 +15,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)
     IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inStorageLineId                     Integer   , -- ссылка на линию производства
+    
+    IN inMember_ReferId                    Integer   , -- сФамилия рекомендателя
+    IN inMember_MentorId                   Integer   , -- Фамилия наставника 	
+    IN inReasonOutId                       Integer   , -- Причина увольнения 	
+    
     IN inDateIn                            TDateTime , -- Дата принятия
     IN inDateOut                           TDateTime , -- Дата увольнения
     IN inIsDateOut                         Boolean   , -- Уволен
     IN inIsMain                            Boolean   , -- Основное место работы
+    IN inComment                           TVarChar  ,
     IN inSession                           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -105,6 +112,15 @@ BEGIN
    -- сохранили свойство <Дата принятия>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member_Refer(), ioId, inMember_ReferId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member_Mentor(), ioId, inMember_MentorId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_ReasonOut(), ioId, inReasonOutId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Personal_Comment(), ioId, inComment);
+
 
    -- сохранили свойство <Дата увольнения>
    IF inIsDateOut = TRUE
@@ -128,6 +144,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.08.21         *
  13.07.17         * add PersonalServiceListCardSecond
  25.05.16         * add StorageLine
  16.11.16         * add inSheetWorkTimeId

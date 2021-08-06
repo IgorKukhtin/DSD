@@ -21,7 +21,7 @@ uses
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
   cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  cxCheckBox;
+  cxCheckBox, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TPersonalEditForm = class(TParentForm)
@@ -74,6 +74,20 @@ type
     cxLabel12: TcxLabel;
     cePersonalServiceListCardSecond: TcxButtonEdit;
     GuidesPersonalServiceListCardSecond: TdsdGuides;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxLabel14: TcxLabel;
+    edMember_Mentor: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    edReasonOut: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edMember_Refer: TcxButtonEdit;
+    GuidesMember_Refer: TdsdGuides;
+    GuidesMember_Mentor: TdsdGuides;
+    GuidesReasonOut: TdsdGuides;
+    edComment: TcxTextEdit;
+    cxLabel16: TcxLabel;
   private
     { Private declarations }
   public

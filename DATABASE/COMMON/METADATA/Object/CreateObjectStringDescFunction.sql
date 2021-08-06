@@ -1337,10 +1337,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_RecalcMCSSheduler_Comment() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_RecalcMCSSheduler_Comment', zc_Object_RecalcMCSSheduler(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RecalcMCSSheduler_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Personal_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Personal_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Personal_Comment', zc_Object_Personal(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Personal_Comment');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 06.08.21         * zc_ObjectString_Personal_Comment
  12.07.21         * zc_ObjectString_MobilePack_Comment
  14.06.21         * zc_ObjectString_ReceiptLevel_Comment
  13.05.21         * zc_ObjectString_User_PhoneAuthent

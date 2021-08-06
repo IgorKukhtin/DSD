@@ -29,16 +29,12 @@
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = -8
-    ExplicitTop = 16
     ClientRectBottom = 457
     ClientRectRight = 349
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077
       ImageIndex = 0
-      ExplicitLeft = -64
-      ExplicitTop = 56
       object edMeasureName: TcxTextEdit
         Left = 14
         Top = 60
@@ -63,7 +59,7 @@
       object edCardIBAN: TcxTextEdit
         Left = 14
         Top = 401
-        TabOrder = 23
+        TabOrder = 22
         Width = 130
       end
       object cxLabel15: TcxLabel
@@ -158,7 +154,7 @@
         Top = 6
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-        TabOrder = 21
+        TabOrder = 19
         Width = 140
       end
       object cbNotCompensation: TcxCheckBox
@@ -202,7 +198,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 14
+        TabOrder = 13
         Width = 116
       end
       object cxLabel12: TcxLabel
@@ -219,7 +215,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 16
+        TabOrder = 15
         Width = 116
       end
       object cxLabel13: TcxLabel
@@ -236,7 +232,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 18
+        TabOrder = 16
         Width = 116
       end
       object cxLabel16: TcxLabel
@@ -260,8 +256,6 @@
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1099
       ImageIndex = 1
-      ExplicitTop = 29
-      ExplicitWidth = 294
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -289,8 +283,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1072#1089#1087#1086#1088#1090
       ImageIndex = 2
-      ExplicitLeft = 16
-      ExplicitTop = 29
       object cxLabel17: TcxLabel
         Left = 10
         Top = 13
@@ -471,8 +463,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1080
       ImageIndex = 3
-      ExplicitLeft = -3
-      ExplicitTop = 88
       object cxLabel29: TcxLabel
         Left = 230
         Top = 10
@@ -630,7 +620,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1055#1088#1086#1095#1077#1077
       ImageIndex = 4
-      ExplicitTop = 29
       object cxLabel41: TcxLabel
         Left = 10
         Top = 14
