@@ -101,7 +101,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
-var SendSMSAction : TdsdSendSMSCPAAction;
+var SendSMSAction : TdsdSendSMSKyivstarAction;
 var N: IXMLNode;
     pXML : String;
 begin
@@ -118,7 +118,8 @@ begin
     '</xml>';
 
     try
-      SendSMSAction:= TdsdSendSMSCPAAction.Create(nil);
+     //SendSMSAction:= TdsdSendSMSCPAAction.Create(nil);
+      SendSMSAction:= TdsdSendSMSKyivstarAction.Create(nil);
 
       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pPhoneAuthent]), False, 4, ANeedShowException)).DocumentElement;
       //
@@ -128,11 +129,16 @@ begin
       begin
          try
            // Send SMS
-           SendSMSAction.Host.Value    := N.GetAttribute(AnsiLowerCase('ServiceName_Sms'));
-           SendSMSAction.Login.Value   := N.GetAttribute(AnsiLowerCase('Login_sms'));
-           SendSMSAction.Password.Value:= N.GetAttribute(AnsiLowerCase('Password_sms'));
+           SendSMSAction.AlphaName.Value    := N.GetAttribute(AnsiLowerCase('AlphaName_Sms'));
+           SendSMSAction.Host.Value    := N.GetAttribute(AnsiLowerCase('HostName_Sms'));
+           SendSMSAction.Environment.Value    := N.GetAttribute(AnsiLowerCase('Environment_Sms'));
+           SendSMSAction.Version.Value    := N.GetAttribute(AnsiLowerCase('Version_Sms'));
+           SendSMSAction.ClientId.Value   := N.GetAttribute(AnsiLowerCase('ClientId'));
+           SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
+           SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
            SendSMSAction.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
            SendSMSAction.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
+           //Result:= SendSMSAction.Authentication;
            Result:= SendSMSAction.Execute;
            //Result:= true;
            if not Result then begin ShowMessage('Ошибка при отправке СМС на номер <'+pPhoneAuthent+'>.Работа с программой заблокирована.');exit;end;

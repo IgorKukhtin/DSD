@@ -6,9 +6,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User_bySMS(
     IN inPhoneAuthent TVarChar,
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (ServiceName_Sms TVarChar
+RETURNS TABLE (HostName_Sms TVarChar
+             , Environment_Sms TVarChar
+             , Version_Sms TVarChar
              , Login_sms TVarChar
              , Password_sms TVarChar
+             , AlphaName_Sms TVarChar
+             , ClientId TVarChar
+             , ClientSecret TVarChar
              , Message_sms TVarChar
              , PhoneNum_sms TVarChar
               )
@@ -81,9 +86,19 @@ BEGIN
 
     -- Результат
      RETURN QUERY 
-      SELECT 'http://193.41.60.77:17070/api/contents' :: TVarChar AS ServiceName_Sms 
+      SELECT --'http://193.41.60.77:17070/api/contents' :: TVarChar AS HostName_Sms
+             --'https://api-gateway.kyivstar.ua/sandbox/rest/v1beta' :: TVarChar AS HostName_Sms
+             'https://api-gateway.kyivstar.ua' :: TVarChar AS HostName_Sms
+           , 'sandbox' :: TVarChar AS Environment_Sms
+           , 'v1beta' :: TVarChar AS Version_Sms
+
            , 'TEST2B2BCUSTOMER' :: TVarChar AS Login_sms
            , 'nuKxk2n6mJwyBvJx' :: TVarChar AS Password_sms
+
+           , 'messagedesk' :: TVarChar AS AlphaName_Sms
+           , '679c4113-0848-471a-8745-844c38ec9eeb' :: TVarChar AS ClientId
+           , 'UmLVhAlbIMpF7EPNhaS7vBzR9T' :: TVarChar AS ClientSecret
+
            , vbKeySMS           :: TVarChar AS Message_sms
            , inPhoneAuthent                 AS PhoneNum_sms
             ;
