@@ -1293,6 +1293,12 @@ type
     miMobilePack: TMenuItem;
     actSmsSettings: TdsdOpenForm;
     N244: TMenuItem;
+    actJobSource: TdsdOpenForm;
+    actMemberSkill: TdsdOpenForm;
+    actGender: TdsdOpenForm;
+    miGender: TMenuItem;
+    miMemberSkill: TMenuItem;
+    miJobSource: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

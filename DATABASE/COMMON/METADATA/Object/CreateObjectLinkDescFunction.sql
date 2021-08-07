@@ -1910,7 +1910,17 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Reason_ReturnDescKind', 'Признак возврата', zc_Object_Reason(), zc_Object_ReturnDescKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Reason_ReturnDescKind');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_Member_Refer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Refer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_Member_Refer', 'Фамилия рекомендателя', zc_Object_Personal(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Refer');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_Member_Mentor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Mentor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_Member_Mentor', 'Фамилия наставника', zc_Object_Personal(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_Member_Mentor');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_ReasonOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_ReasonOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_ReasonOut', 'Причина увольнения', zc_Object_Personal(), zc_Object_ReasonOut() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_ReasonOut');
 
 --!!! АПТЕКА
 
@@ -2451,6 +2461,37 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Unit() RETURNS Integer AS $BODY$
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Member_Unit', 'Связь Физ. лица с Подразделением', zc_Object_Member(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Unit');
 
+--
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Gender() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Gender'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_Gender', 'Связь Физ. лица с Пол', zc_Object_Member(), zc_Object_Gender() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Gender');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_MemberSkill() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberSkill'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_MemberSkill', 'Связь Физ. лица с Область, адрес прописки', zc_Object_Member(), zc_Object_MemberSkill() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberSkill');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_JobSource() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_JobSource'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_JobSource', 'Связь Физ. лица с Город/село/пгт, адрес прописки', zc_Object_Member(), zc_Object_JobSource() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_JobSource');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Region() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Region'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_Region', 'Связь Физ. лица с Область, адрес проживания', zc_Object_Member(), zc_Object_Region() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Region');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_City() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_City'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_City', 'Связь Физ. лица с Город/село/пгт, адрес проживания', zc_Object_Member(), zc_Object_City() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_City');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Region_Real() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Region_Real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_Region_Real', 'Связь Физ. лица с Область, адрес проживания', zc_Object_Member(), zc_Object_Region() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Region_Real');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_City_Real() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_City_Real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_City_Real', 'Связь Физ. лица с Город/село/пгт, адрес проживания', zc_Object_Member(), zc_Object_City() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_City_Real');
+
+--
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_LabReceiptChild_LabMark() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabReceiptChild_LabMark'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_LabReceiptChild_LabMark', 'Связь Нормы для исследования с Название показателя (вид исследования)', zc_Object_LabReceiptChild(), zc_Object_LabMark() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabReceiptChild_LabMark');
@@ -2592,6 +2633,8 @@ SELECT 'zc_ObjectLink_ZReportLog_User', 'Сотрудник', zc_Object_ZReportLog(), zc_
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.08.21         * zc_ObjectLink_Personal_ ....
+ 05.08.21         * zc_ObjectLink_Member_....
  30.07.21                                                                                      * zc_ObjectLink_ZReportLog_...
  12.07.21         * zc_ObjectLink_MobileEmployee_MobilePack
  01.07.21         * zc_ObjectLink_Reason_ReturnDescKind

@@ -118,6 +118,36 @@ type
     actGetImportSettingIBANSecond: TdsdExecStoredProc;
     bbStartLoadIBAN: TdxBarButton;
     bbStartLoadIBANSecond: TdxBarButton;
+    GenderName: TcxGridDBColumn;
+    MemberSkillName: TcxGridDBColumn;
+    JobSourceName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
+    RegionName_Real: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    CityName_Real: TcxGridDBColumn;
+    Street: TcxGridDBColumn;
+    Street_Real: TcxGridDBColumn;
+    Children1: TcxGridDBColumn;
+    Children2: TcxGridDBColumn;
+    Children3: TcxGridDBColumn;
+    Children4: TcxGridDBColumn;
+    Children5: TcxGridDBColumn;
+    Birthday_Date: TcxGridDBColumn;
+    Children1_Date: TcxGridDBColumn;
+    Children2_Date: TcxGridDBColumn;
+    Children3_Date: TcxGridDBColumn;
+    Children4_Date: TcxGridDBColumn;
+    Children5_Date: TcxGridDBColumn;
+    PSP_StartDate: TcxGridDBColumn;
+    PSP_EndDate: TcxGridDBColumn;
+    Dekret_StartDate: TcxGridDBColumn;
+    Dekret_EndDate: TcxGridDBColumn;
+    Law: TcxGridDBColumn;
+    DriverCertificateAdd: TcxGridDBColumn;
+    PSP_S: TcxGridDBColumn;
+    PSP_N: TcxGridDBColumn;
+    PSP_W: TcxGridDBColumn;
+    PSP_D: TcxGridDBColumn;
   private
     { Private declarations }
   public

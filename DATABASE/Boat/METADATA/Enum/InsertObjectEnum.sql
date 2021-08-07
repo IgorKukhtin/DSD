@@ -2847,7 +2847,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка документов Прихода', 
+                                                       inName          := 'Загрузка документов Прихода S/N', 
                                                        inProcedureName := 'gpInsertUpdate_Movement_IncomeSN_Load', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -2856,7 +2856,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка документов Прихода',
+                                                              inName         := 'Загрузка документов Прихода S/N',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -2906,7 +2906,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'C',
+                                                      inName              := 'G',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -2925,7 +2925,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'E',
+                                                      inName              := 'B',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -2944,7 +2944,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'F',
+                                                      inName              := 'BH',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,

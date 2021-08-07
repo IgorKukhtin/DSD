@@ -24,6 +24,16 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
              , isPastMain Boolean
+             , Member_ReferId Integer
+             , Member_ReferCode Integer
+             , Member_ReferName TVarChar
+             , Member_MentorId Integer
+             , Member_MentorCode Integer
+             , Member_MentorName TVarChar
+             , ReasonOutId Integer
+             , ReasonOutCode Integer
+             , ReasonOutName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -163,6 +173,16 @@ BEGIN
                      END
            END AS isPastMain
 
+         , Object_Personal_View.Member_ReferId
+         , Object_Personal_View.Member_ReferCode
+         , Object_Personal_View.Member_ReferName
+         , Object_Personal_View.Member_MentorId
+         , Object_Personal_View.Member_MentorCode
+         , Object_Personal_View.Member_MentorName
+         , Object_Personal_View.ReasonOutId
+         , Object_Personal_View.ReasonOutCode
+         , Object_Personal_View.ReasonOutName
+         , Object_Personal_View.Comment
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
@@ -302,6 +322,17 @@ BEGIN
          , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased
          , FALSE                    AS isPastMain
+
+         , 0                        AS Member_ReferId
+         , 0                        AS Member_ReferCode
+         , CAST ('' as TVarChar)    AS Member_ReferName
+         , 0                        AS Member_MentorId
+         , 0                        AS Member_MentorCode
+         , CAST ('' as TVarChar)    AS Member_MentorName
+         , 0                        AS ReasonOutId
+         , 0                        AS ReasonOutCode
+         , CAST ('' as TVarChar)    AS ReasonOutName
+         , CAST ('' as TVarChar)    AS Comment
     ;
 
 END;

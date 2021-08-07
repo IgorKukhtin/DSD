@@ -24,7 +24,10 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
-   IF COALESCE (inArticle,0) <> 0
+--               RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
+
+
+   IF COALESCE (inArticle,'') <> ''
    THEN
           -- поиск в спр. товара
           vbGoodsId := (SELECT ObjectString_Article.ObjectId
@@ -40,6 +43,7 @@ BEGIN
           -- Eсли не нашли пропускаем
           IF COALESCE (vbGoodsId,0) = 0
           THEN
+               --RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
                RETURN;
           END IF;
 
@@ -70,6 +74,7 @@ BEGIN
           -- Eсли не нашли пропускаем
           IF COALESCE (vbPartnerId,0) = 0
           THEN
+                
                RETURN;
           END IF;
 
@@ -80,6 +85,10 @@ BEGIN
                                                               ON MovementLinkObject_From.MovementId = Movement.Id
                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                              AND MovementLinkObject_From.ObjectId = vbPartnerId
+                                INNER JOIN MovementString AS MovementString_Comment
+                                                          ON MovementString_Comment.MovementId = Movement.Id
+                                                         AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                                         AND MovementString_Comment.ValueData = 'auto S/N'
                            WHERE Movement.DescId = zc_Movement_Income()
                              AND Movement.OperDate = inOperDate
                              AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -99,7 +108,7 @@ BEGIN
                                                             , inFromId             := vbPartnerId   ::Integer
                                                             , inToId               := 35139         ::Integer -- Склад
                                                             , inPaidKindId         := zc_Enum_PaidKind_FirstForm() ::Integer
-                                                            , inComment            := 'auto'        ::TVarChar
+                                                            , inComment            := 'auto S/N'    ::TVarChar
                                                             , inUserId             := vbUserId      ::Integer
                                                             );
           END IF;
@@ -107,10 +116,15 @@ BEGIN
           --ищем такой товар, вдруг уже загрузили, тогда обновляем 
           vbMovementItemId := (SELECT MovementItem.Id
                                FROM MovementItem
+                                 INNER JOIN MovementItemString AS MIString_PartNumber
+                                                              ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                             AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                                WHERE MovementItem.MovementId = vbMovementId
                                  AND MovementItem.DescId     = zc_MI_Master()
                                  AND MovementItem.isErased   = False
                                  AND MovementItem.ObjectId = vbGoodsId
+                                 
                                );
                                
           -- сохранили <Элемент документа>
@@ -121,7 +135,7 @@ BEGIN
                                                                , inAmount        := 1            ::TFloat
                                                                , inOperPrice     := inPrice      ::TFloat
                                                                , inCountForPrice := 1            ::TFloat
-                                                               , inPartNumber    := inPartNumber ::TVarChar
+                                                               , inPartNumber    := COALESCE(inPartNumber,'') ::TVarChar
                                                                , inComment       := ''           ::TVarChar
                                                                , inUserId        := vbUserId     ::Integer
                                                                );
@@ -146,7 +160,7 @@ BEGIN
                                                    , inEKPrice           := inPrice              ::TFloat        -- Цена вх. без НДС
                                                    , inCountForPrice     := 1                    ::TFloat  -- Цена за количество
                                                    , inEmpfPrice         := ObjectFloat_EmpfPrice.ValueData ::TFloat        -- Цена рекоменд. без НДС
-                                                   , inOperPriceList     := vbOperPriceList      ::TFloat        -- Цена продажи, !!!грн!!!
+                                                   , inOperPriceList     := COALESCE (vbOperPriceList,0)      ::TFloat        -- Цена продажи, !!!грн!!!
                                                    , inOperPriceList_old := 0                    ::TFloat        -- Цена продажи, ДО изменения строки
                                                    , inGoodsGroupId      := ObjectLink_Goods_GoodsGroup.ChildObjectId       ::Integer       -- Группа товара
                                                    , inGoodsTagId        := ObjectLink_Goods_GoodsTag.ChildObjectId         ::Integer       -- Категория
@@ -184,7 +198,7 @@ BEGIN
                                     ON ObjectLink_Goods_ProdColor.ObjectId = Object.Id
                                    AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
-                                     ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
+                                     ON ObjectFloat_EmpfPrice.ObjectId = Object.Id
                                     AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
           WHERE Object.Id = vbGoodsId;
 

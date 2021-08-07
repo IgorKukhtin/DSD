@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 531
-  ClientWidth = 338
+  ClientHeight = 574
+  ClientWidth = 373
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,252 +17,336 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 77
-    Top = 508
+    Left = 82
+    Top = 539
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 6
+    TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 181
-    Top = 508
+    Left = 186
+    Top = 539
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 7
-  end
-  object Код: TcxLabel
-    Left = 16
-    Top = 3
-    Caption = #1050#1086#1076
-  end
-  object ceMemberCode: TcxCurrencyEdit
-    Left = 16
-    Top = 20
-    Enabled = False
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 0
-    Width = 73
-  end
-  object cxLabel3: TcxLabel
-    Left = 16
-    Top = 211
-    Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
-  end
-  object cxLabel2: TcxLabel
-    Left = 130
-    Top = 211
-    Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-  end
-  object cxLabel5: TcxLabel
-    Left = 16
-    Top = 132
-    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-  end
-  object cxLabel6: TcxLabel
-    Left = 95
-    Top = 3
-    Caption = #1060#1048#1054
-  end
-  object cxLabel7: TcxLabel
-    Left = 16
-    Top = 46
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  end
-  object cePosition: TcxButtonEdit
-    Left = 16
-    Top = 149
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
     TabOrder = 2
-    Width = 305
   end
-  object ceUnit: TcxButtonEdit
-    Left = 16
-    Top = 63
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 3
-    Width = 305
-  end
-  object ceMember: TcxButtonEdit
-    Left = 95
-    Top = 20
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 1
-    Width = 226
-  end
-  object edDateIn: TcxDateEdit
-    Left = 16
-    Top = 231
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 4
-    Width = 92
-  end
-  object edDateOut: TcxDateEdit
-    Left = 130
-    Top = 231
-    EditValue = 42929d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 5
-    Width = 92
-  end
-  object cePersonalGroup: TcxButtonEdit
-    Left = 16
-    Top = 106
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 14
-    Width = 305
-  end
-  object cxLabel1: TcxLabel
-    Left = 16
-    Top = 89
-    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
-  end
-  object cxLabel4: TcxLabel
-    Left = 16
-    Top = 171
-    Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
-  end
-  object cePositionLevel: TcxButtonEdit
-    Left = 16
-    Top = 188
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 17
-    Width = 305
-  end
-  object cbDateOut: TcxCheckBox
-    Left = 233
-    Top = 231
-    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-    Caption = #1059#1074#1086#1083#1077#1085
-    TabOrder = 18
-    Width = 79
-  end
-  object cbMain: TcxCheckBox
-    Left = 18
-    Top = 256
-    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-    Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
-    TabOrder = 19
-    Width = 186
-  end
-  object cxLabel8: TcxLabel
-    Left = 16
-    Top = 276
-    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
-  end
-  object cePersonalServiceList: TcxButtonEdit
-    Left = 25
-    Top = 295
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 21
-    Width = 305
-  end
-  object cxLabel9: TcxLabel
-    Left = 16
-    Top = 322
-    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
-  end
-  object cePersonalServiceListOfficial: TcxButtonEdit
-    Left = 16
-    Top = 339
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 23
-    Width = 305
-  end
-  object cxLabel10: TcxLabel
-    Left = 16
-    Top = 405
-    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
-  end
-  object ceSheetWorkTime: TcxButtonEdit
-    Left = 16
-    Top = 423
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 25
-    Width = 305
-  end
-  object cxLabel11: TcxLabel
-    Left = 16
-    Top = 448
-    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-  end
-  object ceStorageLine: TcxButtonEdit
-    Left = 16
-    Top = 465
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 27
-    Width = 305
-  end
-  object cxLabel12: TcxLabel
-    Left = 16
-    Top = 363
-    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1050#1072#1088#1090#1072' '#1060'2)'
-  end
-  object cePersonalServiceListCardSecond: TcxButtonEdit
-    Left = 16
-    Top = 380
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 29
-    Width = 305
+  object cxPageControl1: TcxPageControl
+    Left = 8
+    Top = 8
+    Width = 337
+    Height = 513
+    TabOrder = 0
+    Properties.ActivePage = cxTabSheet1
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 513
+    ClientRectRight = 337
+    ClientRectTop = 24
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1054#1073#1097#1072#1103
+      ImageIndex = 0
+      ExplicitWidth = 377
+      ExplicitHeight = 502
+      object Код: TcxLabel
+        Left = 16
+        Top = 3
+        Caption = #1050#1086#1076
+      end
+      object ceMemberCode: TcxCurrencyEdit
+        Left = 16
+        Top = 20
+        Enabled = False
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 0
+        Width = 73
+      end
+      object cxLabel3: TcxLabel
+        Left = 16
+        Top = 211
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+      end
+      object cxLabel2: TcxLabel
+        Left = 130
+        Top = 211
+        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+      end
+      object cxLabel5: TcxLabel
+        Left = 16
+        Top = 132
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+      end
+      object cxLabel6: TcxLabel
+        Left = 95
+        Top = 3
+        Caption = #1060#1048#1054
+      end
+      object cxLabel7: TcxLabel
+        Left = 16
+        Top = 46
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      end
+      object cePosition: TcxButtonEdit
+        Left = 16
+        Top = 149
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Width = 305
+      end
+      object ceUnit: TcxButtonEdit
+        Left = 16
+        Top = 63
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 3
+        Width = 305
+      end
+      object ceMember: TcxButtonEdit
+        Left = 95
+        Top = 20
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Width = 226
+      end
+      object edDateIn: TcxDateEdit
+        Left = 16
+        Top = 231
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 4
+        Width = 92
+      end
+      object edDateOut: TcxDateEdit
+        Left = 130
+        Top = 231
+        EditValue = 42929d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 5
+        Width = 92
+      end
+      object cePersonalGroup: TcxButtonEdit
+        Left = 16
+        Top = 106
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 13
+        Width = 305
+      end
+      object cxLabel1: TcxLabel
+        Left = 16
+        Top = 89
+        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
+      end
+      object cxLabel4: TcxLabel
+        Left = 16
+        Top = 171
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+      end
+      object cePositionLevel: TcxButtonEdit
+        Left = 16
+        Top = 188
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 15
+        Width = 305
+      end
+      object cbDateOut: TcxCheckBox
+        Left = 233
+        Top = 231
+        Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        Caption = #1059#1074#1086#1083#1077#1085
+        TabOrder = 16
+        Width = 79
+      end
+      object cbMain: TcxCheckBox
+        Left = 18
+        Top = 256
+        Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
+        TabOrder = 18
+        Width = 186
+      end
+      object cxLabel8: TcxLabel
+        Left = 16
+        Top = 276
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
+      end
+      object cePersonalServiceList: TcxButtonEdit
+        Left = 16
+        Top = 295
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 20
+        Width = 305
+      end
+      object cxLabel9: TcxLabel
+        Left = 16
+        Top = 322
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
+      end
+      object cePersonalServiceListOfficial: TcxButtonEdit
+        Left = 16
+        Top = 339
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 22
+        Width = 305
+      end
+      object cxLabel10: TcxLabel
+        Left = 16
+        Top = 405
+        Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+      end
+      object ceSheetWorkTime: TcxButtonEdit
+        Left = 16
+        Top = 423
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 24
+        Width = 305
+      end
+      object cxLabel11: TcxLabel
+        Left = 16
+        Top = 448
+        Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      end
+      object ceStorageLine: TcxButtonEdit
+        Left = 16
+        Top = 465
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 26
+        Width = 305
+      end
+      object cxLabel12: TcxLabel
+        Left = 16
+        Top = 363
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1050#1072#1088#1090#1072' '#1060'2)'
+      end
+      object cePersonalServiceListCardSecond: TcxButtonEdit
+        Left = 16
+        Top = 380
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 27
+        Width = 305
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1055#1088#1086#1095#1077#1077
+      ImageIndex = 1
+      object cxLabel14: TcxLabel
+        Left = 8
+        Top = 62
+        Caption = #1060#1072#1084#1080#1083#1080#1103' '#1085#1072#1089#1090#1072#1074#1085#1080#1082#1072
+      end
+      object edMember_Mentor: TcxButtonEdit
+        Left = 8
+        Top = 79
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Width = 318
+      end
+      object cxLabel15: TcxLabel
+        Left = 8
+        Top = 114
+        Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+      end
+      object edReasonOut: TcxButtonEdit
+        Left = 8
+        Top = 131
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 3
+        Width = 318
+      end
+      object cxLabel13: TcxLabel
+        Left = 8
+        Top = 15
+        Caption = #1060#1072#1084#1080#1083#1080#1103' '#1088#1077#1082#1086#1084#1077#1085#1076#1072#1090#1077#1083#1103
+      end
+      object edMember_Refer: TcxButtonEdit
+        Left = 8
+        Top = 32
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 5
+        Width = 318
+      end
+      object edComment: TcxTextEdit
+        Left = 8
+        Top = 181
+        TabOrder = 6
+        Width = 318
+      end
+      object cxLabel16: TcxLabel
+        Left = 8
+        Top = 163
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      end
+    end
   end
   object ActionList: TActionList
     Left = 200
@@ -392,6 +476,30 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMember_ReferId'
+        Value = Null
+        Component = GuidesMember_Refer
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMember_MentorId'
+        Value = Null
+        Component = GuidesMember_Mentor
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReasonOutId'
+        Value = Null
+        Component = GuidesReasonOut
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDateIn'
         Value = 0d
         Component = edDateIn
@@ -409,7 +517,7 @@
       end
       item
         Name = 'inIsDateOut'
-        Value = 'False'
+        Value = False
         Component = cbDateOut
         DataType = ftBoolean
         ParamType = ptInput
@@ -417,9 +525,17 @@
       end
       item
         Name = 'inIsMain'
-        Value = 'False'
+        Value = False
         Component = cbMain
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -562,14 +678,14 @@
       end
       item
         Name = 'IsDateOut'
-        Value = 'False'
+        Value = False
         Component = cbDateOut
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'IsMain'
-        Value = 'False'
+        Value = False
         Component = cbMain
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -648,10 +764,62 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Member_ReferId'
+        Value = Null
+        Component = GuidesMember_Refer
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Member_ReferName'
+        Value = Null
+        Component = GuidesMember_Refer
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Member_MentorId'
+        Value = Null
+        Component = GuidesMember_Mentor
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Member_MentorName'
+        Value = Null
+        Component = GuidesMember_Mentor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonOutId'
+        Value = Null
+        Component = GuidesReasonOut
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReasonOutName'
+        Value = Null
+        Component = GuidesReasonOut
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 134
+    Left = 184
+    Top = 182
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -826,8 +994,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 287
-    Top = 185
+    Left = 335
+    Top = 161
   end
   object PersonalServiceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -916,8 +1084,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 79
-    Top = 187
+    Left = 39
+    Top = 267
   end
   object StorageLineGuides: TdsdGuides
     KeyField = 'Id'
@@ -978,5 +1146,116 @@
       end>
     Left = 183
     Top = 353
+  end
+  object GuidesMember_Refer: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember_Refer
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember_Refer
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember_Refer
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceMemberCode
+        ComponentItem = 'Code'
+        MultiSelectSeparator = ','
+      end>
+    Left = 133
+    Top = 48
+  end
+  object GuidesMember_Mentor: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember_Mentor
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember_Mentor
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember_Mentor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceMemberCode
+        ComponentItem = 'Code'
+        MultiSelectSeparator = ','
+      end>
+    Left = 157
+    Top = 88
+  end
+  object GuidesReasonOut: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReasonOut
+    FormNameParam.Value = 'TReasonOutForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReasonOutForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReasonOut
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReasonOut
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceMemberCode
+        ComponentItem = 'Code'
+        MultiSelectSeparator = ','
+      end>
+    Left = 181
+    Top = 136
   end
 end

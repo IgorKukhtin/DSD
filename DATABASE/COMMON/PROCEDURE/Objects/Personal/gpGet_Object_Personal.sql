@@ -17,7 +17,18 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                StorageLineId Integer, StorageLineName TVarChar,
-               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
+               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean
+             , Member_ReferId Integer
+             , Member_ReferCode Integer
+             , Member_ReferName TVarChar
+             , Member_MentorId Integer
+             , Member_MentorCode Integer
+             , Member_MentorName TVarChar
+             , ReasonOutId Integer
+             , ReasonOutCode Integer
+             , ReasonOutName TVarChar
+             , Comment TVarChar
+               ) AS
 $BODY$
 BEGIN
 
@@ -66,6 +77,16 @@ BEGIN
          -- , Object_Personal_View.isMain
          , FALSE :: Boolean AS isMain
 
+         , Object_Personal_View.Member_ReferId
+         , Object_Personal_View.Member_ReferCode
+         , Object_Personal_View.Member_ReferName
+         , Object_Personal_View.Member_MentorId
+         , Object_Personal_View.Member_MentorCode
+         , Object_Personal_View.Member_MentorName
+         , Object_Personal_View.ReasonOutId
+         , Object_Personal_View.ReasonOutCode
+         , Object_Personal_View.ReasonOutName
+         , Object_Personal_View.Comment
     FROM Object_Personal_View
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
@@ -129,7 +150,18 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS DateOut
            , FALSE AS isDateOut
            -- , TRUE  AS isMain
-           , FALSE  AS isMain;
+           , FALSE  AS isMain
+           , 0                        AS Member_ReferId
+           , 0                        AS Member_ReferCode
+           , CAST ('' as TVarChar)    AS Member_ReferName
+           , 0                        AS Member_MentorId
+           , 0                        AS Member_MentorCode
+           , CAST ('' as TVarChar)    AS Member_MentorName
+           , 0                        AS ReasonOutId
+           , 0                        AS ReasonOutCode
+           , CAST ('' as TVarChar)    AS ReasonOutName
+           , CAST ('' as TVarChar)    AS Comment           
+           ;
   END IF;
 
   IF COALESCE (inId, 0) <> 0
@@ -174,6 +206,16 @@ BEGIN
          , Object_Personal_View.isDateOut
          , Object_Personal_View.isMain
 
+         , Object_Personal_View.Member_ReferId
+         , Object_Personal_View.Member_ReferCode
+         , Object_Personal_View.Member_ReferName
+         , Object_Personal_View.Member_MentorId
+         , Object_Personal_View.Member_MentorCode
+         , Object_Personal_View.Member_MentorName
+         , Object_Personal_View.ReasonOutId
+         , Object_Personal_View.ReasonOutCode
+         , Object_Personal_View.ReasonOutName
+         , Object_Personal_View.Comment
     FROM Object_Personal_View
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
@@ -208,6 +250,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.08.21         * 
  13.07.17         * add PersonalServiceListCardSecond
  25.05.17         * add StorageLine
  16.11.16         * add SheetWorkTime
@@ -226,4 +269,4 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Personal (100, '2')
+-- SELECT * FROM gpGet_Object_Personal (100,0, '2')

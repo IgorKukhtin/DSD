@@ -27,8 +27,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 152
-    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -256,6 +254,263 @@ object MemberForm: TMemberForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 58
+      end
+      object GenderName: TcxGridDBColumn
+        Caption = #1055#1086#1083
+        DataBinding.FieldName = 'GenderName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object MemberSkillName: TcxGridDBColumn
+        Caption = #1050#1074#1072#1083#1080#1092#1080#1082#1072#1094#1080#1103
+        DataBinding.FieldName = 'MemberSkillName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object JobSourceName: TcxGridDBColumn
+        Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080' '#1086' '#1074#1072#1082#1072#1085#1089#1080#1080
+        DataBinding.FieldName = 'JobSourceName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object RegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1073#1083#1072#1089#1090#1100', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        Options.Editing = False
+        Width = 80
+      end
+      object RegionName_Real: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'RegionName_Real'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1073#1083#1072#1089#1090#1100', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object CityName: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076'/'#1089#1077#1083#1086'/'#1087#1075#1090', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        DataBinding.FieldName = 'CityName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1086#1088#1086#1076'/'#1089#1077#1083#1086'/'#1087#1075#1090', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        Options.Editing = False
+        Width = 80
+      end
+      object CityName_Real: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076'/'#1089#1077#1083#1086'/'#1087#1075#1090', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'CityName_Real'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1086#1088#1086#1076'/'#1089#1077#1083#1086'/'#1087#1075#1090', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object Street: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        DataBinding.FieldName = 'Street'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1083#1080#1094#1072', '#1085#1086#1084#1077#1088' '#1076#1086#1084#1072', '#1085#1086#1084#1077#1088' '#1082#1074#1072#1088#1090#1080#1088#1099', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1087#1080#1089#1082#1080
+        Options.Editing = False
+        Width = 80
+      end
+      object Street_Real: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072', '#1085#1086#1084#1077#1088' '#1076#1086#1084#1072', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'Street_Real'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1083#1080#1094#1072', '#1085#1086#1084#1077#1088' '#1076#1086#1084#1072', '#1085#1086#1084#1077#1088' '#1082#1074#1072#1088#1090#1080#1088#1099', '#1072#1076#1088#1077#1089' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object Children1: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 1, '#1060#1048#1054
+        DataBinding.FieldName = 'Children1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children2: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 2, '#1060#1048#1054
+        DataBinding.FieldName = 'Children2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children3: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 3, '#1060#1048#1054
+        DataBinding.FieldName = 'Children3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children4: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 4, '#1060#1048#1054
+        DataBinding.FieldName = 'Children4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children5: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 5, '#1060#1048#1054
+        DataBinding.FieldName = 'Children5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Birthday_Date: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Birthday_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object Children1_Date: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 1, '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Children1_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children2_Date: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 2, '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Children2_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children3_Date: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 3, '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Children3_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children4_Date: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 4, '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Children4_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Children5_Date: TcxGridDBColumn
+        Caption = #1056#1077#1073#1077#1085#1086#1082' 5, '#1076#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'Children5_Date'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_StartDate: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1089
+        DataBinding.FieldName = 'PSP_StartDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1089
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_EndDate: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086
+        DataBinding.FieldName = 'PSP_EndDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086
+        Options.Editing = False
+        Width = 80
+      end
+      object Dekret_StartDate: TcxGridDBColumn
+        Caption = #1044#1077#1082#1088#1077#1090' '#1089
+        DataBinding.FieldName = 'Dekret_StartDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1082#1088#1077#1090' '#1089
+        Options.Editing = False
+        Width = 80
+      end
+      object Dekret_EndDate: TcxGridDBColumn
+        Caption = #1044#1077#1082#1088#1077#1090' '#1087#1086
+        DataBinding.FieldName = 'Dekret_EndDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1082#1088#1077#1090' '#1087#1086
+        Options.Editing = False
+        Width = 80
+      end
+      object Law: TcxGridDBColumn
+        Caption = #1057#1091#1076#1080#1084#1086#1089#1090#1080
+        DataBinding.FieldName = 'Law'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1076#1080#1084#1086#1089#1090#1080
+        Options.Editing = False
+        Width = 80
+      end
+      object DriverCertificateAdd: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090'. '#1091#1076#1086#1089#1090'-'#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1078#1076#1077#1085#1080#1103' '#1082#1072#1088#1099' '#1080' '#1090'.'#1087'.'
+        DataBinding.FieldName = 'DriverCertificateAdd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1078#1076#1077#1085#1080#1103' '#1082#1072#1088#1099' '#1080' '#1090'.'#1087'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_S: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1089#1077#1088#1080#1103
+        DataBinding.FieldName = 'PSP_S'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1089#1077#1088#1080#1103
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_N: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'PSP_N'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1085#1086#1084#1077#1088
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_W: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1082#1077#1084' '#1074#1099#1076#1072#1085
+        DataBinding.FieldName = 'PSP_W'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1082#1077#1084' '#1074#1099#1076#1072#1085
+        Options.Editing = False
+        Width = 80
+      end
+      object PSP_D: TcxGridDBColumn
+        Caption = #1055#1072#1089#1087#1086#1088#1090', '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
+        DataBinding.FieldName = 'PSP_D'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1072#1089#1087#1086#1088#1090', '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1170,10 +1425,12 @@ object MemberForm: TMemberForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264

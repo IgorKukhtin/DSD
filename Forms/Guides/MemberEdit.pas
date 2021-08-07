@@ -8,7 +8,18 @@ uses
   cxEdit, cxCheckBox, cxCurrencyEdit, cxLabel, cxTextEdit, cxPC, Vcl.Controls,
   dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
   Vcl.StdCtrls, cxButtons, cxMemo, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dsdGuides, cxMaskEdit, cxButtonEdit;
+  dxSkinscxPCPainter, dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore,
+  cxDateUtils, cxDropDownEdit, cxCalendar, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMemberEditForm = class(TAncestorEditDialogForm)
@@ -47,13 +58,84 @@ type
     ceBankSecond: TcxButtonEdit;
     cxLabel13: TcxLabel;
     ceBankChild: TcxButtonEdit;
-    BankGuides: TdsdGuides;
+    GuidesBank: TdsdGuides;
     BankSecondGuides: TdsdGuides;
     BankChildGuides: TdsdGuides;
     cxLabel14: TcxLabel;
     edCardIBAN: TcxTextEdit;
     cxLabel15: TcxLabel;
     edCardIBANSecond: TcxTextEdit;
+    cxTabSheet1: TcxTabSheet;
+    GuidesGender: TdsdGuides;
+    cxLabel17: TcxLabel;
+    edPSP_S: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edGender: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    edPSP_N: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edPSP_W: TcxTextEdit;
+    cxLabel20: TcxLabel;
+    edPSP_D: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    edPSP_Start: TcxDateEdit;
+    edPSP_End: TcxDateEdit;
+    cxLabel22: TcxLabel;
+    edBirthday: TcxDateEdit;
+    cxLabel21Birthday: TcxLabel;
+    cxLabel24: TcxLabel;
+    edRegion_Real: TcxButtonEdit;
+    GuidesRegion_Real: TdsdGuides;
+    cxLabel25: TcxLabel;
+    edCity: TcxButtonEdit;
+    GuidesCity: TdsdGuides;
+    cxLabel26: TcxLabel;
+    edCity_real: TcxButtonEdit;
+    GuidesCity_real: TdsdGuides;
+    cxLabel27: TcxLabel;
+    edStreet: TcxTextEdit;
+    cxLabel28: TcxLabel;
+    edStreet_Real: TcxTextEdit;
+    cxTabSheet2: TcxTabSheet;
+    cxLabel29: TcxLabel;
+    edBirthdayChildren1: TcxDateEdit;
+    cxLabel30: TcxLabel;
+    edChildren1: TcxTextEdit;
+    cxLabel31: TcxLabel;
+    edChildren2: TcxTextEdit;
+    edBirthdayChildren2: TcxDateEdit;
+    cxLabel32: TcxLabel;
+    edChildren3: TcxTextEdit;
+    cxLabel33: TcxLabel;
+    edBirthdayChildren3: TcxDateEdit;
+    cxLabel34: TcxLabel;
+    cxLabel35: TcxLabel;
+    edChildren4: TcxTextEdit;
+    edBirthdayChildren4: TcxDateEdit;
+    cxLabel36: TcxLabel;
+    cxLabel37: TcxLabel;
+    edChildren5: TcxTextEdit;
+    edBirthdayChildren5: TcxDateEdit;
+    cxLabel38: TcxLabel;
+    cxLabel39: TcxLabel;
+    edDekret_Start: TcxDateEdit;
+    cxLabel40: TcxLabel;
+    edDekret_End: TcxDateEdit;
+    cxTabSheet3: TcxTabSheet;
+    cxLabel41: TcxLabel;
+    edMemberSkill: TcxButtonEdit;
+    GuidesMemberSkill: TdsdGuides;
+    cxLabel42: TcxLabel;
+    edJobSource: TcxButtonEdit;
+    GuidesJobSource: TdsdGuides;
+    cxLabel43: TcxLabel;
+    edLaw: TcxTextEdit;
+    cxLabel44: TcxLabel;
+    edDriverCertificateAdd: TcxTextEdit;
+    spInsertUpdateIts: TdsdStoredProc;
+    GuidesRegion: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edRegion: TcxButtonEdit;
   private
     { Private declarations }
   public
