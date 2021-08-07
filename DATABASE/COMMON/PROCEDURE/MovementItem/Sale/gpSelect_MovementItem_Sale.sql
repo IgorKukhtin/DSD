@@ -363,7 +363,7 @@ BEGIN
            , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
                   , Object_Goods.ObjectCode                                AS GoodsCode
-                  , Object_Goods.ValueData                                 AS GoodsName
+                  , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   -- , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
                   -- , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
@@ -381,6 +381,9 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
+                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                               ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
                  
@@ -429,7 +432,7 @@ BEGIN
            , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , Object_Goods.ValueData                 AS GoodsName
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , tmpMI_Goods.Amount                     AS Amount
@@ -523,6 +526,9 @@ BEGIN
                               AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
+                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                               ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -739,7 +745,7 @@ BEGIN
                               , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
                               , Object_Goods.Id                        AS GoodsId
                               , Object_Goods.ObjectCode                AS GoodsCode
-                              , Object_Goods.ValueData                 AS GoodsName
+                              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
                               , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                    
                               , tmpMI_Goods.Amount                     AS Amount
@@ -835,6 +841,9 @@ BEGIN
                                                  AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
                    
                                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
+                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                               ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                     ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
