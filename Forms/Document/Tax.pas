@@ -114,6 +114,7 @@ type
     spUpdateTax_DisableNPP_auto: TdsdStoredProc;
     actDisableNPP_auto: TdsdExecStoredProc;
     bbDisableNPP_auto: TdxBarButton;
+    isName_new: TcxGridDBColumn;
   private
     { Private declarations }
   public

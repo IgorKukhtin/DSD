@@ -1,4 +1,4 @@
-unit MemberSkill;
+unit ReasonOut;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TMemberSkillForm = class(TParentForm)
+  TReasonOutForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -69,6 +69,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMemberSkillForm);
+  RegisterClass(TReasonOutForm);
 
 end.
