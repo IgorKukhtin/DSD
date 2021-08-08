@@ -1,7 +1,7 @@
-object GenderForm: TGenderForm
+object ReasonOutForm: TReasonOutForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1083'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -246,8 +246,8 @@ object GenderForm: TGenderForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TGenderEditForm'
-      FormNameParam.Value = 'TGenderEditForm'
+      FormName = 'TReasonOutEditForm'
+      FormNameParam.Value = 'TReasonOutEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -282,8 +282,8 @@ object GenderForm: TGenderForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TGenderEditForm'
-      FormNameParam.Value = 'TGenderEditForm'
+      FormName = 'TReasonOutEditForm'
+      FormNameParam.Value = 'TReasonOutEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -398,7 +398,7 @@ object GenderForm: TGenderForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Gender'
+    StoredProcName = 'gpSelect_Object_ReasonOut'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -427,8 +427,8 @@ object GenderForm: TGenderForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 216
+    Left = 328
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 176

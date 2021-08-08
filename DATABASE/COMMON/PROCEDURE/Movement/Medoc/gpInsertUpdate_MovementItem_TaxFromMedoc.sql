@@ -28,14 +28,14 @@ BEGIN
 
       -- сохранили <Ёлемент документа>
       PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
-                                         , inMovementId         := inMovementId
-                                         , inGoodsId            := vbGoodsExternalId
-                                         , inAmount             := inAmount
-                                         , inPrice              := inPrice
-                                         , ioCountForPrice      := 1
-                                         , inGoodsKindId        := NULL
-                                         , inUserId             := vbUserId
-                                          );
+                                             , inMovementId         := inMovementId
+                                             , inGoodsId            := vbGoodsExternalId
+                                             , inAmount             := inAmount
+                                             , inPrice              := inPrice
+                                             , ioCountForPrice      := 1
+                                             , inGoodsKindId        := NULL
+                                             , inUserId             := vbUserId
+                                              );
 
 END;
 $BODY$

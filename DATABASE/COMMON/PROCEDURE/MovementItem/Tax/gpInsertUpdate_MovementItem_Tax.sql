@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_Tax()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Tax(
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inLineNumTax          Integer   , -- 
+    IN inisName_new          Boolean   , -- использовать новое название
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -46,6 +48,9 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), ioId, inLineNumTax);
 
+     -- сохранили свойство <использовать новое название>  --редактирование в гриде
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Goods_Name_new(), ioId, inisName_new);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -53,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.08.21         * inisName_new
  10.02.14                                                        *
 */
 

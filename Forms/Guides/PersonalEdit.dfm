@@ -51,8 +51,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1073#1097#1072#1103
       ImageIndex = 0
-      ExplicitWidth = 377
-      ExplicitHeight = 502
       object Код: TcxLabel
         Left = 16
         Top = 3

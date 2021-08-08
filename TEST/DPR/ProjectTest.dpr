@@ -504,7 +504,6 @@ uses
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
-  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm},
   PersonalServiceList in '..\..\Forms\Guides\PersonalServiceList.pas' {PersonalServiceListForm: TParentForm},
   PersonalServiceListEdit in '..\..\Forms\Guides\PersonalServiceListEdit.pas' {PersonalServiceListEditForm: TParentForm},
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
@@ -1293,7 +1292,10 @@ uses
   MemberSkill in '..\..\Forms\Guides\MemberSkill.pas' {MemberSkillForm: TParentForm},
   JobSourceEdit in '..\..\Forms\Guides\JobSourceEdit.pas' {JobSourceEditForm: TParentForm},
   JobSource in '..\..\Forms\Guides\JobSource.pas' {JobSourceForm: TParentForm},
-  MemberSkillEdit in '..\..\Forms\Guides\MemberSkillEdit.pas' {MemberSkillEditForm: TParentForm};
+  MemberSkillEdit in '..\..\Forms\Guides\MemberSkillEdit.pas' {MemberSkillEditForm: TParentForm},
+  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm},
+  ReasonOut in '..\..\Forms\Guides\ReasonOut.pas' {ReasonOutForm: TParentForm},
+  ReasonOutEdit in '..\..\Forms\Guides\ReasonOutEdit.pas' {ReasonOutEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

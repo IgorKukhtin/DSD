@@ -288,6 +288,63 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 70
       end
+      object Member_ReferCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1088#1077#1082#1086#1084#1077#1085#1076#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'Member_ReferCode'
+        Visible = False
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object Member_ReferName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1088#1077#1082#1086#1084#1077#1085#1076#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'Member_ReferName'
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1072#1084#1080#1083#1080#1103' '#1088#1077#1082#1086#1084#1077#1085#1076#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 70
+      end
+      object Member_MentorCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1085#1072#1089#1090#1072#1074#1085#1080#1082#1072
+        DataBinding.FieldName = 'Member_MentorCode'
+        Visible = False
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object Member_MentorName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1085#1072#1089#1090#1072#1074#1085#1080#1082#1072
+        DataBinding.FieldName = 'Member_MentorName'
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1072#1084#1080#1083#1080#1103' '#1085#1072#1089#1090#1072#1074#1085#1080#1082#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object ReasonOutName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'ReasonOutName'
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1027,7 +1084,7 @@ object PersonalForm: TPersonalForm
       end
       item
         Name = 'inIsPeriod'
-        Value = 'False'
+        Value = False
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
@@ -1087,10 +1144,13 @@ object PersonalForm: TPersonalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end

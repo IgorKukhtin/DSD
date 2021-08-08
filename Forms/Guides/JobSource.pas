@@ -56,6 +56,8 @@ type
     actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
   private
     { Private declarations }
   public

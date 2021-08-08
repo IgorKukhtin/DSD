@@ -103,6 +103,12 @@ type
     actStorageLine: TOpenChoiceForm;
     PersonalServiceListCardSecondChoice: TOpenChoiceForm;
     isPastMain: TcxGridDBColumn;
+    Member_ReferName: TcxGridDBColumn;
+    Member_MentorName: TcxGridDBColumn;
+    ReasonOutName: TcxGridDBColumn;
+    Member_ReferCode: TcxGridDBColumn;
+    Member_MentorCode: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

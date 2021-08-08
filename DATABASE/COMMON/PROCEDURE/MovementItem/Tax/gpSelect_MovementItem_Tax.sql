@@ -13,7 +13,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , AmountSumm TFloat
+             , isName_new Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -68,6 +70,7 @@ BEGIN
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , CAST (NULL AS TFloat)                  AS AmountSumm
+           , FALSE                                  AS isName_new
            , FALSE                                  AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -151,6 +154,8 @@ BEGIN
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
+                   
+           , COALESCE (MIBoolean_Name_new.ValueData, FALSE) ::Boolean AS isName_new
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -191,6 +196,10 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Name_new
+                                          ON MIBoolean_Name_new.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+
             ;
      ELSE
 
@@ -228,6 +237,8 @@ BEGIN
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
+
+           , COALESCE (MIBoolean_Name_new.ValueData, FALSE) ::Boolean AS isName_new
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -270,6 +281,10 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Name_new
+                                          ON MIBoolean_Name_new.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
             ;
 
      END IF;
@@ -282,6 +297,7 @@ ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) O
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.08.21         * isName_new
  06.12.19         *
  06.01.17         *
  25.03.16         * add LineNum
