@@ -21,7 +21,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Left = 0
     Top = 0
     Width = 971
-    Height = 49
+    Height = 64
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
@@ -57,14 +57,67 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Top = 2
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object cbCheckedHead: TcxCheckBox
+      Left = 430
+      Top = 7
+      Hint = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      TabOrder = 4
+      Width = 165
+    end
+    object edCheckedHead_date: TcxDateEdit
+      Left = 609
+      Top = 7
+      EditValue = 44417d
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.Kind = ckDateTime
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 5
+      Width = 120
+    end
+    object edCheckedHead: TcxTextEdit
+      Left = 735
+      Top = 7
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 226
+    end
+    object cbCheckedPersonal: TcxCheckBox
+      Left = 430
+      Top = 33
+      Hint = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072
+      TabOrder = 7
+      Width = 173
+    end
+    object edCheckedPersonal_date: TcxDateEdit
+      Left = 609
+      Top = 33
+      EditValue = 44417d
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.Kind = ckDateTime
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 8
+      Width = 120
+    end
+    object edCheckedPersonal: TcxTextEdit
+      Left = 735
+      Top = 33
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 226
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 75
+    Top = 90
     Width = 971
-    Height = 387
+    Height = 372
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 1
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -411,6 +464,26 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCheckedHead'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCheckedPersonal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -466,6 +539,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbUpdateCheckedHead: TdxBarButton
+      Action = macUpdateCheckedHead
+      Category = 0
+    end
+    object bbUpdateCheckedPersonal: TdxBarButton
+      Action = macUpdateCheckedPersonal
       Category = 0
     end
   end
@@ -586,6 +667,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -941,6 +1025,62 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actUpdate_CheckedHead: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CheckedHead
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CheckedHead
+        end>
+      Caption = 'actUpdate_CheckedHead'
+      ImageIndex = 76
+    end
+    object actUpdate_CheckedPersonal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CheckedPersonal
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CheckedPersonal
+        end>
+      Caption = 'actUpdate_CheckedHead'
+      ImageIndex = 77
+    end
+    object macUpdateCheckedHead: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CheckedHead
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> - '#1044#1040'?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085' '
+      Caption = 'macUpdateCheckedHead'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> - '#1044#1040
+      ImageIndex = 76
+    end
+    object macUpdateCheckedPersonal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CheckedPersonal
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> - '#1044#1040'?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085' '
+      Caption = 'macUpdateCheckedHead'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> - '#1044#1040
+      ImageIndex = 77
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1038,7 +1178,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = HeaderCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1081,6 +1221,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value
@@ -1090,6 +1231,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
@@ -1188,7 +1331,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1206,5 +1349,150 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PackSize = 1
     Left = 518
     Top = 207
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_SheetWorkTime_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCheckedHead'
+        Value = False
+        Component = cbCheckedHead
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCheckedPersonal'
+        Value = 0d
+        Component = cbCheckedPersonal
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckedHead_date'
+        Value = 'null'
+        Component = edCheckedHead_date
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckedPersonal_date'
+        Value = Null
+        Component = edCheckedPersonal_date
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckedHeadName'
+        Value = ''
+        Component = edCheckedHead
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckedPersonalName'
+        Value = ''
+        Component = edCheckedPersonal
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 112
+  end
+  object spUpdate_CheckedHead: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SheetWorkTime_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_MovementBoolean_CheckedHead'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 208
+  end
+  object spUpdate_CheckedPersonal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SheetWorkTime_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_MovementBoolean_CheckedPersonal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 288
   end
 end

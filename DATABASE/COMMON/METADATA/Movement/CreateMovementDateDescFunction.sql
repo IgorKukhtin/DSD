@@ -208,9 +208,19 @@ INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_UserConfirmedKind', 'Дата/время подтверждения' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_CheckedHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_CheckedHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_CheckedHead', 'Дата/время Проверен руководителем' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_CheckedHead');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_CheckedPersonal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_CheckedPersonal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_CheckedPersonal', 'Дата/время Проверен Отдел персонала' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_CheckedPersonal');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 09.08.21         * zc_MovementDate_CheckedHead
+                    zc_MovementDate_CheckedPersonal
  26.04.21         * zc_MovementDate_StartStop
                     zc_MovementDate_EndStop
                     zc_MovementDate_UserConfirmedKind

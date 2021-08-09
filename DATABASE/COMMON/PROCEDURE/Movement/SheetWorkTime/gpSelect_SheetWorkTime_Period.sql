@@ -16,6 +16,12 @@ RETURNS TABLE (OperDate TDateTime
              , InvNumber_detail Integer
              , OperDate_detail TDateTime
              , UnitId Integer, UnitName TVarChar, isComplete Boolean, MovementId Integer
+             , CheckedHeadId Integer, CheckedHeadName TVarChar
+             , CheckedPersonalId Integer, CheckedPersonalName TVarChar
+             , CheckedHead_date TDateTime
+             , CheckedPersonal_date TDateTime
+             , isCheckedHead Boolean
+             , isCheckedPersonal Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -117,6 +123,18 @@ BEGIN
                                         --, CASE WHEN vbUserId = zfCalc_UserAdmin() :: Integer THEN Movement.Id ELSE 0 END AS MovementId
                                         --, 0 AS MovementId
                                           , CASE WHEN inIsDetail = TRUE THEN Movement.Id ELSE 0 END AS MovementId
+
+                                          , Object_CheckedHead.Id                     AS CheckedHeadId
+                                          , Object_CheckedHead.ValueData              AS CheckedHeadName
+                                          , Object_CheckedPersonal.Id                 AS CheckedPersonalId
+                                          , Object_CheckedPersonal.ValueData          AS CheckedPersonalName
+
+                                          , MovementDate_CheckedHead.ValueData        :: TDateTime AS CheckedHead_date
+                                          , MovementDate_CheckedPersonal.ValueData    :: TDateTime AS CheckedPersonal_date
+                                          , COALESCE (MovementBoolean_CheckedHead.ValueData, False)     :: Boolean   AS isCheckedHead
+                                          , COALESCE (MovementBoolean_CheckedPersonal.ValueData, False) :: Boolean   AS isCheckedPersonal
+
+
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -142,6 +160,30 @@ BEGIN
                                                              AND inIsDetail = TRUE
                                  LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
 
+                                 LEFT JOIN MovementDate AS MovementDate_CheckedHead
+                                                        ON MovementDate_CheckedHead.MovementId = Movement.Id
+                                                       AND MovementDate_CheckedHead.DescId = zc_MovementDate_CheckedHead()
+                                 LEFT JOIN MovementDate AS MovementDate_CheckedPersonal
+                                                        ON MovementDate_CheckedPersonal.MovementId = Movement.Id
+                                                       AND MovementDate_CheckedPersonal.DescId = zc_MovementDate_CheckedPersonal()
+
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_CheckedHead
+                                                           ON MovementBoolean_CheckedHead.MovementId = Movement.Id
+                                                          AND MovementBoolean_CheckedHead.DescId = zc_MovementBoolean_CheckedHead()
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_CheckedPersonal
+                                                           ON MovementBoolean_CheckedPersonal.MovementId = Movement.Id
+                                                          AND MovementBoolean_CheckedPersonal.DescId = zc_MovementBoolean_CheckedPersonal()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedHead
+                                                              ON MovementLinkObject_CheckedHead.MovementId = Movement.Id
+                                                             AND MovementLinkObject_CheckedHead.DescId = zc_MovementLinkObject_CheckedHead()
+                                 LEFT JOIN Object AS Object_CheckedHead ON Object_CheckedHead.Id = MovementLinkObject_CheckedHead.ObjectId
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedPersonal
+                                                              ON MovementLinkObject_CheckedPersonal.MovementId = Movement.Id
+                                                             AND MovementLinkObject_CheckedPersonal.DescId = zc_MovementLinkObject_CheckedPersonal()
+                                 LEFT JOIN Object AS Object_CheckedPersonal ON Object_CheckedPersonal.Id = MovementLinkObject_CheckedPersonal.ObjectId
+
                                  LEFT JOIN tmpList ON tmpList.UnitId = MovementLinkObject_Unit.ObjectId
                             WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -160,10 +202,22 @@ BEGIN
            , Object_Unit.ValueData    AS UnitName
            , CASE WHEN tmpMovement.UnitId IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isComplete
            , tmpMovement.MovementId
+
+           , tmpMovement.CheckedHeadId
+           , tmpMovement.CheckedHeadName
+           , tmpMovement.CheckedPersonalId
+           , tmpMovement.CheckedPersonalName
+
+           , tmpMovement.CheckedHead_date :: TDateTime
+           , tmpMovement.CheckedPersonal_date :: TDateTime
+           , COALESCE (tmpMovement.isCheckedHead,FALSE)     :: Boolean AS isCheckedHead
+           , COALESCE (tmpMovement.isCheckedPersonal,FALSE) :: Boolean AS isCheckedPersonal
+
            , tmpMovement.InsertName
            , tmpMovement.InsertDate
            , tmpMovement.UpdateName
            , tmpMovement.UpdateDate
+
        FROM tmpPeriod
             FULL JOIN tmpMovement ON tmpMovement.UnitId   = tmpPeriod.UnitId
                                  AND tmpMovement.OperDate = tmpPeriod.OperDate
@@ -177,6 +231,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.08.21         *
  07.10.16         * add inJuridicalBasisId
  23.03.16                                        * all
  01.03.16         * add isComplete

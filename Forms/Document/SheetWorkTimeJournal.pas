@@ -68,6 +68,14 @@ type
     OperDate_detail: TcxGridDBColumn;
     InvNumber_detail: TcxGridDBColumn;
     cbDetail: TcxCheckBox;
+    spUpdate_CheckedHead: TdsdStoredProc;
+    spUpdate_CheckedPersonal: TdsdStoredProc;
+    macUpdateCheckedHead: TMultiAction;
+    actUpdate_CheckedHead: TdsdExecStoredProc;
+    actUpdate_CheckedPersonal: TdsdExecStoredProc;
+    macUpdateCheckedPersonal: TMultiAction;
+    bbUpdateCheckedHead: TdxBarButton;
+    bbUpdateCheckedPersonal: TdxBarButton;
   private
   public
   end;

@@ -10,6 +10,14 @@ CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
+
+             , CheckedHeadId Integer, CheckedHeadName TVarChar
+             , CheckedPersonalId Integer, CheckedPersonalName TVarChar
+             , CheckedHead_date TDateTime
+             , CheckedPersonal_date TDateTime
+             , isCheckedHead Boolean
+             , isCheckedPersonal Boolean
+           
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -34,6 +42,16 @@ BEGIN
 
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
+           
+           , Object_CheckedHead.Id                     AS CheckedHeadId
+           , Object_CheckedHead.ValueData              AS CheckedHeadName
+           , Object_CheckedPersonal.Id                 AS CheckedPersonalId
+           , Object_CheckedPersonal.ValueData          AS CheckedPersonalName
+
+           , MovementDate_CheckedHead.ValueData        :: TDateTime AS CheckedHead_date
+           , MovementDate_CheckedPersonal.ValueData    :: TDateTime AS CheckedPersonal_date
+           , MovementBoolean_CheckedHead.ValueData     :: Boolean   AS isCheckedHead
+           , MovementBoolean_CheckedPersonal.ValueData :: Boolean   AS isCheckedPersonal
 
            , Object_Insert.ValueData             AS InsertName
            , MovementDate_Insert.ValueData       AS InsertDate
@@ -47,6 +65,16 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedHead
+                                         ON MovementLinkObject_CheckedHead.MovementId = Movement.Id
+                                        AND MovementLinkObject_CheckedHead.DescId = zc_MovementLinkObject_CheckedHead()
+            LEFT JOIN Object AS Object_CheckedHead ON Object_CheckedHead.Id = MovementLinkObject_CheckedHead.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedPersonal
+                                         ON MovementLinkObject_CheckedPersonal.MovementId = Movement.Id
+                                        AND MovementLinkObject_CheckedPersonal.DescId = zc_MovementLinkObject_CheckedPersonal()
+            LEFT JOIN Object AS Object_CheckedPersonal ON Object_CheckedPersonal.Id = MovementLinkObject_CheckedPersonal.ObjectId
            
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -54,6 +82,20 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementDate AS MovementDate_CheckedHead
+                                   ON MovementDate_CheckedHead.MovementId = Movement.Id
+                                  AND MovementDate_CheckedHead.DescId = zc_MovementDate_CheckedHead()
+            LEFT JOIN MovementDate AS MovementDate_CheckedPersonal
+                                   ON MovementDate_CheckedPersonal.MovementId = Movement.Id
+                                  AND MovementDate_CheckedPersonal.DescId = zc_MovementDate_CheckedPersonal()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_CheckedHead
+                                      ON MovementBoolean_CheckedHead.MovementId = Movement.Id
+                                     AND MovementBoolean_CheckedHead.DescId = zc_MovementBoolean_CheckedHead()
+            LEFT JOIN MovementBoolean AS MovementBoolean_CheckedPersonal
+                                      ON MovementBoolean_CheckedPersonal.MovementId = Movement.Id
+                                     AND MovementBoolean_CheckedPersonal.DescId = zc_MovementBoolean_CheckedPersonal()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -76,6 +118,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.08.21         *
  01.10.13         *
 
 */
