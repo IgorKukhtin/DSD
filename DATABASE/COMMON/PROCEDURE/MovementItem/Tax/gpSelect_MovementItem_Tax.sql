@@ -128,7 +128,9 @@ BEGIN
                        THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
                   ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                              THEN ObjectString_Goods_RUS.ValueData
-                                                        ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                        ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                                             CASE WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
+                                                                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
                                                    END
                                                  , Object_GoodsKind.ValueData
                                                  , MovementItem.Id
@@ -139,7 +141,9 @@ BEGIN
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
-                  ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                  ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                       CASE WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
+                       WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -155,7 +159,7 @@ BEGIN
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
                    
-           , COALESCE (MIBoolean_Name_new.ValueData, FALSE) ::Boolean AS isName_new
+           , COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) ::Boolean AS isName_new
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -167,9 +171,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_RUS
                                    ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
-                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
-                                               ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
                                   
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
@@ -196,9 +200,9 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Name_new
-                                          ON MIBoolean_Name_new.MovementItemId = MovementItem.Id
-                                         AND MIBoolean_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                          ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
 
             ;
      ELSE
@@ -212,7 +216,9 @@ BEGIN
                        THEN -1 * ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
                   ELSE -1 * ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                              THEN ObjectString_Goods_RUS.ValueData
-                                                        ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                        ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                                             CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
                                                    END
                                                  , Object_GoodsKind.ValueData
                                                  , MovementItem.Id
@@ -223,7 +229,9 @@ BEGIN
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
-                  ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                  ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                         CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                              WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -238,7 +246,7 @@ BEGIN
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
 
-           , COALESCE (MIBoolean_Name_new.ValueData, FALSE) ::Boolean AS isName_new
+           , COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) ::Boolean AS isName_new
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -250,9 +258,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_RUS
                                    ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
-                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
-                                               ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+            LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                   ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -282,9 +290,9 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Name_new
-                                          ON MIBoolean_Name_new.MovementItemId = MovementItem.Id
-                                         AND MIBoolean_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                          ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
             ;
 
      END IF;

@@ -689,6 +689,7 @@ order by 4*/
              , MIFloat_CountForPrice.ValueData        AS CountForPrice
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
              , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
+             , COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) ::Boolean AS isName_new
         FROM MovementItem
              INNER JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -703,6 +704,9 @@ order by 4*/
              LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                   ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             LEFT JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                           ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
         WHERE MovementItem.MovementId = vbMovementId_Tax
           AND MovementItem.DescId     = zc_MI_Master()
           AND MovementItem.isErased   = FALSE
@@ -846,7 +850,14 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
-                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData 
+                                  ELSE  /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                       CASE WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
+                                            WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                                       END
+                                  END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN ''
+                                         ELSE ' ' || Object_GoodsKind.ValueData
+                                         END
                         END
               END) :: TVarChar AS GoodsName
 
@@ -862,7 +873,12 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
-                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData 
+                                  ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                       CASE WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
+                                            WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                                       END
+                                  END
                         END
              END) :: TVarChar AS GoodsName_two
 
@@ -994,9 +1010,9 @@ order by 4*/
 
        ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                           THEN ObjectString_Goods_RUS.ValueData
-                     ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> ''
-                                    THEN ObjectString_Goods_BUH.ValueData
-                               ELSE Object_Goods.ValueData
+                     ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                          CASE WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
+                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
                           END
                 END
               , Object_GoodsKind.ValueData
