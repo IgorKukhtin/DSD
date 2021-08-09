@@ -13,6 +13,7 @@ type
     procedure ProcedureLoad; override;
     procedure UpdateMainProgram;
     procedure UpdateMain64Program;
+    procedure UpdateDll;
     procedure UpdateScale;
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
@@ -77,6 +78,16 @@ begin
   if FileExists(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
+end;
+
+// для отправки SMS
+procedure TUpdaterTest.UpdateDll;
+begin
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\libeay32.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\libeay32.dll');
+  //
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\ssleay32.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\ssleay32.dll');
 end;
 
 procedure TUpdaterTest.UpdateMain64Program;

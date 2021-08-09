@@ -32,7 +32,11 @@ BEGIN
            END
          , Object_User.Id
          , ObjectBoolean_ProjectAuthent.ValueData
-         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) ELSE '' END
+         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND inIP = '192.168.43.157' THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND inIP = '62.149.5.248'   THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                WHEN Object_User.Id = 5 AND inIP = '10.0.0.4'       THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+                ELSE '' END
            INTO vbIsCreate, vbUserId, vbIsProjectAuthent, ioPhoneAuthent
     FROM Object AS Object_User
          JOIN ObjectString AS UserPassword

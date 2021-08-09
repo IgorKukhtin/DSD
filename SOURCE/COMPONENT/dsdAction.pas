@@ -5125,8 +5125,9 @@ begin
   if not SendSMS and FUnauthorized then
   begin
     if not Authentication then Exit;
-    SendSMS;
-  end;
+    Result:= SendSMS;
+  end
+  else Result:= true;
 
 end;
 

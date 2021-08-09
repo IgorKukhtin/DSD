@@ -339,7 +339,7 @@ begin
     //then
     //else
         if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
-           UpdateProgram;
+           UpdateProgram
   except
     on E: Exception do
        TMessagesForm.Create(nil).Execute('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику', E.Message);
@@ -567,7 +567,16 @@ begin
   then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
 
-  //5. Запускаем Upgrader для замени EXE
+  //5.1. libeay32.dll грузим - для SMS
+  if (gc_ProgramName = 'Project.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'libeay32.dll'))
+  then
+     FileWriteString(ExtractFilePath(ParamStr(0)) + 'libeay32.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('libeay32.dll'), ''));
+  //5.2. ssleay32.dll грузим - для SMS
+  if (gc_ProgramName = 'Project.exe') and (not FileExists(ExtractFilePath(ParamStr(0)) + 'ssleay32.dll'))
+  then
+     FileWriteString(ExtractFilePath(ParamStr(0)) + 'ssleay32.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('ssleay32.dll'), ''));
+
+  //6. Запускаем Upgrader для замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
 
   ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');

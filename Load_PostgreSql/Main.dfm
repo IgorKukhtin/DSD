@@ -2365,7 +2365,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       OnDblClick = PanelErrDblClick
-      ExplicitWidth = 242
       object EditRepl1: TEdit
         Left = 120
         Top = 17
