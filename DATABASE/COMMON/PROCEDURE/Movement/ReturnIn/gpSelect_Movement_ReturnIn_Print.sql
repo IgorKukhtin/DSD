@@ -569,7 +569,7 @@ BEGIN
                                         , tmpMI_2.GoodsId
                                         , tmpMI_2.GoodsKindId
                                  )
-               , tmpMI_child AS (SELECT MovementItem.ParentId       AS ParentId
+/*               , tmpMI_child AS (SELECT MovementItem.ParentId       AS ParentId
                                       , MAX (Movement_Tax.OperDate) AS OperDate_tax
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -585,7 +585,50 @@ BEGIN
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount     <> 0
                                  GROUP BY MovementItem.ParentId
+                                 )*/
+
+               , tmp_tax AS (SELECT MovementItem.ParentId   AS ParentId
+                                  , Movement_Tax.Id         AS MovementId_tax
+                                  , Movement_Tax.OperDate   AS OperDate_tax
+                              FROM MovementItem
+                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                   LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                                   LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                  ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
+                                                                 AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
+                                   LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId     = zc_MI_Child()
+                                AND MovementItem.isErased   = FALSE
+                                AND MovementItem.Amount     <> 0
+                              )
+
+             -- по продаже находим налоговую и данные по MIBoolean_Goods_Name_new
+             , tmpName_new AS (SELECT DISTINCT
+                                      MovementItem.ObjectId           AS GoodsId
+                                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                    , TRUE AS isName_new
+                               FROM (SELECT DISTINCT tmp_tax.MovementId_tax FROM tmp_tax) AS tmp
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_tax
+                                                           AND MovementItem.DescId     = zc_MI_Child()
+                                                           AND MovementItem.isErased   = FALSE
+                                    INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                                   ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                                  AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+                                                                  AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               )
+
+               , tmpMI_child AS (SELECT tmp_tax.ParentId           AS ParentId
+                                      , MAX (tmp_tax.OperDate_tax) AS OperDate_tax
+                                 FROM tmp_tax
+                                 GROUP BY tmp_tax.ParentId
                                  )
+
                 , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
                                  , MovementItem.MovementId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -650,8 +693,23 @@ BEGIN
        -- Результат
        SELECT
              Object_Goods.ObjectCode  			AS GoodsCode
-           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END END) :: TVarChar AS GoodsName
-           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END END AS GoodsName_two
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                   ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                        CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                             WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                        END
+                       || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN ''
+                               ELSE ' ' || Object_GoodsKind.ValueData 
+                          END
+              END) :: TVarChar AS GoodsName
+           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                       CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                            WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                       END
+             END AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
@@ -728,8 +786,14 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
 
+            LEFT JOIN tmpName_new ON tmpName_new.GoodsId = tmpMI.GoodsId
+                                 AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+
        WHERE tmpMI.AmountPartner <> 0
-       ORDER BY CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END, Object_GoodsKind.ValueData
+       ORDER BY --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END, Object_GoodsKind.ValueData
+                CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                     WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                END
        ;
     RETURN NEXT Cursor2;
 
