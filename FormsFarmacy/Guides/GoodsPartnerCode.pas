@@ -122,6 +122,12 @@ type
     DiscountExternalName: TcxGridDBColumn;
     DiscountExternalChoiceForm: TOpenChoiceForm;
     spUpdate_Goods_DiscountExternal: TdsdStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    actStartLoadAction: TMultiAction;
+    actGetImportSetting_Goods_Action: TdsdExecStoredProc;
+    actDoLoadAction: TExecuteImportSettingsAction;
+    spGetImportSetting_Goods_Àction: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

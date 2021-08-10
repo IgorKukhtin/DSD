@@ -73,6 +73,29 @@ BEGIN
                                                          AND MLM.DescId = zc_MovementLinkMovement_Child())
                                                      ) AS tmp
                   )
+
+   -- данные из налоговой свойство zc_MIBoolean_Goods_Name_new
+   , tmpName_new AS (SELECT DISTINCT
+                            MovementItem.ObjectId           AS GoodsId
+                          , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                          , TRUE AS isName_new
+                     FROM (SELECT MLM.MovementChildId AS MovementId_tax
+                           FROM MovementLinkMovement AS MLM
+                           WHERE MLM.MovementId = inMovementId 
+                             AND MLM.DescId = zc_MovementLinkMovement_Child()
+                          ) AS tmp 
+                          INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_tax
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                          INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                         ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+                                                        AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     )
+                          
    , tmpPrice AS (SELECT tmp.GoodsId
                        , tmp.GoodsKindId
                        , tmp.ValuePrice 
@@ -162,7 +185,11 @@ BEGIN
              MovementItem.Id                        AS Id
            , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                          THEN ObjectString_Goods_RUS.ValueData
-                                                    ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                    ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                         CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                              WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
+                                                              ELSE Object_Goods.ValueData
+                                                         END
                                                END
                                              , Object_GoodsKind.ValueData
                                              , MovementItem.Id
@@ -186,7 +213,11 @@ BEGIN
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS GoodsCodeUKTZED
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
-                  ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                  ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                       CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                            WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
+                            ELSE Object_Goods.ValueData
+                       END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -288,6 +319,9 @@ BEGIN
                                                                             ELSE MIFloat_Price.ValueData
                                                                        END
                                            AND tmpMITax1.GoodsId     IS NULL
+
+            LEFT JOIN tmpName_new ON tmpName_new.GoodsId = Object_Goods.Id
+                                 AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
             ;
      ELSE
 
@@ -300,12 +334,38 @@ BEGIN
                                                          AND MLM.DescId = zc_MovementLinkMovement_Child())
                                                      ) AS tmp
                   )
+
+   -- данные из налоговой свойство zc_MIBoolean_Goods_Name_new
+   , tmpName_new AS (SELECT DISTINCT
+                            MovementItem.ObjectId           AS GoodsId
+                          , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                          , TRUE AS isName_new
+                     FROM (SELECT MLM.MovementChildId AS MovementId_tax
+                           FROM MovementLinkMovement AS MLM
+                           WHERE MLM.MovementId = inMovementId 
+                             AND MLM.DescId = zc_MovementLinkMovement_Child()
+                          ) AS tmp 
+                          INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_tax
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                          INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                         ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+                                                        AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     )
+
        -- Результат     
        SELECT
              MovementItem.Id
            , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                          THEN ObjectString_Goods_RUS.ValueData
-                                                    ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                    ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                         CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                              WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                                                         END
                                                END
                                              , Object_GoodsKind.ValueData
                                              , MovementItem.Id
@@ -324,7 +384,10 @@ BEGIN
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS GoodsCodeUKTZED
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
-                  ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                  ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                       CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                            WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                       END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -421,6 +484,9 @@ BEGIN
                                                                             ELSE MIFloat_Price.ValueData
                                                                        END
                                            AND tmpMITax1.GoodsId     IS NULL
+
+            LEFT JOIN tmpName_new ON tmpName_new.GoodsId = Object_Goods.Id
+                                 AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
             ;
 
      END IF;
@@ -433,6 +499,7 @@ ALTER FUNCTION gpSelect_MovementItem_TaxCorrective (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.08.21         *
  06.12.19         *
  12.04.18         * add PriceTax_calc
  04.04.18         * add SummTaxDiff_calc

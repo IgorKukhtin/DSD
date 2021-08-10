@@ -56,6 +56,8 @@ $BODY$
     DECLARE vbIsLongUKTZED Boolean;
 
     DECLARE vbOperDate_Begin1 TDateTime;
+
+    DECLARE vbMovementId_tax Integer;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -165,9 +167,12 @@ BEGIN
                  ELSE FALSE
             END AS isInfoMoney_30200
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
+          
+          , MovementLinkMovement_Master.MovementChildId AS MovementId_tax
 
             INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
                , vbIsInfoMoney_30200, vbIsLongUKTZED
+               , vbMovementId_tax
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -215,6 +220,12 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
+
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+
      WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
@@ -1361,6 +1372,25 @@ BEGIN
                                  GROUP BY MovementItem.ObjectId
                                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 )
+
+     -- данные из строк налоговой
+     , tmpMI_Tax AS (SELECT DISTINCT
+                            MovementItem.ObjectId           AS GoodsId
+                          , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                          , TRUE AS isName_new
+                     FROM MovementItem 
+                          INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                         ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+                                                        AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     WHERE MovementItem.MovementId = vbMovementId_tax
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                     )
+
       -- Результат
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -1370,6 +1400,7 @@ BEGIN
                    WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
                    WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                   WHEN COALESCE (tmpMI_Tax.isName_new, FALSE)      = TRUE THEN Object_Goods.ValueData
                    WHEN ObjectString_Goods_BUH.ValueData             <> '' THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
               END
@@ -1380,6 +1411,7 @@ BEGIN
                    WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
                    WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                   WHEN COALESCE (tmpMI_Tax.isName_new, FALSE)      = TRUE THEN Object_Goods.ValueData
                    WHEN ObjectString_Goods_BUH.ValueData             <> '' THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
               END) :: TVarChar AS GoodsName_two
@@ -1613,6 +1645,8 @@ BEGIN
                                          ON MLO_PaidKind.MovementId = inMovementId
                                         AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
 
+            LEFT JOIN tmpMI_Tax ON tmpMI_Tax.GoodsId = tmpMI.GoodsId
+                               AND COALESCE (tmpMI_Tax.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
                                               , 83963  -- Ашан
@@ -1740,6 +1774,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.08.21         *
  06.12.19         *
  11.08.19         *
  26.11.15         *

@@ -97,6 +97,7 @@ type
     cxLabel2: TcxLabel;
     PriceSite: TcxGridDBColumn;
     Color_calcSite: TcxGridDBColumn;
+    PriceProc: TcxGridDBColumn;
   private
   public
   end;

@@ -751,12 +751,47 @@ BEGIN
                                 AND ObjectLink_Sticker_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
                              )
 
+     -- по продаже находим налоговую и данные по MIBoolean_Goods_Name_new
+     , tmpName_new AS (SELECT DISTINCT
+                              MovementItem.ObjectId           AS GoodsId
+                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                            , tmp.MovementId_sale
+                            , TRUE AS isName_new
+                       FROM (SELECT DISTINCT
+                                    MLM_Master.MovementChildId AS MovementId_tax
+                                  , tmpSale.MovementId_sale
+                             FROM (SELECT DISTINCT tmpResult.MovementId_sale
+                                   FROM tmpResult) AS tmpSale
+                                  INNER MovementLinkMovement AS MLM_Master 
+                                                             ON MLM_Master.MovementId = tmpSale.MovementId_sale
+                                                            AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+                                  INNER JOIN Movement ON Movement.Id = MLM_Master.MovementId
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                             ) AS tmp
+                            INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_tax
+                                                   AND MovementItem.DescId     = zc_MI_Child()
+                                                   AND MovementItem.isErased   = FALSE
+                            INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                           ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                          AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+                                                          AND COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                       )
+
+
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
            , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (ROW_NUMBER() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
-           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
+           
+           --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
+           , CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+             END :: TVarChar AS GoodsName
+
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , tmpResult.Amount        :: TFloat  AS Amount
@@ -873,6 +908,9 @@ BEGIN
             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpResult.GoodsId
                                         AND tmpStickerProperty.GoodsKindId = tmpResult.GoodsKindId
                                         AND tmpStickerProperty.Ord         = 1
+            LEFT JOIN tmpName_new ON tmpName_new.GoodsId = tmpResult.GoodsId
+                                 AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+                                 AND tmpName_new.MovementId_sale = tmpResult.MovementId_sale
            ;
 
      END IF;

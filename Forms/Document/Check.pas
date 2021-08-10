@@ -191,6 +191,10 @@ type
     dxBarButton15: TdxBarButton;
     cbCorrectMarketing: TcxCheckBox;
     cbCorrectIlliquidMarketing: TcxCheckBox;
+    cbDoctors: TcxCheckBox;
+    actUpdate_Doctors: TdsdExecStoredProc;
+    spUpdate_Doctors: TdsdStoredProc;
+    dxBarButton16: TdxBarButton;
   private
     { Private declarations }
   public

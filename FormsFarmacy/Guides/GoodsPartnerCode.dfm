@@ -1,4 +1,4 @@
-inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
+﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 529
   ClientWidth = 1257
@@ -948,6 +948,60 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end>
       isShowModal = True
     end
+    object actStartLoadAction: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' '#1072#1082#1094#1080#1080
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_Action
+        end
+        item
+          Action = actDoLoadAction
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1082#1094#1080#1080'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1082#1094#1080#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1082#1094#1080#1080
+      ImageIndex = 79
+    end
+    object actGetImportSetting_Goods_Action: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' '#1072#1082#1094#1080#1080
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_Аction
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_Аction
+        end>
+      Caption = 'actGetImportSetting_Goods_Action'
+    end
+    object actDoLoadAction: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' '#1072#1082#1094#1080#1080
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingActionId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAreaId'
+          Value = '0'
+          Component = GuidesArea
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1078,41 +1132,20 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           ItemName = 'dxBarStatic'
         end
         item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
           Visible = True
-          ItemName = 'bbStartLoadConditionsKeep'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
-          Visible = True
-          ItemName = 'bbStartLoad'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
-          Visible = True
-          ItemName = 'bbSpecCondition'
         end
         item
           Visible = True
@@ -1199,6 +1232,44 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object bbUpdate_Goods_Promo_True: TdxBarButton
       Action = actUpdate_Goods_Promo_True
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'bbStartLoadConditionsKeep'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'bbSpecCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actStartLoadAction
       Category = 0
     end
   end
@@ -1363,7 +1434,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       end
       item
         Name = 'outUpdateDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UpdateDate'
         DataType = ftDateTime
@@ -1476,6 +1547,11 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ImportSettingActionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isUpdate'
         Value = Null
         Component = cbUpdate
@@ -1584,7 +1660,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       end
       item
         Name = 'outUpdateDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UpdateDate'
         DataType = ftDateTime
@@ -1977,5 +2053,37 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 344
     Top = 416
+  end
+  object spGetImportSetting_Goods_Аction: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_Action'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingActionId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 360
   end
 end

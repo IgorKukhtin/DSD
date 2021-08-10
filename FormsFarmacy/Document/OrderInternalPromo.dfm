@@ -1,28 +1,28 @@
 inherited OrderInternalPromoForm: TOrderInternalPromoForm
   Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')'
   ClientHeight = 564
-  ClientWidth = 1032
+  ClientWidth = 1025
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 1048
+  ExplicitWidth = 1041
   ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 116
-    Width = 1032
+    Width = 1025
     Height = 348
     ExplicitTop = 116
-    ExplicitWidth = 1032
+    ExplicitWidth = 1025
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 1032
+    ClientRectRight = 1025
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1032
+      ExplicitWidth = 1025
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
-        Width = 1032
+        Width = 1025
         Height = 144
-        ExplicitWidth = 1032
+        ExplicitWidth = 1025
         ExplicitHeight = 144
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -331,7 +331,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 152
-        Width = 1032
+        Width = 1025
         Height = 172
         Align = alBottom
         PopupMenu = PopupMenu
@@ -545,20 +545,53 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 144
-        Width = 1032
+        Width = 1025
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
       end
+      object cxGridExport: TcxGrid
+        Left = 646
+        Top = 76
+        Width = 370
+        Height = 218
+        TabOrder = 3
+        Visible = False
+        object cxGridExportDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ExportItemsDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsView.GroupByBox = False
+          object geGoodsName: TcxGridDBColumn
+            DataBinding.FieldName = 'GoodsName'
+            Visible = False
+            Options.Editing = False
+            Options.ShowCaption = False
+            Width = 140
+          end
+          object geJuridicalName: TcxGridDBColumn
+            DataBinding.FieldName = 'JuridicalName'
+            Visible = False
+            Options.Editing = False
+            Options.ShowCaption = False
+            Width = 99
+          end
+        end
+        object cxGridExportLevel1: TcxGridLevel
+          GridView = cxGridExportDBTableView
+        end
+      end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1032
+    Width = 1025
     Height = 90
     TabOrder = 3
-    ExplicitWidth = 1032
+    ExplicitWidth = 1025
     ExplicitHeight = 90
     inherited edInvNumber: TcxTextEdit
       Left = 168
@@ -650,7 +683,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxSplitter2: TcxSplitter [4]
     Left = 0
     Top = 464
-    Width = 1032
+    Width = 1025
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
@@ -660,7 +693,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object cxGrid2: TcxGrid [5]
     Left = 0
     Top = 472
-    Width = 1032
+    Width = 1025
     Height = 92
     Align = alBottom
     PopupMenu = PopupMenu
@@ -770,7 +803,26 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   inherited ActionList: TActionList
     Left = 199
     Top = 303
-    object actRefreshPromoPartner: TdsdDataSetRefresh [0]
+    object actChoiceJuridical: TOpenChoiceForm [0]
+      Category = 'SendEMail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceJuridical'
+      FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = 'TJuridical_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actRefreshPromoPartner: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPromoPartner
@@ -784,7 +836,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshMI: TdsdDataSetRefresh [1]
+    object actRefreshMI: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -815,7 +867,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
         end>
     end
-    object actMISetErasedChild: TdsdUpdateErased [3]
+    object actMISetErasedChild: TdsdUpdateErased [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -831,7 +883,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actSetErasedPromoPartner: TdsdUpdateErased [5]
+    object actSetErasedPromoPartner: TdsdUpdateErased [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSetErasedPromoPartner
@@ -847,7 +899,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       DataSource = PartnerDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actSetUnErasedPromoPartner: TdsdUpdateErased [7]
+    object actSetUnErasedPromoPartner: TdsdUpdateErased [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnCompletePromoPartner
@@ -863,7 +915,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       isSetErased = False
       DataSource = PartnerDS
     end
-    object actMISetUnErasedChild: TdsdUpdateErased [8]
+    object actMISetUnErasedChild: TdsdUpdateErased [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -891,7 +943,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spSelect_MI_PromoChild
         end>
     end
-    object InsertRecordPartner: TInsertRecord [12]
+    object InsertRecordPartner: TInsertRecord [13]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -904,7 +956,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordPromoMaster: TInsertRecord [13]
+    object InsertRecordPromoMaster: TInsertRecord [14]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -917,7 +969,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1084#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordMaster: TInsertRecord [14]
+    object InsertRecordMaster: TInsertRecord [15]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -930,7 +982,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object InsertRecordChild: TInsertRecord [15]
+    object InsertRecordChild: TInsertRecord [16]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -953,7 +1005,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spSelect_MI_PromoChild
         end>
     end
-    object actUpdatePartnerDS: TdsdUpdateDataSet [17]
+    object actUpdatePartnerDS: TdsdUpdateDataSet [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -968,7 +1020,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Caption = 'actUpdatePartnerDS'
       DataSource = PartnerDS
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [18]
+    object actUpdateChildDS: TdsdUpdateDataSet [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -983,7 +1035,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [19]
+    object actDoLoad: TExecuteImportSettingsAction [20]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -1043,7 +1095,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spGet
         end>
     end
-    object actContractChoice: TOpenChoiceForm [30]
+    object actContractChoice: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1764,6 +1816,103 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       Caption = 'actExecClearComplement'
     end
+    object actExportStoredproc: TdsdExecStoredProc
+      Category = 'SendEMail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetExportParam
+      StoredProcList = <
+        item
+          StoredProc = spGetExportParam
+        end
+        item
+          StoredProc = spSelectExport
+        end>
+      Caption = 'actExportStoredproc'
+    end
+    object actExportToPartner: TExportGrid
+      Category = 'SendEMail'
+      TabSheet = tsMain
+      MoveParams = <>
+      ColumnNameDataSet = ExportHeaderCDS
+      Grid = cxGridExport
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      OpenAfterCreate = False
+    end
+    object actGetDocumentDataForEmail: TdsdExecStoredProc
+      Category = 'SendEMail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDocumentDataForEmail
+      StoredProcList = <
+        item
+          StoredProc = spGetDocumentDataForEmail
+        end>
+      Caption = 'actGetDocumentDataForEmail'
+    end
+    object SMTPFileAction: TdsdSMTPFileAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      Host.Value = '0'
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host'
+      Host.MultiSelectSeparator = ','
+      Port.Value = '0'
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port'
+      Port.MultiSelectSeparator = ','
+      UserName.Value = '0'
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName'
+      UserName.MultiSelectSeparator = ','
+      Password.Value = '0'
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password'
+      Password.MultiSelectSeparator = ','
+      Body.Value = '0'
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body'
+      Body.MultiSelectSeparator = ','
+      Subject.Value = '0'
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject'
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = '0'
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = '0'
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object mactSMTPSend: TMultiAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceJuridical
+        end
+        item
+          Action = actExportStoredproc
+        end
+        item
+          Action = actExportToPartner
+        end
+        item
+          Action = actGetDocumentDataForEmail
+        end
+        item
+          Action = SMTPFileAction
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
+      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+      ShortCut = 16467
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -1982,6 +2131,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -2106,6 +2259,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Visible = ivAlways
       ImageIndex = 40
     end
+    object dxBarButton4: TdxBarButton
+      Action = mactSMTPSend
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
@@ -2157,6 +2314,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'PriceAdjustmentLabel'
         Value = #1042#1074#1086#1076' '#1087#1088#1086#1094#1077#1085#1090#1072' '#1082#1086#1088#1077#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2554,13 +2716,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 476
-    Top = 206
+    Left = 492
+    Top = 214
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 444
+    Left = 420
     Top = 209
   end
   object DetailDCS: TClientDataSet
@@ -2614,6 +2776,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2804,6 +2967,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3229,5 +3393,180 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ParamKeyField = 'inMovementId'
     Left = 680
     Top = 408
+  end
+  object spGetExportParam: TdsdStoredProc
+    StoredProcName = 'gpGet_OrderInternalPromo_ExportParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DefaultFileName'
+        Value = Null
+        Component = actExportToPartner
+        ComponentItem = 'DefaultFileName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExportType'
+        Value = Null
+        Component = actExportToPartner
+        ComponentItem = 'ExportType'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DefaultFileName'
+        Value = Null
+        Component = SMTPFileAction
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 216
+  end
+  object spSelectExport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderInternalPromo_Export'
+    DataSet = ExportHeaderCDS
+    DataSets = <
+      item
+        DataSet = ExportHeaderCDS
+      end
+      item
+        DataSet = ExportItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 903
+    Top = 160
+  end
+  object spGetDocumentDataForEmail: TdsdStoredProc
+    StoredProcName = 'gpGet_OrderInternalPromoForEmail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Subject'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Body'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressFrom'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressTo'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Port'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 272
+  end
+  object ExportItemsDS: TDataSource
+    DataSet = ExportItemsCDS
+    Left = 960
+    Top = 328
+  end
+  object ExportItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 796
+    Top = 278
+  end
+  object ExportHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 724
+    Top = 273
   end
 end

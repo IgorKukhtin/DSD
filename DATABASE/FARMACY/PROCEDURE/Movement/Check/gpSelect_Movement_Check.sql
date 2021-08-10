@@ -52,6 +52,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isCorrectIlliquidMarketing Boolean
              , isDeliverySite Boolean
              , SummaDelivery TFloat
+             , isDoctors Boolean
               )
 AS
 $BODY$
@@ -159,6 +160,7 @@ BEGIN
            
            , COALESCE(MovementBoolean_DeliverySite.ValueData, False)      AS isDeliverySite
            , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
+           , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
 
 
         FROM (SELECT Movement.*
@@ -412,6 +414,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_CorrectIlliquidMarketing
                                       ON MovementBoolean_CorrectIlliquidMarketing.MovementId = Movement_Check.Id
                                      AND MovementBoolean_CorrectIlliquidMarketing.DescId = zc_MovementBoolean_CorrectIlliquidMarketing()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Doctors
+                                      ON MovementBoolean_Doctors.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_Doctors.DescId = zc_MovementBoolean_Doctors()
       ;
 
 END;

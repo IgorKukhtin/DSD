@@ -113,7 +113,10 @@ BEGIN
                                 THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
                            ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                                       THEN ObjectString_Goods_RUS.ValueData
-                                                                 ELSE CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                                 ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                                                      CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                                           WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                                                                      END
                                                             END
                                                           , Object_GoodsKind.ValueData
                                                           , MovementItem.Id
@@ -131,13 +134,17 @@ BEGIN
                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
+                                                  ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
+                                                 AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
                WHERE MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
                  AND MovementItem.Amount     <> 0
               ) AS tmp
          ;
-     END IF:
+     END IF;
 
 
      -- Обязательно меняем статус документа + сохранили протокол

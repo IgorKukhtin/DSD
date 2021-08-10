@@ -61,6 +61,7 @@ type
     actSummaDialogForm: TExecuteDialog;
     actUpdate_SummaReceivedFact: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
+    SummaOther: TcxGridDBColumn;
   private
     { Private declarations }
   public

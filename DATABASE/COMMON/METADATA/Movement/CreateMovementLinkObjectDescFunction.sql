@@ -325,6 +325,18 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SubjectDoc() RETURNS Integer AS
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_SubjectDoc', 'Пользователь, кот. объединил документы' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckedHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_CheckedHead', 'Пользователь, Проверен руководителем' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedHead');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckedPersonal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedPersonal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_CheckedPersonal', 'Пользователь, Проверен Отдел персонала' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedPersonal');
+
+
+
+
+
 --!!!!!!!!!!!  Аптека
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
@@ -508,6 +520,8 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 09.08.21         * zc_MovementLinkObject_CheckedHead
+                    zc_MovementLinkObject_CheckedPersonal
  06.07.21                                                                                      * zc_MovementLinkObject_TopicsTestingTuning 
  08.06.21         * zc_MovementLinkObject_OrderPeriodKind
  21.04.21                                                                                      * zc_MovementLinkObject_BuyerForSite 

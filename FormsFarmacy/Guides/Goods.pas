@@ -285,6 +285,11 @@ type
     dxBarButton12: TdxBarButton;
     isUkrainianTranslation: TcxGridDBColumn;
     PairSunAmount: TcxGridDBColumn;
+    actDialogPercentMarkup: TExecuteDialog;
+    macPercentMarkup: TMultiAction;
+    actStoredProcPercentMarkup: TdsdExecStoredProc;
+    spUpdatePercentMarkup: TdsdStoredProc;
+    dxBarButton13: TdxBarButton;
   private
     { Private declarations }
   public

@@ -82,6 +82,21 @@ type
     bbShowErased: TdxBarButton;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    cbCheckedHead: TcxCheckBox;
+    edCheckedHead_date: TcxDateEdit;
+    edCheckedHead: TcxTextEdit;
+    cbCheckedPersonal: TcxCheckBox;
+    edCheckedPersonal_date: TcxDateEdit;
+    edCheckedPersonal: TcxTextEdit;
+    spGet: TdsdStoredProc;
+    spUpdate_CheckedHead: TdsdStoredProc;
+    spUpdate_CheckedPersonal: TdsdStoredProc;
+    actUpdate_CheckedHead: TdsdExecStoredProc;
+    actUpdate_CheckedPersonal: TdsdExecStoredProc;
+    macUpdateCheckedHead: TMultiAction;
+    macUpdateCheckedPersonal: TMultiAction;
+    bbUpdateCheckedHead: TdxBarButton;
+    bbUpdateCheckedPersonal: TdxBarButton;
   private
   public
   end;
