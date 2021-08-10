@@ -76,17 +76,18 @@ object DialogPswSmsForm: TDialogPswSmsForm
     object LabelNumberValue: TLabel
       Left = 0
       Top = 0
-      Width = 197
+      Width = 322
       Height = 14
       Align = alTop
       Alignment = taCenter
-      Caption = #1042#1074#1077#1076#1080#1090#1077' '#1082#1086#1076' '#1087#1086#1089#1083#1077' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' SMS'
+      Caption = #1042#1074#1077#1076#1080#1090#1077' '#1082#1086#1076' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1081' '#1074' SMS'
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clNavy
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 180
     end
     object NumberValueEdit: TcxCurrencyEdit
       Left = 102
