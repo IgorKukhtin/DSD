@@ -21,9 +21,14 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Tax());
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -38,15 +43,20 @@ BEGIN
                                          , inUserId             := vbUserId
                                           ) AS tmp;
 
-     -- Проверка
-     IF inLineNumTax <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_NPP()), 0)
-        AND NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableNPP_auto())
+     IF inLineNumTax <> COALESCE ((SELECT gpSelect.LineNum FROM gpSelect_MovementItem_Tax (inMovementId:= inMovementId, inShowAll:= FALSE, inisErased:= FALSE, inSession:= inSession) AS gpSelect WHERE gpSelect.Id = ioId), 0)
+        AND vbIsInsert = FALSE
+        AND inLineNumTax > 0
      THEN
-          RAISE EXCEPTION 'Ошибка.Не установлен признак <Отключить пересчет № п/п> = Да.';
+         -- Проверка
+         IF inLineNumTax <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_NPP()), 0)
+            AND NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.ValueData = TRUE AND MB.DescId = zc_MovementBoolean_DisableNPP_auto())
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не установлен признак <Отключить пересчет № п/п> = Да.';
+         END IF;
+    
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), ioId, inLineNumTax);
      END IF;
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP(), ioId, inLineNumTax);
 
      -- сохранили свойство <использовать новое название>  --редактирование в гриде
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Goods_Name_new(), ioId, inisName_new);

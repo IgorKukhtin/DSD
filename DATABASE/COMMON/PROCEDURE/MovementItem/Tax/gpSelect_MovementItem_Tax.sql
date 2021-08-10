@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Tax(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsCodeUKTZED TVarChar, GoodsName TVarChar
+RETURNS TABLE (Id Integer, inLineNumTax Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsCodeUKTZED TVarChar, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -210,6 +210,20 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
+           , CASE WHEN MIFloat_NPP.ValueData <> 0
+                       THEN MIFloat_NPP.ValueData
+                  WHEN vbOperDate < '01.03.2016' AND 1=1
+                       THEN -1 * ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE -1 * ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                             THEN ObjectString_Goods_RUS.ValueData
+                                                        ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
+                                                             CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                   END
+                                                 , Object_GoodsKind.ValueData
+                                                 , MovementItem.Id
+                                              )
+             END :: Integer AS inLineNum
            , CASE WHEN MIFloat_NPP.ValueData <> 0
                        THEN MIFloat_NPP.ValueData
                   WHEN vbOperDate < '01.03.2016' AND 1=1
