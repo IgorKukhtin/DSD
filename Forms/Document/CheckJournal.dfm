@@ -513,6 +513,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 68
           end
+          object isDoctors: TcxGridDBColumn
+            Caption = #1042#1088#1072#1095#1080
+            DataBinding.FieldName = 'isDoctors'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
         end
       end
     end

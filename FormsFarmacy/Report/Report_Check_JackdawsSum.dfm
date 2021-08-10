@@ -22,6 +22,7 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       inherited cxGrid: TcxGrid
         Width = 1007
         Height = 306
+        ExplicitTop = 2
         ExplicitWidth = 1007
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -103,6 +104,11 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaReceivedDelta
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaOther
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -222,6 +228,16 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object SummaOther: TcxGridDBColumn
+            Caption = #1041#1077#1079' '#1075#1072#1083#1082#1080' '#1080' '#1056#1056#1054
+            DataBinding.FieldName = 'SummaOther'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object ColorRA_calc: TcxGridDBColumn
             DataBinding.FieldName = 'ColorRA_calc'

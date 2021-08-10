@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad,
+  dsdInternetAction;
 
 type
   TOrderInternalPromoForm = class(TAncestorDocumentForm)
@@ -171,6 +172,24 @@ type
     AddToM: TcxGridDBColumn;
     dxBarButton3: TdxBarButton;
     CorrPrice: TcxGridDBColumn;
+    cxGridExport: TcxGrid;
+    cxGridExportDBTableView: TcxGridDBTableView;
+    cxGridExportLevel1: TcxGridLevel;
+    actExportStoredproc: TdsdExecStoredProc;
+    actExportToPartner: TExportGrid;
+    actGetDocumentDataForEmail: TdsdExecStoredProc;
+    SMTPFileAction: TdsdSMTPFileAction;
+    mactSMTPSend: TMultiAction;
+    spGetExportParam: TdsdStoredProc;
+    spSelectExport: TdsdStoredProc;
+    actChoiceJuridical: TOpenChoiceForm;
+    dxBarButton4: TdxBarButton;
+    spGetDocumentDataForEmail: TdsdStoredProc;
+    geGoodsName: TcxGridDBColumn;
+    geJuridicalName: TcxGridDBColumn;
+    ExportItemsDS: TDataSource;
+    ExportItemsCDS: TClientDataSet;
+    ExportHeaderCDS: TClientDataSet;
   private
     { Private declarations }
   public

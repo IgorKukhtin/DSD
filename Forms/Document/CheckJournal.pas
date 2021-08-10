@@ -91,6 +91,7 @@ type
     isCorrectIlliquidMarketing: TcxGridDBColumn;
     isDeliverySite: TcxGridDBColumn;
     SummaDelivery: TcxGridDBColumn;
+    isDoctors: TcxGridDBColumn;
   private
     { Private declarations }
   public

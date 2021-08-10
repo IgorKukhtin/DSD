@@ -237,6 +237,58 @@ BEGIN
                         FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                         WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                         )
+      , tmpGoodsSP AS (SELECT DISTINCT MovementItem.ObjectId         AS GoodsId
+                          FROM Movement
+                               INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                       ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                      AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                               INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                      AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+
+                               LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                                ON MI_IntenalSP.MovementItemId = MovementItem.Id
+                                                               AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+
+                          WHERE Movement.DescId = zc_Movement_GoodsSP()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                         )
+     , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                                 , Object_Object.Id                                          AS GoodsDiscountId
+                                 , Object_Object.ValueData                                   AS GoodsDiscountName
+                                 , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                                 , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                              FROM Object AS Object_BarCode
+                                  INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                        ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                       AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                  INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                       ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                      AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                  LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
+
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                          ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id
+                                                         AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                        ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                       AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                                                   
+                              WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                AND Object_BarCode.isErased = False
+                              GROUP BY Object_Goods_Retail.GoodsMainId
+                                     , Object_Object.Id
+                                     , Object_Object.ValueData
+                                     , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
 
       SELECT Remains.UnitId                 AS PharmacyId
            , Object_Goods_Retail.Id         AS ProductId
@@ -248,8 +300,12 @@ BEGIN
            , REPLACE(Object_Goods_Juridical_Optima.Code, ',', ';')::TVarChar      AS Optima
            , REPLACE(Object_Goods_Juridical_Badm.Code, ',', ';')::TVarChar        AS Badm
            , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
-           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS Price
-           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS OfflinePrice
+           , to_char(zfCalc_PriceCash(Object_Price.Price, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                                          ,'FM9999990.00')::TVarChar                   AS Price
+           , to_char(zfCalc_PriceCash(Object_Price.Price, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                                                          ,'FM9999990.00')::TVarChar                   AS OfflinePrice
 --           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS Price
 --           , to_char(CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 4 THEN COALESCE(Price_Site.Price, Object_Price.Price) ELSE Object_Price.Price END,'FM9999990.00')::TVarChar                   AS OfflinePrice
            , NULL::TVarChar                   AS PickupPrice
@@ -296,6 +352,9 @@ BEGIN
 
            -- штрих-код производителя
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
+
+           LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
+           LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
       WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0)) > 0
         AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'

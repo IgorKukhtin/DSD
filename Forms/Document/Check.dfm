@@ -605,7 +605,7 @@ inherited CheckForm: TCheckForm
       Width = 208
     end
     object cbCorrectIlliquidMarketing: TcxCheckBox
-      Left = 219
+      Left = 238
       Top = 213
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1085#1077#1083#1080#1082#1074#1080#1076#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
@@ -614,6 +614,17 @@ inherited CheckForm: TCheckForm
       ShowHint = True
       TabOrder = 45
       Width = 286
+    end
+    object cbDoctors: TcxCheckBox
+      Left = 508
+      Top = 213
+      Hint = #1042#1088#1072#1095#1080
+      Caption = #1042#1088#1072#1095#1080
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 46
+      Width = 66
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -1950,6 +1961,21 @@ inherited CheckForm: TCheckForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       ImageIndex = 75
     end
+    object actUpdate_Doctors: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Doctors
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Doctors
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1088#1072#1095#1080'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1088#1072#1095#1080'>'
+      ImageIndex = 80
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1088#1072#1095#1080'>?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -2077,6 +2103,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2193,6 +2223,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton15: TdxBarButton
       Action = actSetPrice
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = actUpdate_Doctors
       Category = 0
     end
   end
@@ -2692,6 +2726,13 @@ inherited CheckForm: TCheckForm
         Name = 'isCorrectIlliquidMarketing'
         Value = Null
         Component = cbCorrectIlliquidMarketing
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDoctors'
+        Value = Null
+        Component = cbDoctors
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -3570,7 +3611,7 @@ inherited CheckForm: TCheckForm
         Name = 'inMovementItemID'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3586,5 +3627,37 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 202
     Top = 416
+  end
+  object spUpdate_Doctors: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_Doctors'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDoctors'
+        Value = Null
+        Component = cbDoctors
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDoctors'
+        Value = Null
+        Component = cbDoctors
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 258
+    Top = 401
   end
 end

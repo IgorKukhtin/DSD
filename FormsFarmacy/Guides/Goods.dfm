@@ -20,8 +20,6 @@ inherited GoodsForm: TGoodsForm
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 417
-        ExplicitLeft = -784
-        ExplicitTop = 3
         ExplicitWidth = 1165
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2461,6 +2459,59 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actExecUpdate_isMultiplicityError'
     end
+    object actDialogPercentMarkup: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDialogPercentMarkup'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Amount'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'PercentMarkup'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+          Component = FormParams
+          ComponentItem = 'PercentMarkupLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macPercentMarkup: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDialogPercentMarkup
+      ActionList = <
+        item
+          Action = actStoredProcPercentMarkup
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "% '#1085#1072#1094#1077#1085#1082#1080'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "% '#1085#1072#1094#1077#1085#1082#1080'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 43
+    end
+    object actStoredProcPercentMarkup: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePercentMarkup
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePercentMarkup
+        end>
+      Caption = 'actStoredProcPercentMarkup'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2783,6 +2834,10 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -2930,6 +2985,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton12: TdxBarButton
       Action = maUpdate_isMultiplicityError
+      Category = 0
+    end
+    object dxBarButton13: TdxBarButton
+      Action = macPercentMarkup
       Category = 0
     end
   end
@@ -3312,6 +3371,18 @@ inherited GoodsForm: TGoodsForm
       item
         Name = 'MultiplicityLabel'
         Value = #1042#1074#1077#1076#1080#1090#1077' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentMarkup'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentMarkupLabel'
+        Value = #1042#1074#1077#1076#1080#1090#1077' % '#1085#1072#1094#1077#1085#1082#1080
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -4839,5 +4910,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 48
     Top = 216
+  end
+  object spUpdatePercentMarkup: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_PercentMarkup'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentMarkup'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 155
   end
 end

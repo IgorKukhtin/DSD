@@ -18,6 +18,7 @@ RETURNS TABLE (OperDate TDateTime
              , SummaReceivedDelta TFloat
              , SummaJackdaws1 TFloat
              , SummaJackdaws2 TFloat
+             , SummaOther TFloat
              , ColorRA_calc Integer
              )
 AS
@@ -61,6 +62,8 @@ BEGIN
                                          AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaJackdaws1
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 2 
                                          AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaJackdaws2
+                             , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 0 
+                                         AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaOther
                         FROM tmpMovementAll AS Movement
 
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
@@ -146,6 +149,7 @@ BEGIN
 
        , Movement.SummaJackdaws1   AS SummaJackdaws1
        , Movement.SummaJackdaws2   AS SummaJackdaws2
+       , Movement.SummaOther       AS SummaOther
        , zc_Color_Yelow()          AS ColorRA_calc
   FROM tmpMovement AS Movement 
   
@@ -165,7 +169,7 @@ BEGIN
 
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
 
-  WHERE COALESCE(Movement.SummaJackdaws1, 0) > 0 OR COALESCE(Movement.SummaJackdaws2, 0) > 0
+  WHERE COALESCE(Movement.SummaJackdaws1, 0) > 0 OR COALESCE(Movement.SummaJackdaws2, 0) > 0 OR COALESCE(Movement.SummaOther, 0) > 0
   ORDER BY Movement.OperDate
          , Object_Unit.ValueData;
 
@@ -181,4 +185,5 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_Check_JackdawsSum(inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inUnitId := 0, inSession := '3');
+
+select * from gpReport_Check_JackdawsSum(inStartDate := ('04.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inUnitId := 0 ,  inSession := '3');

@@ -42,7 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionDateKindId Integer, PartionDateKindName TVarChar
              , Delay Boolean
              , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
-             , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean
+             , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean, isDoctors Boolean
 )
 AS
 $BODY$
@@ -332,6 +332,7 @@ BEGIN
            , tmpLoyaltySM.LoyaltySMSumma                                  AS LoyaltySMSumma
            , COALESCE(MovementBoolean_CorrectMarketing.ValueData, False)  AS isCorrectMarketing
            , COALESCE(MovementBoolean_CorrectIlliquidMarketing.ValueData, False)  AS isCorrectIlliquidMarketing
+           , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
 
         FROM tmpMovement AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -398,6 +399,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_CorrectIlliquidMarketing
                                        ON MovementBoolean_CorrectIlliquidMarketing.MovementId = Movement_Check.Id
                                       AND MovementBoolean_CorrectIlliquidMarketing.DescId = zc_MovementBoolean_CorrectIlliquidMarketing()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Doctors
+                                       ON MovementBoolean_Doctors.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Doctors.DescId = zc_MovementBoolean_Doctors()
 
              -- Программа лояльности накопительная
              LEFT JOIN tmpLoyaltySM ON 1 = 1

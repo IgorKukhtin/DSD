@@ -253,6 +253,16 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         Options.Editing = False
         Width = 70
       end
+      object PriceProc: TcxGridDBColumn
+        Caption = '% '#1084#1077#1078#1076#1091' '#1052#1080#1085'/'#1052#1072#1082#1089' '#1094#1077#1085#1086#1081
+        DataBinding.FieldName = 'PriceProc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 73
+      end
       object UnitCount: TcxGridDBColumn
         Caption = #1040#1087#1090#1077#1082' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084
         DataBinding.FieldName = 'UnitCount'

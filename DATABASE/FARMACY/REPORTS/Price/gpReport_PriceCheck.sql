@@ -1,7 +1,7 @@
 -- Function: gpReport_PriceCheck()
 
 --DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, TFloat, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PriceCheck (TFloat, TFloat, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PriceCheck(
     IN inPercent          TFloat    , -- Процент отклонения
@@ -144,6 +144,7 @@ BEGIN
             PriceAverage          TFLoat,
             PriceMin              TFLoat,
             PriceMax              TFLoat,
+            PriceProc             TFLoat,
             PriceSite             TFLoat,
             Color_calcSite        Integer NOT NULL DEFAULT zc_Color_Black(),
             isBadPriceSite        Boolean Not Null Default False
@@ -197,7 +198,7 @@ BEGIN
     
                          
     INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PriceTop, isSP, isPromo,
-                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceSite)
+                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceProc, PriceSite)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.Name             AS GoodsName
@@ -218,6 +219,9 @@ BEGIN
          , 0
          , MIN(tmpUnitPrice.Price)
          , MAX(tmpUnitPrice.Price)
+         , CASE WHEN MIN(tmpUnitPrice.Price) > 0 
+                THEN(MAX(tmpUnitPrice.Price) - MIN(tmpUnitPrice.Price)) / MIN(tmpUnitPrice.Price) * 100
+                ELSE 100 END
          , Price_Site.Price
     FROM tmpUnitPrice
          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
@@ -227,18 +231,17 @@ BEGIN
          LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpUnitPrice.GoodsId
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
            , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price, Price_Site.Price
-  --  HAVING (MIN(tmpUnitPrice.Price) * (100.0 + inPercent) / 100.0) < MAX(tmpUnitPrice.Price)
     ORDER BY tmpUnitPrice.GoodsId;
 
     -- Расчитываем среднюю цену
     UPDATE tmpResult SET PriceAverage = T1.PriceAverage
                        , Color_calcSite = CASE WHEN COALESCE (tmpResult.PriceSite, 0) > 0
-                                                AND (T1.PriceAverage * (100.0 + inPercentSite) / 100.0 < tmpResult.PriceSite
-                                                 OR T1.PriceAverage * (100.0 - inPercentSite) / 100.0 > tmpResult.PriceSite)
+                                                AND (T1.PriceAverage * (100.0 + inPercentSite / 2) / 100.0 < tmpResult.PriceSite
+                                                 OR T1.PriceAverage * (100.0 - inPercentSite / 2) / 100.0 > tmpResult.PriceSite)
                                                THEN zc_Color_Red() ELSE zc_Color_Black() END
                        , isBadPriceSite = CASE WHEN COALESCE (tmpResult.PriceSite, 0) > 0
-                                                AND (T1.PriceAverage * (100.0 + inPercentSite) / 100.0 < tmpResult.PriceSite
-                                                 OR T1.PriceAverage * (100.0 - inPercentSite) / 100.0 > tmpResult.PriceSite)
+                                                AND (T1.PriceAverage * (100.0 + inPercentSite / 2) / 100.0 < tmpResult.PriceSite
+                                                 OR T1.PriceAverage * (100.0 - inPercentSite / 2) / 100.0 > tmpResult.PriceSite)
                                                THEN True ELSE False END
     FROM (SELECT tmpUnitPrice.GoodsId
                , ROUND(SUM(tmpUnitPrice.Price) / COUNT(*), 2) AS PriceAverage
@@ -252,8 +255,7 @@ BEGIN
 
     -- Удаляем что номально
     DELETE FROM tmpResult
-    WHERE tmpResult.PriceAverage * (100.0 + inPercent) / 100.0 >= tmpResult.PriceMax
-       AND tmpResult.PriceAverage * (100.0 - inPercent) / 100.0 <= tmpResult.PriceMin
+    WHERE PriceProc < inPercent
        AND isBadPriceSite = False;
 
       -- Подразделения
@@ -294,8 +296,8 @@ BEGIN
           ' FROM (SELECT
              tmpUnitPrice.GoodsID AS GoodsID,
              tmpUnitPrice.Price AS T_Price,
-             CASE WHEN tmpResult.PriceAverage * (100.0 + '||inPercent::Text||') / 100.0 < tmpUnitPrice.Price
-                    OR tmpResult.PriceAverage * (100.0 - '||inPercent::Text||') / 100.0 > tmpUnitPrice.Price
+             CASE WHEN tmpResult.PriceAverage * (100.0 + '||(inPercent/2)::Text||') / 100.0 < tmpUnitPrice.Price
+                    OR tmpResult.PriceAverage * (100.0 - '||(inPercent/2)::Text||') / 100.0 > tmpUnitPrice.Price
                   THEN zc_Color_Red() ELSE zc_Color_Black() END AS T_Color_calc,
              tmpUnitPrice.ManagerId
            FROM tmpUnitPrice
@@ -617,4 +619,4 @@ $BODY$
 -- тест 
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               
 
-select * from gpReport_PriceCheck(inPercent := 100 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');
+select * from gpReport_PriceCheck(inPercent := 10 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');

@@ -329,6 +329,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_DisableNPP_auto() RETURNS integer 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_DisableNPP_auto', 'Отключить пересчет № п/п при проведении'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DisableNPP_auto');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_DisableNPP_auto() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_DisableNPP_auto'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_DisableNPP_auto', 'Отключить пересчет № п/п при проведении'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DisableNPP_auto');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Doctors() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Doctors'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Doctors', 'Врачи'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Doctors');
+
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_CheckedHead() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_CheckedHead'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_CheckedHead', 'Проверен руководителем'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_CheckedHead');
@@ -343,6 +351,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
  09.08.21         * zc_MovementBoolean_CheckedHead
                     zc_MovementBoolean_CheckedPersonal
+ 04.08.21                                                                                    * zc_MovementBoolean_Doctors
  29.07.21                                                                                    * zc_MovementBoolean_RetrievedAccounting
  23.07.21                                                                                    * zc_MovementBoolean_DeliverySite
  19.07.21                                                                                    * zc_MovementBoolean_RoundingTo50

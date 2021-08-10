@@ -663,10 +663,10 @@ begin
 
 {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_GoodsPairSun_EditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_GoodsPairSun_EditForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_LimitSUN_T_EditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_LimitSUN_T_EditForm');
 
@@ -703,10 +703,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
 
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
     exit;
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 
@@ -1005,12 +1006,15 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_JackdawsSumDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_JackdawsSumForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckDeliverySiteForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckDeliverySiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_CheckDeliverySiteForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckWithPenniesForm'));
@@ -1073,9 +1077,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Reprice_PromoBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Reprice_PromoBonusForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_SUAForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_SUAForm');

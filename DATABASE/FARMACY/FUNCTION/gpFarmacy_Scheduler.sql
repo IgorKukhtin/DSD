@@ -331,6 +331,20 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsert_Movement_FinalSUA_Auto', True, text_var1::TVarChar, vbUserId);
     END;
     
+    -- Переоценка для сайта
+    BEGIN
+      IF date_part('isodow', CURRENT_DATE)::Integer <= 5 AND date_part('HOUR',  CURRENT_TIME)::Integer = 12 AND 
+         date_part('MINUTE',  CURRENT_TIME)::Integer >= 25 AND date_part('MINUTE',  CURRENT_TIME)::Integer < 35
+      THEN
+         PERFORM * FROM gpRun_Object_RepriceSheduler_RepriceSite (inSession);    
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Object_RepriceSheduler_RepriceSite', False, 'Пероценка для сайта выполнена', vbUserId);
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Object_RepriceSheduler_RepriceSite', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -343,5 +357,5 @@ $BODY$
  15.02.20                                                       *
 */
 
--- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc
+-- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc LIMIT 50
 -- SELECT * FROM gpFarmacy_Scheduler (inSession := zfCalc_UserAdmin())
