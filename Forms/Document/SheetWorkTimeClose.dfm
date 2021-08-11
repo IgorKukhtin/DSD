@@ -197,6 +197,7 @@ inherited SheetWorkTimeCloseForm: TSheetWorkTimeCloseForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
+      Enabled = False
       Properties.Buttons = <
         item
           Action = actCompleteMovement
