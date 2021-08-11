@@ -216,9 +216,15 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_CheckedPersonal() RETURNS Integer AS 
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_CheckedPersonal', 'Дата/время Проверен Отдел персонала' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_CheckedPersonal');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_TimeClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_TimeClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_TimeClose', 'Время авто закрытия' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_TimeClose');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 10.08.21         * zc_MovementDate_TimeClose
  09.08.21         * zc_MovementDate_CheckedHead
                     zc_MovementDate_CheckedPersonal
  26.04.21         * zc_MovementDate_StartStop

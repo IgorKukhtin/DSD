@@ -1295,7 +1295,10 @@ uses
   MemberSkillEdit in '..\..\Forms\Guides\MemberSkillEdit.pas' {MemberSkillEditForm: TParentForm},
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm},
   ReasonOut in '..\..\Forms\Guides\ReasonOut.pas' {ReasonOutForm: TParentForm},
-  ReasonOutEdit in '..\..\Forms\Guides\ReasonOutEdit.pas' {ReasonOutEditForm: TParentForm};
+  ReasonOutEdit in '..\..\Forms\Guides\ReasonOutEdit.pas' {ReasonOutEditForm: TParentForm},
+  SheetWorkTimeClose in '..\..\Forms\Document\SheetWorkTimeClose.pas' {SheetWorkTimeCloseForm: TParentForm},
+  SheetWorkTimeCloseJournal in '..\..\Forms\Document\SheetWorkTimeCloseJournal.pas' {SheetWorkTimeCloseJournalForm: TParentForm},
+  SheetWorkTimeCloseEdit in '..\..\Forms\Document\SheetWorkTimeCloseEdit.pas' {SheetWorkTimeCloseEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

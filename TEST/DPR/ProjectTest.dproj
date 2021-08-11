@@ -4464,6 +4464,18 @@
 				<Form>ReasonOutEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeClose.pas">
+				<Form>SheetWorkTimeCloseForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeCloseJournal.pas">
+				<Form>SheetWorkTimeCloseJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeCloseEdit.pas">
+				<Form>SheetWorkTimeCloseEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
