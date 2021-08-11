@@ -803,24 +803,16 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   inherited ActionList: TActionList
     Left = 199
     Top = 303
-    object actChoiceJuridical: TOpenChoiceForm [0]
+    object actExecSPSelectExportJuridical: TdsdExecStoredProc [0]
       Category = 'SendEMail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceJuridical'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = 'TJuridical_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spSelectExportJuridical
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
+          StoredProc = spSelectExportJuridical
         end>
-      isShowModal = True
+      Caption = 'actExportStoredproc'
     end
     object actRefreshPromoPartner: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
@@ -1892,9 +1884,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actChoiceJuridical
-        end
-        item
           Action = actExportStoredproc
         end
         item
@@ -1906,10 +1895,23 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         item
           Action = SMTPFileAction
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
-      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
       Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+    end
+    object actSMTPSend: TMultiAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      BeforeAction = actExecSPSelectExportJuridical
+      ActionList = <
+        item
+          Action = mactSMTPSend
+        end>
+      DataSource = ExportJuridicalDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1099#1083#1082#1077' E-mail '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'?'
+      InfoAfterExecute = 'E-mail '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail '#1074#1089#1077#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail '#1074#1089#1077#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       ImageIndex = 53
       ShortCut = 16467
     end
@@ -2260,7 +2262,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ImageIndex = 40
     end
     object dxBarButton4: TdxBarButton
-      Action = mactSMTPSend
+      Action = actSMTPSend
       Category = 0
     end
   end
@@ -3410,7 +3412,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = FormParams
+        Component = ExportJuridicalCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3462,7 +3464,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = FormParams
+        Component = ExportJuridicalCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3487,7 +3489,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = FormParams
+        Component = ExportJuridicalCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3566,7 +3568,38 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
   object ExportHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 724
-    Top = 273
+    Left = 684
+    Top = 281
+  end
+  object spSelectExportJuridical: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderInternalPromo_ExportJuridical'
+    DataSet = ExportJuridicalCDS
+    DataSets = <
+      item
+        DataSet = ExportJuridicalCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 903
+    Top = 328
+  end
+  object ExportJuridicalCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 684
+    Top = 334
+  end
+  object ExportJuridicalDS: TDataSource
+    DataSet = ExportJuridicalCDS
+    Left = 968
+    Top = 376
   end
 end

@@ -49,8 +49,7 @@ BEGIN
       , tmpMovement AS (SELECT
                                Movement.OperDate
                              , Movement.UnitId
-                             , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 0 
-                                         AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) <> 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaChech
+                             , SUM(CASE WHEN COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) <> 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaChech
                              , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
                                          AND (COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True 
                                           OR   COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0) THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS RetrievedAccounting
@@ -186,4 +185,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_Check_JackdawsSum(inStartDate := ('04.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inUnitId := 0 ,  inSession := '3');
+select * from gpReport_Check_JackdawsSum(inStartDate := ('05.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inUnitId := 10779386 ,  inSession := '3');

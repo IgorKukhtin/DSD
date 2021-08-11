@@ -90,7 +90,7 @@ BEGIN
     vbMail := (vbMail || vbUserMail) :: TVarChar;
 
     -- Временно для теста
-    vbMail := 'artur17111@gmail.com, olegsh1264@gmail.com';
+    vbMail := 'artur17111@gmail.com,olegsh1264@gmail.com';
     
     -- Результат
     RETURN QUERY

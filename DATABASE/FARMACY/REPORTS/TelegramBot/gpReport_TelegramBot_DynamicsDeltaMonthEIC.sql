@@ -34,29 +34,35 @@ BEGIN
                                         , DATE_TRUNC ('MONTH', DynamicsOrdersEIC.OperDate):: TDateTime as OperDateStart 
                                    FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '01.03.2021'::TDateTime
                                                                           , inEndDate := CURRENT_DATE - INTERVAL '1 DAY'
-                                                                          , inSession := inSession) AS DynamicsOrdersEIC)
+                                                                          , inSession := inSession) AS DynamicsOrdersEIC),
+          tmpDynamicsOrdersEICSum AS (SELECT tmpDynamicsOrdersEIC.OperDateStart
+                                           , SUM(tmpDynamicsOrdersEIC.CountNeBoley)::Integer   AS CountNeBoley
+                                           , SUM(tmpDynamicsOrdersEIC.CountTabletki)::Integer  AS CountTabletki
+                                           , SUM(tmpDynamicsOrdersEIC.CountLiki24)::Integer    AS CountLiki24
+                                           , SUM(tmpDynamicsOrdersEIC.CountAll)::Integer       AS CountAll
+                                      FROM tmpDynamicsOrdersEIC
+                                      GROUP BY tmpDynamicsOrdersEIC.OperDateStart)                                       
      SELECT 
             (zfConvert_IntToString((ROW_NUMBER() OVER (ORDER BY tmpDynamicsOrdersEIC.OperDateStart))::INTEGER, 3)::TVArChar||'. '||
             zfCalc_MonthYearName(tmpDynamicsOrdersEIC.OperDateStart))::TVArChar  AS OperText
-          , SUM(tmpDynamicsOrdersEIC.CountNeBoley)::Integer
-          , SUM(tmpDynamicsOrdersEIC.CountTabletki)::Integer
-          , SUM(tmpDynamicsOrdersEIC.CountLiki24)::Integer
-          , SUM(tmpDynamicsOrdersEIC.CountAll)::Integer
-          , SUM(DynamicsOrdersEIC.CountNeBoley)::Integer
-          , SUM(DynamicsOrdersEIC.CountTabletki)::Integer
-          , SUM(DynamicsOrdersEIC.CountLiki24)::Integer
-          , SUM(DynamicsOrdersEIC.CountAll)::Integer
-          , CASE WHEN COALESCE(SUM(DynamicsOrdersEIC.CountNeBoley), 0) = 0 THEN 0 ELSE Round(SUM(tmpDynamicsOrdersEIC.CountNeBoley)::TFloat / SUM(DynamicsOrdersEIC.CountNeBoley)::TFloat * 100.0 - 100.0, 2) END::TFloat    AS DeltaNeBoley
-          , CASE WHEN COALESCE(SUM(DynamicsOrdersEIC.CountTabletki), 0) = 0 THEN 0 ELSE Round(SUM(tmpDynamicsOrdersEIC.CountTabletki)::TFloat / SUM(DynamicsOrdersEIC.CountTabletki)::TFloat * 100.0 - 100.0, 2) END::TFloat AS DeltaTabletki
-          , CASE WHEN COALESCE(SUM(DynamicsOrdersEIC.CountLiki24), 0) = 0 THEN 0 ELSE Round(SUM(tmpDynamicsOrdersEIC.CountLiki24)::TFloat / SUM(DynamicsOrdersEIC.CountLiki24)::TFloat * 100.0 - 100.0, 2) END::TFloat       AS DeltaLiki24
-          , CASE WHEN COALESCE(SUM(DynamicsOrdersEIC.CountAll), 0) = 0 THEN 0 ELSE Round(SUM(tmpDynamicsOrdersEIC.CountAll)::TFloat / SUM(DynamicsOrdersEIC.CountAll)::TFloat * 100.0 - 100.0, 2) END::TFloat                AS DeltaAll
-     FROM tmpDynamicsOrdersEIC
+          , tmpDynamicsOrdersEIC.CountNeBoley
+          , tmpDynamicsOrdersEIC.CountTabletki
+          , tmpDynamicsOrdersEIC.CountLiki24
+          , tmpDynamicsOrdersEIC.CountAll
+          , DynamicsOrdersEIC.CountNeBoley
+          , DynamicsOrdersEIC.CountTabletki
+          , DynamicsOrdersEIC.CountLiki24
+          , DynamicsOrdersEIC.CountAll
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountNeBoley, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountNeBoley::TFloat / DynamicsOrdersEIC.CountNeBoley::TFloat * 100.0 - 100.0, 2) END::TFloat    AS DeltaNeBoley
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountTabletki, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountTabletki::TFloat / DynamicsOrdersEIC.CountTabletki::TFloat * 100.0 - 100.0, 2) END::TFloat AS DeltaTabletki
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountLiki24, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountLiki24::TFloat / DynamicsOrdersEIC.CountLiki24::TFloat * 100.0 - 100.0, 2) END::TFloat       AS DeltaLiki24
+          , CASE WHEN COALESCE(DynamicsOrdersEIC.CountAll, 0) = 0 THEN 0 ELSE Round(tmpDynamicsOrdersEIC.CountAll::TFloat / DynamicsOrdersEIC.CountAll::TFloat * 100.0 - 100.0, 2) END::TFloat                AS DeltaAll
+     FROM tmpDynamicsOrdersEICSum AS tmpDynamicsOrdersEIC
      
-          LEFT JOIN tmpDynamicsOrdersEIC AS DynamicsOrdersEIC
-                                         ON DynamicsOrdersEIC.OperDateStart =  tmpDynamicsOrdersEIC.OperDateStart - INTERVAL '1 MONTH'
+          LEFT JOIN tmpDynamicsOrdersEICSum AS DynamicsOrdersEIC
+                                            ON DynamicsOrdersEIC.OperDateStart =  tmpDynamicsOrdersEIC.OperDateStart - INTERVAL '1 MONTH'
           
-     WHERE tmpDynamicsOrdersEIC.OperDate >= '01.04.2021'::TDateTime
-     GROUP BY tmpDynamicsOrdersEIC.OperDateStart
+     WHERE tmpDynamicsOrdersEIC.OperDateStart >= '01.04.2021'::TDateTime
      ORDER BY  tmpDynamicsOrdersEIC.OperDateStart;
 
 END;
