@@ -111,6 +111,7 @@ type
     macUpdateClose_No: TMultiAction;
     bbUpdateClose_No: TdxBarButton;
     bbUpdateClose_Yes: TdxBarButton;
+    Count: TcxGridDBColumn;
   private
   public
   end;

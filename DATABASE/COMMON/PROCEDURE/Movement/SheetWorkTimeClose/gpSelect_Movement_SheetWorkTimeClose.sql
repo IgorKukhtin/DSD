@@ -11,11 +11,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SheetWorkTimeClose(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, OperDateEnd TDateTime
-             , TimeClose TDateTime                             -- Время авто закрытия  на следующий день после окончания периода
+             , OperDateEnd_fact TDateTime
+             , TimeClose Time                             -- Время авто закрытия  на следующий день после окончания периода
              , StatusCode Integer, StatusName TVarChar
              , isClosed Boolean, isClosedAuto Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , MemberId Integer, MemberCode Integer, MemberName TVarChar
+             , Count TFloat
+             , isAmount Boolean
               )
 AS
 $BODY$
@@ -32,13 +36,39 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+        , tmpMovement AS (SELECT Movement.*
+                          FROM tmpStatus
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                            AND Movement.DescId = zc_Movement_SheetWorkTimeClose()
+                                            AND Movement.StatusId = tmpStatus.StatusId
+                         ) 
+        -- нужно показать последную строку в журнале - последнее состояние
+        , tmpMI AS (SELECT *
+                    FROM (SELECT MovementItem.MovementId
+                               , MovementItem.ObjectId AS MemberId
+                               , MovementItem.Amount
+                               , ROW_NUMBER () OVER (PARTITION BY MovementItem.MovementId ORDER BY MovementItem.Id DESC) AS ord
+                               , SUM (COUNT(*)) OVER (PARTITION BY MovementItem.MovementId) AS Count
+                          FROM tmpMovement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                          GROUP BY MovementItem.MovementId
+                               , MovementItem.ObjectId
+                               , MovementItem.Amount
+                               , MovementItem.Id
+                          ) AS tmp
+                    WHERE tmp.ord = 1
+                    )
+
 
        SELECT
              Movement.Id                         AS Id
            , Movement.InvNumber                  AS InvNumber
            , Movement.OperDate ::TDateTime       AS OperDate
            , MovementDate_OperDateEnd.ValueData ::TDateTime AS OperDateEnd
-           , MovementDate_TimeClose.ValueData   ::TDateTime AS TimeClose
+           , (MovementDate_OperDateEnd.ValueData + INTERVAL '1 day') ::TDateTime AS OperDateEnd_fact
+           , MovementDate_TimeClose.ValueData   ::Time AS TimeClose
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
@@ -50,10 +80,13 @@ BEGIN
            , Object_Update.ValueData             AS UpdateName
            , MovementDate_Update.ValueData       AS UpdateDate
 
-       FROM (SELECT Movement.*
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SheetWorkTimeClose() AND Movement.StatusId = tmpStatus.StatusId
-            ) AS Movement
+           --
+           , Object_Member.Id          		AS MemberId
+           , Object_Member.ObjectCode  		AS MemberCode
+           , Object_Member.ValueData   		AS MemberName
+           , tmpMI.Count ::TFloat
+           , CASE WHEN COALESCE (tmpMI.Amount,0)=0 THEN FALSE ELSE TRUE END ::Boolean AS isAmount
+       FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -92,6 +125,9 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+            
+            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI.MemberId
       ;
 
 END;

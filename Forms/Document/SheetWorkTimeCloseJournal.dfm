@@ -74,32 +74,12 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = isClosed
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TimeClose
-        end>
+      DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = OperDateEnd
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = TimeClose
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = isClosed
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -152,7 +132,6 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'OperDate'
         PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
@@ -160,20 +139,29 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       object OperDateEnd: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'OperDateEnd'
+        PropertiesClassName = 'TcxDateEditProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 103
       end
+      object OperDate_month: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055
+        DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object TimeClose: TcxGridDBColumn
         Caption = #1042#1088#1077#1084#1103' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103
         DataBinding.FieldName = 'TimeClose'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1088#1077#1084#1103' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103
+        Options.Editing = False
         Width = 80
       end
       object isClosed: TcxGridDBColumn
@@ -196,6 +184,39 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1055#1077#1088#1080#1086#1076#1072
         Options.Editing = False
         Width = 98
+      end
+      object isAmount: TcxGridDBColumn
+        Caption = #1054#1090#1082#1088#1099#1090' / '#1079#1072#1082#1088#1099#1090
+        DataBinding.FieldName = 'isAmount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 116
+      end
+      object Count: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1074#1090#1086#1088#1085#1099#1093' '#1079#1072#1082#1088'. '#1087#1077#1088#1080#1086#1076#1086#1074
+        DataBinding.FieldName = 'Count'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1074#1090#1086#1088#1085#1099#1093' '#1079#1072#1082#1088'. '#1087#1077#1088#1080#1086#1076#1086#1074
+        Options.Editing = False
+        Width = 70
+      end
+      object MemberName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1087#1086#1074#1090#1086#1088#1085#1086#1077' '#1086#1090#1082#1088#1099#1090#1080'/'#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072')'
+        DataBinding.FieldName = 'MemberName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1087#1086#1074#1090#1086#1088#1085#1086#1077' '#1086#1090#1082#1088#1099#1090#1080'/'#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072')'
+        Options.Editing = False
+        Width = 129
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -1073,6 +1094,9 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       ActionList = <
         item
           Action = actUpdateClose_No
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076'?'
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076
@@ -1085,6 +1109,9 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       ActionList = <
         item
           Action = actUpdateClose_Yes
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076'?'
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076
@@ -1133,7 +1160,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
+    Left = 128
     Top = 192
   end
   object spMovementComplete: TdsdStoredProc
