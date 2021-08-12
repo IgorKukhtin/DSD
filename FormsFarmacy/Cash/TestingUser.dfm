@@ -45,6 +45,7 @@ object TestingUserForm: TTestingUserForm
       Style.IsFontAssigned = True
       StyleFocused.BorderColor = clAqua
       TabOrder = 0
+      ExplicitTop = 76
       Height = 72
       Width = 620
     end
@@ -136,7 +137,6 @@ object TestingUserForm: TTestingUserForm
       Style.IsFontAssigned = True
       TabOrder = 6
       OnClick = cbLastMonthClick
-      Width = 121
     end
   end
   object Panel2: TPanel
@@ -223,7 +223,6 @@ object TestingUserForm: TTestingUserForm
         OnClick = mePossibleAnswer1Click
         OnDblClick = mePossibleAnswer1DblClick
         OnKeyUp = imPossibleAnswer1KeyUp
-        ExplicitTop = 138
         Height = 45
         Width = 294
       end
@@ -256,8 +255,6 @@ object TestingUserForm: TTestingUserForm
         OnClick = mePossibleAnswer1Click
         OnDblClick = mePossibleAnswer1DblClick
         OnKeyUp = imPossibleAnswer1KeyUp
-        ExplicitLeft = 80
-        ExplicitTop = 168
         Height = 45
         Width = 294
       end
@@ -322,7 +319,6 @@ object TestingUserForm: TTestingUserForm
         OnClick = mePossibleAnswer1Click
         OnDblClick = mePossibleAnswer1DblClick
         OnKeyUp = imPossibleAnswer1KeyUp
-        ExplicitTop = 243
         Height = 46
         Width = 322
       end
@@ -339,8 +335,6 @@ object TestingUserForm: TTestingUserForm
         OnClick = mePossibleAnswer1Click
         OnDblClick = mePossibleAnswer1DblClick
         OnKeyUp = imPossibleAnswer1KeyUp
-        ExplicitLeft = 104
-        ExplicitTop = 24
         Height = 100
         Width = 322
       end
@@ -357,8 +351,6 @@ object TestingUserForm: TTestingUserForm
         OnClick = mePossibleAnswer1Click
         OnDblClick = mePossibleAnswer1DblClick
         OnKeyUp = imPossibleAnswer1KeyUp
-        ExplicitLeft = 104
-        ExplicitTop = 168
         Height = 46
         Width = 322
       end

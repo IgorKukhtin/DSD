@@ -14,7 +14,7 @@ uses
   cxFilter, cxData, cxDataStorage, cxNavigator, cxDBData,
   cxGridCustomTableView, cxGridCardView, cxGridDBCardView,
   cxGridCustomLayoutView, cxGridLevel, cxGridCustomView, cxGridTableView,
-  cxGridDBTableView, cxGrid, Vcl.Grids, cxCheckBox, cxImage;
+  cxGridDBTableView, cxGrid, Vcl.Grids, cxCheckBox, cxImage, System.Actions;
 
 type
   TTestingUserForm = class(TForm)
@@ -177,6 +177,9 @@ begin
   begin
     mePossibleAnswer1.Lines.Text := ' 1. ' + TaskCDS.FieldByName('PossibleAnswer1').AsString;
     mePossibleAnswer1.Visible := True;
+    if Length(mePossibleAnswer1.Lines.Text) > 300 then
+      mePossibleAnswer1.Style.Font.Size := meQuestion.Style.Font.Size * 8 DIV 10
+    else mePossibleAnswer1.Style.Font.Size := meQuestion.Style.Font.Size;
   end;
 
   if TaskCDS.FieldByName('isGraphics2').AsBoolean then
@@ -187,6 +190,9 @@ begin
   begin
     mePossibleAnswer2.Lines.Text := ' 2. ' + TaskCDS.FieldByName('PossibleAnswer2').AsString;
     mePossibleAnswer2.Visible := True;
+    if Length(mePossibleAnswer2.Lines.Text) > 300 then
+      mePossibleAnswer2.Style.Font.Size := meQuestion.Style.Font.Size * 8 DIV 10
+    else mePossibleAnswer2.Style.Font.Size := meQuestion.Style.Font.Size;
   end;
 
   if TaskCDS.FieldByName('isGraphics3').AsBoolean then
@@ -197,6 +203,9 @@ begin
   begin
     mePossibleAnswer3.Lines.Text := ' 3. ' + TaskCDS.FieldByName('PossibleAnswer3').AsString;
     mePossibleAnswer3.Visible := True;
+    if Length(mePossibleAnswer3.Lines.Text) > 300 then
+      mePossibleAnswer3.Style.Font.Size := meQuestion.Style.Font.Size * 8 DIV 10
+    else mePossibleAnswer3.Style.Font.Size := meQuestion.Style.Font.Size;
   end;
 
   if TaskCDS.FieldByName('isGraphics4').AsBoolean then
@@ -207,6 +216,9 @@ begin
   begin
     mePossibleAnswer4.Lines.Text := ' 4. ' + TaskCDS.FieldByName('PossibleAnswer4').AsString;
     mePossibleAnswer4.Visible := True;
+    if Length(mePossibleAnswer4.Lines.Text) > 300 then
+      mePossibleAnswer4.Style.Font.Size := meQuestion.Style.Font.Size * 8 DIV 10
+    else mePossibleAnswer4.Style.Font.Size := meQuestion.Style.Font.Size;
   end;
 
   imPossibleAnswer1.Visible := not mePossibleAnswer1.Visible;
@@ -382,11 +394,6 @@ begin
   FStart := False;
   FFocused := 1;
   FShielding := False;
-//  if Date < EncodeDate(2021, 8, 1) then
-//  begin
-//    ShowMessage('Проект будет работать с 01.08.21');
-//    Exit;
-//  end;
 
   FMemo := Nil;
   FImage := Nil;
@@ -480,7 +487,7 @@ begin
     TaskCDS.Next;
   end;
 
-  if Date >= EncodeDate(2021, 8, 1) then
+  if (Date >= EncodeDate(2021, 8, 1)) and (gc_User.Session <> '3') then
   begin
     try
       actInsertUpdate_TestingUser.Params.ParamByName('ioId').Value := 0;
