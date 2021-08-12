@@ -4476,6 +4476,14 @@
 				<Form>SheetWorkTimeCloseEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_OutDialog.pas">
+				<Form>Report_SheetWorkTime_OutDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_Out.pas">
+				<Form>Report_SheetWorkTime_OutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

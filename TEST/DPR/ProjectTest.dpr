@@ -1298,7 +1298,9 @@ uses
   ReasonOutEdit in '..\..\Forms\Guides\ReasonOutEdit.pas' {ReasonOutEditForm: TParentForm},
   SheetWorkTimeClose in '..\..\Forms\Document\SheetWorkTimeClose.pas' {SheetWorkTimeCloseForm: TParentForm},
   SheetWorkTimeCloseJournal in '..\..\Forms\Document\SheetWorkTimeCloseJournal.pas' {SheetWorkTimeCloseJournalForm: TParentForm},
-  SheetWorkTimeCloseEdit in '..\..\Forms\Document\SheetWorkTimeCloseEdit.pas' {SheetWorkTimeCloseEditForm: TParentForm};
+  SheetWorkTimeCloseEdit in '..\..\Forms\Document\SheetWorkTimeCloseEdit.pas' {SheetWorkTimeCloseEditForm: TParentForm},
+  Report_SheetWorkTime_OutDialog in '..\..\Forms\Report\Report_SheetWorkTime_OutDialog.pas' {Report_SheetWorkTime_OutDialogForm: TParentForm},
+  Report_SheetWorkTime_Out in '..\..\Forms\Report\Report_SheetWorkTime_Out.pas' {Report_SheetWorkTime_OutForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
