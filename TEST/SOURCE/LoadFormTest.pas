@@ -197,6 +197,7 @@ type
     procedure LoadSettingsServiceFormTest;
     procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadSheetWorkTimeCloseFormTest;
     procedure LoadSmsSettingsFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStickerFormTest;
@@ -1289,6 +1290,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 end;
 
+procedure TLoadFormTest.LoadSheetWorkTimeCloseFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeCloseJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeCloseJournalForm');
+  //exit;
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
+end;
+
 procedure TLoadFormTest.LoadNameBeforeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TNameBeforeForm'));
@@ -1356,7 +1372,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
-   exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
   exit;

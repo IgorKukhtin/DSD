@@ -52,15 +52,11 @@ BEGIN
                              , MovementFloat_SummaReceivedFact.ValueData   AS SummaReceivedFact
                         FROM tmpMovementAll AS Movement
 
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
                                                            ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
                                                           AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
-                             LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
+                             INNER JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
                                                          
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
-                                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id
-                                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
-
                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -68,8 +64,6 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_SummaReceivedFact
                                                      ON MovementFloat_SummaReceivedFact.MovementId =  Movement.Id
                                                     AND MovementFloat_SummaReceivedFact.DescId = zc_MovementFloat_SummaReceivedFact()
-                                                    
-                        WHERE COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0
                         )
 
 
@@ -117,4 +111,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_Check_JackdawsCheck(inStartDate:= '01.08.2021', inEndDate:= '31.08.2021', inUnitId := 0, inSession := '3');
+select * from gpReport_Check_JackdawsCheck(inStartDate:= '01.05.2021', inEndDate:= '31.05.2021', inUnitId := 0, inSession := '3');

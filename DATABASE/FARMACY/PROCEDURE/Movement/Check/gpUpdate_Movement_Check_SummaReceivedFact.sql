@@ -21,6 +21,10 @@ BEGIN
     RAISE EXCEPTION 'Изменение признака <Сумма получено по факту> вам запрещено.';
   END IF;
       
+  IF COALESCE(inSummaReceivedFact, 0) < 0
+  THEN
+    RAISE EXCEPTION 'Сумма <Сумма получено по факту> должна быть положительной.';
+  END IF;
   
   IF COALESCE(inSummaReceivedFact, 0) <> 0 AND
      EXISTS(SELECT * FROM  MovementBoolean AS MovementBoolean_RetrievedAccounting
@@ -28,9 +32,16 @@ BEGIN
               AND MovementBoolean_RetrievedAccounting.DescId = zc_MovementBoolean_RetrievedAccounting()
               AND COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True)
   THEN
-    RAISE EXCEPTION 'Заполнена <Сумма получено по факту> признака <Получено бухгалтерией> устанавливать нельзя.';
+    RAISE EXCEPTION 'Установлен признак <Получено бухгалтерией> заполнена <Сумма получено по факту> нельзя.';
   END IF;
     
+  IF COALESCE(inSummaReceivedFact, 0) >= COALESCE((SELECT MovementFloat_TotalSumm.ValueData FROM  MovementFloat AS MovementFloat_TotalSumm
+                                                  WHERE MovementFloat_TotalSumm.MovementId =  inMovementId
+                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()), 0)
+  THEN
+    RAISE EXCEPTION 'Сумма <Сумма получено по факту> должна быть меньше суммы чека.';
+  END IF;
+  
   --Меняем Сумма получено по факту
   Perform lpInsertUpdate_MovementFloat(zc_MovementFloat_SummaReceivedFact(), inMovementId, inSummaReceivedFact);
   

@@ -2,7 +2,6 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitTop = -42
   ExplicitWidth = 1083
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -1825,7 +1824,7 @@ inherited TaxForm: TTaxForm
         Name = 'inLineNumTax'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'inLineNumTax'
+        ComponentItem = 'LineNumTax'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

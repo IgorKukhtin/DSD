@@ -182,7 +182,6 @@ type
     mactSMTPSend: TMultiAction;
     spGetExportParam: TdsdStoredProc;
     spSelectExport: TdsdStoredProc;
-    actChoiceJuridical: TOpenChoiceForm;
     dxBarButton4: TdxBarButton;
     spGetDocumentDataForEmail: TdsdStoredProc;
     geGoodsName: TcxGridDBColumn;
@@ -190,6 +189,11 @@ type
     ExportItemsDS: TDataSource;
     ExportItemsCDS: TClientDataSet;
     ExportHeaderCDS: TClientDataSet;
+    spSelectExportJuridical: TdsdStoredProc;
+    actExecSPSelectExportJuridical: TdsdExecStoredProc;
+    ExportJuridicalCDS: TClientDataSet;
+    actSMTPSend: TMultiAction;
+    ExportJuridicalDS: TDataSource;
   private
     { Private declarations }
   public
