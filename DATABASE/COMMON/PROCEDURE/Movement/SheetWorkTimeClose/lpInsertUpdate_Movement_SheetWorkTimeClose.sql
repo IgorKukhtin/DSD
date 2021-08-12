@@ -37,13 +37,6 @@ BEGIN
          -- сохранили свойство <Пользователь (создание)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
 
-         --создаем строку
-         -- сохранили <Элемент документа>
-         PERFORM lpInsertUpdate_MovementItem_SheetWorkTimeClose (ioId         := 0
-                                                               , inMovementId := ioId
-                                                               , inAmount     := 1
-                                                               , inUserId     := inUserId
-                                                                ) AS tmp;
      ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);

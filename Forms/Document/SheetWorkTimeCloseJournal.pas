@@ -112,6 +112,8 @@ type
     bbUpdateClose_No: TdxBarButton;
     bbUpdateClose_Yes: TdxBarButton;
     Count: TcxGridDBColumn;
+    actOpenForm: TdsdOpenForm;
+    bbOpenForm: TdxBarButton;
   private
   public
   end;

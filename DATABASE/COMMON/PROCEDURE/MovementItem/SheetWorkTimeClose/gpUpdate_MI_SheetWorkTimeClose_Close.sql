@@ -20,7 +20,9 @@ BEGIN
                                                            , inAmount     := inAmount
                                                            , inUserId     := vbUserId
                                                             ) AS tmp;
-
+     --если были ручные правки убираем галку Авто
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ClosedAuto(), inMovementId, FALSE);
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
