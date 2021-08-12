@@ -3,7 +3,7 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 598
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 636
+  ExplicitHeight = 633
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -452,7 +452,8 @@ inherited InventoryForm: TInventoryForm
     object cbList: TcxCheckBox
       Left = 793
       Top = 63
-      Caption = #1055#1086' '#1074#1089#1077#1084' '#1090#1086#1074'. '#1085#1072#1082#1083'.'
+      Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1090#1086#1083#1100#1082#1086' '#1087#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1089
+      Caption = #1055#1077#1088#1077#1089#1086#1088#1090
       Properties.ReadOnly = False
       TabOrder = 14
       Width = 122
@@ -1423,6 +1424,9 @@ inherited InventoryForm: TInventoryForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbInsertUpdateMIAmount: TdxBarButton
       Action = actInsertUpdateMIAmount

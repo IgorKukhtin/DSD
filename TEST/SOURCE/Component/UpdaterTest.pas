@@ -88,6 +88,12 @@ begin
   //
   if FileExists(ExtractFileDir(ParamStr(0)) + '\ssleay32.dll')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\ssleay32.dll');
+  //
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\libeay64.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\libeay64.dll');
+  //
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\ssleay64.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\ssleay64.dll');
 end;
 
 procedure TUpdaterTest.UpdateMain64Program;
