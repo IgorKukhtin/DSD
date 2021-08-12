@@ -38,8 +38,9 @@ $BODY$
   DECLARE vbProfitLossDirectionId Integer;
 
   DECLARE vbGoodsGroupId    Integer;
-  DECLARE vbisGoodsGroupIn  Boolean;
-  DECLARE vbisGoodsGroupExc Boolean;
+  DECLARE vbIsGoodsGroupIn  Boolean;
+  DECLARE vbIsGoodsGroupExc Boolean;
+  DECLARE vbIsList          Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
@@ -89,14 +90,15 @@ BEGIN
             END AS PriceListId
 
           , MovementLinkObject_GoodsGroup.ObjectId                               AS GoodsGroupId
-          , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
+          , COALESCE (MovementBoolean_GoodsGroupIn.ValueData,  FALSE) :: Boolean AS isGoodsGroupIn
           , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc
+          , COALESCE (MovementBoolean_List.ValueData,          FALSE) :: Boolean AS isList
 
             INTO vbMovementDescId, vbStatusId, vbOperDate
                , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit, vbJuridicalId_Basis, vbBusinessId
                , vbUnitId_Car
                , vbPriceListId
-               , vbGoodsGroupId, vbisGoodsGroupIn, vbisGoodsGroupExc
+               , vbGoodsGroupId, vbIsGoodsGroupIn, vbIsGoodsGroupExc, vbIsList
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -122,10 +124,12 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupIn
                                     ON MovementBoolean_GoodsGroupIn.MovementId = Movement.Id
                                    AND MovementBoolean_GoodsGroupIn.DescId = zc_MovementBoolean_GoodsGroupIn()
-
           LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
                                     ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
                                    AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
+          LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                    ON MovementBoolean_List.MovementId = Movement.Id
+                                   AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
           LEFT JOIN ObjectLink AS ObjectLink_CarFrom_Unit
                                ON ObjectLink_CarFrom_Unit.ObjectId = MovementLinkObject_From.ObjectId
@@ -191,7 +195,15 @@ BEGIN
 
 
      -- !!!Ограничения по товарам!!!
-     IF vbGoodsGroupId > 0 AND vbisGoodsGroupExc = TRUE
+     IF vbIsList = TRUE
+     THEN
+         vbIsGoodsGroup:= TRUE;
+         --
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
+            SELECT DISTINCT MovementItem.ObjectId AS GoodsId FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+           ;
+     -- !!!Ограничения по товарам!!!
+     ELSEIF vbGoodsGroupId > 0 AND vbIsGoodsGroupExc = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
          --
@@ -200,7 +212,7 @@ BEGIN
             SELECT Object.Id AS GoodsId FROM Object LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
            ;
      -- !!!Ограничения по товарам!!!
-     ELSEIF vbGoodsGroupId > 0 AND vbisGoodsGroupIn = TRUE
+     ELSEIF vbGoodsGroupId > 0 AND vbIsGoodsGroupIn = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
          --
@@ -977,7 +989,7 @@ BEGIN
        FROM _tmpItem
             LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.MovementItemId = _tmpItem.MovementItemId
        WHERE (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) <> 0
-       
+
       UNION ALL
        SELECT 0, zc_MIContainer_CountCount() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_count
@@ -997,7 +1009,7 @@ BEGIN
        WHERE (_tmpItem.OperCountCount - COALESCE (_tmpRemainsCount.OperCountCount, 0)) <> 0;
 
 
--- if vbUserId = 5 -- OR inUserId = 5 OR inMovementId = 691308 
+-- if vbUserId = 5 -- OR inUserId = 5 OR inMovementId = 691308
 -- then
 --    RAISE EXCEPTION 'Ошибка.<%>'
 --     , (select _tmpRemainsCount.OperCountCount from _tmpRemainsCount where _tmpRemainsCount.ContainerId_count = 3050116)
@@ -2004,9 +2016,9 @@ select *
 from
 (select x1 .containerId , x2 .containerId
 , coalesce (amount1, 0) as amount1, coalesce (amount2, 0) as amount2
-from (select containerId, sum (Amount) as amount1 from _MIContainer_20_03_2020_test group by containerId) as x1 
-full join (select containerId, sum (Amount) as amount2  from MovementItemContainer 
-where MovementId = 15999936 
+from (select containerId, sum (Amount) as amount1 from _MIContainer_20_03_2020_test group by containerId) as x1
+full join (select containerId, sum (Amount) as amount2  from MovementItemContainer
+where MovementId = 15999936
 -- and DescId <> zc_MIContainer_CountCount()
 group by containerId) as x2
 on x1 .containerId = x2 .containerId

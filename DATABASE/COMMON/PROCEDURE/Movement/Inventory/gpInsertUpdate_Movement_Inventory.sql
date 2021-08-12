@@ -11,9 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inGoodsGroupId        Integer   , -- Группа товара
- INOUT ioisGoodsGroupIn      Boolean   , -- Только выбр. группа
- INOUT ioisGoodsGroupExc     Boolean   , -- Кроме выбр. группы
-    IN inisList              Boolean   , -- по всем товарам накладной
+ INOUT ioIsGoodsGroupIn      Boolean   , -- Только выбр. группа
+ INOUT ioIsGoodsGroupExc     Boolean   , -- Кроме выбр. группы
+    IN inIsList              Boolean   , -- по всем товарам накладной
     IN inSession             TVarChar    -- сессия пользователя
 )                               
 RETURNS RECORD AS
@@ -41,14 +41,21 @@ BEGIN
      WHERE Movement.Id = ioId;
      
      --
-     IF ioisGoodsGroupIn <> vbisGoodsGroupIn AND ioisGoodsGroupIn = TRUE
+     IF ioIsGoodsGroupIn <> vbisGoodsGroupIn AND ioIsGoodsGroupIn = TRUE
      THEN
-          ioisGoodsGroupExc := NOT ioisGoodsGroupIn;
+          ioIsGoodsGroupExc := NOT ioIsGoodsGroupIn;
      END IF;
-     IF ioisGoodsGroupExc <> vbisGoodsGroupExc AND ioisGoodsGroupIn = TRUE
+     IF ioIsGoodsGroupExc <> vbisGoodsGroupExc AND ioIsGoodsGroupIn = TRUE
      THEN
-          ioisGoodsGroupIn := NOT ioisGoodsGroupExc;
+          ioIsGoodsGroupIn := NOT ioIsGoodsGroupExc;
      END IF; 
+     
+     -- замена
+     IF inIsList = TRUE
+     THEN
+         ioIsGoodsGroupIn := FALSE;
+         ioIsGoodsGroupExc:= FALSE;
+     END IF;
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Inventory (ioId               := ioId
@@ -57,9 +64,9 @@ BEGIN
                                               , inFromId           := inFromId
                                               , inToId             := inToId
                                               , inGoodsGroupId     := inGoodsGroupId
-                                              , inisGoodsGroupIn   := ioisGoodsGroupIn
-                                              , inisGoodsGroupExc  := ioisGoodsGroupExc
-                                              , inisList           := inisList
+                                              , inisGoodsGroupIn   := ioIsGoodsGroupIn
+                                              , inisGoodsGroupExc  := ioIsGoodsGroupExc
+                                              , inIsList           := inIsList
                                               , inUserId           := vbUserId
                                                );
 END;
