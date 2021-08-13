@@ -5637,8 +5637,8 @@ object OrderClientForm: TOrderClientForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 584
-    Top = 224
+    Left = 672
+    Top = 160
   end
   object ChildLevelDS: TDataSource
     DataSet = ChildLevelCDS

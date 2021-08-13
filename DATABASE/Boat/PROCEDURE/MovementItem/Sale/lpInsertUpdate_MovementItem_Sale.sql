@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
---DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
---DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
@@ -24,26 +22,6 @@ $BODY$
 BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     -- % скидки для расчета цены со скидкой если элемент не лодка не лодка
-     IF (SELECT Object.DescId FROM Object WHERE Object.Id = inGoodsId) <> zc_Object_Product()
-     THEN
-      --RAISE EXCEPTION ('111');
-          
-          vbDiscountTax := (SELECT (COALESCE (MovementFloat_DiscountTax.ValueData,0)
-                                  + COALESCE (MovementFloat_DiscountNextTax.ValueData,0) ) ::TFloat AS DiscountTax
-                            FROM Movement
-                                LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
-                                                        ON MovementFloat_DiscountTax.MovementId = Movement.Id
-                                                       AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
-                                LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
-                                                        ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
-                                                       AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
-                            WHERE Movement.Id = inMovementId
-                            );
-          -- рассчитываем цену со скидкой
-          ioOperPrice := (CASE WHEN COALESCE (vbDiscountTax,0) > 0 THEN zfCalc_SummDiscountTax (inOperPriceList, vbDiscountTax)  ELSE inOperPriceList END );
-     END IF;
 
 
      -- сохранили <Элемент документа>

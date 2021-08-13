@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber Integer
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , MovementId_Parent Integer, InvNumber_Parent TVarChar, Comment_parent TVarChar
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
@@ -39,6 +40,7 @@ BEGIN
                        )
 
         , Movement_Sale AS (SELECT Movement_Sale.Id
+                                 , Movement_Sale.ParentId
                                  , Movement_Sale.InvNumber
                                  , Movement_Sale.OperDate             AS OperDate
                                  , Movement_Sale.StatusId             AS StatusId
@@ -66,6 +68,10 @@ BEGIN
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName
 
+             , Movement_Parent.Id               AS MovementId_Parent
+             , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_Parent
+             , MovementString_Comment_parent.ValueData ::TVarChar AS Comment_parent
+
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
@@ -90,6 +96,7 @@ BEGIN
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
         LEFT JOIN Object AS Object_From   ON Object_From.Id   = Movement_Sale.FromId
         LEFT JOIN Object AS Object_To     ON Object_To.Id     = Movement_Sale.ToId
+        LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Sale.ParentId
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement_Sale.Id
@@ -126,6 +133,10 @@ BEGIN
                                      ON MLO_Update.MovementId = Movement_Sale.Id
                                     AND MLO_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
+        LEFT JOIN MovementString AS MovementString_Comment_parent
+                                 ON MovementString_Comment_parent.MovementId = Movement_Parent.Id
+                                AND MovementString_Comment_parent.DescId = zc_MovementString_Comment()
        ;
 
 END;

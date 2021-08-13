@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , MovementId_Parent Integer, InvNumber_Parent TVarChar, Comment_parent TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , Comment TVarChar
@@ -33,6 +34,9 @@ BEGIN
              , inOperDate   ::TDateTime  AS OperDate     --CURRENT_DATE
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
+             , 0                         AS MovementId_Parent
+             , CAST ('' AS TVarChar)     AS InvNumber_Parent
+             , CAST ('' AS TVarChar)     AS Comment_parent
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -58,7 +62,9 @@ BEGIN
           , Movement_Sale.OperDate      AS OperDate
           , Object_Status.ObjectCode    AS StatusCode
           , Object_Status.ValueData     AS StatusName
-
+          , Movement_Parent.Id               AS MovementId_Parent
+          , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_Parent
+          , MovementString_Comment_parent.ValueData ::TVarChar AS Comment_parent
           , Object_From.Id              AS FromId
           , Object_From.ValueData       AS FromName
           , Object_To.Id                AS ToId      
@@ -72,6 +78,7 @@ BEGIN
 
         FROM Movement AS Movement_Sale 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Sale.ParentId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
@@ -94,6 +101,10 @@ BEGIN
                                          ON MLO_Insert.MovementId = Movement_Sale.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment_parent
+                                     ON MovementString_Comment_parent.MovementId = Movement_Parent.Id
+                                    AND MovementString_Comment_parent.DescId = zc_MovementString_Comment()
 
         WHERE Movement_Sale.Id = inMovementId
           AND Movement_Sale.DescId = zc_Movement_Sale()

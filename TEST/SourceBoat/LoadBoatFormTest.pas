@@ -69,6 +69,7 @@ type
     procedure LoadReceiptGoodsFormTest;
     procedure LoadReceiptServiceFormTest;
     procedure LoadReportFormTest;
+    procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadTranslateMessageFormTest;
@@ -396,6 +397,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
 end;
 
+procedure TLoadFormTest.LoadSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+end;
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));

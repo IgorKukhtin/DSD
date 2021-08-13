@@ -281,7 +281,9 @@ uses
   ReceiptGoodsChoice in '..\..\FormsBoat\Guides\ReceiptGoodsChoice.pas' {ReceiptGoodsChoiceForm: TParentForm},
   DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   Report_ProductionPersonalDialog in '..\..\FormsBoat\Report\Report_ProductionPersonalDialog.pas' {Report_ProductionPersonalDialogForm: TParentForm},
-  Report_ProductionPersonal in '..\..\FormsBoat\Report\Report_ProductionPersonal.pas' {Report_ProductionPersonalForm: TParentForm};
+  Report_ProductionPersonal in '..\..\FormsBoat\Report\Report_ProductionPersonal.pas' {Report_ProductionPersonalForm: TParentForm},
+  Sale in '..\..\FormsBoat\Document\Sale.pas' {SaleForm: TParentForm},
+  SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1028,7 +1028,6 @@ inherited MainForm: TMainForm
       end
       object miSale: TMenuItem
         Action = actSale
-        Enabled = False
       end
       object miLoss: TMenuItem
         Action = actLoss

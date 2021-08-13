@@ -25,13 +25,17 @@ OPEN Cursor1 FOR
           , Movement_Sale.InvNumber
           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
           , Movement_Sale.OperDate            AS OperDate
+          , Movement_Parent.Id               AS MovementId_Parent
+          , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_Parent
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
           , Object_To.Id                              AS ToId      
           , Object_To.ValueData                       AS ToName
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
-        FROM Movement AS Movement_Sale 
+        FROM Movement AS Movement_Sale
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement_Sale.ParentId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
