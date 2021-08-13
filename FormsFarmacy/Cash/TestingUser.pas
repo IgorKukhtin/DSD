@@ -14,7 +14,7 @@ uses
   cxFilter, cxData, cxDataStorage, cxNavigator, cxDBData,
   cxGridCustomTableView, cxGridCardView, cxGridDBCardView,
   cxGridCustomLayoutView, cxGridLevel, cxGridCustomView, cxGridTableView,
-  cxGridDBTableView, cxGrid, Vcl.Grids, cxCheckBox, cxImage, System.Actions;
+  cxGridDBTableView, cxGrid, Vcl.Grids, cxCheckBox, cxImage;
 
 type
   TTestingUserForm = class(TForm)

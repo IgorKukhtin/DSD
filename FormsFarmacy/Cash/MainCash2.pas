@@ -581,6 +581,7 @@ type
     N58: TMenuItem;
     N59: TMenuItem;
     N60: TMenuItem;
+    cxCheckBox1: TcxCheckBox;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

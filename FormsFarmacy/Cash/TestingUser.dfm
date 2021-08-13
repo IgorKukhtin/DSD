@@ -137,6 +137,7 @@ object TestingUserForm: TTestingUserForm
       Style.IsFontAssigned = True
       TabOrder = 6
       OnClick = cbLastMonthClick
+      Width = 121
     end
   end
   object Panel2: TPanel

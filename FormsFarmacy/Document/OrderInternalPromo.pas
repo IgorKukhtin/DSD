@@ -194,6 +194,7 @@ type
     ExportJuridicalCDS: TClientDataSet;
     actSMTPSend: TMultiAction;
     ExportJuridicalDS: TDataSource;
+    actLoadListUnit: TdsdLoadListValuesFileAction;
   private
     { Private declarations }
   public

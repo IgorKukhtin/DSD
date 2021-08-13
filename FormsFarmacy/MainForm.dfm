@@ -4486,6 +4486,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actGoodsSUN: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
+      FormName = 'TGoodsSUNForm'
+      FormNameParam.Value = 'TGoodsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5721,6 +5732,9 @@
         end
         object N288: TMenuItem
           Action = actGoodsDivisionLock
+        end
+        object N307: TMenuItem
+          Action = actGoodsSUN
         end
       end
       object mmServiceFunctions: TMenuItem [1]
