@@ -33,7 +33,7 @@ BEGIN
              , CAST (NEXTVAL ('Movement_SheetWorkTimeClose_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
              , inOperDate                                       AS OperDateEnd
-             , (inOperDate +INTERVAL '1 DAY') ::TDateTime       AS TimeClose
+             , (inOperDate + INTERVAL '1 DAY' + INTERVAL '10 HOURS') ::TDateTime       AS TimeClose
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , FALSE   ::Boolean                                AS isClosed
