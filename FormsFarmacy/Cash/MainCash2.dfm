@@ -11,7 +11,6 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitTop = -153
   ExplicitWidth = 980
   ExplicitHeight = 685
   PixelsPerInch = 96
@@ -314,7 +313,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 75
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 87
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1111,8 +1109,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 45
       Align = alBottom
       TabOrder = 1
-      ExplicitLeft = 1
-      ExplicitTop = 93
       object ShapeState: TShape
         Left = 754
         Top = 25
@@ -1160,7 +1156,6 @@ inherited MainCashForm2: TMainCashForm2
         Top = 0
         Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
-        Caption = #1063#1077#1082
         ParentBackground = False
         ParentColor = False
         ParentFont = False
@@ -1325,7 +1320,6 @@ inherited MainCashForm2: TMainCashForm2
         Top = 22
         Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1086#1095#1082#1072
         Action = actSpecCorr
-        Caption = #1063#1077#1082
         ParentBackground = False
         ParentColor = False
         ParentFont = False
@@ -1341,10 +1335,10 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
         TabOrder = 12
       end
-      object cxCheckBox1: TcxCheckBox
+      object cbDoctors: TcxCheckBox
         Left = 468
         Top = 0
-        Caption = #1042#1088#1072#1095#1080
+        Action = actDoctors
         ParentBackground = False
         ParentFont = False
         ParentShowHint = False
@@ -1357,7 +1351,6 @@ inherited MainCashForm2: TMainCashForm2
         Style.Shadow = False
         Style.IsFontAssigned = True
         TabOrder = 13
-        OnClick = actSpecExecute
       end
     end
     object pnlExpirationDateFilter: TPanel
@@ -3213,7 +3206,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actSpec: TAction
       AutoCheck = True
-      Caption = #1058#1080#1093#1086' / '#1043#1088#1086#1084#1082#1086
+      Caption = #1063#1077#1082
       ShortCut = 16501
       OnExecute = actSpecExecute
     end
@@ -3781,7 +3774,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actSpecCorr: TAction
       AutoCheck = True
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1082#1072
+      Caption = #1063#1077#1082
       OnExecute = actSpecCorrExecute
     end
     object actDoesNotShare: TAction
@@ -6114,6 +6107,12 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1053#1072#1095#1072#1090#1100' '#1101#1082#1079#1072#1084#1077#1085
       OnExecute = actStartExamExecute
     end
+    object actDoctors: TAction
+      AutoCheck = True
+      Caption = #1042#1088#1072#1095#1080
+      Hint = #1042#1088#1072#1095#1080
+      OnExecute = actDoctorsExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6909,6 +6908,13 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'CheckOldId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDoctors'
+        Value = Null
+        Component = actDoctors
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 32

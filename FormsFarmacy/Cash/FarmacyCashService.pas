@@ -85,6 +85,8 @@ type
     //***19.03.21
     ISCORRMARK  : boolean;       //Корректировка суммы маркетинг в ЗП по подразделению
     ISCORRIA  : boolean;       //Корректировка суммы нелеквидов в ЗП по подразделению
+    //***15.08.21
+    ISDOCTORS  : boolean;       //Врачи
 
   end;
   TBodyRecord = record
@@ -1441,6 +1443,8 @@ begin
                 //***19.03.21
                 ISCORRMARK := FieldByName('ISCORRMARK').AsBoolean;
                 ISCORRIA := FieldByName('ISCORRIA').AsBoolean;
+                //***15.08.21
+                ISDOCTORS := FieldByName('ISDOCTORS').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1591,8 +1595,6 @@ begin
                   dsdSave.Params.AddParam('inJackdawsChecksCode', ftInteger, ptInput, Head.JACKCHECK);
                   // ***02.04.19
                   dsdSave.Params.AddParam('inRoundingDown', ftBoolean, ptInput, Head.ROUNDDOWN);
-                  // ***19.07.21
-                  //dsdSave.Params.AddParam('inRoundingTo50', ftBoolean, ptInput, True);
                   // ***15.05.19
                   dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Head.PDKINDID);
                   dsdSave.Params.AddParam('inConfirmationCodeSP', ftString, ptInput, Head.CONFCODESP);
@@ -1612,6 +1614,9 @@ begin
                   //***19.03.21
                   dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
                   dsdSave.Params.AddParam('isCorrectIlliquidMarketing', ftBoolean, ptInput, Head.ISCORRIA);
+                  //***15.03821
+                  dsdSave.Params.AddParam('isDoctors', ftBoolean, ptInput, Head.ISDOCTORS);
+
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

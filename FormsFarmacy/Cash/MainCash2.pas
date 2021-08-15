@@ -581,7 +581,8 @@ type
     N58: TMenuItem;
     N59: TMenuItem;
     N60: TMenuItem;
-    cxCheckBox1: TcxCheckBox;
+    cbDoctors: TcxCheckBox;
+    actDoctors: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -738,6 +739,7 @@ type
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
     procedure actSenClipboardNameExecute(Sender: TObject);
     procedure actStartExamExecute(Sender: TObject);
+    procedure actDoctorsExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -901,7 +903,7 @@ type
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
-      AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
+      AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       out AUID: String): Boolean;
 
@@ -1574,6 +1576,7 @@ begin
   FormParams.ParamByName('MemberKashtanName').Value := '';
   FormParams.ParamByName('isCorrectMarketing').Value := False;
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
+  FormParams.ParamByName('isDoctors').Value := False;
 
   ClearFilterAll;
 
@@ -3631,6 +3634,7 @@ begin
         // ***19.03.21
         FormParams.ParamByName('isCorrectMarketing').Value,
         FormParams.ParamByName('isCorrectIlliquidAssets').Value,
+        FormParams.ParamByName('isDoctors').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -5374,6 +5378,7 @@ begin
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
+    , FormParams.ParamByName('isDoctors').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5483,6 +5488,7 @@ begin
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
+    , FormParams.ParamByName('isDoctors').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6425,6 +6431,7 @@ begin
     // ***19.03.21
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
+    , FormParams.ParamByName('isDoctors').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -6508,6 +6515,11 @@ begin
   else
     ShowMessage
       ('Активный документ технической инвентаризации не найден.'#13#10'Попробуйте позже.');
+end;
+
+procedure TMainCashForm2.actDoctorsExecute(Sender: TObject);
+begin
+  //
 end;
 
 procedure TMainCashForm2.actDoesNotShareExecute(Sender: TObject);
@@ -9269,6 +9281,7 @@ begin
   FormParams.ParamByName('MemberKashtanName').Value := '';
   FormParams.ParamByName('isCorrectMarketing').Value := False;
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
+  FormParams.ParamByName('isDoctors').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -9319,6 +9332,7 @@ begin
   MainCashForm.SoldRegim := True;
   MainCashForm.actSpec.Checked := false;
   MainCashForm.actSpecCorr.Checked := false;
+  MainCashForm.actDoctors.Checked := false;
   if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
     MainCashForm.Cash.AlwaysSold := false;
 
@@ -10833,7 +10847,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
-  AisCorrectMarketing, AisCorrectIlliquidAssets : Boolean;
+  AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
   ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -11102,7 +11116,8 @@ begin
           AMedicKashtanId,        // ФИО врача (МИС «Каштан»)
           AMemberKashtanId,       // ФИО пациента (МИС «Каштан»)
           AisCorrectMarketing,    // Корректировка суммы маркетинг в ЗП по подразделению
-          AisCorrectIlliquidAssets // Корректировка суммы нелеквида в ЗП по подразделению
+          AisCorrectIlliquidAssets, // Корректировка суммы нелеквида в ЗП по подразделению
+          AisDoctors                // Врачи
           ]));
       End
       else
@@ -11182,8 +11197,7 @@ begin
         // ***20.02.19
         FLocalDataBaseHead.FieldByName('BANKPOS').Value := ABankPOSTerminal;
         // ***25.02.19
-        FLocalDataBaseHead.FieldByName('JACKCHECK').Value :=
-          AJackdawsChecksCode;
+        FLocalDataBaseHead.FieldByName('JACKCHECK').Value := AJackdawsChecksCode;
         // ***02.04.19
         FLocalDataBaseHead.FieldByName('ROUNDDOWN').Value := ARoundingDown;
         // ***13.05.19
@@ -11213,6 +11227,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISCORRMARK').Value := AisCorrectMarketing;
         // Корректировка суммы Нелеквида в ЗП по подразделению
         FLocalDataBaseHead.FieldByName('ISCORRIA').Value := AisCorrectIlliquidAssets;
+        // Врачи
+        FLocalDataBaseHead.FieldByName('ISDOCTORS').Value := AisDoctors;
         FLocalDataBaseHead.Post;
       End;
     except

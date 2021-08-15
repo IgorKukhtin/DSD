@@ -17,6 +17,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -46,7 +47,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inBankPOSTerminalId   Integer   , -- Банк POS терминала
     IN inJackdawsChecksCode  Integer   , -- Тип галки
     IN inRoundingDown        Boolean   , -- Округление в низ
-    IN inRoundingTo50        Boolean   , -- Округление до 50 коп
     IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inConfirmationCodeSP  TVarChar  , -- код подтверждения рецепта (Соц. проект)
     IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"
@@ -60,6 +60,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inMemberKashtanID     Integer   , -- ФИО пациента (МИС «Каштан»)
     IN isCorrectMarketing    Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
     IN isCorrectIlliquidMarketing  Boolean   , -- Корректировка суммы нелеквидов в ЗП по подразделению
+    IN inDoctors             Boolean   , -- Врачи
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -208,14 +209,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_MedicSP(), ioId, inMedicSP);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
-    IF inRoundingTo50 = TRUE
-    THEN
-      -- сохранили <>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo50(), ioId, True);
-    ELSE
-      -- сохранили <>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), ioId, True);
-    END IF;
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), ioId, True);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingDown(), ioId, inRoundingDown);
     -- сохранили <>
@@ -362,6 +357,12 @@ BEGIN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectIlliquidMarketing(), ioId, isCorrectIlliquidMarketing);
     END IF;
 
+    IF inDoctors = TRUE
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Doctors(), ioId, inDoctors);
+    END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -369,7 +370,7 @@ BEGIN
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inUserSession, inSession;
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inDoctors, inUserSession, inSession;
     END IF;
 
 
@@ -380,6 +381,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
+ 15.08.21                                                                                                         * add inDoctors
  22.03.21                                                                                                         * add isCorrectMarketing
  15.01.20                                                                                                         * add inLoyaltySM...
  07.11.19                                                                                                         * add inLoyaltySignID

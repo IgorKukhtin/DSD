@@ -2570,6 +2570,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UnitSupplementSUN1Out() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN1Out', 'Подразделения для отправки по дополнению СУН1', zc_Object_Goods(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN1Out');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UnitSupplementSUN2Out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN2Out'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_UnitSupplementSUN2Out', 'Подразделения для отправки по дополнению СУН1', zc_Object_Goods(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UnitSupplementSUN2Out');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Instructions_InstructionsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Instructions_InstructionsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Instructions_InstructionsKind', 'Связь с разделами инструкций', zc_Object_Instructions(), zc_Object_InstructionsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Instructions_InstructionsKind');

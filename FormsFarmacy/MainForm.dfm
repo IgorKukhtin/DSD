@@ -4497,6 +4497,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ZReportLog: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'Z '#1086#1090#1095#1077#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_ZReportLogForm'
+      FormNameParam.Value = 'TReport_ZReportLogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5768,6 +5779,9 @@
         end
         object N262: TMenuItem
           Action = actReport_TestingUserAttempts
+        end
+        object Z1: TMenuItem
+          Action = actReport_ZReportLog
         end
         object GUID2: TMenuItem
           Action = actCheckoutTesting
