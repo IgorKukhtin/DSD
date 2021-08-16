@@ -15,10 +15,12 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE cur1 refcursor;
           cur2 refcursor;
+          cur3 refcursor;
           vbIndex Integer;
           vbDayCount Integer;
           vbCrossString Text;
           vbQueryText Text;
+          vbQueryText2 Text;
           vbFieldNameText Text;
   DECLARE vbStartDate TDateTime;
   DECLARE vbEndDate TDateTime;
@@ -142,7 +144,8 @@ BEGIN
                  , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
                  , COALESCE (tmpDateOut.ShortName, tmp.ShortName)     AS ShortName
                  , tmp.isErased
-                 , tmp.Color_Calc   
+                 , tmp.Color_Calc 
+ 
             FROM tmpMovement AS tmp
                  -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
                  LEFT JOIN tmpDateOut ON tmpDateOut.OperDate   = tmp.OperDate
@@ -288,7 +291,7 @@ BEGIN
                                                                ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpDateOut_All.WorkTimeKindId
                                                               AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
 
-                                  order by 1,2''
+                                  order by 1''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
@@ -310,9 +313,82 @@ BEGIN
                            AND tmp.StorageLineId = D.Key[5]
         ';
 
-
+     vbQueryText2 := '
+        SELECT tmp.ValueData    AS Name'
+               || vbFieldNameText ||
+        '
+        FROM
+         (SELECT * FROM CROSSTAB (''
+                                    SELECT ARRAY[Movement_Data.ObjectId        -- AS MemberId
+                                                ] :: Integer[]
+                                         , Movement_Data.OperDate AS OperDate
+                                         , ARRAY[ CAST (COALESCE(Movement_Data.Amount, 0)  AS NUMERIC (16,0)) :: VarChar
+                                               , COALESCE (Movement_Data.ObjectId, zc_Enum_WorkTimeKind_Work()) :: VarChar
+                                                ] :: TVarChar
+                                    FROM (--кол-во часов
+                                          SELECT tmpOperDate.operdate
+                                               , SUM (tmpMI.Amount) AS Amount
+                                               , 1  AS ObjectId
+                                          FROM tmpOperDate
+                                               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                         AND COALESCE (tmpMI.Amount,0) <> 0
+                                           Group by tmpOperDate.operdate
+                                        UNION
+                                          -- кол-во смен 
+                                          SELECT tmpOperDate.operdate
+                                               , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
+                                               , 2  AS ObjectId
+                                          FROM tmpOperDate
+                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                        AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
+                                           Group by tmpOperDate.operdate
+                                        UNION
+                                          -- Кол-во шт.ед
+                                          SELECT tmpOperDate.operdate
+                                               , COUNT (MemberId) AS Amount
+                                               , 3  AS ObjectId
+                                          FROM tmpOperDate
+                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                        --AND COALESCE (tmpMI.Amount,0) <> 0
+                                                          AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
+                                           Group by tmpOperDate.operdate
+                                        UNION
+                                          -- Кол-во отпуска
+                                          SELECT tmpOperDate.operdate
+                                               , SUM (1) AS Amount
+                                               , 4  AS ObjectId
+                                          FROM tmpOperDate
+                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                        AND tmpMI.ObjectId = 16
+                                                        -- AND COALESCE (tmpMI.Amount,0) <> 0
+                                           Group by tmpOperDate.operdate
+                                        UNION
+                                          -- Кол-во прогулов
+                                          SELECT tmpOperDate.operdate
+                                               , SUM (1) AS Amount
+                                               , 5  AS ObjectId
+                                          FROM tmpOperDate
+                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                        AND tmpMI.ObjectId = 18
+                                                       -- AND COALESCE (tmpMI.Amount,0) <> 0
+                                           Group by tmpOperDate.operdate
+                                        ) AS Movement_Data
+                                  order by 1''
+                                , ''SELECT OperDate FROM tmpOperDate order by 1
+                                  '') AS CT (' || vbCrossString || ')
+         ) AS D
+LEFT JOIN (SELECT 1 AS Id, ''кол-во часов'' AS ValueData 
+     UNION SELECT 2 AS Id, ''кол-во смен'' AS ValueData
+     UNION SELECT 3 AS Id, ''Кол-во шт.ед'' AS ValueData
+     UNION SELECT 4 AS Id, ''Кол-во отпуска'' AS ValueData
+     UNION SELECT 5 AS Id, ''Кол-во прогулов'' AS ValueData )AS tmp ON tmp.Id = D.Key[1]
+         ';
      OPEN cur2 FOR EXECUTE vbQueryText;
      RETURN NEXT cur2;
+
+     -- 1)кол-во часов 2)кол-во смен 3)Кол-во шт.ед 4)Кол-во отпуска 5)Кол-во прогулов
+     OPEN cur3 FOR EXECUTE vbQueryText2; 
+     RETURN NEXT cur3;
 
 END;
 $BODY$
@@ -322,6 +398,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.08.21         *
  23.01.20         *
  25.05.17         * StorageLineId
  25.03.16         * AmountHours
@@ -351,3 +428,5 @@ where a.Id = MovementItem.Id
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_SheetWorkTime (inDate := NOW(), inUnitId:= 8465, inIsErased:= FALSE, inSession:= '5'); -- FETCH ALL "<unnamed portal 3>";
+
+--select * from gpSelect_Object_WorkTimeKind( inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

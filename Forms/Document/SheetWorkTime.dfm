@@ -114,7 +114,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Left = 0
     Top = 90
     Width = 971
-    Height = 372
+    Height = 230
     Align = alClient
     TabOrder = 0
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
@@ -326,6 +326,101 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       GridView = cxGridDBBandedTableView
     end
   end
+  object cxGrid1: TcxGrid
+    Left = 0
+    Top = 328
+    Width = 971
+    Height = 134
+    Align = alBottom
+    TabOrder = 6
+    object cxGridDBBandedTableView1: TcxGridDBBandedTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = TotalDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.BandHiding = True
+      OptionsCustomize.BandsQuickCustomization = True
+      OptionsCustomize.ColumnVertSizing = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
+      Styles.BandHeader = dmMain.cxHeaderStyle
+      Bands = <
+        item
+          Caption = #1048#1090#1086#1075#1080
+          FixedKind = fkLeft
+          Options.HoldOwnColumnsOnly = True
+          Options.Moving = False
+        end
+        item
+          Caption = #1055#1077#1088#1080#1086#1076
+          Options.HoldOwnColumnsOnly = True
+          Options.Moving = False
+          Width = 50
+        end>
+      object Name_ch2: TcxGridDBBandedColumn
+        Caption = #1044#1072#1085#1085#1099#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 67
+        Options.Editing = False
+        Options.Moving = False
+        Width = 109
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object Value_ch2: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'Value'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MultiAction
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Visible = False
+        MinWidth = 40
+        Width = 40
+        Position.BandIndex = 1
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGridDBBandedTableView1
+    end
+  end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 320
+    Width = 971
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = cxGrid1
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -362,6 +457,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         DataSet = MasterCDS
+      end
+      item
+        DataSet = TotalCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1260,8 +1358,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
-    Left = 440
-    Top = 280
+    Left = 664
+    Top = 184
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1518,5 +1616,35 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PackSize = 1
     Left = 832
     Top = 288
+  end
+  object TotalCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 512
+    Top = 367
+  end
+  object TotalDS: TDataSource
+    DataSet = TotalCDS
+    Left = 582
+    Top = 359
+  end
+  object CrossDBViewAddOnTotal: TCrossDBViewAddOn
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Value
+    Left = 624
+    Top = 400
   end
 end

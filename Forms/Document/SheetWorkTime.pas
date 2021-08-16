@@ -24,7 +24,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxGridBandedTableView, cxGridDBBandedTableView, Vcl.Grids, Vcl.DBGrids;
+  cxGridBandedTableView, cxGridDBBandedTableView, Vcl.Grids, Vcl.DBGrids,
+  cxSplitter;
 
 type
   TSheetWorkTimeForm = class(TParentForm)
@@ -97,6 +98,15 @@ type
     macUpdateCheckedPersonal: TMultiAction;
     bbUpdateCheckedHead: TdxBarButton;
     bbUpdateCheckedPersonal: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    Name_ch2: TcxGridDBBandedColumn;
+    Value_ch2: TcxGridDBBandedColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    TotalCDS: TClientDataSet;
+    TotalDS: TDataSource;
+    CrossDBViewAddOnTotal: TCrossDBViewAddOn;
   private
   public
   end;
