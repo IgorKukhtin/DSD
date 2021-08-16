@@ -806,6 +806,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object actExecSPSelectExportJuridical: TdsdExecStoredProc [0]
       Category = 'SendEMail'
       MoveParams = <>
+      BeforeAction = actLoadListUnit
       PostDataSetBeforeExecute = False
       StoredProc = spSelectExportJuridical
       StoredProcList = <
@@ -1915,6 +1916,20 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ImageIndex = 53
       ShortCut = 16467
     end
+    object actLoadListUnit: TdsdLoadListValuesFileAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      Param.Value = ''
+      Param.Component = FormParams
+      Param.ComponentItem = 'UnitCodeList'
+      Param.DataType = ftWideString
+      Param.MultiSelectSeparator = ','
+      FileName.Value = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1090#1086#1074#1072#1088#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'.xlsx'
+      FileName.DataType = ftString
+      FileName.MultiSelectSeparator = ','
+      StartColumns = 1
+      Caption = 'actLoadListUnit'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPromo'
@@ -2319,8 +2334,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
+        Name = 'UnitCodeList'
         Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -3466,6 +3482,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = ExportJuridicalCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCodeList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitCodeList'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

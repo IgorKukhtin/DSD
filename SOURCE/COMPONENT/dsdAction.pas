@@ -1143,6 +1143,7 @@ TdsdSetFocusedAction = class(TdsdCustomAction)
   private
     FFileOpenDialog: TFileOpenDialog;
     FParam: TdsdParam;
+    FFileNameParam: TdsdParam;
     FStartColumns: Integer;
   protected
     function LocalExecute: Boolean; override;
@@ -1151,7 +1152,8 @@ TdsdSetFocusedAction = class(TdsdCustomAction)
     destructor Destroy; override;
   published
     property Param: TdsdParam read FParam write FParam;
-    property StartColumns: Integer read FStartColumns write FStartColumns;
+    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
+    property StartColumns: Integer read FStartColumns write FStartColumns default 2;
 
     property Caption;
     property Hint;
@@ -5224,12 +5226,18 @@ begin
     FileMask := '*.xls;*.xlsx';
   end;
   FParam := TdsdParam.Create(nil);
+  FParam.DataType := ftWideString;
+  FParam.Value := '';
+  FFileNameParam := TdsdParam.Create(nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
   FStartColumns := 1;
 end;
 
 destructor TdsdLoadListValuesFileAction.Destroy;
 begin
   FreeAndNil(FFileOpenDialog);
+  FreeAndNil(FFileNameParam);
   FreeAndNil(FParam);
   inherited;
 end;
@@ -5241,44 +5249,56 @@ var
   CLSID: TCLSID;
   Excel, Sheet: Variant;
   Row, Code : Integer;
-  S : string;
+  S, FileName : string;
 begin
   result := false;
   S := '';
-  if FFileOpenDialog.Execute then
+
+  if FFileNameParam.Value = '' then
   begin
-
-    if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
-    begin
-      Excel := CreateOLEObject(ExcelAppName);
-
-      try
-        Excel.Visible := False;
-        Excel.Application.EnableEvents := False;
-        Excel.DisplayAlerts := False;
-        Excel.WorkBooks.Open(FFileOpenDialog.FileName);
-        Sheet := Excel.WorkBooks[1].WorkSheets[1];
-
-        for Row := FStartColumns to Sheet.UsedRange.Rows.Count do
-        begin
-          if TryStrToInt(Sheet.Cells[Row, 1], Code) then
-          begin
-            if S = '' then S := IntToStr(Code)
-            else S := S + ',' + IntToStr(Code);
-          end;
-        end;
-
-        Param.Value := S;
-
-      finally
-        if not VarIsEmpty(Excel) then
-          Excel.Quit;
-
-        Excel := Unassigned;
-      end;
-    end;
-    result := true
+    if not FFileOpenDialog.Execute then Exit;
+    FileName :=  FFileOpenDialog.FileName;
+  end else
+  begin
+    FileName:=  ExtractFilePath(ParamStr(0)) + FFileNameParam.Value;
   end;
+
+  if not FileExists(FFileNameParam.Value) then
+  begin
+    ShowMessage('Файл <' + FileName + '> не найден.');
+    Exit;
+  end;
+
+  if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
+  begin
+    Excel := CreateOLEObject(ExcelAppName);
+
+    try
+      Excel.Visible := False;
+      Excel.Application.EnableEvents := False;
+      Excel.DisplayAlerts := False;
+      Excel.WorkBooks.Open(FileName);
+      Sheet := Excel.WorkBooks[1].WorkSheets[1];
+
+      for Row := FStartColumns to Sheet.UsedRange.Rows.Count do
+      begin
+        if TryStrToInt(Sheet.Cells[Row, 1], Code) then
+        begin
+          if S = '' then S := IntToStr(Code)
+          else S := S + ',' + IntToStr(Code);
+        end;
+      end;
+
+      Param.Value := S;
+
+    finally
+      if not VarIsEmpty(Excel) then
+        Excel.Quit;
+
+      Excel := Unassigned;
+    end;
+  end;
+  result := true
 end;
 
 { TdsdPreparePicturesAction }

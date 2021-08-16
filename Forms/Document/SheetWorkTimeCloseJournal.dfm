@@ -355,11 +355,15 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbOpenForm'
         end
         item
           Visible = True
@@ -505,6 +509,10 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Action = macUpdateClose_Yes
       Category = 0
     end
+    object bbOpenForm: TdxBarButton
+      Action = actOpenForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -642,12 +650,12 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TSheetWorkTimeCloseForm'
-      FormNameParam.Value = 'TSheetWorkTimeCloseForm'
+      FormName = 'TSheetWorkTimeCloseEditForm'
+      FormNameParam.Value = 'TSheetWorkTimeCloseEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1118,6 +1126,39 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Hint = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076
       ImageIndex = 77
     end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088
+      ImageIndex = 28
+      FormName = 'TSheetWorkTimeCloseForm'
+      FormNameParam.Value = 'TSheetWorkTimeCloseForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SheetWorkTimeClose'
@@ -1355,8 +1396,8 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 200
+    Left = 392
+    Top = 192
   end
   object spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_SheetWorkTimeClose'
@@ -1449,7 +1490,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 378
+    Left = 418
     Top = 256
   end
   object spUpdateClose_No: TdsdStoredProc

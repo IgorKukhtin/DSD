@@ -117,7 +117,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 372
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 1
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -128,12 +127,22 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountHours
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountDay
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
           Column = AmountHours
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountDay
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -237,7 +246,22 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 87
         Position.BandIndex = 0
-        Position.ColIndex = 7
+        Position.ColIndex = 8
+        Position.RowIndex = 0
+      end
+      object CountDay: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1084#1077#1085
+        DataBinding.FieldName = 'CountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 65
+        Position.BandIndex = 0
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object AmountHours: TcxGridDBBandedColumn
@@ -252,7 +276,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 65
         Position.BandIndex = 0
-        Position.ColIndex = 6
+        Position.ColIndex = 7
         Position.RowIndex = 0
       end
       object Value: TcxGridDBBandedColumn

@@ -185,7 +185,6 @@ type
     macUpdateGoods_KoeffSUN_list: TMultiAction;
     macUpdateGoods_KoeffSUN: TMultiAction;
     bbUpdateGoods_KoeffSUN: TdxBarButton;
-    isInvisibleSUN: TcxGridDBColumn;
     spUpdate_isInvisibleSUN: TdsdStoredProc;
     actUpdateInvisibleSUN: TMultiAction;
     ExecUpdate_isInvisibleSUN: TdsdExecStoredProc;
@@ -204,7 +203,6 @@ type
     macUpdate_GoodsPairSun: TMultiAction;
     bbUpdate_GoodsPairSun: TdxBarButton;
     PairSunDate: TcxGridDBColumn;
-    isSupplementSUN1: TcxGridDBColumn;
     actUpdateisSupplementSUN1: TMultiAction;
     execUpdate_SupplementSUN1: TdsdExecStoredProc;
     spUpdate_isSupplementSUN1_Revert: TdsdStoredProc;
@@ -239,7 +237,6 @@ type
     dxBarButton4: TdxBarButton;
     spUpdate_SummaWages: TdsdStoredProc;
     spUpdate_PercentWages: TdsdStoredProc;
-    KoeffSUN_Supplementv1: TcxGridDBColumn;
     actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc;
     actDoLoadinSupplementSUN1: TExecuteImportSettingsAction;
     macLoadinSupplementSUN1: TMultiAction;
@@ -257,7 +254,6 @@ type
     spUpdate_SummaWagesStore: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
-    UnitSupplementSUN1OutName: TcxGridDBColumn;
     actSetUnitSupplementSUN1Out: TMultiAction;
     actClearUnitSupplementSUN1Out: TMultiAction;
     actChoiceUnitSupplementSUN1Out: TOpenChoiceForm;

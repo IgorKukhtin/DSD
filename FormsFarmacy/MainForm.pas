@@ -838,6 +838,10 @@ type
     N306: TMenuItem;
     actReport_Check_JackdawsSum: TdsdOpenForm;
     N308: TMenuItem;
+    actGoodsSUN: TdsdOpenForm;
+    N307: TMenuItem;
+    actReport_ZReportLog: TdsdOpenForm;
+    Z1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

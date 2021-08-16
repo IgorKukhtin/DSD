@@ -3,9 +3,8 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
   ClientHeight = 519
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = actReport_SheetWorkTimeDialog
-  ExplicitTop = -65
   ExplicitWidth = 844
-  ExplicitHeight = 558
+  ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +21,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 462
+        ExplicitLeft = 3
         ExplicitWidth = 828
         ExplicitHeight = 462
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -173,7 +173,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -181,7 +181,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -360,10 +360,13 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value

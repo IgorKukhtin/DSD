@@ -23,7 +23,6 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isPromo boolean
              , isMarketToday Boolean
              , isNotMarion Boolean
-             , isNot Boolean, isNot_Sun_v2 Boolean, isNot_Sun_v4 Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
@@ -34,18 +33,12 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
-             --, isSUN_v3 boolean, KoeffSUN_v3 TFloat
-             , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat, KoeffSUN_Supplementv1 TFloat
-             --, LimitSUN_T1 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
-             , isInvisibleSUN boolean
-             , isSupplementSUN1 boolean
              , isExceptionUKTZED boolean
              , isPresent boolean
              , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
-             , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
              , Multiplicity TFloat, isMultiplicityError boolean
              , isUkrainianTranslation boolean
               ) AS
@@ -295,9 +288,6 @@ BEGIN
 
            , CASE WHEN DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
            , Object_Goods_Main.isNotMarion
-           , Object_Goods_Main.isNOT
-           , Object_Goods_Main.isNOT_Sun_v2
-           , Object_Goods_Main.isNOT_Sun_v4
 
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice)::TDateTime     AS LastPriceDate
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPriceOld)::TDateTime  AS LastPriceOldDate
@@ -327,17 +317,8 @@ BEGIN
            , Object_Goods_Main.ActiveSubstance                                   AS GoodsActiveSubstance
            , Object_Goods_Main.isNotTransferTime                                 AS NotTransferTime
 
-           --, COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
-           --, COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
-           , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
-           , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
-           , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
-           , COALESCE (Object_Goods_Retail.KoeffSUN_Supplementv1,0)   :: TFloat AS KoeffSUN_Supplementv1
-           --, COALESCE (Object_Goods_Retail.LimitSUN_T1,0)   :: TFloat AS LimitSUN_T1
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
-           , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
-           , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
            , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
            , Object_Goods_Main.isPresent                                         AS isPresent
            , Object_Goods_Main.isOnlySP                                          AS isOnlySP
@@ -345,8 +326,6 @@ BEGIN
            , Object_Goods_Retail.PercentWages                                    AS PercentWages
            , Object_Goods_Retail.SummaWagesStore                                 AS SummaWagesStore
            , Object_Goods_Retail.PercentWagesStore                               AS PercentWagesStore
-           , Object_Goods_Main.UnitSupplementSUN1OutId 
-           , Object_UnitSupplementSUN1Out.ValueData                              AS UnitSupplementSUN1OutName
            , Object_Goods_Main.Multiplicity
            , Object_Goods_Main.isMultiplicityError
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
@@ -360,7 +339,6 @@ BEGIN
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_Goods_Main.MeasureId
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
-           LEFT JOIN Object AS Object_UnitSupplementSUN1Out ON Object_UnitSupplementSUN1Out.Id = Object_Goods_Main.UnitSupplementSUN1OutId
            
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
            LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId
@@ -632,6 +610,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 12.08.21                                                                     * перенос СУН в отдельную форму
  22.09.20                                                                     * isExceptionUKTZED
  25.05.20         * dell LimitSUN_T1
  18.05.20         * GoodsPairSun

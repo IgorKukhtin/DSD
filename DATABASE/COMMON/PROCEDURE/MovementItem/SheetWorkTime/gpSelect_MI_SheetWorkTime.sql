@@ -211,7 +211,8 @@ BEGIN
                , Object_StorageLine.ValueData    AS StorageLineName
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
               -- , CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
-               , tmp.Amount                      AS AmountHours'
+               , tmp.Amount                      AS AmountHours
+               , tmp.CountDay::TFloat  '
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
@@ -296,7 +297,9 @@ BEGIN
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
          LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = D.Key[5]
-         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.isErased , Sum (tmpMI.Amount) AS Amount
+         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.isErased
+                         , Sum (tmpMI.Amount) AS Amount
+                         , Sum (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS CountDay 
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
                     GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId

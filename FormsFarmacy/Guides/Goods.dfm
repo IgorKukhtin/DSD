@@ -247,35 +247,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object isNot: TcxGridDBColumn
-            Caption = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097'. '#1086#1089#1090'.'
-            DataBinding.FieldName = 'isNot'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1054#1058'- '#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1044#1072'/'#1053#1077#1090')'
-            Width = 86
-          end
-          object isNot_Sun_v2: TcxGridDBColumn
-            Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084'. '#1086#1089#1090'. '#1076#1083#1103' '#1057#1059#1053'-v2'
-            DataBinding.FieldName = 'isNot_Sun_v2'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 ('#1044#1072'/'#1053#1077#1090')'
-            Options.Editing = False
-            Width = 86
-          end
-          object isNot_Sun_v4: TcxGridDBColumn
-            Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084'. '#1086#1089#1090'. '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048
-            DataBinding.FieldName = 'isNot_Sun_v4'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
-            Options.Editing = False
-            Width = 86
-          end
           object isNotMarion: TcxGridDBColumn
             Caption = #1053#1077' '#1087#1088#1080#1074#1103#1079'. '#1052#1072#1088#1080#1086#1085
             DataBinding.FieldName = 'isNotMarion'
@@ -508,49 +479,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 78
           end
-          object KoeffSUN_v1: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v1'
-            DataBinding.FieldName = 'KoeffSUN_v1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v1'
-            Options.Editing = False
-            Width = 70
-          end
-          object KoeffSUN_v2: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2'
-            DataBinding.FieldName = 'KoeffSUN_v2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2'
-            Options.Editing = False
-            Width = 70
-          end
-          object KoeffSUN_v4: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2-'#1055#1048
-            DataBinding.FieldName = 'KoeffSUN_v4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2-'#1055#1048
-            Options.Editing = False
-            Width = 70
-          end
-          object KoeffSUN_Supplementv1: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
-            DataBinding.FieldName = 'KoeffSUN_Supplementv1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 78
-          end
           object isResolution_224: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
@@ -565,29 +493,6 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
-          end
-          object isInvisibleSUN: TcxGridDBColumn
-            Caption = #1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
-            DataBinding.FieldName = 'isInvisibleSUN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object isSupplementSUN1: TcxGridDBColumn
-            Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
-            DataBinding.FieldName = 'isSupplementSUN1'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object UnitSupplementSUN1OutName: TcxGridDBColumn
-            Caption = #9#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
-            DataBinding.FieldName = 'UnitSupplementSUN1OutName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 135
           end
           object isExceptionUKTZED: TcxGridDBColumn
             Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1059#1050#1058#1042#1069#1044
@@ -1370,13 +1275,7 @@ inherited GoodsForm: TGoodsForm
           StoredProc = spUpdate_Goods_Analog
         end
         item
-          StoredProc = spUpdate_Goods_isNot
-        end
-        item
           StoredProc = spUpdate_inResolution_224
-        end
-        item
-          StoredProc = spUpdate_isInvisibleSUN
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -2613,10 +2512,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateGoods_KoeffSUN'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdate_GoodsPairSun'
         end
         item
@@ -2634,10 +2529,6 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -2793,14 +2684,6 @@ inherited GoodsForm: TGoodsForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbUpdateInvisibleSUN'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateisSupplementSUN1'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdateExceptionUKTZED'
         end
         item
@@ -2864,22 +2747,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateNot_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNot_v2_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isNot_Sun_v4_yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isSun_v3_yes'
-        end
-        item
-          Visible = True
           ItemName = 'bbSetClose'
         end
         item
@@ -2889,10 +2756,6 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inTop_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton8'
         end>
     end
     object dxBarSubItem3: TdxBarSubItem
@@ -2907,22 +2770,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateNot_No'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateNot_v2_No'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isNot_Sun_v4_No'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isSun_v3_No'
-        end
-        item
-          Visible = True
           ItemName = 'bbClearClose'
         end
         item
@@ -2932,10 +2779,6 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inTop_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton9'
         end>
     end
     object dxBarSubItem4: TdxBarSubItem

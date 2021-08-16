@@ -4486,6 +4486,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actGoodsSUN: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
+      FormName = 'TGoodsSUNForm'
+      FormNameParam.Value = 'TGoodsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_ZReportLog: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'Z '#1086#1090#1095#1077#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_ZReportLogForm'
+      FormNameParam.Value = 'TReport_ZReportLogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5722,6 +5744,9 @@
         object N288: TMenuItem
           Action = actGoodsDivisionLock
         end
+        object N307: TMenuItem
+          Action = actGoodsSUN
+        end
       end
       object mmServiceFunctions: TMenuItem [1]
         Caption = #1057#1077#1088#1074#1080#1089#1085#1099#1077' '#1092#1091#1085#1082#1094#1080#1080
@@ -5754,6 +5779,9 @@
         end
         object N262: TMenuItem
           Action = actReport_TestingUserAttempts
+        end
+        object Z1: TMenuItem
+          Action = actReport_ZReportLog
         end
         object GUID2: TMenuItem
           Action = actCheckoutTesting

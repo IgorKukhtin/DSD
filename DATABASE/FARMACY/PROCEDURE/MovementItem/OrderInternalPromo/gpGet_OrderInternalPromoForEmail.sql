@@ -1,4 +1,4 @@
--- Function: gpGet_Object_City()
+-- Function: gpGet_OrderInternalPromoForEmail()
 
 DROP FUNCTION IF EXISTS gpGet_OrderInternalPromoForEmail(integer, integer, TVarChar);
 
@@ -17,8 +17,6 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbInvNumber TVarChar;
   DECLARE vbMail TVarChar;
-  DECLARE vbUserMail TVarChar;
-  DECLARE vbUserMailSign TVarChar;
   DECLARE vbSubject TVarChar;
   DECLARE vbZakazName TVarChar;
 BEGIN
@@ -28,69 +26,34 @@ BEGIN
 
 
    -- еще
-   SELECT tmp.InvNumber, tmp.Mail
-          INTO vbInvNumber, vbMail
-   FROM (WITH  tmpContactPerson AS (SELECT * FROM Object_ContactPerson_View)
-         -- Результат
-         SELECT Movement.InvNumber
-              , COALESCE (View_ContactPerson_0.Mail,          View_ContactPerson_1.Mail,          View_ContactPerson_2.Mail,          View_ContactPerson_3.Mail
-                         ) AS Mail
-         FROM Movement
-
-              -- Потом ищем по Юр.Лицам
-              LEFT JOIN tmpContactPerson AS View_ContactPerson_0
-                                                  ON View_ContactPerson_0.JuridicalId         = inJuridicalId
-                                                 AND View_ContactPerson_0.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
-                                                 AND View_ContactPerson_0.RetailId            = 4
-                                                 AND View_ContactPerson_0.AreaId              = zc_Area_Basis()
-              LEFT JOIN tmpContactPerson AS View_ContactPerson_1
-                                                  ON View_ContactPerson_1.JuridicalId         = inJuridicalId
-                                                 AND View_ContactPerson_1.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
-                                                 AND View_ContactPerson_1.RetailId            = 4
-                                                 AND View_ContactPerson_1.AreaId              = zc_Area_Basis()
-                                                 AND View_ContactPerson_0.JuridicalId IS NULL
-              LEFT JOIN tmpContactPerson AS View_ContactPerson_2
-                                                  ON View_ContactPerson_2.JuridicalId         = inJuridicalId
-                                                 AND View_ContactPerson_2.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
-                                                 AND View_ContactPerson_2.RetailId            IS NULL
-                                                 AND View_ContactPerson_2.AreaId              = inJuridicalId
-                                                 AND View_ContactPerson_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_1.JuridicalId IS NULL
-              LEFT JOIN tmpContactPerson AS View_ContactPerson_3
-                                                  ON View_ContactPerson_3.JuridicalId         = inJuridicalId
-                                                 AND View_ContactPerson_3.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
-                                                 AND View_ContactPerson_3.RetailId            IS NULL
-                                                 AND View_ContactPerson_3.AreaId              = zc_Area_Basis()
-                                                 AND View_ContactPerson_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_1.JuridicalId IS NULL
-                                                 AND View_ContactPerson_2.JuridicalId IS NULL
-         WHERE Movement.ID = inMovementId
-        ) AS tmp;
-
+   SELECT Movement.InvNumber
+   INTO vbInvNumber
+   FROM Movement
+   WHERE Movement.ID = inMovementId;
+   
+   vbMail := CASE WHEN inJuridicalId = 59611  THEN 'vmileeva@optimapharm.ua,lbryukhovets@optimapharm.ua '
+                  WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'
+                  WHEN inJuridicalId = 59612 THEN 'volitskayairina@ventaltd.com.ua'
+                  WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'
+                  WHEN inJuridicalId = 410822 THEN 's.boiko@ametrin.com.ua'
+                  ELSE '' END;          
    
     -- проверка
     IF COALESCE (vbMail, '') = '' THEN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
     END IF;
 
-    -- еще
-    SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData
-           INTO vbUserMail, vbUserMailSign
-    FROM ObjectLink AS User_Link_Member
-         LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
-                               AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
-         LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign
-                              ON ObjectBlob_EMailSign.ObjectId = User_Link_Member.ChildObjectId
-                             AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
-    WHERE User_Link_Member.ObjectId = vbUserId AND User_Link_Member.DescId = zc_objectlink_user_member();
 
     vbSubject := 'Заказ #1#';
 
     -- еще
-    vbMail := (vbMail || vbUserMail) :: TVarChar;
+    vbMail := (vbMail || ',artur17111@gmail.com') :: TVarChar;
 
     -- Временно для теста
-    vbMail := 'artur17111@gmail.com,olegsh1264@gmail.com';
+    IF vbUserId = 3
+    THEN
+      vbMail := 'olegsh1264@gmail.com';
+    END IF;
     
     -- Результат
     RETURN QUERY
@@ -126,4 +89,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_OrderInternalPromoForEmail (inMovementId := 23631157 , inJuridicalId := 59611 , inSession:= '377790');
+SELECT * FROM gpGet_OrderInternalPromoForEmail (inMovementId := 23631157 , inJuridicalId := 410822 , inSession:= '298786');

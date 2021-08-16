@@ -1303,6 +1303,8 @@ type
     miReasonOut: TMenuItem;
     actSheetWorkTimeClose: TdsdOpenForm;
     miSheetWorkTimeClose: TMenuItem;
+    actReport_SheetWorkTime_Out: TdsdOpenForm;
+    miReport_SheetWorkTime_Out: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
