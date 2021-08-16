@@ -4484,6 +4484,14 @@
 				<Form>Report_SheetWorkTime_OutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_GraphDialog.pas">
+				<Form>Report_SheetWorkTime_GraphDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SheetWorkTime_Graph.pas">
+				<Form>Report_SheetWorkTime_GraphForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

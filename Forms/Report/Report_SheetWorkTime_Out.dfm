@@ -11,17 +11,17 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
     Width = 954
     Height = 262
     TabOrder = 3
-    ExplicitWidth = 990
+    ExplicitWidth = 954
     ExplicitHeight = 262
     ClientRectBottom = 262
     ClientRectRight = 954
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 990
+      ExplicitWidth = 954
       ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 954
         Height = 262
-        ExplicitWidth = 990
+        ExplicitWidth = 954
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -174,7 +174,7 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
   end
   inherited Panel: TPanel
     Width = 954
-    ExplicitWidth = 990
+    ExplicitWidth = 954
     inherited deStart: TcxDateEdit
       Left = 107
       Properties.SaveTime = False
@@ -334,7 +334,8 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 368
+    Left = 432
+    Top = 256
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80

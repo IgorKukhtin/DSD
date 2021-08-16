@@ -1305,6 +1305,9 @@ type
     miSheetWorkTimeClose: TMenuItem;
     actReport_SheetWorkTime_Out: TdsdOpenForm;
     miReport_SheetWorkTime_Out: TMenuItem;
+    actReport_SheetWorkTime_Graph: TdsdOpenForm;
+    miReport_SheetWorkTime_Graph: TMenuItem;
+    N246: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

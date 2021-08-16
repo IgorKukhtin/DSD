@@ -2137,6 +2137,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutDialogForm'));

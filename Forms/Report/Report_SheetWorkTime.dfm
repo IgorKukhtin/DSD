@@ -21,7 +21,6 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 462
-        ExplicitLeft = 3
         ExplicitWidth = 828
         ExplicitHeight = 462
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -350,8 +349,8 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       item
         Component = GuidesUnit
       end>
-    Left = 632
-    Top = 32
+    Left = 672
+    Top = 40
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'

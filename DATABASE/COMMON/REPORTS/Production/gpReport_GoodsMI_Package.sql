@@ -32,6 +32,7 @@ RETURNS TABLE (OperDate TDateTime
              , Weight_diff TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              
+             , PersonalGroupId        Integer
              , PersonalGroupName      TVarChar
              
              , InvNumber TVarChar, MovementDescName TVarChar
@@ -62,6 +63,7 @@ BEGIN
                            , tmpMI.Amount_Production
                            , tmpMI.CountPack
                            
+                           , tmpMI.PersonalGroupId
                            , tmpMI.PersonalGroupName
                           -- , tmpMI.UnitName_PersonalGroup
                            , tmpMI.MovementId
@@ -91,7 +93,8 @@ BEGIN
                                              ELSE 0
                                         END) AS Amount_Production
                                  , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
-
+                                 
+                                 , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END AS PersonalGroupId
                                  , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END AS PersonalGroupName
                                  --, STRING_AGG (DISTINCT CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END, '; ')      AS PersonalGroupName
                                  
@@ -124,6 +127,7 @@ BEGIN
                                    , MIContainer.ObjectIntId_Analyzer
                                    , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN MIContainer.OperDate ELSE NULL END
                                    , CASE WHEN inIsPersonalGroup = FALSE THEN '' ELSE CASE WHEN COALESCE (Object_PersonalGroup.ValueData,'') <> '' THEN (COALESCE (Object_PersonalGroup.ValueData,'') ||' ('||COALESCE (Object_Unit_PersonalGroup.ValueData,'') ||')') ELSE '' END END
+                                   , CASE WHEN inIsPersonalGroup = FALSE THEN 0 ELSE COALESCE (Object_PersonalGroup.Id,0) END
                                    , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                            ) AS tmpMI
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
@@ -239,6 +243,7 @@ BEGIN
            -- Вес в упаковке - GoodsByGoodsKind
          , ObjectFloat_WeightTotal.ValueData AS WeightTotal
          
+         , tmpMI_Union.PersonalGroupId        ::Integer
          , tmpMI_Union.PersonalGroupName      ::TVarChar
          
          , Movement.InvNumber    :: TVarChar

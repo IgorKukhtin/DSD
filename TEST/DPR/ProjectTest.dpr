@@ -1300,7 +1300,9 @@ uses
   SheetWorkTimeCloseJournal in '..\..\Forms\Document\SheetWorkTimeCloseJournal.pas' {SheetWorkTimeCloseJournalForm: TParentForm},
   SheetWorkTimeCloseEdit in '..\..\Forms\Document\SheetWorkTimeCloseEdit.pas' {SheetWorkTimeCloseEditForm: TParentForm},
   Report_SheetWorkTime_OutDialog in '..\..\Forms\Report\Report_SheetWorkTime_OutDialog.pas' {Report_SheetWorkTime_OutDialogForm: TParentForm},
-  Report_SheetWorkTime_Out in '..\..\Forms\Report\Report_SheetWorkTime_Out.pas' {Report_SheetWorkTime_OutForm: TParentForm};
+  Report_SheetWorkTime_Out in '..\..\Forms\Report\Report_SheetWorkTime_Out.pas' {Report_SheetWorkTime_OutForm: TParentForm},
+  Report_SheetWorkTime_GraphDialog in '..\..\Forms\Report\Report_SheetWorkTime_GraphDialog.pas' {Report_SheetWorkTime_GraphDialogForm: TParentForm},
+  Report_SheetWorkTime_Graph in '..\..\Forms\Report\Report_SheetWorkTime_Graph.pas' {Report_SheetWorkTime_GraphForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
