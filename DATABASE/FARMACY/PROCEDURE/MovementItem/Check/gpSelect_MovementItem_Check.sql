@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , DivisionPartiesId Integer, DivisionPartiesName TVarChar
              , isPresent Boolean
              , FixEndDate TDateTime
+             , UKTZED TVarChar
               )
 AS
 $BODY$
@@ -140,6 +141,15 @@ BEGIN
                    FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                    WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                   )
+   , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
+                             , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
+                             , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId 
+                                            ORDER BY COALESCE(Object_Goods_Juridical.AreaId, 0), Object_Goods_Juridical.JuridicalId) AS Ord
+                        FROM Object_Goods_Juridical
+                        WHERE COALESCE (Object_Goods_Juridical.UKTZED, '') <> ''
+                          AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
+                          AND Object_Goods_Juridical.GoodsMainId <> 0
+                        )
 
        SELECT
              MovementItem.Id
@@ -186,6 +196,7 @@ BEGIN
            
            , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
            , Null::TDateTime                                                     AS FixEndDate 
+           , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
 
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
@@ -232,6 +243,10 @@ BEGIN
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
             LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
+
+            -- Коды UKTZED
+            LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                    AND tmpGoodsUKTZED.Ord = 1
       ;
 END;
 $BODY$

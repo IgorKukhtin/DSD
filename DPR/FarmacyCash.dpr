@@ -144,7 +144,8 @@ uses
   LikiDniproeHealth in '..\FormsFarmacy\Cash\LikiDniproeHealth.pas',
   CallbackHandler in '..\FormsFarmacy\Cash\CallbackHandler.pas' {CallbackHandlerForm},
   ChoosingPairSun in '..\FormsFarmacy\Cash\ChoosingPairSun.pas' {ChoosingPairSunForm},
-  TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm};
+  TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm},
+  CashCloseJeckdawsDialog in '..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas' {CashCloseJeckdawsDialogForm: TParentForm};
 
 {$R *.res}
 

@@ -387,10 +387,13 @@ end;
 
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJackdawsGreenJournalCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckJackdawsGreenJournalCashForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCustomerThresho_RemainsGoodsCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCustomerThresho_RemainsGoodsCashForm');
 
-{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitRetail_CashForm'));
@@ -1014,9 +1017,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZReportLogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ZReportLogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_JackdawsSumDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumForm'));

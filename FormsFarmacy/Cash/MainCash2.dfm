@@ -6113,6 +6113,17 @@ inherited MainCashForm2: TMainCashForm2
       Hint = #1042#1088#1072#1095#1080
       OnExecute = actDoctorsExecute
     end
+    object actCheckJackdawsGreenJournalCash: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1073#1080#1074#1082#1072' '#1095#1077#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1089' '#1079#1077#1083#1077#1085#1086#1081' '#1075#1072#1083#1082#1086#1081
+      FormName = 'TCheckJackdawsGreenJournalCashForm'
+      FormNameParam.Value = 'TCheckJackdawsGreenJournalCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -8319,6 +8330,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N44: TMenuItem
       Action = actReturnInJournal
+    end
+    object N61: TMenuItem
+      Action = actCheckJackdawsGreenJournalCash
     end
   end
   object TimerDroppedDown: TTimer

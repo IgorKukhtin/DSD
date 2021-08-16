@@ -30,7 +30,7 @@ BEGIN
 
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
-     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inDiscountExternalId:= inDiscountExternalId, inStartDate:= CURRENT_DATE - INTERVAL '8 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
+     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inDiscountExternalId:= inDiscountExternalId, inStartDate:= CURRENT_DATE - INTERVAL '20 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
      RETURN QUERY
@@ -136,4 +136,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 2807930 , inSession:= '11697839')
+SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 15615415  , inSession:= '3')

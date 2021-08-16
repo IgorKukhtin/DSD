@@ -260,7 +260,7 @@ BEGIN
     END IF;
 
 
-    IF COALESCE (inJackdawsChecksCode, 0) <> 0
+    IF COALESCE (inJackdawsChecksCode, 0) <> 0 AND  COALESCE(TRIM(inCashRegister), '') = ''
     THEN
       SELECT Object.ID
       INTO vbJackdawsChecksId

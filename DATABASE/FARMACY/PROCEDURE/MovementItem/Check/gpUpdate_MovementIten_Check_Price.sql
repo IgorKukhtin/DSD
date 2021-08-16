@@ -1,4 +1,4 @@
- -- Function: gpUpdate_MovementIten_Check_Price()
+   -- Function: gpUpdate_MovementIten_Check_Price()
 
 DROP FUNCTION IF EXISTS gpUpdate_MovementIten_Check_Price (Integer, Integer, TFloat, TVarChar);
 
@@ -22,7 +22,7 @@ BEGIN
 
     IF inSession::Integer NOT IN (3, 375661, 4183126, 8001630, 9560329, 8051421, 14080152 )
     THEN
-      RAISE EXCEPTION 'Изменение <Типы разделений партий> вам запрещено.';
+      RAISE EXCEPTION 'Изменение <Цены> вам запрещено.';
     END IF;
 
     SELECT
@@ -39,7 +39,7 @@ BEGIN
 
     IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
-        RAISE EXCEPTION 'Ошибка.Изменение Типы разделений партий в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+        RAISE EXCEPTION 'Ошибка.Изменение Цены в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
     -- Провкряем элемент по документу

@@ -387,15 +387,17 @@
         <DCCReference Include="..\FormsFarmacy\Cash\LikiDniproeHealth.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\CallbackHandler.pas">
             <Form>CallbackHandlerForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoosingPairSun.pas">
             <Form>ChoosingPairSunForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\TestingUser.pas">
             <Form>TestingUserForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas">
+            <Form>CashCloseJeckdawsDialogForm</Form>
             <FormType>dfm</FormType>
+            <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

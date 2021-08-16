@@ -12,17 +12,17 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
     Width = 734
     Height = 555
     ExplicitTop = 77
-    ExplicitWidth = 1007
+    ExplicitWidth = 734
     ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 734
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1007
+      ExplicitWidth = 734
       ExplicitHeight = 555
       inherited cxGrid: TcxGrid
         Width = 734
         Height = 306
-        ExplicitWidth = 1007
+        ExplicitWidth = 734
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -184,7 +184,6 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1007
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ZReportDS
@@ -347,14 +346,13 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1007
       end
     end
   end
   inherited Panel: TPanel
     Width = 734
     Height = 51
-    ExplicitWidth = 1007
+    ExplicitWidth = 734
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42491d
@@ -493,104 +491,6 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TCheckForm'
-      FormNameParam.Value = 'TCheckForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ZReportCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42491d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      CheckIDRecords = True
-      ActionType = acUpdate
-      DataSource = ZReportDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate_RetrievedAccounting: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_RetrievedAccounting
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_RetrievedAccounting
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>'
-      ImageIndex = 79
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>?'
-    end
-    object actSummaDialogForm: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actSummaDialogForm'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SummaReceivedFact'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SummaReceivedFactLabel'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_SummaReceivedFact: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actSummaDialogForm
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaReceivedFact
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaReceivedFact
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
-      ImageIndex = 56
-    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -670,19 +570,7 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -716,16 +604,26 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
       ImageIndex = 29
     end
     object dxBarButton2: TdxBarButton
-      Action = actUpdate
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
       Category = 0
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object dxBarButton3: TdxBarButton
-      Action = actUpdate_RetrievedAccounting
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object dxBarButton4: TdxBarButton
-      Action = actUpdate_SummaReceivedFact
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
+      Visible = ivAlways
+      ImageIndex = 56
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -854,7 +752,6 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdate
       end>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -868,65 +765,5 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
     PropertiesCellList = <>
     Left = 496
     Top = 464
-  end
-  object spUpdate_RetrievedAccounting: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_RetrievedAccounting'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = ZReportCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisRetrievedAccounting'
-        Value = False
-        Component = ZReportCDS
-        ComponentItem = 'isRetrievedAccounting'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisRetrievedAccounting'
-        Value = False
-        Component = ZReportCDS
-        ComponentItem = 'isRetrievedAccounting'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 658
-    Top = 456
-  end
-  object spUpdate_SummaReceivedFact: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_SummaReceivedFact'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = ZReportCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaReceivedFact'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SummaReceivedFact'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 658
-    Top = 512
   end
 end
