@@ -51,6 +51,7 @@ BEGIN
                       AND MovementItem.Amount     > 0
                    )
         AND inUserId <> 23902 -- Иванова Т.В.
+      --AND inUserId <> 2     -- 
       --AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Нет кода подтверждения.%Необходимо отправить SMS на телефон Покупателя.', CHR (13);
@@ -398,10 +399,19 @@ BEGIN
      -- проверка что оплачено НЕ больше чем надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)
      THEN
-         RAISE EXCEPTION 'Ошибка. Сумма к оплате = <%> больше чем сумма оплаты = <%>.', (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
-                                                                                      , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         RAISE EXCEPTION 'Ошибка. Сумма оплаты = <%> больше чем сумма к оплате = <%>.Для <%>'
+                       , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                       , (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                       , lfGet_Object_ValueData((SELECT _tmpItem.GoodsId FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1))
          ;
      END IF;
+
+if inUserId = 2 and 1=0
+then
+   UPDATE _tmpItem SET Summ_10201 = _tmpItem.Summ_10201 + 1 WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204;
+end if;
+     
+
      -- проверка что скидка та что надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
      THEN

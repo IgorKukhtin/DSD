@@ -787,8 +787,10 @@ BEGIN
      -- проверка что оплачено НЕ больше чем надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)
      THEN
-         RAISE EXCEPTION 'Ошибка. Сумма к оплате = <%> больше чем сумма оплаты = <%>.', (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
-                                                                                      , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         RAISE EXCEPTION 'Ошибка. Сумма оплаты = <%> больше чем сумма к оплате = <%>.Для <%>'
+                       , (SELECT _tmpItem.TotalPay       FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                       , (SELECT _tmpItem.OperSumm_ToPay FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                       , lfGet_Object_ValueData((SELECT _tmpItem.GoodsId FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay ORDER BY _tmpItem.MovementItemId LIMIT 1))
          ;
      END IF;
      -- проверка что скидка та что надо
