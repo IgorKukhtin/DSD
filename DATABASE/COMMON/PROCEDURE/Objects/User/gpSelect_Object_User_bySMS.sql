@@ -14,6 +14,7 @@ RETURNS TABLE (HostName_Sms TVarChar
              , AlphaName_Sms TVarChar
              , ClientId TVarChar
              , ClientSecret TVarChar
+             , ShowCost_sms Boolean
              , Message_sms TVarChar
              , PhoneNum_sms TVarChar
               )
@@ -87,18 +88,22 @@ BEGIN
     -- Результат
      RETURN QUERY 
       SELECT --'http://193.41.60.77:17070/api/contents' :: TVarChar AS HostName_Sms
-             --'https://api-gateway.kyivstar.ua/sandbox/rest/v1beta' :: TVarChar AS HostName_Sms
-             'https://api-gateway.kyivstar.ua' :: TVarChar AS HostName_Sms
+             --'https://api-gateway.kyivstar.ua' :: TVarChar AS HostName_Sms
+             'https://smsc.ua/sys/send.php' :: TVarChar AS HostName_Sms
            , 'sandbox' :: TVarChar AS Environment_Sms
            , 'v1beta' :: TVarChar AS Version_Sms
 
-           , 'TEST2B2BCUSTOMER' :: TVarChar AS Login_sms
-           , 'nuKxk2n6mJwyBvJx' :: TVarChar AS Password_sms
+         --, 'TEST2B2BCUSTOMER' :: TVarChar AS Login_sms
+         --, 'nuKxk2n6mJwyBvJx' :: TVarChar AS Password_sms
+           
+           , 'admin@alan.ua' :: TVarChar AS Login_sms
+           , 'vas6ok' :: TVarChar AS Password_sms
 
            , 'messagedesk' :: TVarChar AS AlphaName_Sms
            , '679c4113-0848-471a-8745-844c38ec9eeb' :: TVarChar AS ClientId
            , 'UmLVhAlbIMpF7EPNhaS7vBzR9T' :: TVarChar AS ClientSecret
 
+           , TRUE               :: Boolean  AS ShowCost_sms
            , vbKeySMS           :: TVarChar AS Message_sms
            , inPhoneAuthent                 AS PhoneNum_sms
             ;

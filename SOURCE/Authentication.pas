@@ -101,7 +101,8 @@ begin
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
-var SendSMSAction : TdsdSendSMSKyivstarAction;
+//var SendSMSAction : TdsdSendSMSKyivstarAction;
+var SendSMSAction : TdsdSendSMSAction;
 var N: IXMLNode;
     pXML : String;
 begin
@@ -119,7 +120,8 @@ begin
 
     try
      //SendSMSAction:= TdsdSendSMSCPAAction.Create(nil);
-      SendSMSAction:= TdsdSendSMSKyivstarAction.Create(nil);
+    //SendSMSAction:= TdsdSendSMSKyivstarAction.Create(nil);
+    SendSMSAction:= TdsdSendSMSAction.Create(nil);
 
       N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pPhoneAuthent]), False, 4, ANeedShowException)).DocumentElement;
       //
@@ -129,13 +131,16 @@ begin
       begin
          try
            // Send SMS
-           SendSMSAction.AlphaName.Value    := N.GetAttribute(AnsiLowerCase('AlphaName_Sms'));
+         //SendSMSAction.AlphaName.Value    := N.GetAttribute(AnsiLowerCase('AlphaName_Sms'));
            SendSMSAction.Host.Value    := N.GetAttribute(AnsiLowerCase('HostName_Sms'));
-           SendSMSAction.Environment.Value    := N.GetAttribute(AnsiLowerCase('Environment_Sms'));
-           SendSMSAction.Version.Value    := N.GetAttribute(AnsiLowerCase('Version_Sms'));
-           SendSMSAction.ClientId.Value   := N.GetAttribute(AnsiLowerCase('ClientId'));
-           SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
-           SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
+           SendSMSAction.Login.Value    := N.GetAttribute(AnsiLowerCase('Login_sms'));
+           SendSMSAction.Password.Value    := N.GetAttribute(AnsiLowerCase('Password_sms'));
+           SendSMSAction.ShowCost.Value    := N.GetAttribute(AnsiLowerCase('ShowCost_sms'));
+         //SendSMSAction.Environment.Value    := N.GetAttribute(AnsiLowerCase('Environment_Sms'));
+         //SendSMSAction.Version.Value    := N.GetAttribute(AnsiLowerCase('Version_Sms'));
+         //SendSMSAction.ClientId.Value   := N.GetAttribute(AnsiLowerCase('ClientId'));
+         //SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
+         //SendSMSAction.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
            SendSMSAction.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
            SendSMSAction.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
            //Result:= SendSMSAction.Authentication;
