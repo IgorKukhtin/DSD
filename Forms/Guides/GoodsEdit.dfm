@@ -319,7 +319,7 @@
     Caption = #1044#1072#1090#1072' '#1076#1086' ('#1073#1091#1093#1075'.) :'
   end
   object edDate_BUH: TcxDateEdit
-    Left = 223
+    Left = 221
     Top = 107
     EditValue = 42005d
     Properties.SaveTime = False
@@ -388,6 +388,14 @@
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_BUH'
+        Value = Null
+        Component = edName_BUH
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -497,6 +505,14 @@
         Name = 'inStartDate'
         Value = Null
         Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDate_BUH'
+        Value = Null
+        Component = edDate_BUH
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
