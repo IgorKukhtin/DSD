@@ -1063,7 +1063,8 @@ uses
   Report_Check_JackdawsSum in '..\..\FormsFarmacy\Report\Report_Check_JackdawsSum.pas' {Report_Check_JackdawsSumForm: TParentForm},
   GoodsSUN in '..\..\FormsFarmacy\Guides\GoodsSUN.pas' {GoodsSUNForm: TParentForm},
   Report_ZReportLogDialog in '..\..\FormsFarmacy\Report\Report_ZReportLogDialog.pas' {Report_ZReportLogDialogForm: TParentForm},
-  Report_ZReportLog in '..\..\FormsFarmacy\Report\Report_ZReportLog.pas' {Report_ZReportLogForm: TParentForm};
+  Report_ZReportLog in '..\..\FormsFarmacy\Report\Report_ZReportLog.pas' {Report_ZReportLogForm: TParentForm},
+  CheckJackdawsGreenJournalCash in '..\..\FormsFarmacy\Document\CheckJackdawsGreenJournalCash.pas' {CheckJackdawsGreenJournalCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

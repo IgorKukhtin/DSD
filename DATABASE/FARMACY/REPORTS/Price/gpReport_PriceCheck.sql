@@ -146,6 +146,7 @@ BEGIN
             PriceMax              TFLoat,
             PriceProc             TFLoat,
             PriceSite             TFLoat,
+            PriceSiteProc         TFLoat,
             Color_calcSite        Integer NOT NULL DEFAULT zc_Color_Black(),
             isBadPriceSite        Boolean Not Null Default False
 
@@ -198,7 +199,7 @@ BEGIN
     
                          
     INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PriceTop, isSP, isPromo,
-                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceProc, PriceSite)
+                           UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceProc, PriceSite, PriceSiteProc)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
          , Object_Goods.Name             AS GoodsName
@@ -223,6 +224,9 @@ BEGIN
                 THEN(MAX(tmpUnitPrice.Price) - MIN(tmpUnitPrice.Price)) / MIN(tmpUnitPrice.Price) * 100
                 ELSE 100 END
          , Price_Site.Price
+         , CASE WHEN COALESCE(Price_Site.Price, 0) > 0 
+                THEN  (1 - MIN(tmpUnitPrice.Price) / Price_Site.Price) * 100
+                ELSE 0 END 
     FROM tmpUnitPrice
          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
@@ -619,4 +623,4 @@ $BODY$
 -- тест 
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               
 
-select * from gpReport_PriceCheck(inPercent := 10 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');
+select * from gpReport_PriceCheck(inPercent := 20 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');

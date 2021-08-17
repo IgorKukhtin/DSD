@@ -317,7 +317,7 @@ end;
 
 function TCashEmulation.FiscalNumber: String;
 begin
-  Result := '3000007988';
+  Result := '3000403707';
 end;
 
 function TCashEmulation.SerialNumber:String;

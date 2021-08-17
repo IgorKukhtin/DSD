@@ -583,6 +583,8 @@ type
     N60: TMenuItem;
     cbDoctors: TcxCheckBox;
     actDoctors: TAction;
+    actCheckJackdawsGreenJournalCash: TdsdOpenForm;
+    N61: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

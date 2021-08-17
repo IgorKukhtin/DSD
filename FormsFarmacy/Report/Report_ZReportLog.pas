@@ -44,18 +44,12 @@ type
     spJackdawsCheck: TdsdStoredProc;
     ZReportDS: TDataSource;
     ZReportCDS: TClientDataSet;
-    actUpdate: TdsdInsertUpdateAction;
     dxBarButton2: TdxBarButton;
     DBViewAddOnCh: TdsdDBViewAddOn;
     chSummaCash: TcxGridDBColumn;
-    spUpdate_RetrievedAccounting: TdsdStoredProc;
-    actUpdate_RetrievedAccounting: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     ColorRA_calc: TcxGridDBColumn;
     chSummaTotal: TcxGridDBColumn;
-    spUpdate_SummaReceivedFact: TdsdStoredProc;
-    actSummaDialogForm: TExecuteDialog;
-    actUpdate_SummaReceivedFact: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
   private
     { Private declarations }

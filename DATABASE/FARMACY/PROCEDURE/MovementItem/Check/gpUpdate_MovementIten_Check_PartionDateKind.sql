@@ -13,6 +13,11 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbInvNumberOrder TVarChar;
+   DECLARE vbPrice TFloat;
+   DECLARE vbUnitId Integer;
+   DECLARE vbGoodsId Integer;
+   DECLARE vbPricePD TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpGetUserBySession (inSession);
@@ -29,16 +34,22 @@ BEGIN
         RAISE EXCEPTION 'Документ не записан.';
     END IF;
 
-    SELECT 
-      StatusId
-    INTO
-      vbStatusId
+    SELECT Movement.StatusId
+         , MovementLinkObject_Unit.ObjectId  
+         , COALESCE(MovementString_InvNumberOrder.ValueData, '')
+    INTO vbStatusId, vbUnitId, vbInvNumberOrder
     FROM Movement 
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+         LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                  ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
     WHERE Id = inMovementId;
             
-    IF vbStatusId <> zc_Enum_Status_UnComplete() 
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
-        RAISE EXCEPTION 'Ошибка.Изменение подразделения в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
     IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.ParentId = inMovementItemID)
@@ -57,6 +68,26 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), inMovementItemID, 0);
     END IF;
     
+    IF COALESCE(inPartionDateKindId, 0) <> 0 AND COALESCE(vbInvNumberOrder, '') <> ''
+    THEN
+    
+      SELECT MovementItem.ObjectId, MIFloat_Price.ValueData 
+      INTO vbGoodsId, vbPrice
+      FROM MovementItem 
+           LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                             ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+      WHERE MovementItem.Id = inMovementItemID;
+                            
+      vbPricePD := COALESCE((SELECT PricePartionDate.outPricePartionDate 
+                             FROM gpGet_PricePartionDate_Cash(inUnitId := vbUnitId , inGoodsId := vbGoodsId , inPartionDateKindId := inPartionDateKindId, inSession := inSession) AS PricePartionDate), 0);
+                             
+      IF COALESCE(vbPrice, 0) > 0 AND COALESCE(vbPricePD, 0) > 0 AND vbPrice > vbPricePD
+      THEN
+        PERFORM gpUpdate_MovementIten_Check_Price(inMovementId := inMovementId, inMovementItemID := inMovementItemID, inPrice := vbPricePD, inSession := zfCalc_UserAdmin());
+      END IF;
+    END IF;
+    
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inMovementItemID, vbUserId, False);
 
@@ -69,5 +100,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
  17.11.18                                                                                    *
 */
--- тест
--- select * from gpUpdate_MovementIten_Check_PartionDateKind(inId := 7784533 , inUnitId := 183294 ,  inSession := '3');
+-- тест select * from gpUpdate_MovementIten_Check_PartionDateKind(inMovementId := 24447136 , inMovementItemID := 449486903 , inPartionDateKindId := 14542625 ,  inSession := '3');

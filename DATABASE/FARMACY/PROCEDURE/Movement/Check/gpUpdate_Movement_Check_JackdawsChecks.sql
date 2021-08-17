@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbPaidTypeId Integer;
+   DECLARE vbJackdawsChecks Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpGetUserBySession (inSession);
@@ -26,15 +27,20 @@ BEGIN
 
     SELECT
       StatusId,
-      MovementLinkObject_PaidType.ObjectId
+      MovementLinkObject_PaidType.ObjectId,
+      COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0)
     INTO
       vbStatusId,
-      vbPaidTypeId
+      vbPaidTypeId,
+      vbJackdawsChecks
     FROM Movement
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                       ON MovementLinkObject_PaidType.MovementId = Movement.Id
                                      AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                      ON MovementLinkObject_JackdawsChecks.MovementId = Movement.Id
+                                     AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
     WHERE Id = inId;
 
     IF COALESCE(inId,0) = 0
@@ -46,6 +52,12 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Изменение типа галки в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
+    
+    IF vbJackdawsChecks = inJackdawsChecksId
+    THEN
+      inJackdawsChecksId := 0;
+    END IF;
+    
 
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JackdawsChecks(), inId, inJackdawsChecksId);

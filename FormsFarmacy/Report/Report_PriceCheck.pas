@@ -98,6 +98,7 @@ type
     PriceSite: TcxGridDBColumn;
     Color_calcSite: TcxGridDBColumn;
     PriceProc: TcxGridDBColumn;
+    PriceSiteProc: TcxGridDBColumn;
   private
   public
   end;

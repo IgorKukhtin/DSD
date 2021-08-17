@@ -642,6 +642,45 @@ BEGIN
     
     IF COALESCE(inCommentSendID, 0) = 14957072
        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+       AND NOT EXISTS (WITH tmpMovement AS (SELECT Movement.ID
+                                                 , Movement.InvNumber
+                                                 , Movement.StatusId
+                                                 , Movement.OperDate
+                                            FROM Movement
+                                                 INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                         ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                        AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                        AND MovementBoolean_SUN.ValueData = TRUE
+                                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                             AND MovementLinkObject_From.ObjectId = vbFromId 
+                                                 LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                           ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                          AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                            WHERE Movement.DescId = zc_Movement_Send()
+                                              AND (Movement.StatusId = zc_Enum_Status_Complete()
+                                               OR Movement.StatusId = zc_Enum_Status_UnComplete() AND COALESCE(MovementBoolean_Deferred.ValueData, False) = TRUE)
+                                              AND Movement.OperDate >= vbOperDate - INTERVAL '1 MONTH') 
+                       SELECT Movement.ID                                                                    AS ID
+                            , Movement.InvNumber
+                            , Movement.OperDate
+                            , MILinkObject_CommentSend.ObjectId                                              AS CommentSendID
+                            , MovementItem.ObjectId                                                          AS GoodsID
+                            , MovementItem.Id                                                                AS MovementItemId
+                            , MovementItem.Amount                                                            AS Amount
+                       FROM tmpMovement AS Movement
+
+                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                   AND MovementItem.DescId = zc_MI_Master()
+                                                   AND MovementItem.isErased = FALSE
+                                                   AND MovementItem.ObjectId = inGoodsId
+
+                            INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                             ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                                            AND MILinkObject_CommentSend.ObjectId = 14957072 
+                           )
     THEN
        IF NOT EXISTS(WITH GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                     AS GoodsId  
                                               , max(tmp.RelatedProductId)                                                          AS RelatedProductId
