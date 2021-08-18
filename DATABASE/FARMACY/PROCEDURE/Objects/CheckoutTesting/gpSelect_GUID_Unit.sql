@@ -34,7 +34,7 @@ BEGIN
          , Object_Unit.valuedata              AS UnitName
          , Object_User.Id                     AS UserId
          , Object_User.valuedata              AS UserName
-         , DATE_TRUNC ('DAY', EmployeeWorkLog.DateLogIn)::TDateTime   AS DateLogIn
+         , EmployeeWorkLog.DateLogIn          AS DateLogIn
          , False                              AS isErased 
     FROM tmpEmployeeWorkLog AS EmployeeWorkLog
 
@@ -57,4 +57,5 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_GUID_Unit(inSession := '3');
+
+select * from gpSelect_GUID_Unit( inSession := '3');

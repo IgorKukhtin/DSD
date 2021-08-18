@@ -788,7 +788,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'Comment'
         Value = Null
         Component = edComment
         DataType = ftString

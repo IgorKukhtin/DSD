@@ -4,7 +4,7 @@ inherited ListDiffForm: TListDiffForm
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
   ExplicitWidth = 816
-  ExplicitHeight = 574
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -198,7 +198,15 @@ inherited ListDiffForm: TListDiffForm
             Options.Editing = False
             Width = 75
           end
-          object Comment: TcxGridDBColumn [9]
+          object isVIPSend: TcxGridDBColumn [9]
+            Caption = #1042' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+            DataBinding.FieldName = 'isVIPSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -574,6 +582,34 @@ inherited ListDiffForm: TListDiffForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       ImageIndex = 12
     end
+    object actListDiffFormVIPSend: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '
+      ImageIndex = 30
+      FormName = 'TListDiffFormVIPSendForm'
+      FormNameParam.Value = 'TListDiffFormVIPSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -683,10 +719,18 @@ inherited ListDiffForm: TListDiffForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbComplete: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actListDiffFormVIPSend
       Category = 0
     end
   end
@@ -826,7 +870,7 @@ inherited ListDiffForm: TListDiffForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1028,7 +1072,7 @@ inherited ListDiffForm: TListDiffForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1171,14 +1215,14 @@ inherited ListDiffForm: TListDiffForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

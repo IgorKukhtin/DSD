@@ -167,6 +167,8 @@ end;
 
 procedure TTestingUserForm.SetQuestion;
 begin
+  FFocused := 1;
+
   meQuestion.Lines.Text := TaskCDS.FieldByName('Question').AsString;
 
   if TaskCDS.FieldByName('isGraphics1').AsBoolean then
@@ -225,6 +227,7 @@ begin
   imPossibleAnswer2.Visible := not mePossibleAnswer2.Visible;
   imPossibleAnswer3.Visible := not mePossibleAnswer3.Visible;
   imPossibleAnswer4.Visible := not mePossibleAnswer4.Visible;
+  if imPossibleAnswer1.Visible then ActiveControl := imPossibleAnswer1 else ActiveControl := mePossibleAnswer1;
 end;
 
 procedure TTestingUserForm.sgViewingResultsDrawCell(Sender: TObject; ACol,

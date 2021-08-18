@@ -1317,12 +1317,17 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_DiscountExternalDialogForm');
     exit;
+}
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNItogDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNItogDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNItogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNItogForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSUNDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSUNDialogForm');
-    exit;
+{    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSendSUN_InOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSendSUN_InOutDialogForm'));
@@ -2421,6 +2426,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TListDiffJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TListDiffForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffFormVIPSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDiffFormVIPSendForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;

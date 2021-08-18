@@ -471,9 +471,9 @@
     object actReport_CheckSUN: TdsdOpenForm [30]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053' v.1'
-      FormName = 'TReport_CheckSUNForm'
-      FormNameParam.Value = 'TReport_CheckSUNForm'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053
+      FormName = 'TReport_CheckSUNItogForm'
+      FormNameParam.Value = 'TReport_CheckSUNItogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

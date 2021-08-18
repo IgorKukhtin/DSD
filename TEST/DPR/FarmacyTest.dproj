@@ -3804,6 +3804,18 @@
 				<Form>CheckJackdawsGreenJournalCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ListDiffFormVIPSend.pas">
+				<Form>ListDiffFormVIPSendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSUNItogDialog.pas">
+				<Form>Report_CheckSUNItogDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas">
+				<Form>Report_CheckSUNItogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

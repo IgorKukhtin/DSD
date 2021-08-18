@@ -55,6 +55,9 @@ type
     DiffKindName: TcxGridDBColumn;
     isClose_DiffKind: TcxGridDBColumn;
     actDiffKindChoice: TOpenChoiceForm;
+    isVIPSend: TcxGridDBColumn;
+    actListDiffFormVIPSend: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

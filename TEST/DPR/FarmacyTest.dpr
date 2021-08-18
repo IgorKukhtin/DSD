@@ -1064,7 +1064,10 @@ uses
   GoodsSUN in '..\..\FormsFarmacy\Guides\GoodsSUN.pas' {GoodsSUNForm: TParentForm},
   Report_ZReportLogDialog in '..\..\FormsFarmacy\Report\Report_ZReportLogDialog.pas' {Report_ZReportLogDialogForm: TParentForm},
   Report_ZReportLog in '..\..\FormsFarmacy\Report\Report_ZReportLog.pas' {Report_ZReportLogForm: TParentForm},
-  CheckJackdawsGreenJournalCash in '..\..\FormsFarmacy\Document\CheckJackdawsGreenJournalCash.pas' {CheckJackdawsGreenJournalCashForm: TParentForm};
+  CheckJackdawsGreenJournalCash in '..\..\FormsFarmacy\Document\CheckJackdawsGreenJournalCash.pas' {CheckJackdawsGreenJournalCashForm: TParentForm},
+  ListDiffFormVIPSend in '..\..\FormsFarmacy\Document\ListDiffFormVIPSend.pas' {ListDiffFormVIPSendForm: TParentForm},
+  Report_CheckSUNItogDialog in '..\..\FormsFarmacy\Report\Report_CheckSUNItogDialog.pas' {Report_CheckSUNItogDialogForm: TParentForm},
+  Report_CheckSUNItog in '..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas' {Report_CheckSUNItogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

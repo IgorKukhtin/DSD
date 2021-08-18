@@ -60,9 +60,11 @@ BEGIN
 
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), outMovementId, vbUnitId);
-    
+
+    -- сохранили связь с <С чеком источником>
+    PERFORM lpInsertUpdate_MovementLinkMovement(zc_MovementLinkMovement_Master(), outMovementId, inMovementId);    
+
     -- Скопировали параметры чека
-    
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), outMovementId, COALESCE (MB_RoundingTo10.ValueData, FALSE))
           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingDown(), outMovementId, COALESCE (MB_RoundingDown.ValueData, FALSE))
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(), outMovementId, zc_Enum_PaidType_Cash())
