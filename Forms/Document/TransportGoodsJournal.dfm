@@ -367,6 +367,69 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
             Options.Editing = False
             Width = 80
           end
+          object MemberName1: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1087#1086#1083#1091#1095#1080#1083')'
+            DataBinding.FieldName = 'MemberName1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1090#1088#1080#1084#1072#1074' '#1074#1086#1076#1110#1081'/'#1077#1082#1089#1087#1077#1076#1080#1090#1086#1088
+            Options.Editing = False
+            Width = 108
+          end
+          object MemberName2: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088
+            DataBinding.FieldName = 'MemberName2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074#1085#1080#1082#1072')'
+            Options.Editing = False
+            Width = 80
+          end
+          object MemberName3: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1077#1096#1080#1083' '#1086#1090#1075#1088#1091#1079#1082#1091
+            DataBinding.FieldName = 'MemberName3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1110#1076#1087#1091#1089#1082' '#1076#1086#1079#1074#1086#1083#1080#1074
+            Options.Editing = False
+            Width = 80
+          end
+          object MemberName4: TcxGridDBColumn
+            Caption = #1057#1076#1072#1083
+            DataBinding.FieldName = 'MemberName4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1076#1072#1074' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074#1085#1080#1082#1072')'
+            Options.Editing = False
+            Width = 80
+          end
+          object MemberName5: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1087#1088#1080#1085#1103#1083')'
+            DataBinding.FieldName = 'MemberName5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1081#1085#1103#1074' '#1074#1086#1076#1110#1081'/'#1077#1082#1089#1087#1077#1076#1080#1090#1086#1088
+            Options.Editing = False
+            Width = 90
+          end
+          object MemberName6: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1089#1076#1072#1083')'
+            DataBinding.FieldName = 'MemberName6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1076#1072#1074' '#1074#1086#1076#1110#1081'/'#1077#1082#1089#1087#1077#1076#1080#1090#1086#1088' - '#1087#1091#1089#1090#1086' '#1048#1051#1048' 1'
+            Options.Editing = False
+            Width = 103
+          end
+          object MemberName7: TcxGridDBColumn
+            Caption = #1055#1088#1080#1085#1103#1083
+            DataBinding.FieldName = 'MemberName7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1081#1085#1103#1074' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1086#1076#1077#1088#1078#1091#1074#1072#1095#1072') - '#1087#1091#1089#1090#1086
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -579,7 +642,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
