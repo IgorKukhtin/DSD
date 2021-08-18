@@ -43,6 +43,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , isNotPriceIncome      Boolean
              , tmpDate               TDateTime
              , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
               )
 AS
 $BODY$
@@ -232,6 +233,7 @@ BEGIN
                                        , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                                        , COALESCE (MIFloat_PromoMovement.ValueData, 0)                        AS MovementId_Promo
                                        , FALSE AS isTare
+
                                  FROM tmpMovement
                                       INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -445,6 +447,10 @@ BEGIN
                                       , tmpMI.CountForPrice
                                       , FALSE AS isTare
                                  FROM tmpMI_Weighing AS tmpMI
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                           ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                 )
                      , tmpChangePercentAmount AS
                                 (SELECT tmpMI.GoodsId
@@ -533,6 +539,12 @@ BEGIN
                  , ObjectFloat_WeightTare.ValueData     AS WeightTare
                  , ObjectFloat_CountForWeight.ValueData AS CountForWeight
 
+                 , View_InfoMoney_goods.InfoMoneyCode
+                 , View_InfoMoney_goods.InfoMoneyGroupName
+                 , View_InfoMoney_goods.InfoMoneyDestinationName
+                 , View_InfoMoney_goods.InfoMoneyName
+                 , View_InfoMoney_goods.InfoMoneyId
+
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
                        , SUM (tmpMI.Amount_Order)     AS Amount_Order
@@ -581,6 +593,7 @@ BEGIN
                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                 AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- Оборотная тара
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_goods ON View_InfoMoney_goods.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
             ORDER BY Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
                    -- , ObjectString_Goods_GoodsGroupFull.ValueData
@@ -801,6 +814,10 @@ BEGIN
                                  GROUP BY Container.ObjectId
                                 )
               , tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE inIsGoodsComplete = TRUE
                                    AND inBranchCode NOT BETWEEN 301 AND 310
@@ -815,6 +832,10 @@ BEGIN
                                      )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE /*(inIsGoodsComplete = FALSE
                                      OR inBranchCode IN (103)
@@ -825,6 +846,10 @@ BEGIN
                                                                                 )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE inBranchCode NOT BETWEEN 301 AND 310
                                  --AND inIsGoodsComplete = FALSE
@@ -832,6 +857,10 @@ BEGIN
                                                                      )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() THEN TRUE ELSE FALSE END AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
@@ -841,6 +870,10 @@ BEGIN
     
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE inBranchCode BETWEEN 301 AND 310
                                    AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
@@ -855,6 +888,10 @@ BEGIN
                                        )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  -- Цех Упаковки + ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ копчения - втулки
                                  WHERE inBranchCode IN (1, 102)
@@ -866,6 +903,10 @@ BEGIN
                                        )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  -- Цех Тушенки
                                  WHERE inBranchCode IN (103)
@@ -878,6 +919,10 @@ BEGIN
                                        )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  -- Производство - (201-210)Сырье
                                  WHERE inBranchCode BETWEEN 201 AND 210
@@ -890,6 +935,10 @@ BEGIN
                                        )
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
+                                      , View_InfoMoney.InfoMoneyCode
+                                      , View_InfoMoney.InfoMoneyGroupName
+                                      , View_InfoMoney.InfoMoneyDestinationName
+                                      , View_InfoMoney.InfoMoneyName
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE inBranchCode BETWEEN 302 AND 310
                                --WHERE inBranchCode BETWEEN 301 AND 310
@@ -950,6 +999,10 @@ BEGIN
                               , COALESCE (tmpGoods_ScaleCeh.GoodsKindId_max,    COALESCE (tmpGoods_Return.GoodsKindId_max, Object_GoodsKind_Main.Id))  AS GoodsKindId_max
                               , tmpInfoMoney.InfoMoneyId
                               , tmpInfoMoney.InfoMoneyDestinationId
+                              , tmpInfoMoney.InfoMoneyCode
+                              , tmpInfoMoney.InfoMoneyGroupName
+                              , tmpInfoMoney.InfoMoneyDestinationName
+                              , tmpInfoMoney.InfoMoneyName
                          FROM tmpInfoMoney
                               JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                               ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
@@ -961,8 +1014,8 @@ BEGIN
                               LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                               LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
                          WHERE (tmpGoods_Return.GoodsId > 0
-                             OR inBranchCode BETWEEN 302 AND 310
-                           --OR inBranchCode BETWEEN 301 AND 310
+                           --OR inBranchCode BETWEEN 302 AND 310
+                             OR inBranchCode BETWEEN 301 AND 310
                              OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310)
                              OR tmpInfoMoney.isTare = TRUE
                              OR inBranchCode IN (103)
@@ -1078,6 +1131,11 @@ BEGIN
                 , ObjectFloat_WeightTare.ValueData     AS WeightTare
                 , ObjectFloat_CountForWeight.ValueData AS CountForWeight
 
+                , tmpGoods.InfoMoneyCode
+                , tmpGoods.InfoMoneyGroupName
+                , tmpGoods.InfoMoneyDestinationName
+                , tmpGoods.InfoMoneyName
+                , tmpGoods.InfoMoneyId
            FROM tmpGoods
     
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId

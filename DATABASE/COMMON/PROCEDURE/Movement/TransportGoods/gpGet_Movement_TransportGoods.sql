@@ -246,19 +246,19 @@ BEGIN
            , Object_CarJuridical.Id         AS CarJuridicalId
            , Object_CarJuridical.ValueData  AS CarJuridicalName
 
-           , Object_Member1.Id        AS MemberId1
+           , CASE WHEN TRIM (Object_Member1.ValueData) = '' THEN 0 ELSE Object_Member1.Id END :: Integer AS MemberId1
            , Object_Member1.ValueData AS MemberName1
-           ,  Object_Member2.Id        AS MemberId2
+           , CASE WHEN TRIM (Object_Member2.ValueData) = '' THEN 0 ELSE Object_Member2.Id END :: Integer AS MemberId2
            , Object_Member2.ValueData AS MemberName2
-           , Object_Member3.Id        AS MemberId3
+           , CASE WHEN TRIM (Object_Member3.ValueData) = '' THEN 0 ELSE Object_Member3.Id END :: Integer AS MemberId3
            , Object_Member3.ValueData AS MemberName3
-           , Object_Member4.Id        AS MemberId4
+           , CASE WHEN TRIM (Object_Member4.ValueData) = '' THEN 0 ELSE Object_Member4.Id END :: Integer AS MemberId4
            , Object_Member4.ValueData AS MemberName4
-           , Object_Member5.Id        AS MemberId5
+           , CASE WHEN TRIM (Object_Member5.ValueData) = '' THEN 0 ELSE Object_Member5.Id END :: Integer AS MemberId5
            , Object_Member5.ValueData AS MemberName5
-           , Object_Member6.Id        AS MemberId6
+           , CASE WHEN TRIM (Object_Member6.ValueData) = '' THEN 0 ELSE Object_Member6.Id END :: Integer AS MemberId6
            , Object_Member6.ValueData AS MemberName6
-           , Object_Member7.Id        AS MemberId7
+           , CASE WHEN TRIM (Object_Member7.ValueData) = '' THEN 0 ELSE Object_Member7.Id END :: Integer AS MemberId7
            , Object_Member7.ValueData AS MemberName7
 
            , Object_From.Id           AS FromId
