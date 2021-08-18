@@ -1,7 +1,7 @@
 inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 646
+  ClientHeight = 653
   ClientWidth = 964
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
@@ -12,12 +12,12 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 980
-  ExplicitHeight = 685
+  ExplicitHeight = 692
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 493
+    Top = 500
     Width = 964
     Height = 153
     Align = alBottom
@@ -292,7 +292,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 490
+    Top = 497
     Width = 964
     Height = 3
     AlignSplitter = salBottom
@@ -302,7 +302,7 @@ inherited MainCashForm2: TMainCashForm2
     Left = 0
     Top = 349
     Width = 964
-    Height = 141
+    Height = 148
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -310,7 +310,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 21
       Width = 964
-      Height = 75
+      Height = 82
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -1104,7 +1104,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 96
+      Top = 103
       Width = 964
       Height = 45
       Align = alBottom
@@ -6116,7 +6116,7 @@ inherited MainCashForm2: TMainCashForm2
     object actCheckJackdawsGreenJournalCash: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1086#1073#1080#1074#1082#1072' '#1095#1077#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1089' '#1079#1077#1083#1077#1085#1086#1081' '#1075#1072#1083#1082#1086#1081
+      Caption = #1055#1088#1086#1073#1080#1074#1082#1072' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1089' '#1079#1077#1083#1077#1085#1086#1081' '#1075#1072#1083#1082#1086#1081
       FormName = 'TCheckJackdawsGreenJournalCashForm'
       FormNameParam.Value = 'TCheckJackdawsGreenJournalCashForm'
       FormNameParam.DataType = ftString

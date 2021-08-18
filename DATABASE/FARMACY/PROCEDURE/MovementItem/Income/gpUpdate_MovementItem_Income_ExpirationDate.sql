@@ -35,13 +35,7 @@ BEGIN
         Movement 
     WHERE
         Id = inMovementId;
-     
-    --
-    IF vbStatusId <> zc_Enum_Status_UnComplete()
-    THEN
-        RAISE EXCEPTION 'Ошибка. Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
-    END IF;
-    
+         
     IF NOT EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_ChangeExpirationDate
                   WHERE ObjectBoolean_ChangeExpirationDate.ObjectId = inJuridicalId
                     AND ObjectBoolean_ChangeExpirationDate.DescId = zc_ObjectBoolean_Juridical_ChangeExpirationDate()
@@ -50,8 +44,80 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. По поставщику запрещено изменять срок годности.';
     END IF;
 
-    -- Сохранили <Срок годности>
-    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inMovementItemId, inExpirationDate);
+
+    IF vbStatusId = zc_Enum_Status_Complete() AND 
+       EXISTS(SELECT 1 
+              FROM  MovementItemContainer AS MIC
+
+                    INNER JOIN Container AS ContainerPD
+                                         ON ContainerPD.ParentId = MIC.ContainerId
+                                        AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+              WHERE MIC.MovementId = inMovementId
+                AND MIC.MovementItemId = inMovementItemId
+                AND MIC.DescId = zc_MIContainer_Count())
+    THEN
+        IF (SELECT count(*)
+            FROM  MovementItemContainer AS MIC
+
+                  INNER JOIN Container AS ContainerPD
+                                       ON ContainerPD.ParentId = MIC.ContainerId
+                                      AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+            WHERE MIC.MovementId = inMovementId
+              AND MIC.MovementItemId = inMovementItemId
+              AND MIC.DescId = zc_MIContainer_Count()) > 1
+        THEN
+           RAISE EXCEPTION 'Ошибка. По партии было более одного изменения срока.';        
+        END IF;
+        
+        IF (SELECT ObjectDate_ExpirationDate.ValueData
+            FROM  MovementItemContainer AS MIC
+
+                  INNER JOIN Container AS ContainerPD
+                                       ON ContainerPD.ParentId = MIC.ContainerId
+                                      AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+                  LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.ID
+                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                  LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                       ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                                      AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+            WHERE MIC.MovementId = inMovementId
+              AND MIC.MovementItemId = inMovementItemId
+              AND MIC.DescId = zc_MIContainer_Count()) = 
+           (SELECT MIDate_ExpirationDate.ValueData 
+            FROM MovementItemDate AS MIDate_ExpirationDate
+            WHERE MIDate_ExpirationDate.MovementItemId = inMovementItemId
+              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods())
+        THEN
+            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), ObjectDate_ExpirationDate.ObjectId, inExpirationDate)
+            FROM  MovementItemContainer AS MIC
+
+                  INNER JOIN Container AS ContainerPD
+                                       ON ContainerPD.ParentId = MIC.ContainerId
+                                      AND ContainerPD.DescId = zc_Container_CountPartionDate()
+
+                  LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.ID
+                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                  LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                       ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                                      AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+            WHERE MIC.MovementId = inMovementItemId
+              AND MIC.MovementItemId = MovementItem.Id
+              AND MIC.DescId = zc_MIContainer_Count();        
+        ELSE
+           RAISE EXCEPTION 'Ошибка. По партии уже изменен срок.';        
+        END IF;
+        
+    ELSE
+        -- Сохранили <Срок годности>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inMovementItemId, inExpirationDate);
+    END IF;
     
     outExpirationDate := inExpirationDate;
 
@@ -65,4 +131,4 @@ $BODY$
  07.07.21                                                       *
 */
 
--- select * from gpUpdate_MovementItem_Income_ExpirationDate(inMovementItemId := 427266561 , inMovementId := 23186807 , inJuridicalId := 1311462 , inExpirationDate := ('07.07.2021')::TDateTime ,  inSession := '3');
+-- select * from gpUpdate_MovementItem_Income_ExpirationDate(inMovementItemId := 449805652 , inMovementId := 24472940 , inJuridicalId := 17434172 , inExpirationDate := ('01.01.2022')::TDateTime ,  inSession := '3');

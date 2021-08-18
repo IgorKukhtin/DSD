@@ -45,7 +45,6 @@ object TestingUserForm: TTestingUserForm
       Style.IsFontAssigned = True
       StyleFocused.BorderColor = clAqua
       TabOrder = 0
-      ExplicitTop = 76
       Height = 72
       Width = 620
     end
