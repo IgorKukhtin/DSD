@@ -28,8 +28,10 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (шт)
       , AmountSaleWeight        TFloat -- вес
       , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период 
-      , Price                   TFloat --Цена в прайсе
-      , PriceWithVAT            TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , Price                   TFloat --Цена в прайсе за кг
+      , PriceWithVAT            TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн за кг
+      , Price_sh                TFloat --Цена в прайсе за шт
+      , PriceWithVAT_sh         TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн за шт
       , PromoCondition          TFloat --
       , SummaProfit             TFloat --прибыль
       , SummaProfit_Condition   TFloat --
@@ -444,8 +446,14 @@ BEGIN
          , (tmpData_All.AmountSale
             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес
          , tmpData_All.SummaSale               :: TFloat
-         , tmpData_All.Price                   :: TFloat
-         , tmpData_All.PriceWithVAT            :: TFloat
+         --, tmpData_All.Price                   :: TFloat
+         --, tmpData_All.PriceWithVAT            :: TFloat
+         --для шт пересчитываем цену за кг
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_All.Price/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_All.Price END::TFloat AS Price
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_All.PriceWithVAT/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_All.PriceWithVAT END::TFloat AS PriceWithVAT
+         --цена за шт
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_All.Price ELSE 0 END::TFloat AS Price_sh
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_All.PriceWithVAT ELSE 0 END::TFloat AS PriceWithVAT_sh
          , tmpData_All.PromoCondition          :: TFloat
          , tmpData_All.SummaProfit             :: TFloat
          , tmpData_All.SummaProfit_Condition   :: TFloat
