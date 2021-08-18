@@ -187,8 +187,43 @@ BEGIN
                        AND MovementItem.isErased = FALSE
                      )
  
-  , tmpData AS (SELECT tmpData_Full.*
+  , tmpData AS (SELECT tmpData_Full.Id                     --идентификатор
+                     , tmpData_Full.GoodsId                --ИД объекта <товар>
+                     , tmpData_Full.GoodsCode              --код объекта  <товар>
+                     , tmpData_Full.GoodsName              --наименование объекта <товар>
+                     , tmpData_Full.GoodsKindName          --Наименование обьекта <Вид товара>
+                     , tmpData_Full.GoodsKindCompleteName  --Наименование обьекта <Вид товара(Примечание)>
+                     , tmpData_Full.Amount                 --% скидки на товар
+                     , tmpData_Full.PriceIn1               --Себ-ть - 1 прод, грн/кг
+                     , tmpData_Full.PriceIn2               --Себ-ть - 2 прод, грн/кг
+                          
+                     , tmpData_Full.AmountSale             --Максимум планируемого объема продаж на акционный период (в кг)
+                     , tmpData_Full.SummaSale              --сумма плана продаж
+
+                     , tmpData_Full.ContractCondition      -- Бонус сети, %
+                     , tmpData_Full.TaxRetIn               -- % возврат
+                     , tmpData_Full.TaxPromo               -- % cкидки из мастера
+                     , tmpData_Full.PromoCondition         -- % дополнительной скидки
+                     
+                     , tmpData_Full.AmountRetIn 
+                     , tmpData_Full.Ord        -- для вывода пустой строки
+                      /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
+                     , tmpData_Full.Ord_goods  -- для вывода только 1 раз товара
+                          
+                       --для шт пересчитываем цену за кг
+                     , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_Full.Price/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_Full.Price END::TFloat AS Price
+                     , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_Full.PriceWithVAT/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_Full.PriceWithVAT END::TFloat AS PriceWithVAT
+                     --цена за шт
+                     , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpData_Full.Price ELSE 0 END::TFloat AS Price_sh
+                     , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpData_Full.PriceWithVAT ELSE 0 END::TFloat AS PriceWithVAT_sh
+
                 FROM tmpData_Full
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                          ON ObjectLink_Goods_Measure.ObjectId = tmpData_Full.GoodsId
+                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                                 ON ObjectFloat_Goods_Weight.ObjectId = tmpData_Full.GoodsId
+                                                AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                 WHERE tmpData_Full.Ord_goods = 1
                 )
 
@@ -215,6 +250,8 @@ BEGIN
                          , 0                         AS SummaSale
                          , 0                         AS Price
                          , 0                         AS PriceWithVAT
+                         , 0                         AS Price_sh
+                         , 0                         AS PriceWithVAT_sh
                          , tmpData.PromoCondition    AS PromoCondition 
                          , 0                         AS SummaProfit
                          , 0                         AS SummaProfit_Condition  
@@ -256,6 +293,8 @@ BEGIN
                          , tmpData.SummaSale
                          , tmpData.Price               AS Price
                          , tmpData.PriceWithVAT        AS PriceWithVAT
+                         , tmpData.Price_sh            AS Price_sh
+                         , tmpData.PriceWithVAT_sh     AS PriceWithVAT_sh
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
                          , tmpData.SummaSale
                                                - (
@@ -310,6 +349,8 @@ BEGIN
                          , 0                         AS SummaSale
                          , 0                         AS Price
                          , 0                         AS PriceWithVAT
+                         , 0                         AS Price_sh
+                         , 0                         AS PriceWithVAT_sh
                          , tmpData.PromoCondition    AS PromoCondition      --  Компенсация по доп.счету, грн/кг
 
                          , 0                         AS SummaProfit              -- прибыль
@@ -353,6 +394,8 @@ BEGIN
                          , tmpData.SummaSale
                          , tmpData.Price  
                          , tmpData.PriceWithVAT
+                         , tmpData.Price_sh
+                         , tmpData.PriceWithVAT_sh
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
                          , tmpData.SummaSale
                                                - (
@@ -403,6 +446,8 @@ BEGIN
                          , 0                AS SummaSale
                          , 0                AS Price   
                          , 0                AS PriceWithVAT
+                         , 0                AS Price_sh
+                         , 0                AS PriceWithVAT_sh
                          , 0                AS PromoCondition         --  Компенсация по доп.счету, грн/кг
                          , 0                AS SummaProfit                 -- прибыль
                          , 0                AS SummaProfit_Condition
@@ -446,14 +491,12 @@ BEGIN
          , (tmpData_All.AmountSale
             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес
          , tmpData_All.SummaSale               :: TFloat
-         --, tmpData_All.Price                   :: TFloat
-         --, tmpData_All.PriceWithVAT            :: TFloat
-         --для шт пересчитываем цену за кг
-         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_All.Price/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_All.Price END::TFloat AS Price
-         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND COALESCE (ObjectFloat_Goods_Weight.ValueData,0) <> 0 THEN tmpData_All.PriceWithVAT/ ObjectFloat_Goods_Weight.ValueData ELSE tmpData_All.PriceWithVAT END::TFloat AS PriceWithVAT
+         --  за кг
+         , tmpData_All.Price                   :: TFloat
+         , tmpData_All.PriceWithVAT            :: TFloat
          --цена за шт
-         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_All.Price ELSE 0 END::TFloat AS Price_sh
-         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_All.PriceWithVAT ELSE 0 END::TFloat AS PriceWithVAT_sh
+         , tmpData_All.Price_sh                   :: TFloat
+         , tmpData_All.PriceWithVAT_sh            :: TFloat
          , tmpData_All.PromoCondition          :: TFloat
          , tmpData_All.SummaProfit             :: TFloat
          , tmpData_All.SummaProfit_Condition   :: TFloat
