@@ -106,26 +106,26 @@ LANGUAGE PLPGSQL VOLATILE;
  
 WITH 
 
-tmpStaffList AS (
-SELECT ObjectLink_StaffList_Unit.ChildObjectId AS UnitId
-                , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
-                , MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) AS HoursDay
-                      FROM OBJECT AS Object_StaffList
-                            INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
-                                                  ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
-                                                 AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+tmpStaffList AS (SELECT ObjectLink_StaffList_Unit.ChildObjectId AS UnitId
+                      , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
+                      , MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) AS HoursDay
+                 FROM OBJECT AS Object_StaffList
+                       INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                             ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                            AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
 
-                            LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
-                                                 ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
-                                                AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit() 
-                            LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
-                                                  ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
-                                                 AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
-                       WHERE Object_StaffList.DescId = zc_Object_StaffList()
-                         AND Object_StaffList.isErased = False
-                       GROUP BY ObjectLink_StaffList_Unit.ChildObjectId
-                              , ObjectLink_StaffList_Position.ChildObjectId
-)
+                       LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
+                                            ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
+                                           AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit() 
+                       LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                             ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                                            AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
+                  WHERE Object_StaffList.DescId = zc_Object_StaffList()
+                    AND Object_StaffList.isErased = False
+                  GROUP BY ObjectLink_StaffList_Unit.ChildObjectId
+                         , ObjectLink_StaffList_Position.ChildObjectId
+                  HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
+                  )
 
 SELECT Movement.operDate
              , MI_SheetWorkTime.Amount
