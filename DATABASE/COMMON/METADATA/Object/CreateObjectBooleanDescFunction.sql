@@ -1000,9 +1000,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_RequestDistribListDiff() RETURN
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_RequestDistribListDiff', 'Запрос на разрешения заказ без контроля остатка по сети' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_RequestDistribListDiff');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_WorkTimeKind_NoSheetChoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_WorkTimeKind_NoSheetChoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_WorkTimeKind(), 'zc_ObjectBoolean_WorkTimeKind_NoSheetChoice', 'Блокировать выбор в Табеле' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_WorkTimeKind_NoSheetChoice');  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 19.08.21         * zc_ObjectBoolean_WorkTimeKind_NoSheetChoice
  27.07.21                                                                                                          * zc_ObjectBoolean_Unit_ParticipDistribListDiff, zc_ObjectBoolean_Unit_ParticipDistribListDiff
  27.07.21                                                                                                          * zc_ObjectBoolean_DiffKind_FindLeftovers
  07.07.21                                                                                                          * zc_ObjectBoolean_Juridical_ChangeExpirationDate

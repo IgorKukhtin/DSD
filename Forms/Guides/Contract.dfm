@@ -80,7 +80,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 254
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -333,7 +332,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitHeight = 254
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -344,7 +342,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 254
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -427,7 +424,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 254
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -552,7 +548,6 @@
       Height = 236
       AlignSplitter = salRight
       Control = cxGridGoods
-      ExplicitHeight = 254
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -570,7 +565,6 @@
     Height = 236
     AlignSplitter = salRight
     Control = Panel
-    ExplicitHeight = 254
   end
   object CCPartner: TcxGrid
     Left = 481
@@ -582,7 +576,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 254
     object cxGridDBTableViewCCPartner: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = CCPartnerDS
@@ -661,7 +654,6 @@
     Width = 5
     Height = 236
     Control = cxGridContractCondition
-    ExplicitHeight = 254
   end
   object Panel2: TPanel
     Left = 0

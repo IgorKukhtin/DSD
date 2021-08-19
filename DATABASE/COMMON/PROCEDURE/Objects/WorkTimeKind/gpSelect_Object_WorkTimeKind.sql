@@ -1,8 +1,11 @@
 -- Function: gpSelect_Object_WorkTimeKind (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_WorkTimeKind (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_WorkTimeKind (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_WorkTimeKind (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
+    IN inisShowAll      Boolean ,      -- 
+    IN inisErased       Boolean ,      --
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -11,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EnumName  TVarChar
              , Tax       TFloat
              , Summ      TFloat
+             , isNoSheetChoice Boolean
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -28,6 +32,7 @@ $BODY$BEGIN
       , ObjectString_Enum.ValueData      AS EnumName
       , ObjectFloat_Tax.ValueData        AS Tax
       , COALESCE (ObjectFloat_Summ.ValueData,0) ::TFloat AS Summ
+      , COALESCE (ObjectBoolean_NoSheetChoice.ValueData, FALSE) ::Boolean AS isNoSheetChoice
       , Object_WorkTimeKind.isErased     AS isErased
       
    FROM OBJECT AS Object_WorkTimeKind
@@ -45,18 +50,24 @@ $BODY$BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                               ON ObjectFloat_Summ.ObjectId = Object_WorkTimeKind.Id
                              AND ObjectFloat_Summ.DescId = zc_ObjectFloat_WorkTimeKind_Summ()
-                               
-   WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind();
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetChoice
+                                ON ObjectBoolean_NoSheetChoice.ObjectId = Object_WorkTimeKind.Id
+                               AND ObjectBoolean_NoSheetChoice.DescId = zc_ObjectBoolean_WorkTimeKind_NoSheetChoice()
+   WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind()
+     AND (COALESCE (ObjectBoolean_NoSheetChoice.ValueData, FALSE) = FALSE OR inisShowAll = TRUE)
+     AND (Object_WorkTimeKind.isErased = FALSE OR inisErased = TRUE);
   
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_WorkTimeKind (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_WorkTimeKind (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.08.21         *
  04.06.20         *
  05.12.17         *
  01.10.13         *
@@ -65,3 +76,4 @@ ALTER FUNCTION gpSelect_Object_WorkTimeKind (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_WorkTimeKind('2')
+-- SELECT * FROM gpSelect_Object_WorkTimeKind(false, true, '2')

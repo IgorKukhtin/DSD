@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_WorkTimeKind(
     IN inCode          Integer   ,    -- Код
     IN inName          TVarChar  ,    -- наименование
     IN inShortName     TVarChar  ,    -- Короткое наименование
-    IN inTax           Tfloat    ,    -- % изменения рабочих часов	
+    IN inTax           Tfloat    ,    -- % изменения рабочих часов
     IN inSession       TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -36,7 +36,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_WorkTimeKind_ShortName(), ioId, inShortName);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_WorkTimeKind_Tax(), ioId, inTax);
-   
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, vbIsUpdate);
 

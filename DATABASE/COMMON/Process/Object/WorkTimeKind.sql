@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_WorkTimeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_WorkTimeKind' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_WorkTimeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_WorkTimeKind' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_WorkTimeKind_Summ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_WorkTimeKind_Summ' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_WorkTimeKind_NoSheetChoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_WorkTimeKind_NoSheetChoice' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -22,6 +23,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_WorkTim
                                   , inCode:= 3
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_WorkTimeKind())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_WorkTimeKind_Summ');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_WorkTimeKind_Summ()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_WorkTimeKind())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_WorkTimeKind_NoSheetChoice');
+                                  
 /*                                  
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId

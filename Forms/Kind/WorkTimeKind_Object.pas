@@ -18,6 +18,10 @@ type
     FormParams: TdsdFormParams;
     clValue: TcxGridDBColumn;
     Tax: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

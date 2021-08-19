@@ -70,6 +70,14 @@ type
     macUpdate_Summ: TMultiAction;
     FormParams: TdsdFormParams;
     bbUpdate_Summ: TdxBarButton;
+    isNoSheetChoice: TcxGridDBColumn;
+    spUpdate_NoSheetChoice: TdsdStoredProc;
+    actUpdate_NoSheetChoice: TdsdExecStoredProc;
+    bbUpdate_NoSheetChoice: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

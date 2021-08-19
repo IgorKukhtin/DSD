@@ -24,14 +24,18 @@ object WorkTimeKindForm: TWorkTimeKindForm
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 686
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Name
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -41,6 +45,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,7 +56,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 33
+        Width = 27
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -60,14 +65,14 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 190
+        Width = 156
       end
       object ShortName: TcxGridDBColumn
         Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 99
       end
       object Tax: TcxGridDBColumn
         Caption = '% '#1080#1079#1084'. '#1088'.'#1095'.'
@@ -75,7 +80,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
-        Width = 53
+        Width = 44
       end
       object Summ: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
@@ -86,7 +91,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1075#1088#1085' '#1079#1072' '#1101#1090#1086#1090' '#1088#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
         Options.Editing = False
-        Width = 100
+        Width = 82
       end
       object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -94,7 +99,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 69
+        Width = 75
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -111,7 +116,16 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 107
+        Width = 77
+      end
+      object isNoSheetChoice: TcxGridDBColumn
+        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100
+        DataBinding.FieldName = 'isNoSheetChoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1073#1086#1088' '#1074' '#1058#1072#1073#1077#1083#1077
+        Options.Editing = False
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -203,6 +217,18 @@ object WorkTimeKindForm: TWorkTimeKindForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -220,6 +246,14 @@ object WorkTimeKindForm: TWorkTimeKindForm
         item
           Visible = True
           ItemName = 'bbUpdate_Summ'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_NoSheetChoice'
         end
         item
           BeginGroup = True
@@ -293,6 +327,18 @@ object WorkTimeKindForm: TWorkTimeKindForm
     end
     object bbUpdate_Summ: TdxBarButton
       Action = macUpdate_Summ
+      Category = 0
+    end
+    object bbUpdate_NoSheetChoice: TdxBarButton
+      Action = actUpdate_NoSheetChoice
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -530,6 +576,60 @@ object WorkTimeKindForm: TWorkTimeKindForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
       ImageIndex = 50
     end
+    object actUpdate_NoSheetChoice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NoSheetChoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NoSheetChoice
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1073#1086#1088' '#1074' '#1058#1072#1073#1077#1083#1077' ('#1076#1072'/'#1085#1077#1090')'
+      Hint = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1073#1086#1088' '#1074' '#1058#1072#1073#1077#1083#1077' ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 77
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_WorkTimeKind'
@@ -538,7 +638,23 @@ object WorkTimeKindForm: TWorkTimeKindForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 80
     Top = 184
@@ -567,10 +683,12 @@ object WorkTimeKindForm: TWorkTimeKindForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 296
     Top = 168
@@ -661,5 +779,31 @@ object WorkTimeKindForm: TWorkTimeKindForm
     Params = <>
     Left = 479
     Top = 95
+  end
+  object spUpdate_NoSheetChoice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_WorkTimeKind_NoSheetChoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNoSheetChoice'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNoSheetChoice'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 216
   end
 end

@@ -12,21 +12,25 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
     Width = 514
     Height = 350
     TabOrder = 0
-    ExplicitWidth = 360
+    ExplicitWidth = 514
     ExplicitHeight = 350
     ClientRectBottom = 350
     ClientRectRight = 514
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 360
+      ExplicitWidth = 514
       ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 514
         Height = 350
-        ExplicitLeft = -16
-        ExplicitTop = -16
-        ExplicitWidth = 360
+        ExplicitWidth = 514
         ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clName
+            end>
           OptionsData.Editing = False
           OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
@@ -79,6 +83,16 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
+          end
+          object isNoSheetChoice: TcxGridDBColumn
+            Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100
+            DataBinding.FieldName = 'isNoSheetChoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1073#1086#1088' '#1074' '#1058#1072#1073#1077#1083#1077
+            Options.Editing = False
+            Width = 50
           end
         end
       end
@@ -136,6 +150,44 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1079#1072#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -146,6 +198,23 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_WorkTimeKind'
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 96
     Top = 96
   end
@@ -159,6 +228,18 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -187,6 +268,14 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

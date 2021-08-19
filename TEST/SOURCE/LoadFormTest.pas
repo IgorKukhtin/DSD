@@ -3629,16 +3629,17 @@ end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
+    //форма выбора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindSummDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindSummDialogForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindEditForm');
-  //форма выбора
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadSmsSettingsFormTest;
