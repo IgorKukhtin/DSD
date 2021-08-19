@@ -382,13 +382,27 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       object Name_ch2: TcxGridDBBandedColumn
         Caption = #1044#1072#1085#1085#1099#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         MinWidth = 67
         Options.Editing = False
         Options.Moving = False
-        Width = 109
+        Width = 162
         Position.BandIndex = 0
         Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object TotalAmount_ch2: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086
+        DataBinding.FieldName = 'TotalAmount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 67
+        Options.Editing = False
+        Options.Moving = False
+        Width = 80
+        Position.BandIndex = 0
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object Value_ch2: TcxGridDBBandedColumn
@@ -1629,6 +1643,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Top = 359
   end
   object CrossDBViewAddOnTotal: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView1
     OnDblClickActionList = <>
     ActionItemList = <>

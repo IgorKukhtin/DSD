@@ -72,6 +72,7 @@ BEGIN
                                  , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                                  , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
                                  , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                                 , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
                                  , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
                                  , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
                                  , CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END AS ObjectId
@@ -112,6 +113,9 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                   ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
                                                                  AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
+                                                         ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
+                                                        AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                             )
             -- связываем даты до приема, после увольнения с текущими
@@ -139,6 +143,7 @@ BEGIN
                  , tmp.MemberId
                  , tmp.PositionId
                  , tmp.PositionLevelId
+                 , tmp.isNoSheetCalc
                  , tmp.StorageLineId
                  , tmp.PersonalGroupId
                  , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
@@ -159,6 +164,7 @@ BEGIN
                  , tmp.MemberId
                  , tmp.PositionId
                  , tmp.PositionLevelId
+                 , FALSE AS isNoSheetCalc
                  , tmp.StorageLineId
                  , tmp.PersonalGroupId
                  , tmp.WorkTimeKindId AS ObjectId
@@ -314,7 +320,9 @@ BEGIN
         ';
 
      vbQueryText2 := '
-        SELECT tmp.ValueData    AS Name'
+        SELECT tmp.ValueData    AS Name
+             , tmp.TotalAmount ::TFloat
+        '
                || vbFieldNameText ||
         '
         FROM
@@ -332,6 +340,7 @@ BEGIN
                                           FROM tmpOperDate
                                                JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                                                          AND COALESCE (tmpMI.Amount,0) <> 0
+                                                         AND tmpMI.isNoSheetCalc = FALSE
                                            Group by tmpOperDate.operdate
                                         UNION
                                           -- кол-во смен 
@@ -351,25 +360,35 @@ BEGIN
                                               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                                                         --AND COALESCE (tmpMI.Amount,0) <> 0
                                                           AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
+                                                          AND tmpMI.isNoSheetCalc = FALSE
                                            Group by tmpOperDate.operdate
                                         UNION
-                                          -- Кол-во отпуска
+                                          -- Кол-во БЛ
                                           SELECT tmpOperDate.operdate
                                                , SUM (1) AS Amount
                                                , 4  AS ObjectId
                                           FROM tmpOperDate
                                               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                                                        AND tmpMI.ObjectId = 16
+                                                        AND tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())
+                                           Group by tmpOperDate.operdate
+                                        UNION
+                                          -- Кол-во отпуска
+                                          SELECT tmpOperDate.operdate
+                                               , SUM (1) AS Amount
+                                               , 5  AS ObjectId
+                                          FROM tmpOperDate
+                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                        AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()
                                                         -- AND COALESCE (tmpMI.Amount,0) <> 0
                                            Group by tmpOperDate.operdate
                                         UNION
                                           -- Кол-во прогулов
                                           SELECT tmpOperDate.operdate
                                                , SUM (1) AS Amount
-                                               , 5  AS ObjectId
+                                               , 6  AS ObjectId
                                           FROM tmpOperDate
                                               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                                                        AND tmpMI.ObjectId = 18
+                                                        AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()
                                                        -- AND COALESCE (tmpMI.Amount,0) <> 0
                                            Group by tmpOperDate.operdate
                                         ) AS Movement_Data
@@ -377,11 +396,13 @@ BEGIN
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
-LEFT JOIN (SELECT 1 AS Id, ''кол-во часов'' AS ValueData 
-     UNION SELECT 2 AS Id, ''кол-во смен'' AS ValueData
-     UNION SELECT 3 AS Id, ''Кол-во шт.ед'' AS ValueData
-     UNION SELECT 4 AS Id, ''Кол-во отпуска'' AS ValueData
-     UNION SELECT 5 AS Id, ''Кол-во прогулов'' AS ValueData )AS tmp ON tmp.Id = D.Key[1]
+FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpMI.Amount) FROM tmpMI WHERE COALESCE (tmpMI.Amount,0) <> 0 AND tmpMI.isNoSheetCalc = FALSE) :: TFloat AS TotalAmount
+     UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) FROM tmpMI WHERE tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())) :: TFloat AS TotalAmount
+     UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT COUNT (tmpMI.MemberId) FROM tmpMI WHERE tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff()) AND tmpMI.isNoSheetCalc = FALSE) :: TFloat AS TotalAmount
+     UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (1) FROM tmpMI WHERE tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())) :: TFloat AS TotalAmount
+     UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (1) FROM tmpMI WHERE tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()) :: TFloat AS TotalAmount
+     UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (1) FROM tmpMI WHERE tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()) :: TFloat AS TotalAmount
+           )AS tmp ON tmp.Id = D.Key[1]
          ';
      OPEN cur2 FOR EXECUTE vbQueryText;
      RETURN NEXT cur2;
