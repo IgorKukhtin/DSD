@@ -2,8 +2,8 @@ object PositionLevelEditForm: TPositionLevelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080'>'
-  ClientHeight = 139
-  ClientWidth = 295
+  ClientHeight = 190
+  ClientWidth = 314
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object PositionLevelEditForm: TPositionLevelEditForm
     Left = 10
     Top = 72
     TabOrder = 0
-    Width = 273
+    Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -29,7 +29,7 @@ object PositionLevelEditForm: TPositionLevelEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 148
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object PositionLevelEditForm: TPositionLevelEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 148
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,13 +57,24 @@ object PositionLevelEditForm: TPositionLevelEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 296
+  end
+  object cbisNoSheetCalc: TcxCheckBox
+    Left = 10
+    Top = 113
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1080#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1101#1092#1092#1077#1082#1090'-'#1090#1080' '#1088#1072#1073#1086#1090#1099' '#1087#1077#1088#1089#1086#1085#1072#1083#1072
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+    Width = 296
   end
   object ActionList: TActionList
     Left = 152
     Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -76,6 +87,8 @@ object PositionLevelEditForm: TPositionLevelEditForm
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -84,6 +97,8 @@ object PositionLevelEditForm: TPositionLevelEditForm
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -97,12 +112,14 @@ object PositionLevelEditForm: TPositionLevelEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -110,7 +127,17 @@ object PositionLevelEditForm: TPositionLevelEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNoSheetCalc'
+        Value = Null
+        Component = cbisNoSheetCalc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 96
     Top = 48
   end
@@ -120,6 +147,7 @@ object PositionLevelEditForm: TPositionLevelEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -135,19 +163,30 @@ object PositionLevelEditForm: TPositionLevelEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNoSheetCalc'
+        Value = Null
+        Component = cbisNoSheetCalc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 184
     Top = 16
   end
@@ -164,7 +203,7 @@ object PositionLevelEditForm: TPositionLevelEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 160
-    Top = 104
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 8

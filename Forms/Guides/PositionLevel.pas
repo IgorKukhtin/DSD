@@ -56,6 +56,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    isNoSheetCalc: TcxGridDBColumn;
   private
     { Private declarations }
   public

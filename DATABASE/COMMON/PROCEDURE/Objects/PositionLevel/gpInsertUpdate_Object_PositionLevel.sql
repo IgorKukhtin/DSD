@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_PositionLevel(Integer, Integer, TVarChar, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PositionLevel (Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PositionLevel (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PositionLevel (Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PositionLevel(
- INOUT ioId         Integer   , -- Ключ объекта <Разряд должности>
-    IN inCode       Integer   , -- свойство <Код >
-    IN inName       TVarChar  , -- свойство <Наименование>
-    IN inSession    TVarChar    -- сессия пользователя
+ INOUT ioId            Integer   , -- Ключ объекта <Разряд должности>
+    IN inCode          Integer   , -- свойство <Код >
+    IN inName          TVarChar  , -- свойство <Наименование>
+    IN inisNoSheetCalc Boolean   , -- исключить из расчета эффективности работы персонала
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -37,19 +39,23 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PositionLevel(), vbCode_calc, inName);
 
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_PositionLevel_NoSheetCalc(), ioId, inisNoSheetCalc);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_PositionLevel (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_PositionLevel (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.08.21         *
  18.10.13                                        * 
  17.10.13         * 
 */

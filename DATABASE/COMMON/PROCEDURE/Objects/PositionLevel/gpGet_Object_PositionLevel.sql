@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PositionLevel(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isNoSheetCalc Boolean
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -22,7 +23,8 @@ $BODY$BEGIN
            , lfGet_ObjectCode(0, zc_Object_PositionLevel()) AS Code
            , CAST ('' as TVarChar)  AS Name
                       
-           , CAST (NULL AS Boolean) AS isErased
+           , CAST (FALSE AS Boolean) AS isNoSheetCalc
+           , CAST (FALSE AS Boolean) AS isErased
            ;
    ELSE
        RETURN QUERY 
@@ -31,9 +33,13 @@ $BODY$BEGIN
            , Object_PositionLevel.ObjectCode AS Code
            , Object_PositionLevel.ValueData  AS NAME
                       
+           , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
            , Object_PositionLevel.isErased   AS isErased
            
        FROM Object AS Object_PositionLevel
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
+                                ON ObjectBoolean_NoSheetCalc.ObjectId = Object_PositionLevel.Id
+                               AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE Object_PositionLevel.Id = inId;
    END IF;
   
@@ -47,7 +53,8 @@ ALTER FUNCTION gpGet_Object_PositionLevel (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 17.10.13          *         
+ 19.08.21         *
+ 17.10.13         *         
 
 */
 
