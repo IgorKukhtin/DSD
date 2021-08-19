@@ -56,6 +56,7 @@ BEGIN
                                                   , inIsPay              := FALSE               :: Boolean  -- добавить с оплатой
                                                   , ioAmount             := MIFloat_AmountPartner.ValueData :: TFloat   -- Количество
                                                   , ioChangePercent      := 0                   :: TFloat    -- *** - % Скидки
+                                                  , ioChangePercentNext  := 0                   :: TFloat    -- *** - % Скидки
                                                   , ioSummChangePercent  := 0                   :: TFloat    -- *** - Дополнительная скидка в продаже ГРН
                                                   , ioSummChangePercent_curr := 0               :: TFloat    -- *** - Дополнительная скидка в продаже в валюте***
                                                   , ioOperPriceList      := MIFloat_OperPriceList.ValueData :: TFloat  -- *** - Цена факт ГРН

@@ -298,9 +298,15 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trial(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 8, inName:= 'пробная смена' , inEnumName:= 'zc_Enum_WorkTimeKind_Trial');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 9, inName:= 'Выходной'      , inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trip(),      inDescId:= zc_Object_WorkTimeKind(), inCode:= 15, inName:= 'Командировка' , inEnumName:= 'zc_Enum_WorkTimeKind_Trip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Medicday(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 15, inName:= 'Санобработка' , inEnumName:= 'zc_Enum_WorkTimeKind_Medicday');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 13, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkD');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 14, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkN');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 17, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_Audit');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkDayOff');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 11, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_HolidayNoZp');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 12, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_HospitalDoc');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 16, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_RemoteAccess');
 
 
      -- !!! Типы формирования налогового документа
