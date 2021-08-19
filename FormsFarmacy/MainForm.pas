@@ -842,6 +842,8 @@ type
     N307: TMenuItem;
     actReport_ZReportLog: TdsdOpenForm;
     Z1: TMenuItem;
+    actListDiffFormVIPSend: TdsdOpenForm;
+    VIP2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

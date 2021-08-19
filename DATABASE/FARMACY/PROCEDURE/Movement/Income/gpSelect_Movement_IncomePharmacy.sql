@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomePharmacy(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar, ContractName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
@@ -74,6 +74,7 @@ BEGIN
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName
              , MovementFloat_TotalCount.ValueData         AS TotalCount
+             , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
              , Object_From.Id                             AS FromId
              , Object_From.ValueData                      AS FromName
@@ -112,6 +113,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
                                     ON MovementFloat_TotalSummSale.MovementId = Movement_Income.Id
                                    AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                          ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
@@ -179,4 +183,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_IncomePharmacy (inStartDate:= '01.12.2020', inEndDate:= '20.12.2020', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_IncomePharmacy (inStartDate:= '01.08.2021', inEndDate:= '20.08.2021', inIsErased := FALSE, inSession:= '3')

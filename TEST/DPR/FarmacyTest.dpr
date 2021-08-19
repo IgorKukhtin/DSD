@@ -1067,7 +1067,8 @@ uses
   CheckJackdawsGreenJournalCash in '..\..\FormsFarmacy\Document\CheckJackdawsGreenJournalCash.pas' {CheckJackdawsGreenJournalCashForm: TParentForm},
   ListDiffFormVIPSend in '..\..\FormsFarmacy\Document\ListDiffFormVIPSend.pas' {ListDiffFormVIPSendForm: TParentForm},
   Report_CheckSUNItogDialog in '..\..\FormsFarmacy\Report\Report_CheckSUNItogDialog.pas' {Report_CheckSUNItogDialogForm: TParentForm},
-  Report_CheckSUNItog in '..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas' {Report_CheckSUNItogForm: TParentForm};
+  Report_CheckSUNItog in '..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas' {Report_CheckSUNItogForm: TParentForm},
+  ListDiffFormVIPSendRemain in '..\..\FormsFarmacy\Document\ListDiffFormVIPSendRemain.pas' {ListDiffFormVIPSendRemainForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

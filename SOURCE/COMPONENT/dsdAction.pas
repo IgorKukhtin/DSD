@@ -1119,7 +1119,7 @@ type
     property Version: TdsdParam read FVersionParam write FVersionParam;
   end;
 
-TdsdSetFocusedAction = class(TdsdCustomAction)
+  TdsdSetFocusedAction = class(TdsdCustomAction)
   private
 
     FControlNameParam: TdsdParam;
@@ -1187,6 +1187,90 @@ TdsdSetFocusedAction = class(TdsdCustomAction)
     property ShortCut;
   end;
 
+  TdsdSetVisibleParamsItem = class(TCollectionItem)
+  private
+    FComponent: TComponent;
+    FParam: TdsdParam;
+    procedure SetComponent(const Value: TComponent);
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Component: TComponent read FComponent write SetComponent;
+    property ValueParam: TdsdParam read FParam write FParam;
+  end;
+
+  TdsdSetVisibleAction = class(TdsdCustomAction)
+  private
+
+    FSetVisibleParams: TOwnedCollection;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property SetVisibleParams: TOwnedCollection read FSetVisibleParams write FSetVisibleParams;
+  end;
+
+  TdsdPairParamsItem = class(TCollectionItem)
+  private
+    FFieldName : String;
+    FPairName : String;
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property FieldName: String read FFieldName write FFieldName;
+    property PairName: String read FPairName write FPairName;
+  end;
+
+  TdsdDataToJsonAction = class(TdsdCustomAction)
+  private
+    FDataSource: TDataSource;
+    FView: TcxGridTableView;
+
+    FJsonParam: TdsdParam;
+    FPairParams: TOwnedCollection;
+
+    procedure DataSourceExecute(JsonArray: TJSONArray);
+    procedure SetDataSource(const Value: TDataSource);
+    procedure SetView(const Value: TcxGridTableView);
+  protected
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Ссылка на элемент отображающий список
+    property View: TcxGridTableView read FView write SetView;
+    // Ссылка на список данных. Может быть установлен только один источник данных
+    property DataSource: TDataSource read FDataSource write SetDataSource;
+    // Получившийся Json
+    property JsonParam: TdsdParam read FJsonParam write FJsonParam;
+    // Содержимое массива Json
+    property PairParams: TOwnedCollection read FPairParams write FPairParams;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+    property SecondaryShortCuts;
+  end;
 
 procedure Register;
 
@@ -1196,7 +1280,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet, Printers,
+  frxDBSet, Printers, cxDBData,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
   dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage, Xml.XMLDoc, XMLIntf;
@@ -1249,6 +1333,8 @@ begin
   RegisterActions('DSDLib', [TdsdSetFocusedAction], TdsdSetFocusedAction);
   RegisterActions('DSDLib', [TdsdLoadListValuesFileAction], TdsdLoadListValuesFileAction);
   RegisterActions('DSDLib', [TdsdPreparePicturesAction], TdsdPreparePicturesAction);
+  RegisterActions('DSDLib', [TdsdSetVisibleAction], TdsdSetVisibleAction);
+  RegisterActions('DSDLib', [TdsdDataToJsonAction], TdsdDataToJsonAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -5263,7 +5349,7 @@ begin
     FileName:=  ExtractFilePath(ParamStr(0)) + FFileNameParam.Value;
   end;
 
-  if not FileExists(FFileNameParam.Value) then
+  if not FileExists(FileName) then
   begin
     ShowMessage('Файл <' + FileName + '> не найден.');
     Exit;
@@ -5419,6 +5505,319 @@ end;
 procedure TdsdPreparePicturesAction.SetPictureFields(Value: TStrings);
 begin
   FPictureFields.Assign(Value);
+end;
+
+{  TdsdSetVisibleParamsItem  }
+
+constructor TdsdSetVisibleParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FParam := TdsdParam.Create(Nil);
+  FParam.DataType := ftBoolean;
+end;
+
+destructor TdsdSetVisibleParamsItem.Destroy;
+begin
+  FParam.Free;
+  inherited Destroy;
+end;
+
+function TdsdSetVisibleParamsItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FParam.Name <> '' then result := FParam.Name
+  else if Assigned(FParam.Component) then
+    result := FParam.Component.Name + ' ' + FParam.ComponentItem
+  else Result := inherited;;
+end;
+
+procedure TdsdSetVisibleParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdSetVisibleParamsItem then
+  begin
+     FParam.Assign(TdsdSetVisibleParamsItem(Source).ValueParam);
+     FComponent := TdsdSetVisibleParamsItem(Source).FComponent;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+procedure TdsdSetVisibleParamsItem.SetComponent(const Value: TComponent);
+begin
+  if Value <> FComponent then
+  begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FComponent := Value;
+  end
+end;
+
+{  TdsdSetVisibleAction  }
+
+constructor TdsdSetVisibleAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FSetVisibleParams := TOwnedCollection.Create(Self, TdsdSetVisibleParamsItem);
+end;
+
+destructor TdsdSetVisibleAction.Destroy;
+begin
+  FreeAndNil(FSetVisibleParams);
+
+  inherited;
+end;
+
+procedure TdsdSetVisibleAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then
+  begin
+    for i := 0 to FSetVisibleParams.Count - 1 do
+    begin
+       if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component = AComponent then
+            TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component := nil;
+       if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Component = AComponent then
+           TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Component := nil;
+    end;
+  end;
+end;
+
+function TdsdSetVisibleAction.LocalExecute: Boolean;
+var i: integer;
+begin
+  inherited;
+  Result := True;
+
+  for i := 0 to FSetVisibleParams.Count - 1 do  if Assigned(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component) then
+  begin
+     if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component is TcxGridColumn then
+     begin
+       TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
+       TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).VisibleForCustomization := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
+     end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
+     begin
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean then
+          SetVariantProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible', TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value)
+     end;
+  end;
+
+end;
+
+{  TdsdPairParamsItem  }
+
+constructor TdsdPairParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FFieldName := '';
+  FPairName := '';
+end;
+
+function TdsdPairParamsItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FPairName <> '' then result := FPairName
+  else Result := inherited;;
+end;
+
+procedure TdsdPairParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdPairParamsItem then
+  begin
+     FFieldName := TdsdPairParamsItem(Source).FieldName;
+     FPairName := TdsdPairParamsItem(Source).PairName;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+
+{  TdsdDataToJsonAction  }
+
+constructor TdsdDataToJsonAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
+  FJsonParam := TdsdParam.Create(Nil);
+  FJsonParam.DataType := ftWideString;
+end;
+
+destructor TdsdDataToJsonAction.Destroy;
+begin
+  FreeAndNil(FJsonParam);
+  FreeAndNil(FPairParams);
+  inherited;
+end;
+
+procedure TdsdDataToJsonAction.DataSourceExecute(JsonArray: TJSONArray);
+var
+  i, j : Integer;
+  JSONObject: TJSONObject;
+
+  procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
+    var intValue: integer;
+  begin
+    if AValue = NULL then
+      JSONObject.AddPair(AName, TJSONNull.Create)
+    else if ADataType = ftDateTime then
+      JSONObject.AddPair(AName, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+    else if ADataType = ftFloat then
+      JSONObject.AddPair(AName, TJSONNumber.Create(AValue))
+    else if ADataType = ftInteger then
+    begin
+      if TryStrToInt(AValue, intValue) then
+        JSONObject.AddPair(AName, TJSONNumber.Create(intValue))
+      else
+        JSONObject.AddPair(AName, TJSONNull.Create);
+    end
+    else
+      JSONObject.AddPair(AName, TJSONString.Create(AValue));
+  end;
+
+begin
+  JSONObject := TJSONObject.Create;
+  try
+    if Assigned(View) then
+    begin
+      with TGaugeFactory.GetGauge(Caption, 0,
+        View.DataController.FilteredRecordCount) do
+      begin
+        Start;
+        try
+          for i := 0 to View.DataController.FilteredRecordCount - 1 do
+          begin
+            View.DataController.FocusedRecordIndex :=
+              View.DataController.FilteredRecordIndex[i];
+            if FPairParams.Count > 0 then
+            begin
+              for j := 0 to FPairParams.Count - 1 do
+                if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                begin
+                  if Assigned(TcxDBDataController(View.DataController).DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
+                    AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                                   TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
+                                   TcxDBDataController(View.DataController).DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
+                  else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
+                end;
+            end else
+            begin
+              for j := 0 to TcxDBDataController(View.DataController).DataSource.DataSet.FieldCount - 1 do
+                AddParamToJSON(TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DisplayText,
+                               TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].Value,
+                               TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
+            end;
+            IncProgress(1);
+            Application.ProcessMessages;
+          end;
+        finally
+          Finish;
+        end;
+      end;
+    end
+    else if Assigned(DataSource) then
+    begin
+      if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and
+        (DataSource.DataSet.RecordCount > 0) then
+      begin
+        // DataSource.DataSet.DisableControls;
+        i:=DataSource.DataSet.RecordCount;//***12.07.2016
+        try
+          DataSource.DataSet.First;
+          with TGaugeFactory.GetGauge(Caption, 0,
+            DataSource.DataSet.RecordCount) do
+            try
+              Start;
+              while not DataSource.DataSet.Eof do
+              begin
+                if FPairParams.Count > 0 then
+                begin
+                  for j := 0 to FPairParams.Count - 1 do
+                    if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                    begin
+                      if Assigned(DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
+                        AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
+                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
+                      else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
+                    end;
+                end else
+                begin
+                  for j := 0 to DataSource.DataSet.FieldCount - 1 do
+                    AddParamToJSON(DataSource.DataSet.Fields.Fields[J].DisplayText,
+                                   DataSource.DataSet.Fields.Fields[J].Value,
+                                   DataSource.DataSet.Fields.Fields[J].DataType);
+                end;
+                IncProgress(1);
+                Application.ProcessMessages;
+                DataSource.DataSet.Next
+              end;
+            finally
+              Finish;
+            end;
+        finally
+          Application.ProcessMessages;
+          // DataSource.DataSet.EnableControls;
+        end;
+      end;
+    end;
+  finally
+    JsonArray.AddElement(JSONObject);
+  end;
+end;
+
+function TdsdDataToJsonAction.LocalExecute: Boolean;
+  var JsonArray: TJSONArray;
+begin
+  result := False;
+  if Assigned(DataSource) or Assigned(View) then
+  begin
+    JSONArray := TJSONArray.Create();
+    try
+      DataSourceExecute(JsonArray);
+    finally
+      FJsonParam.Value := JSONArray.ToString;
+      result := FJsonParam.Value <> '';
+      JSONArray.Free;
+    end;
+  end;
+end;
+
+procedure TdsdDataToJsonAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var
+  i: Integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove)  then
+    if FJsonParam.Component = AComponent then
+      FJsonParam.Component := nil;
+end;
+
+procedure TdsdDataToJsonAction.SetDataSource(const Value: TDataSource);
+begin
+  if Assigned(View) and Assigned(Value) then
+  begin
+    ShowMessage('Установлен View. Нельзя установить DataSource');
+    exit;
+  end;
+  FDataSource := Value;
+end;
+
+procedure TdsdDataToJsonAction.SetView(const Value: TcxGridTableView);
+begin
+  if Assigned(DataSource) and Assigned(Value) then
+  begin
+    ShowMessage('Установлен DataSource. Нельзя установить View');
+    exit;
+  end;
+  FView := Value;
 end;
 
 initialization

@@ -65,7 +65,10 @@ type
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
     actPrintSticker_notPrice: TdsdPrintAction;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    actSetVisible: TdsdSetVisibleAction;
+    spSetVisible: TdsdStoredProc;
+    actExecStoredSetVisible: TdsdExecStoredProc;
   private
     { Private declarations }
   public

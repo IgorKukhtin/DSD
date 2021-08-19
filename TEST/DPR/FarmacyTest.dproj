@@ -3647,7 +3647,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SendCashSUN.pas">
 				<Form>SendCashSUNForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Object\RecalcMCSShedulerMainDialog.pas">
@@ -3814,6 +3813,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas">
 				<Form>Report_CheckSUNItogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ListDiffFormVIPSendRemain.pas">
+				<Form>ListDiffFormVIPSendRemainForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

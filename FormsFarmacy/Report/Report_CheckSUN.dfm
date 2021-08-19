@@ -41,7 +41,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSale
             end
@@ -72,12 +72,12 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
               Column = AmountSend_Out
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_In
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_Out
             end>
@@ -101,7 +101,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSale
             end
@@ -132,12 +132,12 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
               Column = AmountSend_Out
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_In
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_Out
             end>
@@ -255,7 +255,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SumSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -266,7 +266,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1080#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
             DataBinding.FieldName = 'SumSend_In'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -278,7 +278,7 @@ inherited Report_CheckSUNForm: TReport_CheckSUNForm
             Caption = #1057#1091#1084#1084#1072' '#1056#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
             DataBinding.FieldName = 'SumSend_Out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
