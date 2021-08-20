@@ -2783,7 +2783,13 @@ END IF;*/
                       , _tmpItem_group.BusinessId_From
                       , _tmpItem_group.isLossMaterials
                  FROM (SELECT CASE WHEN _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
+                                    AND vbBranchId_From IN (zc_Branch_Basis(), 0)
                                         THEN zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+
+                                   WHEN _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
+                                    AND vbBranchId_From NOT IN (zc_Branch_Basis(), 0)
+                                        THEN zc_Enum_ProfitLossGroup_40000() -- Расходы на сбыт
+
                                    WHEN vbMemberId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Ирна
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция
@@ -2798,7 +2804,13 @@ END IF;*/
                               END AS ProfitLossGroupId
 
                             , CASE WHEN _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
+                                    AND vbBranchId_From IN (zc_Branch_Basis(), 0)
                                         THEN zc_Enum_ProfitLossDirection_20200() -- Общепроизводственные расходы + Содержание складов
+
+                                   WHEN _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
+                                    AND vbBranchId_From NOT IN (zc_Branch_Basis(), 0)
+                                        THEN zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов
+
                                    WHEN vbMemberId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Ирна
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция

@@ -1352,8 +1352,16 @@ BEGIN
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BranchId_To
            FROM (SELECT  DISTINCT
-                         zc_Enum_ProfitLossGroup_20000()     AS ProfitLossGroupId     -- Общепроизводственные расходы
-                       , zc_Enum_ProfitLossDirection_20200() AS ProfitLossDirectionId -- Содержание складов
+                         CASE WHEN COALESCE (_tmpItem.BranchId_To, 0) IN (zc_Branch_Basis(), 0)
+                              THEN zc_Enum_ProfitLossGroup_20000()     -- Общепроизводственные расходы
+                              ELSE zc_Enum_ProfitLossGroup_40000()     -- Расходы на сбыт
+                         END AS ProfitLossGroupId
+
+                       , CASE WHEN COALESCE (_tmpItem.BranchId_To, 0) IN (zc_Branch_Basis(), 0)
+                              THEN zc_Enum_ProfitLossDirection_20200() -- Содержание складов
+                              ELSE zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов
+                         END AS ProfitLossDirectionId
+
                        , _tmpItem.InfoMoneyDestinationId
                        , _tmpItem.BusinessId_From
                        , _tmpItem.BranchId_To

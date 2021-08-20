@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, CurrencyId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , ValuePrice TFloat
-)
+             , isDiscount Boolean
+              )
 AS
 $BODY$
    DECLARE vbCurrencyId_pl Integer;
@@ -39,6 +40,9 @@ BEGIN
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_Value.ValueData AS ValuePrice
 
+             -- Цена со скидкой (1-Да, 0-НЕТ)
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END :: Boolean AS isDiscount
+
        FROM ObjectLink AS ObjectLink_Goods
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
 
@@ -54,6 +58,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                          ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_isDiscount
+                                         ON ObjectHistoryFloat_isDiscount.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                        AND ObjectHistoryFloat_isDiscount.DescId          = zc_ObjectHistoryFloat_PriceListItem_isDiscount()
 
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                         ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
@@ -74,5 +82,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_ProductionSeparate(), 0)
 -- SELECT * FROM lpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_Basis(), 0)

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar)
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
@@ -13,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
     IN inValue                  TFloat,     -- Цена
     IN inIsLast                 Boolean,    -- 
     IN inIsDiscountDelete       Boolean,    -- 
-    IN inIsDiscount             Boolean,    -- Цена со скидкой
+    IN inIsDiscount             Boolean,    -- Цена со скидкой (1-Да, 0-НЕТ)
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -39,8 +40,8 @@ BEGIN
    -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
-   -- Сохранили Цена со скидкой (0-Да, 1 - НЕТ)
-   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_isDiscount(), ioId, CASE WHEN COALESCE (inisDiscount, 0) = 0 THEN TRUE ELSE FALSE END);
+   -- Сохранили Цена со скидкой (1-Да, 0-НЕТ)
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_isDiscount(), ioId, CASE WHEN inIsDiscount = TRUE THEN 1 ELSE 0 END);
    
    -- Сохранили ВАЛЮТУ
    PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_PriceListItem_Currency(), ioId

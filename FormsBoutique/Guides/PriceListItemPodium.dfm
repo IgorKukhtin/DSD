@@ -176,7 +176,6 @@ object PriceListItemPodiumForm: TPriceListItemPodiumForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
-        Options.Editing = False
         Width = 73
       end
       object RemainsAll: TcxGridDBColumn
@@ -1721,6 +1720,22 @@ object PriceListItemPodiumForm: TPriceListItemPodiumForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outStartDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue'
         Value = Null
         Component = ClientDataSet
@@ -1745,19 +1760,12 @@ object PriceListItemPodiumForm: TPriceListItemPodiumForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outStartDate'
+        Name = 'inIsDiscount'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'StartDate'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEndDate'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'EndDate'
-        DataType = ftDateTime
+        ComponentItem = 'isDiscount'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

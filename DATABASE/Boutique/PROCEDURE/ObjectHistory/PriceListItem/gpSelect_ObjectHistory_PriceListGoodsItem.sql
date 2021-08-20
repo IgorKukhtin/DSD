@@ -32,7 +32,8 @@ BEGIN
            , CASE WHEN ObjectHistory_PriceListItem.EndDate   = zc_DateEnd() THEN NULL ELSE ObjectHistory_PriceListItem.EndDate END :: TDateTime AS EndDate
            , ObjectHistoryFloat_Value.ValueData AS ValuePrice
 
-           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 0 THEN TRUE ELSE FALSE END AS isDiscount
+             -- Цена со скидкой (1-Да, 0-НЕТ)
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END AS isDiscount
 
            , FALSE AS isErased
        FROM ObjectLink AS ObjectLink_PriceList

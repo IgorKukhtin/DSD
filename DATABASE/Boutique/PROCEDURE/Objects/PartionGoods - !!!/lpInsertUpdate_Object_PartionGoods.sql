@@ -419,7 +419,8 @@ BEGIN
                                                                , inValue      := inOperPriceList
                                                                , inIsLast     := TRUE
                                                                , inIsDiscountDelete:= FALSE
-                                                               , inSession    := inUserId :: TVarChar
+                                                               , inIsDiscount      := FALSE
+                                                               , inSession         := inUserId :: TVarChar
                                                                 );
      END IF;
 

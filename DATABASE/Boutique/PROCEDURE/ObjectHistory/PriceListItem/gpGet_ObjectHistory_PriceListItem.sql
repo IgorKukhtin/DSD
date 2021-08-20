@@ -41,7 +41,9 @@ BEGIN
            , CASE WHEN COALESCE (inId,0) = 0 THEN CURRENT_DATE ELSE ObjectHistory_PriceListItem.StartDate END :: TDateTime AS StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 0 THEN TRUE ELSE FALSE END AS isDiscount
+
+             -- ÷ÂÌ‡ ÒÓ ÒÍË‰ÍÓÈ (1-ƒ‡, 0-Õ≈“)
+           , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END AS isDiscount
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -82,7 +84,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

@@ -79,6 +79,7 @@ $BODY$
    DECLARE vbParValue_pl        TFloat;  -- *Номинал для перевода из валюты прайса в ГРН
    DECLARE vbOperPriceList_pl   TFloat;  -- *Цена из прайса - переводим в ГРН
    DECLARE vbOperPriceList_curr TFloat;  -- *Цена из прайса - если в ГРН, тогда переводим в ту валюту что надо (временно zc_Currency_EUR)
+   DECLARE vbIsDiscount_pl      Boolean;
 
    DECLARE vbIsOperPriceListReal Boolean; -- режим
 BEGIN
@@ -181,8 +182,8 @@ BEGIN
 
 
      -- из Истории - Цена и Валюта
-     SELECT lpGet.ValuePrice, lpGet.CurrencyId
-             INTO vbOperPriceList_curr, vbCurrencyId_pl
+     SELECT lpGet.ValuePrice, lpGet.CurrencyId, lpGet.isDiscount
+             INTO vbOperPriceList_curr, vbCurrencyId_pl, vbIsDiscount_pl
      FROM lpGet_ObjectHistory_PriceListItem (vbOperDate, vbPriceListId, ioGoodsId) AS lpGet;
 
      -- проверка - свойство должно быть установлено
@@ -354,9 +355,10 @@ BEGIN
                         OR ObjectFloat_PeriodYear.ValueData > 2020
                           )
                    )
-         THEN
-             SELECT tmp.ChangePercent, tmp.ChangePercentNext, tmp.DiscountSaleKindId INTO ioChangePercent, ioChangePercentNext, ioDiscountSaleKindId
-             FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, ioGoodsId, vbClientId, vbUserId) AS tmp;
+        AND vbIsDiscount_pl = FALSE
+     THEN
+         SELECT tmp.ChangePercent, tmp.ChangePercentNext, tmp.DiscountSaleKindId INTO ioChangePercent, ioChangePercentNext, ioDiscountSaleKindId
+         FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, ioGoodsId, vbClientId, vbUserId) AS tmp;
      ELSE
          ioChangePercent     := 0;
          ioChangePercentNext := 0;

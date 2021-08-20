@@ -578,18 +578,6 @@
 				<Form>PriceListEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListItem.pas">
-				<Form>PriceListItemForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListGoodsItem.pas">
-				<Form>PriceListGoodsItemForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListGoodsItemEdit.pas">
-				<Form>PriceListGoodsItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListTaxDialog.pas">
 				<Form>PriceListTaxDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>

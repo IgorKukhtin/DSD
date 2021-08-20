@@ -200,7 +200,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisDiscount'
+        Name = 'inIsDiscount'
         Value = Null
         Component = cbisDiscount
         DataType = ftBoolean

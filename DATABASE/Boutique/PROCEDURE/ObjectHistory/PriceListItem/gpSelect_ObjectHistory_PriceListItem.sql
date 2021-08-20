@@ -83,7 +83,9 @@ BEGIN
                         , ObjectHistory_PriceListItem.StartDate            AS StartDate
                         , ObjectHistory_PriceListItem.EndDate              AS EndDate
                         , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-                        , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 0 THEN TRUE ELSE FALSE END AS isDiscount
+
+                          -- Цена со скидкой (1-Да, 0-НЕТ)
+                        , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END AS isDiscount
  
                    FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
                         LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
