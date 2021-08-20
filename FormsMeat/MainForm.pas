@@ -1306,7 +1306,6 @@ type
     miReport_SheetWorkTime_Out: TMenuItem;
     actReport_SheetWorkTime_Graph: TdsdOpenForm;
     miReport_SheetWorkTime_Graph: TMenuItem;
-    N246: TMenuItem;
     miPersonal_all: TMenuItem;
     miMember_all: TMenuItem;
     N247: TMenuItem;
