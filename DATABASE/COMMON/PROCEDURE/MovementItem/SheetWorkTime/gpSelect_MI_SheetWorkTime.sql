@@ -82,8 +82,11 @@ BEGIN
                                              THEN zc_Color_GreenL()
                                         WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                              THEN 13816530 -- светло серый  15395562
+                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_Yelow()
+                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_GreenL()
                                         ELSE zc_Color_White()
                                    END AS Color_Calc
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
                             FROM tmpOperDate
                                  JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
                                               AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -116,6 +119,8 @@ BEGIN
                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
                                                          ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
                                                         AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
+
+                                 LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                             )
             -- связываем даты до приема, после увольнения с текущими

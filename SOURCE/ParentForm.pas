@@ -700,6 +700,8 @@ initialization
   RegisterClass (TdsdSetFocusedAction);
   RegisterClass (TdsdLoadListValuesFileAction);
   RegisterClass (TdsdPreparePicturesAction);
+  RegisterClass (TdsdSetVisibleAction);
+  RegisterClass (TdsdDataToJsonAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

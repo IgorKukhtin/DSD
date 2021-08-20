@@ -4,7 +4,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   ClientWidth = 807
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,6 +124,11 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = SaleSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -194,6 +199,16 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 60
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
           end
           object SaleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
@@ -323,8 +338,6 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 78
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-          end
         end
       end
     end
@@ -361,6 +374,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actRefresh: TdsdDataSetRefresh
+      BeforeAction = actSetVisible
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TIncomeForm'
@@ -547,7 +563,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -677,7 +693,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Name = 'isPrice'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -690,6 +706,33 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSetVisible: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecStoredSetVisible
+      Caption = 'actSetVisible'
+      SetVisibleParams = <
+        item
+          Component = TotalSumm
+          ValueParam.Name = 'isVisibleTotalSumm'
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isVisibleTotalSumm'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
+    object actExecStoredSetVisible: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetVisible
+      StoredProcList = <
+        item
+          StoredProc = spSetVisible
+        end>
+      Caption = 'actExecStoredSetVisible'
     end
   end
   inherited MasterDS: TDataSource
@@ -727,7 +770,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -915,7 +958,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -985,6 +1028,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVisibleTotalSumm'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1107,7 +1156,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
@@ -1140,7 +1189,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       end
       item
         Name = 'ioChecked'
-        Value = 'False'
+        Value = False
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
@@ -1205,5 +1254,22 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     PackSize = 1
     Left = 615
     Top = 224
+  end
+  object spSetVisible: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_IncomePharmacy_Visible'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outisVisiableTotalSumm'
+        Value = 41640d
+        Component = FormParams
+        ComponentItem = 'isVisibleTotalSumm'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 307
   end
 end

@@ -874,6 +874,8 @@ begin
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
+     if (Component is TAction) and (Component.ClassName = 'TAction') then
+        Result := (Component as TAction).Checked;
      if Component is TEDI then
         result := (Component as TEDI).Directory;
      if Component is TDocument then begin
@@ -1107,6 +1109,9 @@ begin
      else
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue
+     else
+     if (Component is TAction) and (Component.ClassName = 'TAction') then
+        (Component as TAction).Checked := FValue
      else
      if (Component is TADOQueryAction)
         AND

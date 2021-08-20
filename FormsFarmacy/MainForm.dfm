@@ -4508,6 +4508,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actListDiffFormVIPSend: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081'  '#1087#1086' '#1083#1080#1089#1090#1072#1084' '#1086#1090#1082#1072#1079#1086#1074
+      FormName = 'TListDiffFormVIPSendForm'
+      FormNameParam.Value = 'TListDiffFormVIPSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4964,6 +4986,9 @@
       end
       object miReport_Movement_ListDiff: TMenuItem
         Action = actReport_Movement_ListDiff
+      end
+      object VIP2: TMenuItem
+        Action = actListDiffFormVIPSend
       end
       object N33: TMenuItem
         Caption = '-'

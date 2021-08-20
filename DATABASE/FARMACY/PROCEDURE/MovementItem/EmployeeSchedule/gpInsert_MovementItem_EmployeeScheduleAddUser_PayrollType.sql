@@ -44,12 +44,19 @@ BEGIN
     END IF;
 
     -- Если по аптеке уже есть zc_MI_Child()
-    IF EXISTS(SELECT 1 FROM MovementItem
+    IF EXISTS(SELECT 1 
+              FROM MovementItem
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                                    ON MILinkObject_PayrollType.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+
               WHERE MovementItem.MovementID = inMovementId
                 AND MovementItem.DescId = zc_MI_Child()
                 AND MovementItem.ObjectId = inUnitId
                 AND MovementItem.ParentId = inParentId
-                AND MovementItem.Amount = vbAmount)
+                AND MovementItem.Amount = vbAmount
+                AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) = inPayrollTypeID)
     THEN
       RAISE EXCEPTION 'Ошибка. В дне по подразделению уже есть запись.';
     END IF;

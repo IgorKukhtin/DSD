@@ -41,7 +41,7 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSale
             end
@@ -72,12 +72,12 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
               Column = AmountSend_Out
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_In
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_Out
             end>
@@ -100,7 +100,7 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSale
             end
@@ -131,12 +131,12 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
               Column = AmountSend_Out
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_In
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SumSend_Out
             end>
@@ -194,6 +194,7 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SumSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.ClearKey = 50
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
@@ -205,7 +206,7 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1080#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
             DataBinding.FieldName = 'SumSend_In'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -217,7 +218,7 @@ inherited Report_CheckSUNItogForm: TReport_CheckSUNItogForm
             Caption = #1057#1091#1084#1084#1072' '#1056#1072#1089#1093#1086#1076#1072' '#1087#1086' '#1087#1077#1088#1077#1084'.'
             DataBinding.FieldName = 'SumSend_Out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
