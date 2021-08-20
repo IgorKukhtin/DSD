@@ -52,7 +52,7 @@ BEGIN
                         OR (Object_Personal_View.DateIn >= inDateStart AND Object_Personal_View.DateIn <= inDateEnd))
                         --    ((Object_Personal_View.DateOut >= '01.06.2021' AND Object_Personal_View.DateOut <= '11.08.2021')
                           --OR (Object_Personal_View.DateIn >= '01.06.2021' AND Object_Personal_View.DateIn <= '11.08.2021'))
-                      AND Object_Personal_View.UnitId = inUnitId
+                      AND (Object_Personal_View.UnitId = inUnitId OR inUnitId = 0)
                    )
    -- рабочее время из табеля
   , tmpMovement AS (SELECT tmpOperDate.operdate
