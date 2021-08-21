@@ -25,6 +25,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_MemberHoliday());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --проверка свойство Тип отпуска должно быть заполнено
+     IF COALESCE (inWorkTimeKindId,0) = 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.<Тип отпуска> должен быть заполнен.';
+     END IF;
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_MemberHoliday ( ioId              := ioId
                                                   , inInvNumber       := inInvNumber

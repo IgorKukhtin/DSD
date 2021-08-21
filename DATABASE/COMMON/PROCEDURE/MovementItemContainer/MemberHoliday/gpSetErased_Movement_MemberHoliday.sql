@@ -18,6 +18,8 @@ BEGIN
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
+     --при распроведении или удалении - в табеле автоматом  удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
 
 END;
 $BODY$
