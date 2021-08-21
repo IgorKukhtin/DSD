@@ -335,6 +335,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeKindId'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 20
@@ -480,6 +488,21 @@
         Value = Null
         Component = edUpdateDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WorkTimeKindId'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WorkTimeKindName'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 296
