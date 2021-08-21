@@ -43,6 +43,9 @@ type
     edBeginDateEnd: TcxDateEdit;
     PeriodChoiceOperDate: TPeriodChoice;
     PeriodChoiceBeginDate: TPeriodChoice;
+    cxLabel10: TcxLabel;
+    edWorkTimeKind: TcxButtonEdit;
+    GuidesWorkTimeKind: TdsdGuides;
   private
     { Private declarations }
   public

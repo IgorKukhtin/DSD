@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_MemberHoliday ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MemberHoliday(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MemberHoliday(
     IN inBeginDateStart      TDateTime   , --
     IN inBeginDateEnd        TDateTime   , --
     IN inMemberId            Integer   , -- 
-    IN inMemberMainId        Integer   , --     
+    IN inMemberMainId        Integer   , --   
+    IN inWorkTimeKindId      Integer   , -- Тип отпуска  
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -33,6 +35,7 @@ BEGIN
                                                   , inBeginDateEnd    := inBeginDateEnd
                                                   , inMemberId        := inMemberId
                                                   , inMemberMainId    := inMemberMainId
+                                                  , inWorkTimeKindId  := inWorkTimeKindId
                                                   , inUserId          := vbUserId
                                                    );
 END;

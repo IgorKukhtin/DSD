@@ -333,7 +333,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckedPersonal() RETURNS Integ
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_CheckedPersonal', 'Пользователь, Проверен Отдел персонала' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedPersonal');
 
-
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_WorkTimeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_WorkTimeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_WorkTimeKind', 'Тип отпуска' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_WorkTimeKind');
 
 
 
@@ -520,6 +522,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 21.08.21         * zc_MovementLinkObject_WorkTimeKind
  09.08.21         * zc_MovementLinkObject_CheckedHead
                     zc_MovementLinkObject_CheckedPersonal
  06.07.21                                                                                      * zc_MovementLinkObject_TopicsTestingTuning 

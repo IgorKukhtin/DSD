@@ -147,6 +147,14 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             Options.Editing = False
             Width = 80
           end
+          object WorkTimeKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'WorkTimeKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Day_work: TcxGridDBColumn
             Caption = #1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076', '#1076#1085'.'
             DataBinding.FieldName = 'Day_work'

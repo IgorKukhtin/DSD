@@ -50,6 +50,7 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     spSelectPrint_Spec: TdsdStoredProc;
+    WorkTimeKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
