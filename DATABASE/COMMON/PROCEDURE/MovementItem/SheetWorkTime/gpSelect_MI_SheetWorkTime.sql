@@ -33,7 +33,15 @@ BEGIN
      
      --
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
-        SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate;
+        
+        SELECT tt.*
+             , CASE WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
+                    WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
+                    ELSE zc_Color_White()
+               END AS Color_Calc
+        FROM (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate) AS tt
+         LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tt.OperDate
+        ;
 
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
         WITH
@@ -61,7 +69,9 @@ BEGIN
                                OR tmpList.DateIn > tmpOperDate.OperDate
              LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                     ON ObjectString_WorkTimeKind_ShortName.ObjectId = 12918 --  уволен  ’
-                                   AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName();
+                                   AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+        
+        ;
 
      -- все данные за мес€ц
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
@@ -78,13 +88,14 @@ BEGIN
                                  , CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END AS ObjectId
                                  , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
                                  , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
-                                 , CASE WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
+                                 , CASE 
+                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
+                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
+                                        WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                              THEN zc_Color_GreenL()
                                         WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                              THEN 13816530 -- светло серый  15395562
-                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
-                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
-                                        ELSE zc_Color_White()
+                                        ELSE tmpOperDate.Color_Calc
                                    END AS Color_Calc
                                    --  выходн дни - желтым фоном + праздничные - зеленым, определ€етс€ в zc_Object_Calendar
                             FROM tmpOperDate
@@ -239,7 +250,7 @@ BEGIN
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
                                          , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), COALESCE (Movement_Data.ShortName, ObjectString_WorkTimeKind_ShortName.ValueData))) :: VarChar
                                                , COALESCE (Movement_Data.ObjectId,  COALESCE (tmpDateOut_All.WorkTimeKindId, 0)) :: VarChar
-                                               , COALESCE (Movement_Data.Color_Calc, zc_Color_White()) :: VarChar
+                                               , COALESCE (Movement_Data.Color_Calc, Object_Data.Color_Calc) :: VarChar
                                                 ] :: TVarChar
                                     FROM (WITH tmpAll AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
                                                                , tmpOperDate.OperDate
@@ -267,10 +278,11 @@ BEGIN
                                         FULL JOIN
                                          (SELECT tmpOperDate.OperDate, -- 0,
                                                  COALESCE(MemberId, 0) AS MemberId,
-                                                 COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId,
+                                                 COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0)      AS PositionId,
                                                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId,
-                                                 COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId,
-                                                 COALESCE(Object_Personal_View.StorageLineId, 0)              AS StorageLineId
+                                                 COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0) AS PersonalGroupId,
+                                                 COALESCE(Object_Personal_View.StorageLineId, 0)              AS StorageLineId,
+                                                 tmpOperDate.Color_Calc
                                             FROM tmpOperDate, Object_Personal_View
                                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                                       ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
@@ -301,9 +313,8 @@ BEGIN
                                         LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                                                ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpDateOut_All.WorkTimeKindId
                                                               AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-
-                                  order by 1''
-                                , ''SELECT OperDate FROM tmpOperDate order by 1
+                                  ORDER BY 1''
+                                , '' SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]
