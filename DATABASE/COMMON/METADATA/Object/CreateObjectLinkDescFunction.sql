@@ -2634,9 +2634,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ZReportLog_User() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ZReportLog_User', 'Сотрудник', zc_Object_ZReportLog(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ZReportLog_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PayrollType_PayrollType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollType'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PayrollType_PayrollType', 'Дополнительный расчет заработной платы', zc_Object_PayrollType(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollType');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.05.21                                                                                      * zc_ObjectLink_PayrollType_PayrollType
  06.08.21         * zc_ObjectLink_Personal_ ....
  05.08.21         * zc_ObjectLink_Member_....
  30.07.21                                                                                      * zc_ObjectLink_ZReportLog_...

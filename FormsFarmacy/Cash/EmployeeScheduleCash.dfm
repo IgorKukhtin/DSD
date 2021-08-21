@@ -719,6 +719,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -738,6 +739,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value
@@ -763,6 +765,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -782,6 +785,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value
@@ -807,6 +811,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -826,6 +831,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Substitution_Value
@@ -850,6 +856,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Substitution_Value
@@ -874,6 +881,7 @@ inherited EmployeeScheduleCashForm: TEmployeeScheduleCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Substitution_Value

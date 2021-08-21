@@ -49,7 +49,9 @@ function ImplementationPlanEmployee_lcl: String;
 function ZReportLog_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
-procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
+procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
+procedure DeleteLocalData(AFileName: String);
+
 function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;
@@ -388,7 +390,7 @@ Begin
   end;
 End;
 
-procedure LoadLocalData(ADst: TClientDataSet; AFileName: String); overload;
+procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True); overload;
   var I : integer;
 Begin
   if not FileExists(AFileName) then
@@ -403,7 +405,7 @@ Begin
       CopyFile(PChar(GetBackupFileName(AFileName)), PChar(AFileName), false)
     else
     begin
-      ShowMessage('Файл '+ AFileName + ' пустой!');
+      if AShowError then ShowMessage('Файл '+ AFileName + ' пустой!');
       Exit;
     end;
   end;
@@ -420,10 +422,16 @@ Begin
         if FileExists(GetBackupFileName(AFileName)) and
            (GetFileSizeByName(GetBackupFileName(AFileName)) > 0) then
            CopyFile(PChar(GetBackupFileName(AFileName)), PChar(AFileName), false)
-      end else ShowMessage('Ошибка загрузки файл '+ AFileName + ' !');
+      end else if AShowError then ShowMessage('Ошибка загрузки файл '+ AFileName + ' !');
     end;
   end;
 
+End;
+
+procedure DeleteLocalData(AFileName: String);
+Begin
+  if not FileExists(PChar(GetBackupFileName(AFileName))) then DeleteFile(PChar(PChar(GetBackupFileName(AFileName))));
+  if not FileExists(AFileName) then DeleteFile(PChar(AFileName));
 End;
 
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;

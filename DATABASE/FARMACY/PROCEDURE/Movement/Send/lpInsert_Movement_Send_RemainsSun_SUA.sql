@@ -382,7 +382,7 @@ BEGIN
      -- все Товары для схемы SUN SUA
      INSERT INTO _tmpGoods_SUN_SUA (GoodsId, KoeffSUN)
      SELECT MovementItem.ObjectId                   AS GoodsId
-          , Object_Goods_Retail.KoeffSUN_Supplementv1
+          , COALESCE(NullIf(Object_Goods_Retail.KoeffSUN_Supplementv1, 0), 1)
      FROM MovementItem
 
           INNER JOIN  Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.ObjectId
@@ -393,7 +393,8 @@ BEGIN
        AND MovementItem.Amount  > 0
      GROUP BY MovementItem.ObjectId
             , Object_Goods_Retail.KoeffSUN_Supplementv1;
-
+            
+            
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
@@ -1836,3 +1837,6 @@ $BODY$
 
 -- 
 -- select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('12.04.2021')::TDateTime ,  inSession := '3');
+
+
+select * from gpReport_Movement_Send_RemainsSun_SUA(inOperDate := ('23.06.2021')::TDateTime ,  inSession := '3');

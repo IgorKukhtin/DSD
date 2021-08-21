@@ -13,6 +13,8 @@ RETURNS TABLE (UnitId       Integer
              , UnitName     TVarChar
              , Price        TFloat
              , Remains      TFloat
+             , Reserve      TFloat
+             , ReserveSend  TFloat
              , Amount       TFloat
              , MCSValue     TFloat
              , Layout       TFloat
@@ -106,6 +108,80 @@ BEGIN
                                                          AND MovementItem.Amount > 0
                              GROUP BY MovementItem.ObjectId 
                             )
+          -- Отложенные перемещения
+         , tmpMovementID AS (SELECT
+                                  Movement.Id
+                                , Movement.DescId
+                           FROM Movement
+                           WHERE Movement.DescId IN (zc_Movement_Send(), zc_Movement_Check())
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                         )
+         , tmpMovementSend AS (SELECT
+                                    Movement.Id
+                                  , MovementLinkObject_From.ObjectId AS UnitId
+                             FROM tmpMovementID AS Movement
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                                  LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+                             WHERE Movement.DescId = zc_Movement_Send()
+                               AND COALESCE(MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+
+                             )
+         , tmpSend AS (SELECT
+                                    Movement.UnitId
+                                  , SUM(MovementItem.Amount) AS Amount
+                             FROM tmpMovementSend AS Movement
+
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE
+                                                         AND MovementItem.ObjectId = inGoodsId
+
+                             GROUP BY Movement.UnitId
+                              )
+         -- Отложенные чеки
+       , tmpMovementCheck AS (SELECT Movement.Id
+                              FROM tmpMovementID AS Movement
+                              WHERE Movement.DescId = zc_Movement_Check())
+       , tmpMovReserveAll AS (
+                             SELECT Movement.Id
+                             FROM MovementBoolean AS MovementBoolean_Deferred
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                             WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                               AND MovementBoolean_Deferred.ValueData = TRUE
+                             UNION ALL
+                             SELECT Movement.Id
+                             FROM MovementString AS MovementString_CommentError
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                             WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                               AND MovementString_CommentError.ValueData <> ''
+                             )
+       , tmpMovReserveId AS (SELECT DISTINCT Movement.Id
+                                 ,  MovementLinkObject_Unit.ObjectId AS UnitId
+                             FROM tmpMovReserveAll AS Movement
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                             )
+       , tmpReserve AS (SELECT Movement.UnitId
+                             , SUM(MovementItem.Amount)  AS Amount
+                        FROM tmpMovReserveId AS Movement
+
+                             INNER JOIN MovementItem AS MovementItem
+                                                     ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                                                    AND MovementItem.ObjectId   = inGoodsId
+
+                        GROUP BY Movement.UnitId
+                        )
                            
         SELECT Container.ObjectId                                    AS UnitId
              , Object_Unit.ObjectCode                                AS UnitCode
@@ -113,19 +189,27 @@ BEGIN
 
              , COALESCE(tmpObject_Price.Price,0)::TFloat             AS Price
              , Container.Amount::TFloat                              AS Remains
+             , tmpReserve.Amount::TFloat                             AS Reserve
+             , tmpSend.Amount::TFloat                                AS ReserveSend
              
              , FLOOR(Container.Amount - 
                 COALESCE (tmpObject_Price.MCSValue, 0) - 
-                COALESCE (tmpLayoutUnit.Amount, 0))::TFloat          AS Amount
+                COALESCE (tmpLayoutUnit.Amount, 0) - 
+                COALESCE (tmpReserve.Amount, 0) - 
+                COALESCE (tmpSend.Amount, 0))::TFloat          AS Amount
                 
              , tmpObject_Price.MCSValue                              AS MCSValue 
              , tmpLayoutUnit.Amount::TFloat                          AS Layout 
              
              , CASE WHEN FLOOR(Container.Amount - COALESCE (tmpObject_Price.MCSValue, 0) - 
-                         COALESCE (tmpLayoutUnit.Amount, 0)) > inAmountDiff 
+                         COALESCE (tmpLayoutUnit.Amount, 0) - 
+                         COALESCE (tmpReserve.Amount, 0) - 
+                         COALESCE (tmpSend.Amount, 0)) > inAmountDiff 
                     THEN inAmountDiff
                     ELSE FLOOR(Container.Amount - COALESCE (tmpObject_Price.MCSValue, 0) - 
-                         COALESCE (tmpLayoutUnit.Amount, 0)) END::TFloat AS AmountSend
+                         COALESCE (tmpLayoutUnit.Amount, 0) - 
+                         COALESCE (tmpReserve.Amount, 0) - 
+                         COALESCE (tmpSend.Amount, 0)) END::TFloat AS AmountSend
 
         FROM tmpContainer AS Container
 
@@ -135,9 +219,15 @@ BEGIN
             
             LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.UnitId = Container.WhereObjectId
             
+            LEFT JOIN tmpReserve ON tmpReserve.UnitId = Container.WhereObjectId
+            
+            LEFT JOIN tmpSend ON tmpSend.UnitId = Container.WhereObjectId
+            
         WHERE FLOOR(Container.Amount - 
                     COALESCE (tmpObject_Price.MCSValue, 0) - 
-                    COALESCE (tmpLayoutUnit.Amount, 0)) > 0
+                    COALESCE (tmpLayoutUnit.Amount, 0) - 
+                    COALESCE (tmpReserve.Amount, 0) - 
+                    COALESCE (tmpSend.Amount, 0)) > 0
 
          ;
 
@@ -152,6 +242,5 @@ $BODY$
 */
 
 --ТЕСТ
--- 
-
-select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 16001195 , inGoodsId := 40999 , inAmountDiff := 1 ,  inSession := '3');
+-- select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 16001195 , inGoodsId := 40999 , inAmountDiff := 1 ,  inSession := '3');
+select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 8393158 , inGoodsId := 4573005 , inAmountDiff := 1 ,  inSession := '3');

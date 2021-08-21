@@ -187,7 +187,6 @@ type
     MemDataNEWROW: TBooleanField; // только 2 форма
     actAddDiffMemdata: TAction; // только 2 форма
     actSetRimainsFromMemdata: TAction; // только 2 форма
-    actSaveCashSesionIdToFile: TAction; // только 2 форма
     actServiseRun: TAction; // только 2 форма
     MainColIsSP: TcxGridDBColumn;
     MainColPriceSP: TcxGridDBColumn;
@@ -635,8 +634,6 @@ type
     procedure actAddDiffMemdataExecute(Sender: TObject); // только 2 форма
     procedure actSetRimainsFromMemdataExecute(Sender: TObject);
     // только 2 форма
-    procedure actSaveCashSesionIdToFileExecute(Sender: TObject);
-    // только 2 форма
     procedure actServiseRunExecute(Sender: TObject);
     // ***10.08.16 // только 2 форма
     procedure actGetJuridicalListExecute(Sender: TObject);
@@ -907,7 +904,7 @@ type
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
-      out AUID: String): Boolean;
+      AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
       var APartnerMedicalName, AMedicSP: String; var AOperDateSP: TDateTime);
@@ -1072,10 +1069,6 @@ begin
           LoadUnitConfig;
           LoadTaxUnitNight;
           SetTaxUnitNight;
-        end;
-      2: // получен запрос на сохранение CashSessionId в  CashSessionId.ini
-        begin
-          actSaveCashSesionIdToFile.Execute;
         end;
       3: // получен запрос на обновление всего
         begin
@@ -3640,6 +3633,7 @@ begin
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
+        FormParams.ParamByName('CheckId').Value,  // ID чека
         UID // out AUID
         ) then
       Begin
@@ -3889,25 +3883,6 @@ begin
       Show;
     finally
     end;
-end;
-
-{ synh1 } // дл€ коректной синхронизации двух форм
-
-procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);
-// только 2 форма
-var
-  myFile: TextFile;
-  Text: string;
-
-begin
-  // // ѕопытка открыть Test.txt файл дл€ записи
-  // AssignFile(myFile, 'CashSessionId.ini');
-  // ReWrite(myFile);
-  // // «апись нескольких известных слов в этот файл
-  // WriteLn(myFile, FormParams.ParamByName('CashSessionId').Value);
-  // // «акрытие файла
-  // CloseFile(myFile);
-  // PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 2);  // отправл€ем сообщение что можно забирать вайлс с кешсешнид
 end;
 
 procedure TMainCashForm2.actSaveHardwareDataExecute(Sender: TObject);
@@ -5384,6 +5359,7 @@ begin
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
+    , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
     ) then
   begin
@@ -5494,6 +5470,7 @@ begin
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
+    , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
     ) then
   begin
@@ -6437,6 +6414,7 @@ begin
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
+    , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
     ) then
   begin
@@ -7394,7 +7372,6 @@ begin
   // CashSessionId только в службе
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDGet;
   FormParams.ParamByName('ZReportName').Value := StringReplace(iniLocalUnitNameGet, '/', ',', [rfReplaceAll]);
-  actSaveCashSesionIdToFile.Execute; // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
   FormParams.ParamByName('OperDate').Value := Date;
@@ -10850,7 +10827,8 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
-  ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+  ANeedComplete: Boolean; FiscalCheckNumber: String;
+  AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
@@ -10874,7 +10852,7 @@ begin
     finally
       ReleaseMutex(MutexVip);
     end;
-    if not myVIPCDS.Locate('Id', FormParams.ParamByName('CheckId').Value, [])
+    if not myVIPCDS.Locate('Id', AId, [])
     then
     Begin
       myVIPCDS.IndexFieldNames := 'Id';
@@ -10938,8 +10916,7 @@ begin
     // ***13.05.19
     myVIPCDS.FieldByName('PartionDateKindId').Value := APartionDateKindId;
     myVIPCDS.Post;
-    FormParams.ParamByName('CheckId').Value := myVIPCDS.FieldByName('Id')
-      .AsInteger;
+    AID := myVIPCDS.FieldByName('Id').AsInteger;
 
     myVIPListCDS.Filter := 'MovementId = ' + myVIPCDS.FieldByName('Id')
       .AsString;
@@ -10968,8 +10945,8 @@ begin
         myVIPListCDS.FieldByName('Price').Value :=
           ADS.FieldByName('Price').AsFloat;
         myVIPListCDS.FieldByName('Summ').Value :=
-          GetSumm(ADS.FieldByName('Amount').AsFloat, ADS.FieldByName('Price')
-          .AsFloat, FormParams.ParamByName('RoundingDown').Value);
+          GetSumm(ADS.FieldByName('Amount').AsFloat, ADS.FieldByName('Price').AsFloat,
+          FormParams.ParamByName('RoundingDown').Value);
         // ***20.07.16
         myVIPListCDS.FieldByName('PriceSale').asCurrency :=
           ADS.FieldByName('PriceSale').asCurrency;
@@ -11048,12 +11025,10 @@ begin
 
     // сохран€ем шапку
     try
-      if (FormParams.ParamByName('CheckId').Value = 0) or
-        not FLocalDataBaseHead.Locate('ID', FormParams.ParamByName('CheckId')
-        .Value, []) then
+      if (AID = 0) or not FLocalDataBaseHead.Locate('ID', AID, []) then
       Begin
         FLocalDataBaseHead.AddRecord
-          (VarArrayOf([FormParams.ParamByName('CheckId').Value, // id чека
+          (VarArrayOf([AId, // id чека
           AUID, // uid чека
           Now, // дата/¬рем€ чека
           Integer(PaidType), // тип оплаты
@@ -11395,14 +11370,11 @@ begin
     WaitForSingleObject(MutexVip, INFINITE);
     try
       LoadLocalData(VipCDS, vip_lcl);
-      if (FormParams.ParamByName('CheckId').AsString <> '') and
-        (StrToInt(FormParams.ParamByName('CheckId').AsString) <> 0) then
+      if (AId <> 0) then
       Begin
-        if VipCDS.Locate('Id', FormParams.ParamByName('CheckId').Value, []) then
-          VipCDS.Delete;
+        if VipCDS.Locate('Id', AId, []) then VipCDS.Delete;
       End
-      else if VipCDS.Locate('InvNumber', AUID, []) then
-        VipCDS.Delete;
+      else if VipCDS.Locate('InvNumber', AUID, []) then VipCDS.Delete;
       SaveLocalData(VipCDS, vip_lcl);
     finally
       ReleaseMutex(MutexVip);
@@ -11722,9 +11694,9 @@ begin
   WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
   try
     LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
-    if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
-
-    fBanCash := not EmployeeScheduleCDS.Locate('UserID;Date', VarArrayOf([gc_User.Session, Date]), []);
+    if EmployeeScheduleCDS.Active then
+      fBanCash := not EmployeeScheduleCDS.Locate('UserID;Date', VarArrayOf([gc_User.Session, Date]), [])
+    else fBanCash := True;
 
   finally
     if EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Close;

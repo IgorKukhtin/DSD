@@ -334,7 +334,8 @@ BEGIN
     -- Переоценка для сайта
     BEGIN
       IF date_part('isodow', CURRENT_DATE)::Integer <= 5 AND date_part('HOUR',  CURRENT_TIME)::Integer = 12 AND 
-         date_part('MINUTE',  CURRENT_TIME)::Integer >= 25 AND date_part('MINUTE',  CURRENT_TIME)::Integer < 35
+         date_part('MINUTE',  CURRENT_TIME)::Integer >= 25 AND date_part('MINUTE',  CURRENT_TIME)::Integer < 35 AND
+         CURRENT_DATE >= '25.08.2021' 
       THEN
          PERFORM * FROM gpRun_Object_RepriceSheduler_RepriceSite (inSession);    
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Object_RepriceSheduler_RepriceSite', False, 'Пероценка для сайта выполнена', vbUserId);

@@ -20,18 +20,6 @@ object MainCashForm2: TMainCashForm2
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'CheckId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'CashSessionId'
         Value = Null
         DataType = ftString
@@ -39,64 +27,7 @@ object MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ClosedCheckId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ManagerId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ManagerName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BayerName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountExternalId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountExternalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountCardNumber'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BayerPhone'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ConfirmedKindName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberOrder'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ConfirmedKindClientName'
+        Name = 'CashRegister'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -124,8 +55,8 @@ object MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 88
-    Top = 160
+    Left = 104
+    Top = 176
   end
   object gpUpdate_Log_CashRemains: TdsdStoredProc
     StoredProcName = 'gpUpdate_Log_CashRemains_Version'
@@ -237,48 +168,6 @@ object MainCashForm2: TMainCashForm2
     StoreDefs = True
     Left = 88
     Top = 224
-  end
-  object spSelectCheck: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Check'
-    DataSet = CheckCDS
-    DataSets = <
-      item
-        DataSet = CheckCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 56
-    Top = 224
-  end
-  object spSelect_Alternative: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_Goods_Alternative_ver2'
-    DataSet = AlternativeCDS
-    DataSets = <
-      item
-        DataSet = AlternativeCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 264
-    Top = 152
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
@@ -464,20 +353,6 @@ object MainCashForm2: TMainCashForm2
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
-    end
-    object actSelectCheck: TdsdExecStoredProc
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelectCheck
-      StoredProcList = <
-        item
-          StoredProc = spSelectCheck
-        end>
-      Caption = 'actSelectCheck'
-    end
-    object actSetCashSessionId: TAction
-      Caption = 'actSetCashSessionId'
-      OnExecute = actSetCashSessionIdExecute
     end
     object actCashRemains: TAction
       Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1082#1080
@@ -26047,6 +25922,13 @@ object MainCashForm2: TMainCashForm2
         ComponentItem = 'CashSessionId'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashRegister'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashRegister'
         MultiSelectSeparator = ','
       end
       item

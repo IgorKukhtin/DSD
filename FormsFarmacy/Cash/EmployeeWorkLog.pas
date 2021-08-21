@@ -15,77 +15,11 @@ implementation
 
 uses LocalWorkUnit, CommonData, MainCash2;
 
-function CheckEmployeeWorkLogStrucnureCDS : boolean;
-//  var EmployeeWorkLogCDS, EmployeeWorkLogNewCDS : TClientDataSet;
-begin
-  Result := True;
-{  try
-    EmployeeWorkLogCDS :=  TClientDataSet.Create(Nil);
-    EmployeeWorkLogNewCDS :=  TClientDataSet.Create(Nil);
-    WaitForSingleObject(MutexEmployeeWorkLog, INFINITE);
-    try
-      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
-      if not EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Open;
-
-      if not Assigned(EmployeeWorkLogCDS.FindField('DiffKindId')) then
-      begin
-        EmployeeWorkLogNewCDS.FieldDefs.Add('ID', ftInteger);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('Code', ftInteger);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('Name', ftString, 200);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('Amount', ftCurrency);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('Price', ftCurrency);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('DiffKindId', ftInteger);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('Comment', ftString, 400);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('UserID', ftInteger);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('UserName', ftString, 80);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('DateInput', ftDateTime);
-        EmployeeWorkLogNewCDS.FieldDefs.Add('IsSend', ftBoolean);
-        EmployeeWorkLogNewCDS.CreateDataSet;
-        EmployeeWorkLogNewCDS.Open;
-
-        EmployeeWorkLogCDS.First;
-        while not EmployeeWorkLogCDS.Eof do
-        begin
-          EmployeeWorkLogNewCDS.Append;
-          EmployeeWorkLogNewCDS.FieldByName('ID').AsVariant := EmployeeWorkLogCDS.FieldByName('ID').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('Code').AsVariant := EmployeeWorkLogCDS.FieldByName('Code').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('Name').AsVariant := EmployeeWorkLogCDS.FieldByName('Name').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('Amount').AsVariant := EmployeeWorkLogCDS.FieldByName('Amount').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('Price').AsVariant := EmployeeWorkLogCDS.FieldByName('Price').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('DiffKindId').AsVariant := Null;
-          EmployeeWorkLogNewCDS.FieldByName('Comment').AsVariant := EmployeeWorkLogCDS.FieldByName('Comment').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('UserID').AsVariant := EmployeeWorkLogCDS.FieldByName('UserID').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('UserName').AsVariant := EmployeeWorkLogCDS.FieldByName('UserName').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('DateInput').AsVariant := EmployeeWorkLogCDS.FieldByName('DateInput').AsVariant;
-          EmployeeWorkLogNewCDS.FieldByName('IsSend').AsVariant := EmployeeWorkLogCDS.FieldByName('IsSend').AsVariant;
-          EmployeeWorkLogNewCDS.Post;
-          EmployeeWorkLogCDS.Next;
-        end;
-
-        SaveLocalData(EmployeeWorkLogNewCDS, EmployeeWorkLog_lcl);
-      end;
-      Result := True;
-    finally
-      ReleaseMutex(MutexEmployeeWorkLog);
-      if EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Close;
-      EmployeeWorkLogCDS.Free;
-      if EmployeeWorkLogNewCDS.Active then EmployeeWorkLogNewCDS.Close;
-      EmployeeWorkLogNewCDS.Free;
-    end;
-  Except ON E:Exception do
-    ShowMessage('Ошибка создания листа отказов:'#13#10 + E.Message);
-  end;    }
-end;
-
 function CheckEmployeeWorkLogCDS : boolean;
   var EmployeeWorkLogCDS : TClientDataSet;
 begin
   Result := FileExists(EmployeeWorkLog_lcl);
-  if Result then
-  begin
-    Result := CheckEmployeeWorkLogStrucnureCDS;
-    Exit;
-  end;
+  if Result then Exit;
   EmployeeWorkLogCDS :=  TClientDataSet.Create(Nil);
   try
     try
@@ -115,7 +49,12 @@ begin
     try
       CheckEmployeeWorkLogCDS;
       LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
-      if not EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Open;
+      if not EmployeeWorkLogCDS.Active then
+      begin
+        DeleteLocalData(EmployeeWorkLog_lcl);
+        CheckEmployeeWorkLogCDS;
+        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+      end;
       EmployeeWorkLogCDS.Append;
       EmployeeWorkLogCDS.FieldByName('UserID').AsString := gc_User.Session;
       EmployeeWorkLogCDS.FieldByName('DateLogIn').AsDateTime := Now;
@@ -141,6 +80,12 @@ begin
     try
       CheckEmployeeWorkLogCDS;
       LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+      if not EmployeeWorkLogCDS.Active then
+      begin
+        DeleteLocalData(EmployeeWorkLog_lcl);
+        CheckEmployeeWorkLogCDS;
+        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+      end;
       if not EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Open;
       if EmployeeWorkLogCDS.IsEmpty then Exit;
       EmployeeWorkLogCDS.Last;

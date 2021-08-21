@@ -13,6 +13,8 @@ CREATE TABLE EmployeeWorkLog
   Id                serial    NOT NULL PRIMARY KEY,
   
   CashSessionId     TVarChar,   -- Сессия кассового места
+  CashRegister      TVarChar,   -- Фискальный номер
+
   UserId            Integer,    -- Пользователь
   UnitId            Integer,    -- Подразделение
   RetailId          Integer,    -- Сеть
@@ -30,7 +32,6 @@ ALTER TABLE EmployeeWorkLog
   OWNER TO postgres;
  
 
-
 -------------------------------------------------------------------------------
 
 
@@ -44,11 +45,12 @@ ALTER TABLE EmployeeWorkLog
   13.01.19                                         *
   
                  
-select CashSessionId, DateLogIn, DateZReport, DateLogOut,
+select CashSessionId, CashRegister, DateLogIn, DateZReport, DateLogOut,
        OUser.objectcode, OUser.valuedata,
        OUnit.objectcode, OUnit.valuedata
 from EmployeeWorkLog
      inner join Object As OUser on OUser.id = EmployeeWorkLog.UserId
      inner join Object As OUnit on OUnit.id = EmployeeWorkLog.UnitId
+LIMIT 10
                  
 */

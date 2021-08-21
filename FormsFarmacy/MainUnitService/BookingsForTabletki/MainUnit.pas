@@ -409,6 +409,7 @@ begin
   except
     on E:Exception do
     begin
+      Application.ShowMainForm := False;
       Add_Log(E.Message);
       Timer1.Enabled := true;
       Exit;
@@ -442,6 +443,7 @@ begin
 
     if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
     begin
+      Application.ShowMainForm := False;
       btnAll.Enabled := false;
       btnLoadBookings.Enabled := false;
       btnSaveBookings.Enabled := false;
@@ -451,6 +453,7 @@ begin
     end;
   end else
   begin
+    Application.ShowMainForm := False;
     Timer1.Enabled := true;
     Exit;
   end;

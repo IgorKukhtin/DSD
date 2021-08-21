@@ -353,6 +353,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSAS(),   inDescId:= zc_Object_PayrollType(), inCode:= 6, inName:= 'Подмена средней смены'       , inEnumName:= 'zc_Enum_PayrollType_WorkSAS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkI(),     inDescId:= zc_Object_PayrollType(), inCode:= 7, inName:= 'Исключение'                  , inEnumName:= 'zc_Enum_PayrollType_WorkI');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkIS(),    inDescId:= zc_Object_PayrollType(), inCode:= 8, inName:= 'Исключение для кладовщика'   , inEnumName:= 'zc_Enum_PayrollType_WorkIS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSSAS(),  inDescId:= zc_Object_PayrollType(), inCode:= 9, inName:= 'Смена кладовщика + Подмена средней смены'   , inEnumName:= 'zc_Enum_PayrollType_WorkSSAS');
 
 
 -- !!! Группы расчета заработной платы

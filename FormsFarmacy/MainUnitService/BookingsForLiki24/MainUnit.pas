@@ -18,7 +18,8 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UnitLiki24, System.JSON,
-  cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure;
+  cxDataControllerConditionalFormattingRulesManagerDialog, ZStoredProcedure,
+  dxDateRanges;
 
 type
   TMainForm = class(TForm)
@@ -411,6 +412,7 @@ begin
   except
     on E:Exception do
     begin
+      Application.ShowMainForm := False;
       Add_Log(E.Message);
       Timer1.Enabled := true;
       Exit;
@@ -420,6 +422,7 @@ begin
   Liki24API := TLiki24API.Create(APIUser, APIPassword);
   if Liki24API.Token = '' then
   begin
+    Application.ShowMainForm := False;
     Add_Log(Liki24API.ErrorsText);
     Timer1.Enabled := true;
     Exit;
@@ -438,6 +441,7 @@ begin
     if not (((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) or
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
+      Application.ShowMainForm := False;
       btnAll.Enabled := false;
       btnLoadBookings.Enabled := false;
       btnSaveBookings.Enabled := false;
@@ -447,6 +451,7 @@ begin
     end;
   end else
   begin
+    Application.ShowMainForm := False;
     Timer1.Enabled := true;
     Exit;
   end;
