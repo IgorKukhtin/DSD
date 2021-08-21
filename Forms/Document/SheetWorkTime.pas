@@ -107,6 +107,7 @@ type
     TotalCDS: TClientDataSet;
     TotalDS: TDataSource;
     CrossDBViewAddOnTotal: TCrossDBViewAddOn;
+    actRefreshGet: TdsdDataSetRefresh;
   private
   public
   end;

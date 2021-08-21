@@ -82,8 +82,8 @@ BEGIN
                                              THEN zc_Color_GreenL()
                                         WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                              THEN 13816530 -- светло серый  15395562
-                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_Yelow()
-                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_GreenL()
+                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
+                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
                                         ELSE zc_Color_White()
                                    END AS Color_Calc
                                    --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
