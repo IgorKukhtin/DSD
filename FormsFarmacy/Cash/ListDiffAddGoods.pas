@@ -547,6 +547,7 @@ function TListDiffAddGoodsForm.SaveLocal(AManagerId: Integer; AManagerName, ABay
   var UID: String;
 begin
 
+  UID := '';
   if CheckCDS.Active then CheckCDS.Close;
   CheckCDS.CreateDataSet;
 
@@ -586,7 +587,7 @@ begin
   MainCashForm.SaveLocal(CheckCDS, AManagerId, AManagerName, ABayerName,
     '', 'Не подтвержден', '', '', 0, '', '', 0, '', '', '', '', Date, 0,
     '', 0, 0, 0, 0, 0, 0, 0, 0, True, 0, '', 0, 0, 0, 0, '', '', '', '', '',
-    0, 0, False, False, false, false, '', UID);
+    0, 0, False, False, false, false, '', 0, UID);
 
 end;
 

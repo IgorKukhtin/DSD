@@ -54,6 +54,9 @@ BEGIN
            , Object_Position.ValueData             AS PositionName
            , Object_Unit.ValueData                 AS UnitName
 
+           , Object_WorkTimeKind.Id                AS WorkTimeKindId
+           , Object_WorkTimeKind.ValueData         AS WorkTimeKindName
+
            , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData)   + 1) :: TFloat AS Day_work
            , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData - MovementDate_BeginDateStart.ValueData) + 1) :: TFloat AS Day_holiday
 
@@ -84,6 +87,11 @@ BEGIN
                                          ON MovementLinkObject_MemberMain.MovementId = Movement.Id
                                         AND MovementLinkObject_MemberMain.DescId = zc_MovementLinkObject_MemberMain()
             LEFT JOIN Object AS Object_MemberMain ON Object_MemberMain.Id = MovementLinkObject_MemberMain.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
+            LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MovementLinkObject_WorkTimeKind.ObjectId
 
             --
             LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId

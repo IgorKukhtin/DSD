@@ -1456,9 +1456,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_IlliquidAssetsRepayment() RETURNS Integer 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_IlliquidAssetsRepayment', 'Неликвиды погашение чеком'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_IlliquidAssetsRepayment');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountSend() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSend'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountSend', 'Количество в созданном ВИП перемещении'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSend');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 21.08.21                                                                                                     * zc_MIFloat_AmountSend
  25.04.21                                                                                                     * zc_MIFloat_IlliquidAssetsRepayment
  23.03.21                                                                                                     * zc_MIFloat_MarketingRepayment
  22.03.21                                                                                                     * zc_MIFloat_AmountSUA

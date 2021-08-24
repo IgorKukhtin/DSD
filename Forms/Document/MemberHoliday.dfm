@@ -1,26 +1,26 @@
 ﻿inherited MemberHolidayForm: TMemberHolidayForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1082#1072#1079' '#1087#1086' '#1086#1090#1087#1091#1089#1082#1072#1084'>'
-  ClientHeight = 407
+  ClientHeight = 449
   ClientWidth = 366
   AddOnFormData.isSingle = False
   ExplicitWidth = 372
-  ExplicitHeight = 435
+  ExplicitHeight = 477
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 61
-    Top = 371
+    Top = 409
     Height = 26
     ExplicitLeft = 61
-    ExplicitTop = 371
+    ExplicitTop = 409
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 202
-    Top = 371
+    Top = 409
     Height = 26
     ExplicitLeft = 202
-    ExplicitTop = 371
+    ExplicitTop = 409
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -44,7 +44,7 @@
   end
   object cxLabel6: TcxLabel [5]
     Left = 8
-    Top = 267
+    Top = 305
     Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
   end
   object edInvNumber: TcxTextEdit [6]
@@ -57,7 +57,7 @@
   end
   object edUpdateDate: TcxDateEdit [7]
     Left = 8
-    Top = 334
+    Top = 372
     EditValue = 42092d
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
@@ -68,17 +68,17 @@
   end
   object cxLabel2: TcxLabel [8]
     Left = 8
-    Top = 314
+    Top = 352
     Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
   end
   object cxLabel9: TcxLabel [9]
     Left = 148
-    Top = 266
+    Top = 304
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
   end
   object edInsert: TcxButtonEdit [10]
     Left = 148
-    Top = 287
+    Top = 325
     Properties.Buttons = <
       item
         Default = True
@@ -91,12 +91,12 @@
   end
   object cxLabel8: TcxLabel [11]
     Left = 148
-    Top = 314
+    Top = 352
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdate: TcxButtonEdit [12]
     Left = 148
-    Top = 334
+    Top = 372
     Properties.Buttons = <
       item
         Default = True
@@ -143,7 +143,7 @@
   end
   object edInsertDate: TcxDateEdit [17]
     Left = 8
-    Top = 287
+    Top = 325
     EditValue = 42092d
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
@@ -208,6 +208,23 @@
     TabOrder = 25
     Width = 130
   end
+  object cxLabel10: TcxLabel [26]
+    Left = 8
+    Top = 259
+    Caption = #1058#1080#1087' '#1086#1090#1087#1091#1089#1082#1072
+  end
+  object edWorkTimeKind: TcxButtonEdit [27]
+    Left = 8
+    Top = 279
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 331
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 75
     Top = 69
@@ -236,7 +253,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -273,7 +290,7 @@
       end
       item
         Name = 'inOperDateStart'
-        Value = ''
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -281,7 +298,7 @@
       end
       item
         Name = 'inOperDateEnd'
-        Value = ''
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -289,7 +306,7 @@
       end
       item
         Name = 'inBeginDateStart'
-        Value = ''
+        Value = Null
         Component = edBeginDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -297,7 +314,7 @@
       end
       item
         Name = 'inBeginDateEnd'
-        Value = ''
+        Value = Null
         Component = edBeginDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -318,6 +335,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeKindId'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 20
@@ -335,7 +360,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -365,7 +390,7 @@
       end
       item
         Name = 'OperDateStart'
-        Value = 0.000000000000000000
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -379,14 +404,14 @@
       end
       item
         Name = 'BeginDateStart'
-        Value = ''
+        Value = Null
         Component = edBeginDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'BeginDateEnd'
-        Value = ''
+        Value = Null
         Component = edBeginDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -453,16 +478,31 @@
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'UpdateDate'
-        Value = 'NULL'
+        Value = Null
         Component = edUpdateDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WorkTimeKindId'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WorkTimeKindName'
+        Value = Null
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -486,7 +526,7 @@
       end>
     ActionItemList = <>
     Left = 104
-    Top = 252
+    Top = 290
   end
   object GuideInsert: TdsdGuides
     KeyField = 'Id'
@@ -535,7 +575,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 161
-    Top = 260
+    Top = 298
   end
   object GuideMemberHoliday: TdsdGuides
     KeyField = 'Id'
@@ -565,7 +605,7 @@
       end
       item
         Name = 'DateIn_Holiday'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -573,7 +613,7 @@
       end
       item
         Name = 'DateOut_Holiday'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -581,7 +621,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -618,7 +658,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 48
-    Top = 260
+    Top = 298
   end
   object GuideMemberMain: TdsdGuides
     KeyField = 'Id'
@@ -652,13 +692,42 @@
   object PeriodChoiceOperDate: TPeriodChoice
     DateStart = edOperDateStart
     DateEnd = edOperDateEnd
-    Left = 312
-    Top = 128
+    Left = 272
+    Top = 136
   end
   object PeriodChoiceBeginDate: TPeriodChoice
     DateStart = edBeginDateStart
     DateEnd = edBeginDateEnd
     Left = 320
     Top = 200
+  end
+  object GuidesWorkTimeKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edWorkTimeKind
+    FormNameParam.Value = 'TWorkTimeKind_HolidayForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TWorkTimeKind_HolidayForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesWorkTimeKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 134
+    Top = 248
   end
 end

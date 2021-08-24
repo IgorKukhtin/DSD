@@ -3629,6 +3629,9 @@ end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_HolidayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_HolidayForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
     //форма выбора

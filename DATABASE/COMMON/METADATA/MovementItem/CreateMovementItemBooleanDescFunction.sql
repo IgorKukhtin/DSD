@@ -157,9 +157,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_Goods_Name_new() RETURNS Integer AS $BOD
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Goods_Name_new', 'использовать новое название' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Goods_Name_new'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_OrderInternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_OrderInternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_OrderInternal', 'Товар во внутренний заказ' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_OrderInternal'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 29.07.21                                                                       * zc_MIBoolean_OrderInternal
  08.08.21         *
  29.07.21                                                                       * zc_MIBoolean_VIPSend
  22.07.21                                                                       * zc_MIBoolean_Photo

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_MemberHoliday ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_MemberHoliday (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_MemberHoliday(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_MemberHoliday(
     IN inBeginDateEnd        TDateTime   , --
     IN inMemberId            Integer   , -- 
     IN inMemberMainId        Integer   , -- 
+    IN inWorkTimeKindId      Integer   , -- Тип отпуска
     IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer
@@ -51,6 +53,9 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberMain(), ioId, inMemberMainId);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_WorkTimeKind(), ioId, inWorkTimeKindId);
+     
      IF vbIsInsert = True
      THEN
          -- сохранили свойство <>
@@ -69,6 +74,8 @@ BEGIN
                                 , inDescId     := zc_Movement_MemberHoliday()
                                 , inUserId     := inUserId
                                  );
+     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, inUserId::TVarChar);
 
 END;
 $BODY$
@@ -77,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.08.21         * inWorkTimeKindId
  20.12.18         *
 */
 

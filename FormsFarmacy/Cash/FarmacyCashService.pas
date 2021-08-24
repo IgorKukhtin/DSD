@@ -126,9 +126,6 @@ type
     FormParams: TdsdFormParams;
     spDelete_CashSession: TdsdStoredProc;
     gpUpdate_Log_CashRemains: TdsdStoredProc;
-
-    spSelectCheck: TdsdStoredProc;
-    spSelect_Alternative: TdsdStoredProc;
     AlternativeCDS: TClientDataSet;
     AlternativeDS: TDataSource;
     spSelectRemains: TdsdStoredProc;
@@ -146,8 +143,6 @@ type
     CheckCDS: TClientDataSet;
     actRefreshLite: TdsdDataSetRefresh;
     actShowMessage: TShowMessageAction;
-    actSelectCheck: TdsdExecStoredProc;
-    actSetCashSessionId: TAction;
     pmServise: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
@@ -177,7 +172,6 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actRefreshAllExecute(Sender: TObject); //+
     procedure TimerGetRemainsTimer(Sender: TObject);
-    procedure actSetCashSessionIdExecute(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -295,7 +289,6 @@ begin
     Handled := (Msg.hwnd = Application.Handle) and (Msg.message = FM_SERVISE);
     if Handled and (Msg.wParam = 2) then
       case Msg.lParam of
-        2: actSetCashSessionId.Execute;    // обновление кеш сесии
 
         3: begin
             if SetFarmacyNameByUser then  // попросили провести чеки
@@ -367,29 +360,6 @@ procedure TMainCashForm2.AppException(Sender: TObject; E: Exception);
 begin
   Add_Log('Application Exception: ' + E.Message);
 end;
-
-procedure TMainCashForm2.actSetCashSessionIdExecute(Sender: TObject);
-var myFile:  TextFile;
-    text: string;
-begin
- if FileExists('CashSessionId.ini') then
-  begin
-  AssignFile(myFile, 'CashSessionId.ini');
-  Reset(myFile);
-  ReadLn(myFile, text);
-  FormParams.ParamByName('CashSessionId').Value:=Text;
-  CloseFile(myFile);
-  end
-  else
-  begin
-
-   PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // «апрос на сохранение CashSessionId в  CashSessionId.ini
-
-  end;
-end;
-
-
-
 
 procedure TMainCashForm2.ChangeStatus(AStatus: String);
 Begin
@@ -622,9 +592,8 @@ begin
   //сгенерили гуид дл€ определени€ сессии
   ChangeStatus('”становка первоначальных параметров');
 
-  FormParams.ParamByName('ClosedCheckId').Value := 0;
-  FormParams.ParamByName('CheckId').Value := 0;
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
+  FormParams.ParamByName('CashRegister').Value := iniCashRegister;
 
   if NOT GetIniFile(F) then
   Begin

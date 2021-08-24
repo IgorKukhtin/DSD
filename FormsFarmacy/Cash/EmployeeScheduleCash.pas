@@ -132,8 +132,13 @@ begin
   WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
   try
     try
-      LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
-      if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
+      LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
+      if not EmployeeScheduleCDS.Active then
+      begin
+        DeleteLocalData(EmployeeSchedule_lcl);
+        CheckEmployeeScheduleCDS;
+        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+      end;
       bYes := EmployeeScheduleCDS.Locate('UserID;Date', VarArrayOf([gc_User.Session, Date]), []);
 
       if bYes then
@@ -294,10 +299,11 @@ function TEmployeeScheduleCashForm.EmployeeScheduleCashExecute: boolean;
   var EmployeeScheduleCDS : TClientDataSet;
 begin
   edOperDate.Date := Date;
-  CheckEmployeeScheduleCDS;
   EmployeeScheduleCDS :=  TClientDataSet.Create(Nil);
   WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
   try
+
+    CheckEmployeeScheduleCDS;
 
     if not gc_User.Local then
     begin
@@ -309,10 +315,14 @@ begin
       Panel1.Align := alClient;
     end;
 
-
     try
-      LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
-      if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
+      LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
+      if not EmployeeScheduleCDS.Active then
+      begin
+        DeleteLocalData(EmployeeSchedule_lcl);
+        CheckEmployeeScheduleCDS;
+        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+      end;
       if EmployeeScheduleCDS.Locate('UserID;Date', VarArrayOf([gc_User.Session, Date]), []) then
       begin
         cbServiceExit.Checked := EmployeeScheduleCDS.FieldByName('ServiceExit').AsBoolean;

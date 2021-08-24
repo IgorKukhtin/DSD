@@ -62,6 +62,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Top = 7
       Hint = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 165
     end
@@ -88,6 +89,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Top = 33
       Hint = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 173
     end
@@ -796,6 +798,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       isShowModal = True
     end
+    object actRefreshGet: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1193,12 +1208,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Action = actUpdate_CheckedHead
         end
         item
-          Action = actRefresh
+          Action = actRefreshGet
         end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> - '#1044#1040'?'
-      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085' '
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'>?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> '#1080#1079#1084#1077#1085#1077#1085
       Caption = 'macUpdateCheckedHead'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'> - '#1044#1040
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084'>'
       ImageIndex = 76
     end
     object macUpdateCheckedPersonal: TMultiAction
@@ -1209,12 +1224,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Action = actUpdate_CheckedPersonal
         end
         item
-          Action = actRefresh
+          Action = actRefreshGet
         end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> - '#1044#1040'?'
-      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085' '
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'>?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> '#1080#1079#1084#1077#1085#1077#1085
       Caption = 'macUpdateCheckedHead'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'> - '#1044#1040
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072'>'
       ImageIndex = 77
     end
   end
@@ -1578,6 +1593,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       item
         Name = 'inisChecked'
         Value = False
+        Component = cbCheckedHead
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1590,8 +1606,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 208
+    Left = 872
+    Top = 104
   end
   object spUpdate_CheckedPersonal: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_SheetWorkTime_Checked'
@@ -1616,6 +1632,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       item
         Name = 'inisChecked'
         Value = False
+        Component = cbCheckedPersonal
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1628,8 +1645,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 832
-    Top = 288
+    Left = 872
+    Top = 152
   end
   object TotalCDS: TClientDataSet
     Aggregates = <>

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BeginDateStart TDateTime, BeginDateEnd TDateTime
              , MemberId Integer, MemberName TVarChar
              , MemberMainId Integer, MemberMainName TVarChar
+             , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , InsertName TVarChar
              , UpdateName TVarChar
              , InsertDate TDateTime
@@ -77,6 +78,9 @@ BEGIN
            , Object_MemberMain.Id                  AS MemberMainId
            , Object_MemberMain.ValueData           AS MemberMainName
 
+           , Object_WorkTimeKind.Id                AS WorkTimeKindId
+           , Object_WorkTimeKind.ValueData         AS WorkTimeKindName
+
            , Object_Insert.ValueData               AS InsertName
            , Object_Update.ValueData               AS UpdateName
            , MovementDate_Insert.ValueData         AS InsertDate
@@ -130,6 +134,11 @@ BEGIN
                                         AND MovementLinkObject_MemberMain.DescId = zc_MovementLinkObject_MemberMain()
             LEFT JOIN Object AS Object_MemberMain ON Object_MemberMain.Id = MovementLinkObject_MemberMain.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
+            LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MovementLinkObject_WorkTimeKind.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -157,9 +166,10 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.08.21         *
  27.12.18         *
  20.12.18         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '30.10.2015', inEndDate:= '01.12.2019', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '01.06.2021', inEndDate:= '01.12.2021', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

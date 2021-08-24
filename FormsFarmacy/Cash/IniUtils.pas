@@ -33,6 +33,8 @@ function iniLocalGUIDSave(AGUID: string): string;
 function iniLocalGUIDNew: string;
 
 function iniCashSerialNumber: String;
+function iniCashRegister: String;
+
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
 
@@ -314,6 +316,11 @@ function iniCashSerialNumber: String;
 begin
   Result := GetValue('TSoldWithCompMainForm','FP320SERIAL','');
 End;
+
+function iniCashRegister: String;
+begin
+  Result := GetValue('Common','CashRegister', '');
+end;
 
 //возвращает номер налоговой группы для FP320 7%
 function iniTaxGroup7:Integer;

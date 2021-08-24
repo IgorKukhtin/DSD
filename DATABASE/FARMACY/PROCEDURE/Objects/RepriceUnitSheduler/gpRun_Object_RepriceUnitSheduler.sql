@@ -11,6 +11,11 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
+   
+  IF CURRENT_DATE < '25.08.2021' 
+  THEN
+    RETURN;
+  END IF;
 
     -- Переоценки
   PERFORM  gpRun_Object_RepriceUnitSheduler_UnitReprice(Object_RepriceUnitSheduler.Id, 

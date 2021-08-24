@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_EmployeeWorkLog_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_EmployeeWorkLog_Cash(
     IN inCashSessionId TVarChar,   -- Сессия кассового места
+    IN inCashRegister  TVarChar,   -- Фискальный номер
     IN inUserId        Integer,    -- Текущая накладная
     IN inDateLogIn     TDateTime,  -- Дата и время входа
     IN inDateZReport   TDateTime,  -- Дата и время выполнения Z отчета
@@ -45,8 +47,8 @@ BEGIN
       UPDATE EmployeeWorkLog SET RetailId = vbRetailId, DateZReport = inDateZReport, DateLogOut = inDateLogOut
       WHERE CashSessionId = inCashSessionId AND UserId = inUserId AND UnitId = vbUnitId AND DateLogIn = inDateLogIn;
     ELSE
-      INSERT INTO EmployeeWorkLog (CashSessionId, UserId, UnitId, RetailId, DateLogIn, DateZReport, DateLogOut, OldProgram, OldServise)
-      VALUES (inCashSessionId, inUserId, vbUnitId, vbRetailId, inDateLogIn, inDateZReport, inDateLogOut, inOldProgram, inOldServise);
+      INSERT INTO EmployeeWorkLog (CashSessionId, CashRegister, UserId, UnitId, RetailId, DateLogIn, DateZReport, DateLogOut, OldProgram, OldServise)
+      VALUES (inCashSessionId, inCashRegister, inUserId, vbUnitId, vbRetailId, inDateLogIn, inDateZReport, inDateLogOut, inOldProgram, inOldServise);
     END IF;
 
 END;
@@ -55,6 +57,6 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 13.01.19         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 13.01.19                                                       *
 */

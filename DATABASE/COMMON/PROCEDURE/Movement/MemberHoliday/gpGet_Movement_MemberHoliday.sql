@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BeginDateStart TDateTime, BeginDateEnd TDateTime
              , MemberId Integer, MemberName TVarChar
              , MemberMainId Integer, MemberMainName TVarChar
+             , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , InsertId Integer, InsertName TVarChar
              , UpdateId Integer, UpdateName TVarChar
              , InsertDate TDateTime
@@ -40,6 +41,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS MemberName
              , 0                                                AS MemberMainId
              , CAST ('' AS TVarChar)                            AS MemberMainName
+             , 0                                                AS WorkTimeKindId
+             , CAST ('' AS TVarChar) 				AS WorkTimeKindName
              , Object_Insert.Id                                 AS InsertId
              , Object_Insert.ValueData                          AS InsertName
              , 0                                                AS UpdateId
@@ -67,6 +70,9 @@ BEGIN
            , Object_Member.ValueData               AS MemberName
            , Object_MemberMain.Id                  AS MemberMainId
            , Object_MemberMain.ValueData           AS MemberMainName
+
+           , Object_WorkTimeKind.Id                AS WorkTimeKindId
+           , Object_WorkTimeKind.ValueData         AS WorkTimeKindName
 
            , Object_Insert.Id                      AS InsertId
            , Object_Insert.ValueData               AS InsertName
@@ -109,6 +115,11 @@ BEGIN
                                          ON MovementLinkObject_MemberMain.MovementId = Movement.Id
                                         AND MovementLinkObject_MemberMain.DescId = zc_MovementLinkObject_MemberMain()
             LEFT JOIN Object AS Object_MemberMain ON Object_MemberMain.Id = MovementLinkObject_MemberMain.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
+            LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MovementLinkObject_WorkTimeKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
