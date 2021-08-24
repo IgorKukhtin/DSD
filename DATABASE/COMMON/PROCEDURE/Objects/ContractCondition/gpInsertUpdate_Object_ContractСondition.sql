@@ -123,6 +123,13 @@ BEGIN
                                   UNION SELECT zc_Enum_ContractConditionKind_DelayDayCalendar() UNION SELECT zc_Enum_ContractConditionKind_DelayDayBank()
                                   UNION SELECT zc_Enum_ContractConditionKind_BonusMonthlyPayment()
                                   UNION SELECT tmpOS.ObjectId FROM tmpOS WHERE tmpOS.ValueData ILIKE 'zc_Enum_ContractConditionKind_Transport%'
+                                  --
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusPercentSale()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusMonthlyPayment()
+                                  UNION SELECT zc_Enum_ContractConditionKind_BonusPercentSalePart()
                                        )
  --AND vbUserId = 5
    AND 0 < (WITH tmpData AS (SELECT ObjectLink_ContractConditionKind.ChildObjectId                          AS ContractConditionKindId

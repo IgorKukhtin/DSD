@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              
-             , PaidKindId Integer, PaidKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar, PaidKindName_Condition TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -78,8 +78,9 @@ BEGIN
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
+       , Object_PaidKind.Id                   AS PaidKindId
+       , Object_PaidKind.ValueData            AS PaidKindName
+       , Object_PaidKind_Condition.ValueData  AS PaidKindName_Condition
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName 
@@ -278,6 +279,11 @@ BEGIN
                             AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_ContractCondition ON View_InfoMoney_ContractCondition.InfoMoneyId = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_PaidKind
+                             ON ObjectLink_ContractCondition_PaidKind.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectLink_ContractCondition_PaidKind.DescId   = zc_ObjectLink_ContractCondition_PaidKind()
+        LEFT JOIN Object AS Object_PaidKind_Condition ON Object_PaidKind_Condition.Id = ObjectLink_ContractCondition_PaidKind.ChildObjectId
+
         LEFT JOIN ObjectDate AS ObjectDate_StartDate
                              ON ObjectDate_StartDate.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
@@ -317,4 +323,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractConditionValue (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractConditionValue (inJuridicalId:= 1, inSession := zfCalc_UserAdmin())

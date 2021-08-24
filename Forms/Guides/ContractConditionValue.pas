@@ -129,6 +129,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     RefreshDispatcher: TRefreshDispatcher;
+    PaidKindName_Condition: TcxGridDBColumn;
   private
     { Private declarations }
   public

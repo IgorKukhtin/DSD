@@ -91,7 +91,7 @@ BEGIN
         , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (257171) AS lfSelect_Object_Juridical_byGroup WHERE 257171 <> 0)
 
         , tmpObject_Contract_ContractKey_View AS (SELECT Object_Contract_ContractKey_View.* FROM Object_Contract_ContractKey_View)
-
+          -- Условия договора на Дату
         , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
                                         , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
                                         , ContractConditionKindId

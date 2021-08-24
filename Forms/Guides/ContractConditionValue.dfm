@@ -171,6 +171,15 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 30
       end
+      object PaidKindName_Condition: TcxGridDBColumn
+        Caption = #1060#1054' ('#1091#1089#1083#1086#1074#1080#1077')'
+        DataBinding.FieldName = 'PaidKindName_Condition'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        Options.Editing = False
+        Width = 70
+      end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
