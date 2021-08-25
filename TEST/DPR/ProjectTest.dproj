@@ -4496,6 +4496,14 @@
 				<Form>WorkTimeKind_HolidayForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKindDialog.pas">
+				<Form>Report_GoodsMI_SaleReturnIn_PaidKindDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKind.pas">
+				<Form>Report_GoodsMI_SaleReturnIn_PaidKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

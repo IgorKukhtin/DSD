@@ -56,6 +56,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Return_Amount_40200_Weight TFloat
              , ReturnPercent TFloat
              , isTop Boolean
+             , PaidKindId Integer, PaidKindName TVarChar             
               )
 AS
 $BODY$
@@ -224,6 +225,7 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceCityId END AS ProvinceCityId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END AS StreetKindId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END AS StreetId
+                              , SoldTable.PaidKindId
 
                               , SUM (SoldTable.Actions_Summ) AS Promo_Summ
                               , SUM (SoldTable.Sale_Summ)    AS Sale_Summ
@@ -308,6 +310,7 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.ProvinceCityId END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END
+                              , SoldTable.PaidKindId
                          HAVING SUM (SoldTable.Actions_Summ) <> 0
                              OR SUM (SoldTable.Sale_Summ)    <> 0
                              OR SUM (SoldTable.Return_Summ)  <> 0
@@ -453,12 +456,16 @@ BEGIN
 
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
          , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isTop
+
+         , Object_PaidKind.Id        AS PaidKindId
+         , Object_PaidKind.ValueData AS PaidKindName
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
           LEFT JOIN Object AS Object_Branch    ON Object_Branch.Id    = tmpOperationGroup.BranchId
           LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = tmpOperationGroup.PaidKindId
 
           LEFT JOIN Object AS Object_GoodsPlatform     ON Object_GoodsPlatform.Id     = tmpOperationGroup.GoodsPlatformId
           LEFT JOIN Object AS Object_TradeMark         ON Object_TradeMark.Id         = tmpOperationGroup.TradeMarkId
@@ -519,6 +526,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.08.21         * add PaidKind
  03.06.21         * add isTop
  28.04.21         * add PartnerCategory
  29.04.21         *
