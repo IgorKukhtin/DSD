@@ -28,7 +28,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -57,15 +56,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.####'
@@ -77,11 +67,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
@@ -89,11 +74,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.####'
@@ -191,25 +171,19 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [7]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object isSave: TcxGridDBColumn [7]
+            Caption = #1057#1086#1093#1088#1072#1085#1077#1085
+            DataBinding.FieldName = 'isSave'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Summa: TcxGridDBColumn [8]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object isBonusNo: TcxGridDBColumn [8]
+            Caption = #1053#1077#1090' '#1085#1072#1095'. '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
+            DataBinding.FieldName = 'isBonusNo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            HeaderHint = #1085#1077#1090' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
             Width = 70
           end
           object Comment: TcxGridDBColumn [9]
@@ -439,10 +413,9 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           StoredProc = spInsertUpdateMIMaster
         end
         item
-          StoredProc = spGetTotalSumm
+          StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Child
         end>
     end
     object actPrintNoGroup: TdsdPrintAction [8]
@@ -1051,7 +1024,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 280
-    Top = 464
+    Top = 400
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1327,11 +1300,20 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inisBonusNo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'isBonusNo'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSave'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSave'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1582,8 +1564,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 496
+    Left = 288
+    Top = 504
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'

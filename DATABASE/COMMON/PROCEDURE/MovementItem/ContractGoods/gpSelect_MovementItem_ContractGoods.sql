@@ -13,13 +13,12 @@ RETURNS TABLE (Id Integer
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , Amount TFloat       --
              , Price TFloat
              , Price_curr TFloat
-             , Summa TFloat
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
+             , isSave Boolean, isBonusNo Boolean
              , isErased Boolean
              )
 AS
@@ -71,7 +70,6 @@ BEGIN
                                                           AND ObjectLink_ContractPriceList_PriceList.DescId = zc_ObjectLink_ContractPriceList_PriceList()
                        );                           
 
-                                                          
 
      -- ÷ÂÌ˚ Ò Õƒ—
      vbPriceWithVAT:= (SELECT MB.ValueData FROM ObjectBoolean AS MB WHERE MB.ObjectId = vbPriceListId AND MB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
@@ -141,6 +139,11 @@ BEGIN
                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
                           AND MovementItemFloat.DescId IN (zc_MIFloat_Price())
                        )
+     , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
+                         FROM MovementItemBoolean
+                         WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
+                           AND MovementItemBoolean.DescId IN (zc_MIBoolean_BonusNo())
+                        )
 
      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                       , MovementItem.GoodsId                          AS GoodsId
@@ -148,6 +151,7 @@ BEGIN
                       , MovementItem.Amount                           AS Amount
                       , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                       , MIString_Comment.ValueData        :: TVarChar AS Comment
+                      , COALESCE (MIBoolean_BonusNo.ValueData, FALSE) ::Boolean AS isBonusNo
                       , MovementItem.isErased
                  FROM tmpMI_G AS MovementItem
                       LEFT JOIN tmpMI_Float AS MIFloat_Price
@@ -159,6 +163,9 @@ BEGIN
                       LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN tmpMI_Boolean AS MIBoolean_BonusNo
+                                              ON MIBoolean_BonusNo.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_BonusNo.DescId = zc_MIBoolean_BonusNo()
                  )
 
        SELECT
@@ -173,16 +180,17 @@ BEGIN
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
 
-           , 0                        :: TFloat AS Amount
            , COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist) :: TFloat AS Price
            , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
-           , 0                        :: TFloat AS Summa
            , ''                     :: TVarChar AS Comment
 
            , ''           ::TVarChar       AS InsertName
            , ''           ::TVarChar       AS UpdateName
            , CURRENT_TIMESTAMP ::TDateTime AS InsertDate
            , NULL           ::TDateTime    AS UpdateDate
+           
+           , FALSE AS isSave
+           , FALSE AS isBonusNo
 
            , FALSE AS isErased
        FROM tmpGoodsByGoodsKind AS tmpGoods
@@ -229,10 +237,8 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
-           , tmpMI.Amount            ::TFloat    AS Amount
            , tmpMI.Price             ::TFloat    AS Price
            , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
-           , (tmpMI.Amount * tmpMI.Price) ::TFloat AS Summa
 
            , tmpMI.Comment  :: TVarChar AS Comment
 
@@ -240,6 +246,9 @@ BEGIN
            , Object_Update.ValueData    AS UpdateName
            , MIDate_Insert.ValueData    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
+           
+           , CASE WHEN COALESCE (tmpMI.isErased, TRUE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isSave
+           , tmpMI.isBonusNo            AS isBonusNo
 
            , tmpMI.isErased             AS isErased
 
@@ -316,6 +325,13 @@ BEGIN
                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                           AND MovementItemFloat.DescId IN (zc_MIFloat_Price())
                        )
+
+     , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
+                         FROM MovementItemBoolean
+                         WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                           AND MovementItemBoolean.DescId IN (zc_MIBoolean_BonusNo())
+                        )
+
        -- ÷ÂÌ˚ ËÁ Ô‡ÈÒ‡ Ì‡ ÚÂÍ. ‰‡ÚÛ
      , tmpPriceList_curr AS (SELECT lfSelect.GoodsId     AS GoodsId
                                   , lfSelect.GoodsKindId AS GoodsKindId
@@ -334,10 +350,9 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
-           , tmpMI.Amount              ::TFloat AS Amount
+
            , MIFloat_Price.ValueData   ::TFloat AS Price
            , COALESCE (tmpPriceList_Kind_curr.Price_Pricelist, tmpPriceList_curr.Price_Pricelist) :: TFloat AS Price_curr
-           , (COALESCE (tmpMI.Amount,0) * MIFloat_Price.ValueData) ::TFloat AS Summa
 
            , MIString_Comment.ValueData                       :: TVarChar AS Comment
 
@@ -345,6 +360,9 @@ BEGIN
            , Object_Update.ValueData    AS UpdateName
            , MIDate_Insert.ValueData    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
+           
+           , CASE WHEN COALESCE (tmpMI.isErased, TRUE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isSave
+           , COALESCE (MIBoolean_BonusNo.ValueData, FALSE) ::Boolean AS isBonusNo
 
            , tmpMI.isErased             AS isErased
 
@@ -373,6 +391,10 @@ BEGIN
                                    ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
                                   AND MIString_Comment.DescId = zc_MIString_Comment()
  
+            LEFT JOIN tmpMI_Boolean AS MIBoolean_BonusNo
+                                    ON MIBoolean_BonusNo.MovementItemId = tmpMI.MovementItemId
+                                   AND MIBoolean_BonusNo.DescId = zc_MIBoolean_BonusNo()
+
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
@@ -406,6 +428,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.08.21         * isBonusNo
  05.07.21         *
 */
 
