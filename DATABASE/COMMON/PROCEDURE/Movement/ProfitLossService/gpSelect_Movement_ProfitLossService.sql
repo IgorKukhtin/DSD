@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , ContractMasterId Integer, ContractMasterInvNumber TVarChar
              , ContractTagId_master Integer, ContractTagName_master TVarChar
              , ContractChildId Integer, ContractChildInvNumber TVarChar
@@ -39,7 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
-             , BranchId Integer, BranchName TVarChar
+             , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , PersonalId_main Integer, PersonalName_main TVarChar
              , PaidKindId_Child Integer, PaidKindName_Child TVarChar
@@ -147,9 +147,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyCode            AS InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName            AS InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyName_all
+           , View_Contract_InvNumber.ContractId
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
+           , View_Contract_InvNumber.ContractTagGroupName
            , View_Contract_InvNumber_master.ContractId      AS ContractMasterId
            , View_Contract_InvNumber_master.InvNumber       AS ContractMasterInvNumber
            , View_Contract_InvNumber_master.ContractTagId   AS ContractTagId_master
@@ -169,6 +171,7 @@ BEGIN
            , Object_BonusKind.ValueData                     AS BonusKindName
            
            , Object_Branch.Id                               AS BranchId
+           , Object_Branch.ObjectCode                       AS BranchCode
            , Object_Branch.ValueData                        AS BranchName
 
            , COALESCE (Object_PersonalTrade.Id, Object_PersonalTrade_inf.Id)               AS PersonalId

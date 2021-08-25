@@ -15,17 +15,17 @@
     TabOrder = 3
     ExplicitTop = 107
     ExplicitWidth = 1362
-    ExplicitHeight = 280
+    ExplicitHeight = 308
     ClientRectBottom = 308
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 280
+      ExplicitHeight = 308
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 308
         ExplicitWidth = 1362
-        ExplicitHeight = 280
+        ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -177,6 +177,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_opt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_51201
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -333,6 +338,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_opt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_51201
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1018,6 +1028,17 @@
             Options.Editing = False
             Width = 80
           end
+          object Summ_51201: TcxGridDBColumn
+            Caption = '(111000)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            DataBinding.FieldName = 'Summ_51201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '(111000)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -1390,6 +1411,14 @@
       ParentShowHint = False
       ShowHint = True
     end
+    object cbPaidKind: TcxCheckBox
+      Left = 694
+      Top = 87
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1060#1054
+      Properties.ReadOnly = False
+      TabOrder = 25
+      Width = 91
+    end
   end
   object cbPartner: TcxCheckBox [2]
     Left = 212
@@ -1430,14 +1459,6 @@
     Properties.ReadOnly = False
     TabOrder = 10
     Width = 102
-  end
-  object cbPaidKind: TcxCheckBox [7]
-    Left = 686
-    Top = 114
-    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1060#1054
-    Properties.ReadOnly = False
-    TabOrder = 11
-    Width = 91
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1523,6 +1544,11 @@
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbPaidKind
+        Properties.Strings = (
+          'Checked')
       end>
   end
   inherited ActionList: TActionList
@@ -2147,7 +2173,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbb'
+          ItemName = 'bbPaidKind'
         end
         item
           Visible = True
@@ -2261,7 +2287,7 @@
       Action = actRefreshReal
       Category = 0
     end
-    object bbb: TdxBarControlContainerItem
+    object bbPaidKind: TdxBarControlContainerItem
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1060#1054
       Category = 0
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1060#1054

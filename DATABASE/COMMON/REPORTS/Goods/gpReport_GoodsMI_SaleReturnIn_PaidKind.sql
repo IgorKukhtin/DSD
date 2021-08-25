@@ -61,6 +61,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , SaleReturn_Weight  TFloat -- Продажи за вычетом возврата, кг
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
              , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
+             , Summ_51201         TFloat -- (111000) Услуги по маркетингу 
              , isTop Boolean
              , PaidKindId Integer, PaidKindName TVarChar
               )
@@ -80,6 +81,7 @@ BEGIN
                           , gpReport.TradeMarkId, gpReport.TradeMarkName
                           , gpReport.GoodsGroupAnalystName, gpReport.GoodsTagName, gpReport.GoodsGroupStatName
                           , gpReport.GoodsPlatformName
+                          
                           , gpReport.JuridicalGroupName
                           , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
                           , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
@@ -103,6 +105,7 @@ BEGIN
                           , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
                           , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
                           , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                          , 0 ::TFloat AS Summ_51201
                           , (gpReport.isTop) :: Boolean AS isTop
                           
                           , CASE WHEN inisPaidKind = TRUE THEN gpReport.PaidKindId ELSE 0 END PaidKindId
@@ -127,6 +130,114 @@ BEGIN
                                                         ) AS gpReport
                     )
 
+     , tmpPartnerAddress AS (SELECT * 
+                             FROM Object_Partner_Address_View
+                             )
+
+       -- бонус в документах факт - zc_Movement_ProfitLossService
+     , tmpProfitLossService AS (SELECT '' ::TVarChar AS GoodsGroupName, '' ::TVarChar AS GoodsGroupNameFull
+                                     , 0 AS GoodsId, 0 AS GoodsCode, '' ::TVarChar AS GoodsName
+                                     , 0 AS GoodsKindId, '' ::TVarChar AS GoodsKindName, '' ::TVarChar AS MeasureName
+                                     , 0 AS TradeMarkId, '' ::TVarChar AS TradeMarkName
+                                     , '' ::TVarChar AS GoodsGroupAnalystName, '' ::TVarChar AS GoodsTagName, '' ::TVarChar AS GoodsGroupStatName
+                                     , '' ::TVarChar AS GoodsPlatformName
+                                     
+                                     , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+                                     , tmp.BranchId, tmp.BranchCode, tmp.BranchName
+                                     , tmp.JuridicalId, tmp.JuridicalCode, tmp.JuridicalName
+                                     , tmp.RetailName, Object_RetailReport.ValueData AS RetailReportName
+                                     , Object_Area.ValueData AS AreaName, Object_PartnerTag.ValueData AS PartnerTagName
+                                     , ObjectFloat_Category.ValueData ::TFloat  AS PartnerCategory
+                                     , ObjectString_Address.ValueData AS Address
+                                     , View_Partner_Address.RegionName
+                                     , View_Partner_Address.ProvinceName
+                                     , View_Partner_Address.CityKindName
+                                     , View_Partner_Address.CityName
+                                     , View_Partner_Address.PartnerId
+                                     , View_Partner_Address.PartnerCode
+                                     , View_Partner_Address.PartnerName
+                                     , tmp.ContractId, tmp.ContractCode, tmp.ContractInvNumber AS ContractNumber
+                                     , tmp.ContractTagName, tmp.ContractTagGroupName
+                                     , View_Personal.PersonalName       AS PersonalName
+                                     , View_Personal.UnitName           AS UnitName_Personal
+                                     , Object_BranchPersonal.ValueData  AS BranchName_Personal
+                           
+                                     , View_PersonalTrade.PersonalName  AS PersonalTradeName
+                                     , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+                                     , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
+                                     , tmp.InfoMoneyId, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all 
+
+                                     , 0 :: TFloat AS Promo_Summ, 0 :: TFloat AS Sale_Summ, 0 :: TFloat AS Sale_SummReal, 0 :: TFloat AS Sale_Summ_10200, 0 :: TFloat AS Sale_Summ_10250, 0 :: TFloat AS Sale_Summ_10300
+                                     , 0 :: TFloat AS Promo_SummCost, 0 :: TFloat AS Sale_SummCost, 0 :: TFloat AS Sale_SummCost_10500, 0 :: TFloat AS Sale_SummCost_40200
+                                     , 0 :: TFloat AS Sale_Amount_Weight, 0 :: TFloat AS Sale_Amount_Sh
+                                     , 0 :: TFloat AS Promo_AmountPartner_Weight, 0 :: TFloat AS Promo_AmountPartner_Sh, 0 :: TFloat AS Sale_AmountPartner_Weight, 0 :: TFloat AS Sale_AmountPartner_Sh, 0 :: TFloat AS Sale_AmountPartnerR_Weight, 0 :: TFloat AS Sale_AmountPartnerR_Sh
+                                     , 0 :: TFloat AS Return_Summ, 0 :: TFloat AS Return_Summ_10300, 0 :: TFloat AS Return_Summ_10700, 0 :: TFloat AS Return_SummCost, 0 :: TFloat AS Return_SummCost_40200
+                                     , 0 :: TFloat AS Return_Amount_Weight, 0 :: TFloat AS Return_Amount_Sh, 0 :: TFloat AS Return_AmountPartner_Weight, 0 :: TFloat AS Return_AmountPartner_Sh
+                                     , 0 :: TFloat AS Sale_Amount_10500_Weight
+                                     , 0 :: TFloat AS Sale_Amount_40200_Weight
+                                     , 0 :: TFloat AS Return_Amount_40200_Weight
+                                     , 0 :: TFloat AS ReturnPercent
+                                     , (COALESCE (tmp.AmountOut,0) ) ::TFloat AS Summ_51201  --* (-1) + COALESCE (tmp.AmountIn,0) 
+                                     , FALSE :: Boolean AS isTop
+                                     , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindId ELSE 0 END PaidKindId
+                                     , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindName ELSE '' END PaidKindName
+                                FROM gpSelect_Movement_ProfitLossService(inStartDate
+                                                                       , inEndDate
+                                                                       , 0 :: Integer
+                                                                       , inBranchId
+                                                                       , inPaidKindId
+                                                                       , FALSE        --inIsErased
+                                                                       , inSession
+                                                                        ) AS tmp
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                                         ON ObjectLink_Juridical_JuridicalGroup.ObjectId = tmp.JuridicalId
+                                                        AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+                                    LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                                         ON ObjectLink_Juridical_RetailReport.ObjectId = tmp.JuridicalId
+                                                        AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+                                    LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                                         ON ObjectLink_Partner_Area.ObjectId = tmp.PartnerId
+                                                        AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+                                    LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+                           
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                                         ON ObjectLink_Partner_PartnerTag.ObjectId = tmp.PartnerId
+                                                        AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+                                    LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+                           
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                                                          ON ObjectFloat_Category.ObjectId = tmp.PartnerId
+                                                         AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
+                                    LEFT JOIN ObjectString AS ObjectString_Address
+                                                           ON ObjectString_Address.ObjectId = tmp.PartnerId
+                                                          AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+                                    LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmp.PartnerId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                         ON ObjectLink_Partner_Personal.ObjectId = tmp.PartnerId
+                                                        AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                                    LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                         ON ObjectLink_Partner_PersonalTrade.ObjectId = tmp.PartnerId
+                                                        AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                    LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                         ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
+                                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                    LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
+                                WHERE COALESCE (tmp.AmountOut,0) <> 0
+                                )
+
+          , tmpData AS (SELECT * FROM tmpReport
+                       UNION ALL
+                        SELECT * FROM tmpProfitLossService
+                       )
 
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
@@ -164,12 +275,13 @@ BEGIN
             , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
             , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
+            , SUM (gpReport.Summ_51201) ::TFloat AS Summ_51201
 
             , gpReport.isTop
             , gpReport.PaidKindId ::Integer
             , gpReport.PaidKindName ::TVarChar
 
-       FROM tmpReport AS gpReport
+       FROM tmpData AS gpReport
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName

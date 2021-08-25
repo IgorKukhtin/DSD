@@ -137,9 +137,9 @@ type
     edEndDateOlapSR: TcxDateEdit;
     spGetGlobalConst_DateOlapSR: TdsdStoredProc;
     cxLabel12: TcxLabel;
-    cbPaidKind: TcxCheckBox;
-    bbb: TdxBarControlContainerItem;
+    bbPaidKind: TdxBarControlContainerItem;
     PaidKindName: TcxGridDBColumn;
+    cbPaidKind: TcxCheckBox;
   private
     { Private declarations }
   public
