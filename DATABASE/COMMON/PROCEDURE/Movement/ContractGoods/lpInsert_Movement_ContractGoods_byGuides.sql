@@ -33,7 +33,8 @@ BEGIN
                                                   AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
                                                   AND MovementDate_EndBegin.ValueData = inEndDate
                       WHERE Movement.DescId = zc_Movement_ContractGoods()
-                        AND Movement.OperDate = inStartDate);
+                        AND Movement.OperDate = inStartDate
+                        AND Movement.StatusId <> zc_Enum_Status_Erased());
 
       --если не нашли документ записываем новый
       IF COALESCE (vbMovementId,0) = 0
