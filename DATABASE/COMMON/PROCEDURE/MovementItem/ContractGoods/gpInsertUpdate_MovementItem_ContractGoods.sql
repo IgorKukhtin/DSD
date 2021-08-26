@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_ContractGoods()
+p-- Function: gpInsertUpdate_MovementItem_ContractGoods()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
