@@ -62,7 +62,8 @@ type
     // Update Дисконт в CDS - по всем "обновим" Дисконт
     function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
     // Commit Дисконт из CDS - по всем
-    function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+    function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
+                                  lCardNumber : string; var AisDiscountCommit : Boolean) :Boolean;
     //
     // update DataSet - еще раз по всем "обновим" Дисконт
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
@@ -405,7 +406,8 @@ end;
 
 
 // Commit Дисконт из CDS - по всем
-function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
+                                                   lCardNumber : string; var AisDiscountCommit : Boolean) :Boolean;
 var
   aSaleRequest : CardSaleRequest;
   SendList : ArrayOfCardSaleRequestItem;
@@ -431,6 +433,7 @@ begin
   Result:=false;
   lMsg:='';
   cExchangeHistory := '';
+  AisDiscountCommit := False;
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
   CheckCDS.filtered := False;
@@ -582,6 +585,7 @@ begin
                 llMsg:= ResList.ResultDescription;
                 lMsg:= lMsg + llMsg;
                 Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
+                AisDiscountCommit := Result;
                 //
                 if not Result
                 then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
@@ -715,7 +719,8 @@ begin
                     //ошибка
                   lMsg:='Error';
                   Exit;
-                end else Result:= True //!!!все ОК и Чек можно сохранить!!!;
+                end else Result:= True; //!!!все ОК и Чек можно сохранить!!!;
+                AisDiscountCommit := Result;
               end else
               begin
                 ShowMessage ('Ошибка фиксации факта продажи.' + #10+ #13
@@ -881,7 +886,8 @@ begin
                     if Assigned(XMLNode) then
                     begin
                       if (XMLNode.Text = '200') then Result:= True
-                      else FIdCasual := ''
+                      else FIdCasual := '';
+                      AisDiscountCommit := Result;
                     end else FIdCasual := '';
 
                   end else FIdCasual := '';
@@ -1037,7 +1043,8 @@ begin
                     //ошибка
                   lMsg:='Error';
                   Exit;
-                end else Result:= True //!!!все ОК и Чек можно сохранить!!!;
+                end else Result:= True; //!!!все ОК и Чек можно сохранить!!!;
+                AisDiscountCommit := Result;
               end else
               begin
                 ShowMessage ('Ошибка фиксации факта продажи.' + #10+ #13

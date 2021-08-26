@@ -276,31 +276,31 @@ inherited ListDiffFormVIPSendForm: TListDiffFormVIPSendForm
       PairParams = <
         item
           FieldName = 'Id'
-          PairName = 'Id'
+          PairName = 'id'
         end
         item
           FieldName = 'MovementId'
-          PairName = 'MovementId'
+          PairName = 'movementid'
         end
         item
           FieldName = 'UnitId'
-          PairName = 'UnitId'
+          PairName = 'unitid'
         end
         item
           FieldName = 'UnitSendId'
-          PairName = 'UnitSendId'
+          PairName = 'unitsendid'
         end
         item
           FieldName = 'AmountSend'
-          PairName = 'AmountSend'
+          PairName = 'amountsend'
         end
         item
           FieldName = 'isUrgently'
-          PairName = 'isUrgently'
+          PairName = 'isurgently'
         end
         item
           FieldName = 'isOrder'
-          PairName = 'isOrder'
+          PairName = 'isorder'
         end>
       Caption = 'actDataToJsonAction'
     end

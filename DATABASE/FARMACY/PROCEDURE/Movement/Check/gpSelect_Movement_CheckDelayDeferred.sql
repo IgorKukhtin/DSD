@@ -481,7 +481,8 @@ BEGIN
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , Null::TFloat                                                        AS PartionDateDiscount
-           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat AS AmountMonth
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
+           , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)           AS isDiscountCommit
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -506,6 +507,11 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                 ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                    ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                   AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
        );
 
     RETURN NEXT Cursor2;

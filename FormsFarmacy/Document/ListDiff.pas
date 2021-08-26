@@ -58,6 +58,8 @@ type
     isVIPSend: TcxGridDBColumn;
     actListDiffFormVIPSend: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    isOrderInternal: TcxGridDBColumn;
+    AmountSend: TcxGridDBColumn;
   private
     { Private declarations }
   public

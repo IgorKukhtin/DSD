@@ -85,10 +85,10 @@ object PayrollTypeDialogForm: TPayrollTypeDialogForm
   object GuidesPayrollType: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePayrollType
-    FormNameParam.Value = 'TPayrollTypeForm'
+    FormNameParam.Value = 'TPayrollTypeChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPayrollTypeForm'
+    FormName = 'TPayrollTypeChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

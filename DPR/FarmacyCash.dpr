@@ -145,7 +145,8 @@ uses
   CallbackHandler in '..\FormsFarmacy\Cash\CallbackHandler.pas' {CallbackHandlerForm},
   ChoosingPairSun in '..\FormsFarmacy\Cash\ChoosingPairSun.pas' {ChoosingPairSunForm},
   TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm},
-  CashCloseJeckdawsDialog in '..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas' {CashCloseJeckdawsDialogForm: TParentForm};
+  CashCloseJeckdawsDialog in '..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas' {CashCloseJeckdawsDialogForm: TParentForm},
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas';
 
 {$R *.res}
 

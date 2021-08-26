@@ -8,13 +8,13 @@ inherited PaymentForm: TPaymentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 67
+    Top = 89
     Width = 1005
-    Height = 446
+    Height = 424
     ExplicitTop = 67
     ExplicitWidth = 1005
     ExplicitHeight = 446
-    ClientRectBottom = 446
+    ClientRectBottom = 424
     ClientRectRight = 1005
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1005
@@ -22,7 +22,7 @@ inherited PaymentForm: TPaymentForm
       inherited cxGrid: TcxGrid
         Top = 61
         Width = 1005
-        Height = 361
+        Height = 339
         ExplicitTop = 61
         ExplicitWidth = 1005
         ExplicitHeight = 361
@@ -440,10 +440,10 @@ inherited PaymentForm: TPaymentForm
   end
   inherited DataPanel: TPanel
     Width = 1005
-    Height = 41
+    Height = 63
     TabOrder = 3
     ExplicitWidth = 1005
-    ExplicitHeight = 41
+    ExplicitHeight = 63
     inherited edInvNumber: TcxTextEdit
       Left = 165
       Top = 17
@@ -533,6 +533,17 @@ inherited PaymentForm: TPaymentForm
       ShowHint = True
       TabOrder = 12
       Width = 142
+    end
+    object cxLabel3: TcxLabel
+      Left = 3
+      Top = 41
+      Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    end
+    object edComment: TcxTextEdit
+      Left = 80
+      Top = 40
+      TabOrder = 14
+      Width = 612
     end
   end
   object deDateStart: TcxDateEdit [2]
@@ -826,6 +837,7 @@ inherited PaymentForm: TPaymentForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -836,6 +848,11 @@ inherited PaymentForm: TPaymentForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       Footer = False
       ColumnParams = <
         item
@@ -994,6 +1011,7 @@ inherited PaymentForm: TPaymentForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -1004,6 +1022,11 @@ inherited PaymentForm: TPaymentForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       Footer = False
       ColumnParams = <
         item
@@ -1239,6 +1262,7 @@ inherited PaymentForm: TPaymentForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -1249,6 +1273,11 @@ inherited PaymentForm: TPaymentForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       Footer = False
       ColumnParams = <
         item
@@ -1478,7 +1507,7 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1486,7 +1515,7 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'inDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1750,7 +1779,7 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1758,7 +1787,7 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'inDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1829,14 +1858,14 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Name = 'DateStart'
-        Value = 'NULL'
+        Value = Null
         Component = deDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'DateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = deDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1846,6 +1875,13 @@ inherited PaymentForm: TPaymentForm
         Value = Null
         Component = cbPaymentFormed
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -1893,6 +1929,14 @@ inherited PaymentForm: TPaymentForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1925,6 +1969,9 @@ inherited PaymentForm: TPaymentForm
       end
       item
         Control = cbPaymentFormed
+      end
+      item
+        Control = edComment
       end>
     Left = 200
     Top = 177
@@ -1934,42 +1981,10 @@ inherited PaymentForm: TPaymentForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 256
   end

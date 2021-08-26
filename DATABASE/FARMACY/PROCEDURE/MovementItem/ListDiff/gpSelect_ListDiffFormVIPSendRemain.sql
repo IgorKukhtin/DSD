@@ -99,15 +99,39 @@ BEGIN
                                                      AND MovementItem.Amount > 0
                          WHERE MovementItem.ObjectId = inGoodsId
                         ),
-           tmpLayoutUnit AS (SELECT MovementItem.ObjectId              AS UnitId
-                                  , Max(MovementItem.Amount)           AS Amount
-                             FROM tmpLayoutMovement AS Movement
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                         AND MovementItem.DescId = zc_MI_Child()
-                                                         AND MovementItem.isErased = FALSE
-                                                         AND MovementItem.Amount > 0
-                             GROUP BY MovementItem.ObjectId 
-                            )
+          tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                                 , MovementItem.ObjectId              AS UnitId
+                            FROM tmpLayoutMovement AS Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Child()
+                                                        AND MovementItem.isErased = FALSE
+                                                        AND MovementItem.Amount > 0
+                           ),
+                               
+          tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                      , count(*)                          AS CountUnit
+                                 FROM tmpLayoutUnit
+                                 GROUP BY tmpLayoutUnit.ID
+                                 ),
+          tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                                , tmpUnit.Id                         AS UnitId
+                                , tmpLayout.Amount                   AS Amount
+                           FROM tmpLayout
+                           
+                                INNER JOIN tmpUnit ON 1 = 1
+                                
+                                LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                        ON Unit_PharmacyItem.ObjectId  = tmpUnit.Id
+                                                       AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                 
+                                LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                       AND tmpLayoutUnit.UnitId = tmpUnit.Id
+
+                                LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                 
+                           WHERE (tmpLayoutUnit.UnitId = tmpUnit.Id OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                             AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                           )
           -- Отложенные перемещения
          , tmpMovementID AS (SELECT
                                   Movement.Id
@@ -183,7 +207,7 @@ BEGIN
                         GROUP BY Movement.UnitId
                         )
                            
-        SELECT Container.ObjectId                                    AS UnitId
+        SELECT Container.WhereObjectId                               AS UnitId
              , Object_Unit.ObjectCode                                AS UnitCode
              , Object_Unit.ValueData                                 AS UnitName
 
@@ -194,20 +218,20 @@ BEGIN
              
              , FLOOR(Container.Amount - 
                 COALESCE (tmpObject_Price.MCSValue, 0) - 
-                COALESCE (tmpLayoutUnit.Amount, 0) - 
+                COALESCE (tmpLayoutAll.Amount, 0) - 
                 COALESCE (tmpReserve.Amount, 0) - 
                 COALESCE (tmpSend.Amount, 0))::TFloat          AS Amount
                 
              , tmpObject_Price.MCSValue                              AS MCSValue 
-             , tmpLayoutUnit.Amount::TFloat                          AS Layout 
+             , tmpLayoutAll.Amount::TFloat                           AS Layout 
              
              , CASE WHEN FLOOR(Container.Amount - COALESCE (tmpObject_Price.MCSValue, 0) - 
-                         COALESCE (tmpLayoutUnit.Amount, 0) - 
+                         COALESCE (tmpLayoutAll.Amount, 0) - 
                          COALESCE (tmpReserve.Amount, 0) - 
                          COALESCE (tmpSend.Amount, 0)) > inAmountDiff 
                     THEN inAmountDiff
                     ELSE FLOOR(Container.Amount - COALESCE (tmpObject_Price.MCSValue, 0) - 
-                         COALESCE (tmpLayoutUnit.Amount, 0) - 
+                         COALESCE (tmpLayoutAll.Amount, 0) - 
                          COALESCE (tmpReserve.Amount, 0) - 
                          COALESCE (tmpSend.Amount, 0)) END::TFloat AS AmountSend
 
@@ -217,7 +241,7 @@ BEGIN
 
             LEFT JOIN tmpObject_Price ON tmpObject_Price.UnitId = Container.WhereObjectId
             
-            LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.UnitId = Container.WhereObjectId
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.UnitId = Container.WhereObjectId
             
             LEFT JOIN tmpReserve ON tmpReserve.UnitId = Container.WhereObjectId
             
@@ -225,7 +249,7 @@ BEGIN
             
         WHERE FLOOR(Container.Amount - 
                     COALESCE (tmpObject_Price.MCSValue, 0) - 
-                    COALESCE (tmpLayoutUnit.Amount, 0) - 
+                    COALESCE (tmpLayoutAll.Amount, 0) - 
                     COALESCE (tmpReserve.Amount, 0) - 
                     COALESCE (tmpSend.Amount, 0)) > 0
 

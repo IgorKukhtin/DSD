@@ -92,6 +92,7 @@ type
     isDeliverySite: TcxGridDBColumn;
     SummaDelivery: TcxGridDBColumn;
     isDoctors: TcxGridDBColumn;
+    isDiscountCommit: TcxGridDBColumn;
   private
     { Private declarations }
   public

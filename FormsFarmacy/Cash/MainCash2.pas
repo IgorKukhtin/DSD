@@ -902,7 +902,7 @@ type
       ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
-      AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
+      AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
       ANeedComplete: Boolean; FiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
@@ -1481,10 +1481,87 @@ begin
 end;
 
 procedure TMainCashForm2.actClearAllExecute(Sender: TObject);
+  var UID : String;
 begin
   // if CheckCDS.IsEmpty then exit;
   if MessageDlg('Очистить все?', mtConfirmation, mbYesNo, 0) <> mrYes then
     exit;
+
+  if (FormParams.ParamByName('isDiscountCommit').Value = True) and
+     (FormParams.ParamByName('CheckId').Value = 0) then
+  begin
+    SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
+        FormParams.ParamByName('ManagerName').Value,
+        FormParams.ParamByName('BayerName').Value,
+        // ***16.08.16
+        FormParams.ParamByName('BayerPhone').Value,
+        FormParams.ParamByName('ConfirmedKindName').Value,
+        FormParams.ParamByName('InvNumberOrder').Value,
+        FormParams.ParamByName('ConfirmedKindClientName').Value,
+        // ***20.07.16
+        FormParams.ParamByName('DiscountExternalId').Value,
+        FormParams.ParamByName('DiscountExternalName').Value,
+        FormParams.ParamByName('DiscountCardNumber').Value,
+        // ***08.04.17
+        FormParams.ParamByName('PartnerMedicalId').Value,
+        FormParams.ParamByName('PartnerMedicalName').Value,
+        FormParams.ParamByName('Ambulance').Value,
+        FormParams.ParamByName('MedicSP').Value,
+        FormParams.ParamByName('InvNumberSP').Value,
+        FormParams.ParamByName('OperDateSP').Value,
+        // ***15.06.17
+        FormParams.ParamByName('SPKindId').Value,
+        FormParams.ParamByName('SPKindName').Value,
+        FormParams.ParamByName('SPTax').Value,
+        // ***05.02.18
+        FormParams.ParamByName('PromoCodeID').Value,
+        // ***27.06.18
+        FormParams.ParamByName('ManualDiscount').Value,
+        // ***02.11.18
+        FormParams.ParamByName('SummPayAdd').Value,
+        // ***14.01.19
+        FormParams.ParamByName('MemberSPID').Value,
+        // ***20.02.19
+        FormParams.ParamByName('BankPOSTerminal').Value,
+        // ***25.02.19
+        FormParams.ParamByName('JackdawsChecksCode').Value,
+        // ***28.01.19
+        FormParams.ParamByName('SiteDiscount').Value,
+        // ***02.04.19
+        FormParams.ParamByName('RoundingDown').Value,
+        // ***13.05.19
+        FormParams.ParamByName('PartionDateKindId').Value,
+        FormParams.ParamByName('ConfirmationCodeSP').Value,
+        // ***07.11.19
+        FormParams.ParamByName('LoyaltySignID').Value,
+        // ***08.01.20
+        FormParams.ParamByName('LoyaltySMID').Value,
+        FormParams.ParamByName('LoyaltySMSumma').Value,
+        // ***16.08.20
+        FormParams.ParamByName('DivisionPartiesID').Value,
+        FormParams.ParamByName('DivisionPartiesName').Value,
+        // ***11.10.20
+        FormParams.ParamByName('MedicForSale').Value,
+        FormParams.ParamByName('BuyerForSale').Value,
+        FormParams.ParamByName('BuyerForSalePhone').Value,
+        FormParams.ParamByName('DistributionPromoList').Value,
+        // ***05.03.21
+        FormParams.ParamByName('MedicKashtanId').Value,
+        FormParams.ParamByName('MemberKashtanId').Value,
+        // ***19.03.21
+        FormParams.ParamByName('isCorrectMarketing').Value,
+        FormParams.ParamByName('isCorrectIlliquidAssets').Value,
+        FormParams.ParamByName('isDoctors').Value,
+        FormParams.ParamByName('isDiscountCommit').Value,
+
+        False, // NeedComplete
+        '', // FiscalCheckNumber
+        FormParams.ParamByName('CheckId').Value,  // ID чека
+        UID // out AUID
+        );
+     Add_Log('Сохранение вип чека по проведенному дисконту');
+  end;
+
   Add_Log('Clear all');
   // Вернуть товар в верхний грид
   FormParams.ParamByName('CheckId').Value := 0;
@@ -1572,6 +1649,7 @@ begin
   FormParams.ParamByName('isCorrectMarketing').Value := False;
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
+  FormParams.ParamByName('isDiscountCommit').Value := False;
 
   ClearFilterAll;
 
@@ -1771,31 +1849,35 @@ begin
   end;
 
   // обновим "нужные" параметры-Main ***20.07.16
-  DiscountServiceForm.pGetDiscountExternal
-    (FormParams.ParamByName('DiscountExternalId').Value,
-    FormParams.ParamByName('DiscountCardNumber').Value);
-  // ***20.07.16
-  if DiscountServiceForm.gService = 'CardService' then
+  if (FormParams.ParamByName('isDiscountCommit').Value = False) then
   begin
-    // проверка карты + сохраним "текущие" параметры-Main
-    if not DiscountServiceForm.fCheckCard(lMsg, DiscountServiceForm.gURL,
-      DiscountServiceForm.gService, DiscountServiceForm.gPort,
-      DiscountServiceForm.gUserName, DiscountServiceForm.gPassword,
-      FormParams.ParamByName('DiscountCardNumber').Value,
-      DiscountServiceForm.gisOneSupplier,DiscountServiceForm.gisTwoPackages,
-      FormParams.ParamByName('DiscountExternalId').Value) then
+    DiscountServiceForm.pGetDiscountExternal
+      (FormParams.ParamByName('DiscountExternalId').Value,
+      FormParams.ParamByName('DiscountCardNumber').Value);
+    // ***20.07.16
+    if DiscountServiceForm.gService = 'CardService' then
     begin
-      // обнулим, пусть фармацевт начнет заново
-      FormParams.ParamByName('DiscountExternalId').Value := 0;
-      // обнулим "нужные" параметры-Item
-      // DiscountServiceForm.pSetParamItemNull;
-    end;
+      // проверка карты + сохраним "текущие" параметры-Main
+      if not DiscountServiceForm.fCheckCard(lMsg, DiscountServiceForm.gURL,
+        DiscountServiceForm.gService, DiscountServiceForm.gPort,
+        DiscountServiceForm.gUserName, DiscountServiceForm.gPassword,
+        FormParams.ParamByName('DiscountCardNumber').Value,
+        DiscountServiceForm.gisOneSupplier,DiscountServiceForm.gisTwoPackages,
+        FormParams.ParamByName('DiscountExternalId').Value) then
+      begin
+        // обнулим, пусть фармацевт начнет заново
+        FormParams.ParamByName('DiscountExternalId').Value := 0;
+        // обнулим "нужные" параметры-Item
+        // DiscountServiceForm.pSetParamItemNull;
+      end;
 
+    end;
   end;
   //
 
-  if (FormParams.ParamByName('DiscountExternalId').Value <> 0) or
-    (FormParams.ParamByName('DiscountCardNumber').Value <> '') then
+  if (FormParams.ParamByName('isDiscountCommit').Value = False) and
+    ((FormParams.ParamByName('DiscountExternalId').Value <> 0) or
+    (FormParams.ParamByName('DiscountCardNumber').Value <> ''))  then
   begin
     if (FormParams.ParamByName('InvNumberSP').Value = '') then
     begin
@@ -3046,7 +3128,7 @@ procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
   UID, CheckNumber, ConfirmationCode, S, S1, cResult: String;
   lMsg: String;
-  isPromoForSale, isYes: Boolean;
+  isPromoForSale, isYes, isDiscountCommit: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal: Integer;
   nPOSTerminalCode: Integer;
@@ -3096,7 +3178,8 @@ begin
     exit;
   end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) then
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) and
+    (FormParams.ParamByName('isDiscountCommit').Value = False) then
   begin
     ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
@@ -3449,17 +3532,20 @@ begin
   if not ShowDistributionPromo then Exit;
 
   // Commit Дисконт из CDS - по всем
-  if (FormParams.ParamByName('DiscountExternalId').Value > 0) then
+  if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+     (FormParams.ParamByName('isDiscountCommit').Value = False) then
   begin
 
     if not ShowPUSHMessageCash('Провести продажу по дисконтной программе на сумму ' + lblTotalSumm.Caption + ' грн.?', cResult) then Exit;
-
 
     if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
 
     if not DiscountServiceForm.fCommitCDS_Discount(CheckNumber,
       CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value,
-      FormParams.ParamByName('DiscountCardNumber').Value) then Exit;
+      FormParams.ParamByName('DiscountCardNumber').Value, isDiscountCommit) then Exit;
+    FormParams.ParamByName('isDiscountCommit').Value := isDiscountCommit;
+
+    FormParams.ParamByName('isDiscountCommit').Value := True;
   end;
 
   Add_Log('PutCheckToCash');
@@ -3630,6 +3716,7 @@ begin
         FormParams.ParamByName('isCorrectMarketing').Value,
         FormParams.ParamByName('isCorrectIlliquidAssets').Value,
         FormParams.ParamByName('isDoctors').Value,
+        FormParams.ParamByName('isDiscountCommit').Value,
 
         True, // NeedComplete
         CheckNumber, // FiscalCheckNumber
@@ -5356,6 +5443,7 @@ begin
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
+    , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5467,6 +5555,7 @@ begin
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
+    , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -5517,6 +5606,12 @@ begin
   if (CheckCDS.RecordCount > 1) and (FormParams.ParamByName('CheckId').Value = 0) then
   begin
     ShowMessage('Ошибка.В чеке для дисконтной программы должен быть один товар.');
+    exit;
+  end;
+
+  if FormParams.ParamByName('isDiscountCommit').Value = True then
+  begin
+    ShowMessage('По текущему чеку Дисконт проведен на сайте!');
     exit;
   end;
 
@@ -5637,6 +5732,7 @@ begin
   FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
+
   // update DataSet - еще раз по всем "обновим" Дисконт
   DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
     FormParams.ParamByName('DiscountExternalId').Value,
@@ -6411,6 +6507,7 @@ begin
     , FormParams.ParamByName('isCorrectMarketing').Value
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
+    , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
     , '' // FiscalCheckNumber
@@ -8499,7 +8596,8 @@ begin
         FormParams.ParamByName('AddPresent').Value, nAmount,
         lPriceSale);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
-      if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+      if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+       (FormParams.ParamByName('isDiscountCommit').Value = False) then
       begin
         DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
           FormParams.ParamByName('DiscountExternalId').Value,
@@ -8568,7 +8666,8 @@ begin
         CheckCDS.FindField('isPresent').AsBoolean, nAmount,
         CheckCDS.FieldByName('PriceSale').asCurrency);
       // Update Дисконт в CDS - по всем "обновим" Дисконт
-      if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+      if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+        (FormParams.ParamByName('isDiscountCommit').Value = False) then
       begin
         DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
           FormParams.ParamByName('DiscountExternalId').Value,
@@ -9261,6 +9360,7 @@ begin
   FormParams.ParamByName('isCorrectMarketing').Value := False;
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
+  FormParams.ParamByName('isDiscountCommit').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -10826,7 +10926,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ALoyaltySignID: Integer; ALoyaltySMID: Integer; ALoyaltySMSumma: Currency;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
-  AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors : Boolean;
+  AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
   ANeedComplete: Boolean; FiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
@@ -10915,6 +11015,8 @@ begin
     // Дисконт через сайт
     // ***13.05.19
     myVIPCDS.FieldByName('PartionDateKindId').Value := APartionDateKindId;
+    // ***25.08.21
+    myVIPCDS.FieldByName('isDiscountCommit').Value := AisDiscountCommit;
     myVIPCDS.Post;
     AID := myVIPCDS.FieldByName('Id').AsInteger;
 
@@ -11094,7 +11196,8 @@ begin
           AMemberKashtanId,       // ФИО пациента (МИС «Каштан»)
           AisCorrectMarketing,    // Корректировка суммы маркетинг в ЗП по подразделению
           AisCorrectIlliquidAssets, // Корректировка суммы нелеквида в ЗП по подразделению
-          AisDoctors                // Врачи
+          AisDoctors,                // Врачи
+          AisDiscountCommit          // Дисконт проведен на сайте
           ]));
       End
       else
@@ -11206,6 +11309,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISCORRIA').Value := AisCorrectIlliquidAssets;
         // Врачи
         FLocalDataBaseHead.FieldByName('ISDOCTORS').Value := AisDoctors;
+        //Дисконт проведен на сайте
+        FLocalDataBaseHead.FieldByName('ISDISCCOM').Value := AisDiscountCommit;
         FLocalDataBaseHead.Post;
       End;
     except
@@ -12041,6 +12146,12 @@ begin
     if edAmount.Enabled then ActiveControl := edAmount;
     ShowMessage
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
+  end;
+
+  if FormParams.ParamByName('isDiscountCommit').Value = True then
+  begin
+    ShowMessage('По текущему чеку Дисконт проведен на сайте!');
+    exit;
   end;
 
   if DiscountServiceForm.isPrepared then

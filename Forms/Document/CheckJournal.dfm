@@ -521,6 +521,13 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 53
           end
+          object isDiscountCommit: TcxGridDBColumn
+            Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'isDiscountCommit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
         end
       end
     end

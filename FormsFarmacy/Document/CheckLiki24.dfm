@@ -24,7 +24,134 @@ inherited CheckLiki24Form: TCheckLiki24Form
       end
     end
   end
-  inherited ActionList: TActionList
+  inherited spMovementSetErased: TdsdStoredProc [1]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [2]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [3]
+  end
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [4]
+  end
+  inherited spSmashCheck: TdsdStoredProc [5]
+  end
+  inherited spUpdateOperDate: TdsdStoredProc [6]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [7]
+  end
+  inherited FormParams: TdsdFormParams [8]
+  end
+  inherited spPUSHSetErased: TdsdStoredProc [9]
+  end
+  inherited SPUpdate_NotMCS: TdsdStoredProc [10]
+  end
+  inherited MasterDS: TDataSource [11]
+  end
+  inherited MasterCDS: TClientDataSet [12]
+  end
+  inherited spSelect: TdsdStoredProc [13]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 3
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited BarManager: TdxBarManager [14]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConfirmedKind_Complete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConfirmedKind_UnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateOperDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end>
+    end
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [15]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [16]
+  end
+  inherited ActionList: TActionList [17]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -248,6 +375,13 @@ inherited CheckLiki24Form: TCheckLiki24Form
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Component = MasterCDS
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     inherited actCheckCash: TdsdOpenForm
@@ -277,137 +411,14 @@ inherited CheckLiki24Form: TCheckLiki24Form
         end>
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  inherited DBViewAddOn: TdsdDBViewAddOn [18]
   end
-  inherited PopupMenu: TPopupMenu [5]
+  inherited PopupMenu: TPopupMenu [19]
   end
-  inherited ClientDataSet1: TClientDataSet [6]
+  inherited ClientDataSet1: TClientDataSet [20]
   end
-  inherited DataSource1: TDataSource [7]
+  inherited DataSource1: TDataSource [21]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [9]
-  end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
-  end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [12]
-  end
-  inherited spSmashCheck: TdsdStoredProc [13]
-  end
-  inherited spUpdateOperDate: TdsdStoredProc [14]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [15]
-  end
-  inherited FormParams: TdsdFormParams [16]
-  end
-  inherited spPUSHSetErased: TdsdStoredProc [17]
-  end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [18]
-  end
-  inherited MasterDS: TDataSource [19]
-  end
-  inherited MasterCDS: TClientDataSet [20]
-  end
-  inherited spSelect: TdsdStoredProc [21]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 3
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited BarManager: TdxBarManager [22]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbConfirmedKind_Complete'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbConfirmedKind_UnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateOperDate'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end>
-    end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [22]
   end
 end

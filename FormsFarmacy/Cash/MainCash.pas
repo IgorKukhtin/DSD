@@ -838,6 +838,7 @@ var
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal : integer;
   nPOSTerminalCode : integer;
+  isDiscountCommit : Boolean;
 begin
   if CheckCDS.RecordCount = 0 then exit;
   PaidType:=ptMoney;
@@ -891,7 +892,12 @@ begin
     Begin
 
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
-      then fErr:= not DiscountServiceForm.fCommitCDS_Discount (CheckNumber, CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value)
+      then
+      begin
+        fErr:= not DiscountServiceForm.fCommitCDS_Discount (CheckNumber, CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value,
+                                                            FormParams.ParamByName('DiscountCardNumber').Value, isDiscountCommit);
+        FormParams.ParamByName('isDiscountCommit').Value := isDiscountCommit;
+      end
       else fErr:= false;
 
       if fErr = true

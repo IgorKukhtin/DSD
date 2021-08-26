@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Delay Boolean
              , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
              , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean, isDoctors Boolean
+             , isDiscountCommit Boolean
 )
 AS
 $BODY$
@@ -93,6 +94,8 @@ BEGIN
                                   AND MovementFloat_LoyaltySMID. MovementId = inMovementId) 
              , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject 
                                          WHERE MovementLinkObject.MovementId = inMovementId)
+             , tmpMovementString AS (SELECT * FROM MovementString
+                                     WHERE MovementString.MovementId = inMovementId)
 
              , tmpMovement AS (SELECT       
                                        Movement.Id
@@ -186,17 +189,17 @@ BEGIN
                                                                       ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                                                      AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
                                       LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
-                                      LEFT JOIN MovementString AS MovementString_Bayer
-                                                                   ON MovementString_Bayer.MovementId = Movement.Id
-                                                                  AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                                      LEFT JOIN tmpMovementString AS MovementString_Bayer
+                                                                  ON MovementString_Bayer.MovementId = Movement.Id
+                                                                 AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
                                       LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidType
                                                                       ON MovementLinkObject_PaidType.MovementId = Movement.Id
                                                                      AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
                                       LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
                             			
-                                      LEFT OUTER JOIN MovementString AS MovementString_FiscalCheckNumber
-                                                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.ID
-                                                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+                                      LEFT OUTER JOIN tmpMovementString AS MovementString_FiscalCheckNumber
+                                                                        ON MovementString_FiscalCheckNumber.MovementId = Movement.ID
+                                                                       AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
                                                                       
                                       LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
                                                                      ON MovementBoolean_NotMCS.MovementId = Movement.ID
@@ -215,13 +218,13 @@ BEGIN
                                                              ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
                                                             AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()
 
-                                      LEFT JOIN MovementString AS MovementString_BayerPhone
-                                                               ON MovementString_BayerPhone.MovementId = Movement.Id
-                                                              AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+                                      LEFT JOIN tmpMovementString AS MovementString_BayerPhone
+                                                                  ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                                 AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
 
-                                      LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                               ON MovementString_InvNumberOrder.MovementId = Movement.Id
-                                                              AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                                      LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
+                                                                  ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
                                       LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_ConfirmedKind
                                                                       ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
@@ -233,16 +236,16 @@ BEGIN
                                                                      AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
                                       LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId -- COALESCE (MovementLinkObject_ConfirmedKindClient.ObjectId, zc_Enum_ConfirmedKind_SmsNo())
 
-                                      LEFT JOIN MovementString AS MovementString_InvNumberSP
-                                                               ON MovementString_InvNumberSP.MovementId = Movement.Id
-                                                              AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                      LEFT JOIN MovementString AS MovementString_MedicSP
-                                                               ON MovementString_MedicSP.MovementId = Movement.Id
-                                                              AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                                      LEFT JOIN tmpMovementString AS MovementString_InvNumberSP
+                                                                  ON MovementString_InvNumberSP.MovementId = Movement.Id
+                                                                 AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                      LEFT JOIN tmpMovementString AS MovementString_MedicSP
+                                                                  ON MovementString_MedicSP.MovementId = Movement.Id
+                                                                 AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
 
-                                      LEFT JOIN MovementString AS MovementString_Ambulance
-                                                               ON MovementString_Ambulance.MovementId = Movement.Id
-                                                              AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
+                                      LEFT JOIN tmpMovementString AS MovementString_Ambulance
+                                                                  ON MovementString_Ambulance.MovementId = Movement.Id
+                                                                 AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
 
                                       LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                                              ON MovementDate_OperDateSP.MovementId = Movement.Id
@@ -333,6 +336,7 @@ BEGIN
            , COALESCE(MovementBoolean_CorrectMarketing.ValueData, False)  AS isCorrectMarketing
            , COALESCE(MovementBoolean_CorrectIlliquidMarketing.ValueData, False)  AS isCorrectIlliquidMarketing
            , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
+           , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
 
         FROM tmpMovement AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -403,6 +407,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Doctors
                                        ON MovementBoolean_Doctors.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Doctors.DescId = zc_MovementBoolean_Doctors()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                       ON MovementBoolean_DiscountCommit.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
 
              -- Программа лояльности накопительная
              LEFT JOIN tmpLoyaltySM ON 1 = 1

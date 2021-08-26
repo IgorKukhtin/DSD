@@ -1974,6 +1974,7 @@ inherited MainCashForm: TMainCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = MainColCode
@@ -2498,6 +2499,7 @@ inherited MainCashForm: TMainCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2562,6 +2564,7 @@ inherited MainCashForm: TMainCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = AlternativeGridColTypeColor

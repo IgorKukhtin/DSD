@@ -21,7 +21,9 @@ RETURNS TABLE (Id Integer
              , JuridicalName TVarChar
              , DateStart TDateTime
              , DateEnd TDateTime
-             , isPaymentFormed Boolean)
+             , isPaymentFormed Boolean
+             , Comment TVarChar
+             )
 AS
 $BODY$
 BEGIN
@@ -47,6 +49,7 @@ BEGIN
           , inDateStart                                         AS DateStart
           , inDateEnd                                           AS DateEnd 
           , False                                               AS isPaymentFormed
+          , NULL::TVarChar                                      AS Comment
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete())   AS Object_Status;
     ELSE
         RETURN QUERY
@@ -63,6 +66,7 @@ BEGIN
           , inDateStart AS DateStart
           , inDateEnd AS DateEnd
           , Movement_Payment.isPaymentFormed
+          , Movement_Payment.Comment
         FROM
             Movement_Payment_View AS Movement_Payment
         WHERE Movement_Payment.Id =  inMovementId;

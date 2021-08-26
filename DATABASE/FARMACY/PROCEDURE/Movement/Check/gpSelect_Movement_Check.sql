@@ -53,6 +53,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeliverySite Boolean
              , SummaDelivery TFloat
              , isDoctors Boolean
+             , isDiscountCommit Boolean
               )
 AS
 $BODY$
@@ -161,6 +162,7 @@ BEGIN
            , COALESCE(MovementBoolean_DeliverySite.ValueData, False)      AS isDeliverySite
            , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
            , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
+           , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
 
 
         FROM (SELECT Movement.*
@@ -418,6 +420,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Doctors
                                       ON MovementBoolean_Doctors.MovementId = Movement_Check.Id
                                      AND MovementBoolean_Doctors.DescId = zc_MovementBoolean_Doctors()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
       ;
 
 END;

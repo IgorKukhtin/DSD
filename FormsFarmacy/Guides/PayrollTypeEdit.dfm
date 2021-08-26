@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
-  ClientHeight = 300
+  ClientHeight = 347
   ClientWidth = 638
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 91
-    Top = 258
+    Left = 84
+    Top = 298
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 241
-    Top = 258
+    Left = 234
+    Top = 298
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -118,21 +118,19 @@
     Left = 435
     Top = 0
     Width = 203
-    Height = 300
+    Height = 347
     Align = alRight
     Caption = 'Panel1'
     TabOrder = 14
-    ExplicitLeft = 440
+    ExplicitHeight = 300
     object CorrectMinAmountGrid: TcxGrid
       Left = 1
       Top = 18
       Width = 201
-      Height = 281
+      Height = 328
       Align = alClient
       TabOrder = 0
-      ExplicitTop = 48
-      ExplicitWidth = 168
-      ExplicitHeight = 251
+      ExplicitHeight = 281
       object CorrectMinAmountGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CorrectMinAmountDS
@@ -177,10 +175,23 @@
       Top = 1
       Align = alTop
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1084#1080#1085'. '#1089#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-      ExplicitLeft = 24
-      ExplicitTop = 16
-      ExplicitWidth = 202
     end
+  end
+  object edPayrollType: TcxButtonEdit
+    Left = 23
+    Top = 264
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 15
+    Width = 397
+  end
+  object cxLabel7: TcxLabel
+    Left = 26
+    Top = 245
+    Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
   end
   object ActionList: TActionList
     Left = 252
@@ -301,6 +312,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPayrollTypeId'
+        Value = Null
+        Component = PayrollTypeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -376,6 +395,21 @@
         Name = 'MinAccrualAmount'
         Value = Null
         Component = ceMinAccrualAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PayrollTypeId'
+        Value = Null
+        Component = PayrollTypeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PayrollTypeName'
+        Value = Null
+        Component = PayrollTypeGuides
+        ComponentItem = 'TextValue'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -511,5 +545,34 @@
     PackSize = 1
     Left = 500
     Top = 192
+  end
+  object PayrollTypeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPayrollType
+    FormNameParam.Value = 'TPayrollTypeChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPayrollTypeChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PayrollTypeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PayrollTypeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 320
+    Top = 248
   end
 end

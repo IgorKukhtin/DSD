@@ -111,6 +111,8 @@ type
     CorrPartialSale: TcxGridDBColumn;
     LeftCorrPartialSale: TcxGridDBColumn;
     SummaCorrPartialPay: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

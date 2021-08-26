@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Object_PayrollType()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, TVarChar, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PayrollType(Integer, Integer, TVarChar, TVarChar, Integer, TFloat, TFloat, integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PayrollType (
   INOUT ioId integer,
@@ -11,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PayrollType (
      IN inPayrollGroupID integer,
      IN inPercent TFloat,
      IN inMinAccrualAmount TFloat,
+     IN inPayrollTypeID integer,
      IN inSession TVarChar
 )
   RETURNS integer AS
@@ -42,6 +42,9 @@ BEGIN
 
    -- сохранили связь с <Группа расчета заработной платы>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PayrollType_PayrollGroup(), ioId, inPayrollGroupID);
+   
+   -- сохранили связь с <Дополнительный расчет заработной платы	>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PayrollType_PayrollType(), ioId, inPayrollTypeID);
    
    -- Процент от базы
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PayrollType_Percent(), ioId, inPercent);

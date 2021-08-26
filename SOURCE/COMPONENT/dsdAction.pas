@@ -5663,20 +5663,20 @@ var
     var intValue: integer;
   begin
     if AValue = NULL then
-      JSONObject.AddPair(AName, TJSONNull.Create)
+      JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
     else if ADataType = ftDateTime then
-      JSONObject.AddPair(AName, FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+      JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
     else if ADataType = ftFloat then
-      JSONObject.AddPair(AName, TJSONNumber.Create(AValue))
+      JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(AValue))
     else if ADataType = ftInteger then
     begin
       if TryStrToInt(AValue, intValue) then
-        JSONObject.AddPair(AName, TJSONNumber.Create(intValue))
+        JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
       else
-        JSONObject.AddPair(AName, TJSONNull.Create);
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
     end
     else
-      JSONObject.AddPair(AName, TJSONString.Create(AValue));
+      JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
   end;
 
 begin

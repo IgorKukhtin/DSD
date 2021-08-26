@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PayrollType(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar
              , PayrollGroupID Integer, PayrollGroupName TVarChar
              , Percent TFloat, MinAccrualAmount TFloat
+             , PayrollTypeID Integer, PayrollTypeName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -35,6 +36,9 @@ BEGIN
            , CAST (Null as TFloat)  AS Percent
            , CAST (Null as TFloat)  AS MinAccrualAmount 
 
+           , CAST (0 as Integer)    AS PayrollTypeID
+           , CAST ('' as TVarChar)  AS PayrollTypeName
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY
@@ -50,14 +54,22 @@ BEGIN
            , ObjectFloat_Percent.ValueData               AS Percent
            , ObjectFloat_MinAccrualAmount.ValueData      AS MinAccrualAmount 
 
+           , Object_AddPayrollType.ID                    AS PayrollTypeID
+           , Object_AddPayrollType.ValueData             AS PayrollTypeName
+
            , Object_PayrollType.isErased                 AS isErased
 
        FROM Object AS Object_PayrollType
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_PayrollGroup
-                                 ON ObjectLink_Goods_PayrollGroup.ObjectId = Object_PayrollType.Id
-                                AND ObjectLink_Goods_PayrollGroup.DescId = zc_ObjectLink_PayrollType_PayrollGroup()
-            LEFT JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = ObjectLink_Goods_PayrollGroup.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_PayrollGroup
+                                 ON ObjectLink_PayrollGroup.ObjectId = Object_PayrollType.Id
+                                AND ObjectLink_PayrollGroup.DescId = zc_ObjectLink_PayrollType_PayrollGroup()
+            LEFT JOIN Object AS Object_PayrollGroup ON Object_PayrollGroup.Id = ObjectLink_PayrollGroup.ChildObjectId
    
+            LEFT JOIN ObjectLink AS ObjectLink_AddPayrollType
+                                 ON ObjectLink_AddPayrollType.ObjectId = Object_PayrollType.Id
+                                AND ObjectLink_AddPayrollType.DescId = zc_ObjectLink_PayrollType_PayrollType()
+            LEFT JOIN Object AS Object_AddPayrollType ON Object_AddPayrollType.Id = ObjectLink_AddPayrollType.ChildObjectId
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                   ON ObjectFloat_Percent.ObjectId = Object_PayrollType.Id
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_PayrollType_Percent()
@@ -87,4 +99,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_PayrollType (0, '3')
+-- SELECT * FROM gpGet_Object_PayrollType (17737396 , '3')

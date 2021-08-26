@@ -97,6 +97,8 @@ begin
       AddBoolField(LocalDataBaseHead, 'ISCORRIA');   //Корректировка суммы нелеквидов в ЗП по подразделению
       //***15.08.21
       AddBoolField(LocalDataBaseHead, 'ISDOCTORS');   //Врачи
+      //***15.08.21
+      AddBoolField(LocalDataBaseHead, 'ISDISCCOM');   //Дисконт проведен на сайте
 
       LocalDataBaseHead.CreateTable;
     end
@@ -167,6 +169,8 @@ begin
         if FindField('ISCORRIA') = nil then AddBoolField(LFieldDefs, 'ISCORRIA');    //Корректировка суммы нелеквидов в ЗП по подразделению
         //***15.08.21
         if FindField('ISDOCTORS') = nil then AddBoolField(LFieldDefs, 'ISDOCTORS');    //Врачи
+        //***25.08.21
+        if FindField('ISDISCCOM') = nil then AddBoolField(LFieldDefs, 'ISDISCCOM');    //Дисконт проведен на сайте
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -247,7 +251,9 @@ begin
         (FindField('ISCORRMARK') = nil) or
         (FindField('ISCORRIA') = nil) or
         //***15.08.21
-        (FindField('ISDOCTORS') = nil));
+        (FindField('ISDOCTORS') = nil) or
+        //***25.08.21
+        (FindField('ISDISCCOM') = nil));
 
       Close;
 

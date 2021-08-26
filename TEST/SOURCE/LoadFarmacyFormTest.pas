@@ -2088,12 +2088,14 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollGroupEditForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPayrollGroupEditForm');
 //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeEditForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeEditForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeDialogForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeDialogForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeChoiceForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeChoiceForm');
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
@@ -2108,11 +2110,11 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesTechnicalRediscountUnitForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountUnitForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
 //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;
@@ -2857,9 +2859,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
-}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalVIPForm');

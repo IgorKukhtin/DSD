@@ -16,17 +16,17 @@ inherited PaymentJournalForm: TPaymentJournalForm
     Width = 766
     Height = 317
     TabOrder = 3
-    ExplicitWidth = 663
+    ExplicitWidth = 766
     ExplicitHeight = 317
     ClientRectBottom = 317
     ClientRectRight = 766
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 663
+      ExplicitWidth = 766
       ExplicitHeight = 317
       inherited cxGrid: TcxGrid
         Width = 766
         Height = 317
-        ExplicitWidth = 663
+        ExplicitWidth = 766
         ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -97,13 +97,20 @@ inherited PaymentJournalForm: TPaymentJournalForm
             Options.Editing = False
             Width = 93
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 124
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 766
-    ExplicitWidth = 663
+    ExplicitWidth = 766
   end
   inherited ActionList: TActionList
     Left = 55
@@ -250,7 +257,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -290,13 +297,13 @@ inherited PaymentJournalForm: TPaymentJournalForm
       end
       item
         Name = 'DateStart'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'DateEnd'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>

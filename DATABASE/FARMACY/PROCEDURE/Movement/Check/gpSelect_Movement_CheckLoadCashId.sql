@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_CheckLoadCashId()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_CheckLoadCashId (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CheckLoadCashId (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckLoadCashId(
     IN inMovementId    Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -49,7 +49,8 @@ RETURNS TABLE (
   DateDelay TDateTime,
   LoyaltyChangeSumma TFloat,
   SummCard TFloat,
-  isBanAdd boolean
+  isBanAdd boolean, 
+  isDiscountCommit Boolean
  )
 AS
 $BODY$
@@ -127,7 +128,8 @@ BEGIN
                       COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE COALESCE(MI_PromoCode.Amount, 0) END ELSE 0 END::TFloat AS LoyaltyChangeSumma
             , COALESCE(MovementFloat_TotalSummCard.ValueData, 0)::TFloat                AS SummCard
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
-       FROM Movement
+            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)                 AS isDiscountCommit
+        FROM Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -290,6 +292,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
        WHERE Movement.Id = inMovementId
        ;
 

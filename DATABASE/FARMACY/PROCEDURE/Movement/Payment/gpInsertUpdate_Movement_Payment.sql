@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Payment()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Payment(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Оплаты приходов>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Payment(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inJuridicalId           Integer    , -- Юрлицо плательщик
     IN inisPaymentFormed       Boolean    , -- Платеж сформирован 
+    IN inComment               TVarChar   , -- Комментарий
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -48,6 +49,7 @@ BEGIN
                                            , inOperDate        := inOperDate
                                            , inJuridicalId     := inJuridicalId
                                            , inisPaymentFormed := inisPaymentFormed
+                                           , inComment         := inComment
                                            , inUserId          := vbUserId);
 
 END;
