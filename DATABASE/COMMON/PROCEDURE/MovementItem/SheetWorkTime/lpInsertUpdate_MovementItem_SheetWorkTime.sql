@@ -25,48 +25,57 @@ BEGIN
      -- дня "Командировка" + Удаленый Доступ - автоматом проставляем часы - определяется по должности из zc_ObjectFloat_StaffList_HoursDay - макс значение
      IF COALESCE (inWorkTimeKindId,0) IN (zc_Enum_WorkTimeKind_Trip(), zc_Enum_WorkTimeKind_RemoteAccess())
      THEN
-         --подразделение из шапки документа
-         vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
-                      FROM MovementLinkObject AS MovementLinkObject_Unit
-                      WHERE MovementLinkObject_Unit.MovementId = inMovementId
-                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                      );
-         -- определяем часы
-         inAmount := (WITH
-                      tmpStaffList AS (SELECT ObjectLink_StaffList_Unit.ChildObjectId AS UnitId
-                                            , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
-                                            , MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) AS HoursDay
-                                       FROM OBJECT AS Object_StaffList
-                                             INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
-                                                                   ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
-                                                                  AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
-
-                                             LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
-                                                                  ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
-                                                                 AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit() 
-                                             LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
-                                                                   ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
-                                                                  AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
-                                        WHERE Object_StaffList.DescId = zc_Object_StaffList()
-                                          AND Object_StaffList.isErased = False
-                                        GROUP BY ObjectLink_StaffList_Unit.ChildObjectId
-                                               , ObjectLink_StaffList_Position.ChildObjectId
-                                        HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
-                                      )
-                      SELECT COALESCE ( (SELECT tmpStaffList.HoursDay
-                                         FROM tmpStaffList
-                                         WHERE tmpStaffList.UnitId = vbUnitId
-                                           AND tmpStaffList.PositionId = inPositionId)
-                                       , (SELECT MAX (tmpStaffList.HoursDay)
-                                         FROM tmpStaffList
-                                         WHERE tmpStaffList.PositionId = inPositionId)
-                                       )
-                      );
+         -- если не внесенs часы то ищем в справочнике
+         IF COALESCE (inAmount,0) = 0
+         THEN
+             --подразделение из шапки документа
+             vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
+                          FROM MovementLinkObject AS MovementLinkObject_Unit
+                          WHERE MovementLinkObject_Unit.MovementId = inMovementId
+                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                          );
+             -- определяем часы
+             inAmount := (WITH
+                          tmpStaffList AS (SELECT ObjectLink_StaffList_Unit.ChildObjectId AS UnitId
+                                                , ObjectLink_StaffList_Position.ChildObjectId AS PositionId
+                                                , MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) AS HoursDay
+                                           FROM OBJECT AS Object_StaffList
+                                                 INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                                                       ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                                                      AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+    
+                                                 LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
+                                                                      ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
+                                                                     AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit() 
+                                                 LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                                                       ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                                                                      AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
+                                            WHERE Object_StaffList.DescId = zc_Object_StaffList()
+                                              AND Object_StaffList.isErased = False
+                                            GROUP BY ObjectLink_StaffList_Unit.ChildObjectId
+                                                   , ObjectLink_StaffList_Position.ChildObjectId
+                                            HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
+                                          )
+                          SELECT COALESCE ( (SELECT tmpStaffList.HoursDay
+                                             FROM tmpStaffList
+                                             WHERE tmpStaffList.UnitId = vbUnitId
+                                               AND tmpStaffList.PositionId = inPositionId)
+                                           , (SELECT MAX (tmpStaffList.HoursDay)
+                                             FROM tmpStaffList
+                                             WHERE tmpStaffList.PositionId = inPositionId)
+                                           )
+                          );
+             --если часы не внесены то сообщение
+             IF COALESCE (inAmount,0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для <%> нет плана часов', lfGet_Object_ValueData_sh(inWorkTimeKindId);
+             END IF;
+         END IF;
          
      END IF;
 
      -- сохранили <Элемент документа>
-     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inMemberId, inMovementId, inAmount, NULL);
+     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inMemberId, inMovementId, COALESCE (inAmount,0), NULL);
 
      -- сохранили связь с <Группировки Сотрудников>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), InMovementItemId, inPersonalGroupId);
