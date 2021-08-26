@@ -58,16 +58,26 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
+   , tmpMov AS (SELECT Movement.*
+                FROM tmpStatus
+                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND Movement.DescId = zc_Movement_ContractGoods()
+                                  AND Movement.StatusId = tmpStatus.StatusId
+                )
+
+   , tmpMovementLinkObject AS (SELECT MovementLinkObject.*
+                               FROM MovementLinkObject
+                               WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                                 AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Contract())
+                               )
+
    , tmpMovement AS (SELECT Movement.*
                           , MovementLinkObject_Contract.ObjectId AS ContractId
                           , ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
-                     FROM tmpStatus
-                          JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                       AND Movement.DescId = zc_Movement_ContractGoods()
-                                       AND Movement.StatusId = tmpStatus.StatusId
-                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     FROM tmpMov AS Movement
+                          LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
+                                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                ON ObjectLink_Contract_Juridical.ObjectId = MovementLinkObject_Contract.ObjectId
                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
@@ -113,7 +123,14 @@ BEGIN
                                   , tmp.PriceListId_curr
                                   , tmp.ContractId
                          )
-
+       , tmpContract_View AS (SELECT *
+                              FROM Object_Contract_View
+                              WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMovement.ContractId FROM tmpMovement)
+                              )
+       , tmpInfoMoney_View AS (SELECT *
+                               FROM Object_InfoMoney_View
+                               WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT DISTINCT tmpContract_View.InfoMoneyId FROM tmpContract_View)
+                               )
 
        SELECT
              Movement.Id                         AS Id
@@ -171,7 +188,7 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = Movement.ContractId
+            LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Movement.ContractId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement.JuridicalId
 
             LEFT JOIN MovementDate AS MovementDate_EndBegin
@@ -201,7 +218,7 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList_curr ON Object_PriceList_curr.Id = tmpContractPrice.PriceListId_curr
 
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+            LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
