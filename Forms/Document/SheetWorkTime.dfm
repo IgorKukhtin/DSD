@@ -145,6 +145,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Format = ',0.####'
           Kind = skSum
           Column = CountDay
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = MemberName
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True

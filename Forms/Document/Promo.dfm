@@ -11,7 +11,6 @@
     Top = 139
     Width = 1366
     Height = 545
-    Properties.ActivePage = cxTabSheetCalc
     ExplicitTop = 139
     ExplicitWidth = 1366
     ExplicitHeight = 545
@@ -3107,9 +3106,6 @@
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
     end
     object InsertRecord: TInsertRecord [16]
       Category = 'Goods'

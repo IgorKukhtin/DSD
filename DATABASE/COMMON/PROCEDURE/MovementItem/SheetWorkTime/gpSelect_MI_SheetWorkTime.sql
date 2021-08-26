@@ -195,6 +195,37 @@ BEGIN
             WHERE tmpMovement.MemberId IS NULL
            ;
 
+     -- данные из штатного расписания
+     CREATE TEMP TABLE tmpStaffList ON COMMIT DROP AS
+            SELECT ObjectLink_StaffList_Unit.ChildObjectId           AS UnitId
+                 , ObjectLink_StaffList_Position.ChildObjectId       AS PositionId
+                 , ObjectLink_StaffList_PositionLevel.ChildObjectId  AS PositionLevelId
+                 , MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) AS HoursDay
+            FROM Object AS Object_StaffList
+                  INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
+                                        ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                                       AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
+                                       ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
+                                      AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
+                                       ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
+                                      AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
+                                      AND 
+                  LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                        ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                                       AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
+             WHERE Object_StaffList.DescId = zc_Object_StaffList()
+               AND Object_StaffList.isErased = False
+             GROUP BY ObjectLink_StaffList_Unit.ChildObjectId
+                    , ObjectLink_StaffList_Position.ChildObjectId
+                    , ObjectLink_StaffList_PositionLevel.ChildObjectId
+             HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
+             ;
+                    
+                    
+                    
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
      vbDayCount := (SELECT COUNT(*) FROM tmpOperDate);
@@ -369,15 +400,34 @@ BEGIN
                                            Group by tmpOperDate.operdate
                                         UNION
                                           -- Кол-во шт.ед
-                                          SELECT tmpOperDate.operdate
-                                               , COUNT (MemberId) AS Amount
+                                          SELECT tmp.OperDate
+                                               , SUM (tmp.Amount) AS Amount
                                                , 3  AS ObjectId
-                                          FROM tmpOperDate
-                                              JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                                                        --AND COALESCE (tmpMI.Amount,0) <> 0
-                                                          AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
-                                                          AND tmpMI.isNoSheetCalc = FALSE
-                                           Group by tmpOperDate.operdate
+                                          FROM (SELECT tmpOperDate.operdate
+                                                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
+                                                                 THEN tmp.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
+                                                             ELSE 1
+                                                        END AS Amount  --tmpMI.ObjectId = zc_Enum_WorkTimeKind_WorkD()
+                                                 FROM tmpOperDate
+                                                      JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                                                                AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
+                                                                                         , zc_Enum_WorkTimeKind_DayOff()
+                                                                                         , zc_Enum_WorkTimeKind_Holiday()
+                                                                                         , zc_Enum_WorkTimeKind_Hospital()
+                                                                                         , zc_Enum_WorkTimeKind_HolidayNoZp()
+                                                                                         , zc_Enum_WorkTimeKind_HospitalDoc()
+                                                                                         )
+                                                                AND tmpMI.isNoSheetCalc = FALSE
+                                                      -- данные из штатного расписания
+                                                      LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmp.PositionId
+                                                                            AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                                                            AND tmpStaffList.UnitId     = inUnitId
+                                                      --второй раз без подразделения
+                                                      LEFT JOIN tmpStaffList AS tmpStaffList2
+                                                                             ON tmpStaffList2.PositionId = tmp.PositionId
+                                                                            AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                                 ) AS tmp
+                                          GROUP BY tmp.OperDate
                                         UNION
                                           -- Кол-во БЛ
                                           SELECT tmpOperDate.operdate
