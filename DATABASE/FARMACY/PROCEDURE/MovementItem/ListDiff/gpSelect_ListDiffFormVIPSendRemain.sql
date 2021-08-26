@@ -115,7 +115,7 @@ BEGIN
                                  ),
           tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
                                 , tmpUnit.Id                         AS UnitId
-                                , tmpLayout.Amount                   AS Amount
+                                , MAX(tmpLayout.Amount)              AS Amount
                            FROM tmpLayout
                            
                                 INNER JOIN tmpUnit ON 1 = 1
@@ -129,8 +129,10 @@ BEGIN
 
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
-                           WHERE (tmpLayoutUnit.UnitId = tmpUnit.Id OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                           WHERE (tmpLayoutUnit.UnitId = tmpUnit.Id OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
                              AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                           GROUP BY tmpLayout.GoodsId
+                                  , tmpUnit.Id 
                            )
           -- Отложенные перемещения
          , tmpMovementID AS (SELECT
@@ -267,4 +269,4 @@ $BODY$
 
 --ТЕСТ
 -- select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 16001195 , inGoodsId := 40999 , inAmountDiff := 1 ,  inSession := '3');
-select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 8393158 , inGoodsId := 4573005 , inAmountDiff := 1 ,  inSession := '3');
+select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 8393158 , inGoodsId := 8563 , inAmountDiff := 1 ,  inSession := '3');

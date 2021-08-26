@@ -25929,6 +25929,8 @@ object MainCashForm2: TMainCashForm2
         Value = Null
         Component = FormParams
         ComponentItem = 'CashRegister'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

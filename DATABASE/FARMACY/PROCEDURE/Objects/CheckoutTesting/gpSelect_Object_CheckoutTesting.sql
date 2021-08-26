@@ -1,14 +1,15 @@
 -- Function: gpSelect_Object_CheckoutTesting()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_CheckoutTesting (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_CheckoutTesting (boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CheckoutTesting(
-    IN inShowAll boolean,
+    IN inShowAll       boolean,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id integer, Code integer, Name TVarChar,
                UnitId Integer, UnitName TVarChar, 
                UserId Integer, UserName TVarChar, 
+               CashRegister TVarChar,
                isUpdates Boolean, DateUpdate TDateTime,
                isErased Boolean) 
 AS
@@ -25,6 +26,7 @@ BEGIN
    WITH tmpEmployeeWorkLog AS (
      SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeWorkLog.CashSessionId ORDER BY EmployeeWorkLog.DateLogIn DESC) AS Ord
           , EmployeeWorkLog.CashSessionId      AS CashSessionId
+          , EmployeeWorkLog.CashRegister       AS CashRegister
           , EmployeeWorkLog.DateLogIn          AS DateLogIn
           , EmployeeWorkLog.UnitId             AS UnitId 
           , EmployeeWorkLog.UserId             AS UserId 
@@ -40,6 +42,8 @@ BEGIN
         , Object_Unit.valuedata              AS UnitName
         , Object_User.Id                     AS UserId
         , Object_User.valuedata              AS UserName
+        
+        , EmployeeWorkLog.CashRegister       AS CashRegister
                                                  
         , ObjectBoolean_Updates.ValueData             AS isUpdates
         , ObjectDate_DateUpdate.ValueData             AS DateUpdate

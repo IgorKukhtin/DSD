@@ -844,6 +844,8 @@ type
     Z1: TMenuItem;
     actListDiffFormVIPSend: TdsdOpenForm;
     VIP2: TMenuItem;
+    actCreateOrderFromMCSLayout: TdsdOpenForm;
+    N309: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

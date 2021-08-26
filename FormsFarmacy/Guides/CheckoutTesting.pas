@@ -74,6 +74,7 @@ type
     spUpdate_Rewrite: TdsdStoredProc;
     actUpdate_Rewrite: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    CashRegister: TcxGridDBColumn;
   private
     { Private declarations }
   public

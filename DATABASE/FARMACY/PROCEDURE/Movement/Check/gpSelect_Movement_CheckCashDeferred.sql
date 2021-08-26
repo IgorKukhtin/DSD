@@ -166,8 +166,10 @@ BEGIN
             , Object_SPKind.ValueData     AS SPKindName
             , ObjectFloat_SPTax.ValueData AS SPTax
 
-            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 THEN 16440317 -- бледно крассный / розовый
-                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый
+            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 AND 
+                        COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 THEN 16440317 -- бледно крассный / розовый
+                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL AND 
+                        COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 THEN zc_Color_Yelow() -- желтый
                    ELSE zc_Color_White()
              END  AS Color_CalcDoc
             , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
@@ -576,7 +578,7 @@ BEGIN
            , MovementItem.List_UID               AS List_UID
            , False                               AS isErased
 
-           , CASE WHEN Movement.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId > 0 THEN 16440317 -- бледно крассный / розовый
+           , CASE WHEN Movement.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId > 0 AND MovementItem.Amount > 0 THEN 16440317 -- бледно крассный / розовый
                   -- WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId IS NULL THEN zc_Color_Yelow() -- желтый
                   ELSE zc_Color_White()
              END  AS Color_Calc

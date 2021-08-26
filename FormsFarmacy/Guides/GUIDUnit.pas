@@ -57,6 +57,7 @@ type
     bbShowAll: TdxBarButton;
     UserName: TcxGridDBColumn;
     DateLogIn: TcxGridDBColumn;
+    CashRegister: TcxGridDBColumn;
   private
     { Private declarations }
   public

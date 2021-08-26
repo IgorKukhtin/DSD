@@ -4530,6 +4530,28 @@
         end>
       isShowModal = False
     end
+    object actCreateOrderFromMCSLayout: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047' '#1080' '#1042#1099#1082#1083#1072#1076#1082#1080
+      FormName = 'TCreateOrderFromMCSLayoutForm'
+      FormNameParam.Value = 'TCreateOrderFromMCSLayoutForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4967,6 +4989,9 @@
       end
       object N58: TMenuItem
         Action = actCreateOrderFromMCS
+      end
+      object N309: TMenuItem
+        Action = actCreateOrderFromMCSLayout
       end
       object N13: TMenuItem
         Action = actOrderInternal
