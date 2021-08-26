@@ -99,7 +99,7 @@ BEGIN
            , Object_Member.ValueData           AS MemberName
 
            , Movement_Transport.Id             AS MovementId_Transport
-           , Movement_Transport.InvNumber      AS InvNumber_Transport
+           , (CASE WHEN Movement_Transport.DescId <> zc_Movement_Transport() THEN '***' ELSE '' END || Movement_Transport.InvNumber) :: TVarChar AS InvNumber_Transport
            , Movement_Transport.OperDate       AS OperDate_Transport
            -- , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_Status_Transport.ObjectCode AS StatusCode_Transport
