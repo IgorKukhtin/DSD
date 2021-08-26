@@ -2137,6 +2137,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_PaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_PaidKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_PaidKindDialogForm'));
@@ -2148,7 +2149,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutDialogForm'));
