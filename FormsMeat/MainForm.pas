@@ -1324,6 +1324,8 @@ type
     miGoodsProperty_all: TMenuItem;
     N252: TMenuItem;
     N253: TMenuItem;
+    actReport_GoodsMI_SaleReturnIn_PaidKind: TdsdOpenForm;
+    N246: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

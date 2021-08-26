@@ -1303,7 +1303,9 @@ uses
   Report_SheetWorkTime_Out in '..\..\Forms\Report\Report_SheetWorkTime_Out.pas' {Report_SheetWorkTime_OutForm: TParentForm},
   Report_SheetWorkTime_GraphDialog in '..\..\Forms\Report\Report_SheetWorkTime_GraphDialog.pas' {Report_SheetWorkTime_GraphDialogForm: TParentForm},
   Report_SheetWorkTime_Graph in '..\..\Forms\Report\Report_SheetWorkTime_Graph.pas' {Report_SheetWorkTime_GraphForm: TParentForm},
-  WorkTimeKind_Holiday in '..\..\Forms\Kind\WorkTimeKind_Holiday.pas' {WorkTimeKind_HolidayForm: TParentForm};
+  WorkTimeKind_Holiday in '..\..\Forms\Kind\WorkTimeKind_Holiday.pas' {WorkTimeKind_HolidayForm: TParentForm},
+  Report_GoodsMI_SaleReturnIn_PaidKindDialog in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKindDialog.pas' {Report_GoodsMI_SaleReturnIn_PaidKindDialogForm: TParentForm},
+  Report_GoodsMI_SaleReturnIn_PaidKind in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKind.pas' {Report_GoodsMI_SaleReturnIn_PaidKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

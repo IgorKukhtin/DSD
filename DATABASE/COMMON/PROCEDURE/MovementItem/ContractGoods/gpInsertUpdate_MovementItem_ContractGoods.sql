@@ -1,13 +1,15 @@
--- Function: gpInsertUpdate_MovementItem_ContractGoods()
+p-- Function: gpInsertUpdate_MovementItem_ContractGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId                Integer   , -- Товары
     IN inGoodsKindId            Integer   , -- Виды товаров
-    IN inAmount                 TFloat    , -- Количество
+    IN inisBonusNo              Boolean   , -- нет начисления по бонусам
+    IN inisSave                 Boolean   , -- cохранить да/нет
     IN inPrice                  TFloat    , --
     IN inComment                TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
@@ -20,13 +22,25 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ContractGoods());
- 
+
+     --проверка если был сохранен а теперь сняли галку то удаляем, если и не был то пропускаем
+     IF COALESCE (inisSave,FALSE) = FALSE
+     THEN
+         IF COALESCE (ioId,0) = 0 
+         THEN 
+             RETURN; 
+         ELSE
+             PERFORM lpSetErased_MovementItem (inMovementItemId:= ioId, inUserId:= vbUserId);
+             RETURN;
+         END IF;
+     END IF;
+      
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_ContractGoods (ioId           := ioId
                                                       , inMovementId   := inMovementId
                                                       , inGoodsId      := inGoodsId
                                                       , inGoodsKindId  := inGoodsKindId
-                                                      , inAmount       := inAmount
+                                                      , inisBonusNo    := inisBonusNo
                                                       , inPrice        := inPrice
                                                       , inComment      := inComment
                                                       , inUserId       := vbUserId

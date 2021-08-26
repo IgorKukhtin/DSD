@@ -62,6 +62,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , SaleReturn_Summ    TFloat -- Продажи за вычетом возврата, грн
              , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
              , isTop Boolean
+             , PaidKindId Integer, PaidKindName TVarChar
               )
 AS
 $BODY$
@@ -134,6 +135,8 @@ BEGIN
        RETURN QUERY
        SELECT *
             , FALSE AS isTop
+            , 0 AS PaidKindId
+            , '' ::TVarChar AS PaidKindName
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -158,6 +161,8 @@ BEGIN
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
             , FALSE AS isTop
+            , 0 AS PaidKindId
+            , '' ::TVarChar AS PaidKindName
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -283,6 +288,8 @@ BEGIN
                                     , (gpReport.isTop) :: Boolean AS isTop
                                   --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+                                    , gpReport.PaidKindId
+                                    , gpReport.PaidKindName
                                FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
                                                                       , vbEndDate_olap
                                                                       , inBranchId
@@ -339,6 +346,8 @@ BEGIN
                                     , (gpReport.isTop) :: Boolean AS isTop
                                   --, 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+                                    , gpReport.PaidKindId
+                                    , gpReport.PaidKindName
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
                                                                  , inEndDate
                                                                  , inBranchId
@@ -401,6 +410,9 @@ BEGIN
             , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
             , gpReport.isTop
+            
+            , gpReport.PaidKindId
+            , gpReport.PaidKindName
        FROM tmpData AS gpReport
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -421,6 +433,8 @@ BEGIN
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
               , gpReport.InfoMoneyId, gpReport.InfoMoneyCode, gpReport.InfoMoneyName, gpReport.InfoMoneyName_all
               , gpReport.isTop
+              , gpReport.PaidKindId
+              , gpReport.PaidKindName
                ;
        --
        RETURN;
@@ -644,6 +658,7 @@ BEGIN
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
+                              , ContainerLO_PaidKind.ObjectId AS PaidKindId
 
                               , SUM (tmpOperationGroup2.Promo_Summ)  AS Promo_Summ
                               , SUM (tmpOperationGroup2.Sale_Summ)   AS Sale_Summ
@@ -711,6 +726,7 @@ BEGIN
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                                , ContainerLO_PaidKind.ObjectId
                         )
 
            -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -839,6 +855,8 @@ BEGIN
          , (COALESCE (tmpOperationGroup.Sale_Summ,0) + COALESCE (tmpOperationGroup.Sale_Summ_10200,0) + COALESCE (tmpOperationGroup.Sale_Summ_10250,0) + COALESCE (tmpOperationGroup.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
 
          , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
+         , Object_PaidKind.Id        AS PaidKindId
+         , Object_PaidKind.ValueData AS PaidKindName
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -846,6 +864,7 @@ BEGIN
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
                                ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
@@ -940,6 +959,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.08.21         * add PaidKind
  06.05.21         * 
  29.04.21         * add PartnerCategory
  21.01.16         *
