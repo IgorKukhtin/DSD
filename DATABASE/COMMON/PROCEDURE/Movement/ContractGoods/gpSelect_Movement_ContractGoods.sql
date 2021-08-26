@@ -11,7 +11,29 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ContractGoods(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , ContractId Integer, ContractName TVarChar
+
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , StartDate_Contract TDateTime
+             , ContractKindName TVarChar
+             , ContractStateKindId Integer
+             , ContractStateKindCode Integer
+             , ContractStateKindName TVarChar
+             , InfoMoneyGroupCode  Integer
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationCode Integer
+             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer
+             , InfoMoneyCode Integer
+             , InfoMoneyName TVarChar
+             , PaidKindId Integer
+             , PaidKindName TVarChar
+             , PersonalId Integer
+             , PersonalCode Integer
+             , PersonalName TVarChar
+             , PersonalTradeId Integer
+             , PersonalTradeCode Integer
+             , PersonalTradeName TVarChar
+           
              , JuridicalId Integer, JuridicalName TVarChar
              , PriceListId_first Integer, PriceListName_first TVarChar
              , PriceListId_curr Integer, PriceListName_curr TVarChar
@@ -51,7 +73,8 @@ BEGIN
                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                      )
 
-   , tmpContractPrice AS (SELECT CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END AS PriceListId_first
+   , tmpContractPrice AS (SELECT tmp.ContractId
+                               , CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END AS PriceListId_first
                                , tmp.PriceListId_curr AS PriceListId_curr
                           FROM (SELECT ObjectLink_ContractPriceList_PriceList.ChildObjectId AS PriceListId
                                      , ObjectDate_StartDate.ValueData          :: TDateTime AS StartDate
@@ -61,6 +84,7 @@ BEGIN
                                             THEN ObjectLink_ContractPriceList_PriceList.ChildObjectId
                                             ELSE 0
                                        END AS PriceListId_curr -- текущий прайс лист
+                                     , tmp.ContractId
                                 FROM (SELECT DISTINCT tmpMovement.ContractId, tmpMovement.OperDate FROM tmpMovement) AS tmp
                                  
                                       INNER JOIN ObjectLink AS ObjectLink_ContractPriceList_Contract
@@ -87,6 +111,7 @@ BEGIN
                               OR COALESCE (tmp.PriceListId_curr,0) <> 0
                            GROUP BY CASE WHEN tmp.StartDate = StartDate_first THEN tmp.PriceListId ELSE 0 END
                                   , tmp.PriceListId_curr
+                                  , tmp.ContractId
                          )
 
 
@@ -99,8 +124,30 @@ BEGIN
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
 
-           , Object_Contract.Id                  AS ContractId
-           , Object_Contract.ValueData           AS ContractName
+           , View_Contract.ContractId            AS ContractId
+           , View_Contract.ContractCode          AS ContractCode
+           , View_Contract.InvNumber             AS ContractName
+           , View_Contract.StartDate             AS StartDate_Contract
+           , View_Contract.ContractKindName
+           , View_Contract.ContractStateKindId
+           , View_Contract.ContractStateKindCode
+           , View_Contract.ContractStateKindName
+           , Object_InfoMoney_View.InfoMoneyGroupCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationCode
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_PaidKind.Id            AS PaidKindId
+           , Object_PaidKind.ValueData     AS PaidKindName
+           , Object_Personal.Id          AS PersonalId
+           , Object_Personal.ObjectCode  AS PersonalCode
+           , Object_Personal.ValueData   AS PersonalName
+           , Object_PersonalTrade.Id          AS PersonalTradeId
+           , Object_PersonalTrade.ObjectCode  AS PersonalTradeCode
+           , Object_PersonalTrade.ValueData   AS PersonalTradeName
+           
            , Object_Juridical.Id                 AS JuridicalId
            , Object_Juridical.ValueData          AS JuridicalName
 
@@ -124,7 +171,7 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = Movement.ContractId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = Movement.ContractId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement.JuridicalId
 
             LEFT JOIN MovementDate AS MovementDate_EndBegin
@@ -148,9 +195,23 @@ BEGIN
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
             
-            LEFT JOIN tmpContractPrice ON 1 = 1
+            LEFT JOIN tmpContractPrice ON tmpContractPrice.ContractId = Movement.ContractId
+
             LEFT JOIN Object AS Object_PriceList_first ON Object_PriceList_first.Id = tmpContractPrice.PriceListId_first
             LEFT JOIN Object AS Object_PriceList_curr ON Object_PriceList_curr.Id = tmpContractPrice.PriceListId_curr
+
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                 ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId               
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                 ON ObjectLink_Contract_PersonalTrade.ObjectId = View_Contract.ContractId 
+                                AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Contract_PersonalTrade.ChildObjectId
       ;
 
 END;
