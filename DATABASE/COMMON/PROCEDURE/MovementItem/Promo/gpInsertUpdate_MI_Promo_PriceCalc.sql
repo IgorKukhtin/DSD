@@ -286,6 +286,7 @@ BEGIN
                                                                  AND Object_ContractCondition_View.Value <> 0
                                                                  AND vbOperDate_Condition BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                                             )
+                                 -- результат
                                  SELECT MAX (tmp.Value) AS ContractCondition
                                  FROM (SELECT COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId) AS ContractId
                                             , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
@@ -322,14 +323,14 @@ BEGIN
                                                                                                                               )*/
 
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
-                                                                ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
+                                                                ON ObjectLink_ContractCondition_BonusKind.ObjectId = tmpContractCondition.ContractConditionId
                                                                AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
                                            INNER JOIN Object AS Object_BonusKind
                                                              ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
                                                           --AND Object_BonusKind.Id = 81959   ---Бонус
 
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                                  ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
+                                                                  ON ObjectFloat_Value.ObjectId = tmpContractCondition.ContractConditionId
                                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
 
                                        WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
