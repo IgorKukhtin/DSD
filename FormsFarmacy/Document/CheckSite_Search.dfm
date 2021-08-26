@@ -15,7 +15,45 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
       end
     end
   end
-  inherited ActionList: TActionList
+  inherited spMovementSetErased: TdsdStoredProc [1]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [2]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [3]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [4]
+  end
+  inherited FormParams: TdsdFormParams [5]
+  end
+  inherited spPUSHSetErased: TdsdStoredProc [6]
+  end
+  inherited SPUpdate_NotMCS: TdsdStoredProc [7]
+  end
+  inherited MasterDS: TDataSource [8]
+  end
+  inherited MasterCDS: TClientDataSet [9]
+  end
+  inherited spSelect: TdsdStoredProc [10]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited BarManager: TdxBarManager [11]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [12]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [13]
+  end
+  inherited ActionList: TActionList [14]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -238,51 +276,24 @@ inherited CheckSite_SearchForm: TCheckSite_SearchForm
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Component = MasterCDS
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  inherited DBViewAddOn: TdsdDBViewAddOn [15]
   end
-  inherited PopupMenu: TPopupMenu [5]
+  inherited PopupMenu: TPopupMenu [16]
   end
-  inherited ClientDataSet1: TClientDataSet [6]
+  inherited ClientDataSet1: TClientDataSet [17]
   end
-  inherited DataSource1: TDataSource [7]
+  inherited DataSource1: TDataSource [18]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [8]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [9]
-  end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [10]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [11]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [12]
-  end
-  inherited FormParams: TdsdFormParams [13]
-  end
-  inherited spPUSHSetErased: TdsdStoredProc [14]
-  end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [15]
-  end
-  inherited MasterDS: TDataSource [16]
-  end
-  inherited MasterCDS: TClientDataSet [17]
-  end
-  inherited spSelect: TdsdStoredProc [18]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 2
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited BarManager: TdxBarManager [19]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [19]
   end
 end

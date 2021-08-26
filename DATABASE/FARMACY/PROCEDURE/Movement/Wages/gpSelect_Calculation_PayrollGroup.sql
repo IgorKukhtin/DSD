@@ -87,7 +87,7 @@ BEGIN
     RETURN QUERY
         SELECT vbSummaCalс, vbSummaBase, vbSummaBaseSite, vbFormula;
 
-  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkS(), zc_Enum_PayrollType_WorkIS())
+  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkS(), zc_Enum_PayrollType_WorkIS(), zc_Enum_PayrollType_WorkSSAS())
   THEN
     IF COALESCE (inCountUser, 0) = 0
     THEN
@@ -140,5 +140,3 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TF
 
 -- 
 select * from gpSelect_Calculation_PayrollGroup('01.07.2021', zc_Enum_PayrollType_WorkCS(), 3, 870, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '');
-
-База расчета: (67,064.10 / 3 = 22,354.70) + сайт (9,709.00 / 3 = 3,236.33) + (23,265.90 / 2 = 11,632.95) + сайт (7,179.30 / 2 = 3,589.65) = 40 813.63; Начислено: Если база 3 %  + база сайта 2 %  = 1 156.15 < 870 то 870 иначе 1 156.15

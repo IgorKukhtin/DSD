@@ -17,7 +17,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -61,6 +62,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN isCorrectMarketing    Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
     IN isCorrectIlliquidMarketing  Boolean   , -- Корректировка суммы нелеквидов в ЗП по подразделению
     IN inDoctors             Boolean   , -- Врачи
+    IN inDiscountCommit      Boolean   , -- Дисконт проведен на сайте
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -187,6 +189,17 @@ BEGIN
             PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
           END IF;
         END IF;
+        -- Отмечаем документ как отложенный
+        PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);
+        -- !!! только 1 раз!!! сохранили
+        IF vbIsInsert = TRUE
+        THEN
+            -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_Complete());
+        END IF;
+        
+    ELSEIF COALESCE(inDiscountCommit, FALSE) = TRUE
+    THEN
         -- Отмечаем документ как отложенный
         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);
         -- !!! только 1 раз!!! сохранили
@@ -357,10 +370,20 @@ BEGIN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectIlliquidMarketing(), ioId, isCorrectIlliquidMarketing);
     END IF;
 
-    IF inDoctors = TRUE
+    IF inDoctors = TRUE OR EXISTS(SELECT * FROM MovementBoolean
+                                  WHERE MovementBoolean.MovementId = ioId
+                                    AND MovementBoolean.DescId = zc_MovementBoolean_Doctors())
     THEN
       -- сохранили <>
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Doctors(), ioId, inDoctors);
+    END IF;
+
+    IF inDiscountCommit = TRUE OR EXISTS(SELECT * FROM MovementBoolean
+                                         WHERE MovementBoolean.MovementId = ioId
+                                           AND MovementBoolean.DescId = zc_MovementBoolean_DiscountCommit())
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DiscountCommit(), ioId, inDiscountCommit);
     END IF;
 
     -- сохранили протокол

@@ -45,7 +45,9 @@ RETURNS TABLE (
   SiteDiscount TFloat,
   PartionDateKindId Integer,
   PartionDateKindName TVarChar, 
-  DateDelay TDateTime
+  DateDelay TDateTime, 
+  isDiscountCommit Boolean
+
  )
 AS
 $BODY$
@@ -172,6 +174,7 @@ BEGIN
             , Object_PartionDateKind.ID                     AS PartionDateKindId
             , Object_PartionDateKind.ValueData              AS PartionDateKindName
             , MovementDate_Delay.ValueData                  AS DateDelay
+            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -324,6 +327,10 @@ BEGIN
                                      ON MovementString_OrderId.MovementId = Movement.Id
                                     AND MovementString_OrderId.DescId = zc_MovementString_OrderId()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
        WHERE inIsShowAll OR COALESCE(MovementDate_Delay.ValueData, Movement.OperDate) >= CURRENT_DATE - INTERVAL '10 DAY';
 
 END;
@@ -341,4 +348,5 @@ ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckDelayVIP (inIsShowAll := true, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_Movement_CheckDelayVIP (inIsShowAll := False, inSession:= '3')

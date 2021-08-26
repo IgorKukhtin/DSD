@@ -64,6 +64,9 @@ type
     dsdUpdateDataSet: TdsdUpdateDataSet;
     actRefreshCorrectMinAmount: TdsdExecStoredProc;
     cxLabel5: TcxLabel;
+    edPayrollType: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    PayrollTypeGuides: TdsdGuides;
   private
     { Private declarations }
   public

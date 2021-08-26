@@ -87,6 +87,8 @@ type
     ISCORRIA  : boolean;       //Корректировка суммы нелеквидов в ЗП по подразделению
     //***15.08.21
     ISDOCTORS  : boolean;       //Врачи
+    //***25.08.21
+    ISDISCCOM  : boolean;       //Дисконт проведен на сайте
 
   end;
   TBodyRecord = record
@@ -1414,6 +1416,8 @@ begin
                 ISCORRIA := FieldByName('ISCORRIA').AsBoolean;
                 //***15.08.21
                 ISDOCTORS := FieldByName('ISDOCTORS').AsBoolean;
+                //***15.08.21
+                ISDISCCOM := FieldByName('ISDISCCOM').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1583,8 +1587,10 @@ begin
                   //***19.03.21
                   dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
                   dsdSave.Params.AddParam('isCorrectIlliquidMarketing', ftBoolean, ptInput, Head.ISCORRIA);
-                  //***15.03821
+                  //***15.08.21
                   dsdSave.Params.AddParam('isDoctors', ftBoolean, ptInput, Head.ISDOCTORS);
+                  //***15.08.21
+                  dsdSave.Params.AddParam('isDiscountCommit', ftBoolean, ptInput, Head.ISDISCCOM);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

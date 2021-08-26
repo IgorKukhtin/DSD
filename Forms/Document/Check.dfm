@@ -624,7 +624,18 @@ inherited CheckForm: TCheckForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 46
-      Width = 66
+      Width = 61
+    end
+    object cbDiscountCommit: TcxCheckBox
+      Left = 564
+      Top = 213
+      Hint = #1042#1088#1072#1095#1080
+      Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 47
+      Width = 181
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]

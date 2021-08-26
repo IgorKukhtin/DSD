@@ -161,6 +161,7 @@ BEGIN
             , MovementFloat_TotalSummCard.ValueData                        AS SummCard
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS isNotMCS
+            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
        FROM tmpMov
 
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -335,6 +336,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                       ON MovementBoolean_NotMCS.MovementId = Movement.Id
                                      AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
        WHERE Movement.Id = vbID
 
        );

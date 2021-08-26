@@ -193,6 +193,7 @@ BEGIN
                    ELSE 'VIP' END::TVarChar  AS TypeChech
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS isNotMCS
+            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -367,6 +368,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                       ON MovementBoolean_NotMCS.MovementId = Movement.Id
                                      AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
 
        WHERE tmpMov.isDeferred = True
          AND (inType = 0 OR inType = 1 AND tmpMov.isShowVIP = TRUE OR inType = 2 AND tmpMov.isShowTabletki = TRUE OR inType in (1, 3) AND tmpMov.isShowLiki24 = TRUE)
@@ -583,13 +588,14 @@ BEGIN
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , MovementItem.PricePartionDate                                       AS PricePartionDate
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
            , Object_Accommodation.ValueData                                      AS AccommodationName
            
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MovementItem.PricePartionDate, MovementItem.PriceSale)     AS PriceDiscount
            , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS  NDSKindId
-           , Object_DiscountExternal.ID                                          AS DiscountCardId
-           , Object_DiscountExternal.ValueData                                   AS DiscountCardName
+           , Object_DiscountExternal.ID                                          AS DiscountExternalID
+           , Object_DiscountExternal.ValueData                                   AS DiscountExternalName
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
            , MovementItem.GoodsPairSunId                                         AS GoodsPairSunId     
            , MovementItem.isGoodsPairSun                                         AS isGoodsPairSun

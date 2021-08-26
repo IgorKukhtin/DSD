@@ -28,17 +28,27 @@ inherited CheckVIPForm: TCheckVIPForm
       end
     end
   end
-  inherited spSmashCheck: TdsdStoredProc [1]
+  inherited spSelect: TdsdStoredProc [1]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
-  inherited spUpdateOperDate: TdsdStoredProc [2]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [2]
   end
-  inherited spMovementSetErasedSite: TdsdStoredProc [3]
+  inherited cxPropertiesStore: TcxPropertiesStore [3]
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [4]
+  inherited BarManager: TdxBarManager [4]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
   end
-  inherited FormParams: TdsdFormParams [5]
-  end
-  inherited ActionList: TActionList [6]
+  inherited ActionList: TActionList [5]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -262,6 +272,13 @@ inherited CheckVIPForm: TCheckVIPForm
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Component = MasterCDS
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     inherited actCheckCash: TdsdOpenForm
@@ -291,48 +308,38 @@ inherited CheckVIPForm: TCheckVIPForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [7]
+  inherited MasterDS: TDataSource [6]
   end
-  inherited MasterCDS: TClientDataSet [8]
+  inherited MasterCDS: TClientDataSet [7]
   end
-  inherited spSelect: TdsdStoredProc [9]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 1
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+  inherited spPUSHSetErased: TdsdStoredProc [8]
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [10]
+  inherited SPUpdate_NotMCS: TdsdStoredProc [9]
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [11]
+  inherited spMovementSetErased: TdsdStoredProc [10]
   end
-  inherited BarManager: TdxBarManager [12]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited spConfirmedKind_Complete: TdsdStoredProc [11]
   end
-  inherited PopupMenu: TPopupMenu [13]
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [12]
   end
-  inherited ClientDataSet1: TClientDataSet [14]
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [13]
   end
-  inherited DataSource1: TDataSource [15]
+  inherited PopupMenu: TPopupMenu [14]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [16]
+  inherited DBViewAddOn: TdsdDBViewAddOn [15]
   end
-  inherited spPUSHSetErased: TdsdStoredProc [17]
+  inherited spSmashCheck: TdsdStoredProc [16]
   end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [18]
+  inherited spUpdateOperDate: TdsdStoredProc [17]
   end
-  inherited spMovementSetErased: TdsdStoredProc [19]
+  inherited spMovementSetErasedSite: TdsdStoredProc [18]
   end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [20]
+  inherited ClientDataSet1: TClientDataSet [19]
   end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [21]
+  inherited DataSource1: TDataSource [20]
   end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [22]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [21]
+  end
+  inherited FormParams: TdsdFormParams [22]
   end
 end

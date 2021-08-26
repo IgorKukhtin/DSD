@@ -19,23 +19,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
       end
     end
   end
-  inherited spMovementSetErased: TdsdStoredProc [1]
-  end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [2]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [3]
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn [4]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [5]
-  end
-  inherited FormParams: TdsdFormParams [6]
-  end
-  inherited MasterDS: TDataSource [7]
-  end
-  inherited MasterCDS: TClientDataSet [8]
-  end
-  inherited spSelect: TdsdStoredProc [9]
+  inherited spSelect: TdsdStoredProc [1]
     Params = <
       item
         Name = 'inType'
@@ -44,7 +28,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager [10]
+  inherited BarManager: TdxBarManager [2]
     DockControlHeights = (
       0
       0
@@ -114,11 +98,11 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         end>
     end
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [11]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [3]
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [12]
+  inherited cxPropertiesStore: TcxPropertiesStore [4]
   end
-  inherited ActionList: TActionList [13]
+  inherited ActionList: TActionList [5]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -341,19 +325,36 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Component = MasterCDS
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
   end
-  inherited spPUSHSetErased: TdsdStoredProc [14]
+  inherited spPUSHSetErased: TdsdStoredProc [6]
   end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [15]
+  inherited SPUpdate_NotMCS: TdsdStoredProc [7]
   end
-  inherited PopupMenu: TPopupMenu [16]
+  inherited PopupMenu: TPopupMenu [8]
   end
-  inherited ClientDataSet1: TClientDataSet [17]
+  inherited ClientDataSet1: TClientDataSet [9]
   end
-  inherited DataSource1: TDataSource [18]
+  inherited DataSource1: TDataSource [10]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [19]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [11]
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [12]
+  end
+  inherited MasterDS: TDataSource [16]
+  end
+  inherited MasterCDS: TClientDataSet [17]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [18]
+  end
+  inherited FormParams: TdsdFormParams [19]
   end
 end

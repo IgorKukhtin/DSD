@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Payment()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Payment (Integer, TVarChar, TDateTime, integer, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Payment(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Payment(
     IN inOperDate              TDateTime  , -- Дата документа
     IN inJuridicalId           Integer    , -- Юрлицо
     IN inisPaymentFormed       Boolean    , -- Платеж сформирован 
+    IN inComment               TVarChar   , -- Комментарий
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -31,6 +32,9 @@ BEGIN
     
     -- сохранили <Платеж сформирован >
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PaymentFormed(), ioId, inisPaymentFormed);
+
+    -- сохранили <Комментарий>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

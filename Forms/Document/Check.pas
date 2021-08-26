@@ -195,6 +195,7 @@ type
     actUpdate_Doctors: TdsdExecStoredProc;
     spUpdate_Doctors: TdsdStoredProc;
     dxBarButton16: TdxBarButton;
+    cbDiscountCommit: TcxCheckBox;
   private
     { Private declarations }
   public

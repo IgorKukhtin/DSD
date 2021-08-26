@@ -49,7 +49,8 @@ RETURNS TABLE (
   DateDelay TDateTime,
   LoyaltyChangeSumma TFloat,
   SummCard TFloat,
-  isBanAdd boolean
+  isBanAdd boolean,
+  isDiscountCommit Boolean
  )
 AS
 $BODY$
@@ -205,6 +206,7 @@ BEGIN
                       COALESCE(MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE COALESCE(MI_PromoCode.Amount, 0) END ELSE 0 END::TFloat AS LoyaltyChangeSumma
             , COALESCE(MovementFloat_TotalSummCard.ValueData, 0)::TFloat                AS SummCard
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
+            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)                 AS isDiscountCommit
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -372,6 +374,10 @@ BEGIN
                                      ON MovementString_BookingId.MovementId = Movement.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
                                     
+            LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
+                                      ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
+                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
        ;
 
 END;
@@ -389,4 +395,4 @@ ALTER FUNCTION gpSelect_Movement_CheckLoadCash (TVarChar, TVarChar) OWNER TO pos
 -- тест
 -- 
 
-select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '338603' ,  inSession := '3');
+select * from gpSelect_Movement_CheckLoadCash(inVIPOrder := '359332' ,  inSession := '3');

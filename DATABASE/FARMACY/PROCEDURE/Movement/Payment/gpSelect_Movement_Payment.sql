@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer
              , JuridicalName TVarChar
              , isPaymentFormed Boolean
+             , Comment TVarChar
               )
 
 AS
@@ -45,6 +46,7 @@ BEGIN
           , Movement_Payment.JuridicalId
           , Movement_Payment.JuridicalName
           , Movement_Payment.isPaymentFormed
+          , Movement_Payment.Comment
         FROM
             Movement_Payment_View AS Movement_Payment
             INNER JOIN tmpStatus ON Movement_Payment.StatusId = tmpStatus.StatusId

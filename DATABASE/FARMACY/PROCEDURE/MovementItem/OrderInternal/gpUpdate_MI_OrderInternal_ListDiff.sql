@@ -78,6 +78,7 @@ BEGIN
                   -- строки документа отказ
                 , tmpListDiff_MI_All AS (SELECT MovementItem.*
                                               , Object_DiffKind.ValueData ::TVarChar AS DiffKindName
+                                              , MIFloat_AmountSend.ValueData         AS AmountSend
                                          FROM tmpListDiff
                                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDiff.Id
                                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -90,6 +91,11 @@ BEGIN
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                                                       ON ObjectBoolean_DiffKind_Close.ObjectId = MILO_DiffKind.ObjectId
                                                                      AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()
+                                                                     
+                                              LEFT JOIN MovementItemFloat AS MIFloat_AmountSend
+                                                                          ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
+                                                                         AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend() 
+
                                          WHERE COALESCE (ObjectBoolean_DiffKind_Close.ValueData, FALSE) = FALSE                         -- берем все строки кроме закрытых для заказа (св-во вид отказа)
                                      )
 
@@ -109,13 +115,14 @@ BEGIN
                 SELECT tmpListDiff_MI_All.MovementId                     AS MovementId
                      , tmpListDiff_MI_All.Id                             AS Id
                      , tmpListDiff_MI_All.ObjectId                       AS GoodsId
-                     , tmpListDiff_MI_All.Amount                         AS Amount
+                     , (tmpListDiff_MI_All.Amount - COALESCE(tmpListDiff_MI_All.AmountSend, 0))::TFloat   AS Amount
                      , COALESCE (tmpMI_Comment.ValueData, '') ::TVarChar AS Comment
                      , CASE WHEN COALESCE (tmpListDiff_MI_All.DiffKindName, '') = COALESCE (tmpMI_Comment.ValueData, '') THEN '' ELSE COALESCE (tmpListDiff_MI_All.DiffKindName, '') END ::TVarChar AS DiffKindName
                 FROM tmpListDiff_MI_All
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
                      LEFT JOIN tmpMI_Comment    ON tmpMI_Comment.MovementItemId    = tmpListDiff_MI_All.Id
-                WHERE tmpMI_MovementId.ValueData IS NULL;
+                WHERE tmpMI_MovementId.ValueData IS NULL
+                  AND (tmpListDiff_MI_All.Amount - COALESCE(tmpListDiff_MI_All.AmountSend, 0)) > 0;
            
      -- сохраняем свойства, если такого товара нет в заказе дописываем
      PERFORM lpInsertUpdate_MI_OrderInternal_ListDiff (inId             := COALESCE (_tmp_MI.Id, 0)
@@ -157,23 +164,37 @@ BEGIN
      -- если все позиции из листа отказа перенесены во внутренний заказ - проводим документ Лист отказа, проводятся листы отказов за прошлый день, а листы отказов за текущий день не проводятся 
      PERFORM gpComplete_Movement_ListDiff (tmp.MovementId, inSession)
      FROM (SELECT Movement.Id AS MovementId
-                , SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) AS ord
+                , SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 OR
+                                (MovementItem.Amount - COALESCE(MIFloat_AmountSend.ValueData, 0)) <= 0 THEN 0 ELSE 1 END) AS ord
            FROM Movement 
-               INNER JOIN  MovementItem ON MovementItem.MovementId = Movement.Id
+           
+                INNER JOIN  MovementItem ON MovementItem.MovementId = Movement.Id
 
                 LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
                                            AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
                                            AND MovementItem.isErased = FALSE
                                            AND MovementItem.DescId   = zc_MI_Master()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountSend
+                                            ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend() 
+                                     
             WHERE Movement.DescId = zc_Movement_ListDiff() 
               AND Movement.StatusId = zc_Enum_Status_UnComplete()
               AND Movement.OperDate >= '07.11.2018'
               AND Movement.OperDate < CURRENT_DATE
 
            GROUP BY Movement.Id
-           HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) = 0
+           HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 OR
+                      (MovementItem.Amount - COALESCE(MIFloat_AmountSend.ValueData, 0)) <= 0 THEN 0 ELSE 1 END) = 0
            ) AS tmp;
 
+
+     -- !!!ВРЕМЕННО для ТЕСТА!!!
+     IF inSession = zfCalc_UserAdmin()
+     THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inSession, (select Sum(_tmpListDiff_MI.Amount) from _tmpListDiff_MI);
+     END IF;
 
 END;
 $BODY$
@@ -193,3 +214,4 @@ LANGUAGE PLPGSQL VOLATILE;
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) -- сохранили свойство <Ручное количество>
            , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE) 
            */
+           

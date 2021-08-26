@@ -24,6 +24,7 @@ type
     Id: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     isPaymentFormed: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
