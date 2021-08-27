@@ -108,6 +108,11 @@ type
     TotalDS: TDataSource;
     CrossDBViewAddOnTotal: TCrossDBViewAddOn;
     actRefreshGet: TdsdDataSetRefresh;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocolOpenForm: TdxBarButton;
+    Get_byProtocol: TdsdStoredProc;
+    macMovementItemProtocolOpenForm: TMultiAction;
+    actGet_byProtocol: TdsdExecStoredProc;
   private
   public
   end;

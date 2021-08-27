@@ -1069,7 +1069,8 @@ uses
   Report_CheckSUNItogDialog in '..\..\FormsFarmacy\Report\Report_CheckSUNItogDialog.pas' {Report_CheckSUNItogDialogForm: TParentForm},
   Report_CheckSUNItog in '..\..\FormsFarmacy\Report\Report_CheckSUNItog.pas' {Report_CheckSUNItogForm: TParentForm},
   ListDiffFormVIPSendRemain in '..\..\FormsFarmacy\Document\ListDiffFormVIPSendRemain.pas' {ListDiffFormVIPSendRemainForm: TParentForm},
-  PayrollTypeChoice in '..\..\FormsFarmacy\Guides\PayrollTypeChoice.pas' {PayrollTypeChoiceForm: TParentForm};
+  PayrollTypeChoice in '..\..\FormsFarmacy\Guides\PayrollTypeChoice.pas' {PayrollTypeChoiceForm: TParentForm},
+  CreateOrderFromMCSLayout in '..\..\FormsFarmacy\Document\CreateOrderFromMCSLayout.pas' {CreateOrderFromMCSLayoutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

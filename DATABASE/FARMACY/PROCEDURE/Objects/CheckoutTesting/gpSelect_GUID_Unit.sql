@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_GUID_Unit (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_GUID_Unit(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GUID TVarChar,
+RETURNS TABLE (GUID TVarChar, CashRegister TVarChar,
                UnitId Integer, UnitName TVarChar, 
                UserId Integer, UserName TVarChar, 
                DateLogIn TDateTime,
@@ -23,6 +23,7 @@ BEGIN
     WITH tmpEmployeeWorkLog AS (
       SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeWorkLog.CashSessionId ORDER BY EmployeeWorkLog.DateLogIn DESC) AS Ord
            , EmployeeWorkLog.CashSessionId      AS CashSessionId
+           , EmployeeWorkLog.CashRegister       AS CashRegister
            , EmployeeWorkLog.DateLogIn          AS DateLogIn
            , EmployeeWorkLog.UnitId             AS UnitId 
            , EmployeeWorkLog.UserId             AS UserId 
@@ -30,6 +31,7 @@ BEGIN
       WHERE EmployeeWorkLog.DateLogIn >= CURRENT_DATE - INTERVAL '5 DAY')  
 
     SELECT EmployeeWorkLog.CashSessionId      AS GUID
+         , EmployeeWorkLog.CashRegister       AS CashRegister
          , Object_Unit.Id                     AS UnitId
          , Object_Unit.valuedata              AS UnitName
          , Object_User.Id                     AS UserId

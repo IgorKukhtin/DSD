@@ -61,6 +61,14 @@ object CheckoutTestingForm: TCheckoutTestingForm
         Options.Editing = False
         Width = 196
       end
+      object CashRegister: TcxGridDBColumn
+        Caption = #1060#1080#1089#1082'. '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'CashRegister'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 73
+      end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'

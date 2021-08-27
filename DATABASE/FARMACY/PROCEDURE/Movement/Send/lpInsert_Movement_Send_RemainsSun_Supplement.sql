@@ -385,7 +385,7 @@ BEGIN
 
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
-                           WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN_Supplement.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                           WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN_Supplement.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
                              AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
                            )
                                                               

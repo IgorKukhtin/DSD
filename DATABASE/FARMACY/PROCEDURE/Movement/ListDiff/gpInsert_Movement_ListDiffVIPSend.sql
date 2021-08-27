@@ -99,7 +99,7 @@ BEGIN
                                  ),
           tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
                                 , tmpUnit.Id                         AS UnitId
-                                , tmpLayout.Amount                   AS Amount
+                                , MAX(tmpLayout.Amount)              AS Amount
                            FROM tmpLayout
                            
                                 INNER JOIN (SELECT DISTINCT tmpListDiffVIPSend.UnitId AS ID FROM tmpListDiffVIPSend) AS tmpUnit ON 1 = 1
@@ -113,8 +113,10 @@ BEGIN
 
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
-                           WHERE (tmpLayoutUnit.UnitId = tmpUnit.Id OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) > 0)
+                           WHERE (tmpLayoutUnit.UnitId = tmpUnit.Id OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
                              AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                           GROUP BY tmpLayout.GoodsId
+                                  , tmpUnit.Id 
                            )
         -- Отложенные перемещения
        , tmpMovementID AS (SELECT
@@ -385,4 +387,4 @@ $BODY$
  28.07.21                                                      *
 */  
   
-select * from gpInsert_Movement_ListDiffVIPSend(inJson := '[{"id":450691607,"movementid":24505733,"unitid":8393158,"unitsendid":13338606,"amountsend":1,"isurgently":"False","isorder":"True"}]' ,  inSession := '3');
+-- select * from gpInsert_Movement_ListDiffVIPSend(inJson := '[{"id":450691607,"movementid":24505733,"unitid":8393158,"unitsendid":13338606,"amountsend":1,"isurgently":"False","isorder":"True"}]' ,  inSession := '3');

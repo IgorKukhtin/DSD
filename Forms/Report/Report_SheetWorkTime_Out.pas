@@ -40,6 +40,9 @@ type
     GuidesUnit: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    ErrorText: TcxGridDBColumn;
+    ErrorCode: TcxGridDBColumn;
+    HoursDay: TcxGridDBColumn;
   private
     { Private declarations }
   public

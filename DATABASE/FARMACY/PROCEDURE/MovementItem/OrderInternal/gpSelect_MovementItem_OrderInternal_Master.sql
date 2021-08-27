@@ -109,6 +109,8 @@ RETURNS TABLE (Id                    Integer
              , AmountSUA             TFloat
              , FinalSUA              TFloat
              , FinalSUASend          TFloat
+             
+             , Layout                TFloat
 
              )
 AS
@@ -836,6 +838,58 @@ BEGIN
                                                          ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
                         GROUP BY MovementItem.ObjectId)    
+    -- Выкладка       
+   , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                          ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                         AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                           WHERE Movement.DescId = zc_Movement_Layout()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )
+  , tmpLayout AS (SELECT Movement.ID                        AS Id
+                        , MovementItem.ObjectId              AS GoodsId
+                        , MovementItem.Amount                AS Amount
+                        , Movement.isPharmacyItem            AS isPharmacyItem
+                   FROM tmpLayoutMovement AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.isErased = FALSE
+                                               AND MovementItem.Amount > 0
+                  )
+  , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                           , MovementItem.ObjectId              AS UnitId
+                      FROM tmpLayoutMovement AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                                                  AND MovementItem.Amount > 0
+                     )
+                                     
+  , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                , count(*)                          AS CountUnit
+                           FROM tmpLayoutUnit
+                           GROUP BY tmpLayoutUnit.ID
+                           )
+  , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                          , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                     FROM tmpLayout
+                                 
+                          LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                  ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                 AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                       
+                          LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                 AND tmpLayoutUnit.UnitId = vbUnitId
+
+                          LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                       
+                     WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                       AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                     GROUP BY tmpLayout.GoodsId 
+                     )
+
                     
        -- Результат 1
        SELECT
@@ -1009,6 +1063,8 @@ BEGIN
            , tmpFinalSUAList.FinalSUA::TFloat                                AS FinalSUA
            , tmpFinalSUAList.FinalSUASend::TFloat                            AS FinalSUASend
 
+           , tmpLayoutAll.Amount::TFloat                                  AS Layout
+
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
 
@@ -1065,6 +1121,8 @@ BEGIN
             LEFT JOIN tmpSendSun ON tmpSendSun.GoodsId = tmpMI.GoodsId
 
             LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
+            
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = tmpMI.GoodsId 
            ;
 
 
@@ -2643,6 +2701,57 @@ BEGIN
                                                          ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
                         GROUP BY MovementItem.ObjectId)    
+    -- Выкладка       
+   , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                          ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                         AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                           WHERE Movement.DescId = zc_Movement_Layout()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )
+  , tmpLayout AS (SELECT Movement.ID                        AS Id
+                        , MovementItem.ObjectId              AS GoodsId
+                        , MovementItem.Amount                AS Amount
+                        , Movement.isPharmacyItem            AS isPharmacyItem
+                   FROM tmpLayoutMovement AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.isErased = FALSE
+                                               AND MovementItem.Amount > 0
+                  )
+  , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                           , MovementItem.ObjectId              AS UnitId
+                      FROM tmpLayoutMovement AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                                                  AND MovementItem.Amount > 0
+                     )
+                                     
+  , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                , count(*)                          AS CountUnit
+                           FROM tmpLayoutUnit
+                           GROUP BY tmpLayoutUnit.ID
+                           )
+  , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                          , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                     FROM tmpLayout
+                                 
+                          LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                  ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                 AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                       
+                          LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                 AND tmpLayoutUnit.UnitId = vbUnitId
+
+                          LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                       
+                     WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                       AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                     GROUP BY tmpLayout.GoodsId 
+                     )
 
        -- Результат 1
        SELECT
@@ -2772,6 +2881,8 @@ BEGIN
            , tmpMI.AmountSUA                                              AS AmountSUA
            , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
            , tmpFinalSUAList.FinalSUASend::TFloat                         AS FinalSUASend
+
+           , tmpLayoutAll.Amount::TFloat                                  AS Layout
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -2812,6 +2923,8 @@ BEGIN
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
                                           
             LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
+            
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = tmpMI.GoodsId 
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
@@ -4352,6 +4465,57 @@ BEGIN
                                                          ON MIFloat_SendSUN.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SendSUN.DescId = zc_MIFloat_SendSUN()
                         GROUP BY MovementItem.ObjectId)    
+    -- Выкладка       
+   , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                          ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                         AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                           WHERE Movement.DescId = zc_Movement_Layout()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )
+  , tmpLayout AS (SELECT Movement.ID                        AS Id
+                        , MovementItem.ObjectId              AS GoodsId
+                        , MovementItem.Amount                AS Amount
+                        , Movement.isPharmacyItem            AS isPharmacyItem
+                   FROM tmpLayoutMovement AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.isErased = FALSE
+                                               AND MovementItem.Amount > 0
+                  )
+  , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                           , MovementItem.ObjectId              AS UnitId
+                      FROM tmpLayoutMovement AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                                                  AND MovementItem.Amount > 0
+                     )
+                                     
+  , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                , count(*)                          AS CountUnit
+                           FROM tmpLayoutUnit
+                           GROUP BY tmpLayoutUnit.ID
+                           )
+  , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                          , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                     FROM tmpLayout
+                                 
+                          LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                  ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                 AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                       
+                          LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                 AND tmpLayoutUnit.UnitId = vbUnitId
+
+                          LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                       
+                     WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                       AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                     GROUP BY tmpLayout.GoodsId 
+                     )
 
        -- Результат 1
        SELECT
@@ -4482,6 +4646,8 @@ BEGIN
            , tmpMI.AmountSUA                                              AS AmountSUA
            , tmpFinalSUAList.FinalSUA::TFloat                             AS FinalSUA
            , tmpFinalSUAList.FinalSUASend::TFloat                         AS FinalSUASend
+
+           , tmpLayoutAll.Amount::TFloat                                  AS Layout
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -4521,6 +4687,9 @@ BEGIN
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
                                           
             LEFT JOIN tmpFinalSUAList ON tmpFinalSUAList.GoodsId = tmpMI.GoodsId  
+            
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = tmpMI.GoodsId  
+
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId

@@ -28,27 +28,12 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursDay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -60,6 +45,11 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HoursDay
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -68,6 +58,22 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object ErrorCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1096#1080#1073#1082#1080
+            DataBinding.FieldName = 'ErrorCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object ErrorText: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'ErrorText'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074' '#1090#1072#1073#1077#1083#1077
             DataBinding.FieldName = 'OperDate'
@@ -162,11 +168,21 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
           object Amount: TcxGridDBColumn
             Caption = #1063#1072#1089#1099
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 83
+          end
+          object HoursDay: TcxGridDBColumn
+            Caption = '2.'#1044#1085#1077#1074#1085#1086#1081' '#1087#1083'.'#1095'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+            DataBinding.FieldName = 'HoursDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
+            Width = 70
           end
         end
       end

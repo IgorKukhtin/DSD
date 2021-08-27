@@ -76,6 +76,9 @@ type
     macUpdateCheckedPersonal: TMultiAction;
     bbUpdateCheckedHead: TdxBarButton;
     bbUpdateCheckedPersonal: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
+    MovementProtocolOpenForm1: TdsdOpenForm;
   private
   public
   end;

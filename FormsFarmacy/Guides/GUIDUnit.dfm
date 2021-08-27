@@ -54,7 +54,15 @@ object GUIDUnitForm: TGUIDUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 136
+        Width = 123
+      end
+      object CashRegister: TcxGridDBColumn
+        Caption = #1060#1080#1089#1082'. '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'CashRegister'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -62,7 +70,7 @@ object GUIDUnitForm: TGUIDUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 240
+        Width = 211
       end
       object UserName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -70,7 +78,7 @@ object GUIDUnitForm: TGUIDUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 124
+        Width = 109
       end
       object DateLogIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1074#1093#1086#1076#1072
@@ -79,7 +87,7 @@ object GUIDUnitForm: TGUIDUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 83
+        Width = 73
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

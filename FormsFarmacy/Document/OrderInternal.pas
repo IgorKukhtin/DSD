@@ -155,6 +155,7 @@ type
     actPUSHDiscount: TdsdShowPUSHMessage;
     spPUSHDiscount: TdsdStoredProc;
     bbPUSHDiscount: TdxBarButton;
+    Layout: TcxGridDBColumn;
   private
     { Private declarations }
   public

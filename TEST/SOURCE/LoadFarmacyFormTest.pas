@@ -578,6 +578,10 @@ end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSLayoutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSLayoutForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerForm');
 
@@ -3109,14 +3113,13 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGUIDUnitForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckoutTestingForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCheckoutTestingForm');
 
-
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
