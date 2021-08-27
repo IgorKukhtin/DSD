@@ -55,6 +55,8 @@ BEGIN
           THEN
             RAISE EXCEPTION 'Ошибка. Изменение подразделения запрещено..';                       
           END IF;
+        ELSE
+          RAISE EXCEPTION 'Ошибка. Создавать инвентаризации вам запрещено..';                       
         END IF;
         
         IF COALESCE (inUnitId, 0) = 0

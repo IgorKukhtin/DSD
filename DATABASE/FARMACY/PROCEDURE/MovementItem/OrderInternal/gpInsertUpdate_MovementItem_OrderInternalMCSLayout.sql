@@ -156,6 +156,7 @@ BEGIN
                                                                     THEN tmpLayoutAll.Amount ELSE MCS_Value.ValueData END END
                                                 ELSE 0
                                            END ::TFloat AS MCSValue_min
+                                         , COALESCE(tmpLayoutAll.Amount, 0) AS Layout
                                     FROM ObjectLink AS ObjectLink_Price_Unit
                                          LEFT JOIN ObjectBoolean AS MCS_isClose
                                                                  ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -177,9 +178,9 @@ BEGIN
                                                               AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                                          LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = Price_Goods.ChildObjectId
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                      AND ObjectLink_Price_Unit.ChildObjectId = 183292 /*inUnitId*/
-                                      AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount, 0) > 0)
-                                      --AND COALESCE(MCS_Value.ValueData,0) > 0
+                                      AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                                      AND COALESCE(MCS_isClose.ValueData,False) = False 
+                                      AND (COALESCE(MCS_Value.ValueData,0) > 0 OR COALESCE(tmpLayoutAll.Amount,0) > 0)
                                    )
               -- данные из ассорт. матрицы
             , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
@@ -239,6 +240,7 @@ BEGIN
                                            END ::TFloat AS MCSValue
 
                                          , COALESCE (tmpPrice.MCSValue_min, 0)         :: TFloat AS MCSValue_min
+                                         , COALESCE(tmpPrice.Layout, 0)                :: TFloat AS Layout
                                     FROM tmpPrice
                                          FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                     WHERE COALESCE (tmpGoodsCategory.Value, 0) <> 0
@@ -432,7 +434,7 @@ BEGIN
                    LEFT OUTER JOIN MovementItemSaved ON MovementItemSaved.ObjectId = Object_Price.GoodsId
 
                    INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = Object_Price.GoodsId
-                                               AND Object_Goods_View.IsClose = FALSE
+                                               AND (Object_Goods_View.IsClose = FALSE OR Object_Price.Layout > 0)
 
                    LEFT OUTER JOIN Income ON Income.GoodsId = Object_Price.GoodsId
 
