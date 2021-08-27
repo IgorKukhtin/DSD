@@ -4,6 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -319
   ExplicitWidth = 1378
   ExplicitHeight = 453
   PixelsPerInch = 96
@@ -736,7 +737,7 @@
             Width = 70
           end
           object Sale_Amount_10500_Weight: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072', '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(10500)'#1057#1082#1080#1076#1082#1072', '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Amount_10500_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -796,29 +797,31 @@
             Width = 70
           end
           object Sale_Summ_10200: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(10200)'#1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_10200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '(10200)'#1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             Options.Editing = False
             Width = 80
           end
           object Sale_Summ_10250: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(10250)'#1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_10250'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '(10250)'#1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             Options.Editing = False
             Width = 70
           end
           object Sale_Summ_10300: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(10300)'#1057#1082#1080#1076#1082#1072', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -842,7 +845,7 @@
             Width = 70
           end
           object Sale_SummCost_10500: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(10500)'#1057#1082#1080#1076#1082#1072' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_SummCost_10500'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -854,7 +857,7 @@
             Width = 80
           end
           object Sale_SummCost_40200: TcxGridDBColumn
-            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(40200)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_SummCost_40200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -982,7 +985,7 @@
             Width = 80
           end
           object Return_Summ_10300: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' (-)'#1089#1082#1080#1076#1082'. (+)'#1085#1072#1094#1077#1085#1082#1072'  ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            Caption = '(10300)'#1057#1091#1084#1084#1072' (-)'#1089#1082#1080#1076#1082'. (+)'#1085#1072#1094#1077#1085#1082#1072'  ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Return_Summ_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -994,7 +997,7 @@
             Width = 70
           end
           object Return_Summ_10700: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
+            Caption = '(10700)'#1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
             DataBinding.FieldName = 'Return_Summ_10700'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1017,7 +1020,7 @@
             Width = 70
           end
           object Return_SummCost_40200: TcxGridDBColumn
-            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            Caption = '(40200)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Return_SummCost_40200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

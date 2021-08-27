@@ -73,6 +73,24 @@ BEGIN
         
         ;
 
+/*
+
+Отпуск	        0	0/O	розовый        -- 16492285  "zc_Enum_WorkTimeKind_Holiday"
+Больничный	0	Б	красный        -- 5329407   "zc_Enum_WorkTimeKind_Hospital"
+Прогул	        0	П	темно синий    -- 16744448  "zc_Enum_WorkTimeKind_Skip"
+Стажер50%	50	0/С5O%	желтый         -- 10223615  "zc_Enum_WorkTimeKind_Trainee50"
+пробная смена	0	0/б_о	желтый         -- 8454143   "zc_Enum_WorkTimeKind_Trial"
+Отпуск без сохр.ЗП	0	О б/с	зеленый-- 2405712   "zc_Enum_WorkTimeKind_HolidayNoZp"
+Больничный с документом	0	Б/Д	красный-- 5329407   "zc_Enum_WorkTimeKind_HospitalDoc"
+день 12ч	0	0/Д	голубой        -- 16777128  "zc_Enum_WorkTimeKind_WorkD"
+ночь 12ч	0	0/Н	серый          -- 15395562  "zc_Enum_WorkTimeKind_WorkN"
+Командировка	0	К	салатовый      -- 4128302   "zc_Enum_WorkTimeKind_Trip"
+Удаленый Доступ	0	УД	оранжевый      -- 4760831   "zc_Enum_WorkTimeKind_RemoteAccess"
+Ревизия	        0	РЗ	бирюза         -- 14417001  "zc_Enum_WorkTimeKind_Audit"
+Санобработка	0	/СД	темный желтый  -- 254953    "zc_Enum_WorkTimeKind_Medicday"
+Инвентаризация	0	/ИВ	 бирюза        -- 16776969  "zc_Enum_WorkTimeKind_Medicday"
+
+*/
      -- все данные за месяц
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             WITH
@@ -91,10 +109,26 @@ BEGIN
                                  , CASE 
                                         WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
                                         WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
+
+                                       /* WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Holiday()      THEN 16492285
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Hospital()     THEN 5329407
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip()         THEN 16744448
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()    THEN 10223615
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trial()        THEN 8454143 
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HolidayNoZp()  THEN 2405712 
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HospitalDoc()  THEN 5329407 
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkD()        THEN 16777128
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_WorkN()        THEN 15395562
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trip()         THEN 4128302 
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_RemoteAccess() THEN 4760831 
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit()        THEN 14417001
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 254953  
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 16776969
+*/
                                         --WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                         --     THEN zc_Color_GreenL()
-                                        WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
-                                             THEN 13816530 -- светло серый  15395562
+                                        --WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
+                                        --     THEN 13816530 -- светло серый  15395562
                                         ELSE tmpOperDate.Color_Calc
                                    END AS Color_Calc
                                    --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
