@@ -119,6 +119,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 230
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -88
+    ExplicitTop = 84
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -126,23 +128,43 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
-          Format = ',0.####'
+          Format = ',0.##'
           Kind = skSum
           Column = AmountHours
         end
         item
-          Format = ',0.####'
+          Format = ',0.##'
           Kind = skSum
           Column = CountDay
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_3
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_4
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_5
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_6
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.####'
+          Format = ',0.##'
           Kind = skSum
           Column = AmountHours
         end
         item
-          Format = ',0.####'
+          Format = ',0.##'
           Kind = skSum
           Column = CountDay
         end
@@ -150,6 +172,26 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = MemberName
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_3
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_4
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_5
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Amount_6
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -174,6 +216,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           FixedKind = fkLeft
           Options.HoldOwnColumnsOnly = True
           Options.Moving = False
+          Width = 500
         end
         item
           Caption = #1055#1077#1088#1080#1086#1076
@@ -187,7 +230,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Options.Moving = False
-        Width = 34
+        Width = 20
         Position.BandIndex = 0
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -212,7 +255,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 87
+        Width = 64
         Position.BandIndex = 0
         Position.ColIndex = 2
         Position.RowIndex = 0
@@ -225,7 +268,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 103
+        Width = 64
         Position.BandIndex = 0
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -251,9 +294,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 87
+        Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 8
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object CountDay: TcxGridDBBandedColumn
@@ -266,9 +309,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 65
+        Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 6
+        Position.ColIndex = 7
         Position.RowIndex = 0
       end
       object AmountHours: TcxGridDBBandedColumn
@@ -281,9 +324,69 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 65
+        Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 7
+        Position.ColIndex = 8
+        Position.RowIndex = 0
+      end
+      object Amount_3: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1096#1090'.'#1077#1076
+        DataBinding.FieldName = 'Amount_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 64
+        Position.BandIndex = 0
+        Position.ColIndex = 9
+        Position.RowIndex = 0
+      end
+      object Amount_4: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1041#1051
+        DataBinding.FieldName = 'Amount_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 64
+        Position.BandIndex = 0
+        Position.ColIndex = 10
+        Position.RowIndex = 0
+      end
+      object Amount_6: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1075#1091#1083#1086#1074
+        DataBinding.FieldName = 'Amount_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 64
+        Position.BandIndex = 0
+        Position.ColIndex = 12
+        Position.RowIndex = 0
+      end
+      object Amount_5: TcxGridDBBandedColumn
+        Caption = #1048#1090#1086#1075#1086' '#1086#1090#1087#1091#1089#1082#1072
+        DataBinding.FieldName = 'Amount_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 64
+        Options.Editing = False
+        Options.Moving = False
+        Width = 64
+        Position.BandIndex = 0
+        Position.ColIndex = 11
         Position.RowIndex = 0
       end
       object Value: TcxGridDBBandedColumn
@@ -402,6 +505,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       object TotalAmount_ch2: TcxGridDBBandedColumn
         Caption = #1048#1090#1086#1075#1086
         DataBinding.FieldName = 'TotalAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         MinWidth = 67
