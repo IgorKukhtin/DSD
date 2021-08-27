@@ -107,10 +107,7 @@ BEGIN
                                  , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
                                  , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
                                  , CASE 
-                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
-                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
-
-                                       /* WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Holiday()      THEN 16492285
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Holiday()      THEN 16492285
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Hospital()     THEN 5329407
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip()         THEN 16744448
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()    THEN 10223615
@@ -124,7 +121,9 @@ BEGIN
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit()        THEN 14417001
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 254953  
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 16776969
-*/
+
+                                        WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
+                                        WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
                                         --WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
                                         --     THEN zc_Color_GreenL()
                                         --WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0 AND MIObject_WorkTimeKind.ObjectId <> zc_Enum_WorkTimeKind_Quit()
@@ -246,7 +245,7 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                        ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
                                       AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
-                                      AND 
+ 
                   LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
                                         ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
                                        AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
@@ -257,9 +256,7 @@ BEGIN
                     , ObjectLink_StaffList_PositionLevel.ChildObjectId
              HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
              ;
-                    
-                    
-                    
+
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
      vbDayCount := (SELECT COUNT(*) FROM tmpOperDate);
@@ -437,29 +434,31 @@ BEGIN
                                           SELECT tmp.OperDate
                                                , SUM (tmp.Amount) AS Amount
                                                , 3  AS ObjectId
-                                          FROM (SELECT tmpOperDate.operdate
-                                                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
-                                                                 THEN tmp.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
+                                          FROM (SELECT tmpMI.OperDate
+                                                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, 0) <> 0
+                                                                 THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, 0)
                                                              ELSE 1
                                                         END AS Amount  --tmpMI.ObjectId = zc_Enum_WorkTimeKind_WorkD()
-                                                 FROM tmpOperDate
-                                                      JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                                                                AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
+                                                 FROM tmpMI
+                                                      -- данные из штатного расписания
+                                                      LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpMI.PositionId
+                                                                            AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                                                                            AND tmpStaffList.UnitId     = ' || inUnitId :: TVarChar ||  '
+                                                      --второй раз без подразделения
+                                                      LEFT JOIN tmpStaffList AS tmpStaffList2
+                                                                             ON tmpStaffList2.PositionId = tmpMI.PositionId
+                                                                            AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                                                                            AND tmpStaffList.PositionId IS NULL
+                                                 WHERE tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
                                                                                          , zc_Enum_WorkTimeKind_DayOff()
                                                                                          , zc_Enum_WorkTimeKind_Holiday()
                                                                                          , zc_Enum_WorkTimeKind_Hospital()
                                                                                          , zc_Enum_WorkTimeKind_HolidayNoZp()
                                                                                          , zc_Enum_WorkTimeKind_HospitalDoc()
-                                                                                         )
+                                                                                        )
                                                                 AND tmpMI.isNoSheetCalc = FALSE
-                                                      -- данные из штатного расписания
-                                                      LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmp.PositionId
-                                                                            AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
-                                                                            AND tmpStaffList.UnitId     = inUnitId
-                                                      --второй раз без подразделения
-                                                      LEFT JOIN tmpStaffList AS tmpStaffList2
-                                                                             ON tmpStaffList2.PositionId = tmp.PositionId
-                                                                            AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                                                AND COALESCE (tmpMI.Amount,0) <> 0
+
                                                  ) AS tmp
                                           GROUP BY tmp.OperDate
                                         UNION
