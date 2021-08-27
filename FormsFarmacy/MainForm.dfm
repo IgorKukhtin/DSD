@@ -4552,6 +4552,17 @@
         end>
       isShowModal = False
     end
+    object actReport_Top100GoodsSUN: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1058#1086#1087' 100 '#1090#1086#1074#1072#1088#1072' '#1074' '#1057#1059#1053
+      FormName = 'TReport_Top100GoodsSUNForm'
+      FormNameParam.Value = 'TReport_Top100GoodsSUNForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5471,6 +5482,9 @@
       end
       object N296: TMenuItem
         Action = actReport_SalesGoods_SUA
+      end
+      object N1001: TMenuItem
+        Action = actReport_Top100GoodsSUN
       end
     end
     object N40: TMenuItem [7]

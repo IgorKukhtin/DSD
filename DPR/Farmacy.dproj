@@ -147,8 +147,8 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.250;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-			<VerInfo_Build>250</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.251;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Build>251</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
