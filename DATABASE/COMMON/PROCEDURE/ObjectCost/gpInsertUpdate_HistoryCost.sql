@@ -639,7 +639,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3502863); -- 04.2021
 
      --DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3324068, 3323606, 3325351, 2350884, 2349571, 2354329, 2350886, 2354546, 2349569, -- 07.2021
-     --159538, 256304, 159542, 539314, 158860, 539309, 256017, 539308, 158859, 159537, 539307, 159539, 158864, 539315, 158861, 3617386, 449444, 539312, 467021);
+     -- 159538, 256304, 159542, 539314, 158860, 539309, 256017, 539308, 158859, 159537, 539307, 159539, 158864, 539315, 158861, 3617386, 449444, 539312, 467021);
 
 
 
@@ -1565,4 +1565,6 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2020', inEndDate:= '01.03.2020', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2020', inEndDate:= '31.09.2020', inBranchId:= 301310, inItearationCount:= 10, inInsert:= 12345, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inBranchId:= 0, inItearationCount:= 200, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (769262) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+ SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inBranchId:= 0, inItearationCount:= 700, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in
+(3324068, 3323606, 3325351, 2350884, 2349571, 2354329, 2350886, 2354546, 2349569, -- 07.2021
+     159538, 256304, 159542, 539314, 158860, 539309, 256017, 539308, 158859, 159537, 539307, 159539, 158864, 539315, 158861, 3617386, 449444, 539312, 467021);

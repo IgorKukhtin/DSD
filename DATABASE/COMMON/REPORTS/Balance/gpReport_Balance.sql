@@ -66,7 +66,6 @@ end if;*/
         , vbAccountGroupName_print
         , vbAccountDirectionName_print
      FROM Object_Account_View 
-       
      WHERE  Object_Account_View.AccountCode = 70301;
 
      -- Результат
