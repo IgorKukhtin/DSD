@@ -4,7 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -319
+  ExplicitLeft = -532
   ExplicitWidth = 1378
   ExplicitHeight = 450
   PixelsPerInch = 96
@@ -355,6 +355,14 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1054#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -362,14 +370,6 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
-          end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1054#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085
@@ -414,24 +414,6 @@
             Options.Editing = False
             Width = 100
           end
-          object ContractTagGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object ContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -449,6 +431,24 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object ContractTagGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object Address: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089
@@ -520,6 +520,7 @@
             DataBinding.FieldName = 'PartnerCategory'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.;-0.; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -743,6 +744,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
@@ -750,7 +752,7 @@
             Width = 70
           end
           object Sale_Summ_opt: TcxGridDBColumn
-            Caption = '10100 C'#1091#1084#1084#1072' '#1087#1086' '#1086#1087#1090' '#1087#1088#1072#1081#1089#1091', '#1075#1088#1085' ('#1087#1088#1086#1076'.)'
+            Caption = '(10100)C'#1091#1084#1084#1072' '#1087#1086' '#1086#1087#1090' '#1087#1088#1072#1081#1089#1091', '#1075#1088#1085' ('#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_Summ_opt'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -759,7 +761,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'C'#1091#1084#1084#1072' '#1087#1086' '#1086#1087#1090' '#1087#1088#1072#1081#1089#1091', '#1075#1088#1085' ('#1087#1088#1086#1076'.)'
             Options.Editing = False
-            Width = 79
+            Width = 100
           end
           object Sale_Summ_10200: TcxGridDBColumn
             Caption = '(10200)'#1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -771,7 +773,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = '(10200)'#1056#1072#1079#1085#1080#1094#1072' '#1089' '#1086#1087#1090'. '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Sale_Summ_10250: TcxGridDBColumn
             Caption = '(10250)'#1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -783,7 +785,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = '(10250)'#1057#1082#1080#1076#1082#1072' '#1040#1082#1094#1080#1080', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object Sale_Summ_10300: TcxGridDBColumn
             Caption = '(10300)'#1057#1082#1080#1076#1082#1072', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -794,10 +796,10 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Sale_SummCost: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            Caption = '(10400) '#1055#1088#1086#1076' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -822,62 +824,15 @@
             Width = 80
           end
           object Sale_SummCost_40200: TcxGridDBColumn
-            Caption = '(40200)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            Caption = '(40208)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_SummCost_40200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
-          end
-          object Promo_AmountPartner_Weight: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
-            DataBinding.FieldName = 'Promo_AmountPartner_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Promo_AmountPartner_Sh: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080', '#1096#1090' ('#1087#1086#1082#1091#1087')'
-            DataBinding.FieldName = 'Promo_AmountPartner_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Promo_SummCost: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080'  '#1089'/'#1089', '#1075#1088#1085
-            DataBinding.FieldName = 'Promo_SummCost'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Promo_Summ: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
-            DataBinding.FieldName = 'Promo_Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 120
           end
           object Return_Amount_Weight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'
@@ -939,7 +894,7 @@
             Width = 80
           end
           object Return_Summ: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085
+            Caption = '(10700)'#1042#1086#1079#1074#1088', '#1075#1088#1085
             DataBinding.FieldName = 'Return_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -947,10 +902,10 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Return_Summ_10300: TcxGridDBColumn
-            Caption = '(10300)'#1057#1091#1084#1084#1072' (-)'#1089#1082#1080#1076#1082'. (+)'#1085#1072#1094#1077#1085#1082#1072'  ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            Caption = #1057#1091#1084#1084#1072' (-)'#1089#1082#1080#1076#1082'. (+)'#1085#1072#1094#1077#1085#1082#1072'  ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Return_Summ_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -962,7 +917,7 @@
             Width = 70
           end
           object Return_Summ_10700: TcxGridDBColumn
-            Caption = '(10700)'#1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
+            Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
             DataBinding.FieldName = 'Return_Summ_10700'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -973,8 +928,41 @@
             Width = 70
           end
           object Return_SummCost: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088' '#1089'/'#1089', '#1075#1088#1085
+            Caption = '(10800)'#1042#1086#1079#1074#1088' '#1089'/'#1089', '#1075#1088#1085
             DataBinding.FieldName = 'Return_SummCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Return_SummCost_40200: TcxGridDBColumn
+            Caption = '(40208)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            DataBinding.FieldName = 'Return_SummCost_40200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object Summ_51201: TcxGridDBColumn
+            Caption = '(11101)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            DataBinding.FieldName = 'Summ_51201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '(111000)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            Width = 100
+          end
+          object Promo_AmountPartner_Weight: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Promo_AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -984,9 +972,9 @@
             Options.Editing = False
             Width = 70
           end
-          object Return_SummCost_40200: TcxGridDBColumn
-            Caption = '(40200)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
-            DataBinding.FieldName = 'Return_SummCost_40200'
+          object Promo_AmountPartner_Sh: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Promo_AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -994,17 +982,30 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          object Summ_51201: TcxGridDBColumn
-            Caption = '(111000)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
-            DataBinding.FieldName = 'Summ_51201'
+          object Promo_SummCost: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080'  '#1089'/'#1089', '#1075#1088#1085
+            DataBinding.FieldName = 'Promo_SummCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '(111000)'#1059#1089#1083#1091#1075#1080' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object Promo_Summ: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'Promo_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object BranchName_Personal: TcxGridDBColumn
@@ -1212,12 +1213,14 @@
     ExplicitHeight = 81
     inherited deStart: TcxDateEdit
       Left = 60
+      EditValue = 44197d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
+      EditValue = 44197d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30
@@ -1976,7 +1979,7 @@
   end
   inherited MasterDS: TDataSource
     Left = 112
-    Top = 200
+    Top = 216
   end
   inherited MasterCDS: TClientDataSet
     Left = 40
@@ -2316,8 +2319,8 @@
     Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 112
-    Top = 176
+    Left = 104
+    Top = 192
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ShowDialogAction = ExecuteDialog
@@ -2349,8 +2352,8 @@
       item
         Component = GuidesInfoMoney
       end>
-    Left = 184
-    Top = 160
+    Left = 192
+    Top = 240
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -2390,8 +2393,8 @@
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 170
+    Left = 312
+    Top = 194
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
