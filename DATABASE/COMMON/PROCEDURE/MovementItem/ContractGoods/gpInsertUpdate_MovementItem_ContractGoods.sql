@@ -1,4 +1,4 @@
-p-- Function: gpInsertUpdate_MovementItem_ContractGoods()
+-- Function: gpInsertUpdate_MovementItem_ContractGoods()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ContractGoods (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar, TVarChar);
@@ -34,7 +34,13 @@ BEGIN
              RETURN;
          END IF;
      END IF;
-      
+
+     --проверка если хотят удаленному поставить Сохранить Да то снимаем удаление
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.isErased = TRUE) AND  COALESCE (inisSave,FALSE) = TRUE
+     THEN
+         PERFORM lpSetUnErased_MovementItem (inMovementItemId:= ioId, inUserId:= vbUserId);
+     END IF;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_ContractGoods (ioId           := ioId
                                                       , inMovementId   := inMovementId

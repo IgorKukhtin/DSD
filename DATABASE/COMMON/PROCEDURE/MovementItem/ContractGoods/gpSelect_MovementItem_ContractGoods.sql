@@ -169,8 +169,8 @@ BEGIN
                                              AND MIBoolean_BonusNo.DescId = zc_MIBoolean_BonusNo()
                  )
 
-     , tmpGoodsListSale AS (SELECT tmp.GoodsId
-                                 , tmp.GoodsKindId
+     , tmpGoodsListSale AS (SELECT DISTINCT tmp.GoodsId
+                                 --, COALESCE (tmp.GoodsKindId, 0) AS GoodsKindId
                             FROM gpSelect_Object_GoodsListSale(inRetailId    := 0            ::Integer , -- торговая сеть
                                                                inContractId  := vbContractId ::Integer , -- договор
                                                                inJuridicalId := 0            ::Integer , -- юр. лицо
@@ -239,7 +239,7 @@ BEGIN
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
 
             LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpGoods.GoodsId
-                                      AND tmpGoodsListSale.GoodsKindId = tmpGoods.GoodsKindId
+                                      --AND tmpGoodsListSale.GoodsKindId = COALESCE(tmpGoods.GoodsKindId, 0)
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
         SELECT
@@ -312,7 +312,7 @@ BEGIN
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
 
             LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpMI.GoodsId
-                                      AND tmpGoodsListSale.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                      --AND tmpGoodsListSale.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
     ;
      ELSE
 
@@ -360,8 +360,8 @@ BEGIN
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= CURRENT_DATE) AS lfSelect 
                             )
 
-     , tmpGoodsListSale AS (SELECT tmp.GoodsId
-                                 , tmp.GoodsKindId
+     , tmpGoodsListSale AS (SELECT DISTINCT tmp.GoodsId
+                                 --, COALESCE (tmp.GoodsKindId, 0) AS GoodsKindId
                             FROM gpSelect_Object_GoodsListSale(inRetailId    := 0            ::Integer , -- торговая сеть
                                                                inContractId  := vbContractId ::Integer , -- договор
                                                                inJuridicalId := 0            ::Integer , -- юр. лицо
@@ -453,7 +453,7 @@ BEGIN
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
 
             LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpMI.GoodsId
-                                      AND tmpGoodsListSale.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                      --AND tmpGoodsListSale.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
            ;
 
      END IF;

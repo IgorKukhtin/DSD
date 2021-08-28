@@ -37,7 +37,7 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
+    actRefreshMI: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actUnitChoiceForm: TOpenChoiceForm;
@@ -61,26 +61,22 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     bbPrintSaleOrderTax: TdxBarButton;
-    actPersonalGroupChoiceForm: TOpenChoiceForm;
-    bbPersonalGroupChoiceForm: TdxBarButton;
-    actUpdatePersonalGroup: TdsdExecStoredProc;
-    macUpdatePersonalGroup: TMultiAction;
-    ChildDS: TDataSource;
-    ChildCDS: TClientDataSet;
-    PopupMenuChild: TPopupMenu;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
-    N4: TMenuItem;
-    ChildDBViewAddOn: TdsdDBViewAddOn;
-    spSelect_Child: TdsdStoredProc;
+    bbUpdate_MI_ContractGoods_Save_No: TdxBarButton;
+    actUpdate_MI_ContractGoods_Save_No: TdsdExecStoredProc;
+    macUpdate_MI_Save_No_List: TMultiAction;
     cxLabel5: TcxLabel;
     edEndBeginDate: TcxDateEdit;
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     isSale: TcxGridDBColumn;
+    macUpdate_MI_ContractGoods_Save_No: TMultiAction;
+    actUpdate_MI_ContractGoods_Save_Yes: TdsdExecStoredProc;
+    macUpdate_MI_Save_Yes_List: TMultiAction;
+    macUpdate_MI_ContractGoods_Save_Yes: TMultiAction;
+    spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc;
+    spUpdate_MI_ContractGoods_Save_Yes: TdsdStoredProc;
+    bbUpdate_MI_ContractGoods_Save_Yes: TdxBarButton;
   private
     { Private declarations }
   public

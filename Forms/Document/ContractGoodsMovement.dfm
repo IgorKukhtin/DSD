@@ -382,8 +382,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 84
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 363
-    Top = 528
+    Left = 883
+    Top = 232
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -404,7 +404,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Child
         end>
       RefreshOnTabSetChanges = True
     end
@@ -532,7 +531,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh
+    object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -542,38 +541,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPersonalGroupChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'StorageForm'
-      ImageIndex = 76
-      FormName = 'TPersonalGroupForm'
-      FormNameParam.Value = 'TPersonalGroupForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
     object actStorageChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -774,6 +742,59 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macUpdate_MI_ContractGoods_Save_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_MI_Save_Yes_List
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1044#1040'>?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1044#1040'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1044#1040'>'
+      ImageIndex = 76
+    end
+    object actUpdate_MI_ContractGoods_Save_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_ContractGoods_Save_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_ContractGoods_Save_Yes
+        end>
+      Caption = 'actUpdate_MI_ContractGoods_Save_No'
+    end
+    object macUpdate_MI_ContractGoods_Save_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_MI_Save_No_List
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'> ('#1091#1076#1072#1083#1080#1090#1100')?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'> ('#1091#1076#1072#1083#1080#1090#1100')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'> ('#1091#1076#1072#1083#1080#1090#1100')'
+      ImageIndex = 77
+    end
+    object macUpdate_MI_Save_Yes_List: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_MI_ContractGoods_Save_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1044#1040'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1044#1040'>'
+      ImageIndex = 76
+    end
     object actPrintSaleOrderTax: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -810,28 +831,28 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdatePersonalGroup: TdsdExecStoredProc
+    object actUpdate_MI_ContractGoods_Save_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_ContractGoods_Save_No
       StoredProcList = <
         item
+          StoredProc = spUpdate_MI_ContractGoods_Save_No
         end>
-      Caption = 'actUpdatePersonalGroup'
+      Caption = 'actUpdate_MI_ContractGoods_Save_No'
     end
-    object macUpdatePersonalGroup: TMultiAction
+    object macUpdate_MI_Save_No_List: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actPersonalGroupChoiceForm
-        end
-        item
-          Action = actUpdatePersonalGroup
+          Action = actUpdate_MI_ContractGoods_Save_No
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
-      ImageIndex = 76
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'>'
+      ImageIndex = 77
     end
   end
   inherited MasterDS: TDataSource
@@ -921,11 +942,27 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_ContractGoods_Save_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_ContractGoods_Save_No'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -960,8 +997,12 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Action = actPrintSaleOrderTax
       Category = 0
     end
-    object bbPersonalGroupChoiceForm: TdxBarButton
-      Action = macUpdatePersonalGroup
+    object bbUpdate_MI_ContractGoods_Save_No: TdxBarButton
+      Action = macUpdate_MI_ContractGoods_Save_No
+      Category = 0
+    end
+    object bbUpdate_MI_ContractGoods_Save_Yes: TdxBarButton
+      Action = macUpdate_MI_ContractGoods_Save_Yes
       Category = 0
     end
   end
@@ -1260,8 +1301,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 800
-    Top = 328
+    Left = 784
+    Top = 296
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ContractGoods_SetErased'
@@ -1415,7 +1456,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshPrice
+    RefreshAction = actRefreshMI
     ComponentList = <
       item
       end
@@ -1508,74 +1549,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Left = 348
     Top = 16
   end
-  object ChildDS: TDataSource
-    DataSet = ChildCDS
-    Left = 236
-    Top = 490
-  end
-  object ChildCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'ParentId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 176
-    Top = 489
-  end
-  object PopupMenuChild: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 120
-    Top = 544
-    object MenuItem1: TMenuItem
-      Action = actRefresh
-    end
-    object MenuItem2: TMenuItem
-      Action = actGridToExcel
-    end
-    object MenuItem3: TMenuItem
-    end
-    object MenuItem4: TMenuItem
-    end
-    object N4: TMenuItem
-    end
-  end
-  object ChildDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 206
-    Top = 545
-  end
-  object spSelect_Child: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderGoods_Child'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 504
-  end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
@@ -1603,5 +1576,155 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       end>
     Left = 528
     Top = 8
+  end
+  object spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_ContractGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusNo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBonusNo'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSave'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 432
+  end
+  object spUpdate_MI_ContractGoods_Save_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_ContractGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusNo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBonusNo'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSave'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 496
   end
 end
