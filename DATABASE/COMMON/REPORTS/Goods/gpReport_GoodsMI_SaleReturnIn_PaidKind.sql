@@ -117,7 +117,7 @@ BEGIN
                           , (gpReport.Return_Summ * (-1)) :: TFloat AS Return_Summ
                           , (gpReport.Return_Summ_10300 * (-1)) :: TFloat AS Return_Summ_10300
                           , (gpReport.Return_Summ_10700 * (-1)) :: TFloat AS Return_Summ_10700
-                          , (gpReport.Return_SummCost * (-1)) :: TFloat AS Return_SummCost
+                          , (gpReport.Return_SummCost * (1)) :: TFloat AS Return_SummCost
                           , (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
                           , (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh
                           , (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
