@@ -90,15 +90,15 @@ $BODY$
 
 
 /*
-SELECT lpInsert_Movement_ContractGoods_byGuides (inStartDate   := '01.08.2021'::TDateTime
-                                                         , inEndDate     := tmp.EndDate
-                                                         , inContractId  := tmp.ContractId
-                                                         , inJuridicalId := tmp.JuridicalId
-                                                         , inGoodsId     := tmp.GoodsId
-                                                         , inGoodsKindId := tmp.GoodsKindId
-                                                         , inPrice       := tmp.Price
-                                                         , inUserId      := 5
-                                                          )
+SELECT lpInsert_Movement_ContractGoods_byGuides (inStartDate   := tmp.StartDate ::TDateTime
+                                               , inEndDate     := tmp.EndDate
+                                               , inContractId  := tmp.ContractId
+                                               , inJuridicalId := tmp.JuridicalId
+                                               , inGoodsId     := tmp.GoodsId
+                                               , inGoodsKindId := tmp.GoodsKindId
+                                               , inPrice       := tmp.Price
+                                               , inUserId      := 5
+                                                )
 FROM (
 SELECT ContractGoods_Contract.ChildObjectId             AS ContractId
                 , ObjectLink_Contract_Juridical.ChildObjectId      AS JuridicalId
@@ -142,5 +142,36 @@ SELECT ContractGoods_Contract.ChildObjectId             AS ContractId
 ) AS tmp
      WHERE tmp.EndDate = tmp.EndDate_last
 
+
+*/
+
+
+/*
+
+++UPDATE MovementItem SET isErased = TRUE WHERE Id in (
+ WITH 
+           tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+                          , MovementItem.Amount                           AS Amount
+                          , MovementItem.ObjectId                         AS GoodsId
+, tmpMov.OperDate, tmpMov.InvNumber
+                     FROM (SELECT Movement.* From Movement WHERE Movement.DescId = zc_Movement_ContractGoods() and Movement.StatusId <> zc_Enum_Status_Erased() and Movement.OperDate = '02.10.2020') AS tmpMov
+                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                     )
+
+     , tmpMI_Float AS (SELECT MovementItemFloat.*
+                        FROM MovementItemFloat
+                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                          AND MovementItemFloat.DescId IN (zc_MIFloat_Price())
+                          )
+
+SELECT tmpMI.MovementItemId
+  FROM tmpMI
+            LEFT JOIN tmpMI_Float AS MIFloat_Price
+                                  ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
+                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+WHERE COALESCE (MIFloat_Price.ValueData,0) = 0
+)
 
 */
