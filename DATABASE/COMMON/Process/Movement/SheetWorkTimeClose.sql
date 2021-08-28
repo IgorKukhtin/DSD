@@ -40,7 +40,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_SheetWorkTi
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_SheetWorkTimeClose()
                                   , inDescId:= zc_Object_Process()
-                                  , inCode:= 2
+                                  , inCode:= 4
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SheetWorkTimeClose())||'(все)> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_SheetWorkTimeClose');
 END $$;

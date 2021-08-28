@@ -79,6 +79,7 @@ BEGIN
  3) и т.д.... для Sale_Amount_10500_Weight + Sale_Summ_10300 + Sale_SummCost + Sale_SummCost_10500 + Return_Summ + Return_Summ_10300 + Return_Summ_10700 + Return_SummCost
 */
 
+
        RETURN QUERY
        WITH -- данные  из отчета
        tmpReport AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
@@ -145,7 +146,7 @@ BEGIN
                                                        , inIsGoods
                                                        , inIsGoodsKind
                                                        , inIsContract
-                                                       , FALSE        -- inIsOLAP
+                                                       , inIsOLAP
                                                        , inSession
                                                         ) AS gpReport
                     )
@@ -153,7 +154,9 @@ BEGIN
      , tmpPartnerAddress AS (SELECT * 
                              FROM Object_Partner_Address_View
                              )
-
+     , tmpPersonal_View AS (SELECT * 
+                             FROM Object_Personal_View
+                             )
        -- бонус в документах факт - zc_Movement_ProfitLossService
      , tmpProfitLossService AS (SELECT '' ::TVarChar AS GoodsGroupName, '' ::TVarChar AS GoodsGroupNameFull
                                      , 0 AS GoodsId, 0 AS GoodsCode, '' ::TVarChar AS GoodsName
@@ -240,18 +243,17 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                                          ON ObjectLink_Partner_Personal.ObjectId = tmp.PartnerId
                                                         AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-                                    LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+                                    LEFT JOIN tmpPersonal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                                          ON ObjectLink_Partner_PersonalTrade.ObjectId = tmp.PartnerId
                                                         AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                    LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                                    LEFT JOIN tmpPersonal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
                                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                                          ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
                                                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                     LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
-                               -- WHERE COALESCE (tmp.AmountOut,0) <> 0
                                 )
 
           , tmpData AS (SELECT * FROM tmpReport

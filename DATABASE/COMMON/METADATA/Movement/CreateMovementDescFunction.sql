@@ -478,7 +478,7 @@ INSERT INTO MovementDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_Movement_SheetWorkTimeClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTimeClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
-  SELECT 'zc_Movement_SheetWorkTimeClose', 'Настрока тестирования Фармацевтов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTimeClose');
+  SELECT 'zc_Movement_SheetWorkTimeClose', 'Закрытие периода, Табель учета рабочего времени' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTimeClose');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
