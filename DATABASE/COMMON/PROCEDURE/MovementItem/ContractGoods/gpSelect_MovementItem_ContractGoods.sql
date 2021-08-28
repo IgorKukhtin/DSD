@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isSave Boolean, isBonusNo Boolean
+             , isSale Boolean                     --есть в продаже
              , isErased Boolean
              )
 AS
@@ -168,6 +169,18 @@ BEGIN
                                              AND MIBoolean_BonusNo.DescId = zc_MIBoolean_BonusNo()
                  )
 
+     , tmpGoodsListSale AS (SELECT tmp.GoodsId
+                                 , tmp.GoodsKindId
+                            FROM gpSelect_Object_GoodsListSale(inRetailId    := 0            ::Integer , -- торговая сеть
+                                                               inContractId  := vbContractId ::Integer , -- договор
+                                                               inJuridicalId := 0            ::Integer , -- юр. лицо
+                                                               inGoodsId     := 0            ::Integer , -- Товар
+                                                               inShowAll     := FALSE        ::Boolean , -- показать удаленные Да/нет
+                                                               inSession     := inSession    ::TVarChar  -- сессия пользователя
+                                                               ) AS tmp
+                           )
+
+       --
        SELECT
              0 :: Integer               AS Id
            , Object_Goods.Id          		AS GoodsId
@@ -191,7 +204,8 @@ BEGIN
            
            , FALSE AS isSave
            , FALSE AS isBonusNo
-
+           , CASE WHEN tmpGoodsListSale.GoodsId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSale
+           
            , FALSE AS isErased
        FROM tmpGoodsByGoodsKind AS tmpGoods
 
@@ -223,7 +237,9 @@ BEGIN
                                        AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
             LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpGoods.GoodsId
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
-                                  
+
+            LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpGoods.GoodsId
+                                      AND tmpGoodsListSale.GoodsKindId = tmpGoods.GoodsKindId
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
         SELECT
@@ -249,6 +265,8 @@ BEGIN
            
            , CASE WHEN COALESCE (tmpMI.isErased, TRUE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isSave
            , tmpMI.isBonusNo            AS isBonusNo
+           
+           , CASE WHEN tmpGoodsListSale.GoodsId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSale
 
            , tmpMI.isErased             AS isErased
 
@@ -281,10 +299,10 @@ BEGIN
                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
 
-          LEFT JOIN MovementItemLinkObject AS MILO_Update
-                                           ON MILO_Update.MovementItemId = tmpMI.MovementItemId
-                                          AND MILO_Update.DescId = zc_MILinkObject_Update()
-          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                             ON MILO_Update.MovementItemId = tmpMI.MovementItemId
+                                            AND MILO_Update.DescId = zc_MILinkObject_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
             -- привязываем 2 раза по виду товара и без  --на тек дату
             LEFT JOIN tmpPriceList_curr AS tmpPriceList_Kind_curr 
@@ -292,6 +310,9 @@ BEGIN
                                        AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
             LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpMI.GoodsId
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
+
+            LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpMI.GoodsId
+                                      AND tmpGoodsListSale.GoodsKindId = MILinkObject_GoodsKind.ObjectId
     ;
      ELSE
 
@@ -339,6 +360,17 @@ BEGIN
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= CURRENT_DATE) AS lfSelect 
                             )
 
+     , tmpGoodsListSale AS (SELECT tmp.GoodsId
+                                 , tmp.GoodsKindId
+                            FROM gpSelect_Object_GoodsListSale(inRetailId    := 0            ::Integer , -- торговая сеть
+                                                               inContractId  := vbContractId ::Integer , -- договор
+                                                               inJuridicalId := 0            ::Integer , -- юр. лицо
+                                                               inGoodsId     := 0            ::Integer , -- Товар
+                                                               inShowAll     := FALSE        ::Boolean , -- показать удаленные Да/нет
+                                                               inSession     := inSession    ::TVarChar  -- сессия пользователя
+                                                               ) AS tmp
+                           )
+
         SELECT
              tmpMI.MovementItemId    :: Integer AS Id
            , Object_Goods.Id          		AS GoodsId
@@ -363,6 +395,7 @@ BEGIN
            
            , CASE WHEN COALESCE (tmpMI.isErased, TRUE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isSave
            , COALESCE (MIBoolean_BonusNo.ValueData, FALSE) ::Boolean AS isBonusNo
+           , CASE WHEN tmpGoodsListSale.GoodsId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isSale
 
            , tmpMI.isErased             AS isErased
 
@@ -418,6 +451,9 @@ BEGIN
                                        AND COALESCE (tmpPriceList_Kind_curr.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
             LEFT JOIN tmpPriceList_curr ON tmpPriceList_curr.GoodsId     = tmpMI.GoodsId
                                        AND tmpPriceList_curr.GoodsKindId IS NULL
+
+            LEFT JOIN tmpGoodsListSale ON tmpGoodsListSale.GoodsId     = tmpMI.GoodsId
+                                      AND tmpGoodsListSale.GoodsKindId = MILinkObject_GoodsKind.ObjectId
            ;
 
      END IF;
@@ -428,10 +464,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.08.21         * isSale
  25.08.21         * isBonusNo
  05.07.21         *
 */
 
 -- тест
--- select * from gpSelect_MovementItem_ContractGoods(inMovementId := 18298048 , inShowAll:= false, inIsErased := 'False' ,  inSession := '5')
--- select * from gpSelect_MovementItem_ContractGoods(inMovementId := 18298048 , inShowAll:= true, inIsErased := 'False' ,  inSession := '5')
+-- select * from gpSelect_MovementItem_ContractGoods(inMovementId := 20779487 , inShowAll:= false, inIsErased := 'False' ,  inSession := '5')
+-- select * from gpSelect_MovementItem_ContractGoods(inMovementId := 20779487 , inShowAll:= true, inIsErased := 'False' ,  inSession := '5')

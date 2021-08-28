@@ -94,7 +94,16 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsGroupNameFull: TcxGridDBColumn [0]
+          object isSale: TcxGridDBColumn [0]
+            Caption = #1045#1089#1090#1100' '#1074' '#1087#1088#1086#1076#1072#1078#1077
+            DataBinding.FieldName = 'isSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1090#1100' '#1074' '#1087#1088#1086#1076#1072#1078#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn [1]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -102,7 +111,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 120
           end
-          object GoodsCode: TcxGridDBColumn [1]
+          object GoodsCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -110,7 +119,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 75
           end
-          object GoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -126,7 +135,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 182
           end
-          object GoodsKindName: TcxGridDBColumn [3]
+          object GoodsKindName: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -141,7 +150,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object MeasureName: TcxGridDBColumn [4]
+          object MeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -149,7 +158,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 45
           end
-          object Price: TcxGridDBColumn [5]
+          object Price: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -160,7 +169,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 70
           end
-          object Price_curr: TcxGridDBColumn [6]
+          object Price_curr: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' ('#1090#1077#1082#1091#1097#1072#1103')'
             DataBinding.FieldName = 'Price_curr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -171,14 +180,14 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Options.Editing = False
             Width = 70
           end
-          object isSave: TcxGridDBColumn [7]
+          object isSave: TcxGridDBColumn [8]
             Caption = #1057#1086#1093#1088#1072#1085#1077#1085
             DataBinding.FieldName = 'isSave'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object isBonusNo: TcxGridDBColumn [8]
+          object isBonusNo: TcxGridDBColumn [9]
             Caption = #1053#1077#1090' '#1085#1072#1095'. '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
             DataBinding.FieldName = 'isBonusNo'
             HeaderAlignmentHorz = taCenter
@@ -186,7 +195,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             HeaderHint = #1085#1077#1090' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
             Width = 70
           end
-          object Comment: TcxGridDBColumn [9]
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

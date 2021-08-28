@@ -80,6 +80,7 @@ type
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    isSale: TcxGridDBColumn;
   private
     { Private declarations }
   public
