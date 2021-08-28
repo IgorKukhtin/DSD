@@ -4,7 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -532
+  ExplicitLeft = -392
   ExplicitWidth = 1378
   ExplicitHeight = 450
   PixelsPerInch = 96
@@ -25,6 +25,8 @@
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 308
+        ExplicitLeft = 3
+        ExplicitTop = 7
         ExplicitWidth = 1362
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -804,12 +806,11 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object Sale_SummCost_10500: TcxGridDBColumn
             Caption = '(10500)'#1057#1082#1080#1076#1082#1072' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -817,11 +818,10 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Sale_SummCost_40200: TcxGridDBColumn
             Caption = '(40208)(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
