@@ -242,7 +242,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Width = 40
           end
           object ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1044#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

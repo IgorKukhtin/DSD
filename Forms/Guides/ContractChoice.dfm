@@ -370,6 +370,37 @@ inherited ContractChoiceForm: TContractChoiceForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractStateKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractStateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractStateKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractStateKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction

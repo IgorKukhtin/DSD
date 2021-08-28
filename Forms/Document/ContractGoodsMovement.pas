@@ -77,6 +77,18 @@ type
     spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc;
     spUpdate_MI_ContractGoods_Save_Yes: TdsdStoredProc;
     bbUpdate_MI_ContractGoods_Save_Yes: TdxBarButton;
+    edContractTag: TcxButtonEdit;
+    cxLabel21: TcxLabel;
+    GuidesContractTag: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edStartDate_contract: TcxDateEdit;
+    edEndDate_contract: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    cxLabel11: TcxLabel;
+    edContractCode: TcxCurrencyEdit;
+    GuidesContractStateKind: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edContractStateKind: TcxButtonEdit;
   private
     { Private declarations }
   public

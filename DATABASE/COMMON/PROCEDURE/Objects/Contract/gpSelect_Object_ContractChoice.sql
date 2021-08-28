@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , ContractStateKindCode Integer
+             , ContractStateKindId Integer, ContractStateKindCode Integer, ContractStateKindName TVarChar
              , ContractComment TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , OKPO TVarChar
@@ -132,7 +132,9 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
        , Object_InfoMoney_View.InfoMoneyName_all
 
+       , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
+       , Object_Contract_View.ContractStateKindName
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Currency.Id         AS CurrencyId 
@@ -279,7 +281,9 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
        , Object_InfoMoney_View.InfoMoneyName_all
 
+       , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
+       , Object_Contract_View.ContractStateKindName
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Currency.Id         AS CurrencyId 
@@ -407,7 +411,9 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
        , Object_InfoMoney_View.InfoMoneyName_all
 
+       , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
+       , Object_Contract_View.ContractStateKindName
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Currency.Id         AS CurrencyId 
@@ -530,7 +536,9 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
        , Object_InfoMoney_View.InfoMoneyName_all
 
+       , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
+       , Object_Contract_View.ContractStateKindName
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Currency.Id         AS CurrencyId 

@@ -1,25 +1,25 @@
 inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
   ClientHeight = 638
-  ClientWidth = 982
-  ExplicitWidth = 998
+  ClientWidth = 1076
+  ExplicitWidth = 1092
   ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 117
-    Width = 982
+    Width = 1076
     Height = 521
     ExplicitTop = 117
     ExplicitWidth = 982
     ExplicitHeight = 521
     ClientRectBottom = 521
-    ClientRectRight = 982
+    ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       ExplicitHeight = 497
       inherited cxGrid: TcxGrid
-        Width = 982
+        Width = 1076
         Height = 497
         ExplicitWidth = 982
         ExplicitHeight = 497
@@ -245,10 +245,12 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 982
+    Width = 1076
     Height = 91
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitLeft = 8
+    ExplicitTop = 28
+    ExplicitWidth = 1076
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -279,30 +281,30 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 63
-      ExplicitTop = 63
+      Top = 62
+      ExplicitTop = 62
       ExplicitWidth = 165
       ExplicitHeight = 22
       Width = 165
     end
     object cxLabel22: TcxLabel
-      Left = 272
+      Left = 598
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 272
+      Left = 598
       Top = 63
       TabOrder = 7
-      Width = 360
+      Width = 273
     end
     object cxLabel8: TcxLabel
-      Left = 638
+      Left = 880
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 638
+      Left = 880
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -313,12 +315,12 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Width = 146
     end
     object cxLabel7: TcxLabel
-      Left = 638
+      Left = 880
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 638
+      Left = 880
       Top = 63
       Properties.Buttons = <
         item
@@ -333,7 +335,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     object cxLabel27: TcxLabel
       Left = 272
       Top = 5
-      Caption = #1044#1086#1075#1086#1074#1086#1088
+      Caption = #8470' '#1044#1086#1075#1086#1074#1086#1088#1072
     end
     object edContract: TcxButtonEdit
       Left = 272
@@ -347,16 +349,16 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Properties.HideSelection = False
       Properties.ReadOnly = False
       TabOrder = 13
-      Width = 153
+      Width = 105
     end
     object cxLabel3: TcxLabel
-      Left = 434
-      Top = 5
+      Left = 272
+      Top = 45
       Caption = #1070#1088'.'#1083#1080#1094#1086
     end
     object edJuridical: TcxButtonEdit
-      Left = 434
-      Top = 23
+      Left = 272
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -364,7 +366,85 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 198
+      Width = 315
+    end
+    object edContractTag: TcxButtonEdit
+      Left = 598
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 97
+    end
+    object cxLabel21: TcxLabel
+      Left = 598
+      Top = 5
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object cxLabel4: TcxLabel
+      Left = 703
+      Top = 5
+      Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
+    end
+    object edStartDate_contract: TcxDateEdit
+      Left = 703
+      Top = 23
+      EditValue = 0d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 19
+      Width = 80
+    end
+    object edEndDate_contract: TcxDateEdit
+      Left = 791
+      Top = 23
+      EditValue = 0d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 20
+      Width = 80
+    end
+    object cxLabel6: TcxLabel
+      Left = 791
+      Top = 5
+      Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
+    end
+    object cxLabel11: TcxLabel
+      Left = 383
+      Top = 5
+      Caption = #1050#1086#1076' '#1076#1086#1075'.'
+    end
+    object edContractCode: TcxCurrencyEdit
+      Left = 383
+      Top = 23
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 58
+    end
+    object cxLabel9: TcxLabel
+      Left = 447
+      Top = 5
+      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object edContractStateKind: TcxButtonEdit
+      Left = 448
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 25
+      Width = 139
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1082,7 +1162,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ContractGoods'
-    Left = 152
+    Left = 128
     Top = 32
   end
   inherited spGet: TdsdStoredProc
@@ -1190,6 +1270,56 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractCode'
+        Value = Null
+        Component = edContractCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractStateKindId'
+        Value = Null
+        Component = GuidesContractStateKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractStateKindName'
+        Value = Null
+        Component = GuidesContractStateKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate_contract'
+        Value = Null
+        Component = edStartDate_contract
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate_contract'
+        Value = Null
+        Component = edEndDate_contract
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1545,8 +1675,58 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = edContractCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractStateKindId'
+        Value = Null
+        Component = GuidesContractStateKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractStateKindName'
+        Value = Null
+        Component = GuidesContractStateKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = edStartDate_contract
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = edEndDate_contract
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
-    Left = 348
+    Left = 324
     Top = 16
   end
   object GuidesJuridical: TdsdGuides
@@ -1574,8 +1754,8 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 8
+    Left = 384
+    Top = 56
   end
   object spUpdate_MI_ContractGoods_Save_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ContractGoods'
@@ -1726,5 +1906,48 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     PackSize = 1
     Left = 616
     Top = 496
+  end
+  object GuidesContractTag: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTag
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TContractTagForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 608
+    Top = 15
+  end
+  object GuidesContractStateKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractStateKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 480
+    Top = 16
   end
 end
