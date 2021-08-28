@@ -78,25 +78,25 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_PSP_D(), inId, inPSP_D);
       
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Birthday(), inId, inBirthday_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Birthday(), inId, CASE WHEN inBirthday_date = CURRENT_DATE THEN NULL ELSE inBirthday_date END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children1(), inId, inChildren1_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children1(), inId, CASE WHEN TRIM (inChildren1) <> '' THEN inChildren1_date ELSE NULL END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children2(), inId, inChildren2_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children2(), inId, CASE WHEN TRIM (inChildren2) <> '' THEN inChildren2_date ELSE NULL END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children3(), inId, inChildren3_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children3(), inId, CASE WHEN TRIM (inChildren3) <> '' THEN inChildren3_date ELSE NULL END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children4(), inId, inChildren4_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children4(), inId, CASE WHEN TRIM (inChildren4) <> '' THEN inChildren4_date ELSE NULL END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children5(), inId, inChildren5_date);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Children5(), inId, CASE WHEN TRIM (inChildren5) <> '' THEN inChildren5_date ELSE NULL END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_PSP_Start(), inId, inPSP_StartDate);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_PSP_Start(), inId, CASE WHEN inPSP_StartDate = CURRENT_DATE THEN NULL ELSE inPSP_StartDate END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_PSP_End(), inId, inPSP_EndDate);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_PSP_End(), inId, CASE WHEN inPSP_EndDate = CURRENT_DATE THEN NULL ELSE inPSP_EndDate END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Dekret_Start(), inId, inDekret_StartDate);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Dekret_Start(), inId, CASE WHEN inDekret_StartDate = CURRENT_DATE THEN NULL ELSE inDekret_StartDate END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Dekret_End(), inId, inDekret_EndDate);
+   PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_Dekret_End(), inId, CASE WHEN inDekret_EndDate = CURRENT_DATE THEN NULL ELSE inDekret_EndDate END);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Gender(), inId, inGenderId);
