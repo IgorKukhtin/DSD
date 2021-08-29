@@ -11,17 +11,17 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1076
     Height = 521
     ExplicitTop = 117
-    ExplicitWidth = 982
+    ExplicitWidth = 1076
     ExplicitHeight = 521
     ClientRectBottom = 521
     ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 1076
       ExplicitHeight = 497
       inherited cxGrid: TcxGrid
         Width = 1076
         Height = 497
-        ExplicitWidth = 982
+        ExplicitWidth = 1076
         ExplicitHeight = 497
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -248,8 +248,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
     Width = 1076
     Height = 91
     TabOrder = 3
-    ExplicitLeft = 8
-    ExplicitTop = 28
     ExplicitWidth = 1076
     ExplicitHeight = 91
     inherited edInvNumber: TcxTextEdit
@@ -621,6 +619,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actStorageChoiceForm: TOpenChoiceForm
@@ -677,47 +676,21 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         end>
       isShowModal = True
     end
-    object actPartionGoodsChoiceForm: TOpenChoiceForm
+    object actGoods_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PartionGoodsForm'
-      FormName = 'TPartionGoodsChoiceForm'
-      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      Caption = 'Goods_Object'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inGoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inGoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitId'
-          Value = ''
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsId'
+          ComponentItem = 'GoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -725,35 +698,35 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartionGoodsName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Price'
+          Name = 'Code'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Price'
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StorageName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'StorageName_Partion'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDatePartion'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsOperDate'
+          ComponentItem = 'GoodsCode'
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSave'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isSave'
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -934,6 +907,16 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1093#1088#1072#1085#1077#1085' '#1053#1045#1058'>'
       ImageIndex = 77
     end
+    object InsertRecord1: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actGoods_ObjectChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -999,6 +982,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -1085,6 +1072,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
       Action = macUpdate_MI_ContractGoods_Save_Yes
       Category = 0
     end
+    object bbInsertRecord: TdxBarButton
+      Action = InsertRecord1
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1150,6 +1141,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         Name = 'ReportNameSendBill'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSave_yes'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

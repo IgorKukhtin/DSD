@@ -42,7 +42,7 @@ type
     PrintItemsCDS: TClientDataSet;
     actUnitChoiceForm: TOpenChoiceForm;
     actStorageChoiceForm: TOpenChoiceForm;
-    actPartionGoodsChoiceForm: TOpenChoiceForm;
+    actGoods_ObjectChoiceForm: TOpenChoiceForm;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     actGoodsKindCompleteChoice: TOpenChoiceForm;
@@ -89,6 +89,8 @@ type
     GuidesContractStateKind: TdsdGuides;
     cxLabel9: TcxLabel;
     edContractStateKind: TcxButtonEdit;
+    InsertRecord1: TInsertRecord;
+    bbInsertRecord: TdxBarButton;
   private
     { Private declarations }
   public

@@ -16,9 +16,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ContractGoods(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbWeight TFloat;
-   DECLARE vbMeasureId Integer;
+   DECLARE vbUserId          Integer;
+   DECLARE vbContractId      Integer;
+   DECLARE vbPriceListId     Integer;
+   DECLARE vbOperDate        TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ContractGoods());
@@ -39,6 +40,57 @@ BEGIN
      IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.isErased = TRUE) AND  COALESCE (inisSave,FALSE) = TRUE
      THEN
          PERFORM lpSetUnErased_MovementItem (inMovementItemId:= ioId, inUserId:= vbUserId);
+     END IF;
+
+
+     -- если цена 0 пробуем найти
+     IF COALESCE (inPrice,0) = 0
+     THEN
+         -- Данные документа
+         SELECT Movement.OperDate
+              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+                INTO vbOperDate, vbContractId
+         FROM Movement
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+         WHERE Movement.Id = inMovementId
+           AND Movement.DescId = zc_Movement_ContractGoods();
+
+         vbPriceListId := (SELECT ObjectLink_ContractPriceList_PriceList.ChildObjectId AS PriceListId
+                           FROM (SELECT vbContractId AS ContractId) AS tmp
+                            
+                                 INNER JOIN ObjectLink AS ObjectLink_ContractPriceList_Contract
+                                                       ON ObjectLink_ContractPriceList_Contract.ChildObjectId = tmp.ContractId
+                                                      AND ObjectLink_ContractPriceList_Contract.DescId = zc_ObjectLink_ContractPriceList_Contract()
+                       
+                                 INNER JOIN Object AS Object_ContractPriceList
+                                                   ON Object_ContractPriceList.Id = ObjectLink_ContractPriceList_Contract.ObjectId
+                                                  AND Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
+                                                  AND Object_ContractPriceList.isErased = FALSE
+
+                                 INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                                       ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractPriceList_Contract.ObjectId
+                                                      AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractPriceList_StartDate()
+                                                      AND ObjectDate_StartDate.ValueData <= vbOperDate
+                                 INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                       ON ObjectDate_EndDate.ObjectId = ObjectLink_ContractPriceList_Contract.ObjectId
+                                                      AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractPriceList_EndDate()
+                                                      AND ObjectDate_EndDate.ValueData >= vbOperDate
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_PriceList
+                                                      ON ObjectLink_ContractPriceList_PriceList.ObjectId = ObjectLink_ContractPriceList_Contract.ObjectId
+                                                     AND ObjectLink_ContractPriceList_PriceList.DescId = zc_ObjectLink_ContractPriceList_PriceList()
+                       );
+         
+         inPrice := COALESCE ( (SELECT lfSelect.ValuePrice  AS Price_PriceList
+                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate) AS lfSelect
+                                WHERE lfSelect.GoodsId = inGoodsId AND COALESCE(lfSelect.GoodsKindId,0) = COALESCE (inGoodsKindId,0) LIMIT 1)
+                             , (SELECT lfSelect.ValuePrice  AS Price_PriceList
+                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate) AS lfSelect
+                                WHERE lfSelect.GoodsId = inGoodsId LIMIT 1)
+                             ,0 )::TFloat;
+
      END IF;
 
      -- сохранили <Элемент документа>
