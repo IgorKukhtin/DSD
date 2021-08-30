@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BeginDateStart TDateTime, BeginDateEnd TDateTime
              , MemberId Integer, MemberName TVarChar
              , MemberMainId Integer, MemberMainName TVarChar
+             , PositionId Integer, PositionName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , InsertName TVarChar
              , UpdateName TVarChar
@@ -77,6 +79,11 @@ BEGIN
            , Object_Member.ValueData               AS MemberName
            , Object_MemberMain.Id                  AS MemberMainId
            , Object_MemberMain.ValueData           AS MemberMainName
+           
+           , Object_Position.Id                    AS PositionId
+           , Object_Position.ValueData             AS PositionName
+           , Object_Unit.Id                        AS UnitId
+           , Object_Unit.ValueData                 AS UnitName
 
            , Object_WorkTimeKind.Id                AS WorkTimeKindId
            , Object_WorkTimeKind.ValueData         AS WorkTimeKindName
@@ -151,12 +158,17 @@ BEGIN
             
             --
             LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMember.PositionId
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpMember.UnitId
+
+
             LEFT JOIN ObjectDate AS ObjectDate_DateIn
                                  ON ObjectDate_DateIn.ObjectId = tmpMember.PersonalId
                                 AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
             LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                  ON ObjectDate_DateOut.ObjectId = tmpMember.PersonalId
                                 AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
+
       ;
   
 END;
