@@ -331,8 +331,8 @@ BEGIN
                               INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                                 ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                                AND MIObject_WorkTimeKind.DescId         = zc_MILinkObject_WorkTimeKind()
-                                                               AND MIObject_WorkTimeKind.ObjectId       IN (zc_Enum_WorkTimeKind_Holiday() -- Отпуск
-                                                                                                          , 1580416                        -- Отпуск без сохр.ЗП
+                                                               AND MIObject_WorkTimeKind.ObjectId       IN (zc_Enum_WorkTimeKind_Holiday()     -- Отпуск
+                                                                                                          , zc_Enum_WorkTimeKind_HolidayNoZp() -- Отпуск без сохр.ЗП
                                                                                                            )
                          WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                            AND Movement.OperDate BETWEEN vbStartDate_year AND vbEndDate
