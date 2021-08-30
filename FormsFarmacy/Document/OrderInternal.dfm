@@ -1580,6 +1580,7 @@ inherited OrderInternalForm: TOrderInternalForm
     object actUpdateListDiff: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHListDiffVIPSend
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateListDiff
       StoredProcList = <
@@ -1886,6 +1887,46 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1072#1084
       ImageIndex = 67
     end
+    object actPUSHListDiffVIPSend: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHListDiffVIPSend
+      StoredProcList = <
+        item
+          StoredProc = spPUSHListDiffVIPSend
+        end>
+      Caption = 'actPUSHListDiffVIPSend'
+    end
+    object actOrderInternalZeroingSUA: TdsdOpenForm
+      Category = 'Report'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1047#1072#1085#1091#1083#1077#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080' '#1087#1086' '#1057#1059#1040
+      Hint = #1047#1072#1085#1091#1083#1077#1085#1085#1099#1077' '#1087#1086#1079#1080#1094#1080#1080' '#1087#1086' '#1057#1059#1040
+      ImageIndex = 79
+      FormName = 'TOrderInternalZeroingSUAForm'
+      FormNameParam.Value = 'TOrderInternalZeroingSUAForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -2053,6 +2094,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2190,6 +2235,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbPUSHDiscount: TdxBarButton
       Action = actPUSHDiscount
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actOrderInternalZeroingSUA
       Category = 0
     end
   end
@@ -3332,5 +3381,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 1058
     Top = 360
+  end
+  object spPUSHListDiffVIPSend: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ListDiffVIPSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 522
+    Top = 416
   end
 end

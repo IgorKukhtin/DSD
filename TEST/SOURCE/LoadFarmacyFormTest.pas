@@ -2322,6 +2322,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalLiteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalZeroingSUAForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalZeroingSUAForm');
 end;
 
 procedure TLoadFormTest.LoadOrderInternalPromoFormTest;

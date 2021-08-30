@@ -156,6 +156,10 @@ type
     spPUSHDiscount: TdsdStoredProc;
     bbPUSHDiscount: TdxBarButton;
     Layout: TcxGridDBColumn;
+    spPUSHListDiffVIPSend: TdsdStoredProc;
+    actPUSHListDiffVIPSend: TdsdShowPUSHMessage;
+    actOrderInternalZeroingSUA: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
