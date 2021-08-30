@@ -75,14 +75,15 @@ BEGIN
               , Object_Personal_View.PersonalGroupId
               , Object_Personal_View.StorageLineId
               , tmpMember.UnitId
-              , CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE NULL END ::Integer WorkTimeKindId
-              , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) AS Value
+              , CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
+              , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) ::TVarChar AS Value
          FROM tmpOperDate
              LEFT JOIN tmpMember ON 1=1
              LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = tmpMember.PersonalId
              LEFT JOIN ObjectString AS ObjectString_ShortName
-                                    ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE NULL END
+                                    ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE 0 END
                                    AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
+         LIMIT 1
      ) AS tmp
      ;
 

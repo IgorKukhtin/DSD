@@ -100,6 +100,36 @@ BEGIN
         END IF;
     END IF;
 
+    --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
+   IF EXISTS (SELECT 1
+               FROM MovementLinkObject AS MovementLinkObject_Member
+                    INNER JOIN Movement AS Movement_MemberHoliday 
+                                        ON Movement_MemberHoliday.Id = MovementLinkObject_Member.MovementId
+                                       AND Movement_MemberHoliday.DescId = zc_Movement_MemberHoliday()
+                                       AND Movement_MemberHoliday.StatusId = zc_Enum_Status_Complete()
+
+                    INNER JOIN MovementDate AS MovementDate_BeginDateStart
+                                            ON MovementDate_BeginDateStart.MovementId = MovementLinkObject_Member.MovementId
+                                           AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
+                                           AND MovementDate_BeginDateStart.ValueData <= inOperDate
+                    INNER JOIN MovementDate AS MovementDate_BeginDateEnd
+                                            ON MovementDate_BeginDateEnd.MovementId = MovementDate_BeginDateStart.MovementId
+                                           AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
+                                           AND MovementDate_BeginDateEnd.ValueData >= inOperDate
+               WHERE MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                 AND MovementLinkObject_Member.ObjectId = inMemberId
+               )
+       AND ioTypeId NOT IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
+    THEN
+        RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> есть отпуск.'
+                               , lfGet_Object_ValueData_sh (inMemberId)
+                               , lfGet_Object_ValueData_sh (inPositionId)
+                               , lfGet_Object_ValueData_sh (inUnitId)
+                               , zfConvert_DateToString(inOperDate)
+                                ;
+    END IF;
+
+
     
     IF (ioValue = '0' OR TRIM (ioValue) = '')
     THEN
@@ -154,34 +184,6 @@ BEGIN
 
 
 
-    --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
-    IF EXISTS (SELECT 1
-               FROM MovementLinkObject AS MovementLinkObject_Member
-                    INNER JOIN Movement AS Movement_MemberHoliday 
-                                        ON Movement_MemberHoliday.Id = MovementLinkObject_Member.MovementId
-                                       AND Movement_MemberHoliday.DescId = zc_Movement_MemberHoliday()
-                                       AND Movement_MemberHoliday.StatusId = zc_Enum_Status_Complete()
-
-                    INNER JOIN MovementDate AS MovementDate_BeginDateStart
-                                            ON MovementDate_BeginDateStart.MovementId = MovementLinkObject_Member.MovementId
-                                           AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
-                                           AND MovementDate_BeginDateStart.ValueData <= inOperDate
-                    INNER JOIN MovementDate AS MovementDate_BeginDateEnd
-                                            ON MovementDate_BeginDateEnd.MovementId = MovementDate_BeginDateStart.MovementId
-                                           AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
-                                           AND MovementDate_BeginDateEnd.ValueData >= inOperDate
-               WHERE MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-                 AND MovementLinkObject_Member.ObjectId = inMemberId
-               )
-       AND ioTypeId NOT IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
-    THEN
-        RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> есть отпуск.'
-                               , lfGet_Object_ValueData_sh (inMemberId)
-                               , lfGet_Object_ValueData_sh (inPositionId)
-                               , lfGet_Object_ValueData_sh (inUnitId)
-                               , zfConvert_DateToString(inOperDate)
-                                ;
-    END IF;
     ---
 
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
@@ -291,7 +293,7 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
-
+/*
 if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
@@ -303,6 +305,7 @@ then
                       , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
                       , vbMovementItemId
                        ;
+                       */
 end if;
 
 if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
