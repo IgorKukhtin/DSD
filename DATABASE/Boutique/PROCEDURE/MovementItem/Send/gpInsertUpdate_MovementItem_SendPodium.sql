@@ -304,6 +304,7 @@ BEGIN
                                                                    , inValue      := ioOperPriceListTo
                                                                    , inIsLast     := TRUE
                                                                    , inIsDiscountDelete:= FALSE
+                                                                   , inIsDiscount := FALSE
                                                                    , inSession    := inSession
                                                                     );
          ELSE
