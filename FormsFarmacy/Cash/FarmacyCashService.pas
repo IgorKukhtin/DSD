@@ -2732,8 +2732,8 @@ begin
         if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
            ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
 
-        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
-        if not EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Open;
+        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
+        if not EmployeeWorkLogCDS.Active then Exit;
 
         EmployeeWorkLogCDS.First;
         while not EmployeeWorkLogCDS.Eof do
@@ -2796,8 +2796,8 @@ begin
     try
       try
 
-        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
-        if not EmployeeScheduleCDS.Active then EmployeeScheduleCDS.Open;
+        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
+        if not EmployeeScheduleCDS.Active then Exit;
 
         EmployeeScheduleCDS.First;
         while not EmployeeScheduleCDS.Eof do

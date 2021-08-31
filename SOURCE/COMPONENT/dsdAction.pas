@@ -5680,7 +5680,6 @@ var
   end;
 
 begin
-  JSONObject := TJSONObject.Create;
   try
     if Assigned(View) then
     begin
@@ -5693,6 +5692,7 @@ begin
           begin
             View.DataController.FocusedRecordIndex :=
               View.DataController.FilteredRecordIndex[i];
+            JSONObject := TJSONObject.Create;
             if FPairParams.Count > 0 then
             begin
               for j := 0 to FPairParams.Count - 1 do
@@ -5711,6 +5711,7 @@ begin
                                TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].Value,
                                TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
             end;
+            JsonArray.AddElement(JSONObject);
             IncProgress(1);
             Application.ProcessMessages;
           end;
@@ -5734,6 +5735,7 @@ begin
               Start;
               while not DataSource.DataSet.Eof do
               begin
+                JSONObject := TJSONObject.Create;
                 if FPairParams.Count > 0 then
                 begin
                   for j := 0 to FPairParams.Count - 1 do
@@ -5752,6 +5754,7 @@ begin
                                    DataSource.DataSet.Fields.Fields[J].Value,
                                    DataSource.DataSet.Fields.Fields[J].DataType);
                 end;
+                JsonArray.AddElement(JSONObject);
                 IncProgress(1);
                 Application.ProcessMessages;
                 DataSource.DataSet.Next
@@ -5766,7 +5769,6 @@ begin
       end;
     end;
   finally
-    JsonArray.AddElement(JSONObject);
   end;
 end;
 

@@ -945,7 +945,12 @@ BEGIN
             NULLIF (CashSessionSnapShot.PartionDateKindId, 0)  AS PartionDateKindId,
             Object_PartionDateKind.Name                        AS PartionDateKindName,
             NULLIF (CashSessionSnapShot.DivisionPartiesId, 0)  AS DivisionPartiesId,
-            Object_DivisionParties.ValueData                   AS DivisionPartiesName,
+            CASE WHEN Object_DivisionParties.ObjectCode = 1 
+                  AND (COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = FALSE OR
+                       Object_Goods_Main.isExceptionUKTZED OR
+                       COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE) = True)
+                 THEN 'Разделение парий по УКТВЭД'
+                 ELSE Object_DivisionParties.ValueData END::TVarChar       AS DivisionPartiesName,
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False)
               AND NOT Object_Goods_Main.isExceptionUKTZED      AS isBanFiscalSale,
             CASE WHEN vbDividePartionDate = False
@@ -1136,6 +1141,9 @@ BEGIN
                                    ON ObjectBoolean_Goods_TOP.ObjectId =  CashSessionSnapShot.ObjectId
                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
+                                   ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = vbUnitId
+                                  AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY

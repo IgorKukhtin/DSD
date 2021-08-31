@@ -408,7 +408,7 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
@@ -418,11 +418,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-  exit;
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
-  }
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   exit;
@@ -464,7 +464,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupEditForm');
-
+   }
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
@@ -563,27 +563,27 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_WeightTareDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_WeightTareDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ObjectForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
 

@@ -10,7 +10,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ContractGoods(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, EndBeginDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , StartDate_Contract TDateTime, EndDate_Contract TDateTime
+             , ContractKindName TVarChar
+             , ContractStateKindId Integer
+             , ContractStateKindCode Integer
+             , ContractStateKindName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -36,8 +42,18 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
 
-             , 0                                                AS ContractId
-             , CAST ('' AS TVarChar) 	                        AS ContractName
+             , 0                     AS ContractId
+             , 0                     AS ContractCode
+             , CAST ('' AS TVarChar) AS ContractName
+             , NULL ::TDateTime      AS StartDate_Contract
+             , NULL ::TDateTime      AS EndDate_Contract
+             , CAST ('' AS TVarChar) AS ContractKindName
+             , 0                     AS ContractStateKindId
+             , 0                     AS ContractStateKindCode
+             , CAST ('' AS TVarChar) AS ContractStateKindName
+             , 0                     AS ContractTagId
+             , CAST ('' AS TVarChar) AS ContractTagName
+             
              , 0                                                AS JuridicalId
              , CAST ('' AS TVarChar) 	                        AS JuridicalName
 
@@ -60,8 +76,18 @@ BEGIN
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
 
-           , Object_Contract.Id                     AS ContractId
-           , Object_Contract.ValueData              AS ContractName
+           , View_Contract.ContractId            AS ContractId
+           , View_Contract.ContractCode          AS ContractCode
+           , View_Contract.InvNumber             AS ContractName
+           , View_Contract.StartDate  ::TDateTime AS StartDate_Contract
+           , View_Contract.EndDate    ::TDateTime AS EndDate_Contract
+           , View_Contract.ContractKindName
+           , View_Contract.ContractStateKindId
+           , View_Contract.ContractStateKindCode
+           , View_Contract.ContractStateKindName
+           , View_Contract.ContractTagId
+           , View_Contract.ContractTagName
+
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
 
@@ -79,7 +105,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                  ON ObjectLink_Contract_Juridical.ObjectId = MovementLinkObject_Contract.ObjectId

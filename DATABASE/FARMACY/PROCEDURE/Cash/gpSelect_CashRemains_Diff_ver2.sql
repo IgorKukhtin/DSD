@@ -537,7 +537,12 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             tmpGoodsUKTZED.UKTZED                                             AS UKTZED,
             Object_Goods_PairSun_Main.MainID                                  AS GoodsPairSunId,
             NULLIF (_DIFF.DivisionPartiesId, 0),
-            Object_DivisionParties.ValueData                                  AS DivisionPartiesName,
+            CASE WHEN Object_DivisionParties.ObjectCode = 1 
+                  AND (COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = FALSE OR
+                       Object_Goods_Main.isExceptionUKTZED OR
+                       COALESCE (ObjectBoolean_GoodsUKTZEDRRO.ValueData, FALSE) = True)
+                 THEN 'Разделение парий по УКТВЭД'
+                 ELSE Object_DivisionParties.ValueData END::TVarChar       AS DivisionPartiesName,
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
               AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
@@ -586,6 +591,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                     ON ObjectBoolean_Goods_TOP.ObjectId = _DIFF.ObjectId
                                    AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
+                                    ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = vbUnitId
+                                   AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
         ORDER BY _DIFF.ObjectId
             ;
 

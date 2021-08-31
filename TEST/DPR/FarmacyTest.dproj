@@ -3831,6 +3831,10 @@
 				<Form>Report_Top100GoodsSUNForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalZeroingSUA.pas">
+				<Form>OrderInternalZeroingSUAForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

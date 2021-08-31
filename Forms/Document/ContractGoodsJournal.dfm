@@ -182,6 +182,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
+            Caption = #1044#1072#1090#1072' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080
             HeaderAlignmentHorz = taCenter
             Width = 97
           end
@@ -195,6 +196,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             DataBinding.FieldName = 'EndBeginDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'... ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
             Options.Editing = False
             Width = 80
           end
@@ -240,7 +242,7 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Width = 40
           end
           object ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1044#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -256,10 +258,11 @@ inherited ContractGoodsJournalForm: TContractGoodsJournalForm
             Width = 50
           end
           object StartDate_Contract: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'StartDate_Contract'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1081#1089#1090#1074'. '#1089' ('#1076#1086#1075#1086#1074#1086#1088')'
             Options.Editing = False
             Width = 60
           end

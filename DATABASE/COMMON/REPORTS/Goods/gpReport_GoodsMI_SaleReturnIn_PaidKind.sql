@@ -79,6 +79,7 @@ BEGIN
  3) и т.д.... для Sale_Amount_10500_Weight + Sale_Summ_10300 + Sale_SummCost + Sale_SummCost_10500 + Return_Summ + Return_Summ_10300 + Return_Summ_10700 + Return_SummCost
 */
 
+
        RETURN QUERY
        WITH -- данные  из отчета
        tmpReport AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
@@ -145,14 +146,34 @@ BEGIN
                                                        , inIsGoods
                                                        , inIsGoodsKind
                                                        , inIsContract
-                                                       , FALSE        -- inIsOLAP
+                                                       , inIsOLAP
                                                        , inSession
                                                         ) AS gpReport
                     )
 
-     , tmpPartnerAddress AS (SELECT * 
-                             FROM Object_Partner_Address_View
-                             )
+    -- для вібора документов
+     , tmp1 AS (SELECT *
+                FROM Movement
+                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                and Movement.DescId = zc_Movement_ProfitLossService()
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+                )
+     , tmp2 AS (SELECT MovementItem.*
+                FROM MovementItem
+                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmp1.Id FROM tmp1) AND MovementItem.DescId = zc_MI_Master()AND MovementItem.isErased = FALSE)
+
+     , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
+     , tmpPersonal_View AS (SELECT * FROM Object_Personal_View)
+
+     , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.* FROM MovementItemLinkObject
+                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp2.Id FROM tmp2)
+                                       AND MovementItemLinkObject.DescId IN (zc_MILinkObject_InfoMoney()
+                                                                           , zc_MILinkObject_Contract()
+                                                                           , zc_MILinkObject_Juridical()
+                                                                           , zc_MILinkObject_Branch()
+                                                                           , zc_MILinkObject_PaidKind()
+                                                                             )
+                                     )
 
        -- бонус в документах факт - zc_Movement_ProfitLossService
      , tmpProfitLossService AS (SELECT '' ::TVarChar AS GoodsGroupName, '' ::TVarChar AS GoodsGroupNameFull
@@ -162,28 +183,28 @@ BEGIN
                                      , '' ::TVarChar AS GoodsGroupAnalystName, '' ::TVarChar AS GoodsTagName, '' ::TVarChar AS GoodsGroupStatName
                                      , '' ::TVarChar AS GoodsPlatformName
                                      
-                                     , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+                                     , tmp.JuridicalGroupName
                                      , tmp.BranchId, tmp.BranchCode, tmp.BranchName
                                      , tmp.JuridicalId, tmp.JuridicalCode, tmp.JuridicalName
-                                     , tmp.RetailName, Object_RetailReport.ValueData AS RetailReportName
-                                     , Object_Area.ValueData AS AreaName, Object_PartnerTag.ValueData AS PartnerTagName
-                                     , ObjectFloat_Category.ValueData ::TFloat  AS PartnerCategory
-                                     , ObjectString_Address.ValueData AS Address
-                                     , View_Partner_Address.RegionName
-                                     , View_Partner_Address.ProvinceName
-                                     , View_Partner_Address.CityKindName
-                                     , View_Partner_Address.CityName
-                                     , View_Partner_Address.PartnerId
-                                     , View_Partner_Address.PartnerCode
-                                     , View_Partner_Address.PartnerName
+                                     , tmp.RetailName, tmp.RetailReportName
+                                     , tmp.AreaName, tmp.PartnerTagName
+                                     , tmp.PartnerCategory
+                                     , tmp.Address
+                                     , tmp.RegionName
+                                     , tmp.ProvinceName
+                                     , tmp.CityKindName
+                                     , tmp.CityName
+                                     , tmp.PartnerId
+                                     , tmp.PartnerCode
+                                     , tmp.PartnerName
                                      , tmp.ContractId, tmp.ContractCode, tmp.ContractInvNumber AS ContractNumber
                                      , tmp.ContractTagName, tmp.ContractTagGroupName
-                                     , View_Personal.PersonalName       AS PersonalName
-                                     , View_Personal.UnitName           AS UnitName_Personal
-                                     , Object_BranchPersonal.ValueData  AS BranchName_Personal
+                                     , tmp.PersonalName
+                                     , tmp.UnitName_Personal
+                                     , tmp.BranchName_Personal
                            
-                                     , View_PersonalTrade.PersonalName  AS PersonalTradeName
-                                     , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+                                     , tmp.PersonalTradeName
+                                     , tmp.UnitName_PersonalTrade
                                      , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
                                      , tmp.InfoMoneyId, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all 
 
@@ -197,61 +218,133 @@ BEGIN
                                      , 0 :: TFloat AS Sale_Amount_40200_Weight
                                      , 0 :: TFloat AS Return_Amount_40200_Weight
                                      , 0 :: TFloat AS ReturnPercent
-                                     , (COALESCE (tmp.AmountOut,0) ) ::TFloat AS Summ_51201  --* (-1) + COALESCE (tmp.AmountIn,0) 
+                                     , (COALESCE (tmp.Amount,0) ) ::TFloat AS Summ_51201
                                      , FALSE :: Boolean AS isTop
                                      , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindId ELSE 0 END PaidKindId
                                      , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindName ELSE '' END PaidKindName
-                                FROM gpSelect_Movement_ProfitLossService(inStartDate
-                                                                       , inEndDate
-                                                                       , 0 :: Integer
-                                                                       , inBranchId
-                                                                       , inPaidKindId
-                                                                       , FALSE        --inIsErased
-                                                                       , inSession
-                                                                        ) AS tmp
-                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                                         ON ObjectLink_Juridical_JuridicalGroup.ObjectId = tmp.JuridicalId
-                                                        AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-                                    LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+                                FROM (SELECT Object_JuridicalGroup.ValueData AS JuridicalGroupName
+                                           , Object_Branch.Id                               AS BranchId
+                                           , Object_Branch.ObjectCode                       AS BranchCode
+                                           , Object_Branch.ValueData                        AS BranchName
+                                           , Object_Juridical.Id                            AS JuridicalId
+                                           , Object_Juridical.ObjectCode          ::Integer AS JuridicalCode
+                                           , Object_Juridical.ValueData                     AS JuridicalName
+                                           , View_Contract_InvNumber.ContractId
+                                           , View_Contract_InvNumber.ContractCode
+                                           , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
+                                           , View_Contract_InvNumber.ContractTagName
+                                           , View_Contract_InvNumber.ContractTagGroupName
+                                           , Object_PaidKind.Id                             AS PaidKindId
+                                           , Object_PaidKind.ValueData                      AS PaidKindName
+                                           , Object_Retail.Id                               AS RetailId
+                                           , Object_Retail.ValueData                        AS RetailName
+                                           , Object_RetailReport.ValueData AS RetailReportName
+                                           , Object_Area.ValueData AS AreaName
+                                           , Object_PartnerTag.ValueData AS PartnerTagName
+                                           , ObjectFloat_Category.ValueData ::TFloat  AS PartnerCategory
+                                           , ObjectString_Address.ValueData AS Address
+                                           , View_Partner_Address.RegionName
+                                           , View_Partner_Address.ProvinceName
+                                           , View_Partner_Address.CityKindName
+                                           , View_Partner_Address.CityName
+                                           , View_Partner_Address.PartnerId
+                                           , View_Partner_Address.PartnerCode
+                                           , View_Partner_Address.PartnerName
+                                           , View_Personal.PersonalName       AS PersonalName
+                                           , View_Personal.UnitName           AS UnitName_Personal
+                                           , Object_BranchPersonal.ValueData  AS BranchName_Personal
+                                           , View_PersonalTrade.PersonalName  AS PersonalTradeName
+                                           , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+                                           , Object_InfoMoney_View.InfoMoneyGroupName       AS InfoMoneyGroupName
+                                           , Object_InfoMoney_View.InfoMoneyDestinationName AS InfoMoneyDestinationName
+                                           , Object_InfoMoney_View.InfoMoneyId              AS InfoMoneyId
+                                           , Object_InfoMoney_View.InfoMoneyCode            AS InfoMoneyCode
+                                           , Object_InfoMoney_View.InfoMoneyName            AS InfoMoneyName
+                                           , Object_InfoMoney_View.InfoMoneyName_all
+                                           , tmp2.Amount
+                                      FROM tmp1
+                                          LEFT JOIN tmp2 ON tmp2.MovementId = tmp1.Id
+                                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                              ON MILinkObject_InfoMoney.MovementItemId = tmp2.Id
+                                                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
-                                                         ON ObjectLink_Juridical_RetailReport.ObjectId = tmp.JuridicalId
-                                                        AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
-                                    LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
+                                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_PaidKind
+                                                                              ON MILinkObject_PaidKind.MovementItemId = tmp2.Id
+                                                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                                                                             AND inisPaidKind = TRUE
+                                          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+            
+                                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
+                                                                              ON MILinkObject_Contract.MovementItemId = tmp2.Id
+                                                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+                              
+                                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_ContractMaster
+                                                                              ON MILinkObject_ContractMaster.MovementItemId = tmp2.Id
+                                                                             AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
+                              
+                                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Branch
+                                                                              ON MILinkObject_Branch.MovementItemId = tmp2.Id
+                                                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                                          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+                              
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                               ON ObjectLink_Partner_Juridical.ObjectId = tmp2.ObjectId
+                                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Juridical.ObjectId
+                                          LEFT JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
+                                          
+                                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, tmp2.ObjectId)
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                                                         ON ObjectLink_Partner_Area.ObjectId = tmp.PartnerId
-                                                        AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-                                    LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
-                           
-                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                                                         ON ObjectLink_Partner_PartnerTag.ObjectId = tmp.PartnerId
-                                                        AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
-                                    LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
-                           
-                                    LEFT JOIN ObjectFloat AS ObjectFloat_Category
-                                                          ON ObjectFloat_Category.ObjectId = tmp.PartnerId
-                                                         AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
-                                    LEFT JOIN ObjectString AS ObjectString_Address
-                                                           ON ObjectString_Address.ObjectId = tmp.PartnerId
-                                                          AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-                                    LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmp.PartnerId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                                                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+                                          LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                                         ON ObjectLink_Partner_Personal.ObjectId = tmp.PartnerId
-                                                        AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-                                    LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                         ON ObjectLink_Partner_PersonalTrade.ObjectId = tmp.PartnerId
-                                                        AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                    LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                                               ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id
+                                                              AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+                                          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                                         ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
-                                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                    LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
-                               -- WHERE COALESCE (tmp.AmountOut,0) <> 0
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                                               ON ObjectLink_Partner_Area.ObjectId = tmp2.ObjectId
+                                                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+                                          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                                               ON ObjectLink_Partner_PartnerTag.ObjectId = tmp2.ObjectId
+                                                              AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+                                          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+
+                                          LEFT JOIN ObjectFloat AS ObjectFloat_Category
+                                                                ON ObjectFloat_Category.ObjectId = tmp2.ObjectId
+                                                               AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
+                                          LEFT JOIN ObjectString AS ObjectString_Address
+                                                                 ON ObjectString_Address.ObjectId = tmp2.ObjectId
+                                                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+                                          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmp2.ObjectId
+      
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                               ON ObjectLink_Partner_Personal.ObjectId = tmp2.ObjectId
+                                                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                                          LEFT JOIN tmpPersonal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                               ON ObjectLink_Partner_PersonalTrade.ObjectId = tmp2.ObjectId
+                                                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          LEFT JOIN tmpPersonal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                               ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
+                                                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                          LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
+                                     ) AS tmp
                                 )
 
           , tmpData AS (SELECT * FROM tmpReport
