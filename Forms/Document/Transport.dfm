@@ -1611,7 +1611,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 147
   end
   object edCommentStop: TcxTextEdit
@@ -1980,6 +1980,41 @@
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
+    end
+    object actPrintCost: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintCost
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCost
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1090#1088#1072#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1090#1088#1072#1090
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'PartnerName;MovemenId_Sale;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1079#1072#1090#1088#1072#1090#1099')'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1079#1072#1090#1088#1072#1090#1099')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateIncomeDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -4006,6 +4041,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIProtocol'
         end
         item
@@ -4138,6 +4181,10 @@
     end
     object bbUpdate_PartnerCount: TdxBarButton
       Action = actUpdate_PartnerCount
+      Category = 0
+    end
+    object bbPrintCost: TdxBarButton
+      Action = actPrintCost
       Category = 0
     end
   end
@@ -4911,5 +4958,26 @@
     PackSize = 1
     Left = 348
     Top = 293
+  end
+  object spSelectPrintCost: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TransportCost_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 967
+    Top = 272
   end
 end

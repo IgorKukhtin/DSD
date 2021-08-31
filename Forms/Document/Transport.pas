@@ -276,6 +276,9 @@ type
     actUpdate_PartnerCount: TdsdExecStoredProc;
     spUpdate_PartnerCount: TdsdStoredProc;
     bbUpdate_PartnerCount: TdxBarButton;
+    spSelectPrintCost: TdsdStoredProc;
+    actPrintCost: TdsdPrintAction;
+    bbPrintCost: TdxBarButton;
   private
   public
   end;
