@@ -120,7 +120,7 @@ BEGIN
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_RemoteAccess() THEN 4760831 
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit()        THEN 14417001
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 254953  
-                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday()     THEN 16776969
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Inventory()    THEN 16776969
 
                                         WHEN tmpCalendar.isHoliday = TRUE THEN zc_Color_GreenL()
                                         WHEN tmpCalendar.Working = FALSE THEN zc_Color_Yelow()
