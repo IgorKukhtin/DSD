@@ -680,7 +680,7 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND _tmpItem.ProfitLossGroupId = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Для статьи <%>.Необходимо заполнить <Подразделение>.'
+         RAISE EXCEPTION 'Ошибка.Для статьи <%> нельзя определить <Административные ОС> или <Производственные ОС>.Необходимо корректно заполнить <Подразделение>.'
                         , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.IsMaster = FALSE AND _tmpItem.ObjectDescId = 0 AND _tmpItem.InfoMoneyId > 0 LIMIT 1))
                          ;
      END IF;

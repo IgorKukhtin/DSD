@@ -104,7 +104,7 @@ BEGIN
            , '679c4113-0848-471a-8745-844c38ec9eeb' :: TVarChar AS ClientId
            , 'UmLVhAlbIMpF7EPNhaS7vBzR9T'           :: TVarChar AS ClientSecret
 
-           , TRUE               :: Boolean  AS ShowCost_sms
+           , FALSE              :: Boolean  AS ShowCost_sms
            , vbKeySMS           :: TVarChar AS Message_sms
            , inPhoneAuthent                 AS PhoneNum_sms
            , FALSE              :: Boolean  AS isKS
