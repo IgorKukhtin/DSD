@@ -119,8 +119,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Height = 230
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -88
-    ExplicitTop = 84
     object cxGridDBBandedTableView: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -216,7 +214,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           FixedKind = fkLeft
           Options.HoldOwnColumnsOnly = True
           Options.Moving = False
-          Width = 500
+          Width = 700
         end
         item
           Caption = #1055#1077#1088#1080#1086#1076
@@ -239,10 +237,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter
-        MinWidth = 67
+        MinWidth = 70
         Options.Editing = False
         Options.Moving = False
-        Width = 109
+        Width = 100
         Position.BandIndex = 0
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -252,10 +250,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        MinWidth = 64
+        MinWidth = 70
         Options.Editing = False
         Options.Moving = False
-        Width = 64
+        Width = 70
         Position.BandIndex = 0
         Position.ColIndex = 2
         Position.RowIndex = 0
@@ -299,59 +297,64 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 6
         Position.RowIndex = 0
       end
-      object CountDay: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1089#1084#1077#1085
-        DataBinding.FieldName = 'CountDay'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        MinWidth = 64
-        Options.Editing = False
-        Options.Moving = False
-        Width = 64
-        Position.BandIndex = 0
-        Position.ColIndex = 7
-        Position.RowIndex = 0
-      end
       object AmountHours: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+        Caption = '1.'#1095#1072#1089#1099
         DataBinding.FieldName = 'AmountHours'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        MinWidth = 64
+        HeaderHint = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+        MinWidth = 15
         Options.Editing = False
         Options.Moving = False
-        Width = 64
+        Width = 30
+        Position.BandIndex = 0
+        Position.ColIndex = 7
+        Position.RowIndex = 0
+      end
+      object CountDay: TcxGridDBBandedColumn
+        Caption = '2.'#1089#1084'.'
+        DataBinding.FieldName = 'CountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1084#1077#1085
+        MinWidth = 15
+        Options.Editing = False
+        Options.Moving = False
+        Width = 30
         Position.BandIndex = 0
         Position.ColIndex = 8
         Position.RowIndex = 0
       end
       object Amount_3: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1096#1090'.'#1077#1076
+        Caption = '3.'#1096#1090'.'#1077#1076
         DataBinding.FieldName = 'Amount_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        MinWidth = 64
+        HeaderHint = #1048#1090#1086#1075#1086' '#1096#1090#1072#1090#1085#1099#1093' '#1077#1076#1080#1085#1080#1094
+        MinWidth = 15
         Options.Editing = False
         Options.Moving = False
-        Width = 64
+        Width = 30
         Position.BandIndex = 0
         Position.ColIndex = 9
         Position.RowIndex = 0
       end
       object Amount_4: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1041#1051
+        Caption = '4.'#1041#1051
         DataBinding.FieldName = 'Amount_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        MinWidth = 64
+        HeaderHint = #1048#1090#1086#1075#1086' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077
+        MinWidth = 15
         Options.Editing = False
         Options.Moving = False
         Width = 64
@@ -359,34 +362,38 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 10
         Position.RowIndex = 0
       end
-      object Amount_6: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1075#1091#1083#1086#1074
-        DataBinding.FieldName = 'Amount_6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        MinWidth = 64
-        Options.Editing = False
-        Options.Moving = False
-        Width = 64
-        Position.BandIndex = 0
-        Position.ColIndex = 12
-        Position.RowIndex = 0
-      end
       object Amount_5: TcxGridDBBandedColumn
-        Caption = #1048#1090#1086#1075#1086' '#1086#1090#1087#1091#1089#1082#1072
+        Caption = '5.'#1086#1090#1087'.'
         DataBinding.FieldName = 'Amount_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        MinWidth = 64
+        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1090#1087#1091#1089#1082
+        MinWidth = 15
         Options.Editing = False
         Options.Moving = False
         Width = 64
         Position.BandIndex = 0
         Position.ColIndex = 11
+        Position.RowIndex = 0
+      end
+      object Amount_6: TcxGridDBBandedColumn
+        Caption = '6.'#1087#1088#1086#1075'.'
+        DataBinding.FieldName = 'Amount_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1087#1088#1086#1075#1091#1083#1086#1074
+        MinWidth = 15
+        Options.Editing = False
+        Options.Moving = False
+        Width = 64
+        Position.BandIndex = 0
+        Position.ColIndex = 12
         Position.RowIndex = 0
       end
       object Value: TcxGridDBBandedColumn
@@ -813,11 +820,79 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = AmountHours
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = Amount_3
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = Amount_4
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = Amount_5
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = Amount_6
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = CountDay
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = MemberCode
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = MemberName
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = PersonalGroupName
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = PositionLevelName
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = PositionName
+        Properties.Strings = (
+          'Width')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
           'Left'
           'Top'
+          'Width')
+      end
+      item
+        Component = StorageLineName
+        Properties.Strings = (
+          'Visible'
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
