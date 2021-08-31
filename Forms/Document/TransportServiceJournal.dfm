@@ -886,6 +886,40 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
       ImageIndex = 50
     end
+    object actPrintCost: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintCost
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCost
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1090#1088#1072#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1090#1088#1072#1090
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'PartnerName;MovemenId_Sale;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1079#1072#1090#1088#1072#1090#1099')'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1079#1072#1090#1088#1072#1090#1099')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1011,6 +1045,18 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCost'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1020,6 +1066,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     end
     object bbUpdate_SummReestr: TdxBarButton
       Action = macUpdate_SummReestr
+      Category = 0
+    end
+    object bbPrintCost: TdxBarButton
+      Action = actPrintCost
       Category = 0
     end
   end
@@ -1112,7 +1162,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inoperdate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1121,7 +1171,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inStartRunPlan'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartRunPlan'
         DataType = ftDateTime
@@ -1345,5 +1395,32 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     PackSize = 1
     Left = 784
     Top = 160
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 972
+    Top = 146
+  end
+  object spSelectPrintCost: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TransportCost_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 951
+    Top = 200
   end
 end

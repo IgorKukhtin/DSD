@@ -257,9 +257,18 @@ BEGIN
              HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
              ;
 
+
      -- данные для итогов
      CREATE TEMP TABLE tmpTotal ON COMMIT DROP AS
-     --кол-во часов
+     SELECT tmp.OperDate
+           , tmp.MemberId
+           , tmp.PositionId
+           , tmp.PositionLevelId
+           , tmp.PersonalGroupId
+           , tmp.StorageLineId
+           , SUM (tmp.Amount) ::TFLoat AS Amount
+           , tmp.ObjectId
+     FROM (--кол-во часов
       SELECT tmpOperDate.OperDate
            , tmpMI.MemberId
            , tmpMI.PositionId
@@ -307,7 +316,7 @@ BEGIN
            , tmp.StorageLineId
            , SUM (tmp.Amount) AS Amount
            , 3  AS ObjectId
-      FROM (SELECT tmpMI.OperDate
+      FROM (SELECT tmpOperDate.OperDate
                  , tmpMI.MemberId
                  , tmpMI.PositionId
                  , tmpMI.PositionLevelId
@@ -317,7 +326,17 @@ BEGIN
                             THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
                         ELSE 1
                    END AS Amount
-             FROM tmpMI
+             FROM tmpOperDate
+                  LEFT JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
+                                 AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
+                                                          , zc_Enum_WorkTimeKind_DayOff()
+                                                          , zc_Enum_WorkTimeKind_Holiday()
+                                                          , zc_Enum_WorkTimeKind_Hospital()
+                                                          , zc_Enum_WorkTimeKind_HolidayNoZp()
+                                                          , zc_Enum_WorkTimeKind_HospitalDoc()
+                                                         )
+                                 AND tmpMI.isNoSheetCalc = FALSE
+                                 AND COALESCE (tmpMI.Amount,0) <> 0
                   -- данные из штатного расписания
                   LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpMI.PositionId
                                         AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
@@ -327,15 +346,6 @@ BEGIN
                                          ON tmpStaffList2.PositionId = tmpMI.PositionId
                                         AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
                                         AND tmpStaffList.PositionId IS NULL
-             WHERE tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
-                                                     , zc_Enum_WorkTimeKind_DayOff()
-                                                     , zc_Enum_WorkTimeKind_Holiday()
-                                                     , zc_Enum_WorkTimeKind_Hospital()
-                                                     , zc_Enum_WorkTimeKind_HolidayNoZp()
-                                                     , zc_Enum_WorkTimeKind_HospitalDoc()
-                                                    )
-                            AND tmpMI.isNoSheetCalc = FALSE
-                            AND COALESCE (tmpMI.Amount,0) <> 0
              ) AS tmp
       GROUP BY tmp.OperDate
              , tmp.MemberId
@@ -402,9 +412,16 @@ BEGIN
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+)AS tmp
+       Group by tmp.OperDate
+              , tmp.MemberId
+              , tmp.PositionId
+              , tmp.PositionLevelId
+              , tmp.PersonalGroupId
+              , tmp.StorageLineId
+              , tmp.ObjectId
       ;
       ----------------------------------------------------------------
-
 
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
@@ -449,7 +466,6 @@ BEGIN
               -- , CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
                , tmp.Amount                      AS AmountHours
                , tmp.CountDay::TFloat
-               , tmpTotal.Amount_3 ::TFloat
                , tmpTotal.Amount_4 ::TFloat
                , tmpTotal.Amount_5 ::TFloat
                , tmpTotal.Amount_6 ::TFloat
@@ -585,11 +601,11 @@ BEGIN
                                          , ARRAY[ CAST (COALESCE(Movement_Data.Amount, 0)  AS NUMERIC (16,0)) :: VarChar
                                                , COALESCE (Movement_Data.ObjectId, zc_Enum_WorkTimeKind_Work()) :: VarChar
                                                 ] :: TVarChar
-                                    FROM (SELECT tmpTotal.OperDate
-                                               , SUM (tmpTotal.Amount) AS Amount
+                                    FROM (SELECT tmpTotal.operdate
                                                , tmpTotal.ObjectId
+                                               , SUM (tmpTotal.Amount) AS Amount
                                           FROM tmpTotal
-                                          GROUP BY tmpTotal.OperDate
+                                          Group by tmpTotal.operdate, tmpTotal.ObjectId
                                         ) AS Movement_Data
                                   order by 1''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1

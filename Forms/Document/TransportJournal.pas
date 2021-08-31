@@ -126,6 +126,9 @@ type
     AmountMemberCost: TcxGridDBColumn;
     BranchCode_ProfitLoss: TcxGridDBColumn;
     BranchName_ProfitLoss: TcxGridDBColumn;
+    spSelectPrintCost: TdsdStoredProc;
+    actPrintCost: TdsdPrintAction;
+    bbPrintCost: TdxBarButton;
   private
   public
   end;

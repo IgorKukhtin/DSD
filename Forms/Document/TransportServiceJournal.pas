@@ -68,6 +68,10 @@ type
     macUpdate_SummReestr: TMultiAction;
     isSummReestr: TcxGridDBColumn;
     bbUpdate_SummReestr: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrintCost: TdsdStoredProc;
+    bbPrintCost: TdxBarButton;
+    actPrintCost: TdsdPrintAction;
   private
     { Private declarations }
   public
