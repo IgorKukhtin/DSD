@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_ExpirationDate(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_ExpirationDate(Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_ExpirationDate(
     IN inMovementItemId      Integer   , -- строка документа
@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_ExpirationDate(
     IN inJuridicalId         Integer   , -- Поставщик
     IN inExpirationDate      TDateTime , -- Срок годности
    OUT outExpirationDate     TDateTime , -- Срок годности
+   OUT outExpirationDatePD   TDateTime , -- Срок годности
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TDateTime AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
@@ -107,9 +108,10 @@ BEGIN
                                        ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
                                       AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
-            WHERE MIC.MovementId = inMovementItemId
-              AND MIC.MovementItemId = MovementItem.Id
+            WHERE MIC.MovementId = inMovementId
+              AND MIC.MovementItemId = inMovementItemId
               AND MIC.DescId = zc_MIContainer_Count();        
+            outExpirationDatePD := inExpirationDate;
         ELSE
            RAISE EXCEPTION 'Ошибка. По партии уже изменен срок.';        
         END IF;
@@ -117,10 +119,9 @@ BEGIN
     ELSE
         -- Сохранили <Срок годности>
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), inMovementItemId, inExpirationDate);
+        outExpirationDate := inExpirationDate;
     END IF;
     
-    outExpirationDate := inExpirationDate;
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

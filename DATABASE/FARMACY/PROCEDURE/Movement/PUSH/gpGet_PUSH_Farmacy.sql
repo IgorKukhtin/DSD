@@ -603,6 +603,114 @@ BEGIN
        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
        VALUES (15, 'Был удален ВИП чеки:'||Chr(13)||vbText, '', '', '', '', '');
      END IF;
+
+     vbText := '';
+
+            WITH tmpMovement AS (SELECT Movement.*
+                                , MovementString_InvNumberOrder.ValueData  AS InvNumberOrder
+                                , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased()
+                                       THEN COALESCE(Object_CancelReason.ValueData, '') END::TVarChar  AS CancelReason
+                                , MovementFloat_TotalSumm.ValueData        AS TotalSumm
+                                , COALESCE(Object_BuyerForSite.ValueData,
+                                           MovementString_Bayer.ValueData, '')           AS Bayer
+                                , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
+                                            MovementString_BayerPhone.ValueData, '')     AS BayerPhone
+                                , MovementLinkObject_Unit.ObjectId                       AS UnitId
+                         FROM Movement
+                                
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                           
+                              INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                         ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                        AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                        AND MovementBoolean_Deferred.ValueData = TRUE
+                                                          
+                              INNER JOIN MovementString AS MovementString_InvNumberOrder
+                                                        ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                       AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                                                           ON MovementLinkObject_CancelReason.MovementId = Movement.Id
+                                                          AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
+                              LEFT JOIN Object AS Object_CancelReason 
+                                               ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                                
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                       
+                              LEFT JOIN MovementString AS MovementString_Bayer
+                                                       ON MovementString_Bayer.MovementId = Movement.Id
+                                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                              LEFT JOIN MovementString AS MovementString_BayerPhone
+                                                       ON MovementString_BayerPhone.MovementId = Movement.Id
+                                                      AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSite
+                                                           ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
+                                                          AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
+                              LEFT JOIN Object AS Object_BuyerForSite ON Object_BuyerForSite.Id = MovementLinkObject_BuyerForSite.ObjectId
+                              LEFT JOIN ObjectString AS ObjectString_BuyerForSite_Phone
+                                                     ON ObjectString_BuyerForSite_Phone.ObjectId = Object_BuyerForSite.Id 
+                                                    AND ObjectString_BuyerForSite_Phone.DescId = zc_ObjectString_BuyerForSite_Phone()                                                       
+                                                      
+                         WHERE Movement.DescId = zc_Movement_Check()
+                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                           AND Movement.OperDate >= '20.04.2021'
+                           AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
+                           )
+         , tmpMI AS (SELECT tmpMovement.*
+                          , MovementItem.Id                 AS MovementItemId 
+                          , MovementItem.ObjectId           AS GoodsId
+                     FROM tmpMovement
+                     
+                          INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
+                                                 AND MovementItem.DescId = zc_MI_Master()
+                                                 AND MovementItem.Amount = 0
+                                                 
+                    )
+         , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
+                                  , MovementItemProtocol.OperDate
+                                  , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                             FROM MovementItemProtocol 
+                             WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
+                                                               AND MovementItemProtocol.ProtocolData ILIKE '%"Значение" FieldValue = "0.0000"%'
+                            )
+         , tmpMIFloat AS (SELECT MovementItemFloat.*
+                          FROM MovementItemFloat 
+                          WHERE MovementItemFloat.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
+                         )
+
+     SELECT STRING_AGG('  № '||Movement.InvNumber||
+                       ', покупатель '||COALESCE(Movement.Bayer, '')||
+                       ', номер телефона '||COALESCE(Movement.BayerPhone, '')||
+                       ', номер заказа '||COALESCE(Movement.InvNumberOrder, '')||
+                       ', обнулено '||TO_CHAR(tmpMIProtocol.OperDate, 'DD.MM.YYYY HH24:MI:SS')||
+                       ', товар '||Object_Goods.ValueData||
+                       ', заказано '||zfConvert_FloatToString(MIFloat_AmountOrder.ValueData)
+                       , Chr(13))
+           
+     INTO vbText
+     FROM tmpMI AS Movement
+          INNER JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId = Movement.MovementItemId
+                                  AND tmpMIProtocol.ord = 1
+          
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
+
+          LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
+                               ON MIFloat_AmountOrder.MovementItemId = Movement.MovementItemId
+                              AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                              
+     WHERE tmpMIProtocol.OperDate >= vbDatePUSH
+     ;  
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (16, 'Было обнулено в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '');
+     END IF;
    END IF;
 
    IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)
@@ -632,7 +740,7 @@ BEGIN
        IF COALESCE (vbText, '') <> ''
        THEN
          INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-         VALUES (16, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
+         VALUES (17, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
        END IF;
      END IF;
    END IF;

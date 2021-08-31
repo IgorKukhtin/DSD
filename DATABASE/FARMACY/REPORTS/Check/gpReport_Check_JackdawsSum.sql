@@ -50,10 +50,12 @@ BEGIN
                                Movement.OperDate
                              , Movement.UnitId
                              , SUM(CASE WHEN COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) <> 0 THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS SummaChech
-                             , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                             , SUM(CASE WHEN (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                                          OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0)
                                          AND (COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True 
-                                          OR   COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0) THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS RetrievedAccounting
-                             , SUM(CASE WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                                          OR COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0) THEN MovementFloat_TotalSumm.ValueData END)::TFloat AS RetrievedAccounting
+                             , SUM(CASE WHEN (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
+                                          OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0) 
                                          AND COALESCE(MovementBoolean_RetrievedAccounting.ValueData, False) = True THEN MovementFloat_TotalSumm.ValueData
                                         WHEN COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0 
                                          AND COALESCE(MovementFloat_SummaReceivedFact.ValueData, 0) > 0 THEN MovementFloat_SummaReceivedFact.ValueData END)::TFloat AS SummaReceived

@@ -1796,6 +1796,9 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spPUSHSUA
+        end
+        item
+          StoredProc = spPUSHZeroingSUA
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
@@ -3345,7 +3348,7 @@ inherited OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 682
+    Left = 626
     Top = 424
   end
   object spPUSHDiscount: TdsdStoredProc
@@ -3415,5 +3418,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 522
     Top = 416
+  end
+  object spPUSHZeroingSUA: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_OrderInternal_ZeroingSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 698
+    Top = 424
   end
 end

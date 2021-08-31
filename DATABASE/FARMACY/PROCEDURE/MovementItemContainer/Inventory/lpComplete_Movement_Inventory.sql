@@ -421,6 +421,27 @@ BEGIN
                       WHERE MIContainer.MovementId = inMovementId
                         AND MIContainer.DescId = zc_MIContainer_Count()
                      )
+                 , tmpContainerAll AS (SELECT DISTINCT tmpMIContainer.MovementItemId
+                                            , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)       AS IncomeId
+                                           FROM tmpMIContainer
+                                           
+                                                INNER JOIN Container ON Container.ObjectId = tmpMIContainer.GoodsId
+                                                                    AND Container.DescId = zc_Container_Count()
+                                                                    AND Container.WhereObjectId = vbUnitId
+
+                                                LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                              ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                                             AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                                LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                                -- элемент прихода
+                                                LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                        )
                  , tmpIncome AS
                      (SELECT *
                       FROM
@@ -428,8 +449,10 @@ BEGIN
                               , tmpMIContainer.MovementItemId
                               , tmpMIContainer.GoodsId
                               , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer.MovementItemId, tmpMIContainer.GoodsId
-                                                   ORDER BY CASE WHEN ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId THEN 0 ELSE 1 END
-                                                          , CASE WHEN Movement.OperDate >= vbInventoryDate THEN Movement.OperDate - vbInventoryDate ELSE vbInventoryDate - Movement.OperDate END
+                                                   ORDER BY CASE WHEN COALESCE(tmpContainerAll.IncomeId, 0) <> 0 
+                                                                   OR ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId THEN 0 ELSE 1 END
+                                                          , CASE WHEN Movement.OperDate >= vbInventoryDate 
+                                                                 THEN Movement.OperDate - vbInventoryDate ELSE vbInventoryDate - Movement.OperDate END
                                                           , Movement.OperDate
                                                   ) AS myRow
                          FROM tmpMIContainer
@@ -447,6 +470,8 @@ BEGIN
                                                      AND MI.isErased = FALSE
                                                      AND MI.ObjectId = tmpMIContainer.GoodsId
                                                      AND MI.Amount <> 0
+                              LEFT JOIN tmpContainerAll ON tmpContainerAll.MovementItemId = tmpMIContainer.MovementItemId
+                                                       AND tmpContainerAll.IncomeId = Movement.Id
                         ) AS tmp
                       WHERE tmp.myRow = 1
                      )
@@ -454,6 +479,11 @@ BEGIN
               FROM tmpIncome
              );
 
+    IF inUserId = zfCalc_UserAdmin()::Integer
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

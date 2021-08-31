@@ -2483,11 +2483,11 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceIncomeForm');
-
+}
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
 
@@ -2497,10 +2497,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
   exit;
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');

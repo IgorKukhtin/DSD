@@ -181,6 +181,7 @@ type
     actExecuteDialogExpirationDate: TExecuteDialog;
     actUpdate_ExpirationDate: TdsdExecStoredProc;
     bbUpdate_ExpirationDate: TdxBarButton;
+    ExpirationDatePG: TcxGridDBColumn;
   private
     { Private declarations }
   public

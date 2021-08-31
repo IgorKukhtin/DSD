@@ -19,9 +19,12 @@ $BODY$
    DECLARE vbUserUnitId Integer;
    DECLARE vbOldUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbObjectId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession; -- lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Inventory());
+       -- определяется <Торговая сеть>
+     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
      
      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
@@ -55,7 +58,8 @@ BEGIN
           THEN
             RAISE EXCEPTION 'Ошибка. Изменение подразделения запрещено..';                       
           END IF;
-        ELSE
+        ELSEIF vbObjectId = 4 
+        THEN 
           RAISE EXCEPTION 'Ошибка. Создавать инвентаризации вам запрещено..';                       
         END IF;
         

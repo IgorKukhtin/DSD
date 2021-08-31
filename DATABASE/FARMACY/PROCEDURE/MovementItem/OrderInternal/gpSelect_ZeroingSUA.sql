@@ -55,7 +55,7 @@ BEGIN
                             INNER JOIN MovementString AS MovementString_Comment
                                                       ON MovementString_Comment.MovementId = Movement.Id
                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()                                                   
-                       WHERE MovementDate_Insert.ValueData BETWEEN CURRENT_DATE - ((date_part('isodow', CURRENT_DATE) - 1 + 14)||' day')::INTERVAL AND CURRENT_DATE
+                       WHERE MovementDate_Insert.ValueData BETWEEN CURRENT_DATE - ((date_part('isodow', CURRENT_DATE) - 1)||' day')::INTERVAL AND CURRENT_DATE
                          AND Movement.DescId = zc_Movement_Send()
                          AND MovementString_Comment.ValueData = 'Товар по СУА')
      , tmpMI AS (SELECT Movement.ID                                                                    AS ID

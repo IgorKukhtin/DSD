@@ -160,6 +160,7 @@ type
     actPUSHListDiffVIPSend: TdsdShowPUSHMessage;
     actOrderInternalZeroingSUA: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    spPUSHZeroingSUA: TdsdStoredProc;
   private
     { Private declarations }
   public

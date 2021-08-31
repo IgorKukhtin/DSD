@@ -249,7 +249,14 @@
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 71
+          end
+          object ExpirationDatePG: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'ExpirationDatePG'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
           end
           object OrderAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
@@ -3941,6 +3948,14 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ExpirationDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExpirationDatePD'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ExpirationDatePG'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
