@@ -126,6 +126,15 @@ BEGIN
                           , (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
                           , (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
                           , (gpReport.ReturnPercent) :: TFloat AS ReturnPercent
+                          
+                          , gpReport.Sale_SummMVAT  ::TFloat
+                          , gpReport.Sale_SummVAT  ::TFloat
+                          , gpReport.Return_SummMVAT  ::TFloat
+                          , gpReport.Return_SummVAT  ::TFloat
+                          , gpReport.SaleReturn_Weight   ::TFloat -- Продажи за вычетом возврата, кг
+                          , gpReport.SaleReturn_Summ     ::TFloat -- Продажи за вычетом возврата, грн
+                          , gpReport.Sale_Summ_opt       ::TFloat -- сумма по опт прайсу, грн
+
                           , 0 ::TFloat AS Summ_51201
                           , (gpReport.isTop) :: Boolean AS isTop
                           
@@ -218,6 +227,15 @@ BEGIN
                                      , 0 :: TFloat AS Sale_Amount_40200_Weight
                                      , 0 :: TFloat AS Return_Amount_40200_Weight
                                      , 0 :: TFloat AS ReturnPercent
+
+                                     , 0 :: TFloat AS Sale_SummMVAT
+                                     , 0 :: TFloat AS Sale_SummVAT
+                                     , 0 :: TFloat AS Return_SummMVAT
+                                     , 0 :: TFloat AS Return_SummVAT
+                                     , 0 :: TFloat AS SaleReturn_Weight
+                                     , 0 :: TFloat AS SaleReturn_Summ
+                                     , 0 :: TFloat AS Sale_Summ_opt
+
                                      , (COALESCE (tmp.Amount,0) ) ::TFloat AS Summ_51201
                                      , FALSE :: Boolean AS isTop
                                      , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindId ELSE 0 END PaidKindId
@@ -377,17 +395,27 @@ BEGIN
             , SUM (gpReport.Sale_Summ_10200) :: TFloat AS Sale_Summ_10200
             , SUM (gpReport.Sale_Summ_10250) :: TFloat AS Sale_Summ_10250
             , SUM (gpReport.Sale_Summ_10300) :: TFloat AS Sale_Summ_10300
-            , SUM (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost, SUM (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost
-            , SUM (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500, SUM (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
-            , SUM (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight, SUM (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
-            , SUM (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight, SUM (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh
-            , SUM (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight, SUM (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh
-            , SUM (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight, SUM (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
-            , SUM (gpReport.Return_Summ) :: TFloat AS Return_Summ, SUM (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300
-            , SUM (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700, SUM (gpReport.Return_SummCost) :: TFloat AS Return_SummCost
+            , SUM (gpReport.Promo_SummCost) :: TFloat AS Promo_SummCost
+            , SUM (gpReport.Sale_SummCost) :: TFloat AS Sale_SummCost
+            , SUM (gpReport.Sale_SummCost_10500) :: TFloat AS Sale_SummCost_10500
+            , SUM (gpReport.Sale_SummCost_40200) :: TFloat AS Sale_SummCost_40200
+            , SUM (gpReport.Sale_Amount_Weight) :: TFloat AS Sale_Amount_Weight
+            , SUM (gpReport.Sale_Amount_Sh) :: TFloat AS Sale_Amount_Sh
+            , SUM (gpReport.Promo_AmountPartner_Weight) :: TFloat AS Promo_AmountPartner_Weight
+            , SUM (gpReport.Promo_AmountPartner_Sh) :: TFloat AS Promo_AmountPartner_Sh
+            , SUM (gpReport.Sale_AmountPartner_Weight) :: TFloat AS Sale_AmountPartner_Weight
+            , SUM (gpReport.Sale_AmountPartner_Sh) :: TFloat AS Sale_AmountPartner_Sh
+            , SUM (gpReport.Sale_AmountPartnerR_Weight) :: TFloat AS Sale_AmountPartnerR_Weight
+            , SUM (gpReport.Sale_AmountPartnerR_Sh) :: TFloat AS Sale_AmountPartnerR_Sh
+            , SUM (gpReport.Return_Summ) :: TFloat AS Return_Summ
+            , SUM (gpReport.Return_Summ_10300) :: TFloat AS Return_Summ_10300
+            , SUM (gpReport.Return_Summ_10700) :: TFloat AS Return_Summ_10700
+            , SUM (gpReport.Return_SummCost) :: TFloat AS Return_SummCost
             , SUM (gpReport.Return_SummCost_40200) :: TFloat AS Return_SummCost_40200
-            , SUM (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight, SUM (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh
-            , SUM (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight, SUM (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
+            , SUM (gpReport.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight
+            , SUM (gpReport.Return_Amount_Sh) :: TFloat AS Return_Amount_Sh
+            , SUM (gpReport.Return_AmountPartner_Weight) :: TFloat AS Return_AmountPartner_Weight
+            , SUM (gpReport.Return_AmountPartner_Sh) :: TFloat AS Return_AmountPartner_Sh
             , SUM (gpReport.Sale_Amount_10500_Weight) :: TFloat AS Sale_Amount_10500_Weight
             , SUM (gpReport.Sale_Amount_40200_Weight) :: TFloat AS Sale_Amount_40200_Weight
             , SUM (gpReport.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_40200_Weight
@@ -396,9 +424,9 @@ BEGIN
                     END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
-            , (SUM (gpReport.Sale_AmountPartner_Weight) - SUM (gpReport.Return_AmountPartner_Weight)) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
-            , (SUM (gpReport.Sale_Summ) - SUM (gpReport.Return_Summ))                                 :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
-            , SUM (COALESCE (gpReport.Sale_Summ,0) + COALESCE (gpReport.Sale_Summ_10200,0) + COALESCE (gpReport.Sale_Summ_10250,0) + COALESCE (gpReport.Sale_Summ_10300,0)) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
+            , SUM (gpReport.SaleReturn_Weight) :: TFloat AS SaleReturn_Weight  -- Продажи за вычетом возврата, кг
+            , SUM (gpReport.SaleReturn_Summ)                            :: TFloat AS SaleReturn_Summ    -- Продажи за вычетом возврата, грн
+            , SUM (gpReport.Sale_Summ_opt) ::TFloat AS Sale_Summ_opt  --сумма по опт прайсу
             , SUM (gpReport.Summ_51201) ::TFloat AS Summ_51201
 
             , gpReport.isTop

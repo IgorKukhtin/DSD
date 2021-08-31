@@ -306,19 +306,39 @@ BEGIN
                                , MLO_Route.ObjectId
                        )
 -----------------***-----------------------
-        -- получение данных из док. продаж по товарам
+     -- получение данных из док. продаж по товарам
+     , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                              FROM MovementBoolean
+                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpWeight.MovementId_Sale FROM tmpWeight)
+                                AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT())
+                              )
+
+     , tmpMovementFloat AS (SELECT MovementFloat.*
+                            FROM MovementFloat
+                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpWeight.MovementId_Sale FROM tmpWeight)
+                              AND MovementFloat.DescId IN (zc_MovementFloat_VATPercent())
+                           )
      , tmpSale_MI AS
                    (SELECT MovementItem.MovementId
                         , MovementItem.Id AS MI_Id
                         , MovementItem.ObjectId AS GoodsId
                         , SUM (MovementItem.Amount)    AS Amount
+                        , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+                        , MovementFloat_VATPercent.ValueData             AS VATPercent
                     FROM (SELECT DISTINCT tmpWeight.MovementId_Sale FROM tmpWeight) AS tmpSale
+                         LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
+                                                      ON MovementBoolean_PriceWithVAT.MovementId = tmpSale.MovementId_Sale
+                         LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                                    ON MovementFloat_VATPercent.MovementId = tmpSale.MovementId_Sale
+
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpSale.MovementId_Sale
                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                 AND MovementItem.isErased   = FALSE
                     GROUP BY MovementItem.MovementId
                            , MovementItem.Id
                            , MovementItem.ObjectId
+                           , MovementBoolean_PriceWithVAT.ValueData
+                           , MovementFloat_VATPercent.ValueData
                   )
        , tmpMILO_GoodsKind AS (SELECT *
                                FROM MovementItemLinkObject
@@ -345,15 +365,19 @@ BEGIN
 
        , tmpSale_Goods AS
                         (SELECT tmpSale_MI.MovementId
+                              , tmpSale_MI.PriceWithVAT
+                              , tmpSale_MI.VATPercent
                               , tmpSale_MI.GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                 AS GoodsKindId
                               , ObjectLink_Goods_Measure.ChildObjectId                        AS MeasureId
                               , SUM (MIFloat_AmountPartner.ValueData)                         AS Amount
                               , SUM (MIFloat_AmountPartner.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight
                               , SUM (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                                THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                                ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                                            END AS TFloat) )                   AS AmountSumm
+                                                 THEN  CAST( COALESCE (MIFloat_AmountPartner.ValueData, 0) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) 
+                                                 ELSE  CAST( COALESCE (MIFloat_AmountPartner.ValueData, 0) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                            END 
+                                           AS NUMERIC (16, 2))
+                                            )          ::TFloat         AS AmountSumm
 
                          FROM tmpSale_MI
                               LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
@@ -377,7 +401,9 @@ BEGIN
                          GROUP BY tmpSale_MI.MovementId
                                 , tmpSale_MI.GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                , ObjectLink_Goods_Measure.ChildObjectId                                
+                                , ObjectLink_Goods_Measure.ChildObjectId
+                                , tmpSale_MI.PriceWithVAT
+                                , tmpSale_MI.VATPercent
                           )
 
         , tmpWeight_All AS (SELECT tmpWeight.MovementTransportId 
@@ -510,7 +536,10 @@ BEGIN
                              -- доля каждого товара в общем весе путевого
                            , CASE WHEN COALESCE(tmpUnion.WeightSale,0) <> 0 THEN SUM (tmpSale_Goods.Weight) / tmpUnion.WeightSale ELSE 1 END AS Koeff_kg  
 
-                           , SUM (COALESCE (tmpSale_Goods.AmountSumm,0))::TFloat  AS TotalSumm_Sale
+                           , SUM (CASE WHEN tmpSale_Goods.PriceWithVAT = TRUE OR tmpSale_Goods.VATPercent = 0 THEN COALESCE (tmpSale_Goods.AmountSumm,0)
+                                       ELSE COALESCE (tmpSale_Goods.AmountSumm,0) * (1+tmpSale_Goods.VATPercent/100)
+                                  END
+                                  )::TFloat  AS TotalSumm_Sale
                           
                            , SUM (COALESCE (tmpSale_Goods.Amount,0))  ::TFloat AS Amount_Sale
                            , SUM (COALESCE (tmpSale_Goods.Weight,0))  ::TFloat AS Weight_Sale
@@ -566,7 +595,7 @@ BEGIN
                            , (tmpUnion.TotalWeight_Sale)     :: TFloat  AS TotalWeight_Sale
                            , SUM (COALESCE (tmpUnion.TotalWeight_Doc,0) * tmpUnion.Koeff_kg) :: TFloat  AS TotalWeight_Doc
 
-                           , SUM (COALESCE (tmpUnion.TotalSumm_Sale,0) * tmpUnion.Koeff_kg):: TFloat  AS TotalSumm_Sale
+                           , SUM (COALESCE (tmpUnion.TotalSumm_Sale,0)):: TFloat  AS TotalSumm_Sale -- * tmpUnion.Koeff_kg
 
                            , SUM (COALESCE (tmpUnion.Amount_Sale,0) * 1):: TFloat  AS Amount_Sale
                            , SUM (COALESCE (tmpUnion.Weight_Sale,0) * 1):: TFloat  AS Weight_Sale
