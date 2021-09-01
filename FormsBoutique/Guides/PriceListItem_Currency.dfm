@@ -170,6 +170,15 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         Options.Editing = False
         Width = 45
       end
+      object isDiscount: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        DataBinding.FieldName = 'isDiscount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 73
+      end
       object RemainsAll: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1080#1090#1086#1075#1086
         DataBinding.FieldName = 'RemainsAll'
@@ -374,6 +383,44 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
+      end
+      object OperPriceList_fp: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'OperPriceList_fp'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object CurrencyName_fp: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+        DataBinding.FieldName = 'CurrencyName_fp'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1087#1077#1088#1074#1072#1103' '#1094#1077#1085#1072')'
+        Options.Editing = False
+        Width = 95
+      end
+      object Persent_diff: TcxGridDBColumn
+        Caption = '% '#1080#1079#1084'. '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'Persent_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+        Options.Editing = False
+        Width = 98
+      end
+      object isCurrency_diff: TcxGridDBColumn
+        Caption = #1048#1079#1084'. '#1074#1072#1083#1102#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isCurrency_diff'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1079#1084#1077#1085#1080#1083#1072#1089#1100' '#1074#1072#1083#1102#1090#1072' '#1076#1072'/'#1085#1077#1090
+        Options.Editing = False
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

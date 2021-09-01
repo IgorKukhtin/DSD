@@ -54,8 +54,13 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ParValue         TFloat
                 , OperPriceBalance TFloat
                 , PriceTax         TFloat
-                , isDiscount       Boolean
 
+                , OperPriceList_fp TFloat -- первая цена из прайса
+                , CurrencyName_fp TVarChar
+                , Persent_diff TFloat
+                , isCurrency_diff Boolean
+
+                , isDiscount       Boolean
 
                 , InsertName TVarChar, UpdateName TVarChar
                 , InsertDate TDateTime, UpdateDate TDateTime
@@ -113,6 +118,42 @@ BEGIN
                      AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
                   )
 
+
+    -- первая цена из прайса и валюта
+    , tmpPriceList_fp AS (SELECT DISTINCT
+                                tmp.GoodsId
+                              , tmp.Price
+                              , tmp.CurrencyId
+                          FROM (SELECT DISTINCT
+                                       ObjectHistoryLink_Currency.ObjectId              AS CurrencyId
+                                     , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                     , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                                     , ObjectHistory_PriceListItem.StartDate
+                                     , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
+                                FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                     INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                           ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                          AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+
+                                     LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                             ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                            AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+
+                                     LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                                 ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
+                                     LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                  ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                 AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                WHERE ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                                  AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                               ) AS tmp
+                          WHERE tmp.StartDate = tmp.FirstDate
+                         )
+                                   
+                                   
     , tmpPartionGoods AS (SELECT Object_PartionGoods.MovementItemId  AS PartionId
                                , Object_PartiONGoods.PartnerId
                                , Object_PartionGoods.UnitId
@@ -329,6 +370,11 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
+           , COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) :: TFloat AS OperPriceList_fp  -- первая цена из прайса
+           , Object_Currency_fp.ValueData            AS CurrencyName_fp
+           , CASE WHEN COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) <> 0 THEN (COALESCE (tmpPartionGoods.OperPriceList,0) - COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList))*100/COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) ELSE 0 END ::TFloat AS Persent_diff
+           , CASE WHEN Object_Currency.Id <> Object_Currency_fp.Id THEN TRUE ELSE FALSE END ::Boolean AS isCurrency_diff
+
            , tmpPrice.isDiscount ::Boolean
 
            , Object_Insert.ValueData   AS InsertName
@@ -380,7 +426,10 @@ BEGIN
            LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpPartionGoods.UnitId_Container -- UnitId
                                 AND tmpDiscount.GoodsId = tmpPartionGoods.GoodsId    
 
-           LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPartionGoods.CurrencyId         
+           LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPartionGoods.CurrencyId  
+           
+           LEFT JOIN tmpPriceList_fp ON tmpPriceList_fp.GoodsId = tmpPartionGoods.GoodsId
+           LEFT JOIN Object AS Object_Currency_fp ON Object_Currency_fp.Id = tmpPriceList_fp.CurrencyId
         ;
 END;
 $BODY$
@@ -389,6 +438,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.21         *
  04.08.21         * 
  25.05.18         *
  15.03.18         *

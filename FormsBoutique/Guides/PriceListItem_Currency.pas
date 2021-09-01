@@ -112,6 +112,10 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     cbisChangePrice: TcxCheckBox;
+    OperPriceList_fp: TcxGridDBColumn;
+    CurrencyName_fp: TcxGridDBColumn;
+    Persent_diff: TcxGridDBColumn;
+    isCurrency_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

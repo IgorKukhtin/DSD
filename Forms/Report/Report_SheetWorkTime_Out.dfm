@@ -21,6 +21,8 @@ inherited Report_SheetWorkTime_OutForm: TReport_SheetWorkTime_OutForm
       inherited cxGrid: TcxGrid
         Width = 954
         Height = 262
+        ExplicitLeft = 32
+        ExplicitTop = 16
         ExplicitWidth = 954
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
