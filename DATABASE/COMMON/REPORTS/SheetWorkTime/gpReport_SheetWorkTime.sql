@@ -1,11 +1,13 @@
 -- Function: gpReport_SheetWorkTime()
 
-DROP FUNCTION IF EXISTS gpReport_SheetWorkTime(TDateTime, TDateTime, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_SheetWorkTime(TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SheetWorkTime(TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime(
     IN inDateStart   TDateTime , --
     IN inDateEnd     TDateTime , --
     IN inUnitId      Integer   , --
+    IN inMemberId    Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
@@ -31,12 +33,16 @@ BEGIN
         COALESCE(inUnitId,0) = 0
         OR
         T0.Id = inUnitId;
+
+
     IF COALESCE(vbUnits,'') = ''
     THEN
         vbUnits := '(0)';
     ELSE
         vbUnits := '('||vbUnits||')';
     END IF;
+
+
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
@@ -121,7 +127,8 @@ BEGIN
                                                LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                                 ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-                                          WHERE MovementLinkObject_Unit.ObjectId in '||vbUnits||
+                                          WHERE MovementLinkObject_Unit.ObjectId in '||vbUnits||'
+                                            AND (COALESCE(MI_SheetWorkTime.ObjectId, 0) = '||inMemberId||' OR '||inMemberId||' = 0)'
                                         ') AS Movement_Data
                                   order by 1''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
@@ -139,12 +146,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_SheetWorkTime (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_SheetWorkTime (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 01.09.21         * add inMemberId
  07.01.14                                                          *
 */
 

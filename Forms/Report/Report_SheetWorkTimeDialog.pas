@@ -21,6 +21,9 @@ type
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
     PeriodChoice: TPeriodChoice;
+    cxLabel3: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

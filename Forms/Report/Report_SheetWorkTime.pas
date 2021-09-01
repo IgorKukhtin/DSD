@@ -44,6 +44,9 @@ type
     Value: TcxGridDBBandedColumn;
     actReport_SheetWorkTimeDialog: TExecuteDialog;
     dxBarButton1: TdxBarButton;
+    edMember: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

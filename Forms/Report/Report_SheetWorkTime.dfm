@@ -1,25 +1,25 @@
 inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1073#1077#1083#1102' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 519
-  ClientWidth = 828
+  ClientWidth = 1091
   AddOnFormData.ExecuteDialogAction = actReport_SheetWorkTimeDialog
-  ExplicitWidth = 844
+  ExplicitWidth = 1107
   ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 828
+    Width = 1091
     Height = 462
     TabOrder = 3
     ExplicitWidth = 828
     ExplicitHeight = 462
     ClientRectBottom = 462
-    ClientRectRight = 828
+    ClientRectRight = 1091
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 828
       ExplicitHeight = 462
       inherited cxGrid: TcxGrid
-        Width = 828
+        Width = 1091
         Height = 462
         ExplicitWidth = 828
         ExplicitHeight = 462
@@ -139,24 +139,42 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     end
   end
   inherited Panel: TPanel
-    Width = 828
+    Width = 1091
     ExplicitWidth = 828
     object cxLabel4: TcxLabel
-      Left = 433
+      Left = 420
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edUnit: TcxButtonEdit
-      Left = 523
+      Left = 505
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
-      Width = 278
+      Width = 246
     end
+  end
+  object edMember: TcxButtonEdit [2]
+    Left = 834
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 246
+  end
+  object cxLabel3: TcxLabel [3]
+    Left = 772
+    Top = 6
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
   end
   inherited ActionList: TActionList
     object actReport_SheetWorkTimeDialog: TExecuteDialog
@@ -198,6 +216,23 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           Name = 'UnitName'
           Value = Null
           Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = GuidesMember
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -250,8 +285,16 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 408
+    Left = 440
     Top = 176
   end
   inherited BarManager: TdxBarManager
@@ -348,6 +391,9 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       end
       item
         Component = GuidesUnit
+      end
+      item
+        Component = GuidesMember
       end>
     Left = 672
     Top = 40
@@ -371,5 +417,34 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     TemplateColumn = Value
     Left = 360
     Top = 272
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 920
   end
 end
