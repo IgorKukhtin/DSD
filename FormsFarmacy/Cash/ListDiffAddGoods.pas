@@ -587,7 +587,7 @@ begin
   MainCashForm.SaveLocal(CheckCDS, AManagerId, AManagerName, ABayerName,
     '', 'Не подтвержден', '', '', 0, '', '', 0, '', '', '', '', Date, 0,
     '', 0, 0, 0, 0, 0, 0, 0, 0, True, 0, '', 0, 0, 0, 0, '', '', '', '', '',
-    0, 0, False, False, false, false, false, '', 0, UID);
+    0, 0, False, False, false, false, false, 0, '', 0, UID);
 
 end;
 

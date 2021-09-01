@@ -39,10 +39,15 @@ BEGIN
                                     AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
         LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                     ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                    AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                                    
    WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
      AND Movement.StatusId = zc_Enum_Status_Complete()
      AND Movement.DescId = zc_Movement_Check()
-     AND COALESCE(Object_JackdawsChecks.ObjectCode, 0) = 1);
+     AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
+      OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0));
 
      -- Результат
   OPEN Cursor1 FOR (

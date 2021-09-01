@@ -812,7 +812,7 @@ type
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-      PaidType: TPaidType; var AFiscalNumber, ACheckNumber: String;
+      PaidType: TPaidType; var AZReport : Integer; var AFiscalNumber, ACheckNumber: String;
       APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
     // подключение к локальной базе данных
     function InitLocalStorage: Boolean;
@@ -903,7 +903,7 @@ type
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-      ANeedComplete: Boolean; FiscalCheckNumber: String;
+      ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -1555,7 +1555,8 @@ begin
         FormParams.ParamByName('isDiscountCommit').Value,
 
         False, // NeedComplete
-        '', // FiscalCheckNumber
+        0,     // ZReport
+        '',    // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
         UID // out AUID
         );
@@ -3142,7 +3143,7 @@ var
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
   aRelatedProductId : array of Integer;
   aRelatedProductPrice : array of Currency;
-  I, CheckOldId : integer;
+  I, CheckOldId, ZReport : integer;
 begin
   if CheckCDS.RecordCount = 0 then
     exit;
@@ -3647,7 +3648,7 @@ begin
 
     Add_Log('Печать чека');
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-      MainCashForm.PaidType, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
+      MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
     Begin
       Add_Log('Печать чека завершена');
 
@@ -3719,6 +3720,7 @@ begin
         FormParams.ParamByName('isDiscountCommit').Value,
 
         True, // NeedComplete
+        ZReport,     // Номер Z отчета
         CheckNumber, // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
         UID // out AUID
@@ -5446,6 +5448,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
+    , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
@@ -5558,6 +5561,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
+    , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
@@ -6510,6 +6514,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
 
     , false // NeedComplete
+    , 0 // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
     , UID // out AUID
@@ -7411,10 +7416,10 @@ end;
 
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
 var
-  CheckNumber: string;
+  CheckNumber: string; ZReport: Integer;
 begin
   PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-    MainCashForm.PaidType, FFiscalNumber, CheckNumber, 0, false);
+    MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, 0, false);
 end;
 
 procedure TMainCashForm2.mmSaveToExcelClick(Sender: TObject);
@@ -9598,7 +9603,7 @@ begin
 end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-  PaidType: TPaidType; var AFiscalNumber, ACheckNumber: String;
+  PaidType: TPaidType; var AZReport : Integer; var AFiscalNumber, ACheckNumber: String;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
   str_log_xml, cResult: String;
@@ -9670,6 +9675,7 @@ var
 begin
   Result := False;
   ACheckNumber := '';
+  AZReport := 0;
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
@@ -9940,6 +9946,7 @@ begin
                 (FormParams.ParamByName('LoyaltySMText').Value);
             if Result then
               Result := Cash.CloseReceiptEx(ACheckNumber); // Закрыли чек
+            if Result then AZReport := Cash.ZReport;
             if Result and isFiscal then
               Finish_Check_History(FTotalSumm);
           end
@@ -10927,7 +10934,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-  ANeedComplete: Boolean; FiscalCheckNumber: String;
+  ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -11141,7 +11148,7 @@ begin
           false, // Сохранен в реальную базу данных
           ANeedComplete, // Необходимо проведение
           chbNotMCS.Checked, // Не участвует в расчете НТЗ
-          FiscalCheckNumber, // Номер фискального чека
+          AFiscalCheckNumber, // Номер фискального чека
           // ***20.07.16
           ADiscountExternalId, // Id Проекта дисконтных карт
           ADiscountExternalName, // Название Проекта дисконтных карт
@@ -11197,7 +11204,8 @@ begin
           AisCorrectMarketing,    // Корректировка суммы маркетинг в ЗП по подразделению
           AisCorrectIlliquidAssets, // Корректировка суммы нелеквида в ЗП по подразделению
           AisDoctors,                // Врачи
-          AisDiscountCommit          // Дисконт проведен на сайте
+          AisDiscountCommit,         // Дисконт проведен на сайте
+          AZReport                   // Номер Z отчета
           ]));
       End
       else
@@ -11221,7 +11229,7 @@ begin
         // нужно провести документ
         FLocalDataBaseHead.FieldByName('NOTMCS').Value := chbNotMCS.Checked;
         // Не участвует в расчете НТЗ
-        FLocalDataBaseHead.FieldByName('FISCID').Value := FiscalCheckNumber;
+        FLocalDataBaseHead.FieldByName('FISCID').Value := AFiscalCheckNumber;
         // Номер фискального чека
         // ***20.07.16
         FLocalDataBaseHead.FieldByName('DISCOUNTID').Value :=
@@ -11311,6 +11319,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISDOCTORS').Value := AisDoctors;
         //Дисконт проведен на сайте
         FLocalDataBaseHead.FieldByName('ISDISCCOM').Value := AisDiscountCommit;
+        //Номер Z отчета
+        FLocalDataBaseHead.FieldByName('ZREPORT').Value := AZReport;
         FLocalDataBaseHead.Post;
       End;
     except
@@ -11465,7 +11475,7 @@ begin
   // что б отловить ошибки - запишим в лог чек - во время СОХРАНЕНИЯ чека, т.е. ПОСЛЕ пробития через ЭККА
   Add_Log_XML('<Save now="' + FormatDateTime('YYYY.MM.DD hh:mm:ss', Now) + '">'
     + #10 + #13 + '<AUID>"' + AUID + '"</AUID>' + '<CheckNumber>"' +
-    FiscalCheckNumber + '"</CheckNumber>' + '<FiscalNumber>"' + FFiscalNumber +
+    AFiscalCheckNumber + '"</CheckNumber>' + '<FiscalNumber>"' + FFiscalNumber +
     '"</FiscalNumber>' + #10 + #13 + str_log_xml + #10 + #13 + '</Save>');
 
   // update VIP

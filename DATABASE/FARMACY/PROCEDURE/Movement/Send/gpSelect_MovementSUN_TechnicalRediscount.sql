@@ -81,11 +81,15 @@ BEGIN
       IF vbStatusId <> zc_Enum_Status_Erased() AND 
          NOT EXISTS(SELECT 1
                     FROM Movement
+                    
+                         INNER JOIN MovementItem AS MovementItem
+                                                 ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId     = zc_MI_Master() 
                                                       
                          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                           ON MILinkObject_CommentSend.MovementItemId = Movement.Id
+                                                           ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                                          AND MILinkObject_CommentSend.ObjectId = 16978916 
+                                                          AND MILinkObject_CommentSend.ObjectId = 16978916
 
                     WHERE Movement.Id = inMovementId)
       THEN

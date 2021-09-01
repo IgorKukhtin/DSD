@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
+             , CashMember TVarChar, Bayer TVarChar, ZReport Integer, FiscalCheckNumber TVarChar
              , NotMCS Boolean, IsDeferred Boolean
              , isSite Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
@@ -110,6 +110,7 @@ BEGIN
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
            , COALESCE(Object_BuyerForSite.ValueData,
                       MovementString_Bayer.ValueData)           AS Bayer
+           , MovementFloat_ZReport.ValueData::Integer           AS ZReport
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
@@ -237,6 +238,9 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                      ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+             LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                     ON MovementFloat_ZReport.MovementId =  Movement_Check.Id
+                                    AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
  
              LEFT JOIN MovementFloat AS MovementFloat_SummaDelivery
                                      ON MovementFloat_SummaDelivery.MovementId =  Movement_Check.Id
@@ -292,7 +296,7 @@ BEGIN
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
  
-   	     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
              LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
@@ -454,3 +458,5 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_Movement_Check(inStartDate := ('20.04.2021')::TDateTime , inEndDate := ('20.04.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 377605 ,  inSession := '3');
+
+select * from gpSelect_Movement_Check(inStartDate := ('01.09.2021')::TDateTime , inEndDate := ('01.09.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 183292 ,  inSession := '3');

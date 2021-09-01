@@ -196,6 +196,8 @@ type
     spUpdate_Doctors: TdsdStoredProc;
     dxBarButton16: TdxBarButton;
     cbDiscountCommit: TcxCheckBox;
+    edZReport: TcxTextEdit;
+    cxLabel32: TcxLabel;
   private
     { Private declarations }
   public

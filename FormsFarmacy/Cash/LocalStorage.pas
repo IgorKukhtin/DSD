@@ -99,6 +99,8 @@ begin
       AddBoolField(LocalDataBaseHead, 'ISDOCTORS');   //Врачи
       //***15.08.21
       AddBoolField(LocalDataBaseHead, 'ISDISCCOM');   //Дисконт проведен на сайте
+      //***01.09.21
+      AddIntField(LocalDataBaseHead,  'ZREPORT');     //Номер Z отчета
 
       LocalDataBaseHead.CreateTable;
     end
@@ -171,6 +173,8 @@ begin
         if FindField('ISDOCTORS') = nil then AddBoolField(LFieldDefs, 'ISDOCTORS');    //Врачи
         //***25.08.21
         if FindField('ISDISCCOM') = nil then AddBoolField(LFieldDefs, 'ISDISCCOM');    //Дисконт проведен на сайте
+        //***01.09.21
+        if FindField('ZREPORT') = nil then AddIntField(LFieldDefs,  'ZREPORT');     //Номер Z отчета
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -253,7 +257,9 @@ begin
         //***15.08.21
         (FindField('ISDOCTORS') = nil) or
         //***25.08.21
-        (FindField('ISDISCCOM') = nil));
+        (FindField('ISDISCCOM') = nil) or
+        //***01.09.21
+        (FindField('ZREPORT') = nil));
 
       Close;
 

@@ -593,7 +593,7 @@ end;
 
 function TCashEmulation.ZReport : Integer;
 begin
-//  Result := FPrinter.COUNTERSDAY[0, Password];
+  Result := 22;
 end;
 
 function TCashEmulation.SummaReceipt : Currency;

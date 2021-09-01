@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
+             , CashMember TVarChar, Bayer TVarChar, ZReport Integer, FiscalCheckNumber TVarChar
              , NotMCS Boolean
              , isSite Boolean
              , DiscountCardName TVarChar
@@ -121,6 +121,7 @@ BEGIN
                                                 MovementString_Bayer.ValueData)    AS Bayer
                                      , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId  
                                      , Object_PaidType.ValueData                          AS PaidTypeName 
+                                     , MovementFloat_ZReport.ValueData::Integer           AS ZReport
                                      , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
                                      , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
 
@@ -163,6 +164,9 @@ BEGIN
                                       LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                                               ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                                              AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+                                      LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                                              ON MovementFloat_ZReport.MovementId =  Movement.Id
+                                                             AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
 
                                       LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Unit
                                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -289,6 +293,7 @@ BEGIN
            , Movement_Check.PaidTypeName
            , CASE WHEN Movement_Check.InvNumberOrder <> '' AND COALESCE (Movement_Check.CashMember, '') = '' THEN zc_Member_Site() ELSE Movement_Check.CashMember END :: TVarChar AS CashMember
            , COALESCE( Movement_Check.Bayer, tmpLoyaltySM.BuyerName)
+           , Movement_Check.ZReport
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
            , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
