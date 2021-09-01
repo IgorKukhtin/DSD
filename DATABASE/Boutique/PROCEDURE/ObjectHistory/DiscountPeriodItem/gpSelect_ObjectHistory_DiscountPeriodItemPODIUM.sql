@@ -37,6 +37,11 @@ RETURNS TABLE  (  Id Integer , ObjectId Integer
                 , Remains              TFloat
                 , AmountDebt           TFloat
                 , RemainsAll           TFloat
+
+                , OperPriceList_fp TFloat -- первая цена из прайса
+                , Persent_diff     TFloat     -- % изменения от первой цены
+                , Persent_diff_In  TFloat     --  % наценки от вх. цены для цены с учетом ДВУХ сезонных скидок
+                
                 , BrandName            TVarChar
                 , PeriodName           TVarChar
                 , PeriodYear           Integer
@@ -234,6 +239,42 @@ BEGIN
                                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
                       )
+
+    -- первая цена из прайса и валюта
+    , tmpPriceList_fp AS (SELECT DISTINCT
+                                tmp.GoodsId
+                              , tmp.Price
+                              , tmp.CurrencyId
+                          FROM (SELECT DISTINCT
+                                       ObjectHistoryLink_Currency.ObjectId              AS CurrencyId
+                                     , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                     , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                                     , ObjectHistory_PriceListItem.StartDate
+                                     , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
+                                FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                     INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                           ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                          AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+                                     INNER JOIN (SELECT DISTINCT tmpList.GoodsId FROM tmpList) AS tmp ON tmp.GoodsId = ObjectLink_PriceListItem_Goods.ChildObjectId
+
+                                     LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                             ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                            AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+
+                                     LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                                 ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
+                                     LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                  ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                 AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                WHERE ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = vbPriceListId
+                                  AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                               ) AS tmp
+                          WHERE tmp.StartDate = tmp.FirstDate
+                         )
+
      -- курс 
     , tmpCurrency AS (SELECT lfSelect.*
                       FROM Object
@@ -295,6 +336,17 @@ BEGIN
            , tmpPartionGoods.AmountDebt      :: TFloat
            , (COALESCE (tmpPartionGoods.Remains, 0) + COALESCE (tmpPartionGoods.AmountDebt, 0)) :: TFloat  AS RemainsAll
 
+           , COALESCE (tmpPriceList_fp.Price, tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList) :: TFloat AS OperPriceList_fp  -- первая цена из прайса
+           , CASE WHEN COALESCE (tmpPriceList_fp.Price, tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList) <> 0 
+                  THEN (COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList) - COALESCE (tmpPriceList_fp.Price, tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList))*100/COALESCE (tmpPriceList_fp.Price, tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList)
+                  ELSE 0
+             END ::TFloat AS Persent_diff -- % изменения от первой цены
+            --% наценки от вх. цены для цены с учетом ДВУХ сезонных скидок
+           , CASE WHEN COALESCE (tmpPartionGoods.OperPrice,0) <> 0 THEN (CAST (zfCalc_SummChangePercentNext (1, COALESCE (tmpPriceList.ValuePrice, tmpPartionGoods.OperPriceList), COALESCE(tmpDiscount.ValueDiscount, 0), COALESCE(tmpDiscount.ValueNextDiscount, 0) ) AS NUMERIC (16, 0))
+                                                                          - tmpPartionGoods.OperPrice) * 100 / tmpPartionGoods.OperPrice
+                  ELSE 0
+             END ::TFloat AS Persent_diff_In
+           
            , Object_Brand.ValueData              AS BrandName
            , Object_Period.ValueData             AS PeriodName
            , tmpPartionGoods.PeriodYear          AS PeriodYear
@@ -351,6 +403,8 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
             
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartionGoods.GoodsId
+            LEFT JOIN tmpPriceList_fp ON tmpPriceList_fp.GoodsId = tmpPartionGoods.GoodsId
+            
             LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = tmpPriceList.CurrencyId
             LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPriceList.CurrencyId
 

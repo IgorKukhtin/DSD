@@ -308,6 +308,39 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         Options.Editing = False
         Width = 70
       end
+      object OperPriceList_fp: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'OperPriceList_fp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1074#1072#1103' '#1094#1077#1085#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object Persent_diff: TcxGridDBColumn
+        Caption = '% '#1080#1079#1084'. '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+        DataBinding.FieldName = 'Persent_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089' '#1086#1090' '#1087#1077#1088#1074#1086#1081' '#1094#1077#1085#1099
+        Options.Editing = False
+        Width = 98
+      end
+      object Persent_diff_In: TcxGridDBColumn
+        Caption = '% '#1085#1072#1094'. '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099
+        DataBinding.FieldName = 'Persent_diff_In'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1086#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1076#1083#1103' '#1094#1077#1085#1099' '#1089' '#1091#1095#1077#1090#1086#1084' '#1044#1042#1059#1061' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+        Options.Editing = False
+        Width = 95
+      end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083'. '#1074#1093'.'
         DataBinding.FieldName = 'CurrencyName'
@@ -1735,8 +1768,8 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 442
-    Top = 89
+    Left = 426
+    Top = 145
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -1765,8 +1798,8 @@ object DiscountPeriodPodiumItemForm: TDiscountPeriodPodiumItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 493
-    Top = 99
+    Left = 477
+    Top = 139
   end
   object spGet_Current_Date: TdsdStoredProc
     StoredProcName = 'gpGet_Current_Date'
