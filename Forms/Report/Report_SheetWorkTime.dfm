@@ -11,18 +11,18 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     Width = 1091
     Height = 462
     TabOrder = 3
-    ExplicitWidth = 828
+    ExplicitWidth = 1091
     ExplicitHeight = 462
     ClientRectBottom = 462
     ClientRectRight = 1091
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 828
+      ExplicitWidth = 1091
       ExplicitHeight = 462
       inherited cxGrid: TcxGrid
         Width = 1091
-        Height = 462
-        ExplicitWidth = 828
-        ExplicitHeight = 462
+        Height = 320
+        ExplicitWidth = 1091
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
           Styles.Content = nil
@@ -34,13 +34,34 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         object cxGridDBBandedTableView1: TcxGridDBBandedTableView [1]
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.BandHiding = True
+          OptionsCustomize.BandsQuickCustomization = True
+          OptionsCustomize.ColumnVertSizing = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.Content = dmMain.cxContentStyle
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
+          Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
+          Styles.BandHeader = dmMain.cxHeaderStyle
           Bands = <
             item
               Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1057#1086#1090#1088#1091#1076#1085#1080#1082
-              Width = 441
+              Width = 460
             end
             item
               Caption = #1055#1077#1088#1080#1086#1076
@@ -58,7 +79,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Options.Editing = False
             Width = 104
             Position.BandIndex = 0
-            Position.ColIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object MemberCode: TcxGridDBBandedColumn
@@ -69,7 +90,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Options.Editing = False
             Width = 20
             Position.BandIndex = 0
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object MemberName: TcxGridDBBandedColumn
@@ -78,9 +99,9 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 145
+            Width = 90
             Position.BandIndex = 0
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object PositionName: TcxGridDBBandedColumn
@@ -89,9 +110,9 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 132
+            Width = 81
             Position.BandIndex = 0
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object PositionLevelName: TcxGridDBBandedColumn
@@ -100,9 +121,31 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 110
+            Width = 68
             Position.BandIndex = 0
-            Position.ColIndex = 4
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object DateIn: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object DateOut: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+            Position.BandIndex = 0
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object PersonalGroupName: TcxGridDBBandedColumn
@@ -115,7 +158,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Options.Editing = False
             Width = 47
             Position.BandIndex = 0
-            Position.ColIndex = 5
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object Value: TcxGridDBBandedColumn
@@ -136,11 +179,120 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           GridView = cxGridDBBandedTableView1
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 328
+        Width = 1091
+        Height = 134
+        Align = alBottom
+        TabOrder = 1
+        object cxGridDBBandedTableView2: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = TotalDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.BandHiding = True
+          OptionsCustomize.BandsQuickCustomization = True
+          OptionsCustomize.ColumnVertSizing = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
+          Styles.BandHeader = dmMain.cxHeaderStyle
+          Bands = <
+            item
+              Caption = #1048#1090#1086#1075#1080
+              FixedKind = fkLeft
+              Options.HoldOwnColumnsOnly = True
+              Options.Moving = False
+            end
+            item
+              Caption = #1055#1077#1088#1080#1086#1076
+              Options.HoldOwnColumnsOnly = True
+              Options.Moving = False
+              Width = 50
+            end>
+          object Name_ch2: TcxGridDBBandedColumn
+            Caption = #1044#1072#1085#1085#1099#1077
+            DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 67
+            Options.Editing = False
+            Options.Moving = False
+            Width = 162
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object TotalAmount_ch2: TcxGridDBBandedColumn
+            Caption = #1048#1090#1086#1075#1086
+            DataBinding.FieldName = 'TotalAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 67
+            Options.Editing = False
+            Options.Moving = False
+            Width = 80
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object Value_ch2: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Value'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            MinWidth = 40
+            Width = 40
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBBandedTableView2
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 320
+        Width = 1091
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
+      end
     end
   end
   inherited Panel: TPanel
     Width = 1091
-    ExplicitWidth = 828
+    ExplicitWidth = 1091
     object cxLabel4: TcxLabel
       Left = 420
       Top = 6
@@ -175,6 +327,31 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     Left = 772
     Top = 6
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesMember
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object actReport_SheetWorkTimeDialog: TExecuteDialog
@@ -247,8 +424,8 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     Top = 176
   end
   inherited MasterCDS: TClientDataSet
-    Left = 368
-    Top = 176
+    Left = 376
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_SheetWorkTime'
@@ -259,6 +436,9 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       end
       item
         DataSet = MasterCDS
+      end
+      item
+        DataSet = TotalCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -446,5 +626,36 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         MultiSelectSeparator = ','
       end>
     Left = 920
+  end
+  object TotalCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 472
+    Top = 399
+  end
+  object TotalDS: TDataSource
+    DataSet = TotalCDS
+    Left = 534
+    Top = 407
+  end
+  object CrossDBViewAddOnTotal: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView2
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Value
+    Left = 624
+    Top = 400
   end
 end

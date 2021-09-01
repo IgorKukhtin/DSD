@@ -128,6 +128,8 @@ BEGIN
            UNION SELECT 2 AS ErrorCode, 'дата увольнения' AS ErrorText
            UNION SELECT 3 AS ErrorCode, 'факт часов меньше смены' AS ErrorText
            UNION SELECT 4 AS ErrorCode, 'факт часов больше смены' AS ErrorText
+           UNION SELECT 5 AS ErrorCode, 'работа больше 24 часов' AS ErrorText
+           UNION SELECT 6 AS ErrorCode, 'не протабелированны' AS ErrorText
                  )
   , tmpRes1 AS (-- 
                SELECT tmp.*

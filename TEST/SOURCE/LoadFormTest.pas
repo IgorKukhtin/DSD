@@ -2145,18 +2145,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_PaidKindDialogForm');
   exit;
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphDialogForm');
-  exit;
-  }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutDialogForm');
-  exit;
-{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKDialogForm'));
@@ -2907,6 +2895,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTimeDialogForm');
+
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphDialogForm');
+  exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutDialogForm');
+  exit;
+  }
 end;
 
 procedure TLoadFormTest.LoadReportProductionOutAnalyzeFormTest;
