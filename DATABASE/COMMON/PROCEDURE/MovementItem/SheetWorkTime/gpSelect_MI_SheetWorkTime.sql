@@ -327,7 +327,7 @@ BEGIN
                         ELSE 1
                    END AS Amount
              FROM tmpOperDate
-                  LEFT JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
+                  JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
                                  AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
                                                           , zc_Enum_WorkTimeKind_DayOff()
                                                           , zc_Enum_WorkTimeKind_Holiday()
@@ -508,7 +508,7 @@ BEGIN
                                                               AND (tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE)
                                          ) AS Movement_Data
                                         FULL JOIN
-                                         (SELECT tmpOperDate.OperDate, -- 0,
+                                         (SELECT tmpOperDate.OperDate,
                                                  COALESCE(MemberId, 0) AS MemberId,
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0)      AS PositionId,
                                                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId,
@@ -560,11 +560,11 @@ BEGIN
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
                     GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId
-                   ) AS tmp ON tmp.MemberId = D.Key[1]
-                           AND tmp.PositionId = D.Key[2]
-                           AND tmp.PositionLevelId = D.Key[3]
-                           AND tmp.PersonalGroupId = D.Key[4]
-                           AND tmp.StorageLineId = D.Key[5]
+                   ) AS tmp ON tmp.MemberId                     = D.Key[1]
+                           AND COALESCE(tmp.PositionId, 0)      = D.Key[2]
+                           AND COALESCE(tmp.PositionLevelId, 0) = D.Key[3]
+                           AND COALESCE(tmp.PersonalGroupId, 0) = D.Key[4]
+                           AND COALESCE(tmp.StorageLineId, 0)   = D.Key[5]
          LEFT JOIN (SELECT tmpTotal.MemberId
                          , tmpTotal.PositionId
                          , tmpTotal.PositionLevelId
@@ -580,11 +580,11 @@ BEGIN
                            , tmpTotal.PositionLevelId
                            , tmpTotal.PersonalGroupId
                            , tmpTotal.StorageLineId
-                    ) AS tmpTotal ON tmpTotal.MemberId = D.Key[1]
-                                 AND tmpTotal.PositionId = D.Key[2]
-                                 AND tmpTotal.PositionLevelId = D.Key[3]
-                                 AND tmpTotal.PersonalGroupId = D.Key[4]
-                                 AND tmpTotal.StorageLineId = D.Key[5]
+                    ) AS tmpTotal ON tmpTotal.MemberId                     = D.Key[1]
+                                 AND COALESCE(tmpTotal.PositionId, 0)      = D.Key[2]
+                                 AND COALESCE(tmpTotal.PositionLevelId, 0) = D.Key[3]
+                                 AND COALESCE(tmpTotal.PersonalGroupId, 0) = D.Key[4]
+                                 AND COALESCE(tmpTotal.StorageLineId, 0)   = D.Key[5]
         ';
 
      vbQueryText2 := '

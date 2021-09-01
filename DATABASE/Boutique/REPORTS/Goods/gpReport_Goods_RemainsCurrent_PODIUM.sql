@@ -205,6 +205,8 @@ BEGIN
                            , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.StartDate END)               AS StartDate_Price
                            , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.OperPriceList ELSE 0 END)    AS OperPriceList
                            , MAX (CASE WHEN tmp.StartDate = tmp.FirstDate THEN tmp.OperPriceList ELSE 0 END) AS OperPriceList_first
+                           -- Цена со скидкой (1-Да, 0-НЕТ)
+                           , CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.isDiscount ELSE 0 END             AS isDiscount
                       FROM (SELECT _tmpUnit.UnitId                                  AS UnitId
                                  , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                  , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
@@ -213,6 +215,8 @@ BEGIN
                                  , ObjectHistory_PriceListItem.StartDate
                                  , ObjectHistory_PriceListItem.EndDate
                                  , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY _tmpUnit.UnitId, ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
+                                 -- Цена со скидкой (1-Да, 0-НЕТ)
+                                 , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END AS isDiscount
                             FROM _tmpUnit
                                  INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                        ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
@@ -233,6 +237,10 @@ BEGIN
                                  LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                                              ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                             AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
+                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_isDiscount
+                                                              ON ObjectHistoryFloat_isDiscount.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                             AND ObjectHistoryFloat_isDiscount.DescId          = zc_ObjectHistoryFloat_PriceListItem_isDiscount()
                             WHERE zc_Enum_GlobalConst_isTerry() = FALSE
                            ) AS tmp
                       WHERE tmp.EndDate = zc_DateEnd()
@@ -280,6 +288,7 @@ BEGIN
                            , COALESCE (tmpPriceList.CurrencyId_pl, zc_Currency_Basis())               AS CurrencyId_pl
                            , COALESCE (tmpPriceList.PriceListId, zc_PriceList_Basis())                AS PriceListId
                            , tmpPriceList.StartDate_Price                                             AS StartDate_Price
+                           , tmpPriceList.isDiscount
                            
                            -- , CASE WHEN Container.WhereObjectId = Object_PartionGoods.UnitId THEN Object_PartionGoods.Amount ELSE 0 END AS Amount_in
                            , Object_PartionGoods.Amount     AS Amount_in
@@ -375,6 +384,7 @@ BEGIN
                               , tmpContainer.OperPriceList_first
                               , tmpContainer.StartDate_Price
                               , tmpContainer.UnitId_in
+                              , tmpContainer.isDiscount
 
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
@@ -468,6 +478,7 @@ BEGIN
                                 , MF_ChangePercent.ValueData
                                 , MF_CurrencyValue.ValueData
                                 , MF_ParValue.ValueData
+                                , tmpContainer.isDiscount
                   )
        , tmpCurrency AS (SELECT lfSelect.*
                          FROM Object
@@ -535,6 +546,7 @@ BEGIN
                                                         ) AS OperPriceList_doc_curr
 
                           , tmpData_All.UnitId_in
+                          , tmpData_All.isDiscount
 
                           , tmpData_All.Comment_in
                           , tmpData_All.ChangePercent_in
@@ -599,6 +611,7 @@ BEGIN
                             , tmpCurrency.ParValue
                             , tmpData_All.CurrencyValue
                             , tmpData_All.ParValue
+                            , tmpData_All.isDiscount
               )
 
 
@@ -892,6 +905,8 @@ BEGIN
 
            , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) <> 0 THEN CAST (100 - tmpData.OperPriceList_orig * 100 / tmpData.OperPriceList_first AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS Persent_diff
            , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList_orig,0) AND COALESCE (tmpDiscount.DiscountTax_all,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
+
+           , tmpData.isDiscount
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
