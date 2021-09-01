@@ -466,6 +466,7 @@ BEGIN
               -- , CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
                , tmp.Amount                      AS AmountHours
                , tmp.CountDay::TFloat
+               , tmpTotal.Amount_3 ::TFloat
                , tmpTotal.Amount_4 ::TFloat
                , tmpTotal.Amount_5 ::TFloat
                , tmpTotal.Amount_6 ::TFloat
@@ -629,8 +630,8 @@ FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpT
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
-
+--ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+ 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

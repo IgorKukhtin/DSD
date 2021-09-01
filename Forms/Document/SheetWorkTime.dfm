@@ -553,6 +553,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
+    ExplicitWidth = 8
   end
   object FormParams: TdsdFormParams
     Params = <
