@@ -35,13 +35,14 @@ type
                                AButton : string = '';
                                AParams : string = '';
                                ATypeParams : string = '';
-                               AValueParams : string = '') : boolean;
+                               AValueParams : string = '';
+                               ABeep : Integer = 0) : boolean;
 
 implementation
 
 {$R *.dfm}
 
-uses DB, dsdAction, RegularExpressions, TypInfo;
+uses DB, dsdAction, RegularExpressions, TypInfo, dsdPlaySound;
 
 procedure OpenForm(AFormName, AParams, ATypeParams, AValueParams : string);
   var actOF: TdsdOpenForm; I : Integer; Value : Variant;
@@ -98,9 +99,12 @@ function ShowPUSHMessageFarmacy(AMessage : string;
                              AButton : string = '';
                              AParams : string = '';
                              ATypeParams : string = '';
-                             AValueParams : string = '') : boolean;
+                             AValueParams : string = '';
+                             ABeep : Integer = 0) : boolean;
   var PUSHMessageFarmacyForm : TPUSHMessageFarmacyForm;
 begin
+
+  if ABeep = 1 then PlaySoundFile('Bell0001.wav');
 
   if AMessage = '' then
   begin

@@ -42,6 +42,10 @@ BEGIN
                                                  AND MIChild.DescId = zc_MI_Child()
                                                  AND MIChild.ParentId = MIMaster.ID
                                                  AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                                            ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                                           AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+                                                           AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0
                           LEFT JOIN MovementItemDate AS MIDate_Start
                                                       ON MIDate_Start.MovementItemId = MIChild.Id
                                                      AND MIDate_Start.DescId = zc_MIDate_Start()
@@ -66,6 +70,10 @@ BEGIN
                                                AND MIChild.DescId = zc_MI_Child()
                                                AND MIChild.ParentId = MIMaster.ID
                                                AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
+                        INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                                                          ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
+                                                         AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
+                                                         AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0
                         INNER JOIN MovementItemDate AS MIDate_End
                                                     ON MIDate_End.MovementItemId = MIChild.Id
                                                    AND MIDate_End.DescId = zc_MIDate_End()
@@ -78,7 +86,7 @@ BEGIN
                      AND MIMaster.DescId = zc_MI_Master()
                       AND MIMaster.ObjectId = vbUserId))
          THEN
-           RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
+           RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике илм смена не принята.';     
          END IF;
        ELSE
          RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
@@ -150,4 +158,4 @@ ALTER FUNCTION gpGet_TestingUser_Title (TVarChar) OWNER TO postgres;
 
 -- тест
 -- 
-select * from gpGet_TestingUser_Title(inSession := '3');
+select * from gpGet_TestingUser_Title(inSession := '3998220');

@@ -499,6 +499,7 @@ begin
       if cbLastMonth.Checked then
         actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := IncDay(Now, - DayOf(Date))
       else actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := Now;
+      actInsertUpdate_TestingUser.Params.ParamByName('inLastMonth').Value := cbLastMonth.Checked;
       actInsertUpdate_TestingUser.Execute;
     except on E:Exception do
       begin
