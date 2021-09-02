@@ -57,7 +57,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
 
                 , OperPriceList_fp TFloat -- первая цена из прайса
                 , CurrencyName_fp TVarChar
-                , Persent_diff TFloat
+                , Persent_diff TFloat     -- % изменения от первой цены
                 , isCurrency_diff Boolean
 
                 , isDiscount       Boolean

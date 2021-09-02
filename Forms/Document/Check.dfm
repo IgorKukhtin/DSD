@@ -330,8 +330,7 @@ inherited CheckForm: TCheckForm
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 6
-      Text = 'edCashRegisterName'
-      Width = 121
+      Width = 81
     end
     object cxLabel3: TcxLabel
       Left = 251
@@ -353,7 +352,6 @@ inherited CheckForm: TCheckForm
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 10
-      Text = 'edPaidTypeName'
       Width = 121
     end
     object lblCashMember: TcxLabel
@@ -381,16 +379,16 @@ inherited CheckForm: TCheckForm
       Width = 237
     end
     object cxLabel6: TcxLabel
-      Left = 708
+      Left = 723
       Top = -1
       Caption = #8470' '#1092#1080#1089#1082'. '#1095#1077#1082#1072
     end
     object edFiscalCheckNumber: TcxTextEdit
-      Left = 708
+      Left = 723
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 16
-      Width = 93
+      Width = 78
     end
     object chbNotMCS: TcxCheckBox
       Left = 155
@@ -636,6 +634,18 @@ inherited CheckForm: TCheckForm
       ShowHint = True
       TabOrder = 47
       Width = 181
+    end
+    object edZReport: TcxTextEdit
+      Left = 667
+      Top = 14
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 55
+    end
+    object cxLabel32: TcxLabel
+      Left = 667
+      Top = -1
+      Caption = 'Z '#1086#1090#1095#1077#1090
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -2745,6 +2755,12 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = cbDoctors
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ZReport'
+        Value = Null
+        Component = edZReport
         MultiSelectSeparator = ','
       end>
     Left = 112

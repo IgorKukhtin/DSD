@@ -175,6 +175,14 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
+          object colZReport: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' Z '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'ZReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
           object colNotMCS: TcxGridDBColumn
             Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
             DataBinding.FieldName = 'NotMCS'

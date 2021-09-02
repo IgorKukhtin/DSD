@@ -631,6 +631,10 @@ BEGIN
                                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
+                                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
+                                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
+
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
                                                            ON MovementLinkObject_CancelReason.MovementId = Movement.Id
                                                           AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
@@ -660,6 +664,7 @@ BEGIN
                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                            AND Movement.OperDate >= '20.04.2021'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
+                           AND COALESCE (MovementLinkObject_ConfirmedKindClient.ObjectId, zc_Enum_ConfirmedKind_UnComplete()) <> zc_Enum_ConfirmedKind_Complete() 
                            )
          , tmpMI AS (SELECT tmpMovement.*
                           , MovementItem.Id                 AS MovementItemId 

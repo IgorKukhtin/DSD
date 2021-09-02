@@ -260,166 +260,94 @@ BEGIN
 
      -- данные для итогов
      CREATE TEMP TABLE tmpTotal ON COMMIT DROP AS
-     SELECT tmp.OperDate
-           , tmp.MemberId
-           , tmp.PositionId
-           , tmp.PositionLevelId
-           , tmp.PersonalGroupId
-           , tmp.StorageLineId
+     SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.StorageLineId
            , SUM (tmp.Amount) ::TFLoat AS Amount
            , tmp.ObjectId
      FROM (--кол-во часов
-      SELECT tmpOperDate.OperDate
-           , tmpMI.MemberId
-           , tmpMI.PositionId
-           , tmpMI.PositionLevelId
-           , tmpMI.PersonalGroupId
-           , tmpMI.StorageLineId
-           , SUM (tmpMI.Amount) AS Amount
-           , 1  AS ObjectId
-      FROM tmpOperDate
-           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                     AND COALESCE (tmpMI.Amount,0) <> 0
-                     AND tmpMI.isNoSheetCalc = FALSE
-       Group by tmpOperDate.operdate
-              , tmpMI.MemberId
-              , tmpMI.PositionId
-              , tmpMI.PositionLevelId
-              , tmpMI.PersonalGroupId
-              , tmpMI.StorageLineId
-    UNION
-      -- кол-во смен 
-      SELECT tmpOperDate.OperDate
-           , tmpMI.MemberId
-           , tmpMI.PositionId
-           , tmpMI.PositionLevelId
-           , tmpMI.PersonalGroupId
-           , tmpMI.StorageLineId
-           , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
-           , 2  AS ObjectId
-      FROM tmpOperDate
-          JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                    AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
-       Group by tmpOperDate.OperDate
-              , tmpMI.MemberId
-              , tmpMI.PositionId
-              , tmpMI.PositionLevelId
-              , tmpMI.PersonalGroupId
-              , tmpMI.StorageLineId
-    UNION
-      -- Кол-во шт.ед
-      SELECT tmp.OperDate
-           , tmp.MemberId
-           , tmp.PositionId
-           , tmp.PositionLevelId
-           , tmp.PersonalGroupId
-           , tmp.StorageLineId
-           , SUM (tmp.Amount) AS Amount
-           , 3  AS ObjectId
-      FROM (SELECT tmpOperDate.OperDate
-                 , tmpMI.MemberId
-                 , tmpMI.PositionId
-                 , tmpMI.PositionLevelId
-                 , tmpMI.PersonalGroupId
-                 , tmpMI.StorageLineId
-                 , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
-                            THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
-                        ELSE 1
-                   END AS Amount
-             FROM tmpOperDate
-                  JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
-                                 AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
-                                                          , zc_Enum_WorkTimeKind_DayOff()
-                                                          , zc_Enum_WorkTimeKind_Holiday()
-                                                          , zc_Enum_WorkTimeKind_Hospital()
-                                                          , zc_Enum_WorkTimeKind_HolidayNoZp()
-                                                          , zc_Enum_WorkTimeKind_HospitalDoc()
-                                                         )
-                                 AND tmpMI.isNoSheetCalc = FALSE
-                                 AND COALESCE (tmpMI.Amount,0) <> 0
-                  -- данные из штатного расписания
-                  LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpMI.PositionId
-                                        AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
-                                        AND tmpStaffList.UnitId     = inUnitId
-                  --второй раз без подразделения
-                  LEFT JOIN tmpStaffList AS tmpStaffList2
-                                         ON tmpStaffList2.PositionId = tmpMI.PositionId
-                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
-                                        AND tmpStaffList.PositionId IS NULL
-             ) AS tmp
-      GROUP BY tmp.OperDate
-             , tmp.MemberId
-             , tmp.PositionId
-             , tmp.PositionLevelId
-             , tmp.PersonalGroupId
-             , tmp.StorageLineId
-    UNION
-      -- Кол-во БЛ
-      SELECT tmpOperDate.OperDate
-           , tmpMI.MemberId
-           , tmpMI.PositionId
-           , tmpMI.PositionLevelId
-           , tmpMI.PersonalGroupId
-           , tmpMI.StorageLineId
-           , SUM (1) AS Amount
-           , 4  AS ObjectId
-      FROM tmpOperDate
-          JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                    AND tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())
-       Group by tmpOperDate.OperDate
-              , tmpMI.MemberId
-              , tmpMI.PositionId
-              , tmpMI.PositionLevelId
-              , tmpMI.PersonalGroupId
-              , tmpMI.StorageLineId
-    UNION
-      -- Кол-во отпуска
-      SELECT tmpOperDate.OperDate
-           , tmpMI.MemberId
-           , tmpMI.PositionId
-           , tmpMI.PositionLevelId
-           , tmpMI.PersonalGroupId
-           , tmpMI.StorageLineId
-           , SUM (1) AS Amount
-           , 5  AS ObjectId
-      FROM tmpOperDate
-          JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                    AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()
-                    -- AND COALESCE (tmpMI.Amount,0) <> 0
-       Group by tmpOperDate.OperDate
-              , tmpMI.MemberId
-              , tmpMI.PositionId
-              , tmpMI.PositionLevelId
-              , tmpMI.PersonalGroupId
-              , tmpMI.StorageLineId
-    UNION
-      -- Кол-во прогулов
-      SELECT tmpOperDate.OperDate
-           , tmpMI.MemberId
-           , tmpMI.PositionId
-           , tmpMI.PositionLevelId
-           , tmpMI.PersonalGroupId
-           , tmpMI.StorageLineId
-           , SUM (1) AS Amount
-           , 6  AS ObjectId
-      FROM tmpOperDate
-          JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
-                    AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()
-                   -- AND COALESCE (tmpMI.Amount,0) <> 0
-       Group by tmpOperDate.OperDate
-              , tmpMI.MemberId
-              , tmpMI.PositionId
-              , tmpMI.PositionLevelId
-              , tmpMI.PersonalGroupId
-              , tmpMI.StorageLineId
-)AS tmp
-       Group by tmp.OperDate
-              , tmp.MemberId
-              , tmp.PositionId
-              , tmp.PositionLevelId
-              , tmp.PersonalGroupId
-              , tmp.StorageLineId
-              , tmp.ObjectId
+           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                , SUM (tmpMI.Amount) AS Amount
+                , 1  AS ObjectId
+           FROM tmpOperDate
+                JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                          AND COALESCE (tmpMI.Amount,0) <> 0
+                          AND tmpMI.isNoSheetCalc = FALSE
+            GROUP BY tmpOperDate.operdate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+         UNION
+           -- кол-во смен 
+           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
+                , 2  AS ObjectId
+           FROM tmpOperDate
+               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                         AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
+           GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+         UNION
+           -- Кол-во шт.ед
+           SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.StorageLineId
+                , SUM (tmp.Amount) AS Amount
+                , 3  AS ObjectId
+           FROM (SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
+                                 THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
+                             ELSE 1
+                        END AS Amount
+                  FROM tmpOperDate
+                       JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
+                                      AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
+                                                               , zc_Enum_WorkTimeKind_DayOff()
+                                                               , zc_Enum_WorkTimeKind_Holiday()
+                                                               , zc_Enum_WorkTimeKind_Hospital()
+                                                               , zc_Enum_WorkTimeKind_HolidayNoZp()
+                                                               , zc_Enum_WorkTimeKind_HospitalDoc()
+                                                              )
+                                      AND tmpMI.isNoSheetCalc = FALSE
+                                      AND COALESCE (tmpMI.Amount,0) <> 0
+                       -- данные из штатного расписания
+                       LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpMI.PositionId
+                                             AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                                             AND tmpStaffList.UnitId     = inUnitId
+                       --второй раз без подразделения
+                       LEFT JOIN tmpStaffList AS tmpStaffList2
+                                              ON tmpStaffList2.PositionId = tmpMI.PositionId
+                                             AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                                             AND tmpStaffList.PositionId IS NULL
+                  ) AS tmp
+           GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.StorageLineId
+         UNION
+           -- Кол-во БЛ
+           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                , SUM (1) AS Amount
+                , 4  AS ObjectId
+           FROM tmpOperDate
+               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                         AND tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())
+            GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+         UNION
+           -- Кол-во отпуска
+           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                , SUM (1) AS Amount
+                , 5  AS ObjectId
+           FROM tmpOperDate
+               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                         AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()
+            GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+         UNION
+           -- Кол-во прогулов
+           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                , SUM (1) AS Amount
+                , 6  AS ObjectId
+           FROM tmpOperDate
+               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
+                         AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()
+           GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+           )AS tmp
+     GROUP BY tmp.OperDate
+            , tmp.MemberId
+            , tmp.PositionId
+            , tmp.PositionLevelId
+            , tmp.PersonalGroupId
+            , tmp.StorageLineId
+            , tmp.ObjectId
       ;
       ----------------------------------------------------------------
 
@@ -466,6 +394,7 @@ BEGIN
               -- , CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
                , tmp.Amount                      AS AmountHours
                , tmp.CountDay::TFloat
+               , tmpTotal.Amount_3 ::TFloat
                , tmpTotal.Amount_4 ::TFloat
                , tmpTotal.Amount_5 ::TFloat
                , tmpTotal.Amount_6 ::TFloat
@@ -610,12 +539,13 @@ BEGIN
                                                , tmpTotal.ObjectId
                                                , SUM (tmpTotal.Amount) AS Amount
                                           FROM tmpTotal
-                                          Group by tmpTotal.operdate, tmpTotal.ObjectId
+                                          GROUP BY tmpTotal.operdate, tmpTotal.ObjectId
                                         ) AS Movement_Data
                                   order by 1''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
+<<<<<<< HEAD
 FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
      UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
      UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
@@ -624,7 +554,18 @@ FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpT
      UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
            )AS tmp ON tmp.Id = D.Key[1]
       ORDER BY tmp.Id
+=======
+        FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
+             UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
+             UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
+             UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
+             UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
+             UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
+                   )AS tmp ON tmp.Id = D.Key[1]
+>>>>>>> origin/master
          ';
+
+
      OPEN cur2 FOR EXECUTE vbQueryText;
      RETURN NEXT cur2;
 
@@ -635,8 +576,8 @@ FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpT
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
-
+--ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+ 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

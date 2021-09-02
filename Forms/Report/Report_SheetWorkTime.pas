@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxCurrencyEdit, cxSplitter;
 
 type
   TReport_SheetWorkTimeForm = class(TAncestorReportForm)
@@ -47,6 +47,16 @@ type
     edMember: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesMember: TdsdGuides;
+    TotalCDS: TClientDataSet;
+    TotalDS: TDataSource;
+    CrossDBViewAddOnTotal: TCrossDBViewAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBBandedTableView2: TcxGridDBBandedTableView;
+    Name_ch2: TcxGridDBBandedColumn;
+    TotalAmount_ch2: TcxGridDBBandedColumn;
+    Value_ch2: TcxGridDBBandedColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public

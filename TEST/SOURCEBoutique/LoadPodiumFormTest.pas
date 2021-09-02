@@ -782,11 +782,11 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+       {
   //Отчет остаток товара на дату
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrent_onDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrent_onDateForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrent_onDateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrent_onDateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrent_onDateDialogForm');
    exit;
 
@@ -809,7 +809,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OH_DiscountPeriodDialogForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReturnInForm');
   //
@@ -838,7 +838,7 @@ begin
   //Движ. по покупателю
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientPodiumForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentPodiumForm');
   //exit;

@@ -578,8 +578,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 278
-    Top = 303
+    Left = 214
+    Top = 223
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SheetWorkTime'
@@ -2018,7 +2018,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 406
-    Top = 375
+    Left = 822
+    Top = 215
   end
 end

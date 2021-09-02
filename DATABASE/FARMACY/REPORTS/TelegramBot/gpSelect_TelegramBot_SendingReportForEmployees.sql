@@ -34,6 +34,8 @@ BEGIN
      SELECT 5, (CURRENT_DATE + INTERVAL '18 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckDeliverySite (''3'')'::TVarChar
      UNION ALL
      SELECT 6, (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') + INTERVAL '1 MONTH' + INTERVAL '11 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_DynamicsDeltaMonthEIC (''3'')'::TVarChar
+     UNION ALL
+     SELECT 7, (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') + INTERVAL '1 MONTH' + INTERVAL '11 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckSiteCountMonth (''3'')'::TVarChar
      ;
 
 END;

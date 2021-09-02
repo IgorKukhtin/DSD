@@ -104,6 +104,8 @@ RETURNS TABLE (PartionId            Integer
 
              , Persent_diff         TFloat  -- % отклонения текущей цены от первой
              , isDiff               Boolean -- если есть и % сез скидки и изменение цены в меньшую сторону
+             -- Цена со скидкой (1-Да, 0-НЕТ)
+             , isDiscount           Boolean
               )
 AS
 $BODY$
@@ -206,7 +208,7 @@ BEGIN
                            , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.OperPriceList ELSE 0 END)    AS OperPriceList
                            , MAX (CASE WHEN tmp.StartDate = tmp.FirstDate THEN tmp.OperPriceList ELSE 0 END) AS OperPriceList_first
                            -- Цена со скидкой (1-Да, 0-НЕТ)
-                           , CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.isDiscount ELSE 0 END             AS isDiscount
+                           , MAX (CASE WHEN tmp.EndDate = zc_DateEnd() THEN tmp.isDiscount ELSE 0 END)        AS isDiscount
                       FROM (SELECT _tmpUnit.UnitId                                  AS UnitId
                                  , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                  , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
@@ -216,7 +218,7 @@ BEGIN
                                  , ObjectHistory_PriceListItem.EndDate
                                  , MIN (ObjectHistory_PriceListItem.StartDate) OVER (PARTITION BY _tmpUnit.UnitId, ObjectLink_PriceListItem_Goods.ChildObjectId) AS FirstDate
                                  -- Цена со скидкой (1-Да, 0-НЕТ)
-                                 , CASE WHEN COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) = 1 THEN TRUE ELSE FALSE END AS isDiscount
+                                 , COALESCE (ObjectHistoryFloat_isDiscount.ValueData, 0) AS isDiscount
                             FROM _tmpUnit
                                  INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                        ON ObjectLink_PriceListItem_PriceList.ChildObjectId = _tmpUnit.PriceListId
@@ -906,7 +908,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) <> 0 THEN CAST (100 - tmpData.OperPriceList_orig * 100 / tmpData.OperPriceList_first AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS Persent_diff
            , CASE WHEN COALESCE (tmpData.OperPriceList_first,0) > COALESCE (tmpData.OperPriceList_orig,0) AND COALESCE (tmpDiscount.DiscountTax_all,0) > 0 THEN TRUE ELSE FALSE END ::Boolean AS isDiff
 
-           , tmpData.isDiscount
+           , CASE WHEN COALESCE (tmpData.isDiscount, 0) = 1 THEN TRUE ELSE FALSE END ::Boolean AS isDiscount
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
@@ -953,6 +955,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 01.09.21         * add isDiscount
  03.03.20         *
  03.07.18         *
  15.03.18         * add RemainsAll

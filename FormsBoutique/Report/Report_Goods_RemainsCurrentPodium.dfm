@@ -6,9 +6,8 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -358
   ExplicitWidth = 1147
-  ExplicitHeight = 598
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -396,6 +395,11 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
               Format = ',0.####'
               Kind = skSum
               Column = SummDebt_offer
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = LabelName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -634,6 +638,15 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091' ('#1087#1088#1080#1084#1077#1088#1082#1072')'
+            Options.Editing = False
+            Width = 55
+          end
+          object isDiscount: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'isDiscount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 55
           end
