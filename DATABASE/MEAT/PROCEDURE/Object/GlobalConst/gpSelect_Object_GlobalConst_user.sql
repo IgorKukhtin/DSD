@@ -20,7 +20,7 @@ BEGIN
        SELECT Object_GlobalConst.Id
             , Object_GlobalConst.ObjectCode
 
-            , CASE WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost())
+            , CASE WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost())
                         THEN (zfConvert_DateToString (CURRENT_DATE)  || ' ' ||  SUBSTRING (zfConvert_DateTimeShortToString (COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)), 10, 5)) :: TDateTime
 
                    WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
@@ -45,7 +45,7 @@ BEGIN
               --
             , CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_StartDate_Auto_PrimeCost()
                         THEN zfCalc_MonthName (ActualBankStatement.ValueData)
-                   WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost())
+                   WHEN Object_GlobalConst.Id IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost())
                         THEN SUBSTRING (zfConvert_DateTimeShortToString (COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)), 10, 5)
                    ELSE ''
               END :: TVarChar AS Comment

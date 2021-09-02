@@ -75,7 +75,8 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartDate_Auto_PrimeCost(),  inDescId:= zc_Object_GlobalConst(), inCode:= 201, inName:= 'Ночной пересчет С/С для месяца : ', inEnumName:= 'zc_Enum_GlobalConst_StartDate_Auto_PrimeCost');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 210, inName:= 'Время запуска Ночной пересчет С/С для Главный : ',          inEnumName:= 'zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 211, inName:= 'Время запуска Ночной пересчет С/С для Филиал Киев : ',      inEnumName:= 'zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 212, inName:= 'Время запуска Ночной пересчет С/С для Филиал Остальные : ', inEnumName:= 'zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 212, inName:= 'Время запуска Ночной пересчет С/С для Филиал Одесса : ',    inEnumName:= 'zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost(), inDescId:= zc_Object_GlobalConst(), inCode:= 213, inName:= 'Время запуска Ночной пересчет С/С для Филиал Остальные : ', inEnumName:= 'zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost');
 
 END $$;
 

@@ -35,7 +35,7 @@ BEGIN
           -- всегда 01 число
           ioActualBankStatementDate:= DATE_TRUNC ('MONTH', ioActualBankStatementDate);
 
-     ELSEIF ioId NOT IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost())
+     ELSEIF ioId NOT IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost())
      THEN ioComment:= '';
 --   THEN ioComment:= SUBSTRING (zfConvert_DateTimeShortToString (ioActualBankStatementDate), 10, 5)
 
@@ -43,7 +43,7 @@ BEGIN
 
 
      -- замена - добавим время
-     IF ioId IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost())
+     IF ioId IN (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost(), zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost())
      THEN
           --
           IF TRIM (ioComment) = '' THEN ioComment:= '00:00'; END IF;

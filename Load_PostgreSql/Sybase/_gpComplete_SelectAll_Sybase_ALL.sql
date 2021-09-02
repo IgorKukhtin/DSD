@@ -105,14 +105,16 @@ END IF;
                                OR inGroupId = 0
                                OR (inGroupId = 1 AND ObjectLink.ChildObjectId IN (8379     -- филиал Киев
                                                                                 , 3080683  -- филиал Львов
-                                                                              --, 8373     -- филиал Николаев (Херсон)
+                                                                                 )
+                                  )
+                               OR (inGroupId = 2 AND ObjectLink.ChildObjectId IN (8373     -- филиал Николаев (Херсон)
                                                                                 , 8374     -- филиал Одесса
                                                                                  )
                                   )
-                               OR (inGroupId = 2 AND ObjectLink.ChildObjectId NOT IN (8379     -- филиал Киев
+                               OR (inGroupId = 3 AND ObjectLink.ChildObjectId NOT IN (8379     -- филиал Киев
                                                                                     , 3080683  -- филиал Львов
-                                                                                  --, 8373     -- филиал Николаев (Херсон)
-                                                                                  , 8374     -- филиал Одесса
+                                                                                    , 8373     -- филиал Николаев (Херсон)
+                                                                                    , 8374     -- филиал Одесса
                                                                                      )
                                   ))
                              -- AND ObjectLink.ChildObjectId = 8379       -- филиал Киев

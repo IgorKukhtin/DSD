@@ -244,8 +244,8 @@ type
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
-    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H:Integer;
-    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M:Integer;
+    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H,zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H:Integer;
+    zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M,zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M:Integer;
     zc_Enum_GlobalConst_StartDate_Auto_PrimeCost : TDateTime;
     zc_Enum_Process_Auto_PrimeCost:String;
 
@@ -474,6 +474,7 @@ begin
         if ((GroupId_branch = 0) and (((Hour = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 1) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 2) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
+         or((GroupId_branch = 3) and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
         then begin
             fEnabled:= false;
             //
@@ -904,6 +905,7 @@ begin
          fOpenSqToQuery ('select (SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime0'
                              + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime1'
                              + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime2'
+                             + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost() AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartTime3'
                              + ',(SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = zc_Enum_GlobalConst_StartDate_Auto_PrimeCost()  AND OD.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()) AS StartDate'
                              + ',zc_Enum_Process_Auto_PrimeCost() AS zc_Enum_Process_Auto_PrimeCost'
                         );
@@ -926,6 +928,11 @@ begin
          DecodeTime(Present, Hour, Min, Sec, MSec);
          zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H:= Hour;
          zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M:= Min;
+         // 3
+         Present:= toSqlQuery.FieldByName('StartTime3').AsDateTime;
+         DecodeTime(Present, Hour, Min, Sec, MSec);
+         zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H:= Hour;
+         zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M:= Min;
 
      except
           ShowMessage ('not zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost + zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost + zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost');
@@ -1012,6 +1019,9 @@ procedure TMainForm.StartProcess;
                else if GroupId_branch = 2
                then
                     myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))
+               else if GroupId_branch = 3
+               then
+                    myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))
                ;
 
 

@@ -114,6 +114,7 @@ BEGIN
             -- LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()))
             CROSS JOIN tmpUnit AS View_Unit 
        WHERE Object_Status.Id = zc_Enum_Status_UnComplete()
+       LIMIT 1
        ;
 
      ELSE
