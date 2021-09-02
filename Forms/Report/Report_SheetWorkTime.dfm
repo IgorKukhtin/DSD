@@ -36,8 +36,73 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           DataController.DataSource = MasterDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_6
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = MemberName
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_6
+            end>
           DataController.Summary.SummaryGroups = <>
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -49,6 +114,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsSelection.InvertSelect = False
+          OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.Content = dmMain.cxContentStyle
@@ -99,7 +165,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 69
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -110,7 +176,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 62
             Position.BandIndex = 0
             Position.ColIndex = 4
             Position.RowIndex = 0
@@ -121,7 +187,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 52
             Position.BandIndex = 0
             Position.ColIndex = 5
             Position.RowIndex = 0
@@ -132,7 +198,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 60
             Position.BandIndex = 0
             Position.ColIndex = 6
             Position.RowIndex = 0
@@ -143,7 +209,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 67
             Position.BandIndex = 0
             Position.ColIndex = 7
             Position.RowIndex = 0
@@ -159,6 +225,105 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Width = 47
             Position.BandIndex = 0
             Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object Amount_1: TcxGridDBBandedColumn
+            Caption = '1.'#1095#1072#1089#1099
+            DataBinding.FieldName = 'Amount_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 29
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object Amount_2: TcxGridDBBandedColumn
+            Caption = '2.'#1089#1084'.'
+            DataBinding.FieldName = 'Amount_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1089#1084#1077#1085
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 37
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object Amount_3: TcxGridDBBandedColumn
+            Caption = '3.'#1096#1090'.'#1077#1076
+            DataBinding.FieldName = 'Amount_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1096#1090#1072#1090#1085#1099#1093' '#1077#1076#1080#1085#1080#1094
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 29
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object Amount_4: TcxGridDBBandedColumn
+            Caption = '4.'#1041#1051
+            DataBinding.FieldName = 'Amount_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 64
+            Position.BandIndex = 0
+            Position.ColIndex = 13
+            Position.RowIndex = 0
+          end
+          object Amount_5: TcxGridDBBandedColumn
+            Caption = '5.'#1086#1090#1087'.'
+            DataBinding.FieldName = 'Amount_5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1086#1090#1087#1091#1089#1082
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 64
+            Position.BandIndex = 0
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object Amount_6: TcxGridDBBandedColumn
+            Caption = '6.'#1087#1088#1086#1075'.'
+            DataBinding.FieldName = 'Amount_6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1088#1086#1075#1091#1083#1086#1074
+            MinWidth = 15
+            Options.Editing = False
+            Options.Moving = False
+            Width = 64
+            Position.BandIndex = 0
+            Position.ColIndex = 12
             Position.RowIndex = 0
           end
           object Value: TcxGridDBBandedColumn

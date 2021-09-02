@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime(
     IN inMemberId    Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-  RETURNS SETOF refcursor 
+  RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE cur1 refcursor; 
@@ -35,7 +35,6 @@ BEGIN
         COALESCE(inUnitId,0) = 0
         OR
         T0.Id = inUnitId;
-
 
     IF COALESCE(vbUnits,'') = ''
     THEN
@@ -150,7 +149,7 @@ BEGIN
 
   -- данные для итогов
   CREATE TEMP TABLE tmpTotal ON COMMIT DROP AS
-    SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId
+    SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId
           , SUM (tmp.Amount) ::TFLoat AS Amount
           , tmp.ObjectId
     FROM (--кол-во часов
@@ -241,9 +240,7 @@ BEGIN
                           (EXTRACT(DAY FROM tmpOperDate.OperDate))::TVarChar||'.'||(EXTRACT(MONTH FROM tmpOperDate.OperDate))::TVarChar AS ValueField
                FROM tmpOperDate;  
      RETURN NEXT cur1;
-    
-    
-    
+
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
      vbDayCount := (SELECT count(*) 
@@ -274,6 +271,12 @@ BEGIN
                , tmpPersonal.DateIn
                , tmpPersonal.DateOut
                , tmpStaffList.HoursDay  ::TFLoat
+               , tmpTotal.Amount_1 ::TFloat
+               , tmpTotal.Amount_2 ::TFloat
+               , tmpTotal.Amount_3 ::TFloat
+               , tmpTotal.Amount_4 ::TFloat
+               , tmpTotal.Amount_5 ::TFloat
+               , tmpTotal.Amount_6 ::TFloat
                , tmpStaffList.StaffListSummKindName ::TVarChar
                '
                || vbFieldNameText ||
@@ -311,6 +314,30 @@ BEGIN
                               AND tmpPersonal.PositionLevelId = D.Key[3]
                               AND tmpPersonal.PersonalGroupId = D.Key[4]
                               AND tmpPersonal.UnitId          = D.Key[5]
+
+         LEFT JOIN (SELECT tmpTotal.MemberId
+                         , tmpTotal.PositionId
+                         , tmpTotal.PositionLevelId
+                         , tmpTotal.PersonalGroupId
+                         --, tmpTotal.StorageLineId
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 1 THEN tmpTotal.Amount ELSE 0 END) AS Amount_1
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 2 THEN tmpTotal.Amount ELSE 0 END) AS Amount_2
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 3 THEN tmpTotal.Amount ELSE 0 END) AS Amount_3
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 4 THEN tmpTotal.Amount ELSE 0 END) AS Amount_4
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 5 THEN tmpTotal.Amount ELSE 0 END) AS Amount_5
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 6 THEN tmpTotal.Amount ELSE 0 END) AS Amount_6
+                    FROM tmpTotal
+                    GROUP BY tmpTotal.MemberId
+                           , tmpTotal.PositionId
+                           , tmpTotal.PositionLevelId
+                           , tmpTotal.PersonalGroupId
+                          -- , tmpTotal.StorageLineId
+                    ) AS tmpTotal ON tmpTotal.MemberId                     = D.Key[1]
+                                 AND COALESCE(tmpTotal.PositionId, 0)      = D.Key[2]
+                                 AND COALESCE(tmpTotal.PositionLevelId, 0) = D.Key[3]
+                                 AND COALESCE(tmpTotal.PersonalGroupId, 0) = D.Key[4]
+                              --   AND COALESCE(tmpTotal.StorageLineId, 0)   = D.Key[5]
+
          ';
 
 

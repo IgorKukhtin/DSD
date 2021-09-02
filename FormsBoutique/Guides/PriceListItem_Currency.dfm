@@ -26,6 +26,8 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = -8
+    ExplicitTop = 86
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -176,7 +178,6 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
-        Options.Editing = False
         Width = 73
       end
       object RemainsAll: TcxGridDBColumn
@@ -1756,6 +1757,15 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         Name = 'inisChangePrice'
         Value = Null
         Component = cbisChangePrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDiscount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDiscount'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
