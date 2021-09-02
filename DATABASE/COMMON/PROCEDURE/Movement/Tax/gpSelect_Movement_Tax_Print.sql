@@ -690,6 +690,7 @@ order by 4*/
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
              , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
              , COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) ::Boolean AS isName_new
+             , COALESCE (MIFloat_NPP.ValueData, 0)    AS NPP
         FROM MovementItem
              INNER JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -698,6 +699,9 @@ order by 4*/
              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                         ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_NPP.DescId = zc_MIFloat_NPP()           
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -1008,7 +1012,11 @@ order by 4*/
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-       ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+       ORDER BY CASE WHEN NOT EXISTS (SELECT 1 FROM tmpMI WHERE tmpMI.NPP = 0)
+                          THEN tmpMI.NPP
+                     ELSE 0
+                END
+              , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                           THEN ObjectString_Goods_RUS.ValueData
                      ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
                           CASE WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData

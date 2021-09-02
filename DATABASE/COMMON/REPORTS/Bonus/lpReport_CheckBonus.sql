@@ -1,4 +1,4 @@
--- FunctiON: lpReport_CheckBonus ()
+ -- FunctiON: lpReport_CheckBonus ()
 
 --DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
@@ -212,7 +212,7 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                        ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                         WHERE tmpContract_full.PaidKindId = inPaidKindId
+                     --!!!WHERE tmpContract_full.PaidKindId = inPaidKindId
                          )
            -- Для нал еще zc_Object_ContractConditionPartner - если выбраны то бонусы только на них считаем
          , tmpCCPartner AS (SELECT tmp.ContractId

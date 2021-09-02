@@ -585,6 +585,11 @@ BEGIN
                                  AND COALESCE(tmpTotal.PositionLevelId, 0) = D.Key[3]
                                  AND COALESCE(tmpTotal.PersonalGroupId, 0) = D.Key[4]
                                  AND COALESCE(tmpTotal.StorageLineId, 0)   = D.Key[5]
+      /*ORDER BY Object_Member.ValueData
+               , Object_Position.ValueData
+               , Object_PositionLevel.ValueData
+               , Object_PersonalGroup.ValueData
+               , Object_StorageLine.ValueData*/
         ';
 
      vbQueryText2 := '
@@ -618,6 +623,7 @@ FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpT
      UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
      UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
            )AS tmp ON tmp.Id = D.Key[1]
+      ORDER BY tmp.Id
          ';
      OPEN cur2 FOR EXECUTE vbQueryText;
      RETURN NEXT cur2;

@@ -75,6 +75,14 @@ BEGIN
    -- Результат
    RETURN QUERY 
      WITH Object_AccountDirection AS (SELECT * FROM Object_AccountDirection_View)
+       ,  tmpPartner_Unit AS (SELECT ObjectLink_Partner_Unit.ChildObjectId AS UnitId
+                                   , STRING_AGG (Object_Partner.ValueData, ';') :: TVarChar AS PartnerName
+                              FROM ObjectLink AS ObjectLink_Partner_Unit
+                                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Unit.ObjectId
+                              WHERE ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+                              GROUP BY ObjectLink_Partner_Unit.ChildObjectId
+                             )
+       -- 
        SELECT 
              Object_Unit_View.Id     
            , Object_Unit_View.Code   
@@ -121,8 +129,8 @@ BEGIN
            , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
            , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
          
-           , Object_Partner.ObjectCode             AS PartnerCode
-           , Object_Partner.ValueData              AS PartnerName
+           , 0 :: Integer                          AS PartnerCode
+           , tmpPartner_Unit.PartnerName           AS PartnerName
 
            , Object_Unit_HistoryCost.Id            AS UnitId_HistoryCost
            , Object_Unit_HistoryCost.ObjectCode    AS UnitCode_HistoryCost
@@ -185,10 +193,7 @@ BEGIN
                                     ON ObjectBoolean_PartionGoodsKind.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionGoodsKind.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
-                                 ON ObjectLink_Partner_Unit.ChildObjectId = Object_Unit_View.Id
-                                AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Unit.ObjectId
+            LEFT JOIN tmpPartner_Unit ON tmpPartner_Unit.UnitId = Object_Unit_View.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
