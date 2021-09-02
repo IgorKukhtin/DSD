@@ -938,7 +938,6 @@ BEGIN
                                    ON ObjectString_PostalCode.ObjectId = View_Partner_Address.StreetId
                                   AND ObjectString_PostalCode.DescId = zc_ObjectString_Street_PostalCode()
 
-
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())*/
@@ -970,11 +969,6 @@ BEGIN
                                   AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode()
 
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = NULL
-
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
-                                 ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
-                                AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
-            LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
