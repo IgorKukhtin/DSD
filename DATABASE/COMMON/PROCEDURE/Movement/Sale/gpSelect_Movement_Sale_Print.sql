@@ -48,7 +48,7 @@ $BODY$
     DECLARE vbIsInfoMoney_30200 Boolean;
 
     DECLARE vbIsKiev Boolean;
-    
+
     DECLARE vbIsPrice_Pledge_25 Boolean;
 
     DECLARE vbIsOKPO_04544524 Boolean;
@@ -167,7 +167,7 @@ BEGIN
                  ELSE FALSE
             END AS isInfoMoney_30200
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
-          
+
           , MovementLinkMovement_Master.MovementChildId AS MovementId_tax
 
             INTO vbOperDate, vbOperDatePartner, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
@@ -831,7 +831,7 @@ BEGIN
 
              -- для договора Id = 4440485(№7183Р(14781)) + доп страничка
            , CASE WHEN vbContractId = 4440485 THEN TRUE ELSE FALSE END :: Boolean AS isFozzyPage2
-           
+
              -- этому Юр Лицу печатается "За довіренністю ...."
            , vbIsOKPO_04544524 :: Boolean AS isOKPO_04544524
 
@@ -970,6 +970,11 @@ BEGIN
                                   AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode()
 
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = NULL
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
+                                 ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
+            LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
@@ -1378,7 +1383,7 @@ BEGIN
                             MovementItem.ObjectId           AS GoodsId
                           , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                           , TRUE AS isName_new
-                     FROM MovementItem 
+                     FROM MovementItem
                           INNER JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
                                                          ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
                                                         AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
