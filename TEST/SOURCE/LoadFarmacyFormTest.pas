@@ -1016,10 +1016,20 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Top100GoodsSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LayoutCheckRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LayoutCheckRemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LayoutCheckRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LayoutCheckRemainsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZeroingInOrdersDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ZeroingInOrdersDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZeroingInOrdersForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ZeroingInOrdersForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Top100GoodsSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Top100GoodsSUNForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZReportLogDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZReportLogDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ZReportLogDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZReportLogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ZReportLogForm');
@@ -1864,6 +1874,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLayoutJournalChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceLayoutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceLayoutForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

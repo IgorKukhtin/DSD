@@ -2730,6 +2730,7 @@
     object actCreateOrderFromMCS: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
+      Enabled = False
       Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
       FormName = 'TCreateOrderFromMCSForm'
       FormNameParam.Value = 'TCreateOrderFromMCSForm'
@@ -4563,6 +4564,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ZeroingInOrders: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1073#1085#1091#1083#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086' '#1089#1072#1081#1090#1091
+      FormName = 'TReport_ZeroingInOrdersForm'
+      FormNameParam.Value = 'TReport_ZeroingInOrdersForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_LayoutCheckRemains: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1059#1095#1105#1090' '#1074#1099#1082#1083#1072#1076#1082#1080
+      FormName = 'TReport_LayoutCheckRemainsForm'
+      FormNameParam.Value = 'TReport_LayoutCheckRemainsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5000,6 +5023,7 @@
       end
       object N58: TMenuItem
         Action = actCreateOrderFromMCS
+        Visible = False
       end
       object N309: TMenuItem
         Action = actCreateOrderFromMCSLayout
@@ -5298,6 +5322,12 @@
       end
       object N501: TMenuItem
         Action = actReport_Movement_CheckWithPennies
+      end
+      object N310: TMenuItem
+        Action = actReport_ZeroingInOrders
+      end
+      object N311: TMenuItem
+        Action = actReport_LayoutCheckRemains
       end
     end
     object N36: TMenuItem [5]

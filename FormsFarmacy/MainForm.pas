@@ -848,6 +848,10 @@ type
     N309: TMenuItem;
     actReport_Top100GoodsSUN: TdsdOpenForm;
     N1001: TMenuItem;
+    actReport_ZeroingInOrders: TdsdOpenForm;
+    N310: TMenuItem;
+    actReport_LayoutCheckRemains: TdsdOpenForm;
+    N311: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

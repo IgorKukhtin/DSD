@@ -9684,7 +9684,7 @@ begin
         if not TryStrToInt64(AFiscalNumber, n) OR (Length(AFiscalNumber) < 10) then
         begin
           if ShowPUSHMessageCash('После проведения предыдущего чека возникла ошибка…'#13#10 +
-                                 'Повторите пробитие чека!'#13#10 +
+                                 'Повторите пробитие чека после перезагрузки РРО!'#13#10 +
                                  'Если не пройдет - сделайте X отчет и повторите пробитие.', cResult) then actPutCheckToCashExecute(Nil);
           Exit;
         end;

@@ -1339,7 +1339,13 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     StoredProcName = 'gpRun_Object_RecalcMCSSheduler'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inCalcType'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 544
     Top = 112
