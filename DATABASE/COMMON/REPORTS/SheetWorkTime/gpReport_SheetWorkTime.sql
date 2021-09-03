@@ -150,11 +150,11 @@ BEGIN
   -- данные для итогов
   CREATE TEMP TABLE tmpTotal ON COMMIT DROP AS
     SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId
-          , SUM (tmp.Amount) ::TFLoat AS Amount
+          , SUM (COALESCE (tmp.Amount,0)) ::TFLoat AS Amount
           , tmp.ObjectId
     FROM (--кол-во часов
           SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
-               , SUM (tmpMI.Amount) AS Amount
+               , SUM (COALESCE (tmpMI.Amount,0)) AS Amount
                , 1  AS ObjectId
           FROM tmpOperDate
                JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
@@ -173,7 +173,7 @@ BEGIN
         UNION
           -- Кол-во шт.ед
           SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId
-               , SUM (tmp.Amount) AS Amount
+               , SUM (COALESCE (tmp.Amount,0)) AS Amount
                , 3  AS ObjectId
           FROM (SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
@@ -321,12 +321,12 @@ BEGIN
                          , tmpTotal.PersonalGroupId
                          , tmpTotal.UnitId
                          --, tmpTotal.StorageLineId
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 1 THEN tmpTotal.Amount ELSE 0 END) AS Amount_1
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 2 THEN tmpTotal.Amount ELSE 0 END) AS Amount_2
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 3 THEN tmpTotal.Amount ELSE 0 END) AS Amount_3
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 4 THEN tmpTotal.Amount ELSE 0 END) AS Amount_4
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 5 THEN tmpTotal.Amount ELSE 0 END) AS Amount_5
-                         , SUM (CASE WHEN tmpTotal.ObjectId = 6 THEN tmpTotal.Amount ELSE 0 END) AS Amount_6
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 1 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_1
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 2 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_2
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 3 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_3
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 4 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_4
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 5 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_5
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 6 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_6
                     FROM tmpTotal
                     GROUP BY tmpTotal.MemberId
                            , tmpTotal.PositionId
@@ -368,12 +368,12 @@ BEGIN
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
-        FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
-             UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
-             UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
-             UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
-             UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
-             UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
+        FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
+             UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
+             UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
+             UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
+             UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
+             UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
                    )AS tmp ON tmp.Id = D.Key[1]
          ';
 
