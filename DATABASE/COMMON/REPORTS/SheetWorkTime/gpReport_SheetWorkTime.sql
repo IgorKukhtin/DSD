@@ -4,8 +4,8 @@
 DROP FUNCTION IF EXISTS gpReport_SheetWorkTime(TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime(
-    IN inDateStart   TDateTime , --
-    IN inDateEnd     TDateTime , --
+    IN inStartDate   TDateTime , --
+    IN inEndDate     TDateTime , --
     IN inUnitId      Integer   , --
     IN inMemberId    Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
@@ -24,7 +24,6 @@ $BODY$
           vbFieldNameText Text;
           vbUnits Text;
 BEGIN
-
     SELECT 
         STRING_AGG(T0.Id::TVarChar,',')
     INTO
@@ -48,7 +47,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
-       AS SELECT generate_series(inDateStart, inDateEnd, '1 DAY'::interval) OperDate;
+       AS SELECT generate_series(inStartDate, inEndDate, '1 DAY'::interval) OperDate;
 
 
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
