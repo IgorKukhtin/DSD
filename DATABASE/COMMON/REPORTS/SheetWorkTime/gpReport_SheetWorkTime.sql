@@ -89,6 +89,7 @@ BEGIN
                                     ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
                                    AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE (COALESCE(MI_SheetWorkTime.ObjectId, 0) = inMemberId OR inMemberId = 0)
+          AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
      ;
 
      CREATE TEMP TABLE tmpPersonal ON COMMIT DROP AS
