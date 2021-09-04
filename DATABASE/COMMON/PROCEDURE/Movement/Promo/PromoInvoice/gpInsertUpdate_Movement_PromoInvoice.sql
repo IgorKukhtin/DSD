@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoInvoice(
     IN inOperDate              TDateTime  , --
     IN inBonusKindId           Integer    , --
     IN inPaidKindId            Integer    , -- 
-    IN inCostPromo             TFloat     , --
+    IN inTotalSumm             TFloat     , --
     IN inComment               TVarChar   , --
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -52,12 +52,12 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
      ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, vbUserId);
      END IF;
 
 

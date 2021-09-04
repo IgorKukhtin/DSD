@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PromoInvoice(
 RETURNS TABLE (Id                Integer
              , ParentId          Integer
              , OperDate          TDateTime
-             , Invnumber         TVarChar
+             , Invnumber         Integer
              , InvnumberPartner         TVarChar
              , BonusKindId        Integer 
              , BonusKindCode      Integer 

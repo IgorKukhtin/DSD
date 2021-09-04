@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, cxEditRepositoryItems;
+  cxCheckBox, cxEditRepositoryItems, cxImageComboBox;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -456,6 +456,46 @@ type
     bbUpdatePromoStateKind_Return: TdxBarButton;
     dxBarSeparator3: TdxBarSeparator;
     PriceCorr: TcxGridDBColumn;
+    cxTabSheetPromoInvoice: TcxTabSheet;
+    GridPromoInvoice: TcxGrid;
+    cxGridDBTableViewPromoInvoice: TcxGridDBTableView;
+    OperDate_inv: TcxGridDBColumn;
+    Invnumber_inv: TcxGridDBColumn;
+    InvnumberPartner_inv: TcxGridDBColumn;
+    BonusKindName_inv: TcxGridDBColumn;
+    PaidKindName_inv: TcxGridDBColumn;
+    TotalSumm_inv: TcxGridDBColumn;
+    Comment_inv: TcxGridDBColumn;
+    InsertName_inv: TcxGridDBColumn;
+    UpdateName_inv: TcxGridDBColumn;
+    UpdateDate_inv: TcxGridDBColumn;
+    InsertDate_inv: TcxGridDBColumn;
+    isErased_inv: TcxGridDBColumn;
+    cxGridLevel6: TcxGridLevel;
+    PromoInvoiceCDS: TClientDataSet;
+    PromoInvoiceDS: TDataSource;
+    dsdDBViewAddPromoInvoice: TdsdDBViewAddOn;
+    spSelectPromoInvoice: TdsdStoredProc;
+    spInsertUpdate_PromoInvoice: TdsdStoredProc;
+    actErasedInvoice: TdsdUpdateErased;
+    spUnErasedInvoice: TdsdStoredProc;
+    spErasedInvoice: TdsdStoredProc;
+    actUnErasedInvoice: TdsdUpdateErased;
+    actInsertInvoice: TdsdInsertUpdateAction;
+    actUpdateInvoice: TdsdInsertUpdateAction;
+    actUnCompleteInvoice: TdsdChangeMovementStatus;
+    actSetErasedInvoice: TdsdChangeMovementStatus;
+    actCompleteInvoice: TdsdChangeMovementStatus;
+    spMovementCompletePromoInvoice: TdsdStoredProc;
+    spMovementSetErasedPromoInvoice: TdsdStoredProc;
+    spMovementUnCompletePromoInvoice: TdsdStoredProc;
+    bbInvoice: TdxBarSubItem;
+    bbInsertInvoice: TdxBarButton;
+    bbUpdateInvoice: TdxBarButton;
+    bbCompleteInvoice: TdxBarButton;
+    bbUnCompleteInvoice: TdxBarButton;
+    bbSetErasedInvoice: TdxBarButton;
+    actRefreshInvoice: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

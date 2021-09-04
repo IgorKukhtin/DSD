@@ -3212,6 +3212,10 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoInvoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoInvoiceForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
