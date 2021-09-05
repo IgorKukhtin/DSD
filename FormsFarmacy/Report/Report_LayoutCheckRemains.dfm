@@ -33,6 +33,7 @@ object Report_LayoutCheckRemainsForm: TReport_LayoutCheckRemainsForm
         end>
       Properties.ReadOnly = True
       Properties.UseNullString = True
+      StyleDisabled.TextColor = clBtnShadow
       TabOrder = 0
       Width = 201
     end
@@ -120,6 +121,7 @@ object Report_LayoutCheckRemainsForm: TReport_LayoutCheckRemainsForm
         VisibleForCustomization = False
       end
       object Color_CalcRemains: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_CalcRemains'
         Visible = False
         VisibleForCustomization = False
       end
@@ -395,17 +397,11 @@ object Report_LayoutCheckRemainsForm: TReport_LayoutCheckRemainsForm
         ColorColumn = Remains
         BackGroundValueColumn = Color_CalcRemains
         ColorValueList = <>
-      end
-      item
-        ColorColumn = Color_Calc
-        BackGroundValueColumn = Color_Calc
-        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
-    KeepSelectColor = True
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'UnitName'

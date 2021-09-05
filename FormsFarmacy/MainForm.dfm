@@ -20,6 +20,8 @@
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitLeft = -120
+    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetInfo
@@ -6068,6 +6070,21 @@
     Params = <>
     StoreDefs = True
     Left = 216
+    Top = 8
+  end
+  object spGet_MainForm_isTop: TdsdStoredProc
+    StoredProcName = 'gpGet_MainForm_isTop'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'isMainFormTop'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
     Top = 8
   end
 end

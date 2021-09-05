@@ -665,7 +665,6 @@ BEGIN
                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                            AND Movement.OperDate >= '20.04.2021'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
-                           AND COALESCE (MovementLinkObject_ConfirmedKind.ObjectId, zc_Enum_ConfirmedKind_UnComplete()) <> zc_Enum_ConfirmedKind_Complete() 
                            )
          , tmpMI AS (SELECT tmpMovement.*
                           , MovementItem.Id                 AS MovementItemId 
@@ -677,6 +676,13 @@ BEGIN
                                                  AND MovementItem.Amount = 0
                                                  
                     )
+         , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                        , MovementProtocol.OperDate 
+                                        , MovementProtocol.UserId
+                                        , ROW_NUMBER() OVER (Partition BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id) AS ord
+                                   FROM MovementProtocol 
+                                   WHERE MovementProtocol.MovementId in (SELECT DISTINCT tmpMI.Id AS ID FROM tmpMI)
+                                     AND MovementProtocol.ProtocolData ILIKE '%"Статус заказа (Состояние VIP-чека)" FieldValue = "Подтвержден"%')
          , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
                                   , MovementItemProtocol.OperDate
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
@@ -703,13 +709,17 @@ BEGIN
           INNER JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId = Movement.MovementItemId
                                   AND tmpMIProtocol.ord = 1
           
+          LEFT JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
+                                       AND tmpMovementProtocol.ord = 1 
+ 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
 
           LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
                                ON MIFloat_AmountOrder.MovementItemId = Movement.MovementItemId
                               AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                               
-     WHERE tmpMIProtocol.OperDate >= vbDatePUSH
+     WHERE (tmpMIProtocol.OperDate < tmpMovementProtocol.OperDate OR tmpMovementProtocol.OperDate IS NULL)
+       AND tmpMIProtocol.OperDate >= vbDatePUSH
      ;  
 
      IF COALESCE (vbText, '') <> ''

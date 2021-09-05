@@ -82,11 +82,6 @@ $BODY$
    DECLARE vbJackdawsChecksId Integer;
    DECLARE vbIndex Integer;
 BEGIN
-    -- !!!заменили!!!
-    IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
-    THEN
-        inSession := inUserSession;
-    END IF;
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
@@ -101,6 +96,13 @@ BEGIN
     IF COALESCE(vbUnitId, 0) = 0 THEN
         RAISE EXCEPTION 'Для пользователя не установлено значение параметра Подразделение';
     END IF;
+
+    -- !!!заменили!!! по создателю поссле получения аптеки отправителя
+    IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
+    THEN
+        inSession := inUserSession;
+    END IF;
+    vbUserId := lpGetUserBySession (inSession);
 
     IF inDate is null
     THEN

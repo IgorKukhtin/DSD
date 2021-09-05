@@ -19,6 +19,7 @@ RETURNS TABLE (OperDate TDateTime
              , SummaJackdaws1 TFloat
              , SummaJackdaws2 TFloat
              , SummaOther TFloat
+             , SummaAll TFloat
              , ColorRA_calc Integer
              )
 AS
@@ -151,6 +152,9 @@ BEGIN
        , Movement.SummaJackdaws1   AS SummaJackdaws1
        , Movement.SummaJackdaws2   AS SummaJackdaws2
        , Movement.SummaOther       AS SummaOther
+       , (COALESCE (Movement.SummaJackdaws1, 0) +
+          COALESCE (Movement.SummaJackdaws2, 0) +
+          COALESCE (Movement.SummaOther, 0))::TFloat  AS  SummaAll
        , zc_Color_Yelow()          AS ColorRA_calc
   FROM tmpMovement AS Movement 
   
@@ -187,4 +191,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_Check_JackdawsSum(inStartDate := ('05.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inUnitId := 10779386 ,  inSession := '3');
+select * from gpReport_Check_JackdawsSum(inStartDate := ('07.08.2021')::TDateTime , inEndDate := ('07.08.2021')::TDateTime , inUnitId := 0 ,  inSession := '3');

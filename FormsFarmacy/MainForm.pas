@@ -852,6 +852,7 @@ type
     N310: TMenuItem;
     actReport_LayoutCheckRemains: TdsdOpenForm;
     N311: TMenuItem;
+    spGet_MainForm_isTop: TdsdStoredProc;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
@@ -910,6 +911,15 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
   FNumberPUSH := 0;
+  try
+    spGet_MainForm_isTop.Execute;
+    if spGet_MainForm_isTop.ParamByName('isMainFormTop').Value then
+    begin
+      Top := 10;
+      Left := 10
+    end;
+  finally
+  end;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
