@@ -277,11 +277,12 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
             Width = 42
           end
           object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
             VisibleForCustomization = False
             Width = 54
           end
@@ -308,7 +309,7 @@ inherited Report_Promo_TradeForm: TReport_Promo_TradeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             Options.Editing = False
             VisibleForCustomization = False
             Width = 77

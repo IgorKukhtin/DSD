@@ -109,8 +109,8 @@ BEGIN
                             , tmpPartner.MovementPromo
                             , MovementItem.Amount   AS TaxPromo
                             , MovementItem.ObjectId AS GoodsId
-                            , 0                     AS GoodsKindId
-                            -- , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                          --, 0                     AS GoodsKindId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
                             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT
                             , CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -118,10 +118,10 @@ BEGIN
                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpPartner.MovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
                                                    AND MovementItem.isErased = FALSE
-                            /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                            AND 1 = 0 -- !!!*/
+                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                          --AND 1 = 0 -- !!!
                             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                                         ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
                                                        AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()

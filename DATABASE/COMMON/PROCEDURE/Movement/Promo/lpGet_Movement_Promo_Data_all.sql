@@ -73,13 +73,13 @@ BEGIN
                             INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMovement_all.MovementId
                                                 AND tmpMI_all.GoodsId    = inGoodsId
                                                 AND tmpMI_all.isErased   = FALSE
-                            /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMI_all.MovementItemId
                                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                                            AND 1 = 0 -- !!!*/
+                                                          --AND 1 = 0 -- !!!
 
                        WHERE tmpMovement_all.StatusId = zc_Enum_Status_Complete()
-                       -- WHERE (MILinkObject_GoodsKind.ObjectId = inGoodsKindId OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0)
+                         AND (MILinkObject_GoodsKind.ObjectId = inGoodsKindId OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0)
                       )
            , tmpMovement_PromoPartner AS 
                       (SELECT Movement.ParentId AS MovementId_parent

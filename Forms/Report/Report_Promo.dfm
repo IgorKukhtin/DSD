@@ -3,8 +3,10 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
+  ExplicitLeft = -325
+  ExplicitTop = -12
   ExplicitWidth = 1114
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -297,10 +299,11 @@ inherited Report_PromoForm: TReport_PromoForm
             Width = 42
           end
           object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
             Width = 54
           end
           object GoodsKindCompleteName: TcxGridDBColumn
@@ -325,7 +328,7 @@ inherited Report_PromoForm: TReport_PromoForm
             DataBinding.FieldName = 'GoodsKindName_List'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             Options.Editing = False
             Width = 77
           end
@@ -730,14 +733,14 @@ inherited Report_PromoForm: TReport_PromoForm
       Params = <
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'DateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -763,7 +766,7 @@ inherited Report_PromoForm: TReport_PromoForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -771,7 +774,7 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -865,7 +868,7 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

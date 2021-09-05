@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -198,11 +198,10 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 80
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
+            Width = 90
           end
           object GoodsKindCompleteName: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
@@ -217,7 +216,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             Width = 85
           end
           object GoodsKindName_List: TcxGridDBColumn [5]
@@ -225,7 +224,7 @@
             DataBinding.FieldName = 'GoodsKindName_List'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             Options.Editing = False
             Width = 77
           end
@@ -1256,6 +1255,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0

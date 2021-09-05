@@ -25,7 +25,8 @@ BEGIN
                      JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                                                      AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
                )
-        -- AND vbUserId = zfCalc_UserAdmin() :: Integer
+     -- AND vbUserId = zfCalc_UserAdmin() :: Integer
+        AND 1=0
  
      THEN -- !!! ÎÒÊËÞ×ÈËÈ !!!
           PERFORM pg_cancel_backend (tmp.pId)
