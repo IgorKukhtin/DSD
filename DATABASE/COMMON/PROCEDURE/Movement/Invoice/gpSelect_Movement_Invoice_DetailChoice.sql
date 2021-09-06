@@ -2,14 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice_DetailChoice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_DetailChoice(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_DetailChoice (
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inJuridicalId   Integer  ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
+RETURNS TABLE (Id Integer, MovementDesc TVarChar, InvNumber TVarChar, InvNumber_Full TVarChar
              , InvNumberPartner TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
@@ -72,20 +72,21 @@ BEGIN
                        )
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
 
-         , tmpMovement AS (SELECT Movement.id
-                                , MovementLinkObject_Juridical.ObjectId     AS JuridicalId
-                                , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
-                           FROM tmpStatus
-                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                                 AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                            ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                                           AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
-                              LEFT JOIN MovementBoolean AS MovementBoolean_Closed
-                                                        ON MovementBoolean_Closed.MovementId = Movement.Id
-                                                       AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
-                           )
+        , tmpMovement AS (SELECT Movement.id
+                               , MovementLinkObject_Juridical.ObjectId     AS JuridicalId
+                               , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
+                          FROM tmpStatus
+                             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                AND Movement.DescId = zc_Movement_Invoice()
+                                                AND Movement.StatusId = tmpStatus.StatusId
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                           ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                                          AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                       ON MovementBoolean_Closed.MovementId = Movement.Id
+                                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                          )
 
      , tmpMI AS (SELECT MovementItem.Id
                       , MovementItem.MovementId
@@ -110,8 +111,112 @@ BEGIN
                     LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = MI_OrderIncome.MovementId
                     LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_OrderIncome.DescId
                  )
+
+     , tmpPromoInvoice AS (SELECT Movement.id
+                                , Movement.ParentId
+                                , Movement.OperDate
+                                , Movement.Invnumber 
+                                , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate)  ) :: TVarChar AS InvNumberFull
+                                , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+                                , Movement_parent.InvNumber              AS InvNumber_Parent
+
+                                , Object_Status.Id                       AS StatusId
+                                , Object_Status.ObjectCode               AS StatusCode         --код статуса
+                                , Object_Status.ValueData                AS StatusName         --Статус
+
+                                , Object_BonusKind.Id                    AS BonusKindId
+                                , Object_BonusKind.ValueData             AS BonusKindName
+
+                                , Object_PaidKind.Id                     AS PaidKindId
+                                , Object_PaidKind.ValueData              AS PaidKindName
+
+                                , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+                                , MovementString_Comment.ValueData       AS Comment
+                                , Object_Insert.ValueData             AS InsertName
+                                , MovementDate_Insert.ValueData       AS InsertDate
+                           FROM tmpStatus
+                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                 AND Movement.DescId = zc_Movement_PromoInvoice()
+                                                 AND Movement.StatusId = tmpStatus.StatusId
+                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_BonusKind
+                                                           ON MovementLinkObject_BonusKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_BonusKind.DescId = zc_MovementLinkObject_BonusKind()
+                              LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MovementLinkObject_BonusKind.ObjectId
+                      
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                           ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+                      
+                              LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                       ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                                      AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                      
+                              LEFT JOIN MovementString AS MovementString_Comment
+                                                       ON MovementString_Comment.MovementId = Movement.Id
+                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                                            
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                              LEFT JOIN Movement AS Movement_parent ON Movement_parent.Id = Movement.ParentId
+
+                              LEFT JOIN MovementDate AS MovementDate_Insert
+                                                     ON MovementDate_Insert.MovementId = Movement.Id
+                                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+                           )
+
+     , tmpPromoInv_partner AS (SELECT tmpPromoInvoice.*
+                                    , MovementLinkObject_Partner.ObjectId    AS PartnerId               --Покупатель для акции
+                                    , Object_Partner.ObjectCode              AS PartnerCode             --Покупатель для акции
+                                    , Object_Partner.ValueData               AS PartnerName             --Покупатель для акции
+                                    , Object_Partner.DescId                  AS PartnerDescId           --Тип Покупатель для акции
+                                    , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
+                                    , Object_Juridical.Id                    AS JuridicalId
+                                    , Object_Juridical.ValueData             AS JuridicalName
+                                    , Object_Retail.ValueData                AS Retail_Name
+                                    , Object_Contract.Id                     AS ContractId
+                                    , Object_Contract.ObjectCode             AS ContractCode
+                                    , Object_Contract.ValueData              AS ContractName
+                                    
+                               FROM tmpPromoInvoice
+                                   INNER JOIN Movement AS Movement_Partner ON Movement_Partner.ParentId = tmpPromoInvoice.ParentId
+                                                      AND Movement_Partner.DescId = zc_Movement_PromoPartner()
+                                                      AND Movement_Partner.StatusId <> zc_Enum_Status_Erased()
+
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                ON MovementLinkObject_Partner.MovementId = Movement_Partner.Id
+                                                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+                                   LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
+                           
+                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                             AND Object_Partner.DescId = zc_Object_Partner()
+                                   LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                           
+                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                              ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id)
+                                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                   LEFT OUTER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                           
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                ON MovementLinkObject_Contract.MovementId = Movement_Partner.Id
+                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                              )
+
+
       -- Результат
       SELECT Movement.Id                            AS Id
+           , 'Счет'::TVarChar                       AS MovementDesc
            , Movement.InvNumber                     AS InvNumber
            , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName,  COALESCE(MovementString_InvNumberPartner.ValueData,'')||'/'||Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
@@ -271,7 +376,72 @@ BEGIN
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
-            ;
+    UNION
+       SELECT tmp.Id
+           , 'Счет для акции'::TVarChar      AS MovementDesc
+           , tmp.InvNumber
+           , tmp.InvNumberFull AS InvNumber_Full
+           , tmp.InvNumberPartner
+           , tmp.OperDate
+           , tmp.StatusCode
+           , tmp.StatusName
+
+           , tmp.InsertDate
+           , tmp.InsertName
+
+           , FALSE ::Boolean  AS PriceWithVAT
+           , 0 ::TFloat  AS VATPercent
+           , 0 ::TFloat  AS ChangePercent
+           , 0 ::TFloat  AS CurrencyValue
+           , tmp.TotalSumm ::TFloat
+
+           , 0                 AS CurrencyDocumentId
+           , ''::TVarChar      AS CurrencyDocumentName
+
+           , tmp.JuridicalId
+           , tmp.JuridicalName
+
+           , tmp.ContractId
+           , tmp.ContractCode
+           , tmp.ContractName
+
+           , tmp.PaidKindId
+           , tmp.PaidKindName
+
+           , tmp.Comment :: TVarChar       AS Comment
+           , FALSE ::Boolean AS isClosed
+
+           --строчная часть
+           , 0                      AS MovementItemId
+           , 0        AS MovementId_OrderIncome
+           , '' :: TVarChar         AS InvNumber_OrderIncome
+           , 0     :: TFloat        AS Amount
+           , 0            :: TFloat AS Price
+           , 0  :: TFloat           AS CountForPrice
+           , 0  :: TFloat           AS AmountSumm
+
+           , '' :: TVarChar         AS MIComment
+
+           , 0                      AS GoodsId
+           , 0                      AS GoodsCode
+           , '' :: TVarChar              AS GoodsName
+           , '' :: TVarChar         AS InvNumber_Asset
+
+           , 0                      AS MeasureId
+           , '' :: TVarChar         AS MeasureName
+
+           , 0                      AS NameBeforeId
+           , 0  :: Integer          AS NameBeforeCode
+           , '' :: TVarChar         AS NameBeforeName
+           , 0                      AS UnitId
+           , 0                      AS UnitCode
+           , '' ::TVarChar          AS UnitName
+           , 0                      AS AssetId
+           , '' ::TVarChar          AS AssetName
+
+           , CASE WHEN tmp.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isErased
+       FROM tmpPromoInv_partner AS tmp
+    ;
 
 END;
 $BODY$
@@ -280,8 +450,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.09.21         *
  21.07.16         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice_DetailChoice (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalId:= 0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Invoice_DetailChoice (inStartDate:= '04.09.2021', inEndDate:= '06.09.2021', inJuridicalId:= 0, inIsErased := FALSE, inSession:= '2')
