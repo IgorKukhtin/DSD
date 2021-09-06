@@ -2629,6 +2629,7 @@ begin
         Add('order by OperDate,MovementId,InvNumber');
         Open;
 
+        myLogMemo_add('start Привязка Возвраты' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbReturnIn_Auto.Caption:='('+IntToStr(RecordCount)+') Привязка Возвраты';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2672,6 +2673,7 @@ begin
         end;
      end;
      //
+     myLogMemo_add('end Привязка Возвраты');
      myDisabledCB(cbReturnIn_Auto);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2712,6 +2714,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
 
+        myLogMemo_add('start Расчет курс. разн.' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbCurrency.Caption:='('+IntToStr(RecordCount)+') Расчет курс. разн.';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2744,6 +2747,7 @@ begin
         end;
      end;
      //
+     myLogMemo_add('end Расчет курс. разн.');
      myDisabledCB(cbCurrency);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2762,6 +2766,7 @@ begin
         fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_PartnerCount('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
                        +' order by OperDate,MovementId,InvNumber');
         //
+        myLogMemo_add('start Transport_PartnerCount' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbTransportList.Caption:='('+IntToStr(RecordCount)+') TransportList-PartnerCount';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2794,6 +2799,64 @@ begin
         end;
      end;
      //
+     myLogMemo_add('end Transport_PartnerCount');
+     //
+     //
+     // !!!заливка в сибасе!!!
+     fromZConnection.Connected:=false;
+     with fromZQuery,Sql do begin
+        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_recomplete('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
+                       +' order by OperDate,MovementId,InvNumber');
+        //
+        myLogMemo_add('start Transport-recomplete' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        cbTransportList.Caption:='('+IntToStr(RecordCount)+') Transport-recomplete';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpReComplete_Movement_Transport';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean,ptInput, false);
+        //
+        toStoredProc_three.StoredProcName:='gpReComplete_Movement_TransportService';
+        toStoredProc_three.OutputType := otResult;
+        toStoredProc_three.Params.Clear;
+        toStoredProc_three.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if FieldByName('MovementDescId').AsInteger = FieldByName('zc_Movement_Transport').AsInteger
+             then begin
+                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                   if not myExecToStoredProc_two then ;//exit;
+             end
+             else begin
+                   toStoredProc_three.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                   if not myExecToStoredProc_three then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myLogMemo_add('end Transport-recomplete');
+     //
+     //
      myDisabledCB(cbTransportList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2812,6 +2875,7 @@ begin
         fOpenFromZQuery ('select * from gpComplete_SelectAll_Sybase_Promo_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
                        +' order by OperDate,MovementId,InvNumber');
         //
+        myLogMemo_add('start Расчет акций' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbPromo.Caption:='('+IntToStr(RecordCount)+') Расчет акций';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2844,6 +2908,7 @@ begin
         end;
      end;
      //
+     myLogMemo_add('end Расчет акций');
      myDisabledCB(cbPromo);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

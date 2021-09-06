@@ -399,15 +399,16 @@ function SummaToText(n: Double): string;
 const
 ed1 : array[1..9] of string = ('одна','двi','три','чотири','п`€ть','шiсть','сiм','вiсiм','дев`€ть');
 ed2 : array[1..2] of string = ('одна','двi');
+ed3 : array[1..9] of string = ('один','два','три','чотири','п`€ть','шiсть','сiм','вiсiм','дев`€ть');
 des : array[1..18] of string =
       ('дес€ть','одиннадц€ть','дванадц€ть','тринадц€ть','чотирнадц€ть',
        'п`€тнадц€ть','шiстнадц€ть','сiмнадц€ть','вiсiмнадц€ть',
        'дев`€тнадц€ть','двадц€ть','тридц€ть','сорок','п`€тдес€т',
        'шiстдес€т','сiмдес€т','вiсiмдес€т','дев`€носто');
 sot : array[1..9] of string = ('сто','двiстi','триста','чотириста','п`€тсот', 'шiстсот','сiмсот','вiсiмсот','дев`€тсот');
-tis1 : array[1..4] of string = ('тис€ча','мiлiон'  ,'мiлiард'  ,'трилiон'  );
-tis2 : array[1..4] of string = ('тис€ч' ,'мiлiонiв','мiлiардiв','трилiонiв');
-tis3 : array[1..4] of string = ('тис€чi','мiлiона' ,'мiлiарда' ,'трилiона' );
+tis1 : array[1..4] of string = ('тис€ча','м≥льйон'  ,'м≥ль€рд'  ,'трильйон'  );
+tis2 : array[1..4] of string = ('тис€ч' ,'м≥льйонiв','м≥ль€рдiв','трильйонiв');
+tis3 : array[1..4] of string = ('тис€чi','м≥льйона' ,'м≥ль€рда' ,'трильйона' );
 
 {ed1 : array[1..9] of string = ('одна','две','три','четыре','п€ть','шесть','семь','восемь','дев€ть');
 ed2 : array[1..2] of string = ('одна','две');
@@ -448,6 +449,31 @@ tis3 : array[1..4] of string = ('тыс€чи','милиона' ,'милиарда' ,'трилиона' );
       Result:= Result+ed1[_3]+' ';
   end;
 {+++++++++++++++++++++++++++++++++++++++++++++++++++++++}
+  function _3toScript_mln(n : Word; male : Boolean) : String;
+  var _1, _2, _3 : Word;
+  begin
+    Result:= '';
+    if n = 0 then begin
+      Result:= ' '; exit;
+    end;
+    _1:= n div 100; if _1 <> 0 then Result:= sot[_1]+' ';
+    _2:= (n mod 100) div 10;
+    if _2 >= 2 then
+      Result:= Result+des[9+_2]+' '
+    else
+      if _2 = 1 then begin
+        _2:= n mod 100;
+        Result:= Result+des[_2-9]+' '; exit;
+      end;
+    _3:= (n mod 100) mod 10;
+    if _3 = 0 then
+      exit;
+    if (_3 <= 2) and not male then
+      Result:= Result+ed3[_3]+' '
+    else
+      Result:= Result+ed3[_3]+' ';
+  end;
+{+++++++++++++++++++++++++++++++++++++++++++++++++++++++}
 var Male : Boolean;
     tmp, LastDig, _2dig : Word;
     Count : Byte;
@@ -477,6 +503,10 @@ begin
                 Str:= tis3[Count-1]
               else
                 Str:= tis2[Count-1];
+      if Count > 2
+      then
+         Result:= _3toScript_mln(tmp, Male)+Str+' '+Result
+      else
          Result:= _3toScript(tmp, Male)+Str+' '+Result;
        end;
      if TmpInt = '0' then
