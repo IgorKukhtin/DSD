@@ -379,7 +379,7 @@ BEGIN
            , COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) :: TFloat AS OperPriceList_fp  -- первая цена из прайса
            , Object_Currency_fp.ValueData            AS CurrencyName_fp
            , CASE WHEN COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) <> 0 THEN (COALESCE (tmpPartionGoods.OperPriceList,0) - COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList))*100/COALESCE (tmpPriceList_fp.Price, tmpPartionGoods.OperPriceList) ELSE 0 END ::TFloat AS Persent_diff
-           , CASE WHEN Object_Currency.Id <> Object_Currency_fp.Id THEN TRUE ELSE FALSE END ::Boolean AS isCurrency_diff
+           , CASE WHEN Object_CurrencyPrice.Id <> Object_Currency_fp.Id THEN TRUE ELSE FALSE END ::Boolean AS isCurrency_diff
 
            , tmpPrice.isDiscount ::Boolean
 
