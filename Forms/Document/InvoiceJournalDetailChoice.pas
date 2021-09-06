@@ -108,6 +108,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     InvNumber_Asset: TcxGridDBColumn;
+    MovementDesc: TcxGridDBColumn;
   private
   public
   end;

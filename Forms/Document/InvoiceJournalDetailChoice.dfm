@@ -187,6 +187,14 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MovementDesc: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'MovementDesc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -749,7 +757,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -814,7 +822,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1127,7 +1135,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1460,10 +1468,13 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
@@ -1589,7 +1600,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
