@@ -512,7 +512,7 @@ BEGIN
                             , SUM(tmpAll.HoursWork)                  AS HoursWork
                             , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
                             , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_Transport
-                            , SUM(tmpAll.SumAmount_TransportAdd)     AS SumAmount_TransportAdd
+                            , SUM(COALESCE (tmpAll.SumAmount_TransportAdd,0))     AS SumAmount_TransportAdd
                             , SUM(tmpAll.SumAmount_TransportAddLong) AS SumAmount_TransportAddLong
                             , SUM(tmpAll.SumAmount_TransportTaxi)    AS SumAmount_TransportTaxi
                             , SUM(tmpAll.SumAmount_TransportService) AS SumAmount_TransportService
@@ -521,7 +521,7 @@ BEGIN
                             , SUM (tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd) :: TFloat AS SumAmount_ServiceTotal
                             , CASE WHEN SUM (tmpAll.SumCount_Transport)<>0 THEN CAST (SUM (tmpAll.SumAmount_Transport)/SUM (tmpAll.SumCount_Transport) AS NUMERIC (16, 4)) ELSE 0 END :: TFloat AS PriceFuel
                             , SUM (tmpAll.SumAmount_Transport 
-                                 + tmpAll.SumAmount_TransportAdd 
+                                 + COALESCE (tmpAll.SumAmount_TransportAdd,0)
                                  + tmpAll.SumAmount_TransportAddLong 
                                  + tmpAll.SumAmount_TransportTaxi 
                                  + tmpAll.SumAmount_TransportService
@@ -529,9 +529,9 @@ BEGIN
                                  + tmpAll.SumAmount_PersonalSendCash) :: TFloat AS SumTotal
                             , SUM(tmpAll.Distance)        AS Distance
                             , SUM(tmpAll.WeightTransport) AS WeightTransport
-                            , CAST (CASE WHEN SUM (tmpAll.Distance) <> 0 THEN SUM (tmpAll.SumAmount_Transport + tmpAll.SumAmount_TransportAdd + tmpAll.SumAmount_TransportAddLong + tmpAll.SumAmount_TransportTaxi + tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd + tmpAll.SumAmount_PersonalSendCash) / SUM (tmpAll.Distance) 
+                            , CAST (CASE WHEN SUM (tmpAll.Distance) <> 0 THEN SUM (tmpAll.SumAmount_Transport + COALESCE (tmpAll.SumAmount_TransportAdd,0) + tmpAll.SumAmount_TransportAddLong + tmpAll.SumAmount_TransportTaxi + tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd + tmpAll.SumAmount_PersonalSendCash) / SUM (tmpAll.Distance) 
                                          ELSE 0 END  AS TFloat)  AS One_KM
-                            , CAST (CASE WHEN SUM (tmpAll.WeightTransport) <> 0 THEN  SUM (tmpAll.SumAmount_Transport + tmpAll.SumAmount_TransportAdd + tmpAll.SumAmount_TransportAddLong + tmpAll.SumAmount_TransportTaxi + tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd + tmpAll.SumAmount_PersonalSendCash) /SUM (tmpAll.WeightTransport)
+                            , CAST (CASE WHEN SUM (tmpAll.WeightTransport) <> 0 THEN  SUM (tmpAll.SumAmount_Transport + COALESCE (tmpAll.SumAmount_TransportAdd,0) + tmpAll.SumAmount_TransportAddLong + tmpAll.SumAmount_TransportTaxi + tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd + tmpAll.SumAmount_PersonalSendCash) /SUM (tmpAll.WeightTransport)
                                          ELSE 0 END AS TFloat)  AS One_KG
                             , tmpAll.MovementId_Sale
                             , tmpAll.PartnerId_Sale
@@ -560,7 +560,7 @@ BEGIN
                                   , tmpWeight_All.HoursWork
                                   , tmpContainer.SumCount_Transport
                                   , tmpContainer.SumAmount_Transport
-                                  , tmpContainer.SumAmount_TransportAdd
+                                  , COALESCE (tmpContainer.SumAmount_TransportAdd,0) AS SumAmount_TransportAdd
                                   , tmpContainer.SumAmount_TransportAddLong
                                   , tmpContainer.SumAmount_TransportTaxi
                                   , tmpContainer.SumAmount_TransportService
@@ -670,7 +670,7 @@ BEGIN
                                            ) AS tmpSale ON tmpSale.MovementId = tmpUnion.MovementId_Sale
                
                      GROUP BY tmpUnion.MovementId_Sale
-                                , tmpUnion.MovementId
+                            , tmpUnion.MovementId
                             , tmpUnion.RouteId
                             , tmpUnion.UnitId
                             , tmpUnion.PersonalDriverId
