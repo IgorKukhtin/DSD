@@ -337,6 +337,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_WorkTimeKind() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_WorkTimeKind', 'Тип отпуска' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_WorkTimeKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BonusKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BonusKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BonusKind', 'Вид бонуса' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BonusKind');
+
 
 
 --!!!!!!!!!!!  Аптека

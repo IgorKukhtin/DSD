@@ -1,11 +1,14 @@
 -- Function: gpComplete_Movement_ReturnIn_Cash()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer,Integer, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn_Cash (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn_Cash(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта, 2-Смешенная
     IN inCashRegister      TVarChar             , --№ кассового аппарата
+    IN inZReport           Integer              , -- Z отчет
+    IN inFiscalCheckNumber TVarChar             , -- Номер фискального чека
     IN inTotalSummPayAdd   TFloat               , -- Доплата по чеку
     IN inSession           TVarChar               -- сессия пользователя
 )
@@ -59,6 +62,12 @@ BEGIN
     IF vbCashRegisterId <> 0
     THEN
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CashRegister(), inMovementId, vbCashRegisterId);
+
+        -- сохранили <Номер Z отчета>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ZReport(), inMovementId, inZReport);
+
+        -- сохранили Номер чека в кассовом аппарате
+        PERFORM lpInsertUpdate_MovementString(zc_MovementString_FiscalCheckNumber(), inMovementId, inFiscalCheckNumber);
     END IF;
 
     -- сохранили Доплату по чеку

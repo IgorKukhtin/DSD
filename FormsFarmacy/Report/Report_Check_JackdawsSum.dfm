@@ -22,7 +22,6 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       inherited cxGrid: TcxGrid
         Width = 1007
         Height = 306
-        ExplicitTop = 2
         ExplicitWidth = 1007
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -110,6 +109,8 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
               Kind = skSum
               Column = SummaOther
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -330,6 +331,8 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -374,7 +377,6 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             DataBinding.FieldName = 'isRetrievedAccounting'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object chTotalSumm: TcxGridDBColumn
@@ -609,9 +611,51 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       ImageIndex = 79
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081'>?'
     end
+    object actUpdateJackdawsCheckCDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_RetrievedAccountingCDC
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_RetrievedAccountingCDC
+        end>
+      Caption = 'actUpdateJackdawsCheckCDS'
+      DataSource = JackdawsCheckDS
+    end
+    object actSummaReceivedToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSource = JackdawsCheckDS
+      JsonParam.Name = 'Json'
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'Json'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'Id'
+        end
+        item
+          FieldName = 'isRetrievedAccounting'
+          PairName = 'isRetrievedAccounting'
+        end
+        item
+          FieldName = 'TotalSumm'
+          PairName = 'TotalSumm'
+        end
+        item
+          FieldName = 'SummaReceivedFact'
+          PairName = 'SummaReceivedFact'
+        end>
+      Caption = 'actSummaReceivedToJson'
+    end
     object actSummaDialogForm: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actSummaReceivedToJson
       Caption = 'actSummaDialogForm'
       FormName = 'TSummaDialogForm'
       FormNameParam.Value = 'TSummaDialogForm'
@@ -639,7 +683,21 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     end
     object actUpdate_SummaReceivedFact: TdsdExecStoredProc
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'SummaReceivedFact'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SummaAll'
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'SummaReceivedFact'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SummaReceivedFact'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
       AfterAction = actRefresh
       BeforeAction = actSummaDialogForm
       PostDataSetBeforeExecute = False
@@ -743,11 +801,11 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton4'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarButton4'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -827,6 +885,12 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         Name = 'SummaReceivedFactLabel'
         Value = #1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Json'
+        Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -932,7 +996,7 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     Top = 464
   end
   object spUpdate_RetrievedAccounting: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_RetrievedAccounting'
+    StoredProcName = 'gpUpdate_Movement_Check_RetrievedAccountingRevert'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -952,14 +1016,6 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisRetrievedAccounting'
-        Value = False
-        Component = JackdawsCheckCDS
-        ComponentItem = 'isRetrievedAccounting'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 658
@@ -967,6 +1023,33 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
   end
   object spUpdate_SummaReceivedFact: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_SummaReceivedFact'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSummaReceivedFact'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummaReceivedFact'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJson'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Json'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 658
+    Top = 512
+  end
+  object spUpdate_RetrievedAccountingCDC: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_RetrievedAccounting'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -979,16 +1062,61 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummaReceivedFact'
+        Name = 'isisRetrievedAccounting'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'SummaReceivedFact'
+        Component = JackdawsCheckCDS
+        ComponentItem = 'isRetrievedAccounting'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSumm'
+        Value = Null
+        Component = JackdawsCheckCDS
+        ComponentItem = 'TotalSumm'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummaReceivedFact'
+        Value = Null
+        Component = JackdawsCheckCDS
+        ComponentItem = 'SummaReceivedFact'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioRetrievedAccounting'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetrievedAccounting'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummaReceived'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaReceived'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummaReceivedDelta'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaReceivedDelta'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 658
-    Top = 512
+    Left = 842
+    Top = 456
   end
 end

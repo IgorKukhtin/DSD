@@ -4,13 +4,13 @@
 DROP FUNCTION IF EXISTS gpReport_SheetWorkTime(TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime(
-    IN inDateStart   TDateTime , --
-    IN inDateEnd     TDateTime , --
+    IN inStartDate   TDateTime , --
+    IN inEndDate     TDateTime , --
     IN inUnitId      Integer   , --
     IN inMemberId    Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-  RETURNS SETOF refcursor 
+  RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE cur1 refcursor; 
@@ -24,7 +24,6 @@ $BODY$
           vbFieldNameText Text;
           vbUnits Text;
 BEGIN
-
     SELECT 
         STRING_AGG(T0.Id::TVarChar,',')
     INTO
@@ -35,7 +34,6 @@ BEGIN
         COALESCE(inUnitId,0) = 0
         OR
         T0.Id = inUnitId;
-
 
     IF COALESCE(vbUnits,'') = ''
     THEN
@@ -49,7 +47,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
-       AS SELECT generate_series(inDateStart, inDateEnd, '1 DAY'::interval) OperDate;
+       AS SELECT generate_series(inStartDate, inEndDate, '1 DAY'::interval) OperDate;
 
 
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
@@ -91,6 +89,7 @@ BEGIN
                                     ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
                                    AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE (COALESCE(MI_SheetWorkTime.ObjectId, 0) = inMemberId OR inMemberId = 0)
+          AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
      ;
 
      CREATE TEMP TABLE tmpPersonal ON COMMIT DROP AS
@@ -150,33 +149,33 @@ BEGIN
 
   -- данные для итогов
   CREATE TEMP TABLE tmpTotal ON COMMIT DROP AS
-    SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId
-          , SUM (tmp.Amount) ::TFLoat AS Amount
+    SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId
+          , SUM (COALESCE (tmp.Amount,0)) ::TFLoat AS Amount
           , tmp.ObjectId
     FROM (--кол-во часов
-          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
-               , SUM (tmpMI.Amount) AS Amount
+          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
+               , SUM (COALESCE (tmpMI.Amount,0)) AS Amount
                , 1  AS ObjectId
           FROM tmpOperDate
                JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                          AND COALESCE (tmpMI.Amount,0) <> 0
                          AND tmpMI.isNoSheetCalc = FALSE
-          GROUP BY tmpOperDate.operdate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          GROUP BY tmpOperDate.operdate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
         UNION
           -- кол-во смен 
-          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
                , 2  AS ObjectId
           FROM tmpOperDate
               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                         AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
-          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
         UNION
           -- Кол-во шт.ед
-          SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId
-               , SUM (tmp.Amount) AS Amount
+          SELECT tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId
+               , SUM (COALESCE (tmp.Amount,0)) AS Amount
                , 3  AS ObjectId
-          FROM (SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          FROM (SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                      , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
                                 THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
                             ELSE 1
@@ -202,36 +201,36 @@ BEGIN
                                             AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
                                             AND tmpStaffList.PositionId IS NULL
                  ) AS tmp
-          GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId
+          GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId
         UNION
           -- Кол-во БЛ
-          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                , SUM (1) AS Amount
                , 4  AS ObjectId
           FROM tmpOperDate
               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                         AND tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())
-          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
         UNION
           -- Кол-во отпуска
-          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                , SUM (1) AS Amount
                , 5  AS ObjectId
           FROM tmpOperDate
               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                         AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()
-          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
         UNION
           -- Кол-во прогулов
-          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          SELECT tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
                , SUM (1) AS Amount
                , 6  AS ObjectId
           FROM tmpOperDate
               JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                         AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()
-          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId
+          GROUP BY tmpOperDate.OperDate, tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.UnitId
     )AS tmp
-    GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.ObjectId
+    GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId, tmp.ObjectId
     ;
 
 
@@ -241,9 +240,7 @@ BEGIN
                           (EXTRACT(DAY FROM tmpOperDate.OperDate))::TVarChar||'.'||(EXTRACT(MONTH FROM tmpOperDate.OperDate))::TVarChar AS ValueField
                FROM tmpOperDate;  
      RETURN NEXT cur1;
-    
-    
-    
+
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
      vbDayCount := (SELECT count(*) 
@@ -274,6 +271,12 @@ BEGIN
                , tmpPersonal.DateIn
                , tmpPersonal.DateOut
                , tmpStaffList.HoursDay  ::TFLoat
+               , tmpTotal.Amount_1 ::TFloat
+               , tmpTotal.Amount_2 ::TFloat
+               , tmpTotal.Amount_3 ::TFloat
+               , tmpTotal.Amount_4 ::TFloat
+               , tmpTotal.Amount_5 ::TFloat
+               , tmpTotal.Amount_6 ::TFloat
                , tmpStaffList.StaffListSummKindName ::TVarChar
                '
                || vbFieldNameText ||
@@ -311,6 +314,33 @@ BEGIN
                               AND tmpPersonal.PositionLevelId = D.Key[3]
                               AND tmpPersonal.PersonalGroupId = D.Key[4]
                               AND tmpPersonal.UnitId          = D.Key[5]
+
+         LEFT JOIN (SELECT tmpTotal.MemberId
+                         , tmpTotal.PositionId
+                         , tmpTotal.PositionLevelId
+                         , tmpTotal.PersonalGroupId
+                         , tmpTotal.UnitId
+                         --, tmpTotal.StorageLineId
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 1 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_1
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 2 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_2
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 3 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_3
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 4 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_4
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 5 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_5
+                         , SUM (CASE WHEN tmpTotal.ObjectId = 6 THEN COALESCE (tmpTotal.Amount,0) ELSE 0 END) AS Amount_6
+                    FROM tmpTotal
+                    GROUP BY tmpTotal.MemberId
+                           , tmpTotal.PositionId
+                           , tmpTotal.PositionLevelId
+                           , tmpTotal.PersonalGroupId
+                           , tmpTotal.UnitId
+                          -- , tmpTotal.StorageLineId
+                    ) AS tmpTotal ON tmpTotal.MemberId                     = D.Key[1]
+                                 AND COALESCE(tmpTotal.PositionId, 0)      = D.Key[2]
+                                 AND COALESCE(tmpTotal.PositionLevelId, 0) = D.Key[3]
+                                 AND COALESCE(tmpTotal.PersonalGroupId, 0) = D.Key[4]
+                                 AND COALESCE(tmpTotal.UnitId, 0)          = D.Key[5]
+                              --   AND COALESCE(tmpTotal.StorageLineId, 0)   = D.Key[5]
+
          ';
 
 
@@ -338,12 +368,12 @@ BEGIN
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
-        FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
-             UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
-             UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
-             UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
-             UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
-             UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
+        FULL JOIN (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 1) :: TFloat AS TotalAmount
+             UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 2) :: TFloat AS TotalAmount
+             UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 3) :: TFloat AS TotalAmount
+             UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
+             UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
+             UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (COALESCE (tmpTotal.Amount,0)) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
                    )AS tmp ON tmp.Id = D.Key[1]
          ';
 

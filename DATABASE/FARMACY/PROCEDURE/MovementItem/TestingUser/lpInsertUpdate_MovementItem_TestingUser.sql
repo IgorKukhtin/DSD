@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_TestingUser()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TestingUser(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inUserId              Integer   , -- Сотрудник
     IN inResult              TFloat    , -- Результат теста
     IN inDateTest            TDateTime , -- Дата теста
+    IN inLastMonth           Boolean   , -- Сдача за предыдущий месяц
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -77,14 +79,17 @@ BEGIN
     END IF;
   END IF;
 
-  if COALESCE (ioId, 0) = 0 OR (inResult >= 85 OR vbResult < 85) AND vbDateTest < inDateTest
+  if COALESCE (ioId, 0) = 0 OR (inResult >= 85 OR vbResult < 85) AND (vbDateTest < inDateTest OR COALESCE(inLastMonth, FALSE) = TRUE)
   THEN
 
      -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inUserId, vbMovement, CASE WHEN inResult > vbResult THEN inResult ELSE vbResult END, NULL);
 
      -- сохранили свойство <Дата теста>
-    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TestingUser(), ioId, inDateTest);
+    IF vbDateTest < inDateTest
+    THEN
+      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TestingUser(), ioId, inDateTest);
+    END IF;
 
      -- сохранили свойство <Количество попыток>
     IF vbAttempts = 0 OR vbResult < 85

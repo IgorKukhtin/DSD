@@ -45,7 +45,7 @@ type
   public
     { Public declarations }
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-      PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String;
+      PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
       APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
     procedure Add_Log_XML(AMessage: String);
 
@@ -111,20 +111,27 @@ begin
 end;
 
 procedure TCashCloseReturnDialogForm.actPrintReceiptExecute(Sender: TObject);
-  var cFiscalNumber, cCheckNumber: String;
+  var cFiscalNumber, cCheckNumber: String; nZReport : Integer;
 begin
   inherited;
 
   if not PutCheckToCash(FSummaTotal, edSalerCashAdd.Value,
-    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber) then Exit;
+    TPaidType(rgPaidType.ItemIndex), cFiscalNumber, cCheckNumber, nZReport) then Exit;
 
   // Проведение чека
   try
     spComplete_Movement.ParamByName('inMovementId').Value := FormParams.ParamByName('Id').Value;
     spComplete_Movement.ParamByName('inPaidType').Value := rgPaidType.ItemIndex;
     if Assigned(FCash) then
-      spComplete_Movement.ParamByName('inCashRegister').Value := FCash.FiscalNumber
-    else spComplete_Movement.ParamByName('inCashRegister').Value := '';
+    begin
+      spComplete_Movement.ParamByName('inCashRegister').Value := FCash.FiscalNumber;
+      spComplete_Movement.ParamByName('inZReport').Value := nZReport;
+    end else
+    begin
+      spComplete_Movement.ParamByName('inCashRegister').Value := '';
+      spComplete_Movement.ParamByName('inZReport').Value := 0;
+    end;
+    spComplete_Movement.ParamByName('inFiscalCheckNumber').Value := FCash.FiscalNumber;
     if rgPaidType.ItemIndex = 2 then
       spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
     else spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := 0;
@@ -181,7 +188,7 @@ begin
 end;
 
 function TCashCloseReturnDialogForm.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
   str_log_xml: String;
@@ -219,6 +226,7 @@ var
 { ------------------------------------------------------------------------------ }
 begin
   ACheckNumber := '';
+  AZReport := 0;
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
@@ -410,6 +418,7 @@ begin
               Result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
             if Result then
               Result := Cash.CloseReceiptEx(ACheckNumber); // Закрыли чек
+            if Result then AZReport := Cash.ZReport;
 //            if Result and isFiscal then
 //              Finish_Check_History(FSummaTotal);
           end

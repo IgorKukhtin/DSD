@@ -185,6 +185,12 @@ object CashWorkForm: TCashWorkForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inZReport'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCheckOut'
         Value = Null
         ParamType = ptInput

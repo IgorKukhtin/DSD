@@ -209,9 +209,15 @@ INSERT INTO MovementDesc (Code, ItemName)
 Update Movement SET DescId = zc_Movement_PromoPartner()
 Where Movement.DescId = zc_Movement_Promo() AND Movement.ParentId is not null;
 */
+
 CREATE OR REPLACE FUNCTION zc_Movement_PromoAdvertising() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoAdvertising'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoAdvertising', 'Список Рекламной поддержки' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoAdvertising');
+
+CREATE OR REPLACE FUNCTION zc_Movement_PromoInvoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoInvoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoInvoice', 'Счета для акции' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoInvoice');
+
 
 CREATE OR REPLACE FUNCTION zc_Movement_Reprice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Reprice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
@@ -480,9 +486,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_SheetWorkTimeClose() RETURNS Integer AS $
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SheetWorkTimeClose', 'Закрытие периода, Табель учета рабочего времени' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTimeClose');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoInvoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoInvoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoInvoice', 'Счета для акции' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoInvoice');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 03.09.21         * zc_Movement_PromoInvoice
  06.07.21                                                                                     * zc_Movement_TestingTuning
  05.07.21         * zc_Movement_ContractGoods
  10.06.21                                                                                     * zc_Movement_RepriceSite

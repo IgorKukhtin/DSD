@@ -179,7 +179,7 @@ BEGIN
                                          LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = Price_Goods.ChildObjectId
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                                      AND COALESCE(MCS_isClose.ValueData,False) = False 
+                                      AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount,0) > 0) 
                                       AND (COALESCE(MCS_Value.ValueData,0) > 0 OR COALESCE(tmpLayoutAll.Amount,0) > 0)
                                    )
               -- данные из ассорт. матрицы

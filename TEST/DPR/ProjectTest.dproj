@@ -4504,6 +4504,10 @@
 				<Form>Report_GoodsMI_SaleReturnIn_PaidKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PromoInvoice.pas">
+				<Form>PromoInvoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

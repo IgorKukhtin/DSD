@@ -116,6 +116,7 @@ begin
   if not gc_User.Local then
   try
     spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
+    spGet_Money_CashRegister.ParamByName('inZReport').Value := m_Cash.ZReport;
     spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
     spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
     spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;
@@ -198,6 +199,7 @@ end;
 procedure TCashWorkForm.pmCheckSumClick(Sender: TObject);
 begin
     spGet_Money_CashRegister.ParamByName('inCashRegisterName').Value := m_Cash.FiscalNumber;
+    spGet_Money_CashRegister.ParamByName('inZReport').Value := m_Cash.ZReport;
     spGet_Money_CashRegister.ParamByName('inCheckOut').Value := m_Cash.ReceiptsSales;
     spGet_Money_CashRegister.ParamByName('inCheckIn').Value := m_Cash.ReceiptsReturn;
     spGet_Money_CashRegister.ParamByName('outSummsCash').Value := 0;

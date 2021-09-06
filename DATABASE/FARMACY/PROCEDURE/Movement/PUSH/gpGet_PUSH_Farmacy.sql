@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Farmacy(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Text TBlob,
-               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar)
+               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar, Beep Integer)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -44,7 +44,8 @@ BEGIN
                            , Button TVarChar
                            , Params TVarChar
                            , TypeParams TVarChar
-                           , ValueParams TVarChar) ON COMMIT DROP;
+                           , ValueParams TVarChar
+                           , Beep Integer) ON COMMIT DROP;
 
     SELECT ObjectLink_Member_Position.ChildObjectId
     INTO vbPositionID
@@ -631,9 +632,9 @@ BEGIN
                                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
-                                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
-                                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
                                                            ON MovementLinkObject_CancelReason.MovementId = Movement.Id
@@ -664,7 +665,6 @@ BEGIN
                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
                            AND Movement.OperDate >= '20.04.2021'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
-                           AND COALESCE (MovementLinkObject_ConfirmedKindClient.ObjectId, zc_Enum_ConfirmedKind_UnComplete()) <> zc_Enum_ConfirmedKind_Complete() 
                            )
          , tmpMI AS (SELECT tmpMovement.*
                           , MovementItem.Id                 AS MovementItemId 
@@ -676,6 +676,13 @@ BEGIN
                                                  AND MovementItem.Amount = 0
                                                  
                     )
+         , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                        , MovementProtocol.OperDate 
+                                        , MovementProtocol.UserId
+                                        , ROW_NUMBER() OVER (Partition BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id) AS ord
+                                   FROM MovementProtocol 
+                                   WHERE MovementProtocol.MovementId in (SELECT DISTINCT tmpMI.Id AS ID FROM tmpMI)
+                                     AND MovementProtocol.ProtocolData ILIKE '%"Статус заказа (Состояние VIP-чека)" FieldValue = "Подтвержден"%')
          , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
                                   , MovementItemProtocol.OperDate
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
@@ -702,19 +709,23 @@ BEGIN
           INNER JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId = Movement.MovementItemId
                                   AND tmpMIProtocol.ord = 1
           
+          LEFT JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
+                                       AND tmpMovementProtocol.ord = 1 
+ 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
 
           LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
                                ON MIFloat_AmountOrder.MovementItemId = Movement.MovementItemId
                               AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                               
-     WHERE tmpMIProtocol.OperDate >= vbDatePUSH
+     WHERE (tmpMIProtocol.OperDate < tmpMovementProtocol.OperDate OR tmpMovementProtocol.OperDate IS NULL)
+       AND tmpMIProtocol.OperDate >= vbDatePUSH
      ;  
 
      IF COALESCE (vbText, '') <> ''
      THEN
-       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-       VALUES (16, 'Было обнулено в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '');
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, Beep)
+       VALUES (16, 'Было обнулено в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '', 1);
      END IF;
    END IF;
 
@@ -758,6 +769,7 @@ BEGIN
           , _PUSH.Params                 AS Params
           , _PUSH.TypeParams             AS TypeParams
           , _PUSH.ValueParams            AS ValueParams
+          , _PUSH.Beep                   AS Beep
      FROM _PUSH;
 
 END;

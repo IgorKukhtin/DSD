@@ -76,7 +76,8 @@ BEGIN
                                 , MovementLinkObject_Juridical.ObjectId     AS JuridicalId
                                 , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
                            FROM tmpStatus
-                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
+                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                 AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                             ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                                            AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()

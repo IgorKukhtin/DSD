@@ -62,6 +62,9 @@ type
     actUpdate_SummaReceivedFact: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
     SummaOther: TcxGridDBColumn;
+    actUpdateJackdawsCheckCDS: TdsdUpdateDataSet;
+    spUpdate_RetrievedAccountingCDC: TdsdStoredProc;
+    actSummaReceivedToJson: TdsdDataToJsonAction;
   private
     { Private declarations }
   public

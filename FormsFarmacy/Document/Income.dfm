@@ -1846,6 +1846,41 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1087#1086' '#1089#1090#1088#1086#1082#1077' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 47
     end
+    object actExecuteDialogBranchDate: TExecuteDialog
+      Category = 'DSDLib'
+      ActiveControl = cbDifferent
+      MoveParams = <>
+      Caption = 'actExecuteDialogExpirationDate'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BranchDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SetBranchDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDialogBranchDate
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetBranchDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetBranchDate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1044#1072#1090#1091' '#1072#1087#1090#1077#1082#1080'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1044#1072#1090#1091' '#1072#1087#1090#1077#1082#1080'"'
+      ImageIndex = 67
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1989,6 +2024,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2116,6 +2155,10 @@
     end
     object bbUpdate_ExpirationDate: TdxBarButton
       Action = actUpdate_ExpirationDate
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_SetBranchDate
       Category = 0
     end
   end
@@ -2441,6 +2484,12 @@
       end
       item
         Name = 'ExpirationDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchDate'
         Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -3853,8 +3902,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 448
+    Left = 488
+    Top = 440
   end
   object spUpdateIncome_OperData: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_OperData'
@@ -3962,5 +4011,38 @@
     PackSize = 1
     Left = 354
     Top = 408
+  end
+  object spUpdate_SetBranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_SetBranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BranchDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBranchDate'
+        Value = 42132d
+        Component = edPointDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 440
   end
 end

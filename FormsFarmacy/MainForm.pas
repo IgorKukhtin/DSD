@@ -848,6 +848,11 @@ type
     N309: TMenuItem;
     actReport_Top100GoodsSUN: TdsdOpenForm;
     N1001: TMenuItem;
+    actReport_ZeroingInOrders: TdsdOpenForm;
+    N310: TMenuItem;
+    actReport_LayoutCheckRemains: TdsdOpenForm;
+    N311: TMenuItem;
+    spGet_MainForm_isTop: TdsdStoredProc;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
@@ -906,6 +911,15 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
   FNumberPUSH := 0;
+  try
+    spGet_MainForm_isTop.Execute;
+    if spGet_MainForm_isTop.ParamByName('isMainFormTop').Value then
+    begin
+      Top := 10;
+      Left := 10
+    end;
+  finally
+  end;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -995,12 +1009,15 @@ begin
       try
         TimerPUSH.Interval := 1000;
         if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') then
-            ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString,
-                                   PUSHDS.FieldByName('FormName').AsString,
-                                   PUSHDS.FieldByName('Button').AsString,
-                                   PUSHDS.FieldByName('Params').AsString,
-                                   PUSHDS.FieldByName('TypeParams').AsString,
-                                   PUSHDS.FieldByName('ValueParams').AsString);
+        begin
+          ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString,
+                                 PUSHDS.FieldByName('FormName').AsString,
+                                 PUSHDS.FieldByName('Button').AsString,
+                                 PUSHDS.FieldByName('Params').AsString,
+                                 PUSHDS.FieldByName('TypeParams').AsString,
+                                 PUSHDS.FieldByName('ValueParams').AsString,
+                                 PUSHDS.FieldByName('Beep').AsInteger);
+        end;
       finally
          PUSHDS.Delete;
       end;

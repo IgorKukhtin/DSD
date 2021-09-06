@@ -182,6 +182,10 @@ type
     actUpdate_ExpirationDate: TdsdExecStoredProc;
     bbUpdate_ExpirationDate: TdxBarButton;
     ExpirationDatePG: TcxGridDBColumn;
+    actExecuteDialogBranchDate: TExecuteDialog;
+    actUpdate_SetBranchDate: TdsdExecStoredProc;
+    spUpdate_SetBranchDate: TdsdStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

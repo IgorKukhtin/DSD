@@ -129,6 +129,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SendSUNAmount_save
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Layout
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -276,6 +281,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = FinalSUASend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Layout
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False

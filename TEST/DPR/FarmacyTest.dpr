@@ -1072,7 +1072,12 @@ uses
   PayrollTypeChoice in '..\..\FormsFarmacy\Guides\PayrollTypeChoice.pas' {PayrollTypeChoiceForm: TParentForm},
   CreateOrderFromMCSLayout in '..\..\FormsFarmacy\Document\CreateOrderFromMCSLayout.pas' {CreateOrderFromMCSLayoutForm: TParentForm},
   Report_Top100GoodsSUN in '..\..\FormsFarmacy\Report\Report_Top100GoodsSUN.pas' {Report_Top100GoodsSUNForm: TParentForm},
-  OrderInternalZeroingSUA in '..\..\FormsFarmacy\Document\OrderInternalZeroingSUA.pas' {OrderInternalZeroingSUAForm: TParentForm};
+  OrderInternalZeroingSUA in '..\..\FormsFarmacy\Document\OrderInternalZeroingSUA.pas' {OrderInternalZeroingSUAForm: TParentForm},
+  Report_ZeroingInOrdersDialog in '..\..\FormsFarmacy\Report\Report_ZeroingInOrdersDialog.pas' {Report_ZeroingInOrdersDialogForm: TParentForm},
+  Report_ZeroingInOrders in '..\..\FormsFarmacy\Report\Report_ZeroingInOrders.pas' {Report_ZeroingInOrdersForm: TParentForm},
+  ChoiceLayout in '..\..\FormsFarmacy\Guides\ChoiceLayout.pas' {ChoiceLayoutForm: TParentForm},
+  Report_LayoutCheckRemainsDialog in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemainsDialog.pas' {Report_LayoutCheckRemainsDialogForm: TParentForm},
+  Report_LayoutCheckRemains in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemains.pas' {Report_LayoutCheckRemainsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

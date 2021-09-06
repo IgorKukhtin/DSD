@@ -1,14 +1,18 @@
 -- Function: gpUpdate_Movement_Check_RetrievedAccounting()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_RetrievedAccounting(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_RetrievedAccounting(Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_RetrievedAccounting(
     IN inMovementId                Integer   , -- Ключ объекта <Документ>
     IN inisRetrievedAccounting     Boolean   , -- Получено бухгалтерией
-   OUT outisRetrievedAccounting    Boolean   , -- Получено бухгалтерией
+    IN inTotalSumm                 TFloat    , -- Сумма
+ INOUT ioSummaReceivedFact         TFloat    , -- Сумма получено по факту
+ INOUT ioRetrievedAccounting       TFloat    , -- Получено бухгалтерией
+ INOUT ioSummaReceived             TFloat    , -- Сумма по факту
+ INOUT ioSummaReceivedDelta        TFloat    , -- Разница
     IN inSession                   TVarChar    -- сессия пользователя
 )
-RETURNS Boolean AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -22,7 +26,7 @@ BEGIN
     RAISE EXCEPTION 'Изменение признака <Получено бухгалтерией> вам запрещено.';
   END IF;
   
-  IF COALESCE(inisRetrievedAccounting, False) = False AND
+  IF COALESCE(inisRetrievedAccounting, False) = TRUE AND
      EXISTS(SELECT * FROM  MovementFloat AS MovementFloat_SummaReceivedFact
             WHERE MovementFloat_SummaReceivedFact.MovementId =  inMovementId
               AND MovementFloat_SummaReceivedFact.DescId = zc_MovementFloat_SummaReceivedFact()
@@ -33,12 +37,32 @@ BEGIN
   
       
   --Меняем Получено бухгалтерией
-  Perform lpInsertUpdate_MovementBoolean(zc_MovementBoolean_RetrievedAccounting(), inMovementId, NOT inisRetrievedAccounting);
+  PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_RetrievedAccounting(), inMovementId, inisRetrievedAccounting);
+
+  --Меняем Сумма получено по факту
+  IF COALESCE (ioSummaReceivedFact, 0) <> 0
+  THEN
+    PERFORM lpInsertUpdate_MovementFloat(zc_MovementFloat_SummaReceivedFact(), inMovementId, 0);
+      
+    ioRetrievedAccounting := ioRetrievedAccounting - inTotalSumm;
+    ioSummaReceived := ioSummaReceived - ioSummaReceivedFact;      
+  END IF;
   
+  IF inisRetrievedAccounting = TRUE
+  THEN
+    ioRetrievedAccounting := ioRetrievedAccounting + inTotalSumm;
+    ioSummaReceived := ioSummaReceived + inTotalSumm;
+  ELSE
+    ioRetrievedAccounting := ioRetrievedAccounting - inTotalSumm;
+    ioSummaReceived := ioSummaReceived - inTotalSumm;  
+  END IF;
+  
+  ioSummaReceivedDelta := ioRetrievedAccounting - ioSummaReceived;
+  ioSummaReceivedFact := 0;
+    
   -- сохранили протокол
   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 
-  outisRetrievedAccounting := NOT inisRetrievedAccounting;
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -1,11 +1,13 @@
 -- Function: gpComplete_Movement_IncomeAdmin()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_CashRegister(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer   , -- тип оплаты
     IN inCashRegister      TVarChar  , -- Серийник кассового аппарата
+    IN inZReport           Integer,  -- Z отчет
     IN inFiscalCheckNumber TVarChar  , -- Номер фискального чека
     IN inTotalSummPayAdd   TFloat    , -- Доплата по чеку
     IN inSession           TVarChar    -- сессия пользователя
@@ -40,6 +42,9 @@ BEGIN
     vbCashRegisterId := gpGet_Object_CashRegister_By_Serial(inSerial := inCashRegister, inSession := inSession);
     PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(), inMovementId, vbCashRegisterId);
 
+    -- сохранили <Номер Z отчета>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ZReport(), inMovementId, inZReport);
+
     -- сохранили Номер чека в кассовом аппарате
     PERFORM lpInsertUpdate_MovementString(zc_MovementString_FiscalCheckNumber(), inMovementId, inFiscalCheckNumber);
 
@@ -64,4 +69,3 @@ ALTER FUNCTION gpUpdate_Movement_Check_CashRegister (Integer, Integer, TVarChar,
 
 -- тест
 -- SELECT * FROM gpUpdate_Movement_Check_CashRegister (inMovementId:= 579, inSession:= '2')
-

@@ -83,8 +83,8 @@ begin
   LoadReportFromFile('PrintReport_ClientDebt_Check', ReportPath + '\PrintReport_ClientDebt_Check.fr3');
   }
   LoadReportFromFile('PrintReport_ClientDebt_CheckPODIUM', ReportPath + '\PrintReport_ClientDebt_CheckPODIUM.fr3');
-  {exit;
-
+  exit;
+  {
   LoadReportFromFile('PrintReport_Sale', ReportPath + '\PrintReport_Sale.fr3');
   LoadReportFromFile('PrintReport_ReturnIn', ReportPath + '\PrintReport_ReturnIn.fr3');
   LoadReportFromFile('PrintReport_Uniform', ReportPath + '\PrintReport_Uniform.fr3');

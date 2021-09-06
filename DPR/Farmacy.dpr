@@ -96,7 +96,8 @@ uses
   RepricePromoUnit in '..\FormsFarmacy\ConnectWithOld\RepricePromoUnit.pas' {RepricePromoUnitForm},
   Calculation_SAUA in '..\FormsFarmacy\ConnectWithOld\Calculation_SAUA.pas' {Calculation_SAUAForm: TParentForm},
   UploadCheckoutTesting in '..\FormsFarmacy\Guides\UploadCheckoutTesting.pas' {UploadCheckoutTestingForm},
-  TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm};
+  TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm},
+  dsdPlaySound in '..\SOURCE\dsdPlaySound.pas';
 
 {$R *.res}
 

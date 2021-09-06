@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , StartDate TDateTime, EndDate TDateTime
                 , ValuePrice       TFloat
                 , DiscountTax      TFloat
+                , DiscountTaxNext  TFloat
                 , CurrencyValue    TFloat
                 , ParValue         TFloat
                 , OperPriceBalance TFloat
@@ -275,9 +276,10 @@ BEGIN
                                                   AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                       )
 
-    , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
-                           , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
-                           , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
+    , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId          AS UnitId
+                           , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId         AS GoodsId
+                           , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData     AS DiscountTax
+                           , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
                       FROM tmpDiscountList
                            INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
                                              ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
@@ -291,6 +293,9 @@ BEGIN
                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                         ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                        AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_ValueNext
+                                                        ON ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                                                       AND ObjectHistoryFloat_DiscountPeriodItem_ValueNext.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_ValueNext()
                      )
 
     , tmpCurrency AS (SELECT lfSelect.*
@@ -351,6 +356,7 @@ BEGIN
 
              -- % Сезонной скидки !!!НА!!! zc_DateEnd
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
+           , tmpDiscount.DiscountTaxNext     :: TFloat AS DiscountTaxNext
 
 --         , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
 --         , tmpCurrency.ParValue ::TFloat  AS ParValue

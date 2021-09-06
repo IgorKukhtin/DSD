@@ -304,6 +304,12 @@ inherited CashCloseJeckdawsDialogForm: TCashCloseJeckdawsDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inZReport'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFiscalCheckNumber'
         Value = Null
         DataType = ftString

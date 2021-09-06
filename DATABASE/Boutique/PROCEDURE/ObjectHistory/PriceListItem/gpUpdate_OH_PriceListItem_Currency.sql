@@ -1,7 +1,8 @@
 -- Function: gpUpdate_OH_PriceListItem_Currency (Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_OH_PriceListItem_Currency (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_OH_PriceListItem_Currency (Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_OH_PriceListItem_Currency (Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_OH_PriceListItem_Currency (Integer, Integer, Integer, Integer, TDateTime, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_OH_PriceListItem_Currency(
     IN inId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_OH_PriceListItem_Currency(
  INOUT ioValue                  TFloat,     -- Цена
     IN inIsLast                 Boolean,    --
     IN inisChangePrice          Boolean,    -- Корректировка цены Да/Нет
+    IN inIsDiscount             Boolean,    -- Цена со скидкой (1-Да, 0-НЕТ)
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -57,6 +59,7 @@ BEGIN
                                                         , inValue       := ioValue       ::TFloat     -- Цена
                                                         , inIsLast      := inIsLast      ::Boolean    --
                                                         , inIsDiscountDelete:= FALSE
+                                                        , inIsDiscount  := inIsDiscount  ::Boolean
                                                         , inSession     := inSession     ::TVarChar    -- сессия пользователя
                                                         ) AS tmp;
   ELSE
@@ -92,6 +95,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.21         *
  30.04.21         *
  25.02.20         *
 */
