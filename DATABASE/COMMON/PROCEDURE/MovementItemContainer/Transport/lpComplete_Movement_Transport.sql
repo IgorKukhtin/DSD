@@ -31,6 +31,8 @@ BEGIN
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
 
+     -- !!!обязательно!!! очистили таблицу - элементы продаж для распределения Затрат по накладным
+     DELETE FROM _tmpMI_Sale;
      -- !!!обязательно!!! очистили таблицу свойств (остатки) документа/элементов
      DELETE FROM _tmpPropertyRemains;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -165,6 +167,93 @@ BEGIN
      END IF;
 
 
+     -- формируются данные - элементы продаж для распределения Затрат по накладным
+     WITH -- данные реестра
+          tmpReestr AS
+                     (SELECT MovementItem.Id AS MI_Id
+                      FROM MovementLinkMovement AS MLM_Transport
+                           JOIN Movement ON Movement.Id       = MLM_Transport.MovementId
+                                        AND Movement.DescId   = zc_Movement_Reestr()
+                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                      WHERE MLM_Transport.DescId          = zc_MovementLinkMovement_Transport()
+                        AND MLM_Transport.MovementChildId = inMovementId
+                        AND vbIsAccount_50000 = FALSE
+                     )
+          -- документы Продажа - строчная часть в Реестры накладных
+        , tmpMF_MovementItemId AS (SELECT MovementFloat_MovementItemId.MovementId AS MovementId_sale
+                                   FROM MovementFloat AS MovementFloat_MovementItemId
+                                   WHERE MovementFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpReestr.MI_Id FROM tmpReestr)
+                                     AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                  )
+          -- документы Продажа - Товары
+        , tmpMI_sale_all AS (SELECT tmpSale.MovementId_sale AS MovementId_sale
+                                  , MovementItem.Id         AS MI_Id_sale
+                                  , MovementItem.ObjectId   AS GoodsId
+                             FROM (SELECT DISTINCT tmpMF_MovementItemId.MovementId_sale FROM tmpMF_MovementItemId) AS tmpSale
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpSale.MovementId_Sale
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                            )
+          --
+        , tmpMLO_To AS (SELECT *
+                        FROM MovementLinkObject AS MovementLinkObject_To
+                        WHERE MovementLinkObject_To.MovementId IN (SELECT DISTINCT tmpMF_MovementItemId.MovementId_sale FROM tmpMF_MovementItemId)
+                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                        )
+         --
+       , tmpMILO_GoodsKind AS (SELECT *
+                               FROM MovementItemLinkObject
+                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_sale_all.MI_Id_sale FROM tmpMI_sale_all)
+                                 AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                              )
+         --
+       , tmpMIF_AmountPartner AS (SELECT *
+                                  FROM MovementItemFloat AS MIFloat_AmountPartner
+                                  WHERE MIFloat_AmountPartner.MovementItemId IN (SELECT DISTINCT tmpMI_sale_all.MI_Id_sale FROM tmpMI_sale_all)
+                                    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  )
+              -- документы Продажа - Товары
+            , tmpMI_sale AS (SELECT tmpMI_sale_all.MI_Id_sale                           AS MI_Id_sale
+                                  , MovementLinkObject_To.ObjectId                      AS PartnerId
+                                  , tmpMI_sale_all.GoodsId                              AS GoodsId
+                                  , MILinkObject_GoodsKind.ObjectId                     AS GoodsKindId
+                                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount
+                                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0)
+                                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1
+                                              ELSE 0
+                                         END) ::TFloat AS AmountWeight
+                             FROM tmpMI_sale_all
+                                  LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = tmpMI_sale_all.MI_Id_sale
+                                  LEFT JOIN tmpMIF_AmountPartner AS MIFloat_AmountPartner
+                                                                 ON MIFloat_AmountPartner.MovementItemId = tmpMI_sale_all.MI_Id_sale
+                                  -- Покупатель
+                                  LEFT JOIN tmpMLO_To AS MovementLinkObject_To
+                                                      ON MovementLinkObject_To.MovementId = tmpMI_sale_all.MovementId_sale
+                                  --
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                       ON ObjectLink_Goods_Measure.ObjectId = tmpMI_sale_all.GoodsId
+                                                      AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                        ON ObjectFloat_Weight.ObjectId = tmpMI_sale_all.GoodsId
+                                                       AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                             GROUP BY tmpMI_sale_all.MI_Id_sale
+                                    , MovementLinkObject_To.ObjectId
+                                    , tmpMI_sale_all.GoodsId
+                                    , MILinkObject_GoodsKind.ObjectId
+                            )
+     -- Результат
+     INSERT INTO _tmpMI_Sale (MI_Id_sale, PartnerId, GoodsId, GoodsKindId, Amount, AmountWeight)
+        SELECT tmpMI_sale.MI_Id_sale, tmpMI_sale.PartnerId, tmpMI_sale.GoodsId, tmpMI_sale.GoodsKindId, tmpMI_sale.Amount, tmpMI_sale.AmountWeight
+        FROM tmpMI_sale
+        WHERE tmpMI_sale.AmountWeight > 0
+       ;
+
+
      -- !!!Начали!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
 
      -- Получили все нужные нам количественные/суммовые контейнеры по определенным товарам/счетам !!!без ограничения по Бизнесу и Главному юр.лицу!!!
@@ -258,7 +347,7 @@ BEGIN
                      -- Подразделение ОПиУ
                    , CASE -- если филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
-                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, ObjectLink_Route_Unit.ChildObjectId, 0) 
+                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, ObjectLink_Route_Unit.ChildObjectId, 0)
 
                           -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы - теоретически здесь "Содержание филиалов"
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
@@ -275,14 +364,14 @@ BEGIN
                      -- Филиал ОПиУ
                    , CASE -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению и к филиалу - теоретически здесь "Содержание филиалов"
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
-                               THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) 
+                               THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0)
 
                           -- если маршрут "на филиал" и это наша машина, тогда затраты падают на филиал - теоретически здесь "Содержание транспорта"
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  <> ObjectLink_Route_Branch.ChildObjectId AND ObjectLink_Route_Branch.ChildObjectId > 0
                                THEN COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
 
                           -- иначе затраты без принадлежности к филиалу
-                          ELSE 0 
+                          ELSE 0
                      END AS BranchId_ProfitLoss
 
                      -- всегда zc_MI_Master
@@ -335,7 +424,7 @@ BEGIN
 
                    -- для затрат - подставляется UnitId ОПиУ
                    LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
-                   = 
+                   =
                      CASE -- если маршрут-подр.-филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
                                THEN COALESCE (MILinkObject_Unit_parent.ObjectId, ObjectLink_Route_Unit.ChildObjectId, 0)
@@ -747,31 +836,67 @@ BEGIN
 
      -- 2.2. формируются Проводки
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ContainerIntId_analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive
                                         )
+       WITH -- Сумма затрат
+            tmpProfitLoss AS (SELECT _tmpItem_TransportSumm_Transport.MovementItemId
+                                    , _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
+                                    , SUM (_tmpItem_TransportSumm_Transport.OperSumm) AS OperSumm
+                               FROM _tmpItem_TransportSumm_Transport
+                               GROUP BY _tmpItem_TransportSumm_Transport.MovementItemId, _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
+                              )
+            -- Итого вес
+          , tmpMI_Sale_total AS (SELECT SUM (_tmpMI_Sale.AmountWeight) AS AmountWeight FROM _tmpMI_Sale)
+            -- Распределяем
+          , tmpProfitLoss_goods AS (SELECT tmpProfitLoss.MovementItemId
+                                         , tmpProfitLoss.ContainerId_ProfitLoss
+                                         , _tmpMI_Sale.MI_Id_sale
+                                         , _tmpMI_Sale.PartnerId
+                                         , _tmpMI_Sale.GoodsId
+                                         , _tmpMI_Sale.GoodsKindId
+                                         , CAST (tmpProfitLoss.OperSumm * _tmpMI_Sale.AmountWeight / tmpMI_Sale_total.AmountWeight AS NUMERIC (16, 4)) AS OperSumm
+                                           -- № п/п
+                                         , ROW_NUMBER() OVER (PARTITION BY tmpProfitLoss.MovementItemId, tmpProfitLoss.ContainerId_ProfitLoss ORDER BY _tmpMI_Sale.AmountWeight DESC) AS Ord
+                                    FROM tmpProfitLoss
+                                         JOIN tmpMI_Sale_total ON tmpMI_Sale_total.AmountWeight > 0
+                                         CROSS JOIN _tmpMI_Sale
+                                    WHERE vbIsAccount_50000 = FALSE
+                                   )
+            -- итого распределили
+          , tmpProfitLoss_goods_sum AS (SELECT tmpProfitLoss_goods.MovementItemId
+                                             , tmpProfitLoss_goods.ContainerId_ProfitLoss
+                                             , SUM (tmpProfitLoss_goods.OperSumm) AS OperSumm
+                                        FROM tmpProfitLoss_goods
+                                        GROUP BY tmpProfitLoss_goods.MovementItemId
+                                               , tmpProfitLoss_goods.ContainerId_ProfitLoss
+                                       )
        -- Прибыль
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpProfitLoss.MovementItemId
             , tmpProfitLoss.ContainerId_ProfitLoss
-            , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
-            , 0                                       AS AnalyzerId             -- в ОПиУ как правило не нужена аналитика, т.к. большинство отчетов строится на AnalyzerId <> 0
-            , _tmpItem_Transport.GoodsId              AS ObjectId_Analyzer      -- Товар
-            , vbCarId                                 AS WhereObjectId_Analyzer -- Автомобиль
-            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
-            , 0                                       AS AccountId_Analyzer     -- в ОПиУ не нужен
-            , _tmpItem_Transport.UnitId_ProfitLoss    AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
-            , _tmpItem_Transport.BranchId_ProfitLoss  AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
-            , 0                                       AS ParentId
-            , tmpProfitLoss.OperSumm
+            , zc_Enum_Account_100301()                      AS AccountId              -- прибыль текущего периода
+            , 0                                             AS AnalyzerId             -- в ОПиУ как правило не нужена аналитика, т.к. большинство отчетов строится на AnalyzerId <> 0
+            , _tmpItem_Transport.GoodsId                    AS ObjectId_Analyzer      -- Товар
+            , vbCarId                                       AS WhereObjectId_Analyzer -- Автомобиль
+            , 0                                             AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , COALESCE (tmpProfitLoss_goods.MI_Id_sale, 0)  AS ContainerIntId_analyzer-- MI_Id_sale в накладной или в ОПиУ не нужен
+            , 0                                             AS AccountId_Analyzer     -- в ОПиУ не нужен
+            , _tmpItem_Transport.UnitId_ProfitLoss          AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
+            , _tmpItem_Transport.BranchId_ProfitLoss        AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
+            , 0                                             AS ParentId
+            , COALESCE (tmpProfitLoss_goods.OperSumm, tmpProfitLoss.OperSumm)
+                -- корректируем на разницу округлений
+              - CASE WHEN tmpProfitLoss_goods.Ord = 1 THEN tmpProfitLoss_goods_sum.OperSumm - tmpProfitLoss.OperSumm ELSE 0 END AS OperSumm
             , vbOperDate
-            , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
-       FROM (SELECT _tmpItem_TransportSumm_Transport.MovementItemId
-                  , _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
-                  , SUM (_tmpItem_TransportSumm_Transport.OperSumm) AS OperSumm
-             FROM _tmpItem_TransportSumm_Transport
-             GROUP BY _tmpItem_TransportSumm_Transport.MovementItemId, _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
-            ) AS tmpProfitLoss
+            , FALSE                                         AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
+       FROM tmpProfitLoss
             JOIN _tmpItem_Transport ON _tmpItem_Transport.MovementItemId = tmpProfitLoss.MovementItemId
+            -- Покупатель + Товар
+            LEFT JOIN tmpProfitLoss_goods ON tmpProfitLoss_goods.MovementItemId         = tmpProfitLoss.MovementItemId
+                                         AND tmpProfitLoss_goods.ContainerId_ProfitLoss = tmpProfitLoss.ContainerId_ProfitLoss
+            -- итого распределили
+            LEFT JOIN tmpProfitLoss_goods_sum ON tmpProfitLoss_goods_sum.MovementItemId         = tmpProfitLoss_goods.MovementItemId
+                                             AND tmpProfitLoss_goods_sum.ContainerId_ProfitLoss = tmpProfitLoss_goods.ContainerId_ProfitLoss
        WHERE vbIsAccount_50000 = FALSE
       UNION ALL
        -- или Прибыль будущих периодов
@@ -782,6 +907,7 @@ BEGIN
             , vbPartionMovementId                     AS ObjectId_Analyzer      -- !!!PartionMovementId!!!
             , vbCarId                                 AS WhereObjectId_Analyzer -- Автомобиль
             , tmpProfitLoss.ContainerId               AS ContainerId_Analyzer   -- !!!добавлен!!!
+            , 0                                       AS ContainerIntId_analyzer-- вроде не нужен
             , tmpProfitLoss.AccountId                 AS AccountId_Analyzer     -- !!!добавлен!!!
          -- , _tmpItem_Transport.UnitId_ProfitLoss    AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
             , _tmpItem_Transport.GoodsId              AS ObjectIntId_Analyzer   -- Товар
@@ -861,27 +987,56 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
-       WITH _tmpItem AS (SELECT _tmpItem_SummPersonal.MovementItemId
-                              , _tmpItem_SummPersonal.ContainerId
-                              , zc_Enum_AnalyzerId_Transport_Add()     AS AnalyzerId -- Сумма командировочные
-                              , _tmpItem_SummPersonal.OperSumm_Add     AS OperSumm
-                         FROM _tmpItem_SummPersonal
-                         WHERE _tmpItem_SummPersonal.OperSumm_Add <> 0 -- !!!надо ограничивать!!!
-                        UNION ALL
-                         SELECT _tmpItem_SummPersonal.MovementItemId
-                              , _tmpItem_SummPersonal.ContainerId
-                              , zc_Enum_AnalyzerId_Transport_AddLong() AS AnalyzerId -- Сумма дальнобойные (тоже командировочные)
-                              , _tmpItem_SummPersonal.OperSumm_AddLong AS OperSumm
-                         FROM _tmpItem_SummPersonal
-                         WHERE _tmpItem_SummPersonal.OperSumm_AddLong <> 0 -- !!!надо ограничивать!!!
-                        UNION ALL
-                         SELECT _tmpItem_SummPersonal.MovementItemId
-                              , _tmpItem_SummPersonal.ContainerId
-                              , zc_Enum_AnalyzerId_Transport_Taxi()    AS AnalyzerId -- Сумма на такси
-                              , _tmpItem_SummPersonal.OperSumm_Taxi    AS OperSumm
-                         FROM _tmpItem_SummPersonal
-                         WHERE _tmpItem_SummPersonal.OperSumm_Taxi <> 0 -- !!!надо ограничивать!!!
-                        )
+       WITH -- Сумма
+            tmpItem AS (SELECT _tmpItem_SummPersonal.MovementItemId
+                             , _tmpItem_SummPersonal.ContainerId
+                             , zc_Enum_AnalyzerId_Transport_Add()     AS AnalyzerId -- Сумма командировочные
+                             , _tmpItem_SummPersonal.OperSumm_Add     AS OperSumm
+                        FROM _tmpItem_SummPersonal
+                        WHERE _tmpItem_SummPersonal.OperSumm_Add <> 0 -- !!!надо ограничивать!!!
+                       UNION ALL
+                        SELECT _tmpItem_SummPersonal.MovementItemId
+                             , _tmpItem_SummPersonal.ContainerId
+                             , zc_Enum_AnalyzerId_Transport_AddLong() AS AnalyzerId -- Сумма дальнобойные (тоже командировочные)
+                             , _tmpItem_SummPersonal.OperSumm_AddLong AS OperSumm
+                        FROM _tmpItem_SummPersonal
+                        WHERE _tmpItem_SummPersonal.OperSumm_AddLong <> 0 -- !!!надо ограничивать!!!
+                       UNION ALL
+                        SELECT _tmpItem_SummPersonal.MovementItemId
+                             , _tmpItem_SummPersonal.ContainerId
+                             , zc_Enum_AnalyzerId_Transport_Taxi()    AS AnalyzerId -- Сумма на такси
+                             , _tmpItem_SummPersonal.OperSumm_Taxi    AS OperSumm
+                        FROM _tmpItem_SummPersonal
+                        WHERE _tmpItem_SummPersonal.OperSumm_Taxi <> 0 -- !!!надо ограничивать!!!
+                       )
+            -- Итого вес
+          , tmpMI_Sale_total AS (SELECT SUM (_tmpMI_Sale.AmountWeight) AS AmountWeight FROM _tmpMI_Sale)
+            -- Распределяем
+          , tmpItem_goods AS (SELECT tmpItem.MovementItemId
+                                   , tmpItem.ContainerId
+                                   , tmpItem.AnalyzerId
+                                   , _tmpMI_Sale.MI_Id_sale
+                                   , _tmpMI_Sale.PartnerId
+                                   , _tmpMI_Sale.GoodsId
+                                   , _tmpMI_Sale.GoodsKindId
+                                   , CAST (tmpItem.OperSumm * _tmpMI_Sale.AmountWeight / tmpMI_Sale_total.AmountWeight AS NUMERIC (16, 4)) AS OperSumm
+                                     -- № п/п
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpItem.MovementItemId, tmpItem.ContainerId, tmpItem.AnalyzerId ORDER BY _tmpMI_Sale.AmountWeight DESC) AS Ord
+                              FROM tmpItem
+                                   JOIN tmpMI_Sale_total ON tmpMI_Sale_total.AmountWeight > 0
+                                   CROSS JOIN _tmpMI_Sale
+                              WHERE vbIsAccount_50000 = FALSE
+                             )
+            -- итого распределили
+          , tmpItem_goods_sum AS (SELECT tmpItem_goods.MovementItemId
+                                       , tmpItem_goods.ContainerId
+                                       , tmpItem_goods.AnalyzerId
+                                       , SUM (tmpItem_goods.OperSumm) AS OperSumm
+                                  FROM tmpItem_goods
+                                  GROUP BY tmpItem_goods.MovementItemId
+                                       , tmpItem_goods.ContainerId
+                                       , tmpItem_goods.AnalyzerId
+                                 )
        -- долг Сотруднику (ЗП)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
             , _tmpItem_SummPersonal.ContainerId
@@ -900,29 +1055,40 @@ BEGIN
             , -1 * (_tmpItem.OperSumm)
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
-       FROM _tmpItem
+       FROM tmpItem AS _tmpItem
             INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
                                             AND _tmpItem_SummPersonal.ContainerId    = _tmpItem.ContainerId
       UNION ALL
        -- Прибыль
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
             , _tmpItem_SummPersonal.ContainerId_ProfitLoss
-            , zc_Enum_Account_100301()                AS AccountId                -- прибыль текущего периода
-            , _tmpItem.AnalyzerId                     AS AnalyzerId               -- есть аналитика, т.е. деление ... !!!хотя в других проводках ОПиУ этого не делалось!!!
-            , _tmpItem_SummPersonal.PersonalId        AS ObjectId_Analyzer        -- Сотрудник (ЗП)
-            , vbCarId                                 AS WhereObjectId_Analyzer   -- Автомобиль, а было Физ.лицо (ЗП) - vbMemberDriverId
-            , _tmpItem_SummPersonal.ContainerId       AS ContainerId_Analyzer     -- Контейнер - корреспондент
-            , _tmpItem_SummPersonal.AccountId         AS AccountId_Analyzer       -- Счет - корреспондент
-            , _tmpItem_SummPersonal.UnitId_ProfitLoss AS ObjectIntId_Analyzer     -- Подразделение (ОПиУ)
-            , _tmpItem_SummPersonal.BranchId_ProfitLoss AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а может было б лучше BusinessId_ProfitLoss
-            , 0                                       AS ContainerIntId_Analyzer  -- вроде не нужен
-            , 0                                       AS ParentId
-            , 1 * (_tmpItem.OperSumm)
-            , vbOperDate                              AS OperDate
-            , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
-       FROM _tmpItem
+            , zc_Enum_Account_100301()                             AS AccountId                -- прибыль текущего периода
+            , _tmpItem.AnalyzerId                                  AS AnalyzerId               -- есть аналитика, т.е. деление ... !!!хотя в других проводках ОПиУ этого не делалось!!!
+            , _tmpItem_SummPersonal.PersonalId                     AS ObjectId_Analyzer        -- Сотрудник (ЗП)
+            , vbCarId                                              AS WhereObjectId_Analyzer   -- Автомобиль, а было Физ.лицо (ЗП) - vbMemberDriverId
+            , _tmpItem_SummPersonal.ContainerId                    AS ContainerId_Analyzer     -- Контейнер - корреспондент
+            , _tmpItem_SummPersonal.AccountId                      AS AccountId_Analyzer       -- Счет - корреспондент
+            , _tmpItem_SummPersonal.UnitId_ProfitLoss              AS ObjectIntId_Analyzer     -- Подразделение (ОПиУ)
+            , _tmpItem_SummPersonal.BranchId_ProfitLoss            AS ObjectExtId_Analyzer     -- Филиал (ОПиУ), а может было б лучше BusinessId_ProfitLoss
+            , COALESCE (tmpItem_goods.MI_Id_sale, 0)               AS ContainerIntId_Analyzer  -- MI_Id_sale в накладной или вроде не нужен
+            , 0                                                    AS ParentId
+            , 1 * COALESCE (tmpItem_goods.OperSumm, _tmpItem.OperSumm)
+                -- корректируем на разницу округлений
+              - CASE WHEN tmpItem_goods.Ord = 1 THEN tmpItem_goods_sum.OperSumm - _tmpItem.OperSumm ELSE 0 END AS OperSumm
+              --
+            , vbOperDate                                                          AS OperDate
+            , FALSE                                                               AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
+       FROM tmpItem AS _tmpItem
             INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
                                             AND _tmpItem_SummPersonal.ContainerId    = _tmpItem.ContainerId
+            -- Покупатель + Товар
+            LEFT JOIN tmpItem_goods ON tmpItem_goods.MovementItemId = _tmpItem.MovementItemId
+                                   AND tmpItem_goods.ContainerId    = _tmpItem.ContainerId
+                                   AND tmpItem_goods.AnalyzerId     = _tmpItem.AnalyzerId
+            -- итого распределили
+            LEFT JOIN tmpItem_goods_sum ON tmpItem_goods_sum.MovementItemId = _tmpItem.MovementItemId
+                                       AND tmpItem_goods_sum.ContainerId    = _tmpItem.ContainerId
+                                       AND tmpItem_goods_sum.AnalyzerId     = _tmpItem.AnalyzerId
        WHERE vbIsAccount_50000 = FALSE
       UNION ALL
        -- или Прибыль будущих периодов
@@ -943,7 +1109,7 @@ BEGIN
             , 1 * (_tmpItem.OperSumm)
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive               -- !!!ОПиУ всегда по Кредиту!!!
-       FROM _tmpItem
+       FROM tmpItem AS _tmpItem
             INNER JOIN _tmpItem_SummPersonal ON _tmpItem_SummPersonal.MovementItemId = _tmpItem.MovementItemId
                                             AND _tmpItem_SummPersonal.ContainerId    = _tmpItem.ContainerId
        WHERE vbIsAccount_50000 = TRUE

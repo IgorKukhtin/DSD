@@ -80,15 +80,24 @@ BEGIN
      ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
                                  , -1 * SUM (MIContainer.Amount)      AS Amount
 
+                                   -- Подраделение (ОПиУ)
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                              THEN MIContainer.ObjectIntId_Analyzer
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
                                              THEN MIContainer.ObjectExtId_Analyzer
                                         ELSE MIContainer.WhereObjectId_Analyzer
                                    END AS UnitId_ProfitLoss
-
-                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService())
-                                             THEN MIContainer.ObjectIntId_Analyzer
+                                   -- Назначение (ОПиУ)
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_PersonalService())
+                                             THEN CASE WHEN MIContainer.ContainerIntId_analyzer > 0 AND MIContainer.MovementDescId = zc_Movement_Transport()
+                                                       THEN MovementItem_2.ObjectId
+                                                       ELSE MIContainer.ObjectIntId_Analyzer
+                                                  END
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService())
+                                             THEN CASE WHEN MIContainer.ContainerIntId_analyzer > 0
+                                                       THEN MovementItem_2.ObjectId
+                                                       ELSE MovementItem_1.ObjectId
+                                                  END
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                              THEN MIContainer.ObjectId_Analyzer
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
@@ -96,10 +105,21 @@ BEGIN
                                         ELSE 0
                                    END AS ObjectId_inf
 
+                                   -- Направление (ОПиУ)
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
+                                         AND MIContainer.ContainerIntId_analyzer > 0
+                                             THEN MLO_To.ObjectId
+                                        ELSE MIContainer.ObjectExtId_Analyzer
+                                   END AS DirectionId
                                --, MIContainer.WhereObjectId_Analyzer AS DirectionId
-                                 , MIContainer.ObjectExtId_Analyzer AS DirectionId
+                                   --
                                  , MIContainer.MovementDescId
+                                   -- УП статья
                                  , MILinkObject_InfoMoney.ObjectId AS InfoMoney_inf
+                                 
+                                   -- Вид Товара
+                                 , MILO_GoodsKind.ObjectId AS GoodsKindId_inf
+
 
                             FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementItem AS MovementItem_1
@@ -113,28 +133,60 @@ BEGIN
                                                                   ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
                                                                  AND MIContainer.MovementDescId = zc_Movement_Transport()*/
+                                 LEFT JOIN MovementItem AS MovementItem_2
+                                                        ON MovementItem_2.Id = MIContainer.ContainerIntId_analyzer
+                                                       AND MovementItem_2.DescId = zc_MI_Master()
+                                                       AND MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                 LEFT JOIN MovementLinkObject AS MLO_To
+                                                              ON MLO_To.MovementId          = MovementItem_2.MovementId
+                                                             AND MLO_To.DescId              = zc_MovementLinkObject_To()
+                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                  ON MILO_GoodsKind.MovementItemId = MovementItem_2.Id
+                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
                               AND MIContainer.isActive = FALSE
                             GROUP BY MIContainer.ContainerId
+                                     -- Подраделение (ОПиУ)
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                                THEN MIContainer.ObjectIntId_Analyzer
                                           WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
                                                THEN MIContainer.ObjectExtId_Analyzer
                                           ELSE MIContainer.WhereObjectId_Analyzer
                                      END
-                                 --, MIContainer.WhereObjectId_Analyzer
-                                   , MIContainer.ObjectExtId_Analyzer
-                                   , MIContainer.MovementDescId
-                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService())
-                                               THEN MIContainer.ObjectIntId_Analyzer
+                                     -- Назначение (ОПиУ)
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_PersonalService())
+                                               THEN CASE WHEN MIContainer.ContainerIntId_analyzer > 0 AND MIContainer.MovementDescId = zc_Movement_Transport()
+                                                         THEN MovementItem_2.ObjectId
+                                                         ELSE MIContainer.ObjectIntId_Analyzer
+                                                    END
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService())
+                                               THEN CASE WHEN MIContainer.ContainerIntId_analyzer > 0
+                                                         THEN MovementItem_2.ObjectId
+                                                         ELSE MovementItem_1.ObjectId
+                                                    END
                                           WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                                THEN MIContainer.ObjectId_Analyzer
                                           WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
                                                THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                           ELSE 0
                                      END
+  
+                                     -- Направление (ОПиУ)
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
+                                           AND MIContainer.ContainerIntId_analyzer > 0
+                                               THEN MLO_To.ObjectId
+                                          ELSE MIContainer.ObjectExtId_Analyzer
+                                     END
+                                 --, MIContainer.WhereObjectId_Analyzer
+                                     --
+                                   , MIContainer.MovementDescId
+                                     -- УП статья
                                    , MILinkObject_InfoMoney.ObjectId
+                                   
+                                     -- Вид Товара
+                                   , MILO_GoodsKind.ObjectId
                            )
         , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
@@ -145,6 +197,7 @@ BEGIN
                                  , tmpMIContainer.DirectionId
                                  , tmpMIContainer.UnitId_ProfitLoss
                                  , tmpMIContainer.ObjectId_inf
+                                 , tmpMIContainer.GoodsKindId_inf
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
                                  LEFT JOIN ObjectLink AS OL_Goods_InfoMoney
@@ -174,6 +227,7 @@ BEGIN
                                    , tmpMIContainer.DirectionId
                                    , tmpMIContainer.UnitId_ProfitLoss
                                    , tmpMIContainer.ObjectId_inf
+                                   , tmpMIContainer.GoodsKindId_inf
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
@@ -194,6 +248,7 @@ BEGIN
                            -- , ContainerLinkObject_InfoMoney.ObjectId       AS InfoMoneyId
                            , 0 AS InfoMoneyId_Detail
                            , tmpProfitLoss.ObjectId_inf AS ObjectId_inf
+                           , tmpProfitLoss.GoodsKindId_inf
                            /*, ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                            , ContainerLinkObject_Juridical.ObjectId       AS JuridicalId_inf
                            , ContainerLinkObject_Personal.ObjectId        AS PersonalId_inf
@@ -237,6 +292,7 @@ BEGIN
                              , tmpProfitLoss.DirectionId
                              , tmpProfitLoss.MovementDescId
                              , tmpProfitLoss.ObjectId_inf
+                             , tmpProfitLoss.GoodsKindId_inf
                              /*, ContainerLinkObject_InfoMoneyDetail.ObjectId
                              , ContainerLinkObject_Juridical.ObjectId
                              , ContainerLinkObject_Personal.ObjectId
@@ -244,6 +300,7 @@ BEGIN
                              , ContainerLinkObject_Car.ObjectId
                              , ContainerLinkObject_Goods.ObjectId*/
                      )
+      -- 
       SELECT
              View_ProfitLoss.ProfitLossGroupName
            , View_ProfitLoss.ProfitLossDirectionName
@@ -316,7 +373,7 @@ BEGIN
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
-           
+
            --desc
            LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId

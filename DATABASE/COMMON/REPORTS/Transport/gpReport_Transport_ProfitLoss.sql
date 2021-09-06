@@ -57,6 +57,7 @@ BEGIN
                                 , tmpContainer.ProfitLossId
                                 , tmpContainer.BusinessId
                                 , tmpContainer.isAccount_50000
+                                , tmpContainer.ContainerId
                    
                                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
                                        WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN (MovementItem.Amount + COALESCE(MIFloat_Distance.ValueData,0))
@@ -82,8 +83,9 @@ BEGIN
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
                                        , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                        , CLO_Business.ObjectId                       AS BusinessId
-                                       -- , MIContainer.AnalyzerId
-                                    -- , CASE WHEN tmpAccount_50000.AccountId > 0 THEN TRUE ELSE FALSE END AS isAccount_50000
+                                       , 0                                           AS ContainerId
+                                     --, MIContainer.ContainerId
+                                     --, CASE WHEN tmpAccount_50000.AccountId > 0 THEN TRUE ELSE FALSE END AS isAccount_50000
                                        , FALSE AS isAccount_50000
                                
                                   FROM MovementItemContainer AS MIContainer
@@ -124,7 +126,7 @@ BEGIN
                                           , MILinkObject_Route.ObjectId
                                           , CLO_ProfitLoss.ObjectId
                                           , CLO_Business.ObjectId 
-                                          -- , MovementLinkObject_PersonalDriver.ObjectId   
+                                        --, MIContainer.ContainerId
                                           , MovementItem.Id
                                           , MovementItem.ObjectId
                                        -- , CASE WHEN tmpAccount_50000.AccountId > 0 THEN TRUE ELSE FALSE END
@@ -147,6 +149,7 @@ BEGIN
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
                                        , MIContainer.AccountId_Analyzer              AS ProfitLossId
                                        , 0                                           AS BusinessId
+                                       , 0                                           AS ContainerId
                                        -- , MIContainer.AnalyzerId
                                        , TRUE AS isAccount_50000
                                
@@ -212,6 +215,7 @@ BEGIN
                                        , tmpContainer.ProfitLossId
                                        , tmpContainer.BusinessId
                                        , tmpContainer.isAccount_50000
+                                       , tmpContainer.ContainerId
                           )
 
    , tmpWeight       AS ( SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
@@ -295,6 +299,8 @@ BEGIN
                      , SUM(tmpAll.Distance)        AS Distance
                      , SUM(tmpAll.WeightTransport) AS WeightTransport
  
+                     , tmpAll.ContainerId
+
                 FROM ( SELECT tmpContainer.MovementId
                             , tmpContainer.CarId
                             , tmpContainer.FuelId
@@ -316,6 +322,7 @@ BEGIN
                             , tmpContainer.SumAmount_PersonalSendCash
                             , tmpContainer.Distance
                             , tmpContainer.WeightTransport
+                            , tmpContainer.ContainerId
  
                        FROM tmpContainer
                       UNION ALL
@@ -340,6 +347,7 @@ BEGIN
                             , 0 AS SumAmount_PersonalSendCash
                             , 0 AS Distance
                             , 0 AS WeightTransport
+                            , 0 AS ContainerId
 
                        FROM tmpWeight_All
                       ) AS tmpAll
@@ -353,6 +361,7 @@ BEGIN
                        , tmpAll.ProfitLossId
                        , tmpAll.BusinessId
                        , tmpAll.isAccount_50000
+                       , tmpAll.ContainerId
                 )
        -- Результат
        SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
@@ -361,6 +370,7 @@ BEGIN
             , COALESCE (Object_Fuel.ValueData, Object_FuelMaster.ValueData)    :: TVarChar         AS FuelName
             , Object_CarModel.ValueData        AS CarModelName
             , Object_Car.ValueData             AS CarName
+          --, tmpUnion.ContainerId :: TVarChar AS CarName
            
             , Object_Route.ValueData           AS RouteName
             , Object_PersonalDriver.ValueData  AS PersonalDriverName
@@ -434,6 +444,7 @@ BEGIN
               , COALESCE (View_ProfitLoss.ProfitLossName, View_Account.AccountName)
               , COALESCE (View_ProfitLoss.ProfitLossName_all, View_Account.AccountName_all)
               , tmpUnion.isAccount_50000
+              , tmpUnion.ContainerId
             
        ORDER BY Object_Unit_View.BusinessName
               , Object_Unit_View.BranchName

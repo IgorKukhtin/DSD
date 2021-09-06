@@ -207,7 +207,7 @@ BEGIN
                                        , tmpContainer.isAccount_50000
                                 , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)
                           )
-        -- выбираем данные путевых из реестра, получаем док. продаж которые указаны в реестре
+          -- данные реестра
         , tmpWeight1 AS 
                         (SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
                               , MovementLinkObject_Car.ObjectId                AS CarId
@@ -235,12 +235,12 @@ BEGIN
                            AND MLM_Transport.MovementChildId in (SELECT tmpContainer.MovementId FROM tmpContainer)
                         )
 
-       -- 
+          -- документы Продажа - строчная часть в Реестры накладных
         , tmpMF_MovementItemId AS 
                                   (SELECT MovementFloat_MovementItemId.MovementId
                                         , MovementFloat_MovementItemId.ValueData :: Integer
                                    FROM MovementFloat AS MovementFloat_MovementItemId
-                                   WHERE MovementFloat_MovementItemId.ValueData ::Integer IN (SELECT DISTINCT tmpWeight1.MI_Id FROM tmpWeight1)
+                                   WHERE MovementFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpWeight1.MI_Id FROM tmpWeight1)
                                      AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                                   )
  

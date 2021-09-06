@@ -1373,7 +1373,7 @@ begin
                                 +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%')
                                  );
               myLogMemo_add('rec VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
-              if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc <= 55)) then
+              //!!!if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc <= 55)) then
               if toSqlQuery_two.RecordCount > 0 then
               begin
                    myLogMemo_add('-');
@@ -1388,7 +1388,7 @@ begin
                    //
                    myLogMemo_add('-');
                    //
-                   if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc < 55)) then
+                   //!!!if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc < 55)) then
                    begin
                       MyDelay(1 * 100);
                       exit;
@@ -1415,7 +1415,7 @@ begin
                      end;
                    //
                    myLogMemo_add('-');
-                   if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc < 55)) then
+                   //!!!if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc < 55)) then
                    begin
                       MyDelay(1 * 1000);
                       exit;

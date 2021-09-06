@@ -924,7 +924,7 @@ end if;
 
      -- 3. формируются Проводки + !!!есть MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ContainerIntId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это "обычные" проводки
        SELECT 0
@@ -941,8 +941,9 @@ end if;
                    ELSE _tmpItem.UnitId
               END AS WhereObjectId_Analyzer
 
-            , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer -- Контейнер ОПиУ или Контейнер - корреспондент
-            , COALESCE (tmpProfitLoss.AccountId,   tmpFind.AccountId)   AS AccountId_Analyzer   -- Счет ОПиУ или Счет - корреспондент
+            , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer     -- Контейнер ОПиУ или Контейнер - корреспондент
+            , _tmpItem.ContainerIntId_Analyzer                          AS ContainerIntId_Analyzer  -- MI_Id_sale в накладной продажи
+            , COALESCE (tmpProfitLoss.AccountId,   tmpFind.AccountId)   AS AccountId_Analyzer       -- Счет ОПиУ или Счет - корреспондент
 
               -- !!!замена!!!
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
@@ -992,8 +993,9 @@ end if;
                    ELSE _tmpItem.UnitId
               END AS WhereObjectId_Analyzer  -- !!!замена!!!
 
-            , _tmpItem_Diff.ContainerId_Diff AS ContainerId_Analyzer -- Контейнер - корреспондент (статья ОПиУ)
-            , zc_Enum_Account_100301()       AS AccountId_Analyzer   -- Счет - корреспондент (ОПиУ) - прибыль текущего периода
+            , _tmpItem_Diff.ContainerId_Diff AS ContainerId_Analyzer     -- Контейнер - корреспондент (статья ОПиУ)
+            , 0                              AS ContainerIntId_Analyzer  -- не нужен
+            , zc_Enum_Account_100301()       AS AccountId_Analyzer       -- Счет - корреспондент (ОПиУ) - прибыль текущего периода
 
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.UnitId
@@ -1033,8 +1035,9 @@ end if;
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
             , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
 
-            , _tmpItem_BankAccount.ContainerId    AS ContainerId_Analyzer -- Контейнер - корреспондент
-            , _tmpItem_BankAccount.AccountId      AS AccountId_Analyzer   -- Счет - корреспондент
+            , _tmpItem_BankAccount.ContainerId    AS ContainerId_Analyzer     -- Контейнер - корреспондент
+            , 0                                   AS ContainerIntId_Analyzer  -- не нужен
+            , _tmpItem_BankAccount.AccountId      AS AccountId_Analyzer       -- Счет - корреспондент
 
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
@@ -1060,7 +1063,8 @@ end if;
             , 0                                   AS WhereObjectId_Analyzer
 
             , _tmpItem.ContainerId_Currency       AS ContainerId_Analyzer
-            , 0                                   AS AccountId_Analyzer   -- !!!нет, т.к. это забалансовый счет!!!
+            , 0                                   AS ContainerIntId_Analyzer  -- не нужен
+            , 0                                   AS AccountId_Analyzer       -- !!!нет, т.к. это забалансовый счет!!!
 
             , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer

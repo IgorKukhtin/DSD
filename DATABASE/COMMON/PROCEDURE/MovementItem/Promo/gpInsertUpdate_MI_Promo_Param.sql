@@ -117,7 +117,8 @@ BEGIN
                                )
               , tmpData_promo AS (SELECT MI_PromoGoods.Id
                                        , MI_PromoGoods.GoodsId
-                                       , MI_PromoGoods.GoodsKindCompleteId
+                                       , CASE WHEN MI_PromoGoods.GoodsKindId > 0 THEN MI_PromoGoods.GoodsKindId ELSE MI_PromoGoods.GoodsKindCompleteId END AS GoodsKindId
+                                     --, MI_PromoGoods.GoodsKindCompleteId
                                        , MI_PromoGoods.isErased
                                          --  № п/п
                                        , ROW_NUMBER() OVER (PARTITION BY MI_PromoGoods.GoodsId ORDER BY MI_PromoGoods.Amount DESC) AS Ord
@@ -128,7 +129,8 @@ BEGIN
               , tmpData_notFind AS (SELECT DISTINCT _tmpData.GoodsId
                                     FROM _tmpData
                                          LEFT JOIN tmpData_promo ON tmpData_promo.GoodsId             = _tmpData.GoodsId
-                                                                AND tmpData_promo.GoodsKindCompleteId = _tmpData.GoodsKindId
+                                                              --AND tmpData_promo.GoodsKindCompleteId = _tmpData.GoodsKindId
+                                                                AND tmpData_promo.GoodsKindId         = _tmpData.GoodsKindId
                                     WHERE tmpData_promo.GoodsId IS NULL
                                    )
            -- если в продажах "другие" виды упаковки
@@ -151,7 +153,8 @@ BEGIN
            FROM tmpData_promo AS MI_PromoGoods
                 LEFT JOIN tmpData_notFind ON tmpData_notFind.GoodsId = MI_PromoGoods.GoodsId
                 LEFT JOIN _tmpData ON _tmpData.GoodsId     = MI_PromoGoods.GoodsId
-                                  AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindCompleteId
+                                --AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindCompleteId
+                                  AND _tmpData.GoodsKindId = MI_PromoGoods.GoodsKindId
            WHERE tmpData_notFind.GoodsId IS NULL
           ) AS tmp
     ;

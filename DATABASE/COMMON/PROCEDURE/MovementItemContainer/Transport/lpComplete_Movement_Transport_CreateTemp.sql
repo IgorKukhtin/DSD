@@ -14,6 +14,9 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_Transport'))
      THEN
 
+     -- таблица - элементы продаж дл€ распределени€ «атрат по накладным
+     CREATE TEMP TABLE _tmpMI_Sale (MI_Id_sale Integer, PartnerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountWeight TFloat) ON COMMIT DROP;
+
      -- таблица свойств (остатки) документа/элементов
      CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
      -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
