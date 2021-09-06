@@ -42,10 +42,10 @@ BEGIN
                                                  AND MIChild.DescId = zc_MI_Child()
                                                  AND MIChild.ParentId = MIMaster.ID
                                                  AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
-                          INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                          /*INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
                                                             ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
                                                            AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
-                                                           AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0
+                                                           AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0*/
                           LEFT JOIN MovementItemDate AS MIDate_Start
                                                       ON MIDate_Start.MovementItemId = MIChild.Id
                                                      AND MIDate_Start.DescId = zc_MIDate_Start()
@@ -70,10 +70,10 @@ BEGIN
                                                AND MIChild.DescId = zc_MI_Child()
                                                AND MIChild.ParentId = MIMaster.ID
                                                AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
-                        INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
+                        /*INNER JOIN MovementItemLinkObject AS MILinkObject_PayrollType
                                                           ON MILinkObject_PayrollType.MovementItemId = MIChild.Id
                                                          AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
-                                                         AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0
+                                                         AND COALESCE(MILinkObject_PayrollType.ObjectId, 0) <> 0*/
                         INNER JOIN MovementItemDate AS MIDate_End
                                                     ON MIDate_End.MovementItemId = MIChild.Id
                                                    AND MIDate_End.DescId = zc_MIDate_End()
@@ -86,7 +86,23 @@ BEGIN
                      AND MIMaster.DescId = zc_MI_Master()
                       AND MIMaster.ObjectId = vbUserId))
          THEN
-           RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике илм смена не принята.';     
+           RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
+         END IF;
+         
+         IF COALESCE((SELECT COUNT(*)
+                      FROM Movement
+
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+
+                      WHERE Movement.OperDate >= CURRENT_DATE
+                        AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                        AND MovementLinkObject_Insert.ObjectId = vbUserId
+                        AND Movement.DescId = zc_Movement_Check()
+                        AND Movement.StatusId = zc_Enum_Status_Complete()), 0) < 5
+         THEN
+           RAISE EXCEPTION 'Не найдены продажи по вам..';              
          END IF;
        ELSE
          RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
@@ -158,4 +174,4 @@ ALTER FUNCTION gpGet_TestingUser_Title (TVarChar) OWNER TO postgres;
 
 -- тест
 -- 
-select * from gpGet_TestingUser_Title(inSession := '3998220');
+select * from gpGet_TestingUser_Title(inSession := '3353680');

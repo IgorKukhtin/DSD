@@ -86,15 +86,24 @@ inherited TestingTuningForm: TTestingTuningForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
-          object chQuestion: TcxGridDBColumn [3]
+          object isMandatoryQuestion: TcxGridDBColumn [3]
+            Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089
+            DataBinding.FieldName = 'isMandatoryQuestion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089
+            Options.Editing = False
+            Width = 49
+          end
+          object chQuestion: TcxGridDBColumn [4]
             Caption = #1042#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'Question'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 387
+            Width = 339
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -304,7 +313,7 @@ inherited TestingTuningForm: TTestingTuningForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 165
+          Width = 261
         end
         object maQuestion: TcxGridDBColumn
           Caption = #1042#1086#1087#1088#1086#1089#1086#1074
@@ -312,14 +321,23 @@ inherited TestingTuningForm: TTestingTuningForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 77
+          Width = 122
         end
         object maTestQuestions: TcxGridDBColumn
           Caption = #1044#1083#1103' '#1090#1077#1089#1090#1072
           DataBinding.FieldName = 'TestQuestions'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 87
+          Width = 122
+        end
+        object maMandatoryQuestion: TcxGridDBColumn
+          Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089
+          DataBinding.FieldName = 'MandatoryQuestion'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1093' '#1074#1086#1087#1088#1086#1089
+          Options.Editing = False
+          Width = 122
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -969,6 +987,24 @@ inherited TestingTuningForm: TTestingTuningForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1077' '#1087#1088#1072#1074#1080#1083#1100#1085#1099#1081' '#1092#1086#1090#1086' '#1086#1090#1074#1077#1090' '#1085#1072' '#1074#1086#1087#1088#1086#1089
       ImageIndex = 7
     end
+    object actUpdate_MandatoryQuestion: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MandatoryQuestion
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MandatoryQuestion
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089'"'
+      ImageIndex = 80
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1058,6 +1094,10 @@ inherited TestingTuningForm: TTestingTuningForm
         item
           Visible = True
           ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton18'
         end
         item
           Visible = True
@@ -1229,6 +1269,10 @@ inherited TestingTuningForm: TTestingTuningForm
     end
     object dxBarButton17: TdxBarButton
       Action = actInsertMISecondPhotoFalse
+      Category = 0
+    end
+    object dxBarButton18: TdxBarButton
+      Action = actUpdate_MandatoryQuestion
       Category = 0
     end
   end
@@ -2480,5 +2524,47 @@ inherited TestingTuningForm: TTestingTuningForm
     PackSize = 1
     Left = 920
     Top = 512
+  end
+  object spUpdate_MandatoryQuestion: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingTuning_MandatoryQuestion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMandatoryQuestion'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isMandatoryQuestion'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 464
   end
 end

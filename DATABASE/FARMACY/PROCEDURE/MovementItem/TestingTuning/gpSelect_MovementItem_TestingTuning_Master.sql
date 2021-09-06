@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Master(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, TopicsTestingTuningId Integer, TopicsTestingTuningCode Integer, TopicsTestingTuningName TVarChar
-             , Question Integer, TestQuestions Integer
+             , Question Integer, TestQuestions Integer, MandatoryQuestion Integer
              , isErased Boolean
               )
 AS
@@ -33,7 +33,13 @@ BEGIN
                                    ),
         tmpQuestions AS (SELECT MovementItem.ParentId         AS Id
                               , count(*)                      AS Questions
+                              , SUM(CASE WHEN COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS MandatoryQuestion
                          FROM MovementItem
+                         
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
+                                                            ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
+                                                           
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Child()
                            AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -48,6 +54,7 @@ BEGIN
                  , tmpTopicsTestingTuning.Name                         AS TopicsTestingTuningName
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
+                 , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM tmpTopicsTestingTuning
                 LEFT JOIN MovementItem ON tmpTopicsTestingTuning.Id = MovementItem.ObjectId 
@@ -64,7 +71,13 @@ BEGIN
         WITH
         tmpQuestions AS (SELECT MovementItem.ParentId         AS Id
                               , count(*)                      AS Questions
+                              , SUM(CASE WHEN COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS MandatoryQuestion
                          FROM MovementItem
+
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
+                                                            ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
+
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Child()
                            AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -79,6 +92,7 @@ BEGIN
                  , Object_TopicsTestingTuning.ValueData                AS TopicsTestingTuningName
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
+                 , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM MovementItem 
             
@@ -107,4 +121,4 @@ ALTER FUNCTION gpSelect_MovementItem_TestingTuning_Master (Integer, Boolean, Boo
 
 -- тест
 -- 
-select * from gpSelect_MovementItem_TestingTuning_Master(inMovementId := 16461309 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_TestingTuning_Master(inMovementId := 23977600  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

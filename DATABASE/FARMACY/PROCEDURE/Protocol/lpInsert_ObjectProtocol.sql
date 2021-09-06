@@ -82,6 +82,7 @@ BEGIN
                                 JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
                            WHERE ObjectString.ObjectId = inObjectId
                              AND inIsErased IS NULL
+                             AND ObjectString.DescId <> zc_ObjectString_Goods_Analog()
                           )
   
      , tmpObjectBoolean AS (SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 

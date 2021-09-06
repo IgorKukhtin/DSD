@@ -68,6 +68,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), outMovementId, COALESCE (MB_RoundingTo10.ValueData, FALSE))
           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingDown(), outMovementId, COALESCE (MB_RoundingDown.ValueData, FALSE))
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(), outMovementId, zc_Enum_PaidType_Cash())
+          , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), outMovementId, COALESCE (MovementLinkObject_DiscountCard.ObjectId, 0))
           -- сохранили свойство <ƒата создани€>
           , lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), outMovementId, CURRENT_TIMESTAMP)
           -- сохранили свойство <ѕользователь (создание)>
@@ -80,8 +81,11 @@ BEGIN
          LEFT JOIN MovementBoolean AS MB_RoundingDown
                                    ON MB_RoundingDown.MovementId = Movement.Id
                                   AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                      ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
+                                     AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
     WHERE Movement.ID = inMovementId;
-
+    
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (outMovementId, vbUserId, True);
     
