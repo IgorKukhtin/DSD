@@ -1,36 +1,36 @@
 -- Function: gpReport_PromoPromoInvoice ()
 
-DROP FUNCTION IF EXISTS gpReport_PromoInvoice (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PromoInvoice (TDateTime, TDateTime, TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PromoInvoice(
     IN inStartDate         TDateTime ,
     IN inEndDate           TDateTime ,
-    IN inJuridicalId       Integer ,
+    IN inStartDate2        TDateTime ,
+    IN inEndDate2          TDateTime ,
     IN inPaidKindId        Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumber_Full TVarChar
+RETURNS TABLE (MovementId Integer, StatusCode Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumber_Full TVarChar
              , OperDate TDateTime
              , PaidKindName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
-             , NameBeforeName TVarChar
-             , AssetName TVarChar
-             , UnitName TVarChar
+             , BonusKindId Integer, BonusKindName TVarChar
              , Comment TVarChar
-                         
-             , Amount TFloat  -- 
-             , Price TFloat  -- 
-             , AmountSumm TFloat  
              , TotalSumm TFloat  -- 
              , ServiceSumma TFloat
              , RemStart TFloat
              , BankSumma TFloat
              , RemEnd TFloat
-             , IncomeTotalSumma TFloat
-             , IncomeSumma TFloat
-             , DebetStart TFloat
-             , DebetEnd TFloat
-             , PaymentPlan TFloat
+             , Amount_ProfitLossService TFloat
+
+             , MovementId_promo Integer
+             , OperDate_promo TDateTime
+             , InvNumber_promo  Integer
+             , StatusCode_promo Integer
+             , StartSale_promo TDateTime
+             , EndSale_promo  TDateTime
+             , StartPromo_promo TDateTime
+             , EndPromo_promo TDateTime
+             , MonthPromo_promo TDateTime
              ) 
 AS
 $BODY$
@@ -43,6 +43,7 @@ BEGIN
     WITH
       tmpMovement AS (SELECT Movement.Id
                            , Movement.ParentId
+                           , Object_Status.ObjectCode AS StatusCode
                            , Movement.OperDate
                            , Movement.InvNumber
                            , Object_BonusKind.Id                    AS BonusKindId
@@ -50,6 +51,7 @@ BEGIN
                            , Object_PaidKind.Id                     AS PaidKindId
                            , Object_PaidKind.ValueData              AS PaidKindName
                       FROM Movement AS Movement
+                           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_BonusKind
                                                         ON MovementLinkObject_BonusKind.MovementId = Movement.Id
                                                        AND MovementLinkObject_BonusKind.DescId = zc_MovementLinkObject_BonusKind()
@@ -79,6 +81,7 @@ BEGIN
 
     , tmpPromoInvoice AS (SELECT Movement.Id                               AS MovementId
                                , Movement.ParentId
+                               , Movement.StatusCode
                                , Movement.OperDate
                                , Movement.InvNumber
                                , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
@@ -129,6 +132,37 @@ BEGIN
                                                                      , zc_MovementLinkObject_Unit())
                                    )
 
+       , tmpMovementPromo AS (SELECT tmpPromo.MovementId
+                                   , tmpPromo.OperDate
+                                   , tmpPromo.InvNumber
+                                   , tmpPromo.StatusId
+                                   , tmpPromo.StatusCode
+                                   , MovementDate_StartSale.ValueData       AS StartSale
+                                   , MovementDate_EndSale.ValueData         AS EndSale            --Дата окончания возвратов по акционной цене
+                                   , MovementDate_StartPromo.ValueData      AS StartPromo         --Дата начала акции
+                                   , MovementDate_EndPromo.ValueData        AS EndPromo           --Дата окончания акции
+                                   , MovementDate_Month.ValueData           AS MonthPromo         -- месяц акции
+                                   --, MovementDate_OperDateStart.ValueData   AS OperDateStart      --Дата начала расч. продаж до акции
+                                   --, MovementDate_OperDateEnd.ValueData     AS OperDateEnd        --Дата окончания расч. продаж до акции
+                              FROM tmpPromo
+                                   LEFT JOIN tmpMovementDate ON MovementDate_StartSale
+                                                            AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                                            AND MovementDate_StartSale.MovementId = tmpPromo.MovementId
+                                   LEFT JOIN tmpMovementDate ON MovementDate_EndSale
+                                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                                            AND MovementDate_EndSale.MovementId = tmpPromo.MovementId
+                                   LEFT JOIN tmpMovementDate ON MovementDate_StartPromo
+                                                            AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                            AND MovementDate_StartPromo.MovementId = tmpPromo.MovementId
+                                   LEFT JOIN tmpMovementDate ON MovementDate_EndPromo
+                                                            AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                            AND MovementDate_EndPromo.MovementId = tmpPromo.MovementId
+                                   LEFT JOIN tmpMovementDate ON MovementDate_Month
+                                                            AND MovementDate_Month.DescId = zc_MovementDate_Month()
+                                                            AND MovementDate_Month.MovementId = tmpPromo.MovementId
+
+                             )
+
 
        -- ищем док. оплат
        , tmpMLM_PromoInvoice AS (SELECT *
@@ -147,108 +181,102 @@ BEGIN
 
        , tmpMIList AS (SELECT *
                        FROM MovementItem
-                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementList.MovementId FROM tmpMovementList)
+                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementList.Id FROM tmpMovementList)
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE                   
                       )
 
-       , tmpMLM AS (SELECT tmp.MovementId_PromoInvoice
-                           , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma_Before
-                           , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma
-                           , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma_Before
-                           , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma
+       , tmpMLM AS (SELECT tmp.MovementId_PromoInvoice, tmp.ContractId
+                         , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma_Before
+                         , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma
+                         , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma_Before
+                         , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma
                     FROM (SELECT tmpPromoInvoice.MovementId AS MovementId_PromoInvoice
                                , Movement.OperDate AS MLM_OperDate
+                               , MILinkObject_Contract.ObjectId AS ContractId
                                , CASE WHEN Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN -1 * MovementItem.Amount ELSE 0 END AS BankSumma
-                               , CASE WHEN Movement.DescId = zc_Movement_Service() THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
+                               , CASE WHEN Movement.DescId = zc_Movement_Service() THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma
                            FROM tmpPromoInvoice
                                 INNER JOIN tmpMLM_PromoInvoice AS MLM_PromoInvoice
-                                                               ON MLM_PromoInvoice.MovementChildId = tmpListPromoInvoice.MovementId
-                                                              AND MLM_PromoInvoice.DescId = zc_MovementLinkMovement_PromoInvoice()
+                                                               ON MLM_PromoInvoice.MovementChildId = tmpPromoInvoice.MovementId
+                                                              AND MLM_PromoInvoice.DescId = zc_MovementLinkMovement_Invoice()
                                 INNER JOIN tmpMovementList AS Movement 
                                                            ON Movement.Id = MLM_PromoInvoice.MovementId
 
                                 INNER JOIN tmpMIList AS MovementItem
                                                      ON MovementItem.MovementId = Movement.Id
+
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                                 ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                           ) AS tmp
-                     GROUP BY tmp.MovementId_PromoInvoice
+                     GROUP BY tmp.MovementId_PromoInvoice, tmp.ContractId
                     )
+
+       -- zc_Movement_ProfitLossService 
+       , tmpProfitLossService AS (SELECT MILinkObject_Contract.ObjectId AS ContractId
+                                       , SUM (COALESCE (MovementItem.Amount,0)) AS Amount
+                                  FROM Movement
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                                        ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                       INNER JOIN (SELECT DISTINCT tmpMLM.ContractId FROM tmpMLM) AS tmpContract
+                                                                                                  ON tmpContract.ContractId = MILinkObject_Contract.ObjectId
+
+                                  WHERE Movement.DescId = zc_Movement_ProfitLossService()
+                                    AND Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  )
+       -- все zc_Movement_PromoInvoice (кроме текущего) к этому договору  -- что значит кроме текущего
+      /* , tmpPromoInvoice_period AS (SELECT 
+                                    FROM Movement
+                                    WHERE Movement.DescId = zc_Movement_PromoInvoice()
+                                      AND Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                    ) */
 
 
 
   SELECT *
   FROM
- (SELECT tmpMIPromoInvoice.MovementId
-       , tmpMIPromoInvoice.InvNumber
-       , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
-       , ('№ ' || tmpMIPromoInvoice.InvNumber || ' от ' || tmpMIPromoInvoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
-       , tmpMIPromoInvoice.OperDate
-       , tmpMIPromoInvoice.PaidKindName
-       , tmpMIPromoInvoice.JuridicalId
-       , tmpMIPromoInvoice.JuridicalName
-       , Object_NameBefore.ValueData               AS NameBeforeName
+      (SELECT tmpPromoInvoice.MovementId
+            , tmpPromoInvoice.StatusCode
+            , tmpPromoInvoice.InvNumber
+            , tmpPromoInvoice.InvNumberPartner
+            , ('№ ' || tmpPromoInvoice.InvNumber || ' от ' || tmpPromoInvoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
+            , tmpPromoInvoice.OperDate
+            , tmpPromoInvoice.PaidKindName
+            , tmpPromoInvoice.BonusKindId
+            , tmpPromoInvoice.BonusKindName
+            , tmpPromoInvoice.Comment
+     
+            , tmpPromoInvoice.TotalSumm           :: TFloat AS TotalSumm
 
-       , COALESCE (Object_Asset.ValueData, '') :: TVarChar AS AssetName
-       , COALESCE (Object_Unit.ValueData, '')  :: TVarChar AS UnitName
-       , MIString_Comment.ValueData            :: TVarChar AS Comment
+            , tmpMLM.ServiceSumma              :: TFloat AS ServiceSumma
+            , (tmpPromoInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0)) :: TFloat AS RemStart                 --ост.нач.счет
+            , tmpMLM.BankSumma                 :: TFloat AS BankSumma
+            , (tmpPromoInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
+            
+            , COALESCE (tmpProfitLossService.Amount,0) :: TFloat AS Amount_ProfitLossService
 
-       , tmpMIPromoInvoice.Amount              ::TFloat
-       --, tmpMIPromoInvoice.Price               ::TFloat
-       , CASE WHEN tmpMIPromoInvoice.CountForPrice > 0
-              THEN CAST (COALESCE (tmpMIPromoInvoice.Price, 0) / tmpMIPromoInvoice.CountForPrice AS NUMERIC (16, 2))
-              ELSE CAST (COALESCE (tmpMIPromoInvoice.Price, 0) AS NUMERIC (16, 2))
-         END :: TFloat AS Price
-       --, tmpMIPromoInvoice.AmountSumm          ::TFloat
-       , CASE WHEN tmpMIPromoInvoice.CountForPrice > 0
-              THEN CAST (tmpMIPromoInvoice.Amount * COALESCE (tmpMIPromoInvoice.Price, 0) / tmpMIPromoInvoice.CountForPrice AS NUMERIC (16, 2))
-              ELSE CAST (tmpMIPromoInvoice.Amount * COALESCE (tmpMIPromoInvoice.Price, 0) AS NUMERIC (16, 2))
-         END :: TFloat AS AmountSumm
-       , tmpMIPromoInvoice.TotalSumm           :: TFloat AS TotalSumm
-       , tmpMLM.ServiceSumma              :: TFloat AS ServiceSumma
-       , (tmpMIPromoInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0)) :: TFloat AS RemStart                 --ост.нач.счет
-       , tmpMLM.BankSumma                 :: TFloat AS BankSumma
-       , (tmpMIPromoInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
-       , tmpIncomeGroup.IncomeTotalSumma  :: TFloat AS IncomeTotalSumma
-       , tmpIncome.IncomeSumma            :: TFloat AS IncomeSumma
-       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))) :: TFloat AS DebetStart
-       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))) :: TFloat AS DebetEnd
-       , tmpMIPromoInvoiceChild.AmountSumm     :: TFloat AS PaymentPlan
+            , tmpMovementPromo.MovementId AS MovementId_promo
+            , tmpMovementPromo.OperDate   AS OperDate_promo
+            , tmpMovementPromo.InvNumber  AS InvNumber_promo
+            , tmpMovementPromo.StatusCode AS StatusCode_promo
+            , tmpMovementPromo.StartSale  AS StartSale_promo
+            , tmpMovementPromo.EndSale    AS EndSale_promo 
+            , tmpMovementPromo.StartPromo AS StartPromo_promo
+            , tmpMovementPromo.EndPromo   AS EndPromo_promo
+            , tmpMovementPromo.MonthPromo AS MonthPromo_promo
+    
+       FROM tmpPromoInvoice
+            LEFT JOIN tmpMLM ON tmpMLM.MovementId_PromoInvoice = tmpPromoInvoice.MovementId
+            LEFT JOIN tmpMovementPromo ON tmpMovementPromo.MovementId = tmpPromoInvoice.ParentId
+            LEFT JOIN tmpProfitLossService ON tmpProfitLossService.ContractId = tmpMLM.ContractId
 
-  FROM tmpMIPromoInvoice
-       LEFT JOIN tmpMLM         ON tmpMLM.MovementId_PromoInvoice         = tmpMIPromoInvoice.MovementId
-       LEFT JOIN tmpIncomeGroup ON tmpIncomeGroup.MovementId_PromoInvoice = tmpMIPromoInvoice.MovementId
-
-       LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
-                                  ON MovementString_InvNumberPartner.MovementId = tmpMIPromoInvoice.MovementId
-
-       LEFT JOIN tmpIncome ON tmpIncome.MovementItemId_PromoInvoice = tmpMIPromoInvoice.MovementItemId
-       LEFT JOIN tmpMIPromoInvoiceChild ON tmpMIPromoInvoiceChild.MovementId = tmpMIPromoInvoice.MovementId
-       LEFT JOIN Object AS Object_find ON Object_find.Id = tmpMIPromoInvoice.GoodsId
-       LEFT JOIN Object AS Object_NameBefore ON Object_NameBefore.Id = CASE WHEN Object_find.DescId IN (zc_Object_Asset(), zc_Object_Goods()) THEN Object_find.Id ELSE COALESCE (tmpMIPromoInvoice.NameBeforeId, tmpMIPromoInvoice.GoodsId) END
-
-       LEFT JOIN tmpMovementItemString AS MIString_Comment
-                                       ON MIString_Comment.MovementItemId = tmpMIPromoInvoice.MovementItemId
-                                      AND MIString_Comment.DescId = zc_MIString_Comment()
-       LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Asset
-                                           ON MILinkObject_Asset.MovementItemId = tmpMIPromoInvoice.MovementItemId
-                                          AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-       LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-       LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Unit
-                                           ON MILinkObject_Unit.MovementItemId = tmpMIPromoInvoice.MovementItemId
-                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
-       
-  ORDER BY tmpMIPromoInvoice.MovementId, Object_NameBefore.ValueData
- ) AS tmpResult
- WHERE tmpResult.RemStart <> 0
-    OR tmpResult.PaymentPlan <> 0
-    OR tmpResult.BankSumma <> 0
-    OR tmpResult.RemEnd <> 0
-
-    OR tmpResult.DebetStart <> 0
-    OR tmpResult.IncomeTotalSumma <> 0
-    OR tmpResult.ServiceSumma <> 0
-    OR tmpResult.DebetEnd <> 0
+      ) AS tmpResult
       ;
          
 END;
@@ -258,8 +286,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 03.08.16         *
- 24.07.16         * 
+ 06.09.21         *
 */
 
 -- тест
