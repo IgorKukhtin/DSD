@@ -275,6 +275,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 57
       end
+      object isList: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+        DataBinding.FieldName = 'isList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
       object BarCodeBoxName: TcxGridDBColumn
         Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
         DataBinding.FieldName = 'BarCodeBoxName'
@@ -1222,6 +1230,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

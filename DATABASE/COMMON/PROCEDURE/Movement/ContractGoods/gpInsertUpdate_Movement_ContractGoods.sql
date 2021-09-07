@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_ContractGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ContractGoods (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ContractGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа / С какой даты действует
-    IN inEndBeginDate        TDateTime , -- По какую дату действует
+    --IN inEndBeginDate        TDateTime , -- По какую дату действует
+   OUT outEndBeginDate       TDateTime , -- По какую дату действует
     IN inContractId          Integer   , --
     IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
@@ -19,12 +21,12 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ContractGoods());
      
      -- сохранили <Документ>
-      SELECT tmp.ioId, tmp.ioInvNumber
-    INTO ioId, ioInvNumber
+      SELECT tmp.ioId, tmp.ioInvNumber, tmp.outEndBeginDate
+    INTO ioId, ioInvNumber, outEndBeginDate
       FROM lpInsertUpdate_Movement_ContractGoods (ioId           := ioId
                                                 , ioInvNumber    := ioInvNumber
                                                 , inOperDate     := inOperDate
-                                                , inEndBeginDate := inEndBeginDate
+                                                --, inEndBeginDate := inEndBeginDate
                                                 , inContractId   := inContractId
                                                 , inComment      := inComment
                                                 , inUserId       := vbUserId

@@ -291,6 +291,17 @@ object WeighingProductionForm: TWeighingProductionForm
       TabOrder = 31
       Width = 278
     end
+    object cbisList: TcxCheckBox
+      Left = 561
+      Top = 96
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 32
+      Width = 129
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -819,7 +830,7 @@ object WeighingProductionForm: TWeighingProductionForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 160
   end
   object cxLabel20: TcxLabel
@@ -1914,6 +1925,13 @@ object WeighingProductionForm: TWeighingProductionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'FromId'
         Value = ''
         Component = dsdGuidesFrom
@@ -2302,8 +2320,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 64
+    Left = 704
+    Top = 48
   end
   object GuidesGoodsTypeKind: TdsdGuides
     KeyField = 'Id'
@@ -2559,8 +2577,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 984
-    Top = 80
+    Left = 1064
+    Top = 96
   end
   object GuidesSubjectDoc: TdsdGuides
     KeyField = 'Id'

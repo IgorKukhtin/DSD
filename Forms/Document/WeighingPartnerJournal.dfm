@@ -747,6 +747,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1089#1077#1082#1091#1085#1076' '#1087#1088#1080' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         Width = 70
       end
+      object isList: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+        DataBinding.FieldName = 'isList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
       object isPromo: TcxGridDBColumn
         Caption = #1040#1082#1094#1080#1103
         DataBinding.FieldName = 'isPromo'
@@ -1594,6 +1602,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

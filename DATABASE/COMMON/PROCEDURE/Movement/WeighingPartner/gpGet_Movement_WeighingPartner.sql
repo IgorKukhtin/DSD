@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SubjectDocName TVarChar
 
              , isPromo Boolean
+             , isList Boolean
 
              , PersonalId1 Integer, PersonalName1 TVarChar
              , PersonalId2 Integer, PersonalName2 TVarChar
@@ -132,7 +133,8 @@ BEGIN
              , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
              , Object_SubjectDoc.ValueData     AS SubjectDocName
 
-             , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+             , COALESCE (MovementBoolean_Promo.ValueData, FALSE) :: Boolean AS isPromo
+             , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean AS isList
 
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ValueData AS PersonalName2
@@ -201,6 +203,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -325,6 +330,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.09.21         *
  15.03.17         * add Member
  01.12.15         * add Promo
  11.10.14                                        * all

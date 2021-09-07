@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
+             , isList Boolean
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
@@ -133,6 +134,7 @@ BEGIN
 
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
              , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+             , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean  AS isList
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
@@ -222,6 +224,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId = Movement.Id
@@ -409,6 +414,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.09.21         *
  08.02.21         * Comment
  17.08.20         *
  05.10.16         * add inJuridicalBasisId

@@ -491,6 +491,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
           StoredProc = spInsertUpdateMovement
         end
         item
+          StoredProc = spGet
         end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
@@ -1351,11 +1352,10 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndBeginDate'
+        Name = 'outEndBeginDate'
         Value = Null
         Component = edEndBeginDate
         DataType = ftDateTime
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

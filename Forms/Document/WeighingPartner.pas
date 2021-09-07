@@ -178,6 +178,7 @@ type
     GuidesSubjectDoc: TdsdGuides;
     cxLabel24: TcxLabel;
     ceComment: TcxTextEdit;
+    cbisList: TcxCheckBox;
   private
   public
   end;
