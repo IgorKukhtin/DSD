@@ -31,7 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outAmountPlanMaxWeight TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг) Вес
  INOUT ioTaxRetIn             TFloat    , -- % возвратa
     IN inGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
-    IN inGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
+ INOUT ioGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
+   OUT outGoodsKindCompleteName TVarChar, -- 
     IN inComment              TVarChar  , -- Комментарий
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -72,7 +73,7 @@ BEGIN
                WHERE MI_PromoGoods.MovementId                          = inMovementId
                    AND MI_PromoGoods.GoodsId                           = inGoodsId
                    AND COALESCE (MI_PromoGoods.GoodsKindId, 0)         = COALESCE (inGoodsKindId, 0)
-                   AND COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = COALESCE (inGoodsKindCompleteId, 0)
+                   AND COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = COALESCE (ioGoodsKindCompleteId, 0)
                    AND MI_PromoGoods.Id                        <> COALESCE(ioId, 0)
                    AND MI_PromoGoods.isErased                  = FALSE
               )
@@ -110,7 +111,7 @@ BEGIN
                   , lfSelect.ValuePrice  AS ValuePrice
              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList, inOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId)) AS lfSelect;
 
-       ioOperPriceList := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = CASE WHEN inGoodsKindId > 0 THEN inGoodsKindId ELSE inGoodsKindCompleteId END)
+       ioOperPriceList := COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId = CASE WHEN inGoodsKindId > 0 THEN inGoodsKindId ELSE ioGoodsKindCompleteId END)
                           , (SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = inGoodsId AND tmpPriceList.GoodsKindId IS NULL)
                           ,0);
 
@@ -219,7 +220,7 @@ BEGIN
                                                   , inAmountPlanMax        := inAmountPlanMax
                                                   , inTaxRetIn             := ioTaxRetIn
                                                   , inGoodsKindId          := inGoodsKindId
-                                                  , inGoodsKindCompleteId  := inGoodsKindCompleteId
+                                                  , inGoodsKindCompleteId  := ioGoodsKindCompleteId
                                                   , inComment              := inComment
                                                   , inUserId               := vbUserId
                                                    );
@@ -236,6 +237,17 @@ BEGIN
                                                           );
      END IF;
 
+    -- вернули данные
+    SELECT MILO_GoodsKindComplete.ObjectId    AS GoodsKindCompleteId
+         , Object_GoodsKindComplete.ValueData AS GoodsKindCompleteName
+           INTO ioGoodsKindCompleteId
+              , outGoodsKindCompleteName
+    FROM MovementItemLinkObject AS MILO_GoodsKindComplete
+         LEFT OUTER JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+    WHERE MILO_GoodsKindComplete.MovementItemId = ioId
+      AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete();
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -244,7 +256,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
  24.01.18         * inPriceTender
- 28.11.17         * inGoodsKindCompleteId
+ 28.11.17         * ioGoodsKindCompleteId
  25.11.15                                                                         * Comment
  13.10.15                                                                         *
 */

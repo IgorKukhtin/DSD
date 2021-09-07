@@ -32,7 +32,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
     -- Проверили
-    IF inGoodsKindId <> 0
+    IF inGoodsKindId <> 0 AND 1=0
     THEN
         RAISE EXCEPTION 'Ошибка. Необходимо заполнить колонку Вид (примечание), а значение вид товара = <%> должно быть пустым.', lfGet_Object_ValueData (inGoodsKindId);
     END IF;
@@ -76,8 +76,8 @@ BEGIN
 
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-    -- сохранили связь с <Вид товара (примечание)>
-    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
+    -- сохранили связь с <Вид товара (примечание)> - может быть замена
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, CASE WHEN inGoodsKindId > 0 THEN inGoodsKindId ELSE inGoodsKindCompleteId END);
 
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
