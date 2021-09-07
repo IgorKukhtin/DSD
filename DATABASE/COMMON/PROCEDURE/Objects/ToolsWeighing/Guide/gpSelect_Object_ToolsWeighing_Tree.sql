@@ -23,7 +23,7 @@ BEGIN
                        THEN 'Экспедиция - (001)Филиал Днепр'
 
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_101'
-                       THEN 'Экспедиция - (101)???' -- || COALESCE (Object_ToolsWeighing_View.BranchCode :: TVarChar, '???')
+                       THEN 'Экспедиция - (101) Инвентаризация' -- || COALESCE (Object_ToolsWeighing_View.BranchCode :: TVarChar, '???')
 
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_201'
                        THEN 'Экспедиция - (201)Сырье'
@@ -37,9 +37,12 @@ BEGIN
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_303'
                        THEN 'Экспедиция - (303)Склад спецодежды'
 
+                  --
+                  --
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_1'
                        THEN 'Производство - (001)Склад Реализации'
 
+                  --
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_101'
                        THEN 'Производство - (101)Склад База ГП'
 
@@ -52,6 +55,14 @@ BEGIN
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_104'
                        THEN 'Производство - (104)ЦЕХ Упаковки (маркировка+сортировка)'
 
+                  --
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_111'
+                       THEN 'Производство - (111)Склад База ГП - Инвентаризация'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_112'
+                       THEN 'Производство - (112)ЦЕХ колбасный - Инвентаризация'
+                  --
+                  --
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_201'
                        THEN 'Производство - (201)Сырье - Склад'
 

@@ -197,6 +197,11 @@ BEGIN
             THEN
             -- определяется кол-во
             vbCount:= (SELECT gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', 'Count', CASE WHEN inIsCeh = TRUE THEN '1' ELSE '2' END, inSession));
+            --
+            IF COALESCE (vbCount, 0) = 0
+            THEN
+                 RAISE EXCEPTION 'Ошибка.vbCount = <%> <%> <%>', vbCount, vbLevelMain, inLevelChild;
+            END IF;
             -- Результат
             RETURN QUERY
                SELECT tmp.Number
@@ -205,7 +210,7 @@ BEGIN
                     , tmp.Value  AS Name
                     , tmp.Value  AS Value
                FROM (SELECT tmp.Number
-                          , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', inLevelChild || '_' || tmp.Number, CASE WHEN inIsCeh = TRUE THEN '' ELSE inLevelChild || '_' || tmp.Number END, inSession) AS Value
+                          , gpGet_ToolsWeighing_Value (vbLevelMain, inLevelChild, '', inLevelChild || '_' || tmp.Number, CASE WHEN inIsCeh = TRUE THEN 'not print' ELSE inLevelChild || '_' || tmp.Number END, inSession) AS Value
                      FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
                     ) AS tmp
               ;

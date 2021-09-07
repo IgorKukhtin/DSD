@@ -136,7 +136,7 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
 
-   IF vbUserId :: TVarChar = zfCalc_UserAdmin()
+   IF vbUserId :: TVarChar = zfCalc_UserAdmin() AND 1=1
    THEN
        RAISE EXCEPTION 'Error.Admin test - ok';
    END IF;

@@ -39,7 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDate_TransportGoods TDateTime
              , OperDate_TransportGoods_calc TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
-             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar, PersonalDriverName_TTN TVarChar, PersonalName_4_TTN TVarChar
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean

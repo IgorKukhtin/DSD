@@ -951,7 +951,11 @@ begin
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
      EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+     //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+     fOpenSqToQuery ('select * from Object where Id = zc_Enum_Process_Auto_PrimeCost()');
+     gc_User := TUser.Create(IntToStr(toSqlQuery.FieldByName('Id').AsInteger));
+     //gc_User.Login := toSqlQuery.FieldByName('ValueData').AsString;
+
      //
      try
          fOpenSqToQuery ('select zc_Enum_PaidKind_FirstForm from zc_Enum_PaidKind_FirstForm()');

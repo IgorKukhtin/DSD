@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDate_TransportGoods TDateTime
              , OperDate_TransportGoods_calc TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
-             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar, PersonalDriverName_TTN TVarChar, PersonalName_4_TTN TVarChar
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
@@ -161,7 +161,7 @@ end if;
              LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
              LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
         WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0);
-                         
+
 -- analyze tmpMovement;
 -- RAISE EXCEPTION '<%>', (select count(*) from tmpMovement);
 
@@ -195,7 +195,7 @@ end if;
                                    AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
                                    AND ObjectLink_Branch.ChildObjectId IN (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
                                 )*/
-          tmpMovement_all AS 
+          tmpMovement_all AS
                          (SELECT tmpMovement.Id, tmpMovement.OperDate, tmpMovement.InvNumber, tmpMovement.StatusId, tmpMovement.AccessKeyId FROM tmpMovement
                         /*SELECT Movement.Id
                                , Movement.OperDate
@@ -528,6 +528,12 @@ end if;
                                    WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalDriver()
                                   )
+       , tmpMLO_Personal_4 AS (SELECT MovementLinkObject.*
+                               FROM MovementLinkObject
+                               WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
+                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_Member4()
+                              )
+
 
        , tmpRoute AS (SELECT MovementLinkObject_Route.MovementId
                              , Object_Route.*
@@ -556,6 +562,13 @@ end if;
                                     LEFT JOIN Object AS Object_PersonalDriver
                                                      ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
                                )
+       , tmpPersonal_4 AS (SELECT MovementLinkObject_Personal_4.MovementId
+                                , Object_Personal.*
+                           FROM tmpMLO_Personal_4 AS MovementLinkObject_Personal_4
+                                LEFT JOIN Object AS Object_Personal
+                                                 ON Object_Personal.Id = MovementLinkObject_Personal_4.ObjectId
+                          )
+
        , tmpPartner AS (SELECT MovementLinkObject_Partner.MovementId
                             , Object_Partner.*
                     FROM tmpMLO_Partner AS MovementLinkObject_Partner
@@ -722,6 +735,9 @@ end if;
            , Object_Car.ValueData                      AS CarName
            , Object_CarModel.ValueData                 AS CarModelName
            , Object_PersonalDriver.ValueData           AS PersonalDriverName
+           , Object_PersonalDriver_TTN.ValueData       AS PersonalDriverName_TTN
+           , Object_Personal_4_TTN.ValueData           AS PersonalName_4_TTN
+           
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
@@ -912,7 +928,11 @@ end if;
                                              ON MS_InvNumberPartner_Master.MovementId = Movement_DocumentMaster.Id -- Movement_DocumentMaster.Id
             LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.Id
 
+            -- ТТН
             LEFT JOIN tmpMovement_TransportGoods AS Movement_TransportGoods ON Movement_TransportGoods.MovementId = Movement.Id
+            LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver_TTN ON Object_PersonalDriver_TTN.MovementId =  Movement_TransportGoods.Id
+            LEFT JOIN tmpPersonal_4     AS Object_Personal_4_TTN     ON Object_Personal_4_TTN.MovementId     =  Movement_TransportGoods.Id
+            
 
             LEFT JOIN tmpMovementLinkObject_ReestrKind AS MovementLinkObject_ReestrKind
                                                        ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
@@ -997,6 +1017,7 @@ end if;
                                 ON MovementBoolean_Peresort.MovementId = Movement_Production.Id
                                AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
+            -- Путевой лист
             LEFT JOIN tmpMovement_Transport AS Movement_Transport ON Movement_Transport.MovementId = Movement.Id
 
             LEFT JOIN tmpCar AS Object_Car ON Object_Car.MovementId = Movement_Transport.Id

@@ -435,7 +435,9 @@ END IF;*/
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
      -- !!!
-     vbIsPriceList_begin_recalc:= inUserId IN (6131893, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021';
+     vbIsPriceList_begin_recalc:= inUserId IN (6131893, 7015095, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021'
+                            --AND EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+                                 ;
 
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE AND inIsRecalcPrice = TRUE

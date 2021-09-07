@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                   Integer   , -- Ключ объекта <Документ>
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
     IN inBranchCode           Integer   , -- 
     IN inComment              TVarChar  , --
+    IN inIsListInventory      Boolean   , -- Инвентаризация только для выбранных товаров
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -143,6 +145,13 @@ BEGIN
      THEN
           -- сохранили связь с <Физические лица(Водитель/экспедитор)> 
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), inId, (SELECT Object_Personal_View.MemberId FROM Object_Personal_View WHERE Object_Personal_View.PersonalId = inMovementId_Transport));
+     END IF;
+     
+     -- дописали св-во - Инвентаризация только для выбранных товаров
+     IF inMovementDescId = zc_Movement_Inventory() AND inIsListInventory = TRUE
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
      END IF;
 
 

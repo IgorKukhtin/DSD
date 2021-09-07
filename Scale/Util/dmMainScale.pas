@@ -515,6 +515,7 @@ begin
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
+       Params.AddParam('inIsListInventory', ftBoolean, ptInput, execParamsMovement.ParamByName('isListInventory').AsBoolean);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
@@ -1568,6 +1569,7 @@ begin
                         execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then execParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;
@@ -1603,6 +1605,7 @@ begin
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then ParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;

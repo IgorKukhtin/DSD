@@ -48,14 +48,16 @@ BEGIN
           , Object_Status.Code               	              AS StatusCode
           , Object_Status.Name              		      AS StatusName
 
-          , 0   ::Integer                                     AS BonusKindId
-          , NULL::TVarChar                                    AS BonusKindName
-          , 0   ::Integer                                     AS PaidKindId
-          , NULL::TVarChar                                    AS PaidKindName
+          , Object_BonusKind.Id                               AS BonusKindId
+          , Object_BonusKind.ValueData                        AS BonusKindName
+          , Object_PaidKind.Id                                AS PaidKindId
+          , Object_PaidKind.ValueData                         AS PaidKindName
           , NULL::TFloat                                      AS TotalSumm
           , NULL::TVarChar                                    AS Comment
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Movement AS Movement_parent ON Movement_parent.Id = inParentId
+             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = 81959 -- Бонус
+             LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = zc_Enum_PaidKind_FirstForm()
         ;
     ELSE
         RETURN QUERY

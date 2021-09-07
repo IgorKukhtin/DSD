@@ -5,7 +5,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inIsProductionIn      Boolean   , --
     IN inBranchCode          Integer   , --
     IN inComment             TVarChar  , --
+    IN inIsListInventory     Boolean   , -- Инвентаризация только для выбранных товаров
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id        Integer
@@ -93,6 +95,15 @@ BEGIN
                                                       , inComment             := inComment
                                                       , inSession             := inSession
                                                        );
+
+     -- дописали св-во - Инвентаризация только для выбранных товаров
+     IF inMovementDescId = zc_Movement_Inventory() AND inIsListInventory = TRUE
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
+     END IF;
+
+
      -- Результат
      RETURN QUERY
        SELECT Movement.Id
