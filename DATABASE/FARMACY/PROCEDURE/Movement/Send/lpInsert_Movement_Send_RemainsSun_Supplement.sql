@@ -429,7 +429,7 @@ BEGIN
       INSERT INTO _tmpGoods_PromoUnit_Supplement
       SELECT OL_UnitCategory.Objectid                AS UnitId
            , MI_Goods.Objectid                       AS GoodsId
-           , MI_Goods.Amount * tmpUserUnit.CountUser AS Amount
+           , COALESCE(NULLIF(MIFloat_AmountPlanMax.ValueData, 0), MI_Goods.Amount) * tmpUserUnit.CountUser AS Amount
 
       FROM Movement
 
@@ -445,15 +445,19 @@ BEGIN
            INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                               AND MI_Goods.DescId = zc_MI_Master()
                                               AND MI_Goods.isErased = FALSE
-                                              AND MI_Goods.Amount > 0
                                             
+           LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                                       ON MIFloat_AmountPlanMax.MovementItemId = MI_Goods.Id
+                                      AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+                                                          
            INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MI_Goods.Objectid 
                                                           
            INNER JOIN tmpUserUnit ON tmpUserUnit.UnitId = OL_UnitCategory.Objectid
 
       WHERE Movement.StatusId = zc_Enum_Status_Complete()
         AND Movement.DescId = zc_Movement_PromoUnit()
-        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate);
+        AND Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)
+        AND COALESCE(NULLIF(MIFloat_AmountPlanMax.ValueData, 0), MI_Goods.Amount) > 0;
       
  --raise notice 'Value 05: %', (select Count(*) from _tmpGoods_PromoUnit_Supplement);      
 

@@ -294,6 +294,7 @@ inherited CashCloseReturnDialogForm: TCashCloseReturnDialogForm
         Name = 'inFiscalCheckNumber'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

@@ -180,6 +180,7 @@ type
     KVK: TcxGridDBColumn;
     actPrintStikerKVK: TdsdPrintAction;
     bbPrintStikerKVK: TdxBarButton;
+    cbisList: TcxCheckBox;
   private
   public
   end;

@@ -3987,9 +3987,13 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
-    exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerDialogForm');
@@ -3999,9 +4003,7 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerEditForm');
   //
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
-  exit;
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternal_SendOnPriceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternal_SendOnPriceJournalChoiceForm');
@@ -4012,22 +4014,20 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
-
-  //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
-  //
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
   exit;
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
-   }
+
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;

@@ -131,6 +131,11 @@ type
     actInsertMISecondPhotoFalse: TdsdExecStoredProc;
     dxBarButton16: TdxBarButton;
     dxBarButton17: TdxBarButton;
+    isMandatoryQuestion: TcxGridDBColumn;
+    actUpdate_MandatoryQuestion: TdsdExecStoredProc;
+    spUpdate_MandatoryQuestion: TdsdStoredProc;
+    dxBarButton18: TdxBarButton;
+    maMandatoryQuestion: TcxGridDBColumn;
   private
     { Private declarations }
   public

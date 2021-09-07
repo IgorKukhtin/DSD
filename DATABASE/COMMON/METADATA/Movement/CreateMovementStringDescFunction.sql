@@ -212,9 +212,15 @@ CREATE OR REPLACE FUNCTION zc_MovementString_CommentMarketing() RETURNS Integer 
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_CommentMarketing', 'Комментарий маркетинга' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CommentMarketing');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_CommentСhecking() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_CommentСhecking'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_CommentСhecking', 'Примечание для проверяющей' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CommentСhecking');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 06.09.21                                                                      * zc_MovementString_CommentСhecking
  26.04.21         * zc_MovementString_CommentStop
  15.02.21                                                                      * zc_MovementString_CommentMarketing
  25.06.20                                                                      * zc_MovementString_LetterSubject

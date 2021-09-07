@@ -79,7 +79,7 @@ BEGIN
                                 , tmpContainer.BranchId
                                 , tmpContainer.PersonalDriverId
                                 , tmpContainer.RouteId
-                                , tmpContainer.ProfitLossId
+                               --, tmpContainer.ProfitLossId
                                 , tmpContainer.BusinessId
                                 , tmpContainer.isAccount_50000
                                 , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)  AS WeightTransport
@@ -101,7 +101,7 @@ BEGIN
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
-                                       , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
+                                       --, CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                        , CLO_Business.ObjectId                       AS BusinessId
                                        , FALSE AS isAccount_50000
                                
@@ -126,7 +126,7 @@ BEGIN
                                        --LEFT JOIN tmpAccount_50000 ON tmpAccount_50000.AccountId = MIContainer.AccountId_Analyzer
                                   WHERE MIContainer.MovementId = inMovementId   --20787291 --
                                     AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
-                                    AND MIContainer.isActive = FALSE
+                                  --  AND MIContainer.isActive = FALSE
                                   GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                           , MIContainer.ObjectId_Analyzer
                                           , MIContainer.WhereObjectId_Analyzer 
@@ -134,7 +134,7 @@ BEGIN
                                           , MIContainer.ObjectExtId_Analyzer
                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
-                                          , CLO_ProfitLoss.ObjectId
+                                         -- , CLO_ProfitLoss.ObjectId
                                           , CLO_Business.ObjectId 
                                           , MovementItem.Id
                                           , MovementItem.ObjectId
@@ -155,7 +155,7 @@ BEGIN
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                        , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
-                                       , MIContainer.AccountId_Analyzer              AS ProfitLossId
+                                      -- , MIContainer.AccountId_Analyzer              AS ProfitLossId
                                        , 0                                           AS BusinessId
                                        , TRUE AS isAccount_50000
                                
@@ -182,7 +182,7 @@ BEGIN
                                           , MIContainer.ObjectExtId_Analyzer
                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
-                                          , MIContainer.AccountId_Analyzer
+                                          --, MIContainer.AccountId_Analyzer
                                           , MovementItem.Id
                                           , MovementItem.ObjectId
                               */
@@ -202,7 +202,7 @@ BEGIN
                                        , tmpContainer.BranchId
                                        , tmpContainer.PersonalDriverId
                                        , tmpContainer.RouteId
-                                       , tmpContainer.ProfitLossId
+                                       --, tmpContainer.ProfitLossId
                                        , tmpContainer.BusinessId
                                        , tmpContainer.isAccount_50000
                                 , (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)
@@ -415,7 +415,7 @@ BEGIN
                                  , COALESCE (tmpContainer.BranchId, tmpContainer2.BranchId)               AS BranchId
                                  , COALESCE (tmpContainer.PersonalDriverId, tmpContainer2.PersonalDriverId, tmpWeight.PersonalDriverId)  AS PersonalDriverId
                                  , COALESCE (tmpContainer.RouteId, tmpContainer2.RouteId)                 AS RouteId --tmpWeight.RouteId
-                                 , COALESCE (tmpContainer.ProfitLossId,tmpContainer2.ProfitLossId )       AS ProfitLossId
+                                 --, COALESCE (tmpContainer.ProfitLossId,tmpContainer2.ProfitLossId )       AS ProfitLossId
                                  , COALESCE (tmpContainer.BusinessId, tmpContainer2.BusinessId)           AS BusinessId
                                  , COALESCE (tmpContainer.isAccount_50000,tmpContainer2.isAccount_50000)  AS isAccount_50000
                                  , tmpWeight.PartnerId_Sale
@@ -431,7 +431,7 @@ BEGIN
                                                  , tmpContainer.UnitId
                                                  , tmpContainer.BranchId
                                                  , tmpContainer.PersonalDriverId
-                                                 , tmpContainer.ProfitLossId
+                                                -- , tmpContainer.ProfitLossId
                                                  , tmpContainer.BusinessId
                                                  , tmpContainer.isAccount_50000
                                                  , tmpContainer.MovementId
@@ -441,7 +441,7 @@ BEGIN
                                                    , tmpContainer.UnitId
                                                    , tmpContainer.BranchId
                                                    , tmpContainer.PersonalDriverId
-                                                   , tmpContainer.ProfitLossId
+                                                 --  , tmpContainer.ProfitLossId
                                                    , tmpContainer.BusinessId
                                                    , tmpContainer.isAccount_50000
                                                    , tmpContainer.MovementId
@@ -453,26 +453,26 @@ BEGIN
         , tmpUnion AS (SELECT tmpAll.MovementId
 
                             , (tmpAll.WeightSale)                    AS WeightSale
-                            , SUM(tmpAll.TotalSummsale)              AS TotalSummSale
+                            , SUM(COALESCE (tmpAll.TotalSummsale,0))              AS TotalSummSale
 
-                            , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
-                            , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_Transport
-                            , SUM(tmpAll.SumAmount_TransportAdd)     AS SumAmount_TransportAdd
-                            , SUM(tmpAll.SumAmount_TransportAddLong) AS SumAmount_TransportAddLong
-                            , SUM(tmpAll.SumAmount_TransportTaxi)    AS SumAmount_TransportTaxi
-                            , SUM(tmpAll.SumAmount_TransportService) AS SumAmount_TransportService
-                            , SUM(tmpAll.SumAmount_ServiceAdd)       AS SumAmount_ServiceAdd
-                            , SUM(tmpAll.SumAmount_PersonalSendCash) AS SumAmount_PersonalSendCash
-                            , SUM (tmpAll.SumAmount_TransportService + tmpAll.SumAmount_ServiceAdd) :: TFloat AS SumAmount_ServiceTotal
+                            , SUM(COALESCE (tmpAll.SumCount_Transport,0))         AS SumCount_Transport
+                            , SUM(COALESCE (tmpAll.SumAmount_Transport,0))        AS SumAmount_Transport
+                            , SUM(COALESCE (tmpAll.SumAmount_TransportAdd,0))     AS SumAmount_TransportAdd
+                            , SUM(COALESCE (tmpAll.SumAmount_TransportAddLong,0)) AS SumAmount_TransportAddLong
+                            , SUM(COALESCE (tmpAll.SumAmount_TransportTaxi,0))    AS SumAmount_TransportTaxi
+                            , SUM(COALESCE (tmpAll.SumAmount_TransportService,0)) AS SumAmount_TransportService
+                            , SUM(COALESCE (tmpAll.SumAmount_ServiceAdd,0))       AS SumAmount_ServiceAdd
+                            , SUM(COALESCE (tmpAll.SumAmount_PersonalSendCash,0)) AS SumAmount_PersonalSendCash
+                            , SUM (COALESCE (tmpAll.SumAmount_TransportService,0) + COALESCE (tmpAll.SumAmount_ServiceAdd,0)) :: TFloat AS SumAmount_ServiceTotal
 
-                            , SUM (tmpAll.SumAmount_Transport 
-                                 + tmpAll.SumAmount_TransportAdd 
-                                 + tmpAll.SumAmount_TransportAddLong 
-                                 + tmpAll.SumAmount_TransportTaxi 
-                                 + tmpAll.SumAmount_TransportService
-                                 + tmpAll.SumAmount_ServiceAdd
-                                 + tmpAll.SumAmount_PersonalSendCash) :: TFloat AS SumTotal
-                            , SUM(tmpAll.WeightTransport) AS WeightTransport
+                            , SUM (COALESCE (tmpAll.SumAmount_Transport,0) 
+                                 + COALESCE (tmpAll.SumAmount_TransportAdd,0) 
+                                 + COALESCE (tmpAll.SumAmount_TransportAddLong,0) 
+                                 + COALESCE (tmpAll.SumAmount_TransportTaxi,0) 
+                                 + COALESCE (tmpAll.SumAmount_TransportService,0)
+                                 + COALESCE (tmpAll.SumAmount_ServiceAdd,0)
+                                 + COALESCE (tmpAll.SumAmount_PersonalSendCash,0)) :: TFloat AS SumTotal
+                            , SUM(COALESCE (tmpAll.WeightTransport,0)) AS WeightTransport
 
                             , tmpAll.MovementId_Sale
                             , tmpAll.PartnerId_Sale
@@ -517,9 +517,8 @@ BEGIN
                            , tmpSale_Goods.GoodsKindId  AS GoodsKindId
                            , tmpSale_Goods.MeasureId
 
-                           , (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
-                           , (tmpUnion.SumAmount_Transport
-                               )        :: TFloat  AS SumAmount_Transport
+                           , (tmpUnion.SumCount_Transport)         :: TFloat AS SumCount_Transport 
+                           , (tmpUnion.SumAmount_Transport)        :: TFloat AS SumAmount_Transport
                            , (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
                            , (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
                            , (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
@@ -581,17 +580,19 @@ BEGIN
 
                            , SUM (tmpUnion.SumCount_Transport * tmpUnion.Koeff_kg) AS SumCount_Transport
                            , SUM (tmpUnion.SumAmount_Transport * tmpUnion.Koeff_kg) AS SumAmount_Transport
-                           , (tmpUnion.SumAmount_TransportAdd)     :: TFloat AS SumAmount_TransportAdd
-                           , (tmpUnion.SumAmount_TransportAddLong) :: TFloat AS SumAmount_TransportAddLong
-                           , (tmpUnion.SumAmount_TransportTaxi)    :: TFloat AS SumAmount_TransportTaxi
-                           , (tmpUnion.SumAmount_TransportService) :: TFloat AS SumAmount_TransportService
-                           , (tmpUnion.SumAmount_ServiceAdd)       :: TFloat AS SumAmount_ServiceAdd
+                           
+                           , SUM (tmpUnion.SumAmount_TransportAdd * tmpUnion.Koeff_kg)     :: TFloat AS SumAmount_TransportAdd
+                           , SUM (tmpUnion.SumAmount_TransportAddLong * tmpUnion.Koeff_kg) :: TFloat AS SumAmount_TransportAddLong
+                           , SUM (tmpUnion.SumAmount_TransportTaxi * tmpUnion.Koeff_kg)    :: TFloat AS SumAmount_TransportTaxi
+                           , SUM (tmpUnion.SumAmount_TransportService * tmpUnion.Koeff_kg) :: TFloat AS SumAmount_TransportService
+                           , SUM (tmpUnion.SumAmount_ServiceAdd * tmpUnion.Koeff_kg)       :: TFloat AS SumAmount_ServiceAdd
+                           
                            , SUM (tmpUnion.SumAmount_ServiceTotal  * tmpUnion.Koeff_kg) AS SumAmount_ServiceTotal
-                           , (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
+                           , SUM (tmpUnion.SumAmount_PersonalSendCash) :: TFloat AS SumAmount_PersonalSendCash
                            , SUM (tmpUnion.SumTotal * tmpUnion.Koeff_kg) AS SumTotal
                            , tmpUnion.SumTotal * tmpUnion.Koeff_kg AS SumTotal_calc
                
-                           , (tmpUnion.WeightTransport):: TFloat  AS WeightTransport
+                           , (tmpUnion.WeightTransport)      :: TFloat  AS WeightTransport
                            , (tmpUnion.TotalWeight_Sale)     :: TFloat  AS TotalWeight_Sale
                            , SUM (COALESCE (tmpUnion.TotalWeight_Doc,0) * tmpUnion.Koeff_kg) :: TFloat  AS TotalWeight_Doc
 
@@ -624,13 +625,13 @@ BEGIN
                             , tmpUnion.GoodsKindId
                             , tmpUnion.MeasureId
 
-                            , (tmpUnion.SumAmount_TransportAdd)
+                           /*, (tmpUnion.SumAmount_TransportAdd)
                             , (tmpUnion.SumAmount_TransportAddLong)
                             , (tmpUnion.SumAmount_TransportTaxi)
                             , (tmpUnion.SumAmount_TransportService)
                             , (tmpUnion.SumAmount_ServiceAdd)
                             , (tmpUnion.SumAmount_PersonalSendCash)
-                            , tmpUnion.SumTotal
+                           */ , tmpUnion.SumTotal
                             , tmpUnion.SumTotal * tmpUnion.Koeff_kg
                             , (tmpUnion.WeightTransport)
                             , tmpUnion.TotalWeight_Sale

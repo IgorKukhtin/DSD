@@ -358,6 +358,17 @@ object WeighingPartnerForm: TWeighingPartnerForm
       TabOrder = 40
       Width = 319
     end
+    object cbisList: TcxCheckBox
+      Left = 587
+      Top = 99
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 41
+      Width = 129
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -2553,6 +2564,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbisList
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Child(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , Orders Integer, Replies Integer, CorrectAnswer Integer
+             , Orders Integer, Replies Integer, CorrectAnswer Integer, isMandatoryQuestion Boolean
              , Question TBLOB
              , RandomID Integer
              , isErased Boolean
@@ -42,6 +42,7 @@ BEGIN
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id)::Integer as Orders
              , tmpReplies.Replies::Integer                         AS Replies 
              , tmpReplies.CorrectAnswer::Integer                   AS CorrectAnswer 
+             , COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) AS isMandatoryQuestion
              , MIBLOB_Question.ValueData                           AS Question
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomID
              , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
@@ -53,6 +54,10 @@ BEGIN
             LEFT JOIN MovementItemBLOB AS MIBLOB_Question
                                        ON MIBLOB_Question.MovementItemId = MovementItem.Id
                                       AND MIBLOB_Question.DescId = zc_MIBLOB_Question()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
+                                          ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Child()

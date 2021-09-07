@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumber_Parent TVarChar, MovementId_parent Integer, OperDate_Parent TDateTime
-             , isProductionIn Boolean, isAuto Boolean
+             , isProductionIn Boolean, isAuto Boolean, isList Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , MovementDescNumber Integer
@@ -48,6 +48,7 @@ BEGIN
 
              , FALSE                 AS isProductionIn
              , FALSE                 AS isAuto
+             , FALSE                 AS isList
              , CAST (CURRENT_DATE AS TDateTime) AS StartWeighing
              , CAST (CURRENT_DATE AS TDateTime) AS EndWeighing
 
@@ -102,6 +103,7 @@ BEGIN
 
              , MovementBoolean_isIncome.ValueData    AS isProductionIn
              , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+             , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean  AS isList
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
@@ -149,6 +151,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId = Movement.Id
@@ -235,6 +240,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.09.21         *
  03.03.20         * Add Order
  24.11.16         *
  14.06.16         *

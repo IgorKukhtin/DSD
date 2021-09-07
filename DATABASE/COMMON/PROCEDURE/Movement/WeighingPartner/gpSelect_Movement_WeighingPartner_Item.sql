@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberOrder TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , isList Boolean
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
@@ -191,6 +192,8 @@ BEGIN
              , Object_CarModel.ValueData                 AS CarModelName
              , COALESCE(Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
+             
+             , COALESCE (MovementBoolean_List.ValueData,False) :: Boolean AS isList
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
@@ -342,6 +345,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -669,6 +676,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.09.21         *
  08.02.21         * Comment
  17.08.20         *
  04.11.19         *
