@@ -282,6 +282,8 @@ type
     actPrint_two: TdsdPrintAction;
     mactPrint_QualityDoc_two: TMultiAction;
     bbPrint_QualityDoc_two: TdxBarButton;
+    PersonalDriverName_TTN: TcxGridDBColumn;
+    PersonalName_4_TTN: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -5,6 +5,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -335
+  ExplicitTop = -113
   ExplicitWidth = 1124
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -236,55 +238,23 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'InvNumber_Transport'
+          object PersonalDriverName_TTN: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1058#1058#1053
+            DataBinding.FieldName = 'PersonalDriverName_TTN'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 61
-          end
-          object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'OperDate_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object CarModelName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            DataBinding.FieldName = 'CarModelName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 89
-          end
-          object CarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
             Width = 80
           end
-          object PersonalDriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'PersonalDriverName'
+          object PersonalName_4_TTN: TcxGridDBColumn
+            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1080#1082' '#1058#1058#1053
+            DataBinding.FieldName = 'PersonalName_4_TTN'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -565,6 +535,56 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object InvNumber_Transport: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'InvNumber_Transport'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 61
+          end
+          object OperDate_Transport: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'OperDate_Transport'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object CarModelName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarModelName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
+            Options.Editing = False
+            Width = 89
+          end
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalDriverName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'PersonalDriverName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
+            Options.Editing = False
+            Width = 70
           end
           object CurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
@@ -2303,8 +2323,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Action = actPrintPack
-        end
-        item
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2775,6 +2793,90 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
       ImageIndex = 55
     end
+    object macPrintPackList_TTN: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrintPack_TTN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072'?'
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' <'#1058#1058#1053'>'
+      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' <'#1058#1058#1053'>'
+      ImageIndex = 20
+    end
+    object macPrintPack_TTN: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_TTN_two
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+    end
+    object actPrint_TTN_two: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN_two'
+      Hint = 'actPrint_TTN_two'
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3168,11 +3270,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
-    object N13: TMenuItem [12]
+    object miPrintPacklist: TMenuItem [12]
       Action = macPrintPacklist
     end
-    object N14: TMenuItem [13]
+    object miPrintPackList_Transport: TMenuItem [13]
       Action = macPrintPackList_Transport
+    end
+    object miPrintPackList_TTN: TMenuItem [14]
+      Action = macPrintPackList_TTN
     end
   end
   inherited PeriodChoice: TPeriodChoice

@@ -27,7 +27,8 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId)
-                 OR vbUserId = 943150 -- Туржанская А.В.
+                 OR vbUserId = 943150  -- Туржанская А.В.
+                 OR vbUserId = 7117614 -- Уряшева М.В.
                  ;
 
    -- Результат

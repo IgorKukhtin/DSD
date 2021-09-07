@@ -45,9 +45,10 @@ BEGIN
 
    -- определяется уровень доступа
    IF vbUserId <> 9457 -- Климентьев К.И.
-      AND vbUserId <> 447966 -- Черниловский С.Ф.
-      AND vbUserId <> 280162 -- Панасенко А.Н.
-      AND vbUserId <> 943150 -- Туржанская А.В.
+      AND vbUserId <> 447966  -- Черниловский С.Ф.
+      AND vbUserId <> 280162  -- Панасенко А.Н.
+      AND vbUserId <> 943150  -- Туржанская А.В.
+      AND vbUserId <> 7117614 -- Уряшева М.В.
    THEN
        vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId
                                 FROM Object_RoleAccessKeyGuide_View

@@ -165,8 +165,8 @@ type
     actPrintPack: TdsdPrintAction;
     macPrintPack: TMultiAction;
     macPrintPacklist: TMultiAction;
-    N13: TMenuItem;
-    N14: TMenuItem;
+    miPrintPacklist: TMenuItem;
+    miPrintPackList_Transport: TMenuItem;
     spSelectPrint_Total_To: TdsdStoredProc;
     actPrint_Total_To: TdsdPrintAction;
     mactPrint_Sale_Total_To: TMultiAction;
@@ -212,6 +212,12 @@ type
     mactExport: TMultiAction;
     macExportAll: TMultiAction;
     bbExport: TdxBarButton;
+    macPrintPackList_TTN: TMultiAction;
+    macPrintPack_TTN: TMultiAction;
+    miPrintPackList_TTN: TMenuItem;
+    actPrint_TTN_two: TdsdPrintAction;
+    PersonalDriverName_TTN: TcxGridDBColumn;
+    PersonalName_4_TTN: TcxGridDBColumn;
   private
     { Private declarations }
   public

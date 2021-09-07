@@ -256,6 +256,8 @@ type
     actUpdate_isMail: TdsdExecStoredProc;
     macExportAll: TMultiAction;
     bbmacExportAll: TdxBarButton;
+    PersonalDriverName_TTN: TcxGridDBColumn;
+    PersonalName_4_TTN: TcxGridDBColumn;
   private
     { Private declarations }
   public
