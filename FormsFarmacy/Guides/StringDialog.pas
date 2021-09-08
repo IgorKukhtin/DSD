@@ -1,4 +1,4 @@
-unit TextDialog;
+unit StringDialog;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   cxMemo;
 
 type
-  TTextDialogForm = class(TParentForm)
+  TStringDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -21,7 +21,7 @@ type
     FormParams: TdsdFormParams;
     ActionList: TActionList;
     cxLabem: TcxMemo;
-    cxText: TcxMemo;
+    cxTextEdit1: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -33,6 +33,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTextDialogForm);
+  RegisterClass(TStringDialogForm);
 
 end.

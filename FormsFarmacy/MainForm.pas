@@ -853,6 +853,8 @@ type
     actReport_LayoutCheckRemains: TdsdOpenForm;
     N311: TMenuItem;
     spGet_MainForm_isTop: TdsdStoredProc;
+    actReport_CheckZReport: TdsdOpenForm;
+    Z2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

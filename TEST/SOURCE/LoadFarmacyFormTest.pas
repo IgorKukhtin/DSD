@@ -1016,6 +1016,11 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LayoutCheckRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LayoutCheckRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LayoutCheckRemainsDialogForm'));
@@ -3022,6 +3027,9 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStringDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStringDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTextDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTextDialogForm');
 

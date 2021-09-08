@@ -131,7 +131,7 @@ BEGIN
                                
     WHERE Movement.Id = inMovementId;
     
-    IF COALESCE (inCommentSendID, 0) <> 0 AND COALESCE(vbCommentSendID, 0) = 16978916
+    IF COALESCE (inCommentSendID, 0) <> 0
     THEN
        WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                        , MovementItemProtocol.MovementItemId
@@ -173,7 +173,7 @@ BEGIN
        INTO vbAmountAuto
        FROM tmpProtocol;
 
-       IF  COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0)
+       IF  COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0) AND COALESCE(vbAmountAuto, 0) <> 0
        THEN
           RAISE EXCEPTION 'Ошибка. Количество % равно сформировано % уберите причину уменьшения количества!', inAmount, vbAmountAuto;
        END IF;

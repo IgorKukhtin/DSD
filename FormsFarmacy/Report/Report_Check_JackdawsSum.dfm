@@ -399,6 +399,14 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
             Options.Editing = False
             Width = 90
           end
+          object CommentChecking: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1103#1102#1097#1077#1081
+            DataBinding.FieldName = 'CommentChecking'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 229
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -710,6 +718,63 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091'>'
       ImageIndex = 56
     end
+    object actInputCommentChecking: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSummaDialogForm'
+      FormName = 'TStringDialogForm'
+      FormNameParam.Value = 'TStringDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'CommentChecking'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1057#1091#1084#1084#1072' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1087#1086' '#1092#1072#1082#1090#1091
+          Component = FormParams
+          ComponentItem = 'CommentCheckingLabel'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_CommentChecking: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'CommentChecking'
+          FromParam.Value = Null
+          FromParam.Component = JackdawsCheckCDS
+          FromParam.ComponentItem = 'CommentChecking'
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'CommentChecking'
+          ToParam.Value = 0.000000000000000000
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'CommentChecking'
+          ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
+        end>
+      AfterAction = actRefresh
+      BeforeAction = actInputCommentChecking
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CommentChecking
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CommentChecking
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1103#1102#1097#1077#1081'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1103#1102#1097#1077#1081'>'
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -806,6 +871,14 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         item
           Visible = True
           ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_CommentChecking'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -844,6 +917,10 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     end
     object dxBarButton4: TdxBarButton
       Action = actUpdate_SummaReceivedFact
+      Category = 0
+    end
+    object bbUpdate_CommentChecking: TdxBarButton
+      Action = actUpdate_CommentChecking
       Category = 0
     end
   end
@@ -891,6 +968,18 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
         Name = 'Json'
         Value = Null
         DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentChecking'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentCheckingLabel'
+        Value = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1103#1102#1097#1077#1081
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -1028,7 +1117,7 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
     Params = <
       item
         Name = 'inSummaReceivedFact'
-        Value = Null
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'SummaReceivedFact'
         DataType = ftFloat
@@ -1117,6 +1206,32 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
       end>
     PackSize = 1
     Left = 842
+    Top = 456
+  end
+  object spUpdate_CommentChecking: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_Update_CommentChecking'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = JackdawsCheckCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentChecking'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CommentChecking'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 298
     Top = 456
   end
 end

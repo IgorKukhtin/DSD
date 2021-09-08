@@ -65,6 +65,11 @@ type
     actUpdateJackdawsCheckCDS: TdsdUpdateDataSet;
     spUpdate_RetrievedAccountingCDC: TdsdStoredProc;
     actSummaReceivedToJson: TdsdDataToJsonAction;
+    CommentChecking: TcxGridDBColumn;
+    actInputCommentChecking: TExecuteDialog;
+    actUpdate_CommentChecking: TdsdExecStoredProc;
+    spUpdate_CommentChecking: TdsdStoredProc;
+    bbUpdate_CommentChecking: TdxBarButton;
   private
     { Private declarations }
   public

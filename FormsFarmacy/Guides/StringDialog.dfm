@@ -1,10 +1,10 @@
-object TextDialogForm: TTextDialogForm
+object StringDialogForm: TStringDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
   Caption = #1042#1074#1086#1076
-  ClientHeight = 240
-  ClientWidth = 403
+  ClientHeight = 186
+  ClientWidth = 502
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,23 +17,23 @@ object TextDialogForm: TTextDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 65
-    Top = 186
+    Left = 81
+    Top = 130
     Width = 75
     Height = 25
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 1
+    TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 239
-    Top = 183
+    Left = 334
+    Top = 129
     Width = 75
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxLabem: TcxMemo
     AlignWithMargins = True
@@ -50,17 +50,15 @@ object TextDialogForm: TTextDialogForm
     Style.Shadow = False
     StyleDisabled.BorderStyle = ebsNone
     StyleDisabled.TextColor = clWindowText
-    TabOrder = 3
+    TabOrder = 2
     Height = 47
-    Width = 328
+    Width = 416
   end
-  object cxText: TcxMemo
-    Left = 24
-    Top = 77
-    Properties.AutoSelect = True
-    TabOrder = 0
-    Height = 100
-    Width = 361
+  object cxTextEdit1: TcxTextEdit
+    Left = 40
+    Top = 80
+    TabOrder = 3
+    Width = 417
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 158
@@ -84,8 +82,8 @@ object TextDialogForm: TTextDialogForm
       item
         Name = 'Text'
         Value = 100.000000000000000000
-        Component = cxText
-        DataType = ftWideString
+        Component = cxTextEdit1
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

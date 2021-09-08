@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , isRetrievedAccounting Boolean
              , TotalSumm TFloat
              , SummaReceivedFact TFloat
+             , CommentChecking TVarChar
              )
 AS
 $BODY$
@@ -71,14 +72,15 @@ BEGIN
        , Movement.InvNumber
        , Movement.OperDate
        , Movement.OperDateDay
-       , Object_Unit.ID            AS UnitID
+       , Object_Unit.ID                             AS UnitID
        , Object_Unit.ObjectCode
        , Object_Unit.ValueData
 
-       , Movement.JackdawsChecksName AS JackdawsChecksName
+       , Movement.JackdawsChecksName                AS JackdawsChecksName
        , COALESCE(MovementBoolean_RetrievedAccounting.ValueData,FALSE)   AS isRetrievedAccounting
-       , Movement.TotalSumm          AS TotalSumm
-       , Movement.SummaReceivedFact  AS SummaReceivedFact
+       , Movement.TotalSumm                         AS TotalSumm
+       , Movement.SummaReceivedFact                 AS SummaReceivedFact
+       , MovementString_CommentChecking.ValueData   AS CommentChecking
   FROM tmpMovement AS Movement 
   
        INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -93,6 +95,10 @@ BEGIN
                                  ON MovementBoolean_RetrievedAccounting.MovementId = Movement.Id
                                 AND MovementBoolean_RetrievedAccounting.DescId = zc_MovementBoolean_RetrievedAccounting()
                             
+       LEFT JOIN MovementString AS MovementString_CommentChecking
+                                ON MovementString_CommentChecking.MovementId = Movement.Id
+                               AND MovementString_CommentChecking.DescId = zc_MovementString_CommentChecking()
+
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
 
   ORDER BY Movement.UnitId
@@ -111,4 +117,7 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_Check_JackdawsCheck(inStartDate:= '01.05.2021', inEndDate:= '31.05.2021', inUnitId := 0, inSession := '3');
+
+
+select * from gpReport_Check_JackdawsCheck(inStartDate := ('07.08.2021')::TDateTime , inEndDate := ('07.08.2021')::TDateTime , inUnitId := 0 ,  inSession := '3');
+
