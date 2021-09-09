@@ -1,0 +1,47 @@
+-- Function: gpUpdateObject_Goods_Name_BUH()
+
+DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Name_BUH (Integer, TVarChar, TDateTime, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdate_Object_Goods_Name_BUH(
+    IN inId                Integer   , -- Ключ объекта <товар>
+    IN inName_BUH          TVarChar  , -- 
+    IN inDate_BUH          TDateTime , -- Дата до которой действует Название товара(бухг.)
+    IN inSession           TVarChar    -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+    DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Goods_Name_BUH());
+     --vbUserId:= lpGetUserBySession (inSession);
+
+
+     IF COALESCE (inId,0) = 0
+     THEN
+         RETURN;
+     END IF;
+
+     -- сохранили свойство <Название БУХГ>
+     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), inId, inName_BUH);
+     -- сохранили свойство <Дата до которой действует Название товара(бухг.)>
+     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), inId, CASE WHEN inDate_BUH = CURRENT_DATE THEN NULL ELSE inDate_BUH END);
+
+
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
+  
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.09.21         *
+*/
+
+
+-- тест
+-- SELECT * FROM gpUpdateObject_Goods_UKTZED (ioId:= 275079, inUKTZED:= '456/45', inSession:= '2')

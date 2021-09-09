@@ -1306,7 +1306,8 @@ uses
   WorkTimeKind_Holiday in '..\..\Forms\Kind\WorkTimeKind_Holiday.pas' {WorkTimeKind_HolidayForm: TParentForm},
   Report_GoodsMI_SaleReturnIn_PaidKindDialog in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKindDialog.pas' {Report_GoodsMI_SaleReturnIn_PaidKindDialogForm: TParentForm},
   Report_GoodsMI_SaleReturnIn_PaidKind in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKind.pas' {Report_GoodsMI_SaleReturnIn_PaidKindForm: TParentForm},
-  PromoInvoice in '..\..\Forms\Document\PromoInvoice.pas' {PromoInvoiceForm: TParentForm};
+  PromoInvoice in '..\..\Forms\Document\PromoInvoice.pas' {PromoInvoiceForm: TParentForm},
+  Goods_Name_BUHDialog in '..\..\Forms\Guides\Goods_Name_BUHDialog.pas' {Goods_Name_BUHDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
