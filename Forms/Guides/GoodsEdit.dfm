@@ -310,6 +310,7 @@
   object edName_BUH: TcxTextEdit
     Left = 40
     Top = 107
+    Properties.ReadOnly = True
     TabOrder = 37
     Width = 175
   end
@@ -322,6 +323,7 @@
     Left = 221
     Top = 107
     EditValue = 42005d
+    Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 39
@@ -388,14 +390,6 @@
         Name = 'inName'
         Value = ''
         Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName_BUH'
-        Value = Null
-        Component = edName_BUH
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -510,19 +504,27 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDate_BUH'
-        Value = Null
-        Component = edDate_BUH
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inValuePrice'
         Value = Null
         Component = cePrice
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_BUH'
+        Value = Null
+        Component = edName_BUH
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDate_BUH'
+        Value = Null
+        Component = edDate_BUH
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
