@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
+             , CardBank TVarChar, CardBankSecond TVarChar
              , Comment TVarChar
              , isOfficial Boolean
              , isNotCompensation Boolean
@@ -130,6 +131,8 @@ end if;
          , ObjectString_CardChild.ValueData         AS CardChild
          , ObjectString_CardIBAN.ValueData          AS CardIBAN
          , ObjectString_CardIBANSecond.ValueData    AS CardIBANSecond
+         , ObjectString_CardBank.ValueData          AS CardBank
+         , ObjectString_CardBankSecond.ValueData    AS CardBankSecond
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
@@ -265,6 +268,14 @@ end if;
           LEFT JOIN ObjectString AS ObjectString_CardIBANSecond
                                  ON ObjectString_CardIBANSecond.ObjectId = Object_Member.Id 
                                 AND ObjectString_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
+
+          LEFT JOIN ObjectString AS ObjectString_CardBank
+                                 ON ObjectString_CardBank.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardBank.DescId = zc_ObjectString_Member_CardBank()
+          LEFT JOIN ObjectString AS ObjectString_CardBankSecond
+                                 ON ObjectString_CardBankSecond.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
+
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -466,7 +477,10 @@ end if;
            , CAST ('' as TVarChar)  AS CardChild
            , CAST ('' AS TVarChar)  AS CardIBAN
            , CAST ('' AS TVarChar)  AS CardIBANSecond
+           , CAST ('' AS TVarChar)  AS CardBank
+           , CAST ('' AS TVarChar)  AS CardBankSecond
            , CAST ('' as TVarChar)  AS Comment
+           
            , FALSE                  AS isOfficial
            , FALSE                  AS isNotCompensation
 

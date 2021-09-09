@@ -136,6 +136,10 @@ type
     GuidesRegion: TdsdGuides;
     cxLabel23: TcxLabel;
     edRegion: TcxButtonEdit;
+    cxLabel45: TcxLabel;
+    cxLabel46: TcxLabel;
+    ceCardBank: TcxTextEdit;
+    ceCardBankSecond: TcxTextEdit;
   private
     { Private declarations }
   public

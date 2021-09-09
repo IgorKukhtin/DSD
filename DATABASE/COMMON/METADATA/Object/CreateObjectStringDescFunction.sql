@@ -338,6 +338,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_PSP_D() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_PSP_D', zc_object_Member(), 'Паспорт, дата выдачи' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_PSP_D');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBank', zc_object_Member(), 'Номер банковской карточки ЗП Ф1' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBankSecond', zc_object_Member(), 'Номер банковской карточки ЗП Ф2' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond');
+
 ---
 CREATE OR REPLACE FUNCTION zc_ObjectString_ModelService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ModelService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1344,6 +1352,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 09.09.21         * zc_ObjectString_Member_CardBank
+                    zc_ObjectString_Member_CardBankSecond
  06.08.21         * zc_ObjectString_Personal_Comment
  12.07.21         * zc_ObjectString_MobilePack_Comment
  14.06.21         * zc_ObjectString_ReceiptLevel_Comment
