@@ -108,6 +108,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 128
           end
+          object FiscalCheckNumber: TcxGridDBColumn
+            Caption = #8470' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'FiscalCheckNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+          object ZReport: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' Z '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'ZReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -140,13 +155,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
-          end
-          object FiscalCheckNumber: TcxGridDBColumn
-            DataBinding.FieldName = 'FiscalCheckNumber'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
         end
       end
@@ -275,120 +283,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object PrintDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'actCheckPrintDialog'
-      ImageIndex = 3
-      FormName = 'TCheckPrintDialogForm'
-      FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
-      FormNameParam.ParamType = ptInputOutput
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
-      ReportNameParam.Value = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrint: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = PrintDialog
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 3
-    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn'
@@ -433,8 +327,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       26
       0)
     object bbmacPrint: TdxBarButton
-      Action = macPrint
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Visible = ivAlways
       ImageIndex = 15
     end
   end
@@ -482,42 +378,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     StoredProcName = 'gpReComplete_Movement_ReturnIn'
     Left = 384
     Top = 120
-  end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 564
-    Top = 169
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 564
-    Top = 214
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 656
-    Top = 184
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

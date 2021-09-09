@@ -466,7 +466,28 @@ object CheckoutTestingForm: TCheckoutTestingForm
     end
     object actInsertUpdate: TdsdExecStoredProc
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = '='
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Name = 'GUID'
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'GUID'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'GUID'
+          ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
+        end>
       AfterAction = actRefresh
       BeforeAction = actOpenGUIDUnit
       PostDataSetBeforeExecute = False

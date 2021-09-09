@@ -145,15 +145,12 @@ BEGIN
             , tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
-                                         , CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
-                                                THEN tmpLayoutAll.Amount ELSE MCS_Value.ValueData END                    AS MCSValue
+                                         , (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0))::TFloat      AS MCSValue
                                          , CASE WHEN Price_MCSValueMin.ValueData is not null
                                                 THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < 
-                                                               COALESCE (CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
-                                                                              THEN tmpLayoutAll.Amount ELSE MCS_Value.ValueData END , 0) 
+                                                               COALESCE (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0), 0) 
                                                           THEN COALESCE(Price_MCSValueMin.ValueData,0) 
-                                                          ELSE CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
-                                                                    THEN tmpLayoutAll.Amount ELSE MCS_Value.ValueData END END
+                                                          ELSE COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0) END
                                                 ELSE 0
                                            END ::TFloat AS MCSValue_min
                                          , COALESCE(tmpLayoutAll.Amount, 0) AS Layout
@@ -180,7 +177,7 @@ BEGIN
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                       AND (COALESCE(MCS_isClose.ValueData,False) = False OR COALESCE(tmpLayoutAll.Amount,0) > 0) 
-                                      AND (COALESCE(MCS_Value.ValueData,0) > 0 OR COALESCE(tmpLayoutAll.Amount,0) > 0)
+                                      AND (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0)) > 0
                                    )
               -- данные из ассорт. матрицы
             , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId

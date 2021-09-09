@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterId Integer, CashRegisterName TVarChar
-             , FiscalCheckNumber TVarChar
+             , ZReport Integer, FiscalCheckNumber TVarChar
              , IdCheck Integer, InvNumberCheck TVarChar, OperDateCheck TDateTime
              , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat, TotalSummPayAddCheck TFloat
 
@@ -41,8 +41,7 @@ BEGIN
         RETURN QUERY
         SELECT
             0                                                AS Id
---          , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
-          , CAST ('' AS TVarChar) AS InvNumber
+          , CAST (NEXTVAL ('movement_ReturnIn_seq') AS TVarChar) AS InvNumber
           , CURRENT_DATE::TDateTime                          AS OperDate
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name              	             AS StatusName
@@ -57,6 +56,7 @@ BEGIN
           , 0::Integer                                       AS CashRegisterId
           , ''::TVarChar                                     AS CashRegisterName
 
+          , 0::Integer                                       AS ZReport
           , ''::TVarChar                                     AS FiscalCheckNumber
 
           , 0::Integer                                       AS IdCheck
@@ -90,6 +90,7 @@ BEGIN
            , MovementLinkObject_CashRegister.ObjectId   AS CashRegisterId
            , Object_CashRegister.ValueData              AS CashRegisterName
 
+           , MovementFloat_ZReport.ValueData::Integer           AS ZReport
            , MovementString_FiscalCheckNumber.ValueData AS FiscalCheckNumber
 
            , MovementCheck.Id                           AS IdCheck
@@ -113,6 +114,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
                                     ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_ReturnIn.Id
                                    AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                    ON MovementFloat_ZReport.MovementId =  Movement_ReturnIn.Id
+                                   AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
 
 	        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                          ON MovementLinkObject_PaidType.MovementId = Movement_ReturnIn.Id
@@ -167,4 +171,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 19806544, inSession:= '3')
+SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 0, inSession:= '3')

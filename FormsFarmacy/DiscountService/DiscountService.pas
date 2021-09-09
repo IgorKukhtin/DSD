@@ -138,6 +138,28 @@ begin
      Result:=  gfStrToFloat(aValue);
 end;
 // для Теста
+procedure Add_DiscontLog_XML(AMessage: String);
+var
+  F: TextFile;
+begin
+  try
+    AssignFile(F, ChangeFileExt(Application.ExeName, '_DiscontLog.xml'));
+    if not fileExists(ChangeFileExt(Application.ExeName, '_DiscontLog.xml')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try
+      Writeln(F, AMessage);
+    finally
+      CloseFile(F);
+    end;
+  except
+  end;
+end;
+// для Теста
 procedure SaveToXMLFile_CheckItem(Source : ArrayOfCardCheckItem);
 var
   i : integer;
@@ -185,12 +207,16 @@ var
       XML: IXMLDocument;
       XMLStr: InvString;
 begin
+  try
       XML:= NewXMLDocument;
       NodeRoot:= XML.AddChild('Root');
       NodeParent:= NodeRoot.AddChild('Parent');
       Converter:= TSOAPDomConv.Create(NIL);
       NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
-      XML.SaveToFile('D:\21ItemCommit.xml');
+      Add_DiscontLog_XML(XML.XML.Text);
+  except
+  end;
+//      XML.SaveToFile('D:\21ItemCommit.xml');
 end;
 procedure SaveToXMLFile_ItemCommitRes(Source : TRemotable);
 var
@@ -567,7 +593,7 @@ begin
               aSaleRequest.Items := SendList;
 
               //!!!для теста!!!
-              //***SaveToXMLFile_ItemCommit(aSaleRequest);
+              SaveToXMLFile_ItemCommit(aSaleRequest);
               //!!!для теста!!!
 
               // Отправили запрос
@@ -575,6 +601,7 @@ begin
 
               //!!!для теста!!!
               //***SaveToXMLFile_ItemCommitRes(ResList);
+              SaveToXMLFile_ItemCommit(ResList);
               //!!!для теста!!!
 
 

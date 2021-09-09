@@ -3,7 +3,6 @@ inherited ReturnInCashForm: TReturnInCashForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -25,19 +24,8 @@ inherited ReturnInCashForm: TReturnInCashForm
     inherited actPrint: TdsdPrintAction
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
         end
         item
-          DataSet = PrintItemsCDS
-        end>
-    end
-    inherited actPrintCheck: TdsdPrintAction
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
         end>
     end
     object actCashCloseReturnDialog: TdsdOpenStaticForm
@@ -157,42 +145,6 @@ inherited ReturnInCashForm: TReturnInCashForm
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
-      end>
-  end
-  inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
   end
   inherited GuidesUnit: TdsdGuides

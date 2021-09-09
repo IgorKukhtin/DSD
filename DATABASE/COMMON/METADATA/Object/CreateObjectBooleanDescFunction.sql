@@ -1008,9 +1008,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PositionLevel_NoSheetCalc() RETURNS 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PositionLevel(), 'zc_ObjectBoolean_PositionLevel_NoSheetCalc', 'исключить из расчета эффективности работы персонала' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_WorkTimeKind_NoSheetChoice');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Maker_UnPlanned() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Maker_UnPlanned'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectBoolean_Maker_UnPlanned', 'Отправить внеплановые отчеты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Maker_UnPlanned');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 09.09.21                                                                                                          * zc_ObjectBoolean_Maker_UnPlanned
  19.08.21         * zc_ObjectBoolean_WorkTimeKind_NoSheetChoice
                     zc_ObjectBoolean_PositionLevel_NoSheetCalc
  27.07.21                                                                                                          * zc_ObjectBoolean_Unit_ParticipDistribListDiff, zc_ObjectBoolean_Unit_ParticipDistribListDiff

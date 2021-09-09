@@ -23,12 +23,6 @@ type
     TotalSumm: TcxGridDBColumn;
     Id: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
-    PrintDialog: TExecuteDialog;
-    actPrint: TdsdPrintAction;
-    macPrint: TMultiAction;
     bbmacPrint: TdxBarButton;
     FiscalCheckNumber: TcxGridDBColumn;
     cxLabel3: TcxLabel;
@@ -38,6 +32,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     InvNumberCheck: TcxGridDBColumn;
     OperDateCheck: TcxGridDBColumn;
+    ZReport: TcxGridDBColumn;
   private
     { Private declarations }
   public
