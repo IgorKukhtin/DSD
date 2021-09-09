@@ -3867,6 +3867,10 @@
 				<Form>Report_CheckZReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MakerReport.pas">
+				<Form>MakerReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

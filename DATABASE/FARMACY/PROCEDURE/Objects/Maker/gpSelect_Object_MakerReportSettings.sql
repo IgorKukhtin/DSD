@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Maker()
+-- Function: gpSelect_Object_MakerReportSettings()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Maker(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MakerReportSettings(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Maker(
+CREATE OR REPLACE FUNCTION gpSelect_Object_MakerReportSettings(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport6  Boolean
              , isReport7  Boolean
              , isQuarter  Boolean
-             , is4Month  Boolean
+             , is4Month   Boolean
              , isUnPlanned Boolean 
              , StartDateUnPlanned TDateTime
              , EndDateUnPlanned   TDateTime
@@ -161,7 +161,8 @@ $BODY$BEGIN
                                 ON ObjectFloat_Month.ObjectId = Object_Maker.Id
                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_Maker_Month()
 
-     WHERE Object_Maker.DescId = zc_Object_Maker();
+     WHERE Object_Maker.DescId = zc_Object_Maker()
+       AND COALESCE (ObjectString_Mail.ValueData, '') <> '';
   
 END;
 $BODY$
@@ -172,16 +173,10 @@ LANGUAGE plpgsql VOLATILE;
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 04.01.21                                                       *
- 14.01.20                                                       *
- 07.08.19                                                       *
- 05.04.19                                                       *
- 03.04.19                                                       *
- 16.01.19         *
- 11.01.19         *
- 11.02.14         *
+ 09.09.21                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Maker('2')
+-- 
+SELECT * FROM gpSelect_Object_MakerReportSettings('3')
 

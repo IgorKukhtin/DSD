@@ -1080,7 +1080,8 @@ uses
   Report_LayoutCheckRemains in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemains.pas' {Report_LayoutCheckRemainsForm: TParentForm},
   StringDialog in '..\..\FormsFarmacy\Guides\StringDialog.pas' {StringDialogForm: TParentForm},
   Report_CheckZReportDialog in '..\..\FormsFarmacy\Report\Report_CheckZReportDialog.pas' {Report_CheckZReportDialogForm: TParentForm},
-  Report_CheckZReport in '..\..\FormsFarmacy\Report\Report_CheckZReport.pas' {Report_CheckZReportForm: TParentForm};
+  Report_CheckZReport in '..\..\FormsFarmacy\Report\Report_CheckZReport.pas' {Report_CheckZReportForm: TParentForm},
+  MakerReport in '..\..\FormsFarmacy\Guides\MakerReport.pas' {MakerReportForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

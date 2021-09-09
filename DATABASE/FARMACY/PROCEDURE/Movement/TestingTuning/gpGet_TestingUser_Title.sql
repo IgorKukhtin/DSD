@@ -102,7 +102,7 @@ BEGIN
                         AND Movement.DescId = zc_Movement_Check()
                         AND Movement.StatusId = zc_Enum_Status_Complete()), 0) < 5
          THEN
-           RAISE EXCEPTION 'Не найдены продажи по вам..';              
+           RAISE EXCEPTION 'Не найдены продажи по вам (минимум 5 чеков)..';              
          END IF;
        ELSE
          RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     

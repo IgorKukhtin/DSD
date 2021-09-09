@@ -787,6 +787,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerReportForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerReportEditForm');

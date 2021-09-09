@@ -106,8 +106,6 @@ object MainForm: TMainForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -216
-    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsMaker
@@ -198,6 +196,32 @@ object MainForm: TMainForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 56
+      end
+      object isUnPlanned: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1099#1077' '#1086#1090#1095#1077#1090#1099
+        DataBinding.FieldName = 'isUnPlanned'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 81
+      end
+      object StartDateUnPlanned: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1042#1054
+        DataBinding.FieldName = 'StartDateUnPlanned'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 68
+      end
+      object EndDateUnPlanned: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1042#1054
+        DataBinding.FieldName = 'EndDateUnPlanned'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 70
       end
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
@@ -363,7 +387,8 @@ object MainForm: TMainForm
         'N (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR '
       
         'SendReal < CURRENT_DATE AND COALESCE(AmountDay, 0) = 25 AND DATE' +
-        '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1) AND'
+        '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1 OR'
+      'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       
         '(COALESCE (isReport1, FALSE) = TRUE OR COALESCE (isReport2, FALS' +
         'E) = TRUE OR'
@@ -373,7 +398,8 @@ object MainForm: TMainForm
       
         'COALESCE (isReport5, FALSE) = TRUE OR COALESCE (isReport6, FALSE' +
         ') = TRUE OR '
-      'COALESCE (isReport7, FALSE) = TRUE) AND'
+      'COALESCE (isReport7, FALSE) = TRUE OR'
+      'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       'COALESCE (Mail, '#39#39') <> '#39#39';')
     Params = <>
     Left = 144
@@ -409,7 +435,7 @@ object MainForm: TMainForm
     Top = 336
   end
   object pmExecute: TPopupMenu
-    Left = 224
+    Left = 216
     Top = 136
     object N1: TMenuItem
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084
@@ -494,6 +520,27 @@ object MainForm: TMainForm
       item
         DataType = ftUnknown
         Name = 'inisCurrMonth'
+        ParamType = ptUnknown
+      end>
+  end
+  object qryClearUnPlanned: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'select * from gpUpdate_Object_Maker_ClearUnPlanned (:inMaker, '#39'3' +
+        #39');')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'inMaker'
+        ParamType = ptUnknown
+      end>
+    Left = 224
+    Top = 448
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'inMaker'
         ParamType = ptUnknown
       end>
   end
