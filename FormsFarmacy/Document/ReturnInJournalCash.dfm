@@ -24,15 +24,6 @@ inherited ReturnInJournalCashForm: TReturnInJournalCashForm
       FormName = 'TReturnInCashForm'
       FormNameParam.Value = 'TReturnInCashForm'
     end
-    inherited actPrint: TdsdPrintAction
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
-        end>
-    end
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

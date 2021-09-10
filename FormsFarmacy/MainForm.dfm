@@ -20,8 +20,6 @@
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitLeft = -120
-    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetInfo
@@ -4588,6 +4586,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_CheckZReport: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' Z '#1086#1090#1095#1077#1090#1077#1090#1086#1074
+      FormName = 'TReport_CheckZReportForm'
+      FormNameParam.Value = 'TReport_CheckZReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMakerReport: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1090#1095#1077#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103#1084
+      FormName = 'TMakerReportForm'
+      FormNameParam.Value = 'TMakerReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5876,8 +5896,14 @@
         object N262: TMenuItem
           Action = actReport_TestingUserAttempts
         end
+        object N312: TMenuItem
+          Action = actMakerReport
+        end
         object Z1: TMenuItem
           Action = actReport_ZReportLog
+        end
+        object Z2: TMenuItem
+          Action = actReport_CheckZReport
         end
         object GUID2: TMenuItem
           Action = actCheckoutTesting

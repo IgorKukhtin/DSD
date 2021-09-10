@@ -560,10 +560,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ZReportLog_Date() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ZReportLog(), 'zc_ObjectDate_ZReportLog_Date', 'Дата Z отчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ZReportLog_Date');
   
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_StartDateUnPlanned() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_StartDateUnPlanned'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_StartDateUnPlanned', 'Дата начала для внепланового отчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_StartDateUnPlanned');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_EndDateUnPlanned() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_EndDateUnPlanned'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_EndDateUnPlanned', 'Дата окончания для внепланового отчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_EndDateUnPlanned');
+
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 09.09.21                                                                                     * zc_ObjectDate_Maker_StartDateUnPlanned, zc_ObjectDate_Maker_EndDateUnPlanned
  30.07.21                                                                                     * zc_ObjectDate_ZReportLog_Date
  25.06.21                                                                                     * zc_ObjectDate_CheckoutTesting_DateUpdate
  22.06.21                                                                                     * zc_ObjectDate_CorrectMinAmount_Date

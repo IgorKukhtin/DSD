@@ -66,6 +66,10 @@ type
     isReport7: TcxGridDBColumn;
     N7: TMenuItem;
     isCurrMonth: TcxGridDBColumn;
+    isUnPlanned: TcxGridDBColumn;
+    StartDateUnPlanned: TcxGridDBColumn;
+    EndDateUnPlanned: TcxGridDBColumn;
+    qryClearUnPlanned: TZQuery;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -159,76 +163,21 @@ end;
 procedure TMainForm.AllMaker;
 begin
   try
-    SetDateParams;
 
+    SetDateParams;
     FProcError := False;
 
-    Add_Log('');
-    Add_Log('-------------------');
-    Add_Log('Поставщик: ' + qryMaker.FieldByName('Name').AsString);
-
-    if qryMaker.FieldByName('isReport1').AsBoolean then
+    if qryMaker.FieldByName('isUnPlanned').AsBoolean then
     begin
-      RepType := 0;
-      ReportIncome(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
 
-    if qryMaker.FieldByName('isReport2').AsBoolean then
-    begin
-      RepType := 1;
-      ReportCheck(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
+      Add_Log('');
+      Add_Log('-------------------');
+      Add_Log('Внеплановый отчет по поставщику: ' + qryMaker.FieldByName('Name').AsString);
 
-    if qryMaker.FieldByName('isReport3').AsBoolean then
-    begin
-      RepType := 2;
-      ReportAnalysisRemainsSelling(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport4').AsBoolean then
-    begin
-      RepType := 3;
-      ReportIncomeConsumptionBalance(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport5').AsBoolean then
-    begin
-      RepType := 4;
-      ReportGoodsPartionDate;
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport6').AsBoolean then
-    begin
-      RepType := 5;
-      ReportStockTimingRemainder;
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport7').AsBoolean then
-    begin
-      RepType := 6;
-      ReportPayIncome(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if FormAddFile then
-    begin
       if qryMaker.FieldByName('isReport1').AsBoolean then
       begin
         RepType := 0;
-        ReportIncome(DateStartAdd, DateEndAdd);
+        ReportIncome(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -236,7 +185,7 @@ begin
       if qryMaker.FieldByName('isReport2').AsBoolean then
       begin
         RepType := 1;
-        ReportCheck(DateStartAdd, DateEndAdd);
+        ReportCheck(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -244,7 +193,7 @@ begin
       if qryMaker.FieldByName('isReport3').AsBoolean then
       begin
         RepType := 2;
-        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
+        ReportAnalysisRemainsSelling(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -252,7 +201,7 @@ begin
       if qryMaker.FieldByName('isReport4').AsBoolean then
       begin
         RepType := 3;
-        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+        ReportIncomeConsumptionBalance(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -260,19 +209,34 @@ begin
       if qryMaker.FieldByName('isReport7').AsBoolean then
       begin
         RepType := 6;
-        ReportPayIncome(DateStartAdd, DateEndAdd);
+        ReportPayIncome(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
-    end;
 
-      // квартальные отчеты
-    if FormQuarterFile then
+      if not FProcError then
+      begin
+        try
+          qryClearUnPlanned.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+          qryClearUnPlanned.ExecSQL;
+        except
+          on E: Exception do
+          begin
+            Add_Log(E.Message);
+          end;
+        end;
+      end;
+    end else
     begin
+
+      Add_Log('');
+      Add_Log('-------------------');
+      Add_Log('Поставщик: ' + qryMaker.FieldByName('Name').AsString);
+
       if qryMaker.FieldByName('isReport1').AsBoolean then
       begin
         RepType := 0;
-        ReportIncome(DateStartQuarter, DateEndQuarter);
+        ReportIncome(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -280,7 +244,7 @@ begin
       if qryMaker.FieldByName('isReport2').AsBoolean then
       begin
         RepType := 1;
-        ReportCheck(DateStartQuarter, DateEndQuarter);
+        ReportCheck(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -288,7 +252,7 @@ begin
       if qryMaker.FieldByName('isReport3').AsBoolean then
       begin
         RepType := 2;
-        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
+        ReportAnalysisRemainsSelling(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -296,7 +260,23 @@ begin
       if qryMaker.FieldByName('isReport4').AsBoolean then
       begin
         RepType := 3;
-        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
+        ReportIncomeConsumptionBalance(DateStart, DateEnd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport5').AsBoolean then
+      begin
+        RepType := 4;
+        ReportGoodsPartionDate;
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport6').AsBoolean then
+      begin
+        RepType := 5;
+        ReportStockTimingRemainder;
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -304,68 +284,155 @@ begin
       if qryMaker.FieldByName('isReport7').AsBoolean then
       begin
         RepType := 6;
-        ReportPayIncome(DateStartQuarter, DateEndQuarter);
+        ReportPayIncome(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
-    end;
 
-      // дополнительно отчеты за 4 месяца
-    if Form4MonthFile then
-    begin
-      if qryMaker.FieldByName('isReport1').AsBoolean then
+      if FormAddFile then
       begin
-        RepType := 0;
-        ReportIncome(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport2').AsBoolean then
-      begin
-        RepType := 1;
-        ReportCheck(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport3').AsBoolean then
-      begin
-        RepType := 2;
-        ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport4').AsBoolean then
-      begin
-        RepType := 3;
-        ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport7').AsBoolean then
-      begin
-        RepType := 6;
-        ReportPayIncome(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-    end;
-
-    if not FProcError then
-    begin
-      try
-        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonthSend').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDaySend').AsInteger;
-        qrySetDateSend.Params.ParamByName('inisCurrMonth').Value :=  qryMaker.FieldByName('isCurrMonth').AsBoolean;
-        qrySetDateSend.ExecSQL;
-      except
-        on E: Exception do
+        if qryMaker.FieldByName('isReport1').AsBoolean then
         begin
-          Add_Log(E.Message);
+          RepType := 0;
+          ReportIncome(DateStartAdd, DateEndAdd);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport2').AsBoolean then
+        begin
+          RepType := 1;
+          ReportCheck(DateStartAdd, DateEndAdd);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport3').AsBoolean then
+        begin
+          RepType := 2;
+          ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport4').AsBoolean then
+        begin
+          RepType := 3;
+          ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport7').AsBoolean then
+        begin
+          RepType := 6;
+          ReportPayIncome(DateStartAdd, DateEndAdd);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+      end;
+
+        // квартальные отчеты
+      if FormQuarterFile then
+      begin
+        if qryMaker.FieldByName('isReport1').AsBoolean then
+        begin
+          RepType := 0;
+          ReportIncome(DateStartQuarter, DateEndQuarter);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport2').AsBoolean then
+        begin
+          RepType := 1;
+          ReportCheck(DateStartQuarter, DateEndQuarter);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport3').AsBoolean then
+        begin
+          RepType := 2;
+          ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport4').AsBoolean then
+        begin
+          RepType := 3;
+          ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport7').AsBoolean then
+        begin
+          RepType := 6;
+          ReportPayIncome(DateStartQuarter, DateEndQuarter);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+      end;
+
+        // дополнительно отчеты за 4 месяца
+      if Form4MonthFile then
+      begin
+        if qryMaker.FieldByName('isReport1').AsBoolean then
+        begin
+          RepType := 0;
+          ReportIncome(DateStart4Month, DateEnd4Month);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport2').AsBoolean then
+        begin
+          RepType := 1;
+          ReportCheck(DateStart4Month, DateEnd4Month);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport3').AsBoolean then
+        begin
+          RepType := 2;
+          ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport4').AsBoolean then
+        begin
+          RepType := 3;
+          ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+
+        if qryMaker.FieldByName('isReport7').AsBoolean then
+        begin
+          RepType := 6;
+          ReportPayIncome(DateStart4Month, DateEnd4Month);
+          btnExportClick(Nil);
+          btnSendMailClick(Nil);
+        end;
+      end;
+
+      if not FProcError then
+      begin
+        try
+          qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+          qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonthSend').AsInteger;
+          qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDaySend').AsInteger;
+          qrySetDateSend.Params.ParamByName('inisCurrMonth').Value :=  qryMaker.FieldByName('isCurrMonth').AsBoolean;
+          qrySetDateSend.ExecSQL;
+        except
+          on E: Exception do
+          begin
+            Add_Log(E.Message);
+          end;
         end;
       end;
     end;
@@ -792,72 +859,80 @@ begin
     grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
 
   FormAddFile := False; FormQuarterFile := False; Form4MonthFile := False;
-  if qryMaker.FieldByName('AmountDaySend').AsInteger <> 0 then
+
+  if qryMaker.FieldByName('isUnPlanned').AsBoolean then
   begin
-     if qryMaker.FieldByName('AmountDaySend').AsInteger = 14 then
-     begin
-       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
-       begin
-         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-         DateStart := IncDay(StartOfTheMonth(DateEnd), 14);
-
-         FormAddFile := True;
-         DateEndAdd := DateEnd;
-         DateStartAdd := StartOfTheMonth(DateEndAdd);
-       end else
-       begin
-         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-         DateEnd := IncDay(DateStart, 13);
-       end;
-     end else if qryMaker.FieldByName('AmountDaySend').AsInteger = 15 then
-     begin
-       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
-       begin
-         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-         DateStart := IncDay(StartOfTheMonth(DateEnd), 15);
-
-         FormAddFile := True;
-         DateEndAdd := DateEnd;
-         DateStartAdd := StartOfTheMonth(DateEndAdd);
-       end else
-       begin
-         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-         DateEnd := IncDay(DateStart, 14);
-       end;
-     end else
-     begin
-       DateEnd := IncDay(StartOfTheDay(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-       DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDaySend').AsInteger);
-     end;
+    DateStart := qryMaker.FieldByName('StartDateUnPlanned').AsDateTime;
+    DateEnd := qryMaker.FieldByName('EndDateUnPlanned').AsDateTime;
   end else
   begin
-    if qryMaker.FieldByName('isCurrMonth').AsBoolean then
+    if qryMaker.FieldByName('AmountDaySend').AsInteger <> 0 then
     begin
-      DateEnd := IncDay(Date, -1);
-      DateStart := StartOfTheMonth(DateEnd);
+       if qryMaker.FieldByName('AmountDaySend').AsInteger = 14 then
+       begin
+         if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
+         begin
+           DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+           DateStart := IncDay(StartOfTheMonth(DateEnd), 14);
+
+           FormAddFile := True;
+           DateEndAdd := DateEnd;
+           DateStartAdd := StartOfTheMonth(DateEndAdd);
+         end else
+         begin
+           DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
+           DateEnd := IncDay(DateStart, 13);
+         end;
+       end else if qryMaker.FieldByName('AmountDaySend').AsInteger = 15 then
+       begin
+         if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
+         begin
+           DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+           DateStart := IncDay(StartOfTheMonth(DateEnd), 15);
+
+           FormAddFile := True;
+           DateEndAdd := DateEnd;
+           DateStartAdd := StartOfTheMonth(DateEndAdd);
+         end else
+         begin
+           DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
+           DateEnd := IncDay(DateStart, 14);
+         end;
+       end else
+       begin
+         DateEnd := IncDay(StartOfTheDay(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+         DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDaySend').AsInteger);
+       end;
     end else
     begin
-      DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
-      DateStart := StartOfTheMonth(DateEnd);
-      if qryMaker.FieldByName('AmountMonthSend').AsInteger > 1 then
-        DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonthSend').AsInteger);
+      if qryMaker.FieldByName('isCurrMonth').AsBoolean then
+      begin
+        DateEnd := IncDay(Date, -1);
+        DateStart := StartOfTheMonth(DateEnd);
+      end else
+      begin
+        DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+        DateStart := StartOfTheMonth(DateEnd);
+        if qryMaker.FieldByName('AmountMonthSend').AsInteger > 1 then
+          DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonthSend').AsInteger);
+      end;
     end;
-  end;
 
-  if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) and
-    (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
-  begin
-    FormQuarterFile := True;
-    DateEndQuarter := DateEnd;
-    DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
-  end;
+    if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) and
+      (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
+    begin
+      FormQuarterFile := True;
+      DateEndQuarter := DateEnd;
+      DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
+    end;
 
-  if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 5, 9]) and
-    (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
-  begin
-    Form4MonthFile := True;
-    DateEnd4Month := DateEnd;
-    DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
+    if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 5, 9]) and
+      (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
+    begin
+      Form4MonthFile := True;
+      DateEnd4Month := DateEnd;
+      DateStart4Month := IncMonth(StartOfTheMonth(DateEnd4Month), - 3);
+    end;
   end;
 end;
 

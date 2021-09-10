@@ -124,14 +124,14 @@ begin
     spComplete_Movement.ParamByName('inPaidType').Value := rgPaidType.ItemIndex;
     if Assigned(FCash) then
     begin
-      spComplete_Movement.ParamByName('inCashRegister').Value := FCash.FiscalNumber;
+      spComplete_Movement.ParamByName('inCashRegister').Value := cFiscalNumber;
       spComplete_Movement.ParamByName('inZReport').Value := nZReport;
     end else
     begin
       spComplete_Movement.ParamByName('inCashRegister').Value := '';
       spComplete_Movement.ParamByName('inZReport').Value := 0;
     end;
-    spComplete_Movement.ParamByName('inFiscalCheckNumber').Value := FCash.FiscalNumber;
+    spComplete_Movement.ParamByName('inFiscalCheckNumber').Value := cCheckNumber;
     if rgPaidType.ItemIndex = 2 then
       spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := edSalerCashAdd.Value
     else spComplete_Movement.ParamByName('inTotalSummPayAdd').Value := 0;

@@ -38,14 +38,8 @@ type
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
-    PrintItemsCDS: TClientDataSet;
-    PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
-    spSelectPrintCheck: TdsdStoredProc;
-    actPrintCheck: TdsdPrintAction;
-    PrintDialog: TExecuteDialog;
-    macPrintCheck: TMultiAction;
     bbPrintCheck: TdxBarButton;
     SPKindGuides: TdsdGuides;
     bbGet_SP_Prior: TdxBarButton;
@@ -79,6 +73,10 @@ type
     cxLabel14: TcxLabel;
     edTotalSummPayAddCheck: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
+    edFiscalCheckNumber: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edZReport: TcxTextEdit;
+    cxLabel32: TcxLabel;
   private
     { Private declarations }
   public

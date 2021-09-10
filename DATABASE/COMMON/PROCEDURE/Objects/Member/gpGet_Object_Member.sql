@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
+             , CardBank TVarChar, CardBankSecond TVarChar
              , Comment TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , BankId Integer, BankName TVarChar
@@ -80,6 +81,8 @@ BEGIN
            , CAST ('' AS TVarChar)  AS CardChild
            , CAST ('' AS TVarChar)  AS CardIBAN
            , CAST ('' AS TVarChar)  AS CardIBANSecond
+           , CAST ('' AS TVarChar)  AS CardBank
+           , CAST ('' AS TVarChar)  AS CardBankSecond
            , CAST ('' AS TVarChar)  AS Comment
            , CAST (0 AS Integer)    AS InfoMoneyId
            , CAST (0 AS Integer)    AS InfoMoneyCode
@@ -189,10 +192,12 @@ BEGIN
             , ObjectString_INN.ValueData               AS INN
             , ObjectString_DriverCertificate.ValueData AS DriverCertificate
             , ObjectString_Card.ValueData              AS Card
-            , ObjectString_CardSecond.ValueData        AS CardSecond3
+            , ObjectString_CardSecond.ValueData        AS CardSecond
             , ObjectString_CardChild.ValueData         AS CardChild
             , ObjectString_CardIBAN.ValueData          AS CardIBAN
             , ObjectString_CardIBANSecond.ValueData    AS CardIBANSecond
+            , ObjectString_CardBank.ValueData          AS CardBank
+            , ObjectString_CardBankSecond.ValueData    AS CardBankSecond
             , ObjectString_Comment.ValueData           AS Comment
             
             , Object_InfoMoney_View.InfoMoneyId
@@ -290,6 +295,13 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CardIBANSecond
                                     ON ObjectString_CardIBANSecond.ObjectId = Object_Member.Id 
                                    AND ObjectString_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
+
+             LEFT JOIN ObjectString AS ObjectString_CardBank
+                                    ON ObjectString_CardBank.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardBank.DescId = zc_ObjectString_Member_CardBank()
+             LEFT JOIN ObjectString AS ObjectString_CardBankSecond
+                                    ON ObjectString_CardBankSecond.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
 
              LEFT JOIN ObjectString AS ObjectString_DriverCertificate 
                                     ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
@@ -435,6 +447,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.09.21         *
  06.02.20         * add isNotCompensation
  09.09.19         * CardIBAN, CardIBANSecond
  03.03.17         * add Bank, BankSecond, BankChild

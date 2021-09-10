@@ -1077,7 +1077,11 @@ uses
   Report_ZeroingInOrders in '..\..\FormsFarmacy\Report\Report_ZeroingInOrders.pas' {Report_ZeroingInOrdersForm: TParentForm},
   ChoiceLayout in '..\..\FormsFarmacy\Guides\ChoiceLayout.pas' {ChoiceLayoutForm: TParentForm},
   Report_LayoutCheckRemainsDialog in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemainsDialog.pas' {Report_LayoutCheckRemainsDialogForm: TParentForm},
-  Report_LayoutCheckRemains in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemains.pas' {Report_LayoutCheckRemainsForm: TParentForm};
+  Report_LayoutCheckRemains in '..\..\FormsFarmacy\Report\Report_LayoutCheckRemains.pas' {Report_LayoutCheckRemainsForm: TParentForm},
+  StringDialog in '..\..\FormsFarmacy\Guides\StringDialog.pas' {StringDialogForm: TParentForm},
+  Report_CheckZReportDialog in '..\..\FormsFarmacy\Report\Report_CheckZReportDialog.pas' {Report_CheckZReportDialogForm: TParentForm},
+  Report_CheckZReport in '..\..\FormsFarmacy\Report\Report_CheckZReport.pas' {Report_CheckZReportForm: TParentForm},
+  MakerReport in '..\..\FormsFarmacy\Guides\MakerReport.pas' {MakerReportForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

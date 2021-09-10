@@ -44,7 +44,7 @@ BEGIN
              , tmpReplies.CorrectAnswer::Integer                   AS CorrectAnswer 
              , COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) AS isMandatoryQuestion
              , MIBLOB_Question.ValueData                           AS Question
-             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomID
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) DESC, random())::Integer AS RandomID
              , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
         FROM MovementItem 
             

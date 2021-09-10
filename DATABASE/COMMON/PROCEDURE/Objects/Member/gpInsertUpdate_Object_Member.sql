@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
  INOUT ioId	             Integer   ,    -- ключ объекта <Физические лица> 
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inCardChild           TVarChar  ,    -- № карточного счета ЗП - - алименты (удержание)
     IN inCardIBAN            TVarChar  ,    -- № карточного счета IBAN ЗП - первая форма
     IN inCardIBANSecond      TVarChar  ,    -- № карточного счета IBAN ЗП - вторая форма
+    IN inCardBank            TVarChar  ,    -- № карточного счета ЗП
+    IN inCardBankSecond      TVarChar  ,    -- № карточного счета ЗП - вторая форма
     IN inComment             TVarChar  ,    -- Примечание 
     IN inBankId              Integer   ,    --
     IN inBankSecondId        Integer   ,    --
@@ -93,6 +96,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBANSecond(), ioId, inCardIBANSecond);
 
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBank(), ioId, inCardBank);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBankSecond(), ioId, inCardBankSecond);
+   
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
    
     -- сохранили свойство <>
@@ -119,6 +127,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.09.21         *
  06.02.20         * inIsNotCompensation
  09.09.19         * inCardIBAN, inCardIBANSecond
  03.03.17         * add Bank, BankSecond, BankChild

@@ -118,6 +118,20 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object CardBank: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'CardBank'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object CardBankSecond: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)'
+        DataBinding.FieldName = 'CardBankSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
       object BankChildName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078'.)'
         DataBinding.FieldName = 'BankChildName'
@@ -1533,6 +1547,24 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'CardIBANSecond'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardBank'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardBank'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardBankSecond'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardBankSecond'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

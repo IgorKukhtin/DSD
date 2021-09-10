@@ -559,18 +559,20 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
 
@@ -3523,6 +3525,7 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGenderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGenderEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGenderForm'));
@@ -3537,7 +3540,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberSkillEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSkillForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSkillForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHoliday_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHoliday_ChoiceForm');
 

@@ -79,6 +79,19 @@ BEGIN
         RAISE EXCEPTION 'Тип НДС должен быть определен';
      END IF;
 
+     IF inTOP = TRUE
+     THEN
+       IF COALESCE (inPercentMarkup, 0) = 0 AND COALESCE (inPrice, 0) = 0
+       THEN
+         RAISE EXCEPTION 'Ошибка.При установке признака <Топ> должно быть установлено <%% наценки> или <Цена реализ.>.';       
+       END IF;
+     ELSE
+       IF COALESCE (inPercentMarkup, 0) <> 0 OR COALESCE (inPrice, 0) <> 0
+       THEN
+         RAISE EXCEPTION 'Ошибка.При снятии признака <Топ> убарите <%% наценки> и <Цена реализ.>.';       
+       END IF;     
+     END IF;
+     
           -- Контроль  штрих-кода
      IF COALESCE (inBarCode, '') <> '' AND (COALESCE (ioId, 0) = 0
        OR NOT EXISTS(SELECT Id FROM Object_Goods_View

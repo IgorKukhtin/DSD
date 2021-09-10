@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCount TFloat, TotalSumm TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterId Integer, CashRegisterName TVarChar
-             , FiscalCheckNumber TVarChar
+             , ZReport Integer, FiscalCheckNumber TVarChar
              , IdCheck Integer, InvNumberCheck TVarChar, OperDateCheck TDateTime
              , PaidTypeCheckId Integer, PaidTypeCheckName TVarChar, TotalSummCheck TFloat
              , InsertName TVarChar, InsertDate TDateTime
@@ -52,6 +52,7 @@ BEGIN
            , Object_Unit.ValueData                              AS UnitName
            , MovementLinkObject_CashRegister.ObjectId           AS CashRegisterId
            , Object_CashRegister.ValueData                      AS CashRegisterName
+           , MovementFloat_ZReport.ValueData::Integer           AS ZReport
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
 
            , MovementCheck.Id                           AS IdCheck
@@ -76,6 +77,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_ReturnIn.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                    ON MovementFloat_ZReport.MovementId =  Movement_ReturnIn.Id
+                                   AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement_ReturnIn.Id
@@ -140,5 +145,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inUnitId:= 1, inIsErased := FALSE, inSession:= '2')
-
+-- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.09.2021', inEndDate:= '09.09.2021', inUnitId:= 0, inIsErased := FALSE, inSession:= '2')

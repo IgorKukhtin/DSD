@@ -491,6 +491,18 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Name_BUH'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -603,6 +615,10 @@ object GoodsForm: TGoodsForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbUpdate_Name_BUH: TdxBarButton
+      Action = macUpdate_Name_BUH
       Category = 0
     end
   end
@@ -887,6 +903,85 @@ object GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdateGoods_In'
       Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object macUpdate_Name_BUH: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog_Name_BUH
+        end
+        item
+          Action = actUpdate_Name_BUH
+        end
+        item
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      ImageIndex = 76
+    end
+    object actUpdate_Name_BUH: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Name_BUH
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Name_BUH
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      ImageIndex = 76
+    end
+    object ExecuteDialog_Name_BUH: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
+      ImageIndex = 76
+      FormName = 'TGoods_Name_BUHDialogForm'
+      FormNameParam.Value = 'TGoods_Name_BUHDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inName_BUH'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Name_BUH'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDate_BUH'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Date_BUH'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inName_BUH'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_BUH'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDate_BUH'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Date_BUH'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object macUpdateGoods_In: TMultiAction
       Category = 'Calc'
@@ -1293,5 +1388,40 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 600
     Top = 136
+  end
+  object spUpdate_Name_BUH: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_Name_BUH'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_BUH'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Name_BUH'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDate_BUH'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Date_BUH'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 219
   end
 end

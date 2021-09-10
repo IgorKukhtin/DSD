@@ -110,6 +110,11 @@ type
     spGetImportSettingId: TdsdStoredProc;
     Name_BUH: TcxGridDBColumn;
     Date_BUH: TcxGridDBColumn;
+    spUpdate_Name_BUH: TdsdStoredProc;
+    actUpdate_Name_BUH: TdsdExecStoredProc;
+    macUpdate_Name_BUH: TMultiAction;
+    ExecuteDialog_Name_BUH: TExecuteDialog;
+    bbUpdate_Name_BUH: TdxBarButton;
   private
     { Private declarations }
   public

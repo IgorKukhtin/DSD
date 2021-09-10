@@ -1,28 +1,28 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 482
-  ClientWidth = 644
+  ClientWidth = 655
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 660
+  ExplicitWidth = 671
   ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 644
+    Width = 655
     Height = 319
     ExplicitTop = 163
-    ExplicitWidth = 647
+    ExplicitWidth = 644
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 644
+    ClientRectRight = 655
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 647
+      ExplicitWidth = 644
       ExplicitHeight = 295
       inherited cxGrid: TcxGrid
-        Width = 644
+        Width = 655
         Height = 295
-        ExplicitWidth = 647
+        ExplicitWidth = 644
         ExplicitHeight = 295
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -169,10 +169,10 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 644
+    Width = 655
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 647
+    ExplicitWidth = 644
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -224,7 +224,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object lblJuridical: TcxLabel
       Left = 379
-      Top = 7
+      Top = 4
       Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090
     end
     object edCashRegister: TcxButtonEdit
@@ -236,7 +236,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 252
+      Width = 121
     end
     object cxLabel7: TcxLabel
       Left = 576
@@ -333,7 +333,7 @@ inherited ReturnInForm: TReturnInForm
       Top = 64
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 24
-      Width = 121
+      Width = 133
     end
     object cxLabel14: TcxLabel
       Left = 508
@@ -345,12 +345,36 @@ inherited ReturnInForm: TReturnInForm
       Top = 105
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 26
-      Width = 121
+      Width = 131
     end
     object cxLabel16: TcxLabel
       Left = 508
       Top = 87
       Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1074' '#1095#1077#1082#1077':'
+    end
+    object edFiscalCheckNumber: TcxTextEdit
+      Left = 563
+      Top = 22
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 78
+    end
+    object cxLabel6: TcxLabel
+      Left = 563
+      Top = 4
+      Caption = #8470' '#1092#1080#1089#1082'. '#1095#1077#1082#1072
+    end
+    object edZReport: TcxTextEdit
+      Left = 504
+      Top = 22
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 55
+    end
+    object cxLabel32: TcxLabel
+      Left = 514
+      Top = 4
+      Caption = 'Z '#1086#1090#1095#1077#1090
     end
   end
   inherited ActionList: TActionList
@@ -382,129 +406,13 @@ inherited ReturnInForm: TReturnInForm
         end>
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end
         item
-          DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
-    end
-    object actPrintCheck: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrintCheck
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintCheck
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
-      ReportNameParam.Value = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object PrintDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'actCheckPrintDialog'
-      ImageIndex = 3
-      FormName = 'TCheckPrintDialogForm'
-      FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
-      FormNameParam.ParamType = ptInputOutput
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object macPrintCheck: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = PrintDialog
-        end
-        item
-          Action = actPrintCheck
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
-      ImageIndex = 3
     end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
@@ -695,8 +603,10 @@ inherited ReturnInForm: TReturnInForm
         end>
     end
     object bbPrintCheck: TdxBarButton
-      Action = macPrintCheck
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Visible = ivAlways
       ImageIndex = 15
     end
     object bbGet_SP_Prior: TdxBarButton
@@ -900,7 +810,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'OperDateCheck'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateCheck
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -924,6 +834,19 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = edTotalSummPayAddCheck
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ZReport'
+        Value = Null
+        Component = edZReport
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FiscalCheckNumber'
+        Value = Null
+        Component = edFiscalCheckNumber
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 176
@@ -1047,44 +970,12 @@ inherited ReturnInForm: TReturnInForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    Left = 550
-    Top = 248
+    Left = 502
+    Top = 240
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    Left = 614
-    Top = 344
+    Left = 582
+    Top = 336
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
@@ -1191,8 +1082,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 636
-    Top = 252
+    Left = 588
+    Top = 228
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1251,44 +1142,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
+    Left = 408
     Top = 16
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 500
-    Top = 238
-  end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 532
-    Top = 321
-  end
-  object spSelectPrintCheck: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 616
-    Top = 200
   end
   object SPKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1347,7 +1202,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateCheck
         DataType = ftDateTime
         MultiSelectSeparator = ','

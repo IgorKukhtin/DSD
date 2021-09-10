@@ -6,7 +6,7 @@ inherited CheckItemJournalForm: TCheckItemJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 912
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -552,7 +552,7 @@ inherited CheckItemJournalForm: TCheckItemJournalForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -625,7 +625,7 @@ inherited CheckItemJournalForm: TCheckItemJournalForm
         end
         item
           Name = 'Date'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -959,7 +959,7 @@ inherited CheckItemJournalForm: TCheckItemJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

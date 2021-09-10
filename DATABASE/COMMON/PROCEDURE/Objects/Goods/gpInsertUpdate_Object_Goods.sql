@@ -7,14 +7,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
     IN inCode                Integer   , -- Код объекта <Товар>
     IN inName                TVarChar  , -- Название объекта <Товар>
-    IN inName_BUH            TVarChar  , -- Название БУХГ
+    --IN inName_BUH            TVarChar  , -- Название БУХГ
     IN inWeight              TFloat    , -- Вес
     IN inWeightTare          TFloat    , -- Вес втулки/тары
     IN inCountForWeight      TFloat    , -- кол для веса
@@ -29,7 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inGoodsGroupAnalystId Integer   , -- ***Группа аналитики
     IN inPriceListId         Integer   , -- прайс
     IN inStartDate           TDateTime , -- дата прайса
-    IN inDate_BUH            TDateTime , -- Дата до которой действует Название товара(бухг.)
+    --IN inDate_BUH            TDateTime , -- Дата до которой действует Название товара(бухг.)
     IN inValuePrice          TFloat    , -- значение цены
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -107,10 +108,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);
 
    -- сохранили свойство <Название БУХГ>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), ioId, inName_BUH);
+   --PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), ioId, inName_BUH);
    -- сохранили свойство <Дата до которой действует Название товара(бухг.)>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), ioId, inDate_BUH);
-
+   --PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), ioId, inDate_BUH);
+   
    -- сохранили свойство <Вес>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
    -- сохранили свойство <Вес>
