@@ -46,6 +46,26 @@ BEGIN
          RETURN;
      END IF;
 
+
+     --
+   /*CREATE TEMP TABLE tmpMIContainer_Transport ON COMMIT DROP
+                                 AS (SELECT DISTINCT MIContainer.ContainerIntId_analyzer AS MovementItemId
+                                     FROM MovementItemContainer AS MIContainer
+                                     WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AccountId = zc_Enum_Account_100301()
+                                       AND MIContainer.isActive = FALSE
+                                       AND MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                    );
+     RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpMIContainer_Transport);
+
+     CREATE TEMP TABLE tmpMI_Transport ON COMMIT DROP
+                         AS (SELECT MovementItem.*
+                             FROM MovementItem
+                             WHERE MovementItem.Id IN (SELECT DISTINCT tmpMIContainer_Transport.MovementItemId FROM tmpMIContainer_Transport)
+                            );
+
+     RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpMI_Transport);*/
+
      -- Результат
      RETURN QUERY
       -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
@@ -76,8 +96,29 @@ BEGIN
                                                               AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                             WHERE Container.ObjectId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                               AND Container.DescId = zc_Container_Summ()
-                           )
-     ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
+                           )*/
+      /*tmpMIContainer_Transport AS (SELECT DISTINCT MIContainer.ContainerIntId_analyzer AS MovementItemId
+                                     FROM MovementItemContainer AS MIContainer
+                                     WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AccountId = zc_Enum_Account_100301()
+                                       AND MIContainer.isActive = FALSE
+                                       AND MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                    )
+       , tmpMI_Transport AS (SELECT MovementItem.*
+                             FROM MovementItem
+                             WHERE MovementItem.Id IN (SELECT DISTINCT tmpMIContainer_Transport.MovementItemId FROM tmpMIContainer_Transport)
+                            )
+       , tmpMLO_To_Transport AS (SELECT MLO_To.*
+                                 FROM MovementLinkObject AS MLO_To
+                                 WHERE MLO_To.MovementId IN (SELECT DISTINCT tmpMI_Transport.MovementId FROM tmpMI_Transport)
+                                   AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                )
+       , tmpMILO_GoodsKind_Transport AS (SELECT MILO_GoodsKind.*
+                                         FROM MovementItemLinkObject AS MILO_GoodsKind
+                                         WHERE MILO_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMI_Transport.Id FROM tmpMI_Transport)
+                                           AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                        )
+       ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
                                  , -1 * SUM (MIContainer.Amount)      AS Amount
 
                                    -- Подраделение (ОПиУ)
@@ -116,7 +157,7 @@ BEGIN
                                  , MIContainer.MovementDescId
                                    -- УП статья
                                  , MILinkObject_InfoMoney.ObjectId AS InfoMoney_inf
-                                 
+
                                    -- Вид Товара
                                  , MILO_GoodsKind.ObjectId AS GoodsKindId_inf
 
@@ -138,11 +179,28 @@ BEGIN
                                                        AND MovementItem_2.DescId = zc_MI_Master()
                                                        AND MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                  LEFT JOIN MovementLinkObject AS MLO_To
-                                                              ON MLO_To.MovementId          = MovementItem_2.MovementId
-                                                             AND MLO_To.DescId              = zc_MovementLinkObject_To()
+                                                              ON MLO_To.MovementId = MovementItem_2.MovementId
+                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                  LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                   ON MILO_GoodsKind.MovementItemId = MovementItem_2.Id
                                                                  AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                                 AND 1=0
+
+                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                                                  ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
+                                                                 AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                                                 AND MIContainer.MovementDescId = zc_Movement_Transport()*/
+                               /*LEFT JOIN tmpMI_Transport AS MovementItem_2
+                                                           ON MovementItem_2.Id = MIContainer.ContainerIntId_analyzer
+                                                          AND MovementItem_2.DescId = zc_MI_Master()
+                                                          AND MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                 LEFT JOIN tmpMLO_To_Transport AS MLO_To
+                                                               ON MLO_To.MovementId          = MovementItem_2.MovementId
+                                                              AND MLO_To.DescId              = zc_MovementLinkObject_To()
+                                 LEFT JOIN tmpMILO_GoodsKind_Transport AS MILO_GoodsKind
+                                                                       ON MILO_GoodsKind.MovementItemId = MovementItem_2.Id
+                                                                      AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                                      AND 1=0*/
 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
@@ -172,7 +230,7 @@ BEGIN
                                                THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                           ELSE 0
                                      END
-  
+
                                      -- Направление (ОПиУ)
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(),  zc_Movement_TransportService())
                                            AND MIContainer.ContainerIntId_analyzer > 0
@@ -184,7 +242,7 @@ BEGIN
                                    , MIContainer.MovementDescId
                                      -- УП статья
                                    , MILinkObject_InfoMoney.ObjectId
-                                   
+
                                      -- Вид Товара
                                    , MILO_GoodsKind.ObjectId
                            )
@@ -300,7 +358,7 @@ BEGIN
                              , ContainerLinkObject_Car.ObjectId
                              , ContainerLinkObject_Goods.ObjectId*/
                      )
-      -- 
+      --
       SELECT
              View_ProfitLoss.ProfitLossGroupName
            , View_ProfitLoss.ProfitLossDirectionName
@@ -459,6 +517,7 @@ BEGIN
            LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Unit        ON ObjectDesc_Unit.Id        = Object_Unit_ProfitLoss.DescId
+
       WHERE View_ProfitLoss.ProfitLossId IS NULL
       ;
 
@@ -478,4 +537,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2019', inEndDate:= '31.07.2019', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.08.2021', inEndDate:= '31.08.2021', inSession:= '5') WHERE Amount <> 0 ORDER BY 5

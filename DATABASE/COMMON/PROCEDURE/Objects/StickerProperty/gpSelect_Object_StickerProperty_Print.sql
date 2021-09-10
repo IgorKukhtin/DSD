@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSortName  TVarChar
              , StickerNormName  TVarChar
              , Info Text
+             , Info_add TVarChar
 
              , isJPG             Boolean
              , isStartEnd        Boolean
@@ -525,9 +526,14 @@ BEGIN
                                             THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value5.ValueData, 0)) ||  tmpLanguageParam.Value17 ||''
                                       ELSE ''
                                  END
+
                                , inIsLength
                                , FALSE -- ÚÂÔÂ¸ Õ≈ ËÒÔÓÎ¸ÁÛÂÚÒˇ
                                 ) AS Info
+            , CASE WHEN ObjectBoolean_StickerProperty_CK.ValueData = TRUE
+                        THEN 'Õ¿ œŒ¬≈–’Õ≤ Œ¡ŒÀŒÕ » ƒŒœ”— ¿™“‹—ﬂ ¡≤À»… Õ¿À≤“ —ŒÀ≤'
+                   ELSE ''
+              END :: TVarChar AS Info_add
 
             , inIsJPG                              :: Boolean   AS isJPG
             , (inIsStartEnd  AND inIsTare = FALSE) :: Boolean   AS isStartEnd
@@ -571,6 +577,10 @@ BEGIN
                                   ON ObjectLink_StickerProperty_StickerSkin.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_StickerSkin.DescId = zc_ObjectLink_StickerProperty_StickerSkin()
              LEFT JOIN Object AS Object_StickerSkin ON Object_StickerSkin.Id = ObjectLink_StickerProperty_StickerSkin.ChildObjectId
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_StickerProperty_CK
+                                     ON ObjectBoolean_StickerProperty_CK.ObjectId = Object_StickerProperty.Id
+                                    AND ObjectBoolean_StickerProperty_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Value1
                                    ON ObjectFloat_Value1.ObjectId = Object_StickerProperty.Id

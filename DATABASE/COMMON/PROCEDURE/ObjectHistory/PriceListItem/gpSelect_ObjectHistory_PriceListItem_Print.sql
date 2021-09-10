@@ -45,6 +45,7 @@ BEGIN
 
      -- Ограничение - если роль Начисления транспорт-меню
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 78489 AND UserId = vbUserId)
+        AND NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
         AND COALESCE (inPriceListId, 0) NOT IN (SELECT zc_PriceList_Fuel()
                                                UNION
                                                 SELECT DISTINCT ObjectLink_Contract_PriceList.ChildObjectId

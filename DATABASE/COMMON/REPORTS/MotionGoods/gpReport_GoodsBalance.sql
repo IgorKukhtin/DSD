@@ -138,7 +138,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
+    
+
+    -- замена
+    IF vbUserId <> 5
+    THEN inIsInfoMoney:= FALSE;
+    END IF;
    
+
     -- !!!определяется!!!
     vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
 

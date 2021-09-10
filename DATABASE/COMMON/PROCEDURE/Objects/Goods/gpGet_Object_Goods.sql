@@ -194,7 +194,7 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
           LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId  
 
-          LEFT JOIN gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := vbPriceListId , inGoodsId :=  inId,  inSession := inSession) as tmp ON tmp.EndDate  =  zc_DateEnd()
+          LEFT JOIN gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := vbPriceListId , inGoodsId :=  inId,  inGoodsKindId := 0,  inSession := inSession) as tmp ON tmp.EndDate  =  zc_DateEnd()
 
        WHERE Object_Goods.Id = inId;
 

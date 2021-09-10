@@ -523,6 +523,11 @@ BEGIN
                                                       , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalGroup() AND MLO.ObjectId > 0)
                                                        );
          END IF;
+         -- дописали св-во - Инвентаризация только для выбранных товаров
+         IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_List() AND MB.ValueData = TRUE)
+         THEN
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), vbMovementId_begin, TRUE);
+         END IF;
 
          -- сохранили связь с документом <Заявки сторонние>
          IF vbMovementDescId = zc_Movement_Send() AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
@@ -1487,7 +1492,7 @@ BEGIN
      END IF;
 
 
-if (inSession = '5' AND 1=1)
+if (vbUserId = 5 AND 1=1)
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
     -- 'Повторите действие через 3 мин.'

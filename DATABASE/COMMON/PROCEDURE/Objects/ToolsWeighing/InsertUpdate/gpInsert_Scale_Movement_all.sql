@@ -888,6 +888,12 @@ BEGIN
               AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member();
         END IF;
 
+        -- дописали св-во - Инвентаризация только для выбранных товаров
+        IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_List() AND MB.ValueData = TRUE)
+        THEN
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), vbMovementId_begin, TRUE);
+        END IF;
+
         -- дописали св-во <Дата/время создания>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
         -- дописали св-во <Путевой лист>

@@ -253,7 +253,7 @@ BEGIN
    -- финиш - сохранили связь с <Улица>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Street(), inId, vbStreetId);
 
-   IF inUserId = zfCalc_UserAdmin() :: Integer
+   IF inUserId = zfCalc_UserAdmin() :: Integer AND 1=1
    THEN
        RAISE EXCEPTION 'Ошибка.Admin-test=ok';
    END IF;
