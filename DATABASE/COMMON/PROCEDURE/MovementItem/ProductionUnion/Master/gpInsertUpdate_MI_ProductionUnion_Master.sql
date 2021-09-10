@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inPartionGoods          TVarChar  , -- Партия товара
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП
+    IN inPersonalId_KVK        Integer   , -- 
+    IN inKVK                   TVarChar   , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -39,6 +42,12 @@ BEGIN
                                                   , inGoodsKindId_Complete:= inGoodsKindId_Complete
                                                   , inUserId              := vbUserId
                                                    );
+
+     -- сохранили связь с <Оператор КВК(Ф.И.О)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalKVK(), ioId, inPersonalId_KVK);
+     -- сохранили свойство <№ КВК>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_KVK(), ioId, inKVK);
+
 
 END;
 $BODY$

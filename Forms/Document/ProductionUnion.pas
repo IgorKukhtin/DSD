@@ -88,6 +88,7 @@ type
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
     cbisPeresort: TcxCheckBox;
+    actPersonalChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

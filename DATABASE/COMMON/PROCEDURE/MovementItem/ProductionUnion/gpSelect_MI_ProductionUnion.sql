@@ -58,8 +58,12 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , FALSE                                  AS isAuto
-            , FALSE                                  AS isErased
+            , FALSE                                 AS isAuto
+            , FALSE                                 AS isErased
+
+            , CAST (NULL AS Integer)                AS PersonalId_KVK
+            , CAST (NULL AS TVarchar)               AS PersonalName_KVK
+            , CAST (NULL AS TVarchar)               AS KVK
 
        FROM (SELECT Object_Goods.Id                          AS GoodsId
                   , Object_Goods.ObjectCode                  AS GoodsCode
@@ -137,6 +141,9 @@ BEGIN
 
             , MovementItem.isErased               AS isErased
 
+           , Object_PersonalKVK.Id        AS PersonalId_KVK
+           , Object_PersonalKVK.ValueData AS PersonalName_KVK
+           , MIString_KVK.ValueData       AS KVK
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -163,6 +170,11 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                              ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+             LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -197,6 +209,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+             LEFT JOIN MovementItemString AS MIString_KVK
+                                          ON MIString_KVK.MovementItemId = MovementItem.Id
+                                         AND MIString_KVK.DescId = zc_MIString_KVK()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
@@ -268,6 +284,10 @@ BEGIN
 
             , MovementItem.isErased               AS isErased
 
+            , Object_PersonalKVK.Id        AS PersonalId_KVK
+            , Object_PersonalKVK.ValueData AS PersonalName_KVK
+            , MIString_KVK.ValueData       AS KVK
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -293,6 +313,11 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                              ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+             LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -327,6 +352,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+             LEFT JOIN MovementItemString AS MIString_KVK
+                                          ON MIString_KVK.MovementItemId = MovementItem.Id
+                                         AND MIString_KVK.DescId = zc_MIString_KVK()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
