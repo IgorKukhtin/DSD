@@ -48,7 +48,7 @@ begin
   try
     try
       CheckEmployeeWorkLogCDS;
-      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
       if not EmployeeWorkLogCDS.Active then
       begin
         DeleteLocalData(EmployeeWorkLog_lcl);
@@ -79,7 +79,7 @@ begin
   try
     try
       CheckEmployeeWorkLogCDS;
-      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
       if not EmployeeWorkLogCDS.Active then
       begin
         DeleteLocalData(EmployeeWorkLog_lcl);
@@ -101,6 +101,8 @@ begin
     end;
   finally
     ReleaseMutex(MutexEmployeeWorkLog);
+    if EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Close;
+    EmployeeWorkLogCDS.Free;
   end;
 end;
 

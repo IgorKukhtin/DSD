@@ -38,41 +38,10 @@ BEGIN
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                      )
-       , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
-                      FROM tmpMov
-                           INNER JOIN MovementItem
-                                   ON MovementItem.MovementId = tmpMov.Id
-                                  AND MovementItem.DescId     = zc_MI_Master()
-                                  AND MovementItem.isErased   = FALSE
-                      GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
-                     )
-       , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
-                      FROM tmpMI_all
-                      GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
-                     )
-       , tmpRemains AS (SELECT tmpMI.GoodsId
-                                , tmpMI.UnitId
-                                , tmpMI.Amount           AS Amount_mi
-                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
-                           FROM tmpMI
-                                LEFT JOIN Container ON Container.DescId = zc_Container_Count()
-                                                   AND Container.ObjectId = tmpMI.GoodsId
-                                                   AND Container.WhereObjectId = tmpMI.UnitId
-                                                   AND Container.Amount <> 0
-                           GROUP BY tmpMI.GoodsId
-                                  , tmpMI.UnitId
-                                  , tmpMI.Amount
-                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
-                          )
-       , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
-                    FROM tmpMov
-                         INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
-                         INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
-                                              AND tmpRemains.UnitId  = tmpMI_all.UnitId
-                      )
+
     SELECT Movement.Id
     FROM tmpMov
-         LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
+
          LEFT JOIN Movement ON Movement.Id = tmpMov.Id
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
@@ -98,8 +67,13 @@ BEGIN
                                 ON MovementDate_Delay.MovementId = Movement.Id
                                AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
 
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                      ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
+                                     AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null THEN MovementDate_Delay.ValueData
                WHEN MovementDate_UserConfirmedKind.ValueData is not Null THEN MovementDate_UserConfirmedKind.ValueData
+               WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() THEN Movement.OperDate
                ELSE Movement.OperDate + INTERVAL '3 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY') AS Movement;
                
 END;

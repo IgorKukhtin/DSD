@@ -151,7 +151,7 @@ function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i,j: integer;
     FormStr: string;
     AttemptCount: integer;
-    OldForm: TParentForm;
+    isNewLoad: Boolean;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Ќе передано название формы');
@@ -163,7 +163,17 @@ begin
              if AddOnFormData.isSingle or (not Visible) then
                 result := TParentForm(Screen.Forms[i])
              else begin
-               OldForm := TParentForm(Screen.Forms[i]);
+
+               // »щем кроссы и если есть то форму грузим заново
+               isNewLoad := False;
+               for j := 0 to Screen.Forms[i].ComponentCount - 1 do
+                 if (Screen.Forms[i].Components[j] is TCrossDBViewAddOn) or (Screen.Forms[i].Components[j] is TCrossDBViewReportAddOn) then
+                 begin
+                    isNewLoad := True;
+                    Break;
+                 end;
+               if isNewLoad then Break;
+
                Result := TParentForm.Create(Application);
                Result.FormClassName := FormName;
                try
@@ -173,27 +183,7 @@ begin
                finally
                  MemoryStream.Clear;
                end;
-
-               // »щем кроссы и копируем листы автосозданных €чеек
-               for j := 0 to OldForm.ComponentCount - 1 do
-                 if OldForm.Components[j] is TCrossDBViewAddOn then
-                 begin
-                    TCrossDBViewAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateColumnList.
-                      Assign(TCrossDBViewAddOn(OldForm.Components[j]).CreateColumnList);
-                    TCrossDBViewAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateColorRuleList.
-                      Assign(TCrossDBViewAddOn(OldForm.Components[j]).CreateColorRuleList);
-                 end else if OldForm.Components[j] is TCrossDBViewReportAddOn then
-                 begin
-                    TCrossDBViewReportAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateColumnList.
-                      Assign(TCrossDBViewReportAddOn(OldForm.Components[j]).CreateColumnList);
-                    TCrossDBViewReportAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateColorRuleList.
-                      Assign(TCrossDBViewReportAddOn(OldForm.Components[j]).CreateColorRuleList);
-                    TCrossDBViewReportAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateBаndList.
-                      Assign(TCrossDBViewReportAddOn(OldForm.Components[j]).CreateBаndList);
-                    TCrossDBViewReportAddOn(Result.FindComponent(OldForm.Components[j].Name)).CreateTemplateColumn.
-                      Assign(TCrossDBViewReportAddOn(OldForm.Components[j]).CreateTemplateColumn);
-                 end;
-               end;
+             end;
              exit;
           end;
         end;
