@@ -1081,7 +1081,8 @@ uses
   StringDialog in '..\..\FormsFarmacy\Guides\StringDialog.pas' {StringDialogForm: TParentForm},
   Report_CheckZReportDialog in '..\..\FormsFarmacy\Report\Report_CheckZReportDialog.pas' {Report_CheckZReportDialogForm: TParentForm},
   Report_CheckZReport in '..\..\FormsFarmacy\Report\Report_CheckZReport.pas' {Report_CheckZReportForm: TParentForm},
-  MakerReport in '..\..\FormsFarmacy\Guides\MakerReport.pas' {MakerReportForm: TParentForm};
+  MakerReport in '..\..\FormsFarmacy\Guides\MakerReport.pas' {MakerReportForm: TParentForm},
+  Report_PriceCorrectionSystem in '..\..\FormsFarmacy\Report\Report_PriceCorrectionSystem.pas' {Report_PriceCorrectionSystemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1881,6 +1881,45 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1044#1072#1090#1091' '#1072#1087#1090#1077#1082#1080'"'
       ImageIndex = 67
     end
+    object actInsert_ReturnOut: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_ReturnOut
+      StoredProcList = <
+        item
+          StoredProc = spInsert_ReturnOut
+        end>
+      Caption = 'actInsert_ReturnOut'
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102'?'
+    end
+    object actOpenReturnOut: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actInsert_ReturnOut
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102
+      ImageIndex = 27
+      FormName = 'TReturnOutForm'
+      FormNameParam.Value = 'TReturnOutForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReturnOutId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -2072,6 +2111,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_ExpirationDate'
         end>
     end
@@ -2159,6 +2206,10 @@
     end
     object dxBarButton3: TdxBarButton
       Action = actUpdate_SetBranchDate
+      Category = 0
+    end
+    object bbOpenReturnOut: TdxBarButton
+      Action = actOpenReturnOut
       Category = 0
     end
   end
@@ -2492,6 +2543,11 @@
         Name = 'BranchDate'
         Value = Null
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnOutId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -3177,7 +3233,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 876
-    Top = 164
+    Top = 116
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -3410,8 +3466,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
-    Top = 144
+    Left = 928
+    Top = 120
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -3664,8 +3720,8 @@
         Control = edInvNumberOrder
       end>
     GetStoredProc = spGet
-    Left = 968
-    Top = 129
+    Left = 976
+    Top = 113
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
@@ -4044,5 +4100,29 @@
     PackSize = 1
     Left = 592
     Top = 440
+  end
+  object spInsert_ReturnOut: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_ReturnOutFromIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnOutId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 344
   end
 end

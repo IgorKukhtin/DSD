@@ -857,6 +857,8 @@ type
     Z2: TMenuItem;
     actMakerReport: TdsdOpenForm;
     N312: TMenuItem;
+    N313: TMenuItem;
+    actReport_PriceCorrectionSystem: TdsdOpenForm;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

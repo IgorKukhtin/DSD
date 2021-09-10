@@ -4600,9 +4600,20 @@
     object actMakerReport: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1090#1095#1077#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103#1084
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1090#1095#1077#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103#1084
       FormName = 'TMakerReportForm'
       FormNameParam.Value = 'TMakerReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_PriceCorrectionSystem: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1057#1080#1089#1090#1077#1084#1072' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099' '#1087#1086' '#1080#1090#1086#1075#1072#1084' '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1089#1088#1077#1076#1085#1080#1093' '#1087#1088#1086#1076#1072#1078
+      FormName = 'TReport_PriceCorrectionSystemForm'
+      FormNameParam.Value = 'TReport_PriceCorrectionSystemForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -5707,6 +5718,9 @@
       end
       object C1: TMenuItem
         Action = actReport_KilledCodeRecovery
+      end
+      object N313: TMenuItem
+        Action = actReport_PriceCorrectionSystem
       end
       object N133: TMenuItem
         Caption = '-'

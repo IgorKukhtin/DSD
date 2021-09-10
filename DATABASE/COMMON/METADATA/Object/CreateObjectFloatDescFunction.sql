@@ -2049,10 +2049,15 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ZReportLog(), 'zc_ObjectFloat_ZReportLog_SummaCard', 'Оборот карта' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ZReportLog_SummaCard');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PriceCorrectionDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceCorrectionDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PriceCorrectionDay', 'Период дней для системы коррекции цены по итогам роста/падения средних продаж' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceCorrectionDay');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.09.21                                                                                      * zc_ObjectFloat_CashSettings_PriceCorrectionDay
  30.07.21                                                                                      * zc_ObjectFloat_ZReportLog_Summa...
  27.07.21                                                                                      * zc_ObjectFloat_CashSettings_CustomerThreshold
  01.07.21                                                                                      * zc_ObjectFloat_Goods_PairSunAmount

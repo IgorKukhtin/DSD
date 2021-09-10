@@ -186,6 +186,10 @@ type
     actUpdate_SetBranchDate: TdsdExecStoredProc;
     spUpdate_SetBranchDate: TdsdStoredProc;
     dxBarButton3: TdxBarButton;
+    actInsert_ReturnOut: TdsdExecStoredProc;
+    spInsert_ReturnOut: TdsdStoredProc;
+    actOpenReturnOut: TdsdOpenForm;
+    bbOpenReturnOut: TdxBarButton;
   private
     { Private declarations }
   public
