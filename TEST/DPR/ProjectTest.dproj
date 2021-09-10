@@ -4512,6 +4512,14 @@
 				<Form>Goods_Name_BUHDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\gpReport_PromoInvoiceDialog.pas">
+				<Form>Report_PromoInvoiceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\gpReport_PromoInvoice.pas">
+				<Form>Report_PromoInvoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

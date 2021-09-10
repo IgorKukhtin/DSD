@@ -24,13 +24,15 @@ RETURNS TABLE (MovementId Integer, StatusCode Integer, InvNumber TVarChar, InvNu
 
              , MovementId_promo Integer
              , OperDate_promo TDateTime
-             , InvNumber_promo  Integer
+             , InvNumber_promo  TVarChar
              , StatusCode_promo Integer
              , StartSale_promo TDateTime
              , EndSale_promo  TDateTime
              , StartPromo_promo TDateTime
              , EndPromo_promo TDateTime
              , MonthPromo_promo TDateTime
+             , PromoKindName TVarChar
+             , UnitName TVarChar
              ) 
 AS
 $BODY$
@@ -144,22 +146,33 @@ BEGIN
                                    , MovementDate_Month.ValueData           AS MonthPromo         -- месяц акции
                                    --, MovementDate_OperDateStart.ValueData   AS OperDateStart      --Дата начала расч. продаж до акции
                                    --, MovementDate_OperDateEnd.ValueData     AS OperDateEnd        --Дата окончания расч. продаж до акции
+                                   , Object_PromoKind.ValueData             AS PromoKindName      --Вид акции
+                                   , Object_Unit.ValueData                  AS UnitName           --Подразделение
                               FROM tmpPromo
-                                   LEFT JOIN tmpMovementDate ON MovementDate_StartSale
-                                                            AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                   LEFT JOIN tmpMovementDate AS MovementDate_StartSale
+                                                             ON MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
                                                             AND MovementDate_StartSale.MovementId = tmpPromo.MovementId
-                                   LEFT JOIN tmpMovementDate ON MovementDate_EndSale
-                                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                   LEFT JOIN tmpMovementDate AS MovementDate_EndSale
+                                                            ON MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                                                             AND MovementDate_EndSale.MovementId = tmpPromo.MovementId
-                                   LEFT JOIN tmpMovementDate ON MovementDate_StartPromo
-                                                            AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                   LEFT JOIN tmpMovementDate AS MovementDate_StartPromo
+                                                            ON MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
                                                             AND MovementDate_StartPromo.MovementId = tmpPromo.MovementId
-                                   LEFT JOIN tmpMovementDate ON MovementDate_EndPromo
-                                                            AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                   LEFT JOIN tmpMovementDate AS MovementDate_EndPromo
+                                                            ON MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
                                                             AND MovementDate_EndPromo.MovementId = tmpPromo.MovementId
-                                   LEFT JOIN tmpMovementDate ON MovementDate_Month
-                                                            AND MovementDate_Month.DescId = zc_MovementDate_Month()
+                                   LEFT JOIN tmpMovementDate AS MovementDate_Month
+                                                            ON MovementDate_Month.DescId = zc_MovementDate_Month()
                                                             AND MovementDate_Month.MovementId = tmpPromo.MovementId
+
+                                   LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = tmpPromo.MovementId
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+                                   LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PromoKind
+                                                                   ON MovementLinkObject_PromoKind.MovementId = tmpPromo.MovementId
+                                                                  AND MovementLinkObject_PromoKind.DescId = zc_MovementLinkObject_PromoKind()
+                                   LEFT JOIN Object AS Object_PromoKind ON Object_PromoKind.Id = MovementLinkObject_PromoKind.ObjectId
 
                              )
 
@@ -228,6 +241,7 @@ BEGIN
                                   WHERE Movement.DescId = zc_Movement_ProfitLossService()
                                     AND Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  GROUP BY MILinkObject_Contract.ObjectId
                                   )
        -- все zc_Movement_PromoInvoice (кроме текущего) к этому договору  -- что значит кроме текущего
       /* , tmpPromoInvoice_period AS (SELECT 
@@ -263,13 +277,15 @@ BEGIN
 
             , tmpMovementPromo.MovementId AS MovementId_promo
             , tmpMovementPromo.OperDate   AS OperDate_promo
-            , tmpMovementPromo.InvNumber  AS InvNumber_promo
+            , tmpMovementPromo.InvNumber :: TVarChar AS InvNumber_promo
             , tmpMovementPromo.StatusCode AS StatusCode_promo
             , tmpMovementPromo.StartSale  AS StartSale_promo
             , tmpMovementPromo.EndSale    AS EndSale_promo 
             , tmpMovementPromo.StartPromo AS StartPromo_promo
             , tmpMovementPromo.EndPromo   AS EndPromo_promo
             , tmpMovementPromo.MonthPromo AS MonthPromo_promo
+            , tmpMovementPromo.PromoKindName
+            , tmpMovementPromo.UnitName
     
        FROM tmpPromoInvoice
             LEFT JOIN tmpMLM ON tmpMLM.MovementId_PromoInvoice = tmpPromoInvoice.MovementId
@@ -290,4 +306,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_PromoInvoice(inStartDate := ('29.06.2016')::TDateTime , inEndDate := ('03.07.2016')::TDateTime , inJuridicalId := 15444 , inPaidKindId := 0 ,  inSession := '5');
+-- select * from gpReport_PromoInvoice(inStartDate := ('29.06.2021')::TDateTime , inEndDate := ('03.07.2022')::TDateTime , inStartDate2 := ('29.06.2016')::TDateTime , inEndDate2 := ('03.07.2016')::TDateTime , inPaidKindId := 0::Integer ,  inSession := '5'::TVarChar);
