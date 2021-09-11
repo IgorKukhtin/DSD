@@ -655,7 +655,7 @@ BEGIN
 
      END IF;
      -- проверка: ОСТАТОК должен быть
-     IF vbId_err > 0 AND 1=1 AND inUserId <> '8'
+     IF vbId_err > 0 AND 1=1 AND inUserId NOT IN (8)--, 1017903)
      THEN
         RAISE EXCEPTION 'Ошибка.Для товара <% %> р.<%> Остаток = <%>. Кол-во = <%>'
                       , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbId_err))

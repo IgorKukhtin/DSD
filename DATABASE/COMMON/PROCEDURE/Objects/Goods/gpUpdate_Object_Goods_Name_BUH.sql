@@ -18,9 +18,16 @@ BEGIN
      --vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- проверка прав пользователя на вызов процедуры
+     IF NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Name_BUH())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет Прав на изменение <Название бухгалтерское>.';
+     END IF;
+
      IF COALESCE (inId,0) = 0
      THEN
-         RETURN;
+         RAISE EXCEPTION 'Ошибка.Элемент справочника не выбран.';
+         --RETURN;
      END IF;
 
      -- сохранили свойство <Название БУХГ>

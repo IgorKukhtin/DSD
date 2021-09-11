@@ -13,7 +13,6 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
