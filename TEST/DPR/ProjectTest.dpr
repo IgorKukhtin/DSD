@@ -1307,7 +1307,9 @@ uses
   Report_GoodsMI_SaleReturnIn_PaidKindDialog in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKindDialog.pas' {Report_GoodsMI_SaleReturnIn_PaidKindDialogForm: TParentForm},
   Report_GoodsMI_SaleReturnIn_PaidKind in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_PaidKind.pas' {Report_GoodsMI_SaleReturnIn_PaidKindForm: TParentForm},
   PromoInvoice in '..\..\Forms\Document\PromoInvoice.pas' {PromoInvoiceForm: TParentForm},
-  Goods_Name_BUHDialog in '..\..\Forms\Guides\Goods_Name_BUHDialog.pas' {Goods_Name_BUHDialogForm: TParentForm};
+  Goods_Name_BUHDialog in '..\..\Forms\Guides\Goods_Name_BUHDialog.pas' {Goods_Name_BUHDialogForm: TParentForm},
+  gpReport_PromoInvoiceDialog in '..\..\Forms\Report\gpReport_PromoInvoiceDialog.pas' {Report_PromoInvoiceDialogForm: TParentForm},
+  gpReport_PromoInvoice in '..\..\Forms\Report\gpReport_PromoInvoice.pas' {Report_PromoInvoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

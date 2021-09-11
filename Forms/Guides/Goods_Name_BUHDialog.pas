@@ -33,6 +33,10 @@ type
     edName_BUH: TcxTextEdit;
     cxLabel18: TcxLabel;
     edDate_BUH: TcxDateEdit;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edName: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -482,6 +482,8 @@ type
     property DataSet: TDataSet read FDataSet;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property CreateColumnList: TList read FCreateColumnList;
+    property CreateColorRuleList: TList read FCreateColorRuleList;
   published
     // Дата сет с названием колонок и другой необходимой для работы информацией.
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
@@ -622,6 +624,10 @@ type
     property DataSet: TDataSet read FDataSet;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property CreateColumnList: TList read FCreateColumnList;
+    property CreateColorRuleList: TList read FCreateColorRuleList;
+    property CreateBаndList: TList read FCreateBаndList;
+    property CreateTemplateColumn: TList read FCreateTemplateColumn;
   published
     // Данные для построения графиков
     property ChartList: TOwnedCollection read FChartList write FChartList;

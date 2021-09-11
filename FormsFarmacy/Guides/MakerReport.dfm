@@ -1,7 +1,7 @@
 object MakerReportForm: TMakerReportForm
   Left = 0
   Top = 0
-  Caption = #1053#1072#1089#1090#1088#1086#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1090#1095#1077#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103#1084
+  Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1090#1095#1077#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103#1084
   ClientHeight = 431
   ClientWidth = 1062
   Color = clBtnFace
@@ -12,7 +12,6 @@ object MakerReportForm: TMakerReportForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -514,8 +513,8 @@ object MakerReportForm: TMakerReportForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMakerReportEditForm'
-      FormNameParam.Value = 'TMakerReportEditForm'
+      FormName = 'TMakerEditForm'
+      FormNameParam.Value = 'TMakerEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -535,8 +534,8 @@ object MakerReportForm: TMakerReportForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMakerReportEditForm'
-      FormNameParam.Value = 'TMakerReportEditForm'
+      FormName = 'TMakerEditForm'
+      FormNameParam.Value = 'TMakerEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

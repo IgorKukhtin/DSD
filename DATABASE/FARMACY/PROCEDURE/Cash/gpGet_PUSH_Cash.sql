@@ -519,13 +519,83 @@ BEGIN
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (9, 'Коллеги, удалите распроведенные чеки:'||Chr(13)||Chr(13)||vbText);    
    END IF;
-   
+      
      -- ВНИМАНИЕ!!! ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!! СЕГОДНЯ снять и внести показания в журнал!!!
    IF date_part('DAY',    CURRENT_DATE)::Integer in (1, 15)
      AND date_part('HOUR',  CURRENT_TIME)::Integer % 2 = 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (10, 'ВНИМАНИЕ!!!'||Chr(13)||'ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!!'||Chr(13)||Chr(13)||'СЕГОДНЯ снять и внести показания в журнал!!!');
+   END IF;
+  
+   -- Заполнили, но не провели СУН 
+   IF date_part('MINUTE',  CURRENT_TIME)::Integer <= 10 OR
+      date_part('MINUTE',  CURRENT_TIME)::Integer >= 30 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 50
+   THEN
+     WITH tmpMovement AS (SELECT *
+                          FROM  Movement
+                                INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                           ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                          AND MovementBoolean_SUN.ValueData = TRUE
+                                INNER JOIN MovementBoolean AS MovementBoolean_Sent
+                                                           ON MovementBoolean_Sent.MovementId = Movement.Id
+                                                          AND MovementBoolean_Sent.DescId     = zc_MovementBoolean_Sent()
+                                                          AND MovementBoolean_Sent.ValueData  = TRUE
+                                LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                                          ON MovementBoolean_Received.MovementId = Movement.Id
+                                                         AND MovementBoolean_Received.DescId     = zc_MovementBoolean_Received()
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                             AND MovementLinkObject_To.ObjectId   = vbUnitId
+                          WHERE Movement.DescId = zc_Movement_Send()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete()  
+                            AND Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY'                    
+                   ),
+          tmpMI AS (SELECT DISTINCT Movement.Id
+                    FROM tmpMovement AS Movement
+                                     
+                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId = zc_MI_Master()
+                                                AND MovementItem.isErased = FALSE
+                                          
+                         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                         LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                                     ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+                    WHERE COALESCE(MIFloat_AmountManual.ValueData,0) <> COALESCE(MIFloat_AmountStorage.ValueData,0)
+                    ),
+          tmpMovementUnComplete AS (SELECT Movement.*
+                                    FROM tmpMovement AS Movement
+                                                   
+                                         LEFT JOIN tmpMI ON tmpMI.Id = Movement.Id
+      
+                                    WHERE COALESCE(tmpMI.Id, 0) = 0
+                                    ),
+          tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                       , MAX(MovementProtocol.OperDate) AS OperDate
+                                  FROM tmpMovement AS Movement
+
+                                       INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                                                  AND COALESCE(MovementProtocol.UserId, 0) <> 0
+                                  GROUP BY MovementProtocol.MovementId)
+                   
+     SELECT string_agg(Movement.InvNumber||' от '||zfConvert_DateShortToString (Movement.OperDate), Chr(13))
+     INTO vbText
+     FROM tmpMovementUnComplete AS  Movement
+        
+          INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.ID
+             
+     WHERE tmpMovementProtocol.OperDate > CURRENT_TIMESTAMP - INTERVAL '2 HOUR' - INTERVAL '30 minute'
+       AND tmpMovementProtocol.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 HOUR';    
+
+     IF COALESCE (vbText, '') <> ''
+     THEN
+       INSERT INTO _PUSH (Id, Text) VALUES (11, 'Заполнили, но не провели СУН:'||Chr(13)||Chr(13)||vbText);    
+     END IF;
    END IF;
 
    -- PUSH уведомления
@@ -704,4 +774,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_PUSH_Cash('3')
+-- 
+SELECT * FROM gpGet_PUSH_Cash('3')

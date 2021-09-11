@@ -62,6 +62,8 @@ type
     cxLabel15: TcxLabel;
     ceCustomerThreshold: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
+    cePriceCorrectionDay: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public

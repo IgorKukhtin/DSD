@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inAssortmentGeograph         Integer   ,     -- Аптек аналитиков по географии
     IN inAssortmentSales            Integer   ,     -- Аптек аналитиков по продажам
     IN inCustomerThreshold          TFloat    ,     -- Порог срабатывание при заказе под клиента
+    IN inPriceCorrectionDay         Integer   ,     -- Период дней для системы коррекции цены по итогам роста/падения средних продаж
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -75,6 +76,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DayCompensDiscount(), vbID, inDayCompensDiscount);
       -- сохранили Порог срабатывание при заказе под клиента
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_CustomerThreshold(), vbID, inCustomerThreshold);
+      -- сохранили Период дней для системы коррекции цены по итогам роста/падения средних продаж
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PriceCorrectionDay(), vbID, inPriceCorrectionDay);
 
       -- сохранили Аптек аналитиков по географии
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentGeograph(), vbID, inAssortmentGeograph);

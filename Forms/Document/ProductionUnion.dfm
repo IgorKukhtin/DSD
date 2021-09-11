@@ -20,6 +20,8 @@ inherited ProductionUnionForm: TProductionUnionForm
       inherited cxGrid: TcxGrid
         Width = 1000
         Height = 220
+        ExplicitLeft = 120
+        ExplicitTop = 3
         ExplicitWidth = 1000
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -339,6 +341,30 @@ inherited ProductionUnionForm: TProductionUnionForm
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object PersonalName_KVK: TcxGridDBColumn
+            Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
+            DataBinding.FieldName = 'PersonalName_KVK'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
+            Width = 100
+          end
+          object KVK: TcxGridDBColumn
+            Caption = #8470' '#1050#1042#1050
+            DataBinding.FieldName = 'KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1050#1042#1050
+            Width = 70
           end
         end
       end
@@ -740,7 +766,34 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm [22]
+    object actPersonalChoiceForm: TOpenChoiceForm [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actPersonalChoiceMaster'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId_KVK'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName_KVK'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1039,7 +1092,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1232,8 +1285,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 498
-    Top = 232
+    Left = 522
+    Top = 264
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1264,41 +1317,9 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 334
     Top = 224
   end
@@ -1358,7 +1379,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1387,6 +1408,23 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId_KVK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId_KVK'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKVK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KVK'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1420,14 +1458,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1443,7 +1481,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1466,45 +1504,38 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_Complete'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId_KVK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId_KVK'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKVK'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KVK'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = ChildCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = ChildCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = ChildCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = ChildCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
   end
   inherited GuidesTo: TdsdGuides
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -1563,7 +1594,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime

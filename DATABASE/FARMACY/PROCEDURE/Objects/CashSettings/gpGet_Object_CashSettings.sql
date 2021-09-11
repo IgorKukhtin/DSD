@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AssortmentGeograph Integer
              , AssortmentSales Integer
              , CustomerThreshold TFloat
+             , PriceCorrectionDay Integer
              ) AS
 $BODY$
 BEGIN
@@ -57,6 +58,7 @@ BEGIN
         , ObjectFloat_CashSettings_AssortmentGeograph.ValueData::Integer           AS AssortmentGeograph
         , ObjectFloat_CashSettings_AssortmentSales.ValueData::Integer              AS AssortmentSales
         , ObjectFloat_CashSettings_CustomerThreshold.ValueData                     AS CustomerThreshold
+        , ObjectFloat_CashSettings_PriceCorrectionDay.ValueData::Integer           AS PriceCorrectionDay
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -108,6 +110,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_CustomerThreshold
                               ON ObjectFloat_CashSettings_CustomerThreshold.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_CustomerThreshold.DescId = zc_ObjectFloat_CashSettings_CustomerThreshold()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceCorrectionDay
+                              ON ObjectFloat_CashSettings_PriceCorrectionDay.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_PriceCorrectionDay.DescId = zc_ObjectFloat_CashSettings_PriceCorrectionDay()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
                                 ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 

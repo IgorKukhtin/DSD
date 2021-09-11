@@ -1019,7 +1019,10 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCorrectionSystemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCorrectionSystemForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportDialogForm');
@@ -1034,7 +1037,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZeroingInOrdersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ZeroingInOrdersForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Top100GoodsSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Top100GoodsSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Top100GoodsSUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ZReportLogDialogForm'));
@@ -1045,11 +1048,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCheckForm');
 
-}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_JackdawsSumDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_JackdawsSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_JackdawsSumForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_CheckDeliverySiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_CheckDeliverySiteForm');
 

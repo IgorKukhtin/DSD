@@ -148,9 +148,10 @@ begin
 end;
 
 function TdsdFormStorage.Load(FormName: String): TParentForm;
-var i: integer;
+var i,j: integer;
     FormStr: string;
     AttemptCount: integer;
+    isNewLoad: Boolean;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Ќе передано название формы');
@@ -162,6 +163,17 @@ begin
              if AddOnFormData.isSingle or (not Visible) then
                 result := TParentForm(Screen.Forms[i])
              else begin
+
+               // »щем кроссы и если есть то форму грузим заново
+               isNewLoad := False;
+               for j := 0 to Screen.Forms[i].ComponentCount - 1 do
+                 if (Screen.Forms[i].Components[j] is TCrossDBViewAddOn) or (Screen.Forms[i].Components[j] is TCrossDBViewReportAddOn) then
+                 begin
+                    isNewLoad := True;
+                    Break;
+                 end;
+               if isNewLoad then Break;
+
                Result := TParentForm.Create(Application);
                Result.FormClassName := FormName;
                try
