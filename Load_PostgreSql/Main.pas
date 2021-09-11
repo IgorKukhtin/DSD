@@ -2767,10 +2767,10 @@ begin
      // !!!заливка в сибасе!!!
      fromZConnection.Connected:=false;
      with fromZQuery,Sql do begin
-        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_PartnerCount('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
+        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_PartnerCount('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
                        +' order by OperDate,MovementId,InvNumber');
         //
-        myLogMemo_add('start Transport_PartnerCount' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        myLogMemo_add('start Transport_PartnerCount' + '('+IntToStr(RecordCount)+') ' + StartDateEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbTransportList.Caption:='('+IntToStr(RecordCount)+') TransportList-PartnerCount';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2809,10 +2809,10 @@ begin
      // !!!заливка в сибасе!!!
      fromZConnection.Connected:=false;
      with fromZQuery,Sql do begin
-        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_recomplete('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
+        fOpenFromZQuery ('select * from gpUpdate_SelectAll_Sybase_Transport_recomplete('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
                        +' order by OperDate,MovementId,InvNumber');
         //
-        myLogMemo_add('start Transport-recomplete' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        myLogMemo_add('start Transport-recomplete' + '('+IntToStr(RecordCount)+') ' + StartDateEdit.Text + ' - ' + EndDateCompleteEdit.Text);
         cbTransportList.Caption:='('+IntToStr(RecordCount)+') Transport-recomplete';
         //
         fStop:=cbOnlyOpen.Checked;
