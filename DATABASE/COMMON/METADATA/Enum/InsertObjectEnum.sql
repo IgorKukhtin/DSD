@@ -356,6 +356,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementTransportHours(), inDescId:= zc_Object_SelectKind(), inCode:= 11, inName:= 'Транспорт - Рабочее время из путевого листа', inEnumName:= 'zc_Enum_SelectKind_MovementTransportHours');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementReestrWeight(),   inDescId:= zc_Object_SelectKind(), inCode:= 12, inName:= 'Транспорт - Кол-во вес (реестр)',             inEnumName:= 'zc_Enum_SelectKind_MovementReestrWeight');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementReestrDoc(),      inDescId:= zc_Object_SelectKind(), inCode:= 13, inName:= 'Транспорт - Кол-во документов (реестр)',      inEnumName:= 'zc_Enum_SelectKind_MovementReestrDoc');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementReestrPartner(),  inDescId:= zc_Object_SelectKind(), inCode:= 14, inName:= 'Транспорт - Кол-во ТТ (реестр)',              inEnumName:= 'zc_Enum_SelectKind_MovementReestrPartner');
 
      -- !!! Типы сумм для штатного расписания
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_MonthDay(),        inDescId:= zc_Object_StaffListSummKind(), inCode:= 1, inName:= 'Фонд за месяц (по дням)'                                  , inEnumName:= 'zc_Enum_StaffListSummKind_MonthDay');
