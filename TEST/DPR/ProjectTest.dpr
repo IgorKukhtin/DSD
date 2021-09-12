@@ -1309,7 +1309,9 @@ uses
   PromoInvoice in '..\..\Forms\Document\PromoInvoice.pas' {PromoInvoiceForm: TParentForm},
   Goods_Name_BUHDialog in '..\..\Forms\Guides\Goods_Name_BUHDialog.pas' {Goods_Name_BUHDialogForm: TParentForm},
   gpReport_PromoInvoiceDialog in '..\..\Forms\Report\gpReport_PromoInvoiceDialog.pas' {Report_PromoInvoiceDialogForm: TParentForm},
-  gpReport_PromoInvoice in '..\..\Forms\Report\gpReport_PromoInvoice.pas' {Report_PromoInvoiceForm: TParentForm};
+  gpReport_PromoInvoice in '..\..\Forms\Report\gpReport_PromoInvoice.pas' {Report_PromoInvoiceForm: TParentForm},
+  Report_Losses_KVKDialog in '..\..\Forms\Report\Report_Losses_KVKDialog.pas' {Report_Losses_KVKDialogForm: TParentForm},
+  Report_Losses_KVK in '..\..\Forms\Report\Report_Losses_KVK.pas' {Report_Losses_KVKForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
