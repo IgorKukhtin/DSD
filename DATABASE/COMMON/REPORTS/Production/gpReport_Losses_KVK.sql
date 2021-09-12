@@ -227,8 +227,8 @@ BEGIN
 
      FROM tmpWeighingProduction
           LEFT JOIN tmpMI_Master_PU ON tmpMI_Master_PU.ObjectId = tmpWeighingProduction.GoodsId
-                                --   AND COALESCE (tmpMI_Master_PU.PersonalId_KVK,0) = COALESCE (tmpWeighingProduction.PersonalId_KVK,0)
-                                --   AND COALESCE (tmpMI_Master_PU.KVK,'') = COALESCE (tmpWeighingProduction.KVK,'')
+                                   AND COALESCE (tmpMI_Master_PU.PersonalId_KVK,0) = COALESCE (tmpWeighingProduction.PersonalId_KVK,0)
+                                   AND COALESCE (tmpMI_Master_PU.KVK,'') = COALESCE (tmpWeighingProduction.KVK,'')
           LEFT JOIN tmpProductionUnion ON tmpProductionUnion.Id = tmpMI_Master_PU.MovementId
           
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpWeighingProduction.GoodsId
