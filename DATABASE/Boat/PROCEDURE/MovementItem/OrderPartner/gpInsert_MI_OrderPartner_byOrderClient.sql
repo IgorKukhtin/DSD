@@ -136,7 +136,7 @@ BEGIN
          LEFT JOIN MovementItemString AS MIString_Comment
                                       ON MIString_Comment.MovementItemId = _tmpMI.Id
                                      AND MIString_Comment.DescId         = zc_MIString_Comment()
-         -- Собрали Заказы Клиента
+         -- Собрали Заказы Клиента - zc_MI_Child
          FULL JOIN (SELECT _tmpMI_Child.ObjectId
                          , _tmpMI_Child.CountForPrice
                          , _tmpMI_Child.OperPrice
