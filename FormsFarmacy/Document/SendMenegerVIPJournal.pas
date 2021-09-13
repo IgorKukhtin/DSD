@@ -20,6 +20,7 @@ type
     actPrintNew: TdsdPrintAction;
     actToGenerateCheck: TdsdOpenForm;
     dxBarButton7: TdxBarButton;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

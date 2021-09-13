@@ -156,4 +156,17 @@ object MainForm: TMainForm
     Left = 216
     Top = 128
   end
+  object ZQueryTable: TZQuery
+    Connection = ZConnection
+    SQL.Strings = (
+      'SELECT table_name FROM information_schema.tables'
+      
+        '                    WHERE table_schema NOT IN ('#39'information_sche' +
+        'ma'#39','#39'pg_catalog'#39')'
+      '                      AND table_type = '#39'BASE TABLE'#39
+      '                    ORDER BY table_name;')
+    Params = <>
+    Left = 304
+    Top = 128
+  end
 end

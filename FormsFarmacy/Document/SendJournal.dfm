@@ -1,27 +1,27 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 841
+  ClientWidth = 826
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 857
+  ExplicitWidth = 842
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 841
+    Width = 826
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 841
+    ExplicitWidth = 826
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 841
+    ClientRectRight = 826
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 841
+      ExplicitWidth = 826
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 841
+        Width = 826
         Height = 478
-        ExplicitWidth = 841
+        ExplicitWidth = 826
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -533,8 +533,8 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 841
-    ExplicitWidth = 841
+    Width = 826
+    ExplicitWidth = 826
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -1009,6 +1009,96 @@ inherited SendJournalForm: TSendJournalForm
         end>
       Caption = 'actExecSPDriverSun'
     end
+    object actPrintFilter: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrefixFileNameExport'
+          Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ReportNameParam.Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintFilter: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrintFilter
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1101#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1074' PDF?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1074' PDF'
+      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1074' PDF'
+      ImageIndex = 21
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1182,15 +1272,15 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbSetSent'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbSetReceived'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton7'
+          ItemName = 'bbSetDriverSun'
         end
         item
           Visible = True
@@ -1211,7 +1301,18 @@ inherited SendJournalForm: TSendJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintFilter'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Width = 15
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -1230,11 +1331,11 @@ inherited SendJournalForm: TSendJournalForm
       Category = 0
       ImageIndex = 52
     end
-    object dxBarButton2: TdxBarButton
+    object bbSetReceived: TdxBarButton
       Action = actSetReceived
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbSetSent: TdxBarButton
       Action = actSetSent
       Category = 0
     end
@@ -1262,8 +1363,12 @@ inherited SendJournalForm: TSendJournalForm
       Action = actSetErasedFilter
       Category = 0
     end
-    object dxBarButton7: TdxBarButton
+    object bbSetDriverSun: TdxBarButton
       Action = macSetDriverSun
+      Category = 0
+    end
+    object bbPrintFilter: TdxBarButton
+      Action = macPrintFilter
       Category = 0
     end
   end

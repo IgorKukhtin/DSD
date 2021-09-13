@@ -65,10 +65,10 @@ type
     spUpdate_Movement_Received: TdsdStoredProc;
     actExecSetReceived: TdsdExecStoredProc;
     actSetReceived: TMultiAction;
-    dxBarButton2: TdxBarButton;
+    bbSetReceived: TdxBarButton;
     actSetSent: TMultiAction;
     actExecSetSent: TdsdExecStoredProc;
-    dxBarButton1: TdxBarButton;
+    bbSetSent: TdxBarButton;
     spUpdate_Movement_Sent: TdsdStoredProc;
     isSent: TcxGridDBColumn;
     isOverdueSUN: TcxGridDBColumn;
@@ -103,10 +103,13 @@ type
     isBanFiscalSale: TcxGridDBColumn;
     macSetDriverSun: TMultiAction;
     actOpenChoiceDriverSun: TOpenChoiceForm;
-    dxBarButton7: TdxBarButton;
+    bbSetDriverSun: TdxBarButton;
     spUpdate_Movement_DriverSun: TdsdStoredProc;
     actExecSPDriverSun: TdsdExecStoredProc;
     isSendLoss: TcxGridDBColumn;
+    actPrintFilter: TdsdPrintAction;
+    macPrintFilter: TMultiAction;
+    bbPrintFilter: TdxBarButton;
   private
     { Private declarations }
   public

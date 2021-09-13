@@ -430,8 +430,8 @@ End;
 
 procedure DeleteLocalData(AFileName: String);
 Begin
-  if not FileExists(PChar(GetBackupFileName(AFileName))) then DeleteFile(PChar(PChar(GetBackupFileName(AFileName))));
-  if not FileExists(AFileName) then DeleteFile(PChar(AFileName));
+  if FileExists(PChar(GetBackupFileName(AFileName))) then DeleteFile(PChar(PChar(GetBackupFileName(AFileName))));
+  if FileExists(AFileName) then DeleteFile(PChar(AFileName));
 End;
 
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;

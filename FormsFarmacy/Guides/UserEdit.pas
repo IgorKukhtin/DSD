@@ -45,6 +45,7 @@ type
     ceManagerPharmacy: TcxCheckBox;
     edPasswordWages: TcxTextEdit;
     cxLabel8: TcxLabel;
+    cbWorkingMultiple: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -12,6 +12,7 @@ RETURNS TABLE (
   PricePrev          TFloat,
   PriceCurr          TFloat,
   Procent            TFloat,
+  PriceCorrectionDay Integer,
   Color_Calc         Integer
 )
 AS
@@ -86,6 +87,7 @@ BEGIN
        , MovementItem.PriceCurr::TFloat
        , ((COALESCE(MovementItem.PriceCurr, 0) - COALESCE(MovementItem.PricePrev, 0)) / 
          ((COALESCE(MovementItem.PricePrev, 0) + COALESCE(MovementItem.PriceCurr, 0)) / 2) * 100)::TFloat  AS Procent
+       , tmpCashSettings.PriceCorrectionDay
        , CASE WHEN COALESCE(MovementItem.PriceCurr, 0) = COALESCE(MovementItem.PricePrev, 0) THEN zc_Color_White() 
                WHEN COALESCE(MovementItem.PriceCurr, 0) > COALESCE(MovementItem.PricePrev, 0) THEN zc_Color_Yelow() 
                ELSE 11394815 END                                                                            AS Color_Calc
@@ -94,6 +96,8 @@ BEGIN
        LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
        LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
+       LEFT JOIN tmpCashSettings ON 1 = 1
+       
   WHERE COALESCE(MovementItem.PricePrev, 0) <> 0 
     AND COALESCE(MovementItem.PriceCurr, 0) <> 0
   ORDER BY Object_Goods_Main.Name;

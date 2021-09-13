@@ -470,6 +470,11 @@ BEGIN
                               AND Movement.DescId = zc_Movement_PromoUnit()
                               AND Movement.OperDate = DATE_TRUNC ('MONTH', vbOperDate));
                               
+        IF COALESCE (vbAmountPromo, 0) = 0
+        THEN
+          RAISE EXCEPTION 'Ошибка. Товар не найден в плане для точки.';
+        END IF;
+
           vbUserUnit := (SELECT Count(*)
                          FROM Movement
                                 
@@ -542,7 +547,7 @@ BEGIN
            INTO vbAmountAuto
            FROM tmpProtocol;
 
-        IF COALESCE (vbAmountPromo * vbUserUnit, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
+        IF COALESCE (COALESCE (vbAmountPromo, 0) * vbUserUnit, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
         THEN
           RAISE EXCEPTION 'Ошибка. Остаток с учетом зануления <%> больше чем в плане по точке <%> использование коментария <%> запрещено.',
                            COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0), COALESCE (vbAmountPromo * vbUserUnit, 0), (SELECT Object.ValueData FROM Object WHERE Object.ID = inCommentSendID);

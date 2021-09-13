@@ -32,6 +32,7 @@ type
     qrySetDateSend: TZQuery;
     Memo: TMemo;
     ZQuery: TZQuery;
+    ZQueryTable: TZQuery;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
@@ -76,60 +77,88 @@ procedure TMainForm.btnAllClick(Sender: TObject);
 
   function lVACUUM (lStr : String): Boolean;
   begin
-     ZQuery.Sql.Clear;;
-     ZQuery.Sql.Add (lStr);
-     ZQuery.ExecSql;
-     Add_Log(lStr);
-     Sleep(500);
+     try
+       Application.ProcessMessages;
+       ZQuery.Sql.Clear;;
+       ZQuery.Sql.Add (lStr);
+       ZQuery.ExecSql;
+       Add_Log(lStr);
+       Application.ProcessMessages;
+       Sleep(500);
+     except
+       on E: Exception do
+         Add_Log(E.Message);
+     end;
   end;
 begin
   try
     try
-       //
-       Add_Log('start all VACUUM');
-       //
-       // Container
-       lVACUUM ('VACUUM FULL Container');
-       lVACUUM ('VACUUM ANALYZE Container');
-       // CashSessionSnapShot - !!! 180 MIN !!!
-       lVACUUM ('delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39) + ')');
-       lVACUUM ('delete from CashSession WHERE Id NOT IN (SELECT DISTINCT CashSessionId FROM CashSessionSnapShot) AND lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39));
-       lVACUUM ('VACUUM FULL CashSession');
-       lVACUUM ('VACUUM ANALYZE CashSession');
-       lVACUUM ('VACUUM FULL CashSessionSnapShot');
-       lVACUUM ('VACUUM ANALYZE CashSessionSnapShot');
-       // LoadPriceList + LoadPriceListItem
-       lVACUUM ('VACUUM FULL LoadPriceList');
-       lVACUUM ('VACUUM ANALYZE LoadPriceList');
-       lVACUUM ('VACUUM FULL LoadPriceListItem');
-       lVACUUM ('VACUUM ANALYZE LoadPriceListItem');
-       // System - FULL
-       lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_class');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_type');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_index');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
-       lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
-       // System - ANALYZE
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_class');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_type');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_depend');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_shdepend');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
-       lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
-       //
-       // !!!main!!!
-       lVACUUM ('VACUUM');
-       lVACUUM ('VACUUM ANALYZE');
-       //
-       //
-       Add_Log('end all VACUUM');
+
+       if (CompareText(ParamStr(1), 'analyze') = 0) and (CompareText(ParamStr(2), 'analyze') = 0) and (CompareText(ParamStr(3), 'analyze') = 0) then
+       begin
+         //
+         Add_Log('start all VACUUM');
+         //
+         // Container
+         lVACUUM ('VACUUM FULL Container');
+         lVACUUM ('VACUUM ANALYZE Container');
+         // CashSessionSnapShot - !!! 180 MIN !!!
+         lVACUUM ('delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39) + ')');
+         lVACUUM ('delete from CashSession WHERE Id NOT IN (SELECT DISTINCT CashSessionId FROM CashSessionSnapShot) AND lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39));
+         lVACUUM ('VACUUM FULL CashSession');
+         lVACUUM ('VACUUM ANALYZE CashSession');
+         lVACUUM ('VACUUM FULL CashSessionSnapShot');
+         lVACUUM ('VACUUM ANALYZE CashSessionSnapShot');
+         // LoadPriceList + LoadPriceListItem
+         lVACUUM ('VACUUM FULL LoadPriceList');
+         lVACUUM ('VACUUM ANALYZE LoadPriceList');
+         lVACUUM ('VACUUM FULL LoadPriceListItem');
+         lVACUUM ('VACUUM ANALYZE LoadPriceListItem');
+         // System - FULL
+         lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_class');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_type');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_index');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
+         lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
+         // System - ANALYZE
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_class');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_type');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_depend');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_shdepend');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
+         lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
+         //
+         // !!!main!!!
+         lVACUUM ('VACUUM');
+         lVACUUM ('VACUUM ANALYZE');
+         //
+         //
+         Add_Log('end all VACUUM');
+       end else
+       begin
+         //
+         Add_Log('start all ANALYZE');
+         //
+
+         ZQueryTable.Open;
+         ZQueryTable.First;
+         while not ZQueryTable.Eof do
+         begin
+            lVACUUM ('ANALYZE ' + ZQueryTable.FieldByName('table_name').AsString);
+            ZQueryTable.Next;
+         end;
+
+         //
+         //
+         Add_Log('end all ANALYZE');
+       end;
 
     except
       on E: Exception do
@@ -151,7 +180,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForMaker.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExecuteVACUM.ini');
 
   try
 
@@ -187,8 +216,7 @@ begin
 
   if ZConnection.Connected then
   begin
-    if not (((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) or
-      (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
+    if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
     begin
       btnAll.Enabled := false;
       Timer1.Enabled := true;

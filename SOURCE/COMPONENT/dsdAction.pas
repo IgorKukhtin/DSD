@@ -3462,6 +3462,9 @@ var
   ExpandedIdx: Integer;
   frxPDFExport1: TfrxPDFExport;
   frxPDFExport_find: Boolean;
+  frxPDFExport1_ShowDialog: Boolean;
+  FileNameExport: String;
+  PrefixFileNameExport: String;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
@@ -3632,12 +3635,26 @@ begin
       LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(AReportName));
       // это НЕ выгрузка в PFD
       frxPDFExport_find:=false;
+      // Показывать диалог при печати в DBF
+      frxPDFExport1_ShowDialog:=True;
+      FileNameExport:= '';
+      PrefixFileNameExport:= '';
       //
       for i := 0 to AParams.Count - 1 do
       begin
         // если есть такой параметр, тогда это выгрузка в PFD
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport_find')
         then frxPDFExport_find:= true;
+        // если есть такой параметр, тогда без диалога
+        if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport1_ShowDialog')) and
+           (AParams[i].DataType = ftBoolean)
+        then frxPDFExport1_ShowDialog:= AParams[i].Value;
+        // если есть такой параметр, Префикс файла экспорта
+        if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('PrefixFileNameExport')
+        then PrefixFileNameExport:= AParams[i].Value;
+        // если есть такой параметр, Имя файла экспорта
+        if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('FileNameExport')
+        then FileNameExport:= AParams[i].Value;
         //
         case AParams[i].DataType of
           ftString, ftDate, ftDateTime:
@@ -3695,6 +3712,14 @@ begin
             if frxPDFExport_find = true then
             begin
                  frxPDFExport1:= TfrxPDFExport.Create(Self);
+                 if FileNameExport <> '' then
+                 begin
+                   FileNameExport := FileNameExport + '.pdf';
+                   if PrefixFileNameExport <> '' then
+                     FileNameExport := PrefixFileNameExport + FileNameExport;
+                 end;
+                 frxPDFExport1.FileName := FileNameExport;
+                 frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;
                  FReport.Export(frxPDFExport1);
             end
             else ShowPreparedReport;

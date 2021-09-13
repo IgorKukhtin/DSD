@@ -1012,9 +1012,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Maker_UnPlanned() RETURNS Integer AS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Maker(), 'zc_ObjectBoolean_Maker_UnPlanned', 'Отправить внеплановые отчеты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Maker_UnPlanned');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_WorkingMultiple() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_WorkingMultiple'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectBoolean_User_WorkingMultiple', 'Работа на нескольких аптеках' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_WorkingMultiple');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 13.09.21                                                                                                          * zc_ObjectBoolean_User_WorkingMultiple
  09.09.21                                                                                                          * zc_ObjectBoolean_Maker_UnPlanned
  19.08.21         * zc_ObjectBoolean_WorkTimeKind_NoSheetChoice
                     zc_ObjectBoolean_PositionLevel_NoSheetCalc

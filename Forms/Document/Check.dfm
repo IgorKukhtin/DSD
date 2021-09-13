@@ -1997,6 +1997,20 @@ inherited CheckForm: TCheckForm
       ImageIndex = 80
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1088#1072#1095#1080'>?'
     end
+    object actUpdate_ClearFiscal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearFiscal
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearFiscal
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -2049,6 +2063,10 @@ inherited CheckForm: TCheckForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton17'
         end
         item
           Visible = True
@@ -2248,6 +2266,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton16: TdxBarButton
       Action = actUpdate_Doctors
+      Category = 0
+    end
+    object dxBarButton17: TdxBarButton
+      Action = actUpdate_ClearFiscal
       Category = 0
     end
   end
@@ -3175,7 +3197,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 216
+    Top = 200
   end
   object spUpdateBankPOSTerminal: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_BankPOSTerminal'
@@ -3686,5 +3708,22 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 258
     Top = 401
+  end
+  object spUpdate_ClearFiscal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_ClearFiscal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 490
+    Top = 472
   end
 end
