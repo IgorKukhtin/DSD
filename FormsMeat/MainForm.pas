@@ -1328,6 +1328,8 @@ type
     N246: TMenuItem;
     actReport_PromoInvoice: TdsdOpenForm;
     miReport_PromoInvoice: TMenuItem;
+    actReport_Losses_KVK: TdsdOpenForm;
+    miReport_Losses_KVK: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

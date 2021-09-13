@@ -20,8 +20,6 @@ inherited ProductionUnionForm: TProductionUnionForm
       inherited cxGrid: TcxGrid
         Width = 1000
         Height = 220
-        ExplicitLeft = 120
-        ExplicitTop = 3
         ExplicitWidth = 1000
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView

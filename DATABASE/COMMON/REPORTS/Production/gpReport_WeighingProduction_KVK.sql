@@ -265,9 +265,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 06SELECT * FROM gpReport_WeighingProduction_KVK (inStartDate := ('01.07.2021')::TDateTime , inEndDate := ('01.07.2021')::TDateTime , inisDetail:= TRUE, inSession := '5');
-.07.21         *
+ 06.07.21         *
 */
 
 -- тест
--- 
+-- SELECT * FROM gpReport_WeighingProduction_KVK (inStartDate := ('01.07.2021')::TDateTime , inEndDate := ('01.07.2021')::TDateTime , inisDetail:= TRUE, inSession := '5');
