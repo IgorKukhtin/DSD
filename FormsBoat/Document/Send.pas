@@ -156,12 +156,16 @@ type
     GoodsCode_ch2: TcxGridDBColumn;
     GoodsName_ch2: TcxGridDBColumn;
     MeasureName_ch2: TcxGridDBColumn;
-    GoodsKindNamec_ch2: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
     InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
+    Artikel_ch2: TcxGridDBColumn;
+    InvNumber_OrderPartner_Full_ch2: TcxGridDBColumn;
+    CIN_ch2: TcxGridDBColumn;
+    ProductName_ch2: TcxGridDBColumn;
+    BrandName_ch2: TcxGridDBColumn;
   private
   public
   end;

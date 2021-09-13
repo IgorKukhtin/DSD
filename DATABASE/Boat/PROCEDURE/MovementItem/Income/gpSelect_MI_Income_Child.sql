@@ -29,7 +29,7 @@ BEGIN
                                         UNION ALL
                                        SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                                       )
-             -- Элементы Резерв
+             -- Существующие Элементы Резерв
            , tmpMI AS (SELECT MovementItem.Id
                             , MovementItem.ParentId
                             , MovementItem.ObjectId   AS GoodsId
@@ -44,13 +44,13 @@ BEGIN
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                       )
-   
+
        -- Элементы - Заказ клиента - zc_MI_Child
      , tmpMI_order AS (SELECT tmpMI.MovementId_order  AS MovementId_order
                             , MovementItem.ObjectId   AS GoodsId
                               -- заказ Поставщику
                             , MIFloat_MovementId.ValueData :: Integer AS MovementId_order_income
-                            
+
                        FROM (SELECT DISTINCT tmpMI.MovementId_order FROM tmpMI) AS tmpMI
                             JOIN MovementItem ON MovementItem.MovementId = tmpMI.MovementId_order
                                              AND MovementItem.DescId     = zc_MI_Child()
@@ -82,7 +82,7 @@ BEGIN
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
 
              , MovementItem.isErased
-   
+
         FROM tmpMI AS MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN ObjectString AS ObjectString_Article
@@ -101,7 +101,7 @@ BEGIN
                                   ON ObjectLink_Brand.ObjectId = Object_Product.Id
                                  AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
              LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-     
+
              LEFT JOIN tmpMI_order ON tmpMI_order.GoodsId          = MovementItem.GoodsId
                                   AND tmpMI_order.MovementId_order = MovementItem.MovementId_order
              LEFT JOIN Movement AS Movement_OrderPartner ON Movement_OrderPartner.Id = tmpMI_order.MovementId_order_income
