@@ -1063,6 +1063,13 @@ inherited SendJournalForm: TSendJournalForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'ExportDirectory'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileDirectory'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'FileNameExport'
           Value = Null
           Component = MasterCDS
@@ -1088,6 +1095,7 @@ inherited SendJournalForm: TSendJournalForm
     object macPrintFilter: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actDirectoryDialog
       ActionList = <
         item
           Action = actPrintFilter
@@ -1098,6 +1106,18 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1074' PDF'
       Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1089#1077#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1074' PDF'
       ImageIndex = 21
+    end
+    object actDirectoryDialog: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = [fdoPickFolders]
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'FileDirectory'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1496,6 +1516,12 @@ inherited SendJournalForm: TSendJournalForm
       item
         Name = 'DriverSunId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileDirectory'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400

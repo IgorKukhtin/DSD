@@ -3465,6 +3465,7 @@ var
   frxPDFExport1_ShowDialog: Boolean;
   FileNameExport: String;
   PrefixFileNameExport: String;
+  ExportDirectory: String;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
@@ -3639,6 +3640,7 @@ begin
       frxPDFExport1_ShowDialog:=True;
       FileNameExport:= '';
       PrefixFileNameExport:= '';
+      ExportDirectory:= '';
       //
       for i := 0 to AParams.Count - 1 do
       begin
@@ -3655,6 +3657,9 @@ begin
         // если есть такой параметр, Имя файла экспорта
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('FileNameExport')
         then FileNameExport:= AParams[i].Value;
+        // если есть такой параметр, Путь к сохраняемому файлу
+        if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('ExportDirectory')
+        then ExportDirectory:= AParams[i].Value;
         //
         case AParams[i].DataType of
           ftString, ftDate, ftDateTime:
@@ -3717,6 +3722,8 @@ begin
                    FileNameExport := FileNameExport + '.pdf';
                    if PrefixFileNameExport <> '' then
                      FileNameExport := PrefixFileNameExport + FileNameExport;
+                   if ExportDirectory <> '' then
+                     FileNameExport := ExportDirectory + '\' + FileNameExport;
                  end;
                  frxPDFExport1.FileName := FileNameExport;
                  frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;

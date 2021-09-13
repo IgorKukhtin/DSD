@@ -44,6 +44,8 @@ object MainForm: TMainForm
   object ZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     Catalog = ''
+    Properties.Strings = (
+      'controls_cp=CP_UTF16')
     HostName = ''
     Port = 5432
     Database = ''

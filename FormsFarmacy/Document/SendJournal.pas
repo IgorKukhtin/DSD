@@ -110,6 +110,7 @@ type
     actPrintFilter: TdsdPrintAction;
     macPrintFilter: TMultiAction;
     bbPrintFilter: TdxBarButton;
+    actDirectoryDialog: TFileDialogAction;
   private
     { Private declarations }
   public
