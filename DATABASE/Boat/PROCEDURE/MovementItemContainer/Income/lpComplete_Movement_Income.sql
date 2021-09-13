@@ -25,6 +25,14 @@ $BODY$
   DECLARE vbDiscountTax             TFloat;
 
   DECLARE vbWhereObjectId_Analyzer Integer; -- Аналитика для проводок
+
+  DECLARE curReserveDiff     RefCursor;
+  DECLARE curItem            RefCursor;
+  DECLARE vbMovementItemId   Integer;
+  DECLARE vbMovementId_order Integer;
+  DECLARE vbGoodsId          Integer;
+  DECLARE vbAmount           TFloat;
+  DECLARE vbAmount_Reserve   TFloat;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -32,6 +40,10 @@ BEGIN
      DELETE FROM _tmpItem_SummPartner;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+     -- !!!обязательно!!! очистили таблицу - сколько осталось зарезервировать для Заказов клиента
+     DELETE FROM _tmpReserveDiff;
+     -- !!!обязательно!!! элементы Резерв для Заказов клиента
+     DELETE FROM _tmpReserveRes;
 
 
      -- Параметры из документа
@@ -51,7 +63,7 @@ BEGIN
                 , Movement.StatusId
                 , Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId
-                  -- Partner Official Tax
+                  -- Partner Official Tax - кому выставляем долг за НДС
                 , 35138 AS PartnerId_VAT
                   --
                 , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Unit()    THEN Object_To.Id   ELSE 0 END, 0) AS UnitId
@@ -218,6 +230,148 @@ BEGIN
              , _tmpItem.OperSumm_VAT                       AS OperSumm_VAT
         FROM _tmpItem
         ;
+
+
+     -- 1.заполняем таблицу - сколько осталось зарезервировать для Заказов клиента
+     INSERT INTO _tmpReserveDiff (MovementId_order, OperDate_order, GoodsId, AmountPartner)
+        WITH -- ВСЕ Заказы клиента - zc_MI_Child - детализация по Поставщикам
+             tmpMI_Child AS (SELECT Movement.OperDate
+                                  , MovementItem.MovementId
+                                  , MovementItem.ObjectId
+                                    -- Кол-во - попало в заказ Поставщику
+                                  , MIFloat_AmountPartner.ValueData AS AmountPartner
+                             FROM MovementItemLinkObject AS MILinkObject_Partner
+                                  INNER JOIN MovementItem ON MovementItem.Id      = MILinkObject_Partner.MovementItemId
+                                                         AND MovementItem.DescId  = zc_MI_Child()
+                                                         AND MovementItem.isErased = FALSE
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_OrderClient()
+                                                     -- все НЕ удаленные
+                                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  -- ValueData - MovementId заказа Поставщику
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                             WHERE -- !!!ограничение по Поставщику
+                                   MILinkObject_Partner.ObjectId = vbPartnerId
+                               AND MILinkObject_Partner.DescId   = zc_MILinkObject_Partner()
+                               -- если заказ Поставщику был сформирован
+                               AND MIFloat_MovementId.ValueData > 0
+                            )
+             -- Приходы, в которых есть Резервы под Заказ клиента
+          , tmpMI_Income AS (SELECT MovementItem.MovementId
+                                  , MovementItem.ObjectId
+                                    -- Сколько зарезервировано
+                                  , MovementItem.Amount
+                                    -- Заказ клиента
+                                  , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
+                             FROM MovementItemFloat AS MIFloat_MovementId
+                                  INNER JOIN MovementItem ON MovementItem.Id      = MIFloat_MovementId.MovementItemId
+                                                         AND MovementItem.DescId  = zc_MI_Child()
+                                                         AND MovementItem.isErased = FALSE
+                                  -- это точно Приход от Поставщика
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_Income()
+                                                     -- все НЕ удаленные
+                                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                   --AND Movement.StatusId = zc_Enum_Status_Complete()
+                             WHERE MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMI_Child.MovementId FROM tmpMI_Child)
+                               AND MIFloat_MovementId.DescId   = zc_MIFloat_MovementId()
+                            )
+        -- сколько осталось зарезервировать для Заказов клиента
+        SELECT tmpMI_Child.MovementId AS MovementId_order
+             , tmpMI_Child.OperDate   AS OperDate_order
+             , tmpMI_Child.ObjectId
+               -- осталось
+             , tmpMI_Child.AmountPartner - COALESCE (tmpMI_Income.Amount, 0) AS AmountPartner
+        FROM tmpMI_Child
+             -- Итого сколько уже пришло
+             LEFT JOIN (SELECT tmpMI_Income.MovementId_order
+                             , tmpMI_Income.ObjectId
+                             , SUM (tmpMI_Income.Amount) AS Amount
+                        FROM tmpMI_Income
+                        -- !!!без текущего прихода
+                        WHERE tmpMI_Income.MovementId <> inMovementId
+                        GROUP BY tmpMI_Income.MovementId_order
+                               , tmpMI_Income.ObjectId
+                       ) AS tmpMI_Income
+                         ON tmpMI_Income.MovementId_order = tmpMI_Child.MovementId
+                        AND tmpMI_Income.ObjectId         = tmpMI_Child.ObjectId
+        ;
+
+     -- 2.заполняем таблицу - элементы Резерв для Заказов клиента
+
+        -- курсор1 - элементы прихода
+        OPEN curItem FOR SELECT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.OperCount AS Amount FROM _tmpItem;
+        -- начало цикла по курсору1 - приходы
+        LOOP
+        -- данные по приходам
+        FETCH curItem INTO vbMovementItemId, vbGoodsId, vbAmount;
+        -- если данные закончились, тогда выход
+        IF NOT FOUND THEN EXIT; END IF;
+
+        -- курсор2. - осталось зарезервировать МИНУС сколько уже зарезервировли для vbGoodsId
+        OPEN curReserveDiff FOR
+           SELECT _tmpReserveDiff.MovementId_order, _tmpReserveDiff.AmountPartner - COALESCE (tmp.Amount, 0)
+           FROM _tmpReserveDiff
+                LEFT JOIN (SELECT _tmpReserveRes.MovementId_order, _tmpReserveRes.GoodsId, SUM (_tmpReserveRes.Amount) AS Amount FROM _tmpReserveRes GROUP BY _tmpReserveRes.MovementId_order, _tmpReserveRes.GoodsId
+                          ) AS tmp ON tmp.MovementId_order = _tmpReserveDiff.MovementId_order
+                                  AND tmp.GoodsId          = _tmpReserveDiff.GoodsId
+           WHERE _tmpReserveDiff.GoodsId = vbGoodsId
+             AND _tmpReserveDiff.AmountPartner - COALESCE (tmp.Amount, 0) > 0
+           ORDER BY _tmpReserveDiff.OperDate_order ASC
+          ;
+            -- начало цикла по курсору2. - Резервы
+            LOOP
+                -- данные - сколько осталось зарезервировать
+                FETCH curReserveDiff INTO vbMovementId_order, vbAmount_Reserve;
+                -- если данные закончились, или все кол-во зарезервировли тогда выход
+                IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+                --
+                IF vbAmount_Reserve > vbAmount
+                THEN
+                    -- получилось в Приходе меньше чем надо - заполняем таблицу - элементы Резерв для Заказов клиента
+                    INSERT INTO _tmpReserveRes (MovementItemId, ParentId
+                                              , GoodsId
+                                              , Amount
+                                              , MovementId_order
+                                               )
+                       SELECT 0                AS MovementItemId -- Сформируем позже
+                            , vbMovementItemId AS ParentId
+                            , vbGoodsId        AS GoodsId
+                            , vbAmount
+                            , vbMovementId_order
+                             ;
+                    -- обнуляем кол-во что бы больше не искать
+                    vbAmount:= 0;
+                ELSE
+                    -- получилось в Приходе больше чем надо резервировать - заполняем таблицу - элементы Резерв для Заказов клиента
+                    INSERT INTO _tmpReserveRes (MovementItemId, ParentId
+                                              , GoodsId
+                                              , Amount
+                                              , MovementId_order
+                                               )
+                       SELECT 0                AS MovementItemId -- Сформируем позже
+                            , vbMovementItemId AS ParentId
+                            , vbGoodsId        AS GoodsId
+                            , vbAmount_Reserve
+                            , vbMovementId_order
+                             ;
+                    -- уменьшаем приход на кол-во которое нашли и продолжаем поиск
+                    vbAmount:= vbAmount - vbAmount_Reserve;
+                END IF;
+
+            END LOOP; -- финиш цикла по курсору2. - Резервы
+            CLOSE curReserveDiff; -- закрыли курсор2. - Резервы
+
+        END LOOP; -- финиш цикла по курсору1 - элементы прихода
+        CLOSE curItem; -- закрыли курсор1 - элементы прихода
+
+
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
@@ -445,18 +599,6 @@ BEGIN
 
 
 
-     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_Income()
-                                , inUserId     := inUserId
-                                 );
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
      -- дописали - КОЛ-ВО + Цену
      UPDATE Object_PartionGoods SET Amount        = _tmpItem.OperCount
                                   , EKPrice_orig  = _tmpItem.OperPrice_orig
@@ -468,7 +610,52 @@ BEGIN
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
     ;
+    
+    -- Сохранили "новый" Резерв
+    PERFORM lpInsertUpdate_MI_Income_Child (ioId                     := tmpMI_Child.MovementItemId
+                                          , inParentId               := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
+                                          , inMovementId             := inMovementId
+                                          , inMovementId_OrderClient := COALESCE (_tmpReserveRes.MovementId_order, tmpMI_Child.MovementId_order) :: Integer
+                                          , inObjectId               := COALESCE (_tmpReserveRes.GoodsId, tmpMI_Child.GoodsId)
+                                          , inAmount                 := COALESCE (_tmpReserveRes.Amount, 0)
+                                          , inUserId                 := inUserId
+                                           )
+    FROM _tmpReserveRes
+         -- существующие элементы - Резерв
+         FULL JOIN (SELECT MovementItem.Id               AS MovementItemId
+                         , MovementItem.ParentId         AS ParentId
+                         , MovementItem.ObjectId         AS GoodsId
+                         , MIFloat_MovementId.ValueData  AS MovementId_order
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                       --INNER JOIN MovementItem AS MI_Master
+                       --                        ON MI_Master.Id  = MovementItem.ParentId
+                       --                       -- Мастер НЕ удален
+                       --                       AND MI_Master.isErased = FALSE
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Child()
+                      AND MovementItem.isErased   = FALSE
+                    ) AS tmpMI_Child ON tmpMI_Child.ParentId         = _tmpReserveRes.ParentId
+                                    AND tmpMI_Child.MovementId_order = _tmpReserveRes.MovementId_order
+                                    AND tmpMI_Child.GoodsId          = _tmpReserveRes.GoodsId
+                                    ;
 
+    --         
+    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpReserveRes);
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Income()
+                                , inUserId     := inUserId
+                                 );
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 END;
 $BODY$
@@ -482,3 +669,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_Status_Income(inMovementId := 76 , inStatusCode := 2 ,  inSession := '5');
+select * from gpUpdate_Status_Income(inMovementId := 353 , inStatusCode := 2 ,  inSession := '5');

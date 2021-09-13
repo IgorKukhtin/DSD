@@ -12,33 +12,34 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderPartner(
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderPartner());
-     vbUserId := lpGetUserBySession (inSession);
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderPartner());
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-     
+
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioOperPrice
-   INTO ioId , ioOperPrice
+            INTO ioId , ioOperPrice
      FROM lpInsertUpdate_MovementItem_OrderPartner (ioId
-                                                 , inMovementId
-                                                 , inGoodsId
-                                                 , inAmount
-                                                 , ioOperPrice
-                                                 , inCountForPrice
-                                                 , inComment
-                                                 , vbUserId
-                                                 ) AS tmp;
+                                                  , inMovementId
+                                                  , inGoodsId
+                                                  , inAmount
+                                                  , ioOperPrice
+                                                  , inCountForPrice
+                                                  , inComment
+                                                  , vbUserId
+                                                   ) AS tmp;
 
-                  
+
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (inMovementId);
 

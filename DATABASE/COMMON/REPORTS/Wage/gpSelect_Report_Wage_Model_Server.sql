@@ -366,6 +366,7 @@ BEGIN
           OR ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId IN (zc_Enum_SelectKind_MovementTransportHours()
                                                                           , zc_Enum_SelectKind_MovementReestrWeight()
                                                                           , zc_Enum_SelectKind_MovementReestrDoc()
+                                                                          , zc_Enum_SelectKind_MovementReestrPartner()
                                                                            )
             )
    ;
@@ -445,7 +446,7 @@ BEGIN
                          AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                                           zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
                                                           -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                                        , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
+                                                        , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                                          )
                       ) AS SettingDesc
                       INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
@@ -754,7 +755,7 @@ BEGIN
         WHERE Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                            zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
                                            -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                         , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
+                                         , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                           )
           AND (Setting.FromId IS NULL OR COALESCE (tmpMovement_HeadCount.FromId, tmpMovement.FromId) IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) AS UnitTree))
           AND (Setting.ToId   IS NULL OR COALESCE (tmpMovement_HeadCount.ToId,   tmpMovement.ToId)   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId)   AS UnitTree))
@@ -1025,12 +1026,12 @@ BEGIN
          -- Данные для - Transport + Реестр Документов
        , tmpUnit_Reestr AS (SELECT DISTINCT Setting_Wage_1.UnitId
                             FROM Setting_Wage_1
-                            WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
+                            WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner())
                               AND Setting_Wage_1.UnitId > 0
                            )
   , tmpUnit_Reestr_from AS (SELECT DISTINCT Setting_Wage_1.UnitId, COALESCE (Setting_Wage_1.FromId, 0) AS FromId
                             FROM Setting_Wage_1
-                            WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
+                            WHERE Setting_Wage_1.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner())
                               AND Setting_Wage_1.UnitId > 0
                            )
          -- Данные для - Transport
@@ -1128,9 +1129,12 @@ BEGIN
              , OL_Car_Unit.ChildObjectId        AS UnitId_car
                -- Вес
              , SUM (CASE WHEN /*tmpMovement_Reestr_notWeight.MovementId > 0*/ 1=0 THEN 0 ELSE COALESCE (MovementFloat_TotalCountKg.ValueData, 0) END) :: TFloat AS TotalCountKg
-               -- Кол. док. (компл.)
+               -- Кол. док.
              , COUNT (DISTINCT Movement_Sale.Id)  :: TFloat AS CountMovement
            --, COUNT (DISTINCT CASE WHEN vbUserId = 5 THEN MovementLinkObject_To.ObjectId ELSE Movement_Sale.Id END)  :: TFloat AS CountMovement
+
+               -- Кол. ТТ
+             , COUNT (DISTINCT MovementLinkObject_To.ObjectId)  :: TFloat AS CountPartner
 
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
@@ -1184,6 +1188,7 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                           ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+             -- покупатель
              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                           ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -1523,8 +1528,8 @@ BEGIN
 
     WHERE Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
                                        zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
-                                       -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                     , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
+                                       -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр) + Транспорт - Кол-во ТТ (реестр)
+                                     , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
                                       )
 
    UNION ALL
@@ -1706,6 +1711,9 @@ BEGIN
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
                     THEN tmpMovement_Reestr.CountMovement
+              -- Кол. ТТ
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrPartner()
+                    THEN tmpMovement_Reestr.CountPartner
               ELSE 0
          END :: TFloat AS Gross
        , CASE -- Вес (компл.)
@@ -1714,6 +1722,9 @@ BEGIN
               -- Кол. Документов (компл.)
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
                     THEN tmpMovement_Reestr.CountMovement
+              -- Кол. ТТ
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrPartner()
+                    THEN tmpMovement_Reestr.CountPartner
               ELSE 0
          END :: TFloat AS GrossOnOneMember
        , (CASE -- Вес
@@ -1722,6 +1733,9 @@ BEGIN
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
                     THEN tmpMovement_Reestr.CountMovement
+              -- Кол. ТТ
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrPartner()
+                    THEN tmpMovement_Reestr.CountPartner
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS Amount
        , (CASE -- Вес
@@ -1730,6 +1744,9 @@ BEGIN
               -- Кол. Документов
               WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrDoc()
                     THEN tmpMovement_Reestr.CountMovement
+              -- Кол. ТТ
+              WHEN Setting.SelectKindId = zc_Enum_SelectKind_MovementReestrPartner()
+                    THEN tmpMovement_Reestr.CountPartner
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
 
@@ -1740,6 +1757,7 @@ BEGIN
                                       AND tmpMovement_Reestr.FromId     = COALESCE (Setting.FromId, 0)
                                       AND (tmpMovement_Reestr.TotalCountKg  <> 0
                                         OR tmpMovement_Reestr.CountMovement <> 0
+                                        OR tmpMovement_Reestr.CountPartner  <> 0
                                           )
          LEFT JOIN Object AS Object_Unit_from ON Object_Unit_from.Id = tmpMovement_Reestr.UnitId_from
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
@@ -1750,7 +1768,7 @@ BEGIN
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
-    WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc())
+    WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner())
 
    UNION ALL
     -- Транспорт - Рабочее время из путевого листа
@@ -1849,6 +1867,6 @@ $BODY$
 */
 
 -- тест
+-- select * from gpSelect_Report_Wage_Server(inStartDate := ('01.03.2019')::TDateTime , inEndDate := ('31.03.2019')::TDateTime , inUnitId := 8395 , inModelServiceId := 3363159 , inMemberId := 0 , inPositionId := 0 , inDetailDay := 'True' , inDetailModelService := 'True' , inDetailModelServiceItemMaster := 'True' , inDetailModelServiceItemChild := 'True' ,  inSession := '5');
 -- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '02.06.2019', inEndDate:= '02.06.2019', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
 -- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2019', inEndDate:= '01.10.2019', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
--- select * from gpSelect_Report_Wage_Server(inStartDate := ('01.03.2019')::TDateTime , inEndDate := ('31.03.2019')::TDateTime , inUnitId := 8395 , inModelServiceId := 3363159 , inMemberId := 0 , inPositionId := 0 , inDetailDay := 'True' , inDetailModelService := 'True' , inDetailModelServiceItemMaster := 'True' , inDetailModelServiceItemChild := 'True' ,  inSession := '5');

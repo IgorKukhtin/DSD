@@ -24,6 +24,18 @@ BEGIN
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                 ) ON COMMIT DROP;
 
+     -- таблица - сколько осталось зарезервировать для Заказов клиента
+     CREATE TEMP TABLE _tmpReserveDiff (MovementId_order Integer, OperDate_order TDateTime
+                                      , GoodsId Integer
+                                      , AmountPartner TFloat
+                                       ) ON COMMIT DROP;
+     -- таблица - элементы Резерв для Заказов клиента
+     CREATE TEMP TABLE _tmpReserveRes (MovementItemId Integer, ParentId Integer
+                                     , GoodsId Integer
+                                     , Amount TFloat
+                                     , MovementId_order Integer
+                                      ) ON COMMIT DROP;
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
