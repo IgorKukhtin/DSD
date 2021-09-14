@@ -94,7 +94,7 @@ begin
   try
     try
 
-       if (CompareText(ParamStr(1), 'analyze') = 0) and (CompareText(ParamStr(2), 'analyze') = 0) and (CompareText(ParamStr(3), 'analyze') = 0) then
+       if not ((CompareText(ParamStr(1), 'analyze') = 0) or (CompareText(ParamStr(2), 'analyze') = 0) or (CompareText(ParamStr(3), 'analyze') = 0)) then
        begin
          //
          Add_Log('start all VACUUM');

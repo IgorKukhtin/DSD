@@ -1016,9 +1016,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_WorkingMultiple() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectBoolean_User_WorkingMultiple', 'Работа на нескольких аптеках' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_WorkingMultiple');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_BlockCommentSendTP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_BlockCommentSendTP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_BlockCommentSendTP', 'Бликировать коменты с формированием ТП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_BlockCommentSendTP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 14.09.21                                                                                                          * zc_ObjectBoolean_Unit_BlockCommentSendTP
  13.09.21                                                                                                          * zc_ObjectBoolean_User_WorkingMultiple
  09.09.21                                                                                                          * zc_ObjectBoolean_Maker_UnPlanned
  19.08.21         * zc_ObjectBoolean_WorkTimeKind_NoSheetChoice

@@ -529,7 +529,7 @@
       end
       object cbNotCashListDiff: TcxCheckBox
         Left = 240
-        Top = 30
+        Top = 26
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1042#1090#1086#1088#1072#1103' '#1096#1082#1072#1083#1072' '#1076#1083#1103' '#1083#1080#1089#1090#1086#1074' '#1086#1090#1082#1072#1079#1086#1074
         TabOrder = 3
@@ -626,7 +626,7 @@
       end
       object cbTechnicalRediscount: TcxCheckBox
         Left = 240
-        Top = 49
+        Top = 41
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1080' '#1055#1057' '
         TabOrder = 12
@@ -752,7 +752,7 @@
       end
       object cbAlertRecounting: TcxCheckBox
         Left = 240
-        Top = 68
+        Top = 57
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1054#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1077#1088#1077#1076' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1084
         TabOrder = 26
@@ -779,6 +779,14 @@
         Caption = #1052#1080#1085#1080'. '#1085#1072#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1077#1090#1080' '#1080#1083#1080' '#1072#1087#1090#1077#1082#1077
         TabOrder = 33
         Width = 216
+      end
+      object cbBlockCommentSendTP: TcxCheckBox
+        Left = 240
+        Top = 73
+        Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+        Caption = #1041#1083#1080#1082#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1077#1085#1090#1099' '#1089' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077#1084' '#1058#1055
+        TabOrder = 34
+        Width = 246
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -1517,6 +1525,14 @@
         Component = ceSerialNumberMypharmacy
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBlockCommentSendTP'
+        Value = Null
+        Component = cbBlockCommentSendTP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -2098,6 +2114,13 @@
         Name = 'SerialNumberMypharmacy'
         Value = Null
         Component = ceSerialNumberMypharmacy
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBlockCommentSendTP'
+        Value = Null
+        Component = cbBlockCommentSendTP
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

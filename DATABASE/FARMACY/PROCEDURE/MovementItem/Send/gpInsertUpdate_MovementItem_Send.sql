@@ -55,6 +55,7 @@ $BODY$
    DECLARE vHT_SUN         Integer;
    DECLARE vbisSent        Boolean;
    DECLARE vbisReceived    Boolean;
+   DECLARE vbisBlockCommentSendTP  Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -76,8 +77,9 @@ BEGIN
          , COALESCE (MovementBoolean_Sent.ValueData, FALSE) ::Boolean
          , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean
          , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
+         , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE):: Boolean    AS isBlockCommentSendTP
     INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, 
-         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived, vbCommentSendID       
+         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived, vbCommentSendID, vbisBlockCommentSendTP       
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -128,11 +130,24 @@ BEGIN
                                                                                       WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                                                                                       LIMIT 1)
                                AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
+ 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
+                                  ON ObjectBoolean_BlockCommentSendTP.ObjectId = MovementLinkObject_From.ObjectId  
+                                 AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
                                
     WHERE Movement.Id = inMovementId;
     
     IF COALESCE (inCommentSendID, 0) <> 0
     THEN
+    
+       IF COALESCE (vbisBlockCommentSendTP, False) = TRUE AND 
+          COALESCE ((SELECT ChildObjectId FROM ObjectLink
+                      WHERE ObjectId = inCommentSendID
+                        AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) <> 0
+       THEN
+          RAISE EXCEPTION 'Ошибка. Использование причин уменьшения количества которые участвуют в техническом переучете запрещено.';       
+       END IF;
+       
        WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                        , MovementItemProtocol.MovementItemId
                                        , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData

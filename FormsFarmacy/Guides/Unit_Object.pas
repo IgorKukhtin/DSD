@@ -410,6 +410,7 @@ type
     macUnit_isRequestDistribListDiff: TMultiAction;
     actUnit_isRequestDistribListDiff: TdsdExecStoredProc;
     dxBarButton22: TdxBarButton;
+    isBlockCommentSendTP: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
+  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -960,6 +961,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1080' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1079#1072#1082#1072#1079#1077' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             Options.Editing = False
             Width = 80
+          end
+          object isBlockCommentSendTP: TcxGridDBColumn
+            Caption = #1041#1083#1080#1082#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1077#1085#1090#1099' '#1089' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077#1084' '#1058#1055
+            DataBinding.FieldName = 'isBlockCommentSendTP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
           end
         end
       end
