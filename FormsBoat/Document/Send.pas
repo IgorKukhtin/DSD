@@ -166,6 +166,14 @@ type
     CIN_ch2: TcxGridDBColumn;
     ProductName_ch2: TcxGridDBColumn;
     BrandName_ch2: TcxGridDBColumn;
+    spInsert_MI_Send_Child: TdsdStoredProc;
+    actInsert_MI_Send_Child: TdsdExecStoredProc;
+    macInsert_MI_Send_Child: TMultiAction;
+    bbcInsert_MI_Send_Child: TdxBarButton;
+    actOpenFormOrderClient: TdsdOpenForm;
+    actOpenFormOrderPartner: TdsdOpenForm;
+    bbOpenFormOrderClient: TdxBarButton;
+    bbOpenFormOrderPartner: TdxBarButton;
   private
   public
   end;

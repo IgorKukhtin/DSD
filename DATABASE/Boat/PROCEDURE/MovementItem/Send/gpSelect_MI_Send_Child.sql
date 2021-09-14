@@ -46,7 +46,8 @@ BEGIN
                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                       )
        -- Элементы - Заказ клиента - zc_MI_Child
-     , tmpMI_order AS (SELECT tmpMI.MovementId_order  AS MovementId_order
+     , tmpMI_order AS (SELECT DISTINCT
+                              tmpMI.MovementId_order  AS MovementId_order
                             , MovementItem.ObjectId   AS GoodsId
                               -- заказ Поставщику
                             , MIFloat_MovementId.ValueData :: Integer AS MovementId_order_income
