@@ -2053,10 +2053,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PriceCorrectionDay() RETU
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PriceCorrectionDay', 'Период дней для системы коррекции цены по итогам роста/падения средних продаж' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceCorrectionDay');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollTypeVIP_PercentPhone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollTypeVIP_PercentPhone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PayrollTypeVIP(), 'zc_ObjectFloat_PayrollTypeVIP_PercentPhone', 'Процент от заказов, которые принимают в телеф.режиме' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollTypeVIP_PercentPhone');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PayrollTypeVIP_PercentOther() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollTypeVIP_PercentOther'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PayrollTypeVIP(), 'zc_ObjectFloat_PayrollTypeVIP_PercentOther', 'Процент от остальных заказов' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PayrollTypeVIP_PercentOther');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.09.21                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Percent...
  10.09.21                                                                                      * zc_ObjectFloat_CashSettings_PriceCorrectionDay
  30.07.21                                                                                      * zc_ObjectFloat_ZReportLog_Summa...
  27.07.21                                                                                      * zc_ObjectFloat_CashSettings_CustomerThreshold

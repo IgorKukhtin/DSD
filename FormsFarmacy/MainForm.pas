@@ -859,6 +859,8 @@ type
     N312: TMenuItem;
     N313: TMenuItem;
     actReport_PriceCorrectionSystem: TdsdOpenForm;
+    actPayrollTypeVIP: TdsdOpenForm;
+    N314: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

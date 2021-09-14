@@ -172,6 +172,25 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TestingTuning(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TestingTuning'), inName:= 'Настройка тестирования', inEnumName:= 'zc_Enum_Role_TestingTuning');
    END IF;
 
+   -- zc_Enum_Role_VIPWages
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'ЗП Вип')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'ЗП Вип')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_VIPWages');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_VIPWages(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_VIPWages'), inName:= 'ЗП Вип', inEnumName:= 'zc_Enum_Role_VIPWages');
+   END IF;
+
+   -- zc_Enum_Role_VIPManager
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'ВИП')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'ВИП')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_VIPManager');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_VIPManager(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_VIPManager'), inName:= 'ВИП', inEnumName:= 'zc_Enum_Role_VIPManager');
+   END IF;
 
 END $$;
 /*
@@ -359,6 +378,10 @@ BEGIN
 -- !!! Группы расчета заработной платы
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_Check(),       inDescId:= zc_Object_PayrollGroup(), inCode:= 1, inName:= 'От суммы проведенных чеков'                    , inEnumName:= 'zc_Enum_PayrollGroup_Check');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollGroup_IncomeCheck(), inDescId:= zc_Object_PayrollGroup(), inCode:= 2, inName:= 'Oт суммы реализации оприходоанных накладных '  , inEnumName:= 'zc_Enum_PayrollGroup_IncomeCheck');
+
+-- !!! Типы расчета заработной платы для VIP менеджеров
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollTypeVIP_WorkCS(),    inDescId:= zc_Object_PayrollTypeVIP(), inCode:= 1, inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollTypeVIP_WorkCS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollTypeVIP_WorkAS(),    inDescId:= zc_Object_PayrollTypeVIP(), inCode:= 2, inName:= 'Средняя смена'               , inEnumName:= 'zc_Enum_PayrollTypeVIP_WorkAS');
 
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');

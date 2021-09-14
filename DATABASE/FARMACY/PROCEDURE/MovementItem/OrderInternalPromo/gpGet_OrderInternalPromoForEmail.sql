@@ -47,7 +47,7 @@ BEGIN
     vbSubject := 'Заказ #1#';
 
     -- еще
-    vbMail := (vbMail || ',artur17111@gmail.com') :: TVarChar;
+    vbMail := (vbMail || ',artur17111@gmail.com' || ',alexandra.p2009@gmail.com') :: TVarChar;
 
     -- Временно для теста
     IF vbUserId = 3

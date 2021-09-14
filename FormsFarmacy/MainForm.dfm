@@ -4619,6 +4619,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actPayrollTypeVIP: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1080#1087#1099' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1042#1048#1055' '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
+      FormName = 'TPayrollTypeVIPForm'
+      FormNameParam.Value = 'TPayrollTypeVIPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5857,6 +5868,9 @@
         end
         object N191: TMenuItem
           Action = actPayrollType
+        end
+        object N314: TMenuItem
+          Action = actPayrollTypeVIP
         end
         object N197: TMenuItem
           Action = actCashSettings

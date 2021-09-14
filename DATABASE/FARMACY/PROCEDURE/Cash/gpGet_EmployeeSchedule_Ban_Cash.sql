@@ -67,54 +67,113 @@ BEGIN
       WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
         AND Movement.DescId = zc_Movement_EmployeeSchedule();
 
-      IF EXISTS(SELECT 1 
-                FROM MovementItem AS MIMaster
-                     INNER JOIN MovementItem AS MIChild
-                                             ON MIChild.MovementId = vbMovementID
-                                            AND MIChild.DescId = zc_MI_Child()
-                                            AND MIChild.ParentId = MIMaster.ID
-                                            AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
-
-                     LEFT JOIN MovementItemDate AS MIDate_Start
-                                                 ON MIDate_Start.MovementItemId = MIChild.Id
-                                                AND MIDate_Start.DescId = zc_MIDate_Start()
-
-                     LEFT JOIN MovementItemDate AS MIDate_End
-                                                ON MIDate_End.MovementItemId = MIChild.Id
-                                               AND MIDate_End.DescId = zc_MIDate_End()
-
-                     LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
-                                                   ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
-                                                  AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
-
-                WHERE MIMaster.MovementId = vbMovementID
-                  AND MIMaster.DescId = zc_MI_Master()
-                  AND MIMaster.ObjectId = vbUserId
-                  AND (COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE
-                   OR MIBoolean_ServiceExit.ValueData IS NOT NULL AND MIDate_End.ValueData IS NOT NULL))
-         OR
-         EXISTS(SELECT 1 
-                FROM MovementItem AS MIMaster
-                     INNER JOIN MovementItem AS MIChild
-                                             ON MIChild.MovementId = MIMaster.MovementId
-                                            AND MIChild.DescId = zc_MI_Child()
-                                            AND MIChild.ParentId = MIMaster.ID
-                                            AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
-
-                     INNER JOIN MovementItemDate AS MIDate_End
-                                                 ON MIDate_End.MovementItemId = MIChild.Id
-                                                AND MIDate_End.DescId = zc_MIDate_End()
-                                                AND MIDate_End.ValueData > date_trunc('day', CURRENT_DATE)
-
-
-                WHERE MIMaster.MovementId = (SELECT Movement.ID
-                                             FROM Movement
-                                             WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE - interval '1 day')
-                                               AND Movement.DescId = zc_Movement_EmployeeSchedule() )
-                  AND MIMaster.DescId = zc_MI_Master()
-                  AND MIMaster.ObjectId = vbUserId)                  
+      IF EXISTS(SELECT *
+                FROM ObjectBoolean AS ObjectBoolean_WorkingMultiple
+                WHERE ObjectBoolean_WorkingMultiple.ObjectId = vbUserId
+                  AND ObjectBoolean_WorkingMultiple.DescId = zc_ObjectBoolean_User_WorkingMultiple()
+                  AND ObjectBoolean_WorkingMultiple.ValueData = TRUE)
+         AND vbUnitId <> 0
       THEN
-        outBanCash := False;
+        IF EXISTS(SELECT 1 
+                  FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = vbMovementID
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+
+                       LEFT JOIN MovementItemDate AS MIDate_Start
+                                                   ON MIDate_Start.MovementItemId = MIChild.Id
+                                                  AND MIDate_Start.DescId = zc_MIDate_Start()
+
+                       LEFT JOIN MovementItemDate AS MIDate_End
+                                                  ON MIDate_End.MovementItemId = MIChild.Id
+                                                 AND MIDate_End.DescId = zc_MIDate_End()
+
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                                     ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                                    AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
+
+                  WHERE MIMaster.MovementId = vbMovementID
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId
+                    AND COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE)
+           OR
+           EXISTS(SELECT 1 
+                  FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = MIMaster.MovementId
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
+                                              AND MIChild.ObjectId = vbUnitId 
+
+                       INNER JOIN MovementItemDate AS MIDate_End
+                                                   ON MIDate_End.MovementItemId = MIChild.Id
+                                                  AND MIDate_End.DescId = zc_MIDate_End()
+                                                  AND MIDate_End.ValueData > date_trunc('day', CURRENT_DATE)
+
+
+                  WHERE MIMaster.MovementId = (SELECT Movement.ID
+                                               FROM Movement
+                                               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE - interval '1 day')
+                                                 AND Movement.DescId = zc_Movement_EmployeeSchedule() )
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId)                  
+        THEN
+          outBanCash := False;
+        END IF;
+        
+      ELSE
+        IF EXISTS(SELECT 1 
+                  FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = vbMovementID
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer
+
+                       LEFT JOIN MovementItemDate AS MIDate_Start
+                                                   ON MIDate_Start.MovementItemId = MIChild.Id
+                                                  AND MIDate_Start.DescId = zc_MIDate_Start()
+
+                       LEFT JOIN MovementItemDate AS MIDate_End
+                                                  ON MIDate_End.MovementItemId = MIChild.Id
+                                                 AND MIDate_End.DescId = zc_MIDate_End()
+
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_ServiceExit
+                                                     ON MIBoolean_ServiceExit.MovementItemId = MIChild.Id
+                                                    AND MIBoolean_ServiceExit.DescId = zc_MIBoolean_ServiceExit()
+
+                  WHERE MIMaster.MovementId = vbMovementID
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId
+                    AND (COALESCE(MIBoolean_ServiceExit.ValueData, FALSE) = TRUE
+                     OR MIBoolean_ServiceExit.ValueData IS NOT NULL AND MIDate_End.ValueData IS NOT NULL))
+           OR
+           EXISTS(SELECT 1 
+                  FROM MovementItem AS MIMaster
+                       INNER JOIN MovementItem AS MIChild
+                                               ON MIChild.MovementId = MIMaster.MovementId
+                                              AND MIChild.DescId = zc_MI_Child()
+                                              AND MIChild.ParentId = MIMaster.ID
+                                              AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer - 1
+
+                       INNER JOIN MovementItemDate AS MIDate_End
+                                                   ON MIDate_End.MovementItemId = MIChild.Id
+                                                  AND MIDate_End.DescId = zc_MIDate_End()
+                                                  AND MIDate_End.ValueData > date_trunc('day', CURRENT_DATE)
+
+
+                  WHERE MIMaster.MovementId = (SELECT Movement.ID
+                                               FROM Movement
+                                               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE - interval '1 day')
+                                                 AND Movement.DescId = zc_Movement_EmployeeSchedule() )
+                    AND MIMaster.DescId = zc_MI_Master()
+                    AND MIMaster.ObjectId = vbUserId)                  
+        THEN
+          outBanCash := False;
+        END IF;
       END IF;
     ELSE 
       outBanCash := False;
@@ -133,4 +192,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_EmployeeSchedule_Ban_Cash('3')
+-- SELECT * FROM gpGet_EmployeeSchedule_Ban_Cash('12104119')

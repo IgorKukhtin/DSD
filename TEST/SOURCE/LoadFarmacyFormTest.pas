@@ -164,6 +164,7 @@ type
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
     procedure LoadWagesFormTest;
+    procedure LoadWagesVIPFormTest;
     procedure LoadWriteOffHouseholdInventoryFormTest;
     procedure FormTest;
   end;
@@ -2146,6 +2147,15 @@ begin
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+end;
+
+
+procedure TLoadFormTest.LoadWagesVIPFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeVIPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeVIPEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeVIPForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;
