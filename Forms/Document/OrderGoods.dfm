@@ -419,43 +419,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountForecastPromo_ch2
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = GoodsKindName_ch2
-            end
-            item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Amount_ch2
             end
@@ -471,11 +438,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountForecastOrder_ch2
-            end
-            item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName_ch2
@@ -486,7 +448,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = AmountForecastPromo_ch2
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Amount_ch2
             end
@@ -494,6 +456,11 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastOrderPromo_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrder_ch2
             end
             item
               Format = ',0.####'
@@ -567,7 +534,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -580,9 +547,9 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1075#1085#1086#1079'('#1087#1088#1086#1076#1072#1078#1072')'
+            HeaderHint = #1055#1088#1086#1075#1085#1086#1079' ('#1087#1088#1086#1076#1072#1078#1072')'
             Options.Editing = False
-            Width = 85
+            Width = 103
           end
           object AmountForecastOrder_ch2: TcxGridDBColumn
             Caption = #1055#1088#1086#1075#1085#1086#1079' ('#1079#1072#1103#1074#1082#1072')'
@@ -593,6 +560,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1075#1085#1086#1079'('#1079#1072#1103#1074#1082#1072')'
+            Options.Editing = False
             Width = 108
           end
           object AmountForecastPromo_ch2: TcxGridDBColumn
@@ -995,6 +963,20 @@ inherited OrderGoodsForm: TOrderGoodsForm
   inherited ActionList: TActionList
     Left = 87
     Top = 255
+    object actRefresh_Detail_Master: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectDetailMaster
+      StoredProcList = <
+        item
+          StoredProc = spSelectDetailMaster
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1028,6 +1010,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
         end>
     end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetailMaster
+        end
+        item
+          StoredProc = spSelectDetailChild
+        end>
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
@@ -1040,7 +1034,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           StoredProc = spSelect_Child
         end>
     end
-    object actPrintNoGroup: TdsdPrintAction [8]
+    object actPrintNoGroup: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -1118,7 +1112,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1450,6 +1444,34 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#8470' '#1073#1088#1080#1075#1072#1076#1099
       ImageIndex = 76
     end
+    object actInsert_OrderGoodsDetail_Master: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_OrderGoodsDetail_Master
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_OrderGoodsDetail_Master
+        end>
+      Caption = 'actInsert_OrderGoodsDetail_Master'
+      ImageIndex = 27
+    end
+    object matInsert_OrderGoodsDetail_Master: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_OrderGoodsDetail_Master
+        end
+        item
+          Action = actRefresh_Detail_Master
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' P'#1072#1089#1095#1077#1090' '#1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = 'P'#1072#1089#1095#1077#1090' '#1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
+      Hint = 'P'#1072#1089#1095#1077#1090' '#1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1538,6 +1560,22 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_OrderGoodsDetail_Master'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1587,6 +1625,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
     object bbPersonalGroupChoiceForm: TdxBarButton
       Action = macUpdatePersonalGroup
+      Category = 0
+    end
+    object bbInsert_OrderGoodsDetail_Master: TdxBarButton
+      Action = matInsert_OrderGoodsDetail_Master
       Category = 0
     end
   end
@@ -2434,5 +2476,52 @@ inherited OrderGoodsForm: TOrderGoodsForm
     PackSize = 1
     Left = 776
     Top = 408
+  end
+  object spInsert_MI_OrderGoodsDetail_Master: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_OrderGoodsDetail_Master'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateStart'
+        Value = Null
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateEnd'
+        Value = Null
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 986
+    Top = 312
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = edOperDateStart
+    DateEnd = edOperDateEnd
+    Left = 896
+    Top = 96
   end
 end

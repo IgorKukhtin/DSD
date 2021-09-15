@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter;
+  cxSplitter, ChoicePeriod;
 
 type
   TOrderGoodsForm = class(TAncestorDocumentForm)
@@ -103,7 +103,6 @@ type
     GoodsCode_ch2: TcxGridDBColumn;
     GoodsName_ch2: TcxGridDBColumn;
     MeasureName_ch2: TcxGridDBColumn;
-    AmountForecast_ch2: TcxGridDBColumn;
     AmountForecastOrder_ch2: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
     AmountForecastPromo_ch2: TcxGridDBColumn;
@@ -129,6 +128,12 @@ type
     edOperDateStart: TcxDateEdit;
     edOperDateEnd: TcxDateEdit;
     cxLabel9: TcxLabel;
+    spInsert_MI_OrderGoodsDetail_Master: TdsdStoredProc;
+    actInsert_OrderGoodsDetail_Master: TdsdExecStoredProc;
+    matInsert_OrderGoodsDetail_Master: TMultiAction;
+    bbInsert_OrderGoodsDetail_Master: TdxBarButton;
+    actRefresh_Detail_Master: TdsdDataSetRefresh;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public

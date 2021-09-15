@@ -13,21 +13,27 @@ RETURNS TABLE (Id Integer
              )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbStartDate TDateTime;
+   DECLARE vbEndDate   TDateTime;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderGoodsDetail());
      vbUserId:= lpGetUserBySession (inSession);
 
-     
+     inOperDate := DATE_TRUNC('MONTH',inOperDate);
+
+     -- !!! 5 Ќ≈ƒ≈Ћ№  от последнего дн€ пред мес€ца.!!!
+     vbStartDate := (inOperDate - ((5 * 7) :: TVarChar || ' DAY') :: INTERVAL) ::TDateTime;
+     vbEndDate   := (inOperDate - INTERVAL '1 DAY')  ::TDateTime;
 
      IF COALESCE (inParentId, 0) = 0 OR NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail() AND Movement.StatusId <> zc_Enum_Status_Erased())
      THEN
      RETURN QUERY
          SELECT
                0 AS Id
-             , inOperDate ::TDateTime AS OperDateStart
-             , inOperDate ::TDateTime AS OperDateEnd
+             , vbStartDate ::TDateTime AS OperDateStart
+             , vbEndDate ::TDateTime AS OperDateEnd
           ;
      ELSE
 

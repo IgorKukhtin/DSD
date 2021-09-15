@@ -23,17 +23,14 @@ RETURNS TABLE (Id Integer, ParentId Integer
 AS
 $BODY$
   DECLARE vbUserId          Integer;
-  DECLARE vbGoodsPropertyId Integer;
-  DECLARE vbPriceWithVAT    Boolean;
-  DECLARE vbPriceListId     Integer;
-  DECLARE vbUnitId          Integer;
-  DECLARE vbOperDate        TDateTime;
+  DECLARE vbMovement        Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
-   
+     vbMovement := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail());
+     
      -- Результат другой
      RETURN QUERY
 
@@ -44,7 +41,7 @@ BEGIN
                           , MovementItem.ObjectId                         AS GoodsId
                           , MovementItem.isErased                         AS isErased
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                          INNER JOIN MovementItem ON MovementItem.ParentId = inParentId
+                          INNER JOIN MovementItem ON MovementItem.MovementId = vbMovement-- MovementItem.ParentId = inParentId
                                                  AND MovementItem.DescId     = zc_MI_Master()
                                                  AND MovementItem.isErased   = tmpIsErased.isErased
                      )
