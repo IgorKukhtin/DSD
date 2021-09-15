@@ -398,9 +398,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 982
-      ExplicitHeight = 0
       object cxGridDetailMaster: TcxGrid
         Left = 0
         Top = 0
@@ -409,10 +406,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 440
-        ExplicitTop = -60
-        ExplicitWidth = 982
-        ExplicitHeight = 300
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetailMaster
@@ -644,9 +637,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 982
-      ExplicitHeight = 0
       object cxGridDetailChild: TcxGrid
         Left = 0
         Top = 0
@@ -655,10 +645,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 440
-        ExplicitTop = -60
-        ExplicitWidth = 982
-        ExplicitHeight = 300
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetailChild
@@ -2413,12 +2399,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
   object spGet_OrderGoodsDetail: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderGoodsDetail'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inParentId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2437,7 +2432,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 368
+    Left = 776
+    Top = 408
   end
 end

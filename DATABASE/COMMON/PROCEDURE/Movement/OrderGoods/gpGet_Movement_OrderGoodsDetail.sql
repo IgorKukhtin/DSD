@@ -19,8 +19,9 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderGoodsDetail());
      vbUserId:= lpGetUserBySession (inSession);
 
+     
 
-     IF COALESCE (inParentId, 0) = 0
+     IF COALESCE (inParentId, 0) = 0 OR NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail() AND Movement.StatusId <> zc_Enum_Status_Erased())
      THEN
      RETURN QUERY
          SELECT
@@ -59,4 +60,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderGoodsDetail (inParentId:= 1, inOperDate:= CURRENT_DATE, inSession:= '9818')
+--SELECT * FROM gpGet_Movement_OrderGoodsDetail (inParentId:=20242962 , inOperDate:= CURRENT_DATE, inSession:= '9818')
+
+--20242962 
