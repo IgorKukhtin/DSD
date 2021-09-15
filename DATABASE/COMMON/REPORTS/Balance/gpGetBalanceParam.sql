@@ -1,9 +1,9 @@
--- Function: gpReport_JuridicalCollation()
+-- Function: gpGetBalanceParam()
 
 DROP FUNCTION IF EXISTS gpGetBalanceParam (TBlob ,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetBalanceParam(
-    IN inData             TBlob , 
+    IN inData             TBlob ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountGroupName TVarChar
@@ -12,7 +12,12 @@ RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountGroupName TVarCh
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ObjectDirectionId Integer, ObjectDestinationId Integer
              , JuridicalBasisId Integer
-             , BusinessId Integer, BusinessName TVarChar)
+             , BusinessId Integer, BusinessName TVarChar
+             , ProfitLossGroupId Integer, ProfitLossGroupName TVarChar
+             , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
+             , ProfitLossId Integer, ProfitLossName TVarChar
+             , BranchId Integer, BranchName TVarChar
+              )
 AS
 $BODY$
 DECLARE
@@ -55,46 +60,46 @@ BEGIN
                 WHEN 'accountgroupname' THEN
                    BEGIN
                       vbCode := split_part(vbValue, ' ', 1);
-                      SELECT Id, ValueData INTO vbAccountGroupId, vbAccountGroupName 
-                        FROM Object 
-                       WHERE DescId = zc_Object_AccountGroup() AND ObjectCode = vbCode::Integer;
+                      SELECT Id, ValueData INTO vbAccountGroupId, vbAccountGroupName
+                        FROM Object
+                       WHERE DescId = zc_Object_AccountGroup() AND ObjectCode = zfConvert_StringToNumber (vbCode);
                    END;
                 WHEN 'accountdirectionname' THEN
                    BEGIN
                       vbCode := split_part(vbValue, ' ', 1);
-                      SELECT Id, ValueData INTO vbAccountDirectionId, vbAccountDirectionName 
-                        FROM Object 
-                       WHERE DescId = zc_Object_AccountDirection() AND ObjectCode = vbCode::Integer;
+                      SELECT Id, ValueData INTO vbAccountDirectionId, vbAccountDirectionName
+                        FROM Object
+                       WHERE DescId = zc_Object_AccountDirection() AND ObjectCode = zfConvert_StringToNumber (vbCode);
                    END;
-                WHEN 'accountname' THEN 
+                WHEN 'accountname' THEN
                    BEGIN
                       vbCode := split_part(vbValue, ' ', 1);
-                      SELECT Id, ValueData INTO vbAccountId, vbAccountName 
-                        FROM Object 
-                       WHERE DescId = zc_Object_Account() AND ObjectCode = vbCode::Integer;
-                   END; 
-                WHEN 'businessname' THEN 
+                      SELECT Id, ValueData INTO vbAccountId, vbAccountName
+                        FROM Object
+                       WHERE DescId = zc_Object_Account() AND ObjectCode = zfConvert_StringToNumber (vbCode);
+                   END;
+                WHEN 'businessname' THEN
                    BEGIN
-                      SELECT Id, ValueData INTO vbBusinessId, vbBusinessName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbBusinessId, vbBusinessName
+                        FROM Object
                        WHERE DescId = zc_Object_Business() AND ValueData = vbValue;
-                   END; 
-                WHEN 'infomoneyname' THEN 
+                   END;
+                WHEN 'infomoneyname' THEN
                    BEGIN
-                      SELECT Id, ValueData INTO vbInfoMoneyId, vbInfoMoneyName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbInfoMoneyId, vbInfoMoneyName
+                        FROM Object
                        WHERE DescId = zc_Object_InfoMoney() AND ValueData = vbValue;
-                   END; 
-               ELSE BEGIN END;    
-            END CASE; 
+                   END;
+               ELSE BEGIN END;
+            END CASE;
          END IF;
          vbIndex := vbIndex + 1;
 
      END LOOP;
 
 
-     RETURN QUERY  
-     SELECT  
+     RETURN QUERY
+     SELECT
        0 AS RootType
      , vbAccountGroupId AS AccountGroupId
      , vbAccountGroupName AS AccountGroupName
@@ -107,20 +112,28 @@ BEGIN
      , 0 AS ObjectDirectionId
      , 0 AS ObjectDestinationId
      , 0 AS JuridicalBasisId
-     , vbBusinessId AS BusinessId  
-     , vbBusinessName AS BusinessName;
- 
+     , vbBusinessId AS BusinessId
+     , vbBusinessName AS BusinessName
+     , 0 AS ProfitLossGroupId
+     , '' :: TVarChar AS ProfitLossGroupName 
+     , 0 AS ProfitLossDirectionId 
+     , '' :: TVarChar AS ProfitLossDirectionName 
+     , 0 AS ProfitLossId 
+     , '' :: TVarChar AS ProfitLossName 
+     , 0 AS BranchId 
+     , '' :: TVarChar AS BranchName
+      ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGetBalanceParam (TBlob, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 19.03.14                         *  
+ 19.03.14                         *
 */
 
 -- тест
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2'); 
-                                                                
+-- SELECT * FROM gpGetBalanceParam (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2');
+
