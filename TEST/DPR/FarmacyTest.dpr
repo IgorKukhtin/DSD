@@ -1082,7 +1082,11 @@ uses
   Report_CheckZReportDialog in '..\..\FormsFarmacy\Report\Report_CheckZReportDialog.pas' {Report_CheckZReportDialogForm: TParentForm},
   Report_CheckZReport in '..\..\FormsFarmacy\Report\Report_CheckZReport.pas' {Report_CheckZReportForm: TParentForm},
   MakerReport in '..\..\FormsFarmacy\Guides\MakerReport.pas' {MakerReportForm: TParentForm},
-  Report_PriceCorrectionSystem in '..\..\FormsFarmacy\Report\Report_PriceCorrectionSystem.pas' {Report_PriceCorrectionSystemForm: TParentForm};
+  Report_PriceCorrectionSystem in '..\..\FormsFarmacy\Report\Report_PriceCorrectionSystem.pas' {Report_PriceCorrectionSystemForm: TParentForm},
+  PayrollTypeVIP in '..\..\FormsFarmacy\Guides\PayrollTypeVIP.pas' {PayrollTypeVIPForm: TParentForm},
+  PayrollTypeVIPEdit in '..\..\FormsFarmacy\Guides\PayrollTypeVIPEdit.pas' {PayrollTypeVIPEditForm: TParentForm},
+  EmployeeScheduleVIPJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleVIPJournal.pas' {EmployeeScheduleVIPJournalForm: TParentForm},
+  EmployeeScheduleVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleVIP.pas' {EmployeeScheduleVIPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

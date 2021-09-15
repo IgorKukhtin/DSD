@@ -198,6 +198,9 @@ type
     cbDiscountCommit: TcxCheckBox;
     edZReport: TcxTextEdit;
     cxLabel32: TcxLabel;
+    spUpdate_ClearFiscal: TdsdStoredProc;
+    actUpdate_ClearFiscal: TdsdExecStoredProc;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

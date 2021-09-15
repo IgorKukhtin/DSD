@@ -216,6 +216,14 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 68
           end
+          object isCallOrder: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1079#1074#1086#1085#1082#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1055#1086#1095#1090#1072')'
+            DataBinding.FieldName = 'isCallOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
         end
       end
     end

@@ -66,6 +66,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
              , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
+             , isBlockCommentSendTP Boolean
 ) AS
 $BODY$
 BEGIN
@@ -253,6 +254,7 @@ BEGIN
       , COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE) :: Boolean     AS isParticipDistribListDiff
       , COALESCE (ObjectBoolean_PauseDistribListDiff.ValueData, FALSE)    :: Boolean     AS isPauseDistribListDiff
       , COALESCE (ObjectBoolean_RequestDistribListDiff.ValueData, FALSE)  :: Boolean     AS isRequestDistribListDiff
+      , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE)      :: Boolean     AS isBlockCommentSendTP
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -592,6 +594,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RequestDistribListDiff
                                 ON ObjectBoolean_RequestDistribListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RequestDistribListDiff.DescId = zc_ObjectBoolean_Unit_RequestDistribListDiff()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
+                                ON ObjectBoolean_BlockCommentSendTP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

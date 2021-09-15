@@ -195,6 +195,10 @@ type
     CIN_ch2: TcxGridDBColumn;
     ProductName_ch2: TcxGridDBColumn;
     BrandName_ch2: TcxGridDBColumn;
+    actOpenFormOrderPartner: TdsdOpenForm;
+    actOpenFormOrderClient: TdsdOpenForm;
+    bbOpenFormOrderPartner: TdxBarButton;
+    bbOpenFormOrderClient: TdxBarButton;
   private
   public
   end;

@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxDBEdit;
 
 type
   TReport_PriceCorrectionSystemForm = class(TAncestorReportForm)
@@ -33,6 +33,10 @@ type
     GoodsCode: TcxGridDBColumn;
     Procent: TcxGridDBColumn;
     Color_Calc: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    dbedPriceCorrectionDay: TcxDBTextEdit;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

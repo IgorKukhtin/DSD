@@ -61,7 +61,8 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
             Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'PricePrev'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -72,7 +73,8 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'PriceCurr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -95,6 +97,21 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
             VisibleForCustomization = False
           end
         end
+      end
+      object cxLabel3: TcxLabel
+        Left = 392
+        Top = 46
+        Caption = #1056#1072#1089#1089#1084#1072#1090#1088#1080#1074#1072#1077#1084#1099#1081' '#1087#1077#1088#1080#1086#1076':'
+      end
+      object dbedPriceCorrectionDay: TcxDBTextEdit
+        Left = 540
+        Top = 45
+        TabStop = False
+        DataBinding.DataField = 'PriceCorrectionDay'
+        DataBinding.DataSource = MasterDS
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Width = 45
       end
     end
   end
@@ -268,10 +285,6 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -280,7 +293,15 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end>
     end
     object bbExecuteDialog: TdxBarButton
@@ -290,6 +311,20 @@ inherited Report_PriceCorrectionSystemForm: TReport_PriceCorrectionSystemForm
     object dxBarButton1: TdxBarButton
       Action = MovementProtocolOpenForm
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel3
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = dbedPriceCorrectionDay
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

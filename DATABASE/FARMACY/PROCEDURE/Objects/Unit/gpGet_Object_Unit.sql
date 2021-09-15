@@ -53,7 +53,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                LayoutId  Integer, LayoutName TVarChar,
                PromoForSale TVarChar,
                isMinPercentMarkup Boolean,
-               SerialNumberMypharmacy Integer
+               SerialNumberMypharmacy Integer,
+               isBlockCommentSendTP Boolean
                ) AS
 $BODY$
 BEGIN
@@ -169,6 +170,7 @@ BEGIN
            , CAST ('' as TVarChar) AS PromoForSale
            , FALSE                 AS isMinPercentMarkup
            , CAST (0 as Integer)   AS SerialNumberMypharmacy
+           , FALSE                 AS isBlockCommentSendTP
 ;
    ELSE
        RETURN QUERY 
@@ -283,7 +285,8 @@ BEGIN
       
       , ObjectString_PromoForSale.ValueData                AS PromoForSale
       , COALESCE (ObjectBoolean_MinPercentMarkup.ValueData, FALSE):: Boolean      AS isMinPercentMarkup
-      , ObjectFloat_SerialNumberMypharmacy.ValueData::Integer                     AS  SerialNumberMypharmacy
+      , ObjectFloat_SerialNumberMypharmacy.ValueData::Integer           AS  SerialNumberMypharmacy
+      , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE):: Boolean    AS isBlockCommentSendTP
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -567,6 +570,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_MinPercentMarkup
                                 ON ObjectBoolean_MinPercentMarkup.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MinPercentMarkup.DescId = zc_ObjectBoolean_Unit_MinPercentMarkup()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
+                                ON ObjectBoolean_BlockCommentSendTP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -616,5 +623,4 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 -- select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
 
-
- select * from gpGet_Object_Unit(inId := 0 ,  inSession := '375661');
+ select * from gpGet_Object_Unit(inId := 183289 ,  inSession := '3');

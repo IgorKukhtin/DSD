@@ -164,6 +164,7 @@ type
     cdMinPercentMarkup: TcxCheckBox;
     ceSerialNumberMypharmacy: TcxCurrencyEdit;
     cxLabel49: TcxLabel;
+    cbBlockCommentSendTP: TcxCheckBox;
   private
     { Private declarations }
   public

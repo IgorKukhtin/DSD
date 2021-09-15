@@ -749,6 +749,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbcInsert_MI_Send_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedChild'
         end
         item
@@ -759,6 +767,18 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderClient'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormOrderPartner'
         end
         item
           Visible = True
@@ -919,6 +939,18 @@ object SendForm: TSendForm
     end
     object bbSetErasedChild: TdxBarButton
       Action = SetErasedChild
+      Category = 0
+    end
+    object bbcInsert_MI_Send_Child: TdxBarButton
+      Action = macInsert_MI_Send_Child
+      Category = 0
+    end
+    object bbOpenFormOrderClient: TdxBarButton
+      Action = actOpenFormOrderClient
+      Category = 0
+    end
+    object bbOpenFormOrderPartner: TdxBarButton
+      Action = actOpenFormOrderPartner
       Category = 0
     end
   end
@@ -1531,6 +1563,103 @@ object SendForm: TSendForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ImageIndex = 0
+    end
+    object macInsert_MI_Send_Child: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MI_Send_Child
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074'?'
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
+      ImageIndex = 27
+    end
+    object actInsert_MI_Send_Child: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Send_Child
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Send_Child
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = 'actInsert_MI_Send_Child'
+      ImageIndex = 27
+    end
+    object actOpenFormOrderPartner: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      ImageIndex = 26
+      FormName = 'TOrderPartnerForm'
+      FormNameParam.Value = 'TOrderPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MovementId_OrderPartner'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowAll
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormOrderClient: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 24
+      FormName = 'TOrderClientForm'
+      FormNameParam.Value = 'TOrderClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowAll
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2178,7 +2307,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 698
-    Top = 437
+    Top = 461
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased_Child'
@@ -2253,5 +2382,22 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 304
+  end
+  object spInsert_MI_Send_Child: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Send_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 750
+    Top = 207
   end
 end

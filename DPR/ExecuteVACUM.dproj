@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{9EC2C8E1-2EE6-4CB0-948F-F29762EE48D8}</ProjectGuid>
-        <ProjectVersion>19.0</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>ExecuteVACUM.dpr</MainSource>
         <Base>True</Base>
@@ -103,7 +103,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\FormsFarmacy\ExportForMaker\MainUnit.pas">
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExecuteVACUM\MainUnit.pas">
             <Form>MainForm</Form>
         </DCCReference>
         <BuildConfiguration Include="Release">

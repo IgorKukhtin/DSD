@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
              , NotMCS Boolean, IsDeferred Boolean
-             , isSite Boolean
+             , isSite Boolean, isCallOrder Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -81,6 +81,7 @@ BEGIN
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
            , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
+           , COALESCE(MovementBoolean_CallOrder.ValueData,FALSE) :: Boolean AS isCallOrder
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
@@ -220,6 +221,9 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Site
                                        ON MovementBoolean_Site.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+             LEFT JOIN MovementBoolean AS MovementBoolean_CallOrder
+                                       ON MovementBoolean_CallOrder.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_CallOrder.DescId = zc_MovementBoolean_CallOrder()
 
 	         LEFT JOIN MovementBoolean AS MovementBoolean_DeliverySite
                                        ON MovementBoolean_DeliverySite.MovementId = Movement_Check.Id
@@ -359,3 +363,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
+
+select * from gpSelect_Movement_CheckSummCard(inStartDate := ('14.09.2021')::TDateTime , inEndDate := ('14.09.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');

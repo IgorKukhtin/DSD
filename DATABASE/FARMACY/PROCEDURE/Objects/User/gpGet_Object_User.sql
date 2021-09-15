@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSite Boolean
              , PasswordWages TVarChar
              , isManagerPharmacy Boolean
+             , isWorkingMultiple Boolean
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -44,6 +45,7 @@ BEGIN
            , FALSE                  AS isSite
            , CAST ('' as TVarChar)  AS PasswordWages
            , FALSE                  AS isManagerPharmacy
+           , FALSE                  AS isWorkingMultiple
 ;
    ELSE
       RETURN QUERY 
@@ -66,6 +68,8 @@ BEGIN
 
           , ObjectString_PasswordWages.ValueData
           , COALESCE (ObjectBoolean_ManagerPharmacy.ValueData, FALSE)::Boolean  AS isManagerPharmacy
+
+          , COALESCE (ObjectBoolean_WorkingMultiple.ValueData, FALSE)::Boolean  AS isWorkingMultiple
 
       FROM Object AS Object_User
            LEFT JOIN ObjectString AS ObjectString_UserPassword 
@@ -95,6 +99,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
                   ON ObjectBoolean_Site.ObjectId = Object_User.Id
                  AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_WorkingMultiple
+                                   ON ObjectBoolean_WorkingMultiple.ObjectId = Object_User.Id
+                                  AND ObjectBoolean_WorkingMultiple.DescId = zc_ObjectBoolean_User_WorkingMultiple()
                  
            LEFT JOIN ObjectLink AS ObjectLink_User_Member
                   ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -108,7 +116,6 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_ManagerPharmacy
                                    ON ObjectBoolean_ManagerPharmacy.ObjectId = ObjectLink_User_Member.ChildObjectId
                                   AND ObjectBoolean_ManagerPharmacy.DescId = zc_ObjectBoolean_Member_ManagerPharmacy()
-           
       WHERE Object_User.Id = inId;
    END IF;
   
@@ -129,4 +136,4 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_User (1, '5')
+-- SELECT * FROM gpGet_Object_User (1, '3')

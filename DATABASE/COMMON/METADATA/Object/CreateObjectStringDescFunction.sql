@@ -1349,9 +1349,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Personal_Comment() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Personal_Comment', zc_Object_Personal(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Personal_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PayrollTypeVIP_ShortName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollTypeVIP_ShortName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PayrollTypeVIP_ShortName', zc_Object_PayrollTypeVIP(), 'Короткое наименование' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollTypeVIP_ShortName');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 14.09.21                                                                                                         * zc_ObjectString_PayrollTypeVIP_ShortName
  09.09.21         * zc_ObjectString_Member_CardBank
                     zc_ObjectString_Member_CardBankSecond
  06.08.21         * zc_ObjectString_Personal_Comment

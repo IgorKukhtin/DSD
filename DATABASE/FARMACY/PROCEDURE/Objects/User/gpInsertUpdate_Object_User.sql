@@ -3,21 +3,23 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
- INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
-    IN inCode             Integer   ,    -- 
-    IN inUserName         TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
-    IN inPassword         TVarChar  ,    -- пароль пользователя 
-    IN inSign             TVarChar  ,    -- Электронная подпись
-    IN inSeal             TVarChar  ,    -- Электронная печать
-    IN inKey              TVarChar  ,    -- Электроный Ключ 
-    IN inProjectMobile    TVarChar  ,    -- Серийный № моб устр-ва
-    IN inisProjectMobile  Boolean   ,    -- признак - это Торговый агент
-    IN inisSite           Boolean   ,    -- признак - Для сайта
-    IN inMemberId         Integer   ,    -- физ. лицо
-    IN inPasswordWages    TVarChar  ,    -- пароль пользователя 
-    IN inSession          TVarChar       -- сессия пользователя
+ INOUT ioId                 Integer   ,    -- ключ объекта <Пользователь> 
+    IN inCode               Integer   ,    -- 
+    IN inUserName           TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
+    IN inPassword           TVarChar  ,    -- пароль пользователя 
+    IN inSign               TVarChar  ,    -- Электронная подпись
+    IN inSeal               TVarChar  ,    -- Электронная печать
+    IN inKey                TVarChar  ,    -- Электроный Ключ 
+    IN inProjectMobile      TVarChar  ,    -- Серийный № моб устр-ва
+    IN inisProjectMobile    Boolean   ,    -- признак - это Торговый агент
+    IN inisSite             Boolean   ,    -- признак - Для сайта
+    IN inMemberId           Integer   ,    -- физ. лицо
+    IN inPasswordWages      TVarChar  ,    -- пароль пользователя 
+    IN inisWorkingMultiple  Boolean   ,    -- Работа на нескольких аптеках
+    IN inSession            TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
 AS
@@ -46,6 +48,9 @@ BEGIN
 
    -- свойство <Для сайта>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_Site(), ioId, inisSite);
+       
+   -- свойство <Работа на нескольких аптеках>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_WorkingMultiple(), ioId, inisWorkingMultiple);
        
    IF inisProjectMobile = TRUE
    THEN

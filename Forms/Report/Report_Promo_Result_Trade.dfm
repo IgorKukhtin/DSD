@@ -4,9 +4,8 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
   ClientWidth = 1075
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -302
   ExplicitWidth = 1091
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -162,6 +161,13 @@ inherited Report_Promo_Result_TradeForm: TReport_Promo_Result_TradeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
+          end
+          object JuridicalName_str: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_str'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 154
           end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072

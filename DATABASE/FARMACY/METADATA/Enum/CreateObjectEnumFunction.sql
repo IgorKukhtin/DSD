@@ -54,6 +54,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_Role_ViewWages() RETURNS integer AS $BODY$BEG
 
 CREATE OR REPLACE FUNCTION zc_Enum_Role_TestingTuning() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_TestingTuning' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Role_VIPWages() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_VIPWages' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION zc_Enum_Role_VIPManager() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_VIPManager' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 -- !!!
 -- !!! Подразделение для роли Директор Партнер
@@ -208,6 +212,11 @@ CREATE OR REPLACE FUNCTION zc_Enum_PayrollType_WorkSSAS()  RETURNS Integer AS $B
 -- !!!
 CREATE OR REPLACE FUNCTION zc_Enum_PayrollGroup_Check()       RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PayrollGroup_Check'        AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_PayrollGroup_IncomeCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PayrollGroup_IncomeCheck'  AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- !!!
+-- !!! Типы расчета заработной платы для VIP менеджеров
+-- !!!
+CREATE OR REPLACE FUNCTION zc_Enum_PayrollTypeVIP_WorkCS()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PayrollTypeVIP_WorkCS'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_PayrollTypeVIP_WorkAS()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PayrollTypeVIP_WorkAS'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Типы модели начисления

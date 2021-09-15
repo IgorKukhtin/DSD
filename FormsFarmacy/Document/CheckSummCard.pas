@@ -53,6 +53,7 @@ type
     CancelReason: TcxGridDBColumn;
     isDeliverySite: TcxGridDBColumn;
     SummaDelivery: TcxGridDBColumn;
+    isCallOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

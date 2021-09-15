@@ -46,6 +46,7 @@ type
     ñbSite: TcxCheckBox;
     ñbVIP: TcxCheckBox;
     ñbRegularSales: TcxCheckBox;
+    isCallOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

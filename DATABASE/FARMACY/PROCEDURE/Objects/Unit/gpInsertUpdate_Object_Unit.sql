@@ -70,6 +70,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -140,6 +147,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inSerialNumberTabletki    Integer   ,    -- Серийный номер на сайте таблеток
     IN inPromoForSale            TVarChar  ,    -- Маркетинговый контракт для заполнения врачей и покупателей
     IN inisMinPercentMarkup      Boolean   ,    -- Использовать минимальную наценку по сети или аптеке
+    IN inSerialNumberMypharmacy  Integer   ,    -- Серийный номер на сайте моя аптека
+    IN inisBlockCommentSendTP    Boolean   ,    -- Бликировать коменты с формированием ТП
     
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -450,6 +459,8 @@ BEGIN
    
    -- Кол-во дней приход от пост. (Серийный номер на сайте таблеток)
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_SerialNumberTabletki(), ioId, inSerialNumberTabletki);
+   -- Серийный номер на сайте "Моя аптека"
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_SerialNumberMypharmacy(), ioId, inSerialNumberMypharmacy);
 
    -- сохранили связь с <Выкладка>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Layout(), ioId, inLayoutId);
@@ -459,6 +470,9 @@ BEGIN
    
    --сохранили <Использовать минимальную наценку по сети или аптеке>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_MinPercentMarkup(), ioId, inisMinPercentMarkup);   
+
+   --сохранили <Бликировать коменты с формированием ТП>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_BlockCommentSendTP(), ioId, inisBlockCommentSendTP);   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

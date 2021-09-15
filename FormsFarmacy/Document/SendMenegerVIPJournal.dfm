@@ -118,6 +118,22 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
           DataSet = PrintItemsCDS
         end>
     end
+    inherited actPrintFilter: TdsdPrintAction
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+        end
+        item
+          DataSet = PrintItemsCDS
+        end>
+    end
     object actPrintNew: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -182,7 +198,7 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -190,7 +206,7 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -242,7 +258,7 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
       end
       item
         Name = 'inisVip'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisVip'
         DataType = ftBoolean
@@ -350,10 +366,6 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton7'
         end
         item
@@ -370,14 +382,6 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -391,6 +395,14 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -400,6 +412,35 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
       Action = actToGenerateCheck
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = macPrintFilter
+      Category = 0
+    end
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -439,8 +480,27 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
       end
       item
         Name = 'inisVip'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_Movement_DriverSun: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDriverSunId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DriverSunId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
   end

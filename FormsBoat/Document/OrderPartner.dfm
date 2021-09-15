@@ -2471,7 +2471,7 @@ object OrderPartnerForm: TOrderPartnerForm
       item
       end>
     GetStoredProc = spGet
-    Left = 512
+    Left = 456
     Top = 65
   end
   object spGet: TdsdStoredProc

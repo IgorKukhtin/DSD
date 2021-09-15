@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   ClientHeight = 483
-  ClientWidth = 303
+  ClientWidth = 406
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@
     Left = 13
     Top = 71
     TabOrder = 0
-    Width = 273
+    Width = 385
   end
   object cxLabel1: TcxLabel
     Left = 13
@@ -28,8 +28,8 @@
     Caption = #1051#1086#1075#1080#1085
   end
   object cxButton1: TcxButton
-    Left = 45
-    Top = 443
+    Left = 101
+    Top = 435
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 189
-    Top = 443
+    Left = 245
+    Top = 435
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -75,14 +75,14 @@
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 273
+    Width = 385
   end
   object edPassword: TcxTextEdit
     Left = 13
     Top = 121
     Properties.PasswordChar = '*'
     TabOrder = 8
-    Width = 273
+    Width = 185
   end
   object cxLabel2: TcxLabel
     Left = 13
@@ -99,14 +99,14 @@
     Top = 224
     Properties.PasswordChar = '*'
     TabOrder = 11
-    Width = 273
+    Width = 385
   end
   object edSeal: TcxTextEdit
     Left = 13
     Top = 270
     Properties.PasswordChar = '*'
     TabOrder = 12
-    Width = 273
+    Width = 385
   end
   object cxLabel5: TcxLabel
     Left = 13
@@ -118,7 +118,7 @@
     Top = 320
     Properties.PasswordChar = '*'
     TabOrder = 14
-    Width = 273
+    Width = 385
   end
   object cxLabel6: TcxLabel
     Left = 13
@@ -138,8 +138,8 @@
     Width = 185
   end
   object ceisProjectMobile: TcxCheckBox
-    Left = 204
-    Top = 367
+    Left = 13
+    Top = 394
     Caption = #1058#1086#1088#1075'. '#1072#1075#1077#1085#1090
     TabOrder = 18
     Width = 82
@@ -152,24 +152,32 @@
     Width = 82
   end
   object ceManagerPharmacy: TcxCheckBox
-    Left = 204
-    Top = 414
+    Left = 101
+    Top = 394
     Caption = #1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
     Properties.ReadOnly = True
     TabOrder = 20
-    Width = 91
+    Width = 97
   end
   object edPasswordWages: TcxTextEdit
-    Left = 13
-    Top = 414
+    Left = 213
+    Top = 367
     Properties.PasswordChar = '*'
     TabOrder = 21
     Width = 185
   end
   object cxLabel8: TcxLabel
-    Left = 13
-    Top = 393
+    Left = 213
+    Top = 346
     Caption = #1055#1072#1088#1083#1100' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+  end
+  object cbWorkingMultiple: TcxCheckBox
+    Left = 204
+    Top = 394
+    Hint = #1056#1072#1073#1086#1090#1072' '#1085#1072' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1072#1087#1090#1077#1082#1072#1093
+    Caption = #1056#1072#1073#1086#1090#1072' '#1085#1072' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1072#1087#1090#1077#1082#1072#1093
+    TabOrder = 23
+    Width = 189
   end
   object ActionList: TActionList
     Left = 269
@@ -303,6 +311,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkingMultiple'
+        Value = Null
+        Component = cbWorkingMultiple
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 213
@@ -411,6 +427,7 @@
       end
       item
         Name = 'PasswordWages'
+        Value = Null
         Component = edPasswordWages
         DataType = ftString
         MultiSelectSeparator = ','
@@ -419,6 +436,13 @@
         Name = 'isManagerPharmacy'
         Value = Null
         Component = ceManagerPharmacy
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isWorkingMultiple'
+        Value = Null
+        Component = cbWorkingMultiple
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -450,11 +474,11 @@
         MultiSelectSeparator = ','
       end>
     Left = 85
-    Top = 173
+    Top = 165
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 237
-    Top = 176
+    Left = 253
+    Top = 192
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -468,7 +492,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 221
+    Left = 245
     Top = 136
   end
 end

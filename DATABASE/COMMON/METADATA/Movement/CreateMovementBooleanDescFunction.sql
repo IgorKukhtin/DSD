@@ -354,11 +354,16 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_DiscountCommit() RETURNS integer A
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_DiscountCommit', 'Дисконт проведен на сайте'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_DiscountCommit');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_CallOrder() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_CallOrder'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_CallOrder', 'Заказ по звонку покупателя'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_CallOrder');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 14.09.21                                                                                   * zc_MovementBoolean_CallOrder
  21.08.21                                                                                   * zc_MovementBoolean_DiscountCommit
  10.08.21         * zc_MovementBoolean_ClosedAuto
  09.08.21         * zc_MovementBoolean_CheckedHead
