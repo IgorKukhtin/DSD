@@ -60,7 +60,8 @@ BEGIN
               vbJackdawsChecksId <> 0)
          OR vbOperDate < '05.07.2021'
          OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY')
-         AND (vbInvNumberOrder <> '' OR vbCheckSourceKindId <> 0)
+         OR vbInvNumberOrder <> '' 
+         OR vbCheckSourceKindId <> 0
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
       END IF;

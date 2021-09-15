@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
              , NotMCS Boolean, IsDeferred Boolean
-             , isSite Boolean
+             , isSite Boolean, isCallOrder Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -78,6 +78,7 @@ BEGIN
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
            , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
+           , COALESCE(MovementBoolean_CallOrder.ValueData,FALSE) :: Boolean AS isCallOrder
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
@@ -211,6 +212,9 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Site
                                        ON MovementBoolean_Site.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+             LEFT JOIN MovementBoolean AS MovementBoolean_CallOrder
+                                       ON MovementBoolean_CallOrder.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_CallOrder.DescId = zc_MovementBoolean_CallOrder()
 
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
@@ -356,3 +360,4 @@ $BODY$
 -- тест
 --
 select * from gpReport_Movement_CheckSite(inDateStart := ('01.01.2021')::TDateTime , inDateFinal := ('04.01.2021')::TDateTime , inUnitId := 183292 , inIsRegularSales := 'True' , inisVIP := 'True' , inisSite := 'True' , inisSiteTabletki := 'False' , inisSiteLiki24 := 'False' ,  inSession := '3');
+select * from gpReport_Movement_CheckSite(inDateStart := ('01.09.2021')::TDateTime , inDateFinal := ('14.09.2021')::TDateTime , inUnitId := 0 , inIsRegularSales := 'False' , inisVIP := 'False' , inisSite := 'True' , inisSiteTabletki := 'False' , inisSiteLiki24 := 'False' ,  inSession := '3');

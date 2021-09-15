@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
     IN inPromoCodeId       Integer   , -- ID Промокода
     IN inisDelivery        Boolean   , -- Hаша доставка
     IN inDeliveryPrice     TFloat    , -- Цена доставки
+    IN inisCallOrder       Boolean   , -- Заказ по звонку покупателя
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -224,6 +226,10 @@ BEGIN
       -- сохранили <Сумма доставки>
       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummaDelivery(), ioId, inDeliveryPrice);
     END IF;
+
+    IF COALESCE (inisCallOrder, False) = TRUE THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CallOrder(), ioId, True);
+	END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

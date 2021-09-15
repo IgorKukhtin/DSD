@@ -57,6 +57,7 @@ type
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
     procedure LoadEmployeeScheduleFormTest;
+    procedure LoadEmployeeScheduleVIPFormTest;
     procedure LoadFinalSUAFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
@@ -3027,6 +3028,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleAddUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleAddUserDialogForm');
+end;
+
+procedure TLoadFormTest.LoadEmployeeScheduleVIPFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleVIPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleVIPJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleVIPForm');
+
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

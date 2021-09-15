@@ -861,6 +861,8 @@ type
     actReport_PriceCorrectionSystem: TdsdOpenForm;
     actPayrollTypeVIP: TdsdOpenForm;
     N314: TMenuItem;
+    actEmployeeScheduleVIP: TdsdOpenForm;
+    VIP3: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
