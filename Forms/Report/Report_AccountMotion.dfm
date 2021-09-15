@@ -227,6 +227,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object AccountName_All: TcxGridDBColumn
@@ -234,25 +235,32 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         DataBinding.FieldName = 'AccountName_All'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ObjectCode_Direction: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'ObjectCode_Direction'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object ObjectName_Direction: TcxGridDBColumn
         Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ObjectName_Direction'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 98
       end
       object DescName_Direction: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'DescName_Direction'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ObjectCode_Destination: TcxGridDBColumn
@@ -261,6 +269,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object ObjectName_Destination: TcxGridDBColumn
@@ -268,12 +277,15 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         DataBinding.FieldName = 'ObjectName_Destination'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 94
       end
       object DescName_Destination: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'DescName_Destination'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 88
       end
       object GoodsKindName: TcxGridDBColumn
@@ -289,14 +301,18 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
         DataBinding.FieldName = 'JuridicalBasisName'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -333,12 +349,21 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Options.Editing = False
         Width = 110
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object ContractName: TcxGridDBColumn
@@ -347,6 +372,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object MovementDescName: TcxGridDBColumn
@@ -354,6 +380,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         DataBinding.FieldName = 'MovementDescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object InvNumber: TcxGridDBColumn
@@ -362,6 +389,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object OperDate: TcxGridDBColumn
@@ -370,6 +398,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object OperDatePartner: TcxGridDBColumn
@@ -377,6 +406,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object AccountCode_inf: TcxGridDBColumn
@@ -385,6 +415,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object AccountName_All_inf: TcxGridDBColumn
@@ -393,6 +424,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ProfitLossName_All_inf: TcxGridDBColumn
@@ -401,6 +433,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object BusinessName_inf: TcxGridDBColumn
@@ -409,6 +442,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object BranchName_inf: TcxGridDBColumn
@@ -417,6 +451,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object UnitName_inf: TcxGridDBColumn
@@ -425,6 +460,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object RouteName_inf: TcxGridDBColumn
@@ -433,6 +469,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object OperPrice: TcxGridDBColumn
@@ -444,6 +481,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
       object SummStart: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
@@ -1012,11 +1050,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     object actRefreshDetail: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1076#1077#1090#1072#1083#1100#1085#1086
       Hint = #1076#1077#1090#1072#1083#1100#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
@@ -1026,11 +1060,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     object actRefreshGoodsKind: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
@@ -1040,11 +1070,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     object actRefreshGoods: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
@@ -1054,11 +1080,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     object actRefreshMovement: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       Hint = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 4
@@ -1173,14 +1195,14 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1582,10 +1604,13 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 312
     Top = 264
   end

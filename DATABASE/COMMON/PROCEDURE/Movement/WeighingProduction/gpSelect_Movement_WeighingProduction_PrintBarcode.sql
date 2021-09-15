@@ -49,11 +49,18 @@ BEGIN
 
        -- Результат
     WITH
+     tmp1 AS (SELECT MIFloat_MovementItemId.ValueData :: Integer AS MovementItemId FROM MovementItemFloat AS MIFloat_MovementItemId WHERE MIFloat_MovementItemId.MovementItemId = inId AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId())
+   , tmp2 AS (SELECT * FROM MovementItem WHERE MovementItem.Id IN (SELECT DISTINCT tmp1.MovementItemId FROM tmp1))
+   , tmp3 AS (SELECT * FROM Movement WHERE Movement.Id IN (SELECT DISTINCT tmp2.MovementId FROM tmp2)
+                                       AND Movement.DescId = zc_Movement_ProductionUnion()
+             )
+
+
     -- для 1-ой строки
-    tmpMI AS (SELECT MovementItem.Id                           AS MovementItemId
+  , tmpMI AS (SELECT MovementItem.Id                           AS MovementItemId
                    , MovementItem.ObjectId                     AS GoodsId
                    , MILinkObject_GoodsKind.ObjectId           AS GoodsKindId
-                   , MIDate_PartionGoods.ValueData             AS PartionGoodsDate
+                   , COALESCE (Movement_Partion.OperDate, MIDate_PartionGoods.ValueData) :: TDateTime AS PartionGoodsDate
                    , MIString_PartionGoods.ValueData           AS PartionGoods
                    , MILinkObject_PartionGoods.ObjectId        AS PartionGoodsId
                    , MovementItem.Amount                       AS Amount
@@ -126,6 +133,8 @@ BEGIN
                                                ON MIFloat_WeightSkewer2.MovementItemId = MovementItem.Id
                                               AND MIFloat_WeightSkewer2.DescId = zc_MIFloat_WeightSkewer2()
 
+                   LEFT JOIN tmp3 AS Movement_Partion ON Movement_Partion.DescId = zc_Movement_ProductionUnion()
+
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.Id         = inId
              )
@@ -155,7 +164,7 @@ BEGIN
            , tmpMI.WeightTare
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
-           , zfConvert_DateToString (CURRENT_DATE) AS PartionGoodsDate_str
+           , zfConvert_DateToString (tmpMI.PartionGoodsDate) AS PartionGoodsDate_str
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
 

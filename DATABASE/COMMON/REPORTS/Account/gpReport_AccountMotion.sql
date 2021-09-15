@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inIsDetail               Boolean ,
     IN inSession                TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, Comment TVarChar, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
 
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
@@ -70,15 +70,45 @@ BEGIN
 
 
     RETURN QUERY
-    SELECT * FROM lpReport_AccountMotion (inStartDate             := inStartDate,  
+         SELECT tmp.InvNumber, tmp.MovementId, tmp.OperDate, tmp.OperDatePartner, tmp.Comment, tmp.MovementDescName
+              , tmp.InfoMoneyCode, tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyName
+
+              , tmp.JuridicalBasisCode, tmp.JuridicalBasisName
+              , tmp.BusinessCode, tmp.BusinessName
+              , tmp.PaidKindName, tmp.ContractName
+
+              , tmp.ObjectId_Direction, tmp.ObjectCode_Direction, tmp.ObjectName_Direction
+              , tmp.ObjectCode_Destination, tmp.ObjectName_Destination
+              , tmp.DescName_Direction
+              , tmp.DescName_Destination
+              , tmp.GoodsKindName
+
+              , tmp.RouteCode_inf, tmp.RouteName_inf
+              , tmp.UnitCode_inf, tmp.UnitName_inf
+              , tmp.BranchCode_inf, tmp.BranchName_inf
+              , tmp.BusinessCode_inf, tmp.BusinessName_inf
+              , tmp.SummStart, tmp.SummIn, tmp.SummOut, tmp.SummEnd--, tmp.OperPrice
+              , tmp.AccountGroupCode, tmp.AccountGroupName
+              , tmp.AccountDirectionCode, tmp.AccountDirectionName
+              , tmp.AccountCode, tmp.AccountName, tmp.AccountName_All
+              , tmp.AccountGroupCode_inf, tmp.AccountGroupName_inf
+              , tmp.AccountDirectionCode_inf, tmp.AccountDirectionName_inf
+              , tmp.AccountCode_inf, tmp.AccountName_inf, tmp.AccountName_All_inf
+              , tmp.ProfitLossName_All_inf
+
+              , tmp.InfoMoneyId_Detail, tmp.InfoMoneyCode_Detail
+              , tmp.InfoMoneyGroupName_Detail, tmp.InfoMoneyDestinationName_Detail
+              , tmp.InfoMoneyName_Detail, tmp.InfoMoneyName_all_Detail
+              
+    FROM lpReport_AccountMotion (inStartDate             := inStartDate, 
                                           inEndDate               := inEndDate,
-                                          inAccountGroupId        := inAccountGroupId, 
-                                          inAccountDirectionId    := inAccountDirectionId, 
-                                          inInfoMoneyId           := inInfoMoneyId, 
+                                          inAccountGroupId        := inAccountGroupId,
+                                          inAccountDirectionId    := inAccountDirectionId,
+                                          inInfoMoneyId           := inInfoMoneyId,
                                           inAccountId             := inAccountId,
                                           inBusinessId            := inBusinessId,
                                           inProfitLossGroupId     := inProfitLossGroupId,
-                                          inProfitLossDirectionId := inProfitLossDirectionId, 
+                                          inProfitLossDirectionId := inProfitLossDirectionId,
                                           inProfitLossId          := inProfitLossId,
                                           inBranchId              := inBranchId,
                                           inMovementDescId        := inMovementDescId,
@@ -98,11 +128,11 @@ $BODY$
 
 
 /*-------------------------------------------------------------------------------
- »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿,¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  12.09.18         * add inMovementDescId
  19.06.18         *  
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_AccountMotion (inStartDate := ('01.11.2018')::TDateTime , inEndDate := ('01.11.2018')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := False, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_AccountMotion (inStartDate := ('01.11.2021')::TDateTime ,inEndDate := ('01.11.2021')::TDateTime ,inAccountGroupId := 9015 ,inAccountDirectionId := 9034 ,inInfoMoneyId := 0 ,inAccountId := 0 ,inBusinessId := 0 ,inProfitLossGroupId := 0 ,inProfitLossDirectionId := 0 ,inProfitLossId := 0 ,inBranchId := 0 ,inMovementDescId := 0 ,inIsMovement := 'False' ,inIsGoods := 'False' ,inIsGoodsKind := 'False' ,inIsDetail := False,inSession:= zfCalc_UserAdmin());

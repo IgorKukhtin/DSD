@@ -28,7 +28,6 @@ object MainForm: TMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 539
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -787,7 +786,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 498
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -951,7 +949,6 @@ object MainForm: TMainForm
       Height = 548
       Align = alClient
       TabOrder = 2
-      ExplicitHeight = 465
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1595,7 +1592,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    ExplicitHeight = 539
     object BarCodePanel: TPanel
       Left = 0
       Top = 39
@@ -1634,7 +1630,7 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 163
+      Top = 230
       Width = 130
       Height = 29
       Align = alTop
@@ -1645,7 +1641,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 277
+      ExplicitTop = 163
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -1679,21 +1675,20 @@ object MainForm: TMainForm
       Left = 0
       Top = 160
       Width = 130
-      Height = 3
+      Height = 70
       Align = alTop
       Caption = #1042#1077#1089#1099
       TabOrder = 2
       OnClick = rgScaleClick
-      ExplicitTop = 157
     end
     object PanelCountPack: TPanel
       Left = 0
-      Top = 192
+      Top = 259
       Width = 130
       Height = 39
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 306
+      ExplicitTop = 192
       object LabelCountPack: TLabel
         Left = 1
         Top = 1
@@ -1718,12 +1713,12 @@ object MainForm: TMainForm
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 285
+      Top = 352
       Width = 130
       Height = 39
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 399
+      ExplicitTop = 285
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1788,12 +1783,12 @@ object MainForm: TMainForm
     end
     object PanelBox: TPanel
       Left = 0
-      Top = 231
+      Top = 298
       Width = 130
       Height = 54
       Align = alTop
       TabOrder = 6
-      ExplicitTop = 345
+      ExplicitTop = 231
       object Label1: TLabel
         Left = 1
         Top = 1
@@ -1921,14 +1916,14 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 410
+      Top = 477
       Width = 130
       Height = 177
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
-      ExplicitTop = 524
+      ExplicitTop = 410
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -2158,14 +2153,14 @@ object MainForm: TMainForm
     end
     object infoSubjectDocPanel: TPanel
       Left = 0
-      Top = 367
+      Top = 434
       Width = 130
       Height = 43
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 10
-      ExplicitTop = 481
+      ExplicitTop = 367
       object SubjectDocPanel: TPanel
         Left = 1
         Top = 1
@@ -2216,14 +2211,14 @@ object MainForm: TMainForm
     end
     object infoReasonPanel: TPanel
       Left = 0
-      Top = 324
+      Top = 391
       Width = 130
       Height = 43
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 11
-      ExplicitTop = 438
+      ExplicitTop = 324
       object ReasonPanel: TPanel
         Left = 1
         Top = 1
@@ -2282,7 +2277,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitHeight = 539
     object PanelProduction_Goods: TPanel
       Left = 0
       Top = 15
@@ -2543,7 +2537,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 502
       object GBTotalWeight: TGroupBox
         Left = 0
         Top = 0

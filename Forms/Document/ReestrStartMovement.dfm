@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 959
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -168,7 +168,16 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object FromName: TcxGridDBColumn [11]
+          object isNotPayForWeight: TcxGridDBColumn [11]
+            Caption = #1053#1077#1090' '#1086#1087#1083'. '#1079#1072' '#1074#1077#1089
+            DataBinding.FieldName = 'isNotPayForWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1086#1087#1083#1072#1090#1099' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object FromName: TcxGridDBColumn [12]
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             Visible = False
@@ -176,14 +185,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object ToName: TcxGridDBColumn [12]
+          object ToName: TcxGridDBColumn [13]
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object OKPO_To: TcxGridDBColumn [13]
+          object OKPO_To: TcxGridDBColumn [14]
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_To'
             Visible = False
@@ -191,14 +200,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object JuridicalName_To: TcxGridDBColumn [14]
+          object JuridicalName_To: TcxGridDBColumn [15]
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_To'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object TotalCountKg: TcxGridDBColumn [15]
+          object TotalCountKg: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -208,7 +217,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object TotalSumm: TcxGridDBColumn [16]
+          object TotalSumm: TcxGridDBColumn [17]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -218,7 +227,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Checked: TcxGridDBColumn [17]
+          object Checked: TcxGridDBColumn [18]
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
             Visible = False
@@ -226,14 +235,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object PaidKindName: TcxGridDBColumn [18]
+          object PaidKindName: TcxGridDBColumn [19]
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ContractCode: TcxGridDBColumn [19]
+          object ContractCode: TcxGridDBColumn [20]
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -241,14 +250,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object ContractName: TcxGridDBColumn [20]
+          object ContractName: TcxGridDBColumn [21]
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ContractTagName: TcxGridDBColumn [21]
+          object ContractTagName: TcxGridDBColumn [22]
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -256,14 +265,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             Options.Editing = False
             Width = 60
           end
-          object InsertDate: TcxGridDBColumn [22]
+          object InsertDate: TcxGridDBColumn [23]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object MemberName: TcxGridDBColumn [23]
+          object MemberName: TcxGridDBColumn [24]
             Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -1143,7 +1152,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 0
+          Value = Null
           Component = FormParams
           ComponentItem = 'inStartDate'
           DataType = ftDateTime
@@ -1151,7 +1160,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'InEndDate'
           DataType = ftDateTime
@@ -1388,7 +1397,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'operdate'
-        Value = 0c
+        Value = Null
         DataType = ftDateTime
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1555,7 +1564,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inStartDate'
         DataType = ftDateTime
@@ -1563,7 +1572,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'InEndDate'
         DataType = ftDateTime
@@ -1593,7 +1602,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1671,43 +1680,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 422
     Top = 328
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 510
     Top = 320
   end
@@ -1724,7 +1701,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1809,14 +1786,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1825,14 +1802,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inCount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2152,6 +2129,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -2159,6 +2137,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 598
     Top = 121

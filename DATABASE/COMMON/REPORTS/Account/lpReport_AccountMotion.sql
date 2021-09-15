@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION lpReport_AccountMotion (
     IN inIsGoodsKind            Boolean ,
     IN inIsDetail               Boolean
 )
-RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, Comment TVarChar, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
               , BusinessCode Integer, BusinessName TVarChar
@@ -68,7 +68,9 @@ BEGIN
 
 
     -- оптимизация
-    CREATE TEMP TABLE tmpContainer ON COMMIT DROP
+  RETURN QUERY
+    WITH tmpContainer
+  --CREATE TEMP TABLE tmpContainer ON COMMIT DROP
       AS (SELECT Container.Id                  AS ContainerId
                , Container.ObjectId            AS AccountId
                , Container.Amount              AS Amount
@@ -83,7 +85,7 @@ BEGIN
                   AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0
                      )
                 ) AS tmpAccount -- счет
-  
+
                INNER JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                    AND Container.DescId   = zc_Container_Summ()
                LEFT JOIN ContainerLinkObject AS ContainerLO_Business
@@ -91,14 +93,13 @@ BEGIN
                                             AND ContainerLO_Business.DescId      = zc_ContainerLinkObject_Business()
                                             AND ContainerLO_Business.ObjectId    > 0
           WHERE ContainerLO_Business.ObjectId = inBusinessId OR COALESCE (inBusinessId, 0) = 0
-         );
-
+         )
     -- оптимизация
-    ANALYZE tmpContainer;
-
-    -- Результат
-    RETURN QUERY
-    WITH tmpContainer_Remains AS (SELECT tmpContainer.BusinessId
+    --ANALYZE tmpContainer;
+    --Результат
+    --RETURN QUERY
+    --WITH
+    , tmpContainer_Remains AS (SELECT tmpContainer.BusinessId
                                        , tmpContainer.AccountId
                                        , tmpContainer.ContainerId
                                        , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
@@ -114,7 +115,7 @@ BEGIN
                                    , tmpContainer.ContainerId
                                    , tmpContainer.AccountId
                                    , MIContainer.MovementDescId
-                                   , CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END :: Integer AS MovementId
+                                   , CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId     ELSE 0 END :: Integer AS MovementId
                                    , MIContainer.MovementItemId
                                    , MIContainer.ContainerId_Analyzer
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Currency()) THEN MIContainer.ObjectIntId_Analyzer ELSE 0 END AS ObjectIntId_Analyzer
@@ -161,6 +162,24 @@ BEGIN
                                 WHERE MovementDate_OperDatePartner.MovementId IN (SELECT DISTINCT tmpContainer_Motion.MovementId FROM tmpContainer_Motion)
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
                                )
+         , tmpMS_Comment AS (SELECT MovementString.*
+                             FROM MovementString
+                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpContainer_Motion.MovementId FROM tmpContainer_Motion)
+                               AND MovementString.DescId = zc_MovementString_Comment()
+                            )
+    , tmpMIS_Comment_all AS (SELECT MovementItemString.*
+                             FROM MovementItemString
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpContainer_Motion.MovementItemId FROM tmpContainer_Motion)
+                               AND MovementItemString.DescId    = zc_MIString_Comment()
+                               AND MovementItemString.ValueData <> ''
+                               AND inIsMovement = TRUE
+                            )
+        , tmpMIS_Comment AS (SELECT tmpContainer_Motion.MovementId
+                                  , MAX (tmpMIS_Comment_all.ValueData) AS ValueData
+                             FROM tmpMIS_Comment_all
+                                  JOIN tmpContainer_Motion ON tmpContainer_Motion.MovementItemId = tmpMIS_Comment_all.MovementItemId
+                             GROUP BY tmpContainer_Motion.MovementId
+                            )
     /*, tmpMIContainer AS (SELECT MovementItemContainer.MovementItemId
                               , MovementItemContainer.Amount
                               , MovementItemContainer.MovementDescId
@@ -274,7 +293,7 @@ BEGIN
                        LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = tmp.MovementItemId
                                         AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-                                        
+
                   WHERE MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0
                   )
 
@@ -540,6 +559,7 @@ BEGIN
          , tmpReport.MovementId
          , tmpReport.OperDate
          , COALESCE (MovementDate_OperDatePartner.ValueData, tmpReport.OperDate) :: TDateTime AS OperDatePartner
+         , COALESCE (MovementString_Comment.ValueData, MovementItemString_Comment.ValueData) :: TVarChar AS Comment
          , MovementDesc.ItemName             AS MovementDescName
          , View_InfoMoney.InfoMoneyCode
          , View_InfoMoney.InfoMoneyGroupName
@@ -604,6 +624,8 @@ BEGIN
    FROM tmpReport
 
        LEFT JOIN tmpMD_OperDatePartner AS MovementDate_OperDatePartner ON MovementDate_OperDatePartner.MovementId = tmpReport.MovementId
+       LEFT JOIN tmpMS_Comment         AS MovementString_Comment       ON MovementString_Comment.MovementId       = tmpReport.MovementId
+       LEFT JOIN tmpMIS_Comment        AS MovementItemString_Comment   ON MovementItemString_Comment.MovementId   = tmpReport.MovementId
 
        LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpReport.JuridicalBasisId
        LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpReport.BusinessId

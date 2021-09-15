@@ -133,6 +133,7 @@ type
     edMovementDesc: TcxButtonEdit;
     GuidesMovementDesc: TdsdGuides;
     OperDatePartner: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
   public
   end;

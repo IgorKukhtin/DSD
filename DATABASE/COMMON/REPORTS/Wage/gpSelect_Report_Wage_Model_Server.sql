@@ -1134,7 +1134,10 @@ BEGIN
            --, COUNT (DISTINCT CASE WHEN vbUserId = 5 THEN MovementLinkObject_To.ObjectId ELSE Movement_Sale.Id END)  :: TFloat AS CountMovement
 
                --  ÓÎ. ““
-             , COUNT (DISTINCT MovementLinkObject_To.ObjectId)  :: TFloat AS CountPartner
+             , case when vbUserId = 5 AND 1=0
+             then COUNT (DISTINCT Movement_Sale.Id)
+             else COUNT (DISTINCT MovementLinkObject_To.ObjectId)
+             end  :: TFloat AS CountPartner
 
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver

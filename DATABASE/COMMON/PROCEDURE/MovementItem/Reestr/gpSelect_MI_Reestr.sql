@@ -13,7 +13,7 @@ RETURNS TABLE  (Id Integer, LineNum Integer, MemberId Integer, MemberCode Intege
 
               , OperDatePartner TDateTime, InvNumberPartner TVarChar
               , TotalCountKg TFloat, TotalSumm TFloat
-              , InvNumberOrder TVarChar, RouteGroupName TVarChar, RouteName TVarChar
+              , InvNumberOrder TVarChar, RouteGroupName TVarChar, RouteName TVarChar, isNotPayForWeight Boolean
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -76,6 +76,7 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
            , Object_RouteGroup.ValueData               AS RouteGroupName
            , Object_Route.ValueData                    AS RouteName
+           , COALESCE (ObjectBoolean_NotPayForWeight.ValueData, FALSE) ::Boolean AS isNotPayForWeight
 
            , Object_From.ValueData                     AS FromName
            , Object_To.ValueData                       AS ToName
@@ -126,6 +127,10 @@ BEGIN
                                          ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotPayForWeight
+                                    ON ObjectBoolean_NotPayForWeight.ObjectId = Object_Route.Id
+                                   AND ObjectBoolean_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
+
             LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
                                                                AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
             LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)

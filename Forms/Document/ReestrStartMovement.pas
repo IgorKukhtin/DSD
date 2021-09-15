@@ -92,6 +92,7 @@ type
     spSelectPrintPeriodGroup: TdsdStoredProc;
     actPrintForDriver: TdsdPrintAction;
     bbPrintForDriver: TdxBarButton;
+    isNotPayForWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public
