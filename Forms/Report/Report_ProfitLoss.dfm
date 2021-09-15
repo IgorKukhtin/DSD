@@ -27,7 +27,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 43466d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43466d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -1265,7 +1265,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     OnDblClickActionList = <>
     ActionItemList = <
       item
-        Action = macReport_Account
+        Action = macReport_AccountMotion
         ShortCut = 13
       end>
     ColorRuleList = <>
