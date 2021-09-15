@@ -281,8 +281,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         item
           Name = 'PersonalName'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalName'
+          Component = edUserName
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -613,7 +612,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'DateStart'
           DataType = ftDateTime
@@ -621,7 +620,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
         end
         item
           Name = 'DateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'DateEnd'
           DataType = ftDateTime
@@ -775,6 +774,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     end
     inherited bbAddMask: TdxBarButton
       Action = actAddUser
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
     end
     object bbPrintCheck: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
@@ -902,13 +902,13 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       end
       item
         Name = 'DateStart'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'DateEnd'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -1063,41 +1063,9 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 534
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 526
     Top = 280
   end
@@ -1231,7 +1199,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       end
       item
         Name = 'inDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'DateStart'
         DataType = ftDateTime
@@ -1240,7 +1208,7 @@ inherited EmployeeScheduleEditUserForm: TEmployeeScheduleEditUserForm
       end
       item
         Name = 'inDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'DateEnd'
         DataType = ftDateTime

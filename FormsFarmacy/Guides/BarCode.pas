@@ -58,6 +58,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     GoodsCode: TcxGridDBColumn;
     MaxPrice: TcxGridDBColumn;
+    isDiscountSite: TcxGridDBColumn;
+    DiscountProcent: TcxGridDBColumn;
   private
     { Private declarations }
   public

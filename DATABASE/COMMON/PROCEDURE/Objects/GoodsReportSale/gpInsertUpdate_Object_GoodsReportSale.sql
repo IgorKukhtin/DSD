@@ -20,17 +20,7 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsReportSale());
      
-     -- vbOperDate := '02.11.2017';
-     -- vbOperDate := '08.11.2017';
-     vbOperDate := CURRENT_DATE - INTERVAL '1 DAY';
 
-     -- !!!было 8 Ќ≈ƒ≈Ћ№!!!
-     -- vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
-
-     -- !!!теперь 5 Ќ≈ƒ≈Ћ№!!!
-     vbStartDate := (vbOperDate - ((5 * 7 + 1) :: TVarChar || ' DAY') :: INTERVAL) ::TDateTime;
-     vbEndDate   := (vbOperDate - INTERVAL '2 DAY')  ::TDateTime;
-     vbWeek      := (ROUND( (date_part('DAY', vbEndDate - vbStartDate) / 7) ::TFloat, 0)) :: Integer;
      
 
 

@@ -1086,7 +1086,9 @@ uses
   PayrollTypeVIP in '..\..\FormsFarmacy\Guides\PayrollTypeVIP.pas' {PayrollTypeVIPForm: TParentForm},
   PayrollTypeVIPEdit in '..\..\FormsFarmacy\Guides\PayrollTypeVIPEdit.pas' {PayrollTypeVIPEditForm: TParentForm},
   EmployeeScheduleVIPJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleVIPJournal.pas' {EmployeeScheduleVIPJournalForm: TParentForm},
-  EmployeeScheduleVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleVIP.pas' {EmployeeScheduleVIPForm: TParentForm};
+  EmployeeScheduleVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleVIP.pas' {EmployeeScheduleVIPForm: TParentForm},
+  DiscountExternalSupplier in '..\..\FormsFarmacy\Guides\DiscountExternalSupplier.pas' {DiscountExternalSupplierForm: TParentForm},
+  DiscountExternalSupplierEdit in '..\..\FormsFarmacy\Guides\DiscountExternalSupplierEdit.pas' {DiscountExternalSupplierEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

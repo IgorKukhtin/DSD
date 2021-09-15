@@ -108,14 +108,19 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
-         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                      AS ContainerId
-                                            , max(tmpMIFloat_ContainerId.ContainerId) AS ContainerPDId
-                                            , MovementItem.Id                         AS MovementItemId
-                                            , MovementItem.ParentID                   AS ParentID
+         , tmpMI_Container AS (SELECT *
+                                      FROM Container
+                                      WHERE Container.ID in (SELECT tmpMIFloat_ContainerId.ContainerId FROM tmpMIFloat_ContainerId)
+                                      )
+         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
+                                            , Container.Id                        AS ContainerPDId
+                                            , MovementItem.Id                     AS MovementItemId
+                                            , MovementItem.ParentID               AS ParentID
+                                            , SUM(MovementItem.Amount)            AS Amount
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                            INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
-                                       GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId
+                                            INNER JOIN tmpMI_Container AS Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                       GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId, Container.Id
                                        )
          , tmpMIContainerPD AS (SELECT MovementItemContainer.MovementItemID     AS Id
                                      , Container.Id                             AS ContainerId
@@ -303,6 +308,10 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
+         , tmpMI_Container AS (SELECT *
+                                      FROM Container
+                                      WHERE Container.ID in (SELECT tmpMIFloat_ContainerId.ContainerId FROM tmpMIFloat_ContainerId)
+                                      )
          , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
                                             , Container.Id                        AS ContainerPDId
                                             , MovementItem.Id                     AS MovementItemId
@@ -310,10 +319,9 @@ BEGIN
                                             , SUM(MovementItem.Amount)            AS Amount
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                            INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                            INNER JOIN tmpMI_Container AS Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
                                        GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId, Container.Id
                                        )
-
           , tmpContainerPD AS (SELECT Container.ParentId                                          AS ContainerId
                                     , Min(Container.Id)                                           AS ContainerPDId
                                     , Min(ObjectDate_Value.ValueData)                             AS ExpirationDate
@@ -519,7 +527,7 @@ BEGIN
              , MovementItem.isErased                                            AS isErased
          FROM tmpMIContainerAll AS Container
 
-              LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
+              LEFT JOIN tmpMI_Master AS MovementItem ON MovementItem.ID = Container.MovementItemId
 
 --              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -560,6 +568,10 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
+         , tmpMI_Container AS (SELECT *
+                                      FROM Container
+                                      WHERE Container.ID in (SELECT tmpMIFloat_ContainerId.ContainerId FROM tmpMIFloat_ContainerId)
+                                      )
          , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
                                             , Container.Id                        AS ContainerPDId
                                             , MovementItem.Id                     AS MovementItemId
@@ -567,7 +579,7 @@ BEGIN
                                             , SUM(MovementItem.Amount)            AS Amount
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                            INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                            INNER JOIN tmpMI_Container AS Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
                                        GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId, Container.Id
                                        )
          , REMAINS AS ( --остатки
@@ -585,6 +597,7 @@ BEGIN
                                                    AND ObjectBoolean_BanFiscalSale.DescId = zc_ObjectBoolean_DivisionParties_BanFiscalSale()                                                          
                        WHERE Container.DescID = zc_Container_Count()
                          AND Container.WhereObjectId = vbUnitId
+                         --AND Container.ObjectId in (SELECT DISTINCT tmpMI_Master.ObjectId FROM tmpMI_Master)
                          AND Container.Amount - COALESCE(tmpMI_Child_ContainerId.Amount, 0) > 0
                          AND (vbisBanFiscalSale = False OR vbisBanFiscalSale = True AND COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) = True)
                        )
@@ -630,7 +643,7 @@ BEGIN
                                FROM (SELECT DISTINCT tmpMIContainerAll.ContainerId FROM tmpMIContainerAll) AS ContainerAll
                                     INNER JOIN Container ON Container.DescId = zc_Container_CountPartionDate()
                                                         AND Container.WhereObjectId = vbUnitId
-                                                        AND Container.ParentId = ContainerAll.ContainerId
+                                                        AND Container.ParentId = ContainerAll.ContainerId 
                                                         AND Container.Amount > 0
                                GROUP BY Container.ParentId)
           , tmpContainerPDDate AS (SELECT ContainerAll.ContainerPDId                                        AS ContainerPDId
@@ -715,7 +728,8 @@ BEGIN
                                     WHERE MovementItem.MovementId = inMovementId
                                        AND MovementItem.DescId = zc_MI_Master()
                                     --   AND MovementItem.Amount > 0
-                                       AND MovementItem.isErased = FALSE) AS tmpMI
+                                       AND MovementItem.isErased = FALSE
+                                       ) AS tmpMI
                                    INNER JOIN Container ON Container.DescId = zc_Container_Count()
                                                        AND Container.WhereObjectId in (SELECT OL_Unit_Juridical.ObjectId FROM ObjectLink AS OL_Unit_Juridical
                                                                                        WHERE OL_Unit_Juridical.ChildObjectId = vbJuridicalId
@@ -759,7 +773,7 @@ BEGIN
              , MovementItem.isErased                                            AS isErased
          FROM tmpMIContainerAll AS Container
 
-              LEFT JOIN MovementItem ON MovementItem.ID = Container.MovementItemId
+              LEFT JOIN tmpMI_Master AS MovementItem ON MovementItem.ID = Container.MovementItemId
 
 --              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -794,6 +808,4 @@ $BODY$
 --select * from gpSelect_MovementItem_Send_Child (inMovementId := 20000655       ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;
 
-
-select * from gpSelect_MovementItem_Send_Child(inMovementId := 22808088 ,  inSession := '3')
-where GoodsId = 36913;
+select * from gpSelect_MovementItem_Send_Child(inMovementId := 24817082 ,  inSession := '3');

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, Boolean, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
     IN inBarCodeName             TVarChar  ,    -- штрихкод
     IN inGoodsId                 Integer   ,    -- товар
     IN inObjectId                Integer   ,    -- Подключение к программе дисконтных карт
-    IN inMaxPrice                TFloat   ,     -- Максимальная цена
+    IN inMaxPrice                TFloat    ,    -- Максимальная цена
+    IN inDiscountProcent         TFloat    ,    -- Процент скидки по дисконтной программе
+    IN inisDiscountSite          Boolean   ,    -- Показывать цену на сайте
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -40,6 +42,11 @@ BEGIN
 
    -- Максимальная цена
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_MaxPrice(), ioId, inMaxPrice);
+   -- Процент скидки по дисконтной программе
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_DiscountProcent(), ioId, inDiscountProcent);
+
+   -- Показывать цену на сайте
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_BarCode_DiscountSite(), ioId, inisDiscountSite);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -51,7 +58,8 @@ LANGUAGE plpgsql VOLATILE;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.09.21                                                       *  
  20.07.16         * 
 
 */

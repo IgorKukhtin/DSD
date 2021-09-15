@@ -568,10 +568,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_EndDateUnPlanned() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_EndDateUnPlanned', 'Дата окончания для внепланового отчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_EndDateUnPlanned');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_UpdateMinimumLot() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UpdateMinimumLot'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_UpdateMinimumLot', 'Дата (корр. Мин. округл)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UpdateMinimumLot');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_UpdateisPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UpdateisPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_UpdateisPromo', 'Дата (корр. Акция)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_UpdateisPromo');
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 15.09.21                                                                                     * zc_ObjectDate_Goods_Update... 
  09.09.21                                                                                     * zc_ObjectDate_Maker_StartDateUnPlanned, zc_ObjectDate_Maker_EndDateUnPlanned
  30.07.21                                                                                     * zc_ObjectDate_ZReportLog_Date
  25.06.21                                                                                     * zc_ObjectDate_CheckoutTesting_DateUpdate

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BarCode(
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
-               MaxPrice TFloat,
+               MaxPrice TFloat, DiscountProcent TFloat, isDiscountSite Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +30,8 @@ BEGIN
            , Object_Object.ValueData     AS ObjectName 
            
            , ObjectFloat_MaxPrice.ValueData  AS MaxPrice 
+           , ObjectFloat_DiscountProcent.ValueData  AS DiscountProcent 
+           , COALESCE (ObjectBoolean_DiscountSite.ValueData, False)   AS isDiscountSite 
            
            , Object_BarCode.isErased     AS isErased
            
@@ -47,6 +49,13 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
                                  ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
                                 AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                 ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
+                                   ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
+                                  AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
 
        WHERE Object_BarCode.DescId = zc_Object_BarCode();
   
@@ -58,7 +67,8 @@ LANGUAGE plpgsql VOLATILE;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.09.21                                                       *  
  20.07.16         *
 
 */

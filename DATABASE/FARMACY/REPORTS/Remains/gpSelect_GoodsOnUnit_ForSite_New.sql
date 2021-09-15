@@ -20,6 +20,7 @@ RETURNS TABLE (Id                Integer
              , Price_min         TFloat -- цена миним поставщика с НДС с наценкой
              , Price_min_sale    TFloat -- цена миним поставщика с НДС с наценкой со скидкой
              , Price_minD        TFloat -- Delivery - цена миним с НДС с наценкой - доставка
+             , Price_Discount    TFloat -- Цена по дисконтной программе
 
              , JuridicalId       Integer    -- Поставщик (по которому найдена миним цена)
              , JuridicalName     TVarChar   -- Поставщик (по которому найдена миним цена)
@@ -728,6 +729,59 @@ BEGIN
                              AND MovementItem.isErased = False
                              AND MovementItem.Amount > 0
                            GROUP BY MovementItem.ObjectId)
+          -- Товары дисконтной программы
+          , tmpUnitDiscount AS (SELECT ObjectLink_DiscountExternal.ChildObjectId     AS DiscountExternalId
+                                     , ObjectLink_Unit.ChildObjectId                  AS UnitId
+                                FROM Object AS Object_DiscountExternalTools
+                                      LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                           ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountExternalTools.Id
+                                                          AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                           ON ObjectLink_Unit.ObjectId = Object_DiscountExternalTools.Id
+                                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_DiscountExternalTools_Unit()
+                                 WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+                                   AND Object_DiscountExternalTools.isErased = False
+                                 )
+          -- Товары дисконтной программы
+          , tmpGoodsDiscount AS (SELECT tmpUnitDiscount.UnitId                      AS UnitId
+                                      , ObjectLink_BarCode_Goods.ChildObjectId      AS GoodsId
+                                                   
+                                      , MAX(ObjectFloat_MaxPrice.ValueData)         AS MaxPrice 
+                                      , MAX(ObjectFloat_DiscountProcent.ValueData)  AS DiscountProcent 
+                                         
+                                  FROM Object AS Object_BarCode
+
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
+                                                               ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
+                                                              AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
+                                                              AND ObjectBoolean_DiscountSite.ValueData = True
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                          ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                         AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                         
+                                     LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                          ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                         AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                     LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+
+                                     LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                           ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                          AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                           ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                          AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+
+                                 WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                                   AND Object_BarCode.isErased = False
+                                   AND Object_Object.isErased = False
+                                   AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
+                                 GROUP BY tmpUnitDiscount.UnitId
+                                        , ObjectLink_BarCode_Goods.ChildObjectId
+                          )
+                      
                            
 
         SELECT Object_Goods.Id                                                     AS Id
@@ -781,6 +835,13 @@ BEGIN
                         (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price_min_sale
              , ROUND (MinPrice_List_D.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD*/
              
+             
+             , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) - COALESCE (PDGoodsRemains.Amount, 0)), 0) <= 0
+                    THEN NULL
+                    WHEN COALESCE(Price_Unit.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0
+                    THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
+                                    THEN Price_Unit.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
+                    ELSE NULL END  :: TFloat   AS Price_Discount
              , MinPrice_List.JuridicalId
              , MinPrice_List.JuridicalName
              , MinPrice_List.ContractId
@@ -862,6 +923,11 @@ BEGIN
                                             ON PDGoodsRemains6.GoodsId = tmpList.GoodsId_retail
                                            AND PDGoodsRemains6.UnitId = tmpList.UnitId
                                            AND PDGoodsRemains6.PartionDateKindId = zc_Enum_PartionDateKind_6()
+                                           
+             LEFT JOIN tmpGoodsDiscount AS GoodsDiscount
+                                        ON GoodsDiscount.GoodsId = tmpList.GoodsId
+                                       AND GoodsDiscount.UnitId = tmpList.UnitId
+                                        
         ORDER BY Price_Unit.Price
        ;
        
@@ -914,10 +980,11 @@ $BODY$
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
 --
 
-SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089,10128935', 
-  '13516058', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
+--SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('15212291,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,377574,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089,10128935', 
+--  '13516058', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
 
 
---SELECT p.* FROM gpselect_goodsonunit_forsite_Ol ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '10615,15208,3031,22420,9985,5303682,6970592,14273738,26701,27199,21898,1199196,1199199,2600865,12745,33004', TRUE, zfCalc_UserSite()) AS p
-
+SELECT OBJECT.valuedata, p.* FROM gpselect_goodsonunit_forsite ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '33004, 5925154, 5925280', TRUE, zfCalc_UserSite()) AS p
+ LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
+ 
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('4135547', '11923', TRUE, zfCalc_UserSite()) AS p

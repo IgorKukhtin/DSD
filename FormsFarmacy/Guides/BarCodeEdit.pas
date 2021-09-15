@@ -11,7 +11,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TBarCodeEditForm = class(TParentForm)
@@ -38,6 +38,9 @@ type
     GuidesDiscountExternal: TdsdGuides;
     cxLabel3: TcxLabel;
     ceMaxPrice: TcxCurrencyEdit;
+    ceDiscountProcent: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    cbDiscountSite: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -78,7 +78,7 @@ BEGIN
                 WHERE MovementItem.MovementId = vbMovementID
                   AND MovementItem.DescId = zc_MI_Child()
                   AND MovementItem.ParentId = vbMovementItemID
-                  AND MovementItem.ObjectId = vbUserId
+                  AND MovementItem.ObjectId = vbUnitId
                   AND MovementItem.Amount = date_part('DAY', inOperDate)::Integer)
       THEN
 
@@ -91,7 +91,7 @@ BEGIN
                                                                    inDateStart      := inDateStart, -- Дата время начала смены
                                                                    inDateEnd        := inDateEnd, -- Дата время конца счены
                                                                    inServiceExit    := inServiceExit,  -- Служебный выход
-                                                                   inSession        := inSession);
+                                                                   inUserId        := inSession);
       ELSE
       
         SELECT MovementItem.id
@@ -104,10 +104,10 @@ BEGIN
         WHERE MovementItem.MovementId = vbMovementID
           AND MovementItem.DescId = zc_MI_Child()
           AND MovementItem.ParentId = vbMovementItemID
-          AND MovementItem.ObjectId = vbUserId
+          AND MovementItem.ObjectId = vbUnitId
           AND MovementItem.Amount = date_part('DAY', inOperDate)::Integer;
 
-        PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := vbId, -- Ключ объекта <Элемент документа>
+        PERFORM lpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := vbId, -- Ключ объекта <Элемент документа>
                                                                    inMovementId     := vbMovementID, -- ключ Документа
                                                                    inParentId       := vbMovementItemID, -- элемент мастер
                                                                    inUnitId         := vbUnitId, -- подразделение
@@ -116,7 +116,7 @@ BEGIN
                                                                    inDateStart      := inDateStart, -- Дата время начала смены
                                                                    inDateEnd        := inDateEnd, -- Дата время конца счены
                                                                    inServiceExit    := inServiceExit,  -- Служебный выход
-                                                                   inSession        := inSession);
+                                                                   inSession        := vbUserId);
       END IF;    
     ELSE  
         -- Наличие записи по дню
