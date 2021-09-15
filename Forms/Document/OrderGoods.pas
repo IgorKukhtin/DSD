@@ -89,6 +89,46 @@ type
     spSelect_Child: TdsdStoredProc;
     cxLabel5: TcxLabel;
     edMonth: TcxTextEdit;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    DSDetailMaster: TDataSource;
+    CDSDetailMaster: TClientDataSet;
+    dsdDBViewAddOnDetailMaster: TdsdDBViewAddOn;
+    DSDetailChild: TDataSource;
+    CDSDetailChild: TClientDataSet;
+    dsdDBViewAddOnDetailChild: TdsdDBViewAddOn;
+    cxGridDetailMaster: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    GoodsGroupNameFull_ch2: TcxGridDBColumn;
+    GoodsCode_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    MeasureName_ch2: TcxGridDBColumn;
+    AmountForecast_ch2: TcxGridDBColumn;
+    AmountForecastOrder_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    AmountForecastPromo_ch2: TcxGridDBColumn;
+    AmountForecastOrderPromo_ch2: TcxGridDBColumn;
+    GoodsKindName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxGridDetailChild: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    GoodsGroupNameFull_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    MeasureName_ch3: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    PartionGoods_ch3: TcxGridDBColumn;
+    GoodsKindName_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    spSelectDetailMaster: TdsdStoredProc;
+    spSelectDetailChild: TdsdStoredProc;
+    spGet_OrderGoodsDetail: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    edOperDateStart: TcxDateEdit;
+    edOperDateEnd: TcxDateEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
