@@ -34,10 +34,10 @@ BEGIN
 
    IF COALESCE(inMinimumLot,0) <> vbMinimumLot 
    THEN
-          -- сохранили свойство <Дата корректировки>
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
-         -- сохранили свойство <Пользователь (корректировка)>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inId, vbUserId);
+         -- сохранили свойство <Дата корректировки>
+        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_UpdateMinimumLot(), inId, CURRENT_TIMESTAMP);
+        -- сохранили свойство <Пользователь (корректировка)>
+        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UpdateMinimumLot(), inId, vbUserId);
    
           -- Сохранили в плоскую таблицй
          BEGIN

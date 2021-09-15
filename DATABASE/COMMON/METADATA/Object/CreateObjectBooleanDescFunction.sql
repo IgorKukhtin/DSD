@@ -1020,9 +1020,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_BlockCommentSendTP() RETURNS In
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_BlockCommentSendTP', 'Бликировать коменты с формированием ТП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_BlockCommentSendTP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_BarCode_DiscountSite() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_DiscountSite'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_BarCode(), 'zc_ObjectBoolean_BarCode_DiscountSite', 'Показывать цену на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_DiscountSite');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 15.09.21                                                                                                          * zc_ObjectBoolean_BarCode_DiscountSite
  14.09.21                                                                                                          * zc_ObjectBoolean_Unit_BlockCommentSendTP
  13.09.21                                                                                                          * zc_ObjectBoolean_User_WorkingMultiple
  09.09.21                                                                                                          * zc_ObjectBoolean_Maker_UnPlanned

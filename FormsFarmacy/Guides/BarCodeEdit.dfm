@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1064#1090#1088#1080#1093'-'#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 307
+  ClientHeight = 355
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
   end
   object cxButton1: TcxButton
-    Left = 79
-    Top = 255
+    Left = 95
+    Top = 311
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 255
+    Top = 311
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 90
   end
   object ceGoods: TcxButtonEdit
     Left = 40
@@ -107,6 +107,29 @@
     Properties.DisplayFormat = ',0.00'
     TabOrder = 11
     Width = 90
+  end
+  object ceDiscountProcent: TcxCurrencyEdit
+    Left = 40
+    Top = 268
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 12
+    Width = 90
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 249
+    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+  end
+  object cbDiscountSite: TcxCheckBox
+    Left = 159
+    Top = 268
+    Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1091' '#1085#1072' '#1089#1072#1081#1090#1077
+    Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1091' '#1085#1072' '#1089#1072#1081#1090#1077
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 162
   end
   object ActionList: TActionList
     Left = 272
@@ -192,6 +215,22 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountProcent'
+        Value = Null
+        Component = ceDiscountProcent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDiscountSite'
+        Value = Null
+        Component = cbDiscountSite
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -269,6 +308,20 @@
         Value = Null
         Component = ceMaxPrice
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountProcent'
+        Value = Null
+        Component = ceDiscountProcent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscountSite'
+        Value = Null
+        Component = cbDiscountSite
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

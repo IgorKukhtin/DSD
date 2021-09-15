@@ -235,12 +235,12 @@ begin
     (GetForm('TDiscountExternalJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalEditForm');
 
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeEditForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountCardForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountCardEditForm'));

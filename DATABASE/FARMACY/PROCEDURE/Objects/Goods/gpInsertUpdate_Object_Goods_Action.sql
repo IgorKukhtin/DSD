@@ -14,6 +14,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
    DECLARE text_var1 text;
+   DECLARE vbMinimumLot TFloat;
+   DECLARE vbIsPromo boolean;
 BEGIN
     --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
     vbUserId := inSession;
@@ -39,7 +41,8 @@ BEGIN
     END IF;
     
     -- Ищем по коду и inObjectId  и регион    
-    SELECT Object_Goods_View.Id INTO vbGoodsId
+    SELECT Object_Goods_View.Id, Object_Goods_View.MinimumLot, Object_Goods_View.IsPromo
+    INTO vbGoodsId, vbMinimumLot, vbIsPromo
     FROM Object_Goods_View 
     WHERE Object_Goods_View.ObjectId = inObjectId
       AND Object_Goods_View.GoodsCode = inGoodsCode
@@ -51,14 +54,32 @@ BEGIN
 
         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Promo(), vbGoodsId, True);
 
+        IF COALESCE(inMinimumLot,0) <> vbMinimumLot 
+        THEN
+           -- сохранили свойство <Дата корректировки>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_UpdateMinimumLot(), vbGoodsId, CURRENT_TIMESTAMP);
+          -- сохранили свойство <Пользователь (корректировка)>
+          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UpdateMinimumLot(), vbGoodsId, vbUserId);
+        END IF;
+   
+        IF vbIsPromo <> TRUE 
+        THEN
+           -- сохранили свойство <Дата корректировки>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_UpdateMinimumLot(), vbGoodsId, CURRENT_TIMESTAMP);
+          -- сохранили свойство <Пользователь (корректировка)>
+          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_UpdateMinimumLot(), vbGoodsId, vbUserId);
+        END IF;
+
           -- Сохранили в плоскую таблицй
         BEGIN
           UPDATE Object_Goods_Juridical SET isPromo      = True
                                           , MinimumLot   = NULLIF(inMinimumLot, 0)
                                           , UserUpdateId = vbUserId
                                           , DateUpdate   = CURRENT_TIMESTAMP
-                                          , UserUpdateMinimumLotId = vbUserId
-                                          , DateUpdateMinimumLot   = CURRENT_TIMESTAMP
+                                          , UserUpdateMinimumLotId = CASE WHEN COALESCE(inMinimumLot,0) <> vbMinimumLot THEN vbUserId ELSE UserUpdateMinimumLotId END
+                                          , DateUpdateMinimumLot   = CASE WHEN COALESCE(inMinimumLot,0) <> vbMinimumLot THEN CURRENT_TIMESTAMP ELSE DateUpdateMinimumLot END
+                                          , UserUpdateisPromoId = CASE WHEN vbIsPromo <> TRUE THEN vbUserId ELSE UserUpdateisPromoId END
+                                          , DateUpdateisPromo   = CASE WHEN vbIsPromo <> TRUE THEN CURRENT_TIMESTAMP ELSE DateUpdateisPromo END
           WHERE Object_Goods_Juridical.Id = vbGoodsId
             AND (COALESCE(Object_Goods_Juridical.MinimumLot, 0) <> COALESCE(inMinimumLot, 0)
              OR Object_Goods_Juridical.isPromo <> True)
@@ -73,7 +94,13 @@ BEGIN
         PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
 
     END IF;
-    
+
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+/*    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> ', inSession;
+    END IF;
+*/        
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -85,4 +112,11 @@ LANGUAGE plpgsql VOLATILE;
 
 */                                          
 
-                                           `
+/* SELECT * FROM gpInsertUpdate_Object_Goods_Action(inGoodsCode := '5361002'
+                                                , inObjectId := 59610 
+                                                , inMinimumLot := 10
+                                                , inAreaId := zc_Area_Basis()
+                                                , inSession := zfCalc_UserAdmin());
+)*/
+
+                                           

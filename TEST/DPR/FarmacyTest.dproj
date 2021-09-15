@@ -3891,6 +3891,14 @@
 				<Form>EmployeeScheduleVIPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalSupplier.pas">
+				<Form>DiscountExternalSupplierForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalSupplierEdit.pas">
+				<Form>DiscountExternalSupplierEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -3,7 +3,7 @@ object BarCodeForm: TBarCodeForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1064#1090#1088#1080#1093'-'#1082#1086#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 332
-  ClientWidth = 795
+  ClientWidth = 965
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object BarCodeForm: TBarCodeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 795
+    Width = 965
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 795
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -56,7 +57,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 47
+        Width = 45
       end
       object BarCodeName: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
@@ -64,14 +65,14 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 160
+        Width = 126
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 66
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -79,7 +80,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 203
+        Width = 204
       end
       object ObjectName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
@@ -98,7 +99,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 109
+        Width = 79
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -108,6 +109,26 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 78
+      end
+      object isDiscountSite: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1091' '#1085#1072' '#1089#1072#1081#1090#1077
+        DataBinding.FieldName = 'isDiscountSite'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 106
+      end
+      object DiscountProcent: TcxGridDBColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'DiscountProcent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+        Options.Editing = False
+        Width = 130
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -460,10 +481,12 @@ object BarCodeForm: TBarCodeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 128

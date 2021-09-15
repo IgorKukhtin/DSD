@@ -2638,10 +2638,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PayrollType_PayrollType() RETURNS Integ
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PayrollType_PayrollType', 'Дополнительный расчет заработной платы', zc_Object_PayrollType(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PayrollType_PayrollType');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UpdateMinimumLot() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UpdateMinimumLot'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_UpdateMinimumLot', 'Пользователь (корр. Мин. округл)', zc_Object_Goods(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UpdateMinimumLot');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UpdateisPromo() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UpdateisPromo'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_UpdateisPromo', 'Пользователь (корр. Акция)', zc_Object_Goods(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UpdateisPromo');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.06.21                                                                                      * zc_ObjectLink_Goods_Update...
  31.05.21                                                                                      * zc_ObjectLink_PayrollType_PayrollType
  06.08.21         * zc_ObjectLink_Personal_ ....
  05.08.21         * zc_ObjectLink_Member_....
