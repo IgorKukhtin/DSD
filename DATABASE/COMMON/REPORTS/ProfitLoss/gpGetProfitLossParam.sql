@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGetProfitLossParam (TBlob ,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetProfitLossParam(
-    IN inData             TBlob , 
+    IN inData             TBlob ,
     IN inSession          TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountGroupName TVarChar
@@ -16,7 +16,8 @@ RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountGroupName TVarCh
              , ProfitLossGroupId Integer, ProfitLossGroupName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
              , ProfitLossId Integer, ProfitLossName TVarChar
-             , BranchId Integer, BranchName TVarChar)
+             , BranchId Integer, BranchName TVarChar
+              )
 AS
 $BODY$
 DECLARE
@@ -55,9 +56,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
      vbUserId := lpGetUserBySession(inSession);
 
-     SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountGroupName, 
-            Object_Account_View.AccountDirectionId, Object_Account_View.AccountDirectionName, 
-            Object_Account_View.AccountId, Object_Account_View.AccountName  
+     SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountGroupName,
+            Object_Account_View.AccountDirectionId, Object_Account_View.AccountDirectionName,
+            Object_Account_View.AccountId, Object_Account_View.AccountName
              INTO vbAccountGroupId, vbAccountGroupName, vbAccountDirectionId, vbAccountDirectionName, vbAccountId, vbAccountName
        FROM Object_Account_View
       WHERE Object_Account_View.AccountId = zc_Enum_Account_100301();
@@ -74,46 +75,46 @@ BEGIN
                 WHEN 'profitlossgroupname' THEN
                    BEGIN
                       vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
-                      SELECT Id, ValueData INTO vbProfitLossGroupId, vbProfitLossGroupName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbProfitLossGroupId, vbProfitLossGroupName
+                        FROM Object
                        WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = vbCode;
                    END;
                 WHEN 'profitlossdirectionname' THEN
                    BEGIN
                       vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
-                      SELECT Id, ValueData INTO vbProfitLossDirectionId, vbProfitLossDirectionName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbProfitLossDirectionId, vbProfitLossDirectionName
+                        FROM Object
                        WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = vbCode;
                    END;
-                WHEN 'profitlossname' THEN 
+                WHEN 'profitlossname' THEN
                    BEGIN
                       vbCode := zfConvert_StringToNumber (split_part(vbValue, ' ', 1));
-                      SELECT Id, ValueData INTO vbProfitLossId, vbProfitLossName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbProfitLossId, vbProfitLossName
+                        FROM Object
                        WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = vbCode;
-                   END; 
-                WHEN 'businessname' THEN 
+                   END;
+                WHEN 'businessname' THEN
                    BEGIN
-                      SELECT Id, ValueData INTO vbBusinessId, vbBusinessName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbBusinessId, vbBusinessName
+                        FROM Object
                        WHERE DescId = zc_Object_Business() AND ValueData = vbValue;
-                   END; 
-                WHEN 'branchname_profitloss' THEN 
+                   END;
+                WHEN 'branchname_profitloss' THEN
                    BEGIN
-                      SELECT Id, ValueData INTO vbBranchId, vbBranchName 
-                        FROM Object 
+                      SELECT Id, ValueData INTO vbBranchId, vbBranchName
+                        FROM Object
                        WHERE DescId = zc_Object_Branch() AND ValueData = vbValue;
-                   END; 
-               ELSE BEGIN END;    
-            END CASE; 
+                   END;
+               ELSE BEGIN END;
+            END CASE;
          END IF;
          vbIndex := vbIndex + 1;
 
      END LOOP;
 
 
-     RETURN QUERY  
-     SELECT  
+     RETURN QUERY
+     SELECT
        0 AS RootType
      , vbAccountGroupId AS AccountGroupId
      , vbAccountGroupName AS AccountGroupName
@@ -126,18 +127,19 @@ BEGIN
      , 0 AS ObjectDirectionId
      , 0 AS ObjectDestinationId
      , 0 AS JuridicalBasisId
-     , vbBusinessId AS BusinessId  
+     , vbBusinessId AS BusinessId
      , vbBusinessName AS BusinessName
      , vbProfitLossGroupId
-     , vbProfitLossGroupName 
-     , vbProfitLossDirectionId 
-     , vbProfitLossDirectionName 
-     , vbProfitLossId 
-     , vbProfitLossName 
-     , vbBranchId 
-     , vbBranchName;
+     , vbProfitLossGroupName
+     , vbProfitLossDirectionId
+     , vbProfitLossDirectionName
+     , vbProfitLossId
+     , vbProfitLossName
+     , vbBranchId
+     , vbBranchName
+      ;
 
- 
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -146,9 +148,9 @@ ALTER FUNCTION gpGetProfitLossParam (TBlob, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
- 19.03.14                         *  
+ 19.03.14                         *
 */
 
 -- òåñò
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2'); 
-                                                                
+-- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2');
+
