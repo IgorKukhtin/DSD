@@ -95,9 +95,9 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
               Options.Moving = False
               Width = 65
             end>
-          object PersonalCode: TcxGridDBBandedColumn
+          object UserCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PersonalCode'
+            DataBinding.FieldName = 'UserCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
@@ -106,9 +106,9 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object PersonalName: TcxGridDBBandedColumn
+          object UserName: TcxGridDBBandedColumn
             Caption = #1060#1048#1054
-            DataBinding.FieldName = 'PersonalName'
+            DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             MinWidth = 67
             Options.Editing = False
@@ -117,18 +117,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
-          end
-          object PositionName: TcxGridDBBandedColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 64
-            Options.Editing = False
-            Options.Moving = False
-            Width = 205
-            Position.BandIndex = 0
-            Position.ColIndex = 1
-            Position.RowIndex = 1
           end
           object Value: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Value'
@@ -144,6 +132,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
             Styles.Content = dmMain.cxFooterStyle
+            VisibleForCustomization = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -158,6 +147,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 40
+            VisibleForCustomization = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -172,6 +162,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.ShowCaption = False
+            VisibleForCustomization = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -180,6 +171,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
+            VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -188,6 +180,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Caption = 'Color_CalcStart'
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
+            VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 4
             Position.RowIndex = 0
@@ -195,6 +188,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
           object Color_CalcEnd: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_CalcUser'
             Visible = False
+            VisibleForCustomization = False
             Position.BandIndex = 0
             Position.ColIndex = 5
             Position.RowIndex = 0
@@ -204,6 +198,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             DataBinding.FieldName = 'isErased'
             Visible = False
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 50
             Position.BandIndex = 0
             Position.ColIndex = 2
@@ -213,7 +208,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Options.Editing = False
             Options.Focusing = False
             Options.ShowCaption = False
-            Width = 30
+            Width = 241
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 1
@@ -224,9 +219,9 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Options.Editing = False
             Options.Focusing = False
             Options.ShowCaption = False
-            Width = 75
+            Width = 77
             Position.BandIndex = 0
-            Position.ColIndex = 2
+            Position.ColIndex = 1
             Position.RowIndex = 1
           end
           object Empty2: TcxGridDBBandedColumn
@@ -249,33 +244,13 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
             Position.ColIndex = 1
             Position.RowIndex = 2
           end
-          object Empty3: TcxGridDBBandedColumn
-            Options.Editing = False
-            Options.Focusing = False
-            Options.ShowCaption = False
-            Width = 240
-            Position.BandIndex = 0
-            Position.ColIndex = 0
-            Position.RowIndex = 3
-          end
-          object Name3: TcxGridDBBandedColumn
-            Caption = '  '
-            DataBinding.FieldName = 'Name3'
-            Options.Editing = False
-            Options.Focusing = False
-            Options.ShowCaption = False
-            Width = 77
-            Position.BandIndex = 0
-            Position.ColIndex = 1
-            Position.RowIndex = 3
-          end
           object Name0: TcxGridDBBandedColumn
             Caption = '  '
             DataBinding.FieldName = 'Name0'
             Options.Editing = False
             Options.Focusing = False
             Options.ShowCaption = False
-            Width = 75
+            Width = 74
             Position.BandIndex = 0
             Position.ColIndex = 6
             Position.RowIndex = 0
@@ -480,103 +455,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end>
       Caption = 'actspInsertUser'
     end
-    object actPreviousMonth: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecPreviousMonth
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
-      ImageIndex = 50
-    end
-    object actExecPreviousMonth: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spPreviousMonth
-      StoredProcList = <
-        item
-          StoredProc = spPreviousMonth
-        end>
-      Caption = 'actExecPreviousMonth'
-    end
-    object actUpdateUnit: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actChoiceUnitTreeForm
-        end
-        item
-          Action = actExecStoredUpdateUnit
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      ImageIndex = 66
-    end
-    object actChoiceUnitTreeForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceUnitTreeForm'
-      FormName = 'TUnitTreeForm'
-      FormNameParam.Value = 'TUnitTreeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UnitID'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actExecStoredUpdateUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateUnit
-      StoredProcList = <
-        item
-          StoredProc = spUpdateUnit
-        end>
-      Caption = 'actExecStoredUpdateUnit'
-    end
-    object actUpdateSubstitutionUnit: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actCrossDBViewSetSubstitutionUnit
-        end
-        item
-          Action = actChoiceSubstitutionUnitTreeForm
-        end
-        item
-          Action = actExecStoredUpdateSubstitutionUnit
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099'?'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
-      ImageIndex = 35
-    end
     object actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId
       Category = 'DSDLib'
       MoveParams = <>
@@ -607,10 +485,8 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateSubstitutionUnit
       StoredProcList = <
         item
-          StoredProc = spUpdateSubstitutionUnit
         end>
       Caption = 'actExecStoredUpdateSubstitutionUnit'
     end
@@ -694,34 +570,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       ImageIndex = 52
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
     end
-    object actEmployeeScheduleFilling: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
-      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
-      ImageIndex = 42
-      FormName = 'TEmployeeScheduleFillingForm'
-      FormNameParam.Value = 'TEmployeeScheduleFillingForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MovementID'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object MovementItemChildProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -765,9 +613,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     DataSets = <
       item
         DataSet = HeaderCDS
-      end
-      item
-        DataSet = HeaderPrevCDS
       end
       item
         DataSet = MasterCDS
@@ -949,16 +794,25 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       ImageIndex = 43
     end
     object dxBarButton4: TdxBarButton
-      Action = actPreviousMonth
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
       Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      Visible = ivAlways
+      ImageIndex = 50
     end
     object dxBarButton5: TdxBarButton
-      Action = actUpdateUnit
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Visible = ivAlways
+      ImageIndex = 66
     end
     object dxBarButton6: TdxBarButton
-      Action = actUpdateSubstitutionUnit
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
+      Visible = ivAlways
+      ImageIndex = 35
     end
     object dxBarButton7: TdxBarButton
       Action = actUpdate
@@ -969,8 +823,11 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       Category = 0
     end
     object dxBarButton9: TdxBarButton
-      Action = actEmployeeScheduleFilling
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Category = 0
+      Hint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1075#1088#1072#1092#1080#1082#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      Visible = ivAlways
+      ImageIndex = 42
     end
     object dxBarButton10: TdxBarButton
       Action = MovementItemChildProtocolOpenForm
@@ -997,7 +854,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         DataSummaryItemIndex = 0
       end>
     Left = 334
-    Top = 241
+    Top = 225
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1042,16 +899,16 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 312
   end
   inherited StatusGuides: TdsdGuides
-    Top = 232
+    Top = 224
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_EmployeeScheduleVIP'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Top = 232
+    Top = 224
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EmployeeSchedule'
+    StoredProcName = 'gpGet_Movement_EmployeeScheduleVIP'
     Params = <
       item
         Name = 'inMovementId'
@@ -1159,7 +1016,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_EmployeeSchedule'
+    StoredProcName = 'gpInsertUpdate_Movement_EmployeeScheduleVIP'
     Params = <
       item
         Name = 'ioId'
@@ -1199,7 +1056,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         Action = actInsertUpdateMovement
       end>
     Left = 264
-    Top = 232
+    Top = 224
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1221,7 +1078,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       item
       end>
     Left = 208
-    Top = 233
+    Top = 225
   end
   inherited RefreshAddOn: TRefreshAddOn
     Left = 72
@@ -1306,7 +1163,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 336
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EmployeeSchedule_TotalSumm'
+    StoredProcName = 'gpGet_Movement_EmployeeScheduleVIP_TotalSumm'
     Left = 668
     Top = 228
   end
@@ -1369,7 +1226,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 112
   end
   object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_User'
+    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleVIP_User'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1392,87 +1249,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     PackSize = 1
     Left = 488
     Top = 336
-  end
-  object spPreviousMonth: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleVIP_PreviousMonth'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 664
-    Top = 296
-  end
-  object HeaderPrevCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 568
-    Top = 168
-  end
-  object spUpdateUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_Unit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 802
-    Top = 305
-  end
-  object spUpdateSubstitutionUnit: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_SubstitutionUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioTypeId'
-        Value = Null
-        Component = CrossDBViewAddOn
-        ComponentItem = 'TypeId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 802
-    Top = 361
   end
   object CrossDBViewEndAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1502,7 +1278,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 256
   end
   object spDelUser: TdsdStoredProc
-    StoredProcName = 'gpDelete_MovementItem_EmployeeSchedule_User'
+    StoredProcName = 'gpDelete_MovementItem_EmployeeScheduleVIP_User'
     DataSets = <>
     OutputType = otResult
     Params = <

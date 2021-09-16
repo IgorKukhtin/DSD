@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbIsVIP Boolean;
   DECLARE vbisSendLoss Boolean;
   DECLARE vbInsertDate TDateTime;
+  DECLARE vbInsertUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Send());
@@ -32,7 +33,8 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
         COALESCE (MovementBoolean_VIP.ValueData, FALSE), 
-        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)
+        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE),
+        COALESCE (MLO_Insert.ObjectId, 0)
     INTO
         vbFromId,
         vbUnitId,
@@ -40,7 +42,8 @@ BEGIN
         vbIsSUN,
         vbInsertDate,
         vbIsVIP,
-        vbisSendLoss
+        vbisSendLoss,
+        vbInsertUserId
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -63,6 +66,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
                                   ON MovementBoolean_SendLoss.MovementId = Movement.Id
                                  AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
+        LEFT JOIN MovementLinkObject AS MLO_Insert
+                                     ON MLO_Insert.MovementId = Movement.Id
+                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
     WHERE Movement.Id = inMovementId;     
     
     IF vbisSendLoss = TRUE
@@ -109,6 +115,8 @@ BEGIN
                    FROM MovementFloat AS MovementFloat_TotalCount
                    WHERE MovementFloat_TotalCount.MovementId = inMovementId
                      AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()), 0) <> 0
+         AND NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                        WHERE Object_RoleUser.ID = vbInsertUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Если создал не "Кассир аптеки"
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
       END IF;                                

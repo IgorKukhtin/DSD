@@ -234,6 +234,25 @@
             Options.Editing = False
             Width = 101
           end
+          object PromoBonus: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089' '#1087#1086' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'PromoBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PromoBonusName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1073#1086#1085#1091#1089#1085#1099#1093' '#1091#1087#1072#1082#1086#1074#1086#1082' '#1087#1086' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'PromoBonusName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 147
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
