@@ -3038,6 +3038,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleVIPForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserVIPForm');
 end;
 
 procedure TLoadFormTest.LoadSPKindFormTest;

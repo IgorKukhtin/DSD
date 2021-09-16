@@ -36,10 +36,6 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
-    actUserNickDialig: TOpenChoiceForm;
-    actAddUser: TMultiAction;
-    actspInsertUser: TdsdExecStoredProc;
-    spInsertUser: TdsdStoredProc;
     ValueStart: TcxGridDBBandedColumn;
     dxBarButton4: TdxBarButton;
     Color_Calc: TcxGridDBBandedColumn;
@@ -63,7 +59,6 @@ type
     Empty2: TcxGridDBBandedColumn;
     Name2: TcxGridDBBandedColumn;
     Name0: TcxGridDBBandedColumn;
-    actUpdate: TdsdInsertUpdateAction;
     dxBarButton7: TdxBarButton;
     spDelUser: TdsdStoredProc;
     actDeleteUser: TdsdExecStoredProc;
@@ -71,6 +66,9 @@ type
     dxBarButton9: TdxBarButton;
     MovementItemChildProtocolOpenForm: TdsdOpenForm;
     dxBarButton10: TdxBarButton;
+    actDelUserDay: TdsdExecStoredProc;
+    spDelUserDay: TdsdStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

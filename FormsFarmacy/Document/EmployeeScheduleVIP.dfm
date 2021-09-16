@@ -295,7 +295,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       Top = 22
       ExplicitLeft = 12
       ExplicitTop = 22
-      ExplicitHeight = 22
     end
     object Panel1: TPanel
       Left = 409
@@ -364,7 +363,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
           Name = 'PersonalName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalName'
+          ComponentItem = 'UserName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -402,58 +401,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end>
       isShowModal = True
       OpenBeforeShow = True
-    end
-    object actAddUser: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUserNickDialig
-        end
-        item
-          Action = actspInsertUser
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      ImageIndex = 54
-    end
-    object actUserNickDialig: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actUserNickDialig'
-      FormName = 'TUserNickForm'
-      FormNameParam.Value = 'TUserNickForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UserID'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actspInsertUser: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUser
-      StoredProcList = <
-        item
-          StoredProc = spInsertUser
-        end>
-      Caption = 'actspInsertUser'
     end
     object actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId
       Category = 'DSDLib'
@@ -509,52 +456,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end>
       isShowModal = False
     end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TEmployeeScheduleEditUserForm'
-      FormNameParam.Value = 'TEmployeeScheduleEditUserForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementID'
-          Value = 42370d
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UserId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UserId'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actDeleteUser: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -593,12 +494,27 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
           Name = 'PersonalName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalName'
+          ComponentItem = 'UserName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actDelUserDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelUserDay
+      StoredProcList = <
+        item
+          StoredProc = spDelUserDay
+        end>
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1086#1090#1084#1077#1090#1082#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1079#1072' '#1076#1077#1085#1100' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1086#1090#1084#1077#1090#1082#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1079#1072' '#1076#1077#1085#1100' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072
+      ImageIndex = 77
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1086#1090#1084#1077#1090#1082#1091' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1079#1072' '#1076#1077#1085#1100' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
     end
   end
   inherited MasterDS: TDataSource
@@ -678,17 +594,8 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
           ItemName = 'bbShowAll'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
         end
         item
           Visible = True
@@ -740,11 +647,15 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton8'
+          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -756,7 +667,9 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end>
     end
     inherited bbAddMask: TdxBarButton
-      Action = actAddUser
+      Action = nil
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
     end
     object bbPrintCheck: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
@@ -815,8 +728,12 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       ImageIndex = 35
     end
     object dxBarButton7: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object dxBarButton8: TdxBarButton
       Action = actDeleteUser
@@ -833,16 +750,18 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       Action = MovementItemChildProtocolOpenForm
       Category = 0
     end
+    object dxBarButton11: TdxBarButton
+      Action = actDelUserDay
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SummaryItemList = <
@@ -1163,7 +1082,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Top = 336
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_EmployeeScheduleVIP_TotalSumm'
+    StoredProcName = 'gpGet_Movement_EmployeeSchedule_TotalSumm'
     Left = 668
     Top = 228
   end
@@ -1225,31 +1144,6 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     Left = 568
     Top = 112
   end
-  object spInsertUser: TdsdStoredProc
-    StoredProcName = 'gpInsert_MovementItem_EmployeeScheduleVIP_User'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserID'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UserID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 488
-    Top = 336
-  end
   object CrossDBViewEndAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView1
@@ -1300,6 +1194,39 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       end>
     PackSize = 1
     Left = 664
+    Top = 353
+  end
+  object spDelUserDay: TdsdStoredProc
+    StoredProcName = 'gpDelete_MovementItem_EmployeeScheduleVIP_UserDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTypeId'
+        Value = Null
+        Component = CrossDBViewAddOn
+        ComponentItem = 'TypeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
     Top = 353
   end
 end

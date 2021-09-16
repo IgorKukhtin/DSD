@@ -4642,6 +4642,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actEmployeeScheduleUserVIP: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1042#1074#1086#1076' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072
+      Hint = #1042#1074#1086#1076' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1080' '#1091#1093#1086#1076#1072
+      FormName = 'TEmployeeScheduleUserVIPForm'
+      FormNameParam.Value = 'TEmployeeScheduleUserVIPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5015,6 +5027,9 @@
         object N304: TMenuItem
           Action = actTestingTuning_Manual
         end
+      end
+      object N315: TMenuItem
+        Action = actEmployeeScheduleUserVIP
       end
       object N87: TMenuItem
         Caption = '-'

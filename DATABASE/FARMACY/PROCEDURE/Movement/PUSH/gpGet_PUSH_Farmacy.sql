@@ -478,7 +478,7 @@ BEGIN
      END IF;
    END IF;
 
-   IF inSession::Integer IN (3, 390046, 2431210)
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_VIPManager())
    THEN
      vbText := '';
      

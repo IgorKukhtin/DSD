@@ -15,6 +15,7 @@ $BODY$
   DECLARE vbInvNumberOrder TVarChar;
   DECLARE vbCheckSourceKindId Integer;
   DECLARE vbisDiscountCommit Boolean;
+  DECLARE vbCancelReason Integer;
 BEGIN
     --Если документ уже проведен то проверим права
     -- проверка прав пользователя на вызов процедуры
@@ -31,7 +32,8 @@ BEGIN
         COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0),
         COALESCE (MovementString_InvNumberOrder.ValueData, ''),
         COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0), 
-        COALESCE(MovementBoolean_DiscountCommit.ValueData, False) 
+        COALESCE(MovementBoolean_DiscountCommit.ValueData, False),
+        COALESCE(MovementLinkObject_CancelReason.ObjectId, 0)
       INTO
         vbOperDate,
         vbCashRegisterId,
@@ -39,7 +41,8 @@ BEGIN
         vbJackdawsChecksId,
         vbInvNumberOrder,
         vbCheckSourceKindId,
-        vbisDiscountCommit
+        vbisDiscountCommit,
+        vbCancelReason
       FROM Movement 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                         ON MovementLinkObject_CashRegister.MovementId = Movement.Id
@@ -47,6 +50,9 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
                                         ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
                                        AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
+                                        ON MovementLinkObject_CancelReason.MovementId =  Movement.Id
+                                       AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
            LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
@@ -67,7 +73,8 @@ BEGIN
          OR vbOperDate < '05.07.2021'
          OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY')
          OR vbInvNumberOrder <> '' 
-         OR vbCheckSourceKindId <> 0
+         OR vbCheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki() AND vbCancelReason = 0
+         OR vbCheckSourceKindId <> 0 AND vbCheckSourceKindId <> zc_Enum_CheckSourceKind_Tabletki()
          OR vbisDiscountCommit = TRUE
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
