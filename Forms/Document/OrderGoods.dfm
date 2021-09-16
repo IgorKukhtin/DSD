@@ -33,34 +33,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Total_kg
             end
             item
@@ -289,17 +261,9 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = ChildAmount
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -414,17 +378,17 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountForecast_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = AmountForecastOrder_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastPromo_ch2
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-              Column = Amount_ch2
             end
             item
               Format = ',0.####'
@@ -434,7 +398,11 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountForecast_ch2
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -445,17 +413,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountForecastPromo_ch2
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-              Column = Amount_ch2
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountForecastOrderPromo_ch2
+              Column = AmountForecast_ch2
             end
             item
               Format = ',0.####'
@@ -465,7 +423,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountForecast_ch2
+              Column = AmountForecastPromo_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrderPromo_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -534,7 +506,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -626,48 +598,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = GoodsKindName_ch3
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = PartionGoods_ch3
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -2095,8 +2031,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 188
+    Left = 380
+    Top = 204
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2331,15 +2267,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 790
@@ -2368,15 +2296,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 878
