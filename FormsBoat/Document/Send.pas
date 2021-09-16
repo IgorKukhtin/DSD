@@ -174,6 +174,7 @@ type
     actOpenFormOrderPartner: TdsdOpenForm;
     bbOpenFormOrderClient: TdxBarButton;
     bbOpenFormOrderPartner: TdxBarButton;
+    isOn: TcxGridDBColumn;
   private
   public
   end;
