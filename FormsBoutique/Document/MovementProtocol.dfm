@@ -5,7 +5,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 798
-  ExplicitHeight = 362
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -236,8 +236,6 @@ inherited MovementProtocolForm: TMovementProtocolForm
       item
         Name = 'inMovementDescId'
         Value = ''
-        Component = MovementDescGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -312,33 +310,6 @@ inherited MovementProtocolForm: TMovementProtocolForm
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 24
-  end
-  object MovementDescGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edMovementDesc
-    FormNameParam.Value = 'TMovementDescFormsForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMovementDescFormsForm'
-    PositionDataSet = 'MainDataCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = MovementDescGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = MovementDescGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 384
     Top = 24
   end
   object FormParams: TdsdFormParams

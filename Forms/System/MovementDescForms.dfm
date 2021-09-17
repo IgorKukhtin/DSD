@@ -16,11 +16,18 @@ inherited MovementDescDataForm: TMovementDescDataForm
           object colDocumentDesc: TcxGridDBColumn
             Caption = 'Desc'
             DataBinding.FieldName = 'DocumentDesc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
           end
           object colDocumentName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DocumentName'
-            Width = 225
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
           end
           object colFormName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072
@@ -32,6 +39,10 @@ inherited MovementDescDataForm: TMovementDescDataForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
           end
         end
       end
@@ -46,12 +57,14 @@ inherited MovementDescDataForm: TMovementDescDataForm
       FormName = 'TFormsForm'
       FormNameParam.Value = 'TFormsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FormId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -59,6 +72,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
           Component = MasterCDS
           ComponentItem = 'FormName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -108,6 +122,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFormId'
@@ -115,6 +130,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
         Component = MasterCDS
         ComponentItem = 'FormId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160

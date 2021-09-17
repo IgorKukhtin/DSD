@@ -6,12 +6,14 @@ inherited MovementDescDataForm: TMovementDescDataForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 535
+    ExplicitWidth = 535
     ClientRectRight = 535
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
+      ExplicitWidth = 535
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 535
+        ExplicitWidth = 535
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -21,12 +23,18 @@ inherited MovementDescDataForm: TMovementDescDataForm
           object colDocumentDesc: TcxGridDBColumn
             Caption = 'Desc'
             DataBinding.FieldName = 'DocumentDesc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object colDocumentName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DocumentName'
-            Width = 208
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
           end
           object colFormName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072
@@ -38,6 +46,9 @@ inherited MovementDescDataForm: TMovementDescDataForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 150
           end
         end

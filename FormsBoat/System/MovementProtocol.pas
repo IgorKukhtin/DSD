@@ -36,7 +36,6 @@ type
     cxLabel3: TcxLabel;
     UserGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    MovementDescGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
