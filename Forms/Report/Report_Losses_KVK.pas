@@ -37,6 +37,17 @@ type
     UserName: TcxGridDBColumn;
     KVK: TcxGridDBColumn;
     actRefresh_Detail: TdsdDataSetRefresh;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edUser: TcxButtonEdit;
+    GuidesUser: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edPersonalKVK: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    ceKVK: TcxTextEdit;
+    GuidesPersonalKVK: TdsdGuides;
   private
     { Private declarations }
   public

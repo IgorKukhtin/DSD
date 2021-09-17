@@ -726,6 +726,24 @@ object WeighingProductionForm: TWeighingProductionForm
             Options.Editing = False
             Width = 70
           end
+          object PositionName_KVK: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'PositionName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 78
+          end
+          object UnitName_KVK: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'UnitName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 83
+          end
           object KVK: TcxGridDBColumn
             Caption = #8470' '#1050#1042#1050
             DataBinding.FieldName = 'KVK'

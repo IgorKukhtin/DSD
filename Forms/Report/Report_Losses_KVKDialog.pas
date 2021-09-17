@@ -23,6 +23,17 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edUser: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    GuidesUser: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edPersonalKVK: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    ceKVK: TcxTextEdit;
+    GuidesPersonalKVK: TdsdGuides;
   private
     { Private declarations }
   public

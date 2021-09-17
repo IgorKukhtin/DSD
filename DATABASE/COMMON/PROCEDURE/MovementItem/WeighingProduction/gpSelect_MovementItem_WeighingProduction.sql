@@ -22,6 +22,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StorageLineId Integer, StorageLineName TVarChar
              , PersonalKVKId Integer, PersonalKVKName TVarChar
+             , PositionCode_KVK Integer
+             , PositionName_KVK TVarChar
+             , UnitCode_KVK Integer
+             , UnitName_KVK TVarChar
              , KVK TVarChar
              , isErased Boolean
               )
@@ -85,9 +89,13 @@ BEGIN
            , Object_StorageLine.Id        AS StorageLineId
            , Object_StorageLine.ValueData AS StorageLineName
            
-           , Object_PersonalKVK.Id        AS PersonalKVKId
-           , Object_PersonalKVK.ValueData AS PersonalKVKName
-           , MIString_KVK.ValueData       AS KVK
+           , Object_PersonalKVK.Id           AS PersonalKVKId
+           , Object_PersonalKVK.ValueData    AS PersonalKVKName
+           , Object_PositionKVK.ObjectCode   AS PositionCode_KVK
+           , Object_PositionKVK.ValueData    AS PositionName_KVK
+           , Object_UnitKVK.ObjectCode       AS UnitCode_KVK
+           , Object_UnitKVK.ValueData        AS UnitName_KVK
+           , MIString_KVK.ValueData          AS KVK
 
            , MovementItem.isErased
 
@@ -181,6 +189,16 @@ BEGIN
                                             AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
             LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
+                                 ON ObjectLink_Personal_PositionKVK.ObjectId = Object_PersonalKVK.Id
+                                AND ObjectLink_Personal_PositionKVK.DescId = zc_ObjectLink_Personal_Position()
+            LEFT JOIN Object AS Object_PositionKVK ON Object_PositionKVK.Id = ObjectLink_Personal_PositionKVK.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_UnitKVK
+                                 ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
+                                AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -214,6 +232,7 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boole
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 16.09.21         *
  30.06.21         *
  26.05.17         * add StorageLine
  27.06.15         * add CountPack
