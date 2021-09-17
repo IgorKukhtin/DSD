@@ -8,7 +8,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1006
-  ExplicitHeight = 340
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -531,6 +531,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TProfitLossServiceForm'
@@ -555,6 +556,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -582,6 +584,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -800,8 +803,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Top = 96
   end
   inherited MasterCDS: TClientDataSet
-    Left = 32
-    Top = 64
+    Left = 40
+    Top = 96
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProfitLossService'

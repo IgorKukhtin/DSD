@@ -6,7 +6,7 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 991
-  ExplicitHeight = 589
+  ExplicitHeight = 586
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -688,6 +688,7 @@ inherited CashJournalForm: TCashJournalForm
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TCashOperationForm'
@@ -727,6 +728,7 @@ inherited CashJournalForm: TCashJournalForm
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm
       FormNameParam.Value = ''

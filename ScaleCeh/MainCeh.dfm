@@ -840,22 +840,6 @@ object MainCehForm: TMainCehForm
           Options.Editing = False
           Width = 40
         end
-        object NumberKVK: TcxGridDBColumn
-          Caption = #8470' '#1050#1042#1050
-          DataBinding.FieldName = 'NumberKVK'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object PersonalName_KVK: TcxGridDBColumn
-          Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050
-          DataBinding.FieldName = 'PersonalName_KVK'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 70
-        end
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
@@ -1086,6 +1070,22 @@ object MainCehForm: TMainCehForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
+        end
+        object NumberKVK: TcxGridDBColumn
+          Caption = #8470' '#1050#1042#1050
+          DataBinding.FieldName = 'NumberKVK'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object PersonalName_KVK: TcxGridDBColumn
+          Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050
+          DataBinding.FieldName = 'PersonalName_KVK'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object InsertDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103

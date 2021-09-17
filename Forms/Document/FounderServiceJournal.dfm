@@ -4,10 +4,8 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   ClientWidth = 840
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -113
-  ExplicitTop = -83
   ExplicitWidth = 856
-  ExplicitHeight = 576
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -186,6 +184,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TFounderServiceForm'
@@ -207,6 +206,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -255,6 +255,9 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

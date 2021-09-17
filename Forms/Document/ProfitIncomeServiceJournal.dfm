@@ -8,7 +8,7 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1006
-  ExplicitHeight = 340
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -463,6 +463,7 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TProfitIncomeServiceForm'
@@ -487,6 +488,7 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -515,6 +517,7 @@ inherited ProfitIncomeServiceJournalForm: TProfitIncomeServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'

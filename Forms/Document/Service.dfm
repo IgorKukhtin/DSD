@@ -3,9 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 462
   ClientWidth = 609
-  AddOnFormData.isSingle = False
   ExplicitWidth = 615
-  ExplicitHeight = 490
+  ExplicitHeight = 487
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -676,7 +675,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

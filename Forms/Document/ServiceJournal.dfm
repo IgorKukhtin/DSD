@@ -6,7 +6,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 451
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -452,6 +452,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TServiceForm'
@@ -476,6 +477,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -503,6 +505,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'

@@ -2,8 +2,9 @@ inherited ProfitLossResultForm: TProfitLossResultForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1080#1073#1099#1083#1080' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1088#1077#1079#1091#1083#1100#1090#1072#1090')>'
   ClientHeight = 470
   ClientWidth = 823
+  AddOnFormData.isSingle = True
   ExplicitWidth = 839
-  ExplicitHeight = 508
+  ExplicitHeight = 505
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

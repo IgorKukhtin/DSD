@@ -3,7 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090'>'
   ClientHeight = 313
   ClientWidth = 605
-  AddOnFormData.isSingle = False
   ExplicitWidth = 611
   ExplicitHeight = 338
   PixelsPerInch = 96

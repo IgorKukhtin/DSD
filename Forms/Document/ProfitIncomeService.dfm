@@ -3,9 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1088#1080#1073#1099#1083#1100' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
   ClientHeight = 354
   ClientWidth = 614
-  AddOnFormData.isSingle = False
   ExplicitWidth = 620
-  ExplicitHeight = 382
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -476,7 +475,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

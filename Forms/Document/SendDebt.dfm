@@ -2,9 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
   ClientHeight = 438
   ClientWidth = 594
-  AddOnFormData.isSingle = False
   ExplicitWidth = 600
-  ExplicitHeight = 466
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton

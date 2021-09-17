@@ -4,9 +4,8 @@
   ClientHeight = 365
   ClientWidth = 563
   PopupMenu = PopupMenu
-  AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 393
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -609,7 +608,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1324,7 +1323,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput

@@ -763,7 +763,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -788,14 +788,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
@@ -1187,10 +1187,13 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
@@ -1270,7 +1273,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime

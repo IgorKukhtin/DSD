@@ -6,7 +6,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1167
-  ExplicitHeight = 687
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -339,6 +339,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TPersonalReportForm'
@@ -363,6 +364,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -390,6 +392,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

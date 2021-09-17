@@ -6,7 +6,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1119
-  ExplicitHeight = 603
+  ExplicitHeight = 600
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -709,6 +709,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     object actUpdate_New: TdsdInsertUpdateAction [4]
       Category = 'DSDLib'
@@ -850,7 +851,7 @@ inherited CashJournalBonusForm: TCashJournalBonusForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
