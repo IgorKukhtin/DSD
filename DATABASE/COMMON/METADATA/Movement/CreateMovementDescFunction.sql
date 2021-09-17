@@ -499,10 +499,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_EmployeeScheduleVIP() RETURNS Integer AS 
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_EmployeeScheduleVIP', 'График работы VIP менеджеров' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EmployeeScheduleVIP');
 
+CREATE OR REPLACE FUNCTION zc_Movement_WagesVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_WagesVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_WagesVIP', 'З/П VIP менеджеров' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WagesVIP');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 17.09.21                                                                                     * zc_Movement_WagesVIP
  15.09.21                                                                                     * zc_Movement_EmployeeScheduleVIP
  03.09.21         * zc_Movement_PromoInvoice
  06.07.21                                                                                     * zc_Movement_TestingTuning

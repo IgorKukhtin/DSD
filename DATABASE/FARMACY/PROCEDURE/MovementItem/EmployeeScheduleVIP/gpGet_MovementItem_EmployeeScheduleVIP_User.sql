@@ -9,7 +9,8 @@ RETURNS TABLE (OperDate  TDateTime,
                StartHour TVarChar,
                StartMin TVarChar,
                EndHour TVarChar, 
-               EndMin TVarChar 
+               EndMin TVarChar, 
+               GridColumns TVarChar  
               )
 AS
 $BODY$
@@ -27,9 +28,9 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
     
-   vbStartHour := '';
+   vbStartHour := '8';
    vbStartMin := '00'; 
-   vbEndHour := '';
+   vbEndHour := '21';
    vbEndMin := '00'; 
    
    IF vbUserId = 3
@@ -119,6 +120,7 @@ BEGIN
          , vbStartMin::TVarChar
          , vbEndHour::TVarChar
          , vbEndMin::TVarChar
+         , ('cxGridDBBandedTableView1Value'||(date_part('DAY',  CURRENT_DATE) + 22)::TVarChar)::TVarChar
     ;
 
 END;

@@ -108,14 +108,9 @@ BEGIN
                 AND MovementItem.Amount = date_part('DAY', CURRENT_DATE)
                 AND MovementItem.DescId = zc_MI_Child())
     THEN
-       SELECT MovementItem.ID, MovementItem.ObjectId, COALESCE (MIDate_Start.ValueData, vbDateStart)
-       INTO vbChildId, vbPayrollTypeVIP, vbDateStart
+       SELECT MovementItem.ID, MovementItem.ObjectId
+       INTO vbChildId, vbPayrollTypeVIP
        FROM MovementItem
-
-            LEFT JOIN MovementItemDate AS MIDate_Start
-                                       ON MIDate_Start.MovementItemId = MovementItem.Id
-                                      AND MIDate_Start.DescId = zc_MIDate_Start()
-
        WHERE MovementItem.MovementId = vbMovementId
          AND MovementItem.ParentID = vbMIId
          AND MovementItem.Amount = date_part('DAY', CURRENT_DATE)

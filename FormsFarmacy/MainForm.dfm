@@ -4654,6 +4654,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actWagesVIP: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
+      Hint = #1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
+      FormName = 'TWagesVIPJournalForm'
+      FormNameParam.Value = 'TWagesVIPJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5054,6 +5066,9 @@
       end
       object N190: TMenuItem
         Action = actWages
+      end
+      object VIP4: TMenuItem
+        Action = actWagesVIP
       end
     end
     object miLoad: TMenuItem [2]

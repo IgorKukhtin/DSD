@@ -52,23 +52,26 @@ begin
   try
     actOF.FormNameParam.Value := AFormName;
     actOF.isShowModal := True;
-    arParams := TRegEx.Split(AParams, ',');
-    arTypeParams := TRegEx.Split(ATypeParams, ',');
-    arValueParams := TRegEx.Split(AValueParams, ',');
-    for I := 0 to High(arParams) do
+    if Trim(AParams) <> '' then
     begin
-      if (High(arTypeParams) < I) or (High(arValueParams) < I) then Break;
-      Value := arValueParams[I];
-      case TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])) of
-        ftDateTime : begin
-                       arValue := TRegEx.Split(Value, '-');
-                       if High(arValue) = 2 then
-                         Value := EncodeDate(StrToInt(arValue[0]), StrToInt(arValue[1]), StrToInt(arValue[2]))
-                       else Value := Date;
-                     end;
-        ftFloat : Value := StringReplace(Value, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]);
+      arParams := TRegEx.Split(AParams, ',');
+      arTypeParams := TRegEx.Split(ATypeParams, ',');
+      arValueParams := TRegEx.Split(AValueParams, ',');
+      for I := 0 to High(arParams) do
+      begin
+        if (High(arTypeParams) < I) or (High(arValueParams) < I) then Break;
+        Value := arValueParams[I];
+        case TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])) of
+          ftDateTime : begin
+                         arValue := TRegEx.Split(Value, '-');
+                         if High(arValue) = 2 then
+                           Value := EncodeDate(StrToInt(arValue[0]), StrToInt(arValue[1]), StrToInt(arValue[2]))
+                         else Value := Date;
+                       end;
+          ftFloat : Value := StringReplace(Value, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]);
+        end;
+        actOF.GuiParams.AddParam(arParams[I], TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])), ptInput, Value);
       end;
-      actOF.GuiParams.AddParam(arParams[I], TFieldType(GetEnumValue(TypeInfo(TFieldType), arTypeParams[I])), ptInput, Value);
     end;
     actOF.Execute;
   finally
