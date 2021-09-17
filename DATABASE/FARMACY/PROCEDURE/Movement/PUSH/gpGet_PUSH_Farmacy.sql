@@ -727,6 +727,31 @@ BEGIN
        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, Beep)
        VALUES (16, 'Было обнулено в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '', 1);
      END IF;
+     
+     
+      -- ПУШ по отметке
+     IF EXISTS(SELECT Movement.Id FROM Movement
+               WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                 AND Movement.DescId = zc_Movement_EmployeeScheduleVIP())
+     THEN
+         
+       IF NOT EXISTS(SELECT 1 FROM MovementItem
+                        INNER JOIN MovementItem AS MIChild
+                                                ON MIChild.MovementId = MovementItem.MovementID
+                                               AND MIChild.DescId = zc_MI_Child()
+                                               AND MIChild.ParentId = MovementItem.ID
+                                               AND MIChild.Amount = date_part('DAY',  CURRENT_DATE)::Integer                     
+                     WHERE MovementItem.MovementId = (SELECT Movement.Id FROM Movement
+                                                      WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                                                        AND Movement.DescId = zc_Movement_EmployeeScheduleVIP()
+                                                      LIMIT 1)
+                       AND MovementItem.DescId = zc_MI_Master()
+                       AND MovementItem.ObjectId = vbUserId)
+       THEN
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         VALUES (17, 'Установите время работы', 'TEmployeeScheduleUserVIPForm', 'Ввод времени прихода и ухода', ' ', ' ', ' ');
+       END IF;
+     END IF;
    END IF;
 
    IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)
@@ -756,7 +781,7 @@ BEGIN
        IF COALESCE (vbText, '') <> ''
        THEN
          INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
-         VALUES (17, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
+         VALUES (18, 'Возможна оплата частями:'||Chr(13)||vbText, '', '', '', '', '');
        END IF;
      END IF;
    END IF;
@@ -786,4 +811,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
--- SELECT * FROM gpGet_PUSH_Farmacy(1, '3')
+-- 
+SELECT * FROM gpGet_PUSH_Farmacy(1, '390046')
