@@ -42,6 +42,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbParentId Integer;
    DECLARE vbIsSUN_over Boolean;
 BEGIN
 
@@ -54,6 +55,7 @@ BEGIN
 
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     vbParentId := 0;
      
      IF vbUserId IN (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (308121)) -- Кассир аптеки
      THEN 
@@ -62,11 +64,19 @@ BEGIN
           vbUnitKey := '0';
        END IF;   
        vbUnitId := vbUnitKey::Integer;
+       
+       IF vbUserId in (12325076, 6406669)
+       THEN
+         SELECT ObjectLink_Unit_Parent.ChildObjectId
+         INTO vbParentId
+         FROM ObjectLink AS ObjectLink_Unit_Parent
+         WHERE  ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+           AND ObjectLink_Unit_Parent.ObjectId = vbUnitId;
+       END IF;
      ELSE
        vbUnitId := 0;
      END IF;
      
-
      -- Ограничение - если роль Кассир аптеки
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 308121 AND UserId = vbUserId)
      THEN
@@ -86,7 +96,7 @@ BEGIN
         -- , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          -- UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               -- )
-        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId      AS UnitId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -320,7 +330,8 @@ BEGIN
             LEFT JOIN Object AS Object_DriverSun ON Object_DriverSun.Id = MovementLinkObject_DriverSun.ObjectId 
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
-         AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId OR 
+              COALESCE(vbParentId, 0) <> 0 AND (tmpUnit_To.UnitId = vbParentId OR tmpUnit_FROM.UnitId = vbParentId))
          AND (COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE OR inisVip = FALSE)
 /*         AND (vbIsSUN_over = TRUE
            OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE
@@ -361,3 +372,5 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Boolean, T
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inisVip := FALSE,  inSession:= '2')
+
+select * from gpSelect_Movement_Send(instartdate := ('01.09.2021')::TDateTime , inenddate := ('17.09.2021')::TDateTime , inIsErased := 'False' , inisVip := 'False' ,  inSession := '12325076');

@@ -71,7 +71,11 @@ BEGIN
               vbFiscalCheckNumber = '-5' OR
               vbJackdawsChecksId <> 0)
          OR vbOperDate < '05.07.2021'
-         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY')
+         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY') AND 
+            EXISTS(SELECT MovementProtocol.MovementId
+                   FROM  MovementProtocol 
+                   WHERE MovementProtocol.MovementId = inMovementID
+                     AND SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П')
          OR vbInvNumberOrder <> '' 
          OR vbCheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki() AND vbCancelReason = 0
          OR vbCheckSourceKindId <> 0 AND vbCheckSourceKindId <> zc_Enum_CheckSourceKind_Tabletki()
