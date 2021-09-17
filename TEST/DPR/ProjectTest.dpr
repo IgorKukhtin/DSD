@@ -1311,7 +1311,8 @@ uses
   gpReport_PromoInvoiceDialog in '..\..\Forms\Report\gpReport_PromoInvoiceDialog.pas' {Report_PromoInvoiceDialogForm: TParentForm},
   gpReport_PromoInvoice in '..\..\Forms\Report\gpReport_PromoInvoice.pas' {Report_PromoInvoiceForm: TParentForm},
   Report_Losses_KVKDialog in '..\..\Forms\Report\Report_Losses_KVKDialog.pas' {Report_Losses_KVKDialogForm: TParentForm},
-  Report_Losses_KVK in '..\..\Forms\Report\Report_Losses_KVK.pas' {Report_Losses_KVKForm: TParentForm};
+  Report_Losses_KVK in '..\..\Forms\Report\Report_Losses_KVK.pas' {Report_Losses_KVKForm: TParentForm},
+  Report_CashUserDialog in '..\..\Forms\Report\Report_CashUserDialog.pas' {Report_CashUserDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
