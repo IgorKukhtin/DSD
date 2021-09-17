@@ -979,8 +979,8 @@
     Top = 467
   end
   inherited ActionList: TActionList
-    Left = 405
-    Top = 437
+    Left = 437
+    Top = 381
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1322,6 +1322,25 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actShowErasedCC: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectContractCondition
+      StoredProcList = <
+        item
+          StoredProc = spSelectContractCondition
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object PaidKindChoiceFormСС: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2545,6 +2564,14 @@
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErasedCC
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 410
@@ -2595,6 +2622,14 @@
         item
           Visible = True
           ItemName = 'bbSetUnerasedCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErasedCC'
         end
         item
           Visible = True
@@ -2697,6 +2732,10 @@
     end
     object bbDeleteDocument: TdxBarButton
       Action = actDeleteDocument
+      Category = 0
+    end
+    object bbShowErasedCC: TdxBarButton
+      Action = actShowErasedCC
       Category = 0
     end
   end

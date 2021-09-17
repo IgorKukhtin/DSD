@@ -1384,7 +1384,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
+    Left = 176
     Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn

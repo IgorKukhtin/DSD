@@ -49,6 +49,8 @@ type
     isErased: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     ContractSendName: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public
