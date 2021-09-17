@@ -401,7 +401,7 @@
           Width = 45
         end
         object PartnerName: TcxGridDBColumn
-          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088#1072')'
+          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088')'
           DataBinding.FieldName = 'PartnerName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -413,7 +413,7 @@
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088#1072')'
+          HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1044#1086#1075#1086#1074#1086#1088')'
           Width = 258
         end
         object clPisErased: TcxGridDBColumn
@@ -474,7 +474,7 @@
           Width = 60
         end
         object GoodsName: TcxGridDBColumn
-          Caption = #1058#1086#1074#1072#1088
+          Caption = #1058#1086#1074#1072#1088' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
           DataBinding.FieldName = 'GoodsName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
