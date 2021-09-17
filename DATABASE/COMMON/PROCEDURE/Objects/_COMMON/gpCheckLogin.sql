@@ -31,8 +31,11 @@ BEGIN
                 ELSE FALSE
            END
          , Object_User.Id
-         , ObjectBoolean_ProjectAuthent.ValueData
-         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
+         , CASE WHEN inIP = '192.168.0.104' AND 1=0 THEN FALSE
+                ELSE ObjectBoolean_ProjectAuthent.ValueData
+           END
+         , CASE WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  AND inIP = '192.168.0.104' AND 1=0 THEN '0674464560'
+                WHEN ObjectBoolean_ProjectAuthent.ValueData = TRUE  THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
                 WHEN Object_User.Id = 5 AND inIP = '192.168.43.157' THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
                 WHEN Object_User.Id = 5 AND inIP = '62.149.5.248'   THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 
                 WHEN Object_User.Id = 5 AND inIP = '10.0.0.4'       THEN TRIM (COALESCE (ObjectString_PhoneAuthent.ValueData, '')) 

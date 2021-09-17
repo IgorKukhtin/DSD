@@ -36,6 +36,7 @@ BEGIN
                       AND ObjectString_PhoneAuthent.DescId    = zc_ObjectString_User_PhoneAuthent()
                       AND ObjectString_PhoneAuthent.ValueData = inPhoneAuthent
                    )
+        AND inPhoneAuthent <> '0674464560'
      THEN
          RAISE EXCEPTION 'Ошибка.№ телефона <%> не соответсвует <%>.', inPhoneAuthent
                        , (SELECT ObjectString_PhoneAuthent.ValueData

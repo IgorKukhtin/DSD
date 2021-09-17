@@ -293,7 +293,7 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
-/*
+
 if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
@@ -305,7 +305,7 @@ then
                       , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
                       , vbMovementItemId
                        ;
-                       */
+                       
 end if;
 
 if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)

@@ -27,7 +27,7 @@ BEGIN
   END IF;
 
 
-  IF inMovementId <> 0 AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_ProfitLossService(), zc_Movement_Service(), zc_Movement_Currency()))
+  IF inMovementId <> 0 AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId IN (zc_Movement_Cash(), zc_Movement_PersonalReport(), zc_Movement_BankAccount(), zc_Movement_ProfitLossService(), zc_Movement_Service(), zc_Movement_Currency()))
   THEN
   RETURN QUERY 
    WITH tmpPersonal AS (SELECT lfSelect.MemberId

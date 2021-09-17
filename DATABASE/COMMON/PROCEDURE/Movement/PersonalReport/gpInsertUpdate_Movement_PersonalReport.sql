@@ -31,8 +31,13 @@ BEGIN
      -- определяем ключ доступа
 --     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalReport());
 
+
      -- проверка
-     PERFORM lpCheck_Movement_PersonalReport (inMovementId:= -1 * (SELECT DescId FROM Object WHERE Id = inMoneyPlaceId), inComment:= CASE WHEN ioId > 0 THEN 'изменен' ELSE 'добавлен' END, inUserId:= vbUserId);
+     PERFORM lpCheck_Movement_PersonalReport (inMovementId:= -1 * (SELECT Object.DescId FROM Object WHERE Object.Id = inMoneyPlaceId), inComment:= CASE WHEN ioId > 0 THEN 'изменен' ELSE 'добавлен' END, inUserId:= vbUserId);
+
+     -- проверка
+     IF ioId > 0 THEN PERFORM lpCheck_Movement_PersonalReport (inMovementId:= ioId, inComment:= 'изменен', inUserId:= vbUserId); END IF;
+
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
