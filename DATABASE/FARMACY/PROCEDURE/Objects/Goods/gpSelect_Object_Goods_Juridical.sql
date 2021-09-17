@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , AreaId Integer, AreaName TVarChar
              , MinimumLot TFloat
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isUploadYuriFarm Boolean
+             , PromoBonus TFloat, PromoBonusName TVarChar
              , UpdateName TVarChar
              , UpdateDate TDateTime
 
@@ -122,6 +123,9 @@ BEGIN
          , COALESCE(Object_Goods_Juridical.IsUploadBadm,FALSE)       AS IsUploadBadm
          , COALESCE(Object_Goods_Juridical.IsUploadTeva,FALSE)       AS IsUploadTeva
          , COALESCE(Object_Goods_Juridical.IsUploadYuriFarm,FALSE  ) AS isUploadYuriFarm
+
+         , Object_Goods_Juridical.PromoBonus
+         , Object_Goods_Juridical.PromoBonusName
 
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate

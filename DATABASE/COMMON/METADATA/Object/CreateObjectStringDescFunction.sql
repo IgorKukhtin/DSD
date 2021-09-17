@@ -1353,10 +1353,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PayrollTypeVIP_ShortName() RETURNS In
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PayrollTypeVIP_ShortName', zc_Object_PayrollTypeVIP(), 'Короткое наименование' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PayrollTypeVIP_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_PromoBonusName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_PromoBonusName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_PromoBonusName', zc_Object_Goods(), 'Наименование бонусных упаковок по акции' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_PromoBonusName');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 16.09.21                                                                                                         * zc_ObjectString_Goods_PromoBonusName
  14.09.21                                                                                                         * zc_ObjectString_PayrollTypeVIP_ShortName
  09.09.21         * zc_ObjectString_Member_CardBank
                     zc_ObjectString_Member_CardBankSecond

@@ -1088,7 +1088,8 @@ uses
   EmployeeScheduleVIPJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleVIPJournal.pas' {EmployeeScheduleVIPJournalForm: TParentForm},
   EmployeeScheduleVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleVIP.pas' {EmployeeScheduleVIPForm: TParentForm},
   DiscountExternalSupplier in '..\..\FormsFarmacy\Guides\DiscountExternalSupplier.pas' {DiscountExternalSupplierForm: TParentForm},
-  DiscountExternalSupplierEdit in '..\..\FormsFarmacy\Guides\DiscountExternalSupplierEdit.pas' {DiscountExternalSupplierEditForm: TParentForm};
+  DiscountExternalSupplierEdit in '..\..\FormsFarmacy\Guides\DiscountExternalSupplierEdit.pas' {DiscountExternalSupplierEditForm: TParentForm},
+  EmployeeScheduleUserVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleUserVIP.pas' {EmployeeScheduleUserVIPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

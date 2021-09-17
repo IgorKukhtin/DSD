@@ -1,4 +1,4 @@
-unit Report_Losses_KVKDialog;
+unit Report_CashUserDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_Losses_KVKDialogForm = class(TParentForm)
+  TReport_CashUserDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -23,17 +23,16 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel4: TcxLabel;
-    edUnit: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    edUser: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    GuidesUser: TdsdGuides;
+    cxLabel1: TcxLabel;
+    ceCash: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    edPersonalKVK: TcxButtonEdit;
-    cxLabel22: TcxLabel;
-    ceKVK: TcxTextEdit;
-    GuidesPersonalKVK: TdsdGuides;
+    edAccount: TcxButtonEdit;
+    GuidesAccount: TdsdGuides;
+    GuidesCash: TdsdGuides;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
+    cbisDate: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -45,6 +44,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_Losses_KVKDialogForm);
+  RegisterClass(TReport_CashUserDialogForm);
 
 end.

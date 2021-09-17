@@ -2065,9 +2065,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCode_DiscountProcent() RETURNS Inte
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_BarCode(), 'zc_ObjectFloat_BarCode_DiscountProcent', 'Процент скидки по дисконтной программе' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountProcent');
     
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PromoBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PromoBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PromoBonus', 'Бонус по акции' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PromoBonus');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.09.21                                                                                      * zc_ObjectFloat_Goods_PromoBonus
  15.09.21                                                                                      * zc_ObjectFloat_BarCode_DiscountProcent
  14.09.21                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Percent...
  10.09.21                                                                                      * zc_ObjectFloat_CashSettings_PriceCorrectionDay

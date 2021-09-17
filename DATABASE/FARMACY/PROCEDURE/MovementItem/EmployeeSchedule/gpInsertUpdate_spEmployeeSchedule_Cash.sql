@@ -82,7 +82,7 @@ BEGIN
                   AND MovementItem.Amount = date_part('DAY', inOperDate)::Integer)
       THEN
 
-        PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := 0, -- Ключ объекта <Элемент документа>
+        PERFORM lpInsertUpdate_MovementItem_EmployeeSchedule_Child(ioId             := 0, -- Ключ объекта <Элемент документа>
                                                                    inMovementId     := vbMovementID, -- ключ Документа
                                                                    inParentId       := vbMovementItemID, -- элемент мастер
                                                                    inUnitId         := vbUnitId, -- подразделение
@@ -91,7 +91,7 @@ BEGIN
                                                                    inDateStart      := inDateStart, -- Дата время начала смены
                                                                    inDateEnd        := inDateEnd, -- Дата время конца счены
                                                                    inServiceExit    := inServiceExit,  -- Служебный выход
-                                                                   inUserId        := inSession);
+                                                                   inUserId         := vbUserId);
       ELSE
       
         SELECT MovementItem.id
@@ -116,7 +116,7 @@ BEGIN
                                                                    inDateStart      := inDateStart, -- Дата время начала смены
                                                                    inDateEnd        := inDateEnd, -- Дата время конца счены
                                                                    inServiceExit    := inServiceExit,  -- Служебный выход
-                                                                   inSession        := vbUserId);
+                                                                   inUserId         := vbUserId);
       END IF;    
     ELSE  
         -- Наличие записи по дню

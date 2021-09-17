@@ -294,6 +294,13 @@ object SendForm: TSendForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isOn: TcxGridDBColumn
+            Caption = #1042#1082#1083'.'
+            DataBinding.FieldName = 'isOn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1774,6 +1781,23 @@ object SendForm: TSendForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOn'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

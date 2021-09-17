@@ -36,30 +36,16 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
-    HeaderPrevCDS: TClientDataSet;
-    actUserNickDialig: TOpenChoiceForm;
-    actAddUser: TMultiAction;
-    actspInsertUser: TdsdExecStoredProc;
-    spInsertUser: TdsdStoredProc;
     ValueStart: TcxGridDBBandedColumn;
-    actExecPreviousMonth: TdsdExecStoredProc;
-    spPreviousMonth: TdsdStoredProc;
-    actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
     Color_Calc: TcxGridDBBandedColumn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     CrossDBViewStartAddOn: TCrossDBViewAddOn;
     Color_CalcStart: TcxGridDBBandedColumn;
-    actUpdateUnit: TMultiAction;
-    actChoiceUnitTreeForm: TOpenChoiceForm;
-    actExecStoredUpdateUnit: TdsdExecStoredProc;
-    actUpdateSubstitutionUnit: TMultiAction;
     actChoiceSubstitutionUnitTreeForm: TOpenChoiceForm;
     actExecStoredUpdateSubstitutionUnit: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
-    spUpdateUnit: TdsdStoredProc;
-    spUpdateSubstitutionUnit: TdsdStoredProc;
     actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId;
     ValueEnd: TcxGridDBBandedColumn;
     actPayrollTypeVIPChoice: TOpenChoiceForm;
@@ -72,18 +58,17 @@ type
     Name1: TcxGridDBBandedColumn;
     Empty2: TcxGridDBBandedColumn;
     Name2: TcxGridDBBandedColumn;
-    Empty3: TcxGridDBBandedColumn;
-    Name3: TcxGridDBBandedColumn;
     Name0: TcxGridDBBandedColumn;
-    actUpdate: TdsdInsertUpdateAction;
     dxBarButton7: TdxBarButton;
     spDelUser: TdsdStoredProc;
     actDeleteUser: TdsdExecStoredProc;
     dxBarButton8: TdxBarButton;
-    actEmployeeScheduleFilling: TdsdOpenForm;
     dxBarButton9: TdxBarButton;
     MovementItemChildProtocolOpenForm: TdsdOpenForm;
     dxBarButton10: TdxBarButton;
+    actDelUserDay: TdsdExecStoredProc;
+    spDelUserDay: TdsdStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

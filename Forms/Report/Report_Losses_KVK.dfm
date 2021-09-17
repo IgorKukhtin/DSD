@@ -10,19 +10,20 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 91
     Width = 1064
-    Height = 291
+    Height = 257
     TabOrder = 3
     ExplicitWidth = 1064
     ExplicitHeight = 291
-    ClientRectBottom = 291
+    ClientRectBottom = 257
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 291
       inherited cxGrid: TcxGrid
         Width = 1064
-        Height = 291
+        Height = 257
         ExplicitWidth = 1064
         ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -207,10 +208,27 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             Options.Editing = False
             Width = 60
           end
+          object PositionName_KVK: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'PositionName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 78
+          end
+          object UnitName_KVK: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'UnitName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 83
+          end
           object MovementDescName_pu: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082'. '#1087#1088#1086#1080#1079#1074'.'#1089#1084#1077#1096'.'
             DataBinding.FieldName = 'MovementDescName_pu'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -278,7 +296,6 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 60
           end
           object PartionDate: TcxGridDBColumn
@@ -288,7 +305,6 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 60
           end
           object Amount: TcxGridDBColumn
@@ -327,6 +343,7 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -338,27 +355,95 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
   end
   inherited Panel: TPanel
     Width = 1064
+    Height = 65
     ExplicitWidth = 1064
+    ExplicitHeight = 65
     inherited deStart: TcxDateEdit
-      Left = 97
+      Left = 113
       EditValue = 42309d
       Properties.SaveTime = False
-      ExplicitLeft = 97
+      ExplicitLeft = 113
     end
     inherited deEnd: TcxDateEdit
-      Left = 300
+      Left = 113
+      Top = 34
       EditValue = 42309d
       Properties.SaveTime = False
-      ExplicitLeft = 300
+      ExplicitLeft = 113
+      ExplicitTop = 34
     end
     inherited cxLabel1: TcxLabel
-      Left = 5
-      ExplicitLeft = 5
+      Left = 21
+      ExplicitLeft = 21
     end
     inherited cxLabel2: TcxLabel
-      Left = 189
-      ExplicitLeft = 189
+      Left = 2
+      Top = 35
+      ExplicitLeft = 2
+      ExplicitTop = 35
     end
+    object cxLabel4: TcxLabel
+      Left = 217
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 306
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 207
+    end
+    object cxLabel5: TcxLabel
+      Left = 225
+      Top = 35
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
+    end
+    object edUser: TcxButtonEdit
+      Left = 306
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 207
+    end
+    object cxLabel22: TcxLabel
+      Left = 614
+      Top = 35
+      Caption = #8470' '#1050#1042#1050':'
+    end
+    object ceKVK: TcxTextEdit
+      Left = 659
+      Top = 34
+      TabOrder = 9
+      Width = 207
+    end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 535
+    Top = 6
+    Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054'):'
+  end
+  object edPersonalKVK: TcxButtonEdit [3]
+    Left = 659
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 207
   end
   inherited ActionList: TActionList
     object actRefresh_Detail: TdsdDataSetRefresh [0]
@@ -399,6 +484,65 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KVK'
+          Value = Null
+          Component = ceKVK
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserId'
+          Value = Null
+          Component = GuidesUser
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = GuidesUser
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalKVKId'
+          Value = Null
+          Component = GuidesPersonalKVK
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalKVKName'
+          Value = Null
+          Component = GuidesPersonalKVK
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -481,10 +625,35 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisDetail'
+        Name = 'inUnitId'
         Value = Null
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalKVKId'
+        Value = Null
+        Component = GuidesPersonalKVK
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKVK'
+        Value = Null
+        Component = ceKVK
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -552,8 +721,16 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesUnit
       end
       item
+        Component = GuidesUser
+      end
+      item
+        Component = GuidesPersonalKVK
+      end
+      item
+        Component = ceKVK
       end>
     Left = 208
     Top = 144
@@ -562,5 +739,87 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
     Params = <>
     Left = 328
     Top = 170
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 376
+  end
+  object GuidesUser: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUser
+    FormNameParam.Value = 'TUser_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUser_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 24
+  end
+  object GuidesPersonalKVK: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalKVK
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalKVK
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalKVK
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 728
+    Top = 8
   end
 end

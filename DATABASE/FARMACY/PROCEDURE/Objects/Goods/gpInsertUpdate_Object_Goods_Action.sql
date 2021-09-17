@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Goods_Action()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_Action(TVarChar, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_Action(TVarChar, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_Action(
     IN inGoodsCode           TVarChar  ,    -- код объекта <Товар>
     IN inObjectId            Integer   ,    -- Ключ объекта <поставщик>
     IN inMinimumLot          TFloat    ,    -- Минимальное округление
+    IN inPromoBonus          TFloat    ,    -- Бонус по акции
+    IN inPromoBonusName      TVarChar  ,    -- Наименование бонусных упаковок по акции
     IN inAreaId              Integer   ,
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -51,6 +53,9 @@ BEGIN
     IF COALESCE(vbGoodsId,0) <> 0
     THEN
         PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Goods_MinimumLot(), vbGoodsId, inMinimumLot);    
+        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Goods_PromoBonus(), vbGoodsId, inPromoBonus);    
+
+        PERFORM lpInsertUpdate_objectString(zc_ObjectString_Goods_PromoBonusName(), vbGoodsId, inPromoBonusName);    
 
         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Promo(), vbGoodsId, True);
 
@@ -72,10 +77,12 @@ BEGIN
 
           -- Сохранили в плоскую таблицй
         BEGIN
-          UPDATE Object_Goods_Juridical SET isPromo      = True
-                                          , MinimumLot   = NULLIF(inMinimumLot, 0)
-                                          , UserUpdateId = vbUserId
-                                          , DateUpdate   = CURRENT_TIMESTAMP
+          UPDATE Object_Goods_Juridical SET isPromo          = True
+                                          , MinimumLot       = NULLIF(inMinimumLot, 0)
+                                          , PromoBonus       = NULLIF(inPromoBonus, 0)
+                                          , PromoBonusName   = NULLIF(inPromoBonusName, '')
+                                          , UserUpdateId     = vbUserId
+                                          , DateUpdate       = CURRENT_TIMESTAMP
                                           , UserUpdateMinimumLotId = CASE WHEN COALESCE(inMinimumLot,0) <> vbMinimumLot THEN vbUserId ELSE UserUpdateMinimumLotId END
                                           , DateUpdateMinimumLot   = CASE WHEN COALESCE(inMinimumLot,0) <> vbMinimumLot THEN CURRENT_TIMESTAMP ELSE DateUpdateMinimumLot END
                                           , UserUpdateisPromoId = CASE WHEN vbIsPromo <> TRUE THEN vbUserId ELSE UserUpdateisPromoId END

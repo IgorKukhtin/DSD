@@ -128,6 +128,8 @@ type
     actDoLoadAction: TExecuteImportSettingsAction;
     spGetImportSetting_Goods_Àction: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    PromoBonus: TcxGridDBColumn;
+    PromoBonusName: TcxGridDBColumn;
   private
     { Private declarations }
   public
