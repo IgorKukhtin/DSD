@@ -3103,28 +3103,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3201,28 +3201,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3575,28 +3575,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3689,28 +3689,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3787,28 +3787,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3907,28 +3907,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -4025,28 +4025,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -4123,28 +4123,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -4170,7 +4170,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -4178,7 +4178,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -4254,7 +4254,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4352,7 +4352,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'inisAllMO'
-        Value = 'False'
+        Value = False
         Component = cbAllMO
         DataType = ftBoolean
         ParamType = ptInput
@@ -4360,7 +4360,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'inisAllAuto'
-        Value = 'False'
+        Value = False
         Component = cbAllAuto
         DataType = ftBoolean
         ParamType = ptInput
@@ -4377,6 +4377,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -4387,6 +4388,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 456
     Top = 392
   end
@@ -4653,6 +4656,86 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationId'
+        Value = Null
+        Component = GuidesLocation
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationName'
+        Value = Null
+        Component = GuidesLocation
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAllMO'
+        Value = Null
+        Component = cbAllMO
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAllAuto'
+        Value = Null
+        Component = cbAllAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isInfoMoney'
+        Value = Null
+        Component = cbInfoMoney
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 416
