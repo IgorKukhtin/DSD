@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ContractCondition(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractCondition(TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_ContractCondition(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractCondition (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractCondition(
+    IN inIsErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -160,13 +162,12 @@ BEGIN
                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
 
      WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
-       AND Object_ContractCondition.isErased = FALSE
+       AND (Object_ContractCondition.isErased = FALSE OR inIsErased = TRUE)
     ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -182,4 +183,4 @@ ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractCondition ('2')
+-- SELECT * FROM gpSelect_Object_ContractCondition ('2', FALSE)

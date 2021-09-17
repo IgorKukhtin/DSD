@@ -2135,10 +2135,10 @@
     object actRefreshContract: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2165,10 +2165,10 @@
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end
         item
           StoredProc = spSelectContractCondition
@@ -3440,7 +3440,7 @@
           StoredProc = spUpdate_isWMS
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
@@ -3469,7 +3469,7 @@
           StoredProc = spUpdateVat
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
@@ -3485,7 +3485,7 @@
           StoredProc = spUpdateDefaultOut
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
@@ -3624,6 +3624,9 @@
       StoredProcList = <
         item
           StoredProc = spSelect_ContractPriceList
+        end
+        item
+          StoredProc = spSelectContractCondition
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
@@ -3637,7 +3640,7 @@
       ImageIndexFalse = 64
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
     DataSet = ClientDataSet
     DataSets = <
@@ -3856,7 +3859,15 @@
       item
         DataSet = CDSContractCondition
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 314
     Top = 413
@@ -4533,7 +4544,7 @@
       end>
     Params = <
       item
-        Name = 'inisErased'
+        Name = 'inIsErased'
         Value = False
         Component = actShowErased
         DataType = ftBoolean

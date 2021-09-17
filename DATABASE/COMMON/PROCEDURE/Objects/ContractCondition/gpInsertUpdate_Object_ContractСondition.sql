@@ -82,7 +82,17 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_PaidKind(), ioId, inPaidKindId); 
 
-   IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart()
+   IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart() OR 1 < (SELECT COUNT(*)
+                                                                      FROM ObjectLink AS ObjectLink_Contract
+                                                                           INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                                                                                 ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                                                                AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                                                                AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                                           INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
+                                                                                                                        AND Object_ContractCondition.isErased = FALSE
+                                                                      WHERE ObjectLink_Contract.ChildObjectId = inContractId
+                                                                        AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+                                                                     )
    THEN
        --
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, inStartDate);
@@ -90,8 +100,8 @@ BEGIN
        -- EndDate - апдейтим ВСЕМ
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
-                                   , ObjectDate_StartDate.ValueData                        AS StartDate
-                                   , ROW_NUMBER() OVER (ORDER BY ObjectDate_StartDate ASC) AS Ord
+                                   , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) AS StartDate
+                                   , ROW_NUMBER() OVER (ORDER BY COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) ASC) AS Ord
                               FROM ObjectLink AS ObjectLink_Contract
                                    INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                          ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
@@ -99,10 +109,10 @@ BEGIN
                                                         AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
-                                   INNER JOIN ObjectDate AS ObjectDate_StartDate
-                                                         ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
-                                                        AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
-                                                        AND ObjectDate_StartDate.ValueData > zc_DateStart()
+                                   LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                        ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
+                                                       AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
+                                                     --AND ObjectDate_StartDate.ValueData > zc_DateStart()
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )
