@@ -635,7 +635,7 @@
         Width = 45
       end
       object ccpPartnerName: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
         DataBinding.FieldName = 'PartnerName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -647,7 +647,7 @@
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        HeaderHint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
         Width = 258
       end
       object ccpisErased: TcxGridDBColumn
@@ -1631,7 +1631,7 @@
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
+    Left = 72
     Top = 88
     DockControlHeights = (
       0
@@ -1652,187 +1652,7 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCustom'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateDefaultOut'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_isWMS'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateStateKind_Closed'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecCCK'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete_ContractSend'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenFormCondition'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRecordCP'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenFormPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordCCPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbdsdSetErasedCCPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbdsdSetUnErased'#1057#1057'Partner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenFormCCPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRecordGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenFormGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecord_ContractPriceList'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSubItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bsContract'
         end
         item
           Visible = True
@@ -1840,15 +1660,15 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bsContract'
         end
         item
           Visible = True
-          ItemName = 'bbContractGoodsChoiceOpenForm'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bsContract'
         end
         item
           Visible = True
@@ -1856,7 +1676,87 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract2'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContractCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordCCPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContractConditionPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRecordCP'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContractPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContractGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord_ContractPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContractPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bsContract'
         end
         item
           Visible = True
@@ -1864,7 +1764,7 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bsContract'
         end>
       OneOnRow = True
       Row = 0
@@ -1896,11 +1796,12 @@
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
+    object bsContract: TdxBarStatic
       Caption = '    '
       Category = 0
       Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -1947,7 +1848,6 @@
     end
     object bbRecordCP: TdxBarButton
       Action = InsertRecordCP
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbProtocol: TdxBarButton
@@ -1960,7 +1860,6 @@
     end
     object bbSetErasedPartner: TdxBarButton
       Action = dsdSetErasedPartner
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbSetErasedGoods: TdxBarButton
@@ -1969,7 +1868,6 @@
     end
     object bbSetUnErasedPartner: TdxBarButton
       Action = dsdSetUnErasedPartner
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Category = 0
     end
     object bbSetUnErasedGoods: TdxBarButton
@@ -1986,7 +1884,6 @@
     end
     object bbProtocolOpenFormGoods: TdxBarButton
       Action = ProtocolOpenFormGoods
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
       Category = 0
     end
     object bbCustom: TdxBarButton
@@ -2015,12 +1912,10 @@
     end
     object bbdsdSetErasedCCPartner: TdxBarButton
       Action = dsdSetErasedCCPartner
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       Category = 0
     end
     object bbdsdSetUnErasedССPartner: TdxBarButton
       Action = dsdSetUnErasedССPartner
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       Category = 0
     end
     object bbProtocolOpenFormCCPartner: TdxBarButton
@@ -2047,7 +1942,8 @@
       Action = OpenForm_ContractPriceList
       Category = 0
     end
-    object dxBarSubItem1: TdxBarSubItem
+    object bsContractPriceList: TdxBarSubItem
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2068,6 +1964,139 @@
       Action = actShowErased
       Category = 0
     end
+    object bsContract2: TdxBarSubItem
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCustom'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateDefaultOut'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isWMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateStateKind_Closed'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'dxBarSeparator1'
+      Category = 0
+      Hint = 'dxBarSeparator1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bsContractCondition: TdxBarSubItem
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete_ContractSend'
+        end>
+    end
+    object bsContractPartner: TdxBarSubItem
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1086#1075#1086#1074#1086#1088')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormPartner'
+        end>
+    end
+    object bsContractConditionPartner: TdxBarSubItem
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbdsdSetErasedCCPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbdsdSetUnErased'#1057#1057'Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormCCPartner'
+        end>
+    end
+    object bsContractGoods: TdxBarSubItem
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractGoodsChoiceOpenForm'
+        end>
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2080,15 +2109,15 @@
       View = cxGridDBTableViewContractPriceList
       Action = ContractPriceListChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       ImageIndex = 0
     end
     object OpenForm_ContractPriceList: TdsdOpenForm
       Category = 'ContractPriceList'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -2125,8 +2154,8 @@
         item
           StoredProc = spSelect_ContractPriceList
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2203,8 +2232,8 @@
         end>
       QuestionBeforeExecute = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
       InfoAfterExecute = #1047#1072#1082#1088#1099#1090#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1044#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 13
     end
     object PaidKindChoiceFormСС: TOpenChoiceForm
@@ -2268,8 +2297,8 @@
       View = cxGridDBTableViewCCPartner
       Action = PartnerContractConditionChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       ImageIndex = 0
     end
     object InsertRecordGoods: TInsertRecord
@@ -2279,8 +2308,8 @@
       View = cxGridDBTableViewGoods
       Action = GoodsChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')>'
       ImageIndex = 0
     end
     object InsertRecordCP: TInsertRecord
@@ -2290,14 +2319,14 @@
       View = cxGridDBTableViewPartner
       Action = PartnerChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       ImageIndex = 0
     end
     object ProtocolOpenFormCCPartner: TdsdOpenForm
       Category = 'CCPartner'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
@@ -2327,7 +2356,8 @@
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TContractEditForm'
@@ -2359,8 +2389,8 @@
     object ProtocolOpenFormGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -2389,8 +2419,8 @@
     object ProtocolOpenFormPartner: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -2419,8 +2449,8 @@
     object ProtocolOpenFormCondition: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -2449,8 +2479,8 @@
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1044#1086#1075#1086#1074#1086#1088'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -2535,8 +2565,8 @@
         item
           StoredProc = spErasedUnErasedCCPartner
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083'. '#1076#1086#1075'.)'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -2577,8 +2607,8 @@
         item
           StoredProc = spErasedUnErasedGoods
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -2592,8 +2622,8 @@
         item
           StoredProc = spErasedUnErasedPartner
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -2699,7 +2729,7 @@
           StoredProc = spErasedUnErasedCCPartner
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -2842,7 +2872,7 @@
           StoredProc = spErasedUnErasedPartner
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -3628,14 +3658,14 @@
         item
           StoredProc = spSelectContractCondition
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 64
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1086#1074
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end

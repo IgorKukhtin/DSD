@@ -38,7 +38,7 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
+    bsContract: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -300,10 +300,16 @@ type
     bbSetErased_ContractPriceList: TdxBarButton;
     bbSetUnErased_ContractPriceList: TdxBarButton;
     bbOpenForm_ContractPriceList: TdxBarButton;
-    dxBarSubItem1: TdxBarSubItem;
+    bsContractPriceList: TdxBarSubItem;
     UpdateDataSet_ContractPriceList: TdsdUpdateDataSet;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    bsContract2: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    bsContractCondition: TdxBarSubItem;
+    bsContractPartner: TdxBarSubItem;
+    bsContractConditionPartner: TdxBarSubItem;
+    bsContractGoods: TdxBarSubItem;
 
   private
     { Private declarations }
