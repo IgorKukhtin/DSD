@@ -6,7 +6,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 259
+  ExplicitHeight = 256
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -276,7 +276,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_CheckBonus_Journal: TdsdOpenForm [10]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1046#1091#1088#1085#1072#1083' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
       FormName = 'TReport_CheckBonus_JournalForm'
@@ -343,7 +343,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_PromoInvoice: TdsdOpenForm [15]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       FormName = 'TReport_PromoInvoiceForm'
@@ -961,7 +961,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_CheckBonus_Income: TdsdOpenForm [53]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
       FormName = 'TReport_CheckBonus_IncomeForm'
@@ -1235,7 +1235,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actPromoStateKind: TdsdOpenForm [71]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075'\'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1103' '#1040#1082#1094#1080#1080
       Hint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080
@@ -1538,7 +1538,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProfitIncomeService: TdsdOpenForm [91]
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
       FormName = 'TProfitIncomeServiceJournalForm'
@@ -1777,7 +1777,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actPromoManager: TdsdOpenForm [106]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1040#1082#1094#1080#1080' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100')'
       FormName = 'TPromoManagerJournalForm'
@@ -1799,7 +1799,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProfitLossServiceCash: TdsdOpenForm [108]
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080') '#1053#1040#1051
       FormName = 'TProfitLossServiceJournalForm'
@@ -1869,7 +1869,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_Movement_ProfitLossService: TdsdOpenForm [113]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087'. '#1076#1077#1090#1072#1083#1100#1085#1086')'
       FormName = 'TReport_Movement_ProfitLossServiceForm'
@@ -2218,7 +2218,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actServiceMarket: TdsdOpenForm [137]
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')'
       FormName = 'TServiceJournalForm'
@@ -2886,7 +2886,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_PromoPlan: TdsdOpenForm [184]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1040#1082#1094#1080#1103#1084
       FormName = 'TReport_PromoPlanForm'
@@ -4852,7 +4852,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actAdvertising: TdsdOpenForm [312]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075'\'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
       Hint = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
@@ -7092,7 +7092,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProfitLossService: TdsdOpenForm
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080') '#1041#1053
       FormName = 'TProfitLossServiceJournalForm'
@@ -7205,7 +7205,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_CheckBonus: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080')'
       FormName = 'TReport_CheckBonusForm'
@@ -8095,7 +8095,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actPromoKind: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075'\'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1042#1080#1076#1099' '#1072#1082#1094#1080#1081
       Hint = #1042#1080#1076#1099' '#1072#1082#1094#1080#1081
@@ -8107,7 +8107,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actConditionPromo: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075'\'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '#1074' '#1072#1082#1094#1080#1080
       Hint = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '#1074' '#1072#1082#1094#1080#1080
@@ -8119,7 +8119,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actPromoJournal: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       MoveParams = <>
       Caption = #1040#1082#1094#1080#1080
       Hint = #1040#1082#1094#1080#1080
@@ -9114,6 +9114,9 @@ inherited MainForm: TMainForm
       object N240: TMenuItem
         Action = actReport_CheckBonus_Journal
       end
+      object miReport_PromoInvoice: TMenuItem
+        Action = actReport_PromoInvoice
+      end
       object N189: TMenuItem
         Caption = '-'
       end
@@ -10060,9 +10063,6 @@ inherited MainForm: TMainForm
       end
       object miReport_AccountMotion: TMenuItem
         Action = actReport_AccountMotion
-      end
-      object miReport_PromoInvoice: TMenuItem
-        Action = actReport_PromoInvoice
       end
       object N125: TMenuItem
         Caption = '-'
