@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_ContractConditionByContract(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionByContract(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionByContract(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionByContract(
     IN inContractId  Integer,
+    IN inIsErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -126,17 +128,20 @@ BEGIN
                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
 
      WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-       AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId;
+       AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+       AND (Object_ContractCondition.isErased = inIsErased OR inIsErased = TRUE)
+       ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractConditionByContract (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ContractConditionByContract (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.09.21         *
  24.03.20         *
  02.03.16         *
  14.03.14         * add InfoMoney

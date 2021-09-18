@@ -28,11 +28,7 @@ type
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
-    MovementDescName: TcxGridDBColumn;
+    GoodsKindComplete_partion: TcxGridDBColumn;
     PersonalKVKName: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     KVK: TcxGridDBColumn;
@@ -48,6 +44,8 @@ type
     cxLabel22: TcxLabel;
     ceKVK: TcxTextEdit;
     GuidesPersonalKVK: TdsdGuides;
+    actReport_MotionGoods: TdsdOpenForm;
+    bbReport_MotionGoods: TdxBarButton;
   private
     { Private declarations }
   public

@@ -408,21 +408,21 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-  exit;
+   {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   exit;
@@ -451,10 +451,11 @@ begin
   // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
+  }
   // Условия договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionByContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionByContractForm');
-  // Признак договора
+  {// Признак договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
@@ -2151,13 +2152,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_PaidKindDialogForm');
   exit;
 
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Losses_KVKForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Losses_KVKForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Losses_KVKDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Losses_KVKDialogForm');
-  exit;
-
+  //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKDialogForm'));
@@ -2316,11 +2317,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 

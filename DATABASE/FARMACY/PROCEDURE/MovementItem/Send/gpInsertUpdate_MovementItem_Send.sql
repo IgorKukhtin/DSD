@@ -56,10 +56,12 @@ $BODY$
    DECLARE vbisSent        Boolean;
    DECLARE vbisReceived    Boolean;
    DECLARE vbisBlockCommentSendTP  Boolean;
+   DECLARE vbParentId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
+    vbParentId := 0;
 
     --определяем подразделение получателя
     SELECT Movement.StatusId
@@ -322,6 +324,15 @@ BEGIN
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
 
+        IF vbUserId in (12325076, 6406669)
+        THEN
+          SELECT ObjectLink_Unit_Parent.ChildObjectId
+          INTO vbParentId
+          FROM ObjectLink AS ObjectLink_Unit_Parent
+          WHERE  ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+            AND ObjectLink_Unit_Parent.ObjectId = vbUserUnitId;
+        END IF;
+
         IF COALESCE (vbUserUnitId, 0) = 0
         THEN
           RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';
@@ -343,7 +354,8 @@ BEGIN
           RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
         END IF;
 
-        IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
+        IF COALESCE (vbFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0) AND
+           COALESCE (vbFromId, 0) <> COALESCE (vbParentId, 0) AND COALESCE (vbUnitId, 0) <> COALESCE (vbParentId, 0)
         THEN
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
         END IF;

@@ -2157,6 +2157,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeVIPEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollTypeVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPayrollTypeVIPForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesVIPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesVIPJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesVIPForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;

@@ -13,15 +13,12 @@ CREATE OR REPLACE FUNCTION gpReport_Losses_KVK(
     IN inKVK                TVarChar  ,
     IN inSession            TVarChar       -- сесси€ пользовател€
 )
-RETURNS TABLE (/*MovementId Integer, InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
-             , FromName TVarChar, ToName TVarChar, UserName TVarChar
-             , */
-               MovementDescName TVarChar
-             , InvNumber_pu TVarChar, OperDate_pu TDateTime, MovementDescName_pu TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
+RETURNS TABLE (MovementDescName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , MeasureName TVarChar, GoodsKindName TVarChar
              , PartionDate TDateTime            
-             , PartionGoods TVarChar
+             , PartionGoods TVarChar, InvNumber_partion TVarChar, GoodsKindComplete_partion TVarChar
              , PersonalKVKId Integer, PersonalKVKName TVarChar
              , PositionCode_KVK Integer, PositionName_KVK TVarChar
              , UnitCode_KVK Integer, UnitName_KVK TVarChar
@@ -107,104 +104,137 @@ BEGIN
                                                        , zc_MILinkObject_GoodsKind())
                 )
 
-   , tmpWeighingProduction AS (SELECT /*tmpMI.MovementId
-                                    , tmpMI.InvNumber
-                                    , tmpMI.OperDate
-                                    , tmpMI.MovementDescName
-                                    --, tmpMI.MI_Id
-                                    ,*/ tmpMI.MovementDescName
-                                    , tmpMI.GoodsId
-                                    , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                                    , SUM (tmpMI.Amount) AS Amount
-                                    , MIString_KVK.ValueData            AS KVK
-                                    , MILinkObject_PersonalKVK.ObjectId AS PersonalId_KVK
-                                    , DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) AS PartionDate    --дата партии
-                                    , Movement_Partion.Id               AS MovementId_Partion
-                                    , CASE WHEN MIString_PartionGoods.ValueData <> ''
-                                                THEN MIString_PartionGoods.ValueData
-                                           WHEN MI_Partion.Id > 0
-                                                THEN 
-                                              ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
-                                            || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
-                                            || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
-                                            || ' парти€=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
-                                            || ' є <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
-                                              )
-                                           ELSE MIFloat_MovementItemId.ValueData :: TVarChar
-                                      END :: TVarChar AS PartionGoods
-
-                               FROM tmpMI
-                                    LEFT JOIN tmpMILO AS MILinkObject_PersonalKVK
-                                                      ON MILinkObject_PersonalKVK.MovementItemId = tmpMI.MI_Id
-                                                     AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
-                                    LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
-                                                      ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MI_Id
-                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                                    LEFT JOIN tmpMovementItemString AS MIString_KVK
-                                                                    ON MIString_KVK.MovementItemId = tmpMI.MI_Id
-                                                                   AND MIString_KVK.DescId = zc_MIString_KVK()
-
-                                    LEFT JOIN tmpMovementItemString AS MIString_PartionGoods
-                                                                    ON MIString_PartionGoods.MovementItemId = tmpMI.MI_Id
-                                                                   AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-
-                                    LEFT JOIN tmpMovementItemFloat AS MIFloat_MovementItemId
-                                                                   ON MIFloat_MovementItemId.MovementItemId = tmpMI.MI_Id
-                                                                  AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
-                                    LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
-                                    LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
-                                                                          AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
-
-                                    LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                     ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
-                                                                    AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                    LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
-                                    LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                                ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
-                                                               AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
-
-                               WHERE (COALESCE (MILinkObject_PersonalKVK.ObjectId,0) <> 0 OR COALESCE (MIString_KVK.ValueData,'') <> '')
-                                 AND (COALESCE (MILinkObject_PersonalKVK.ObjectId,0) = inPersonalKVKId OR inPersonalKVKId = 0)
-                                 AND (COALESCE (MIString_KVK.ValueData,'') = inKVK OR COALESCE (inKVK,'') = '')
-                               GROUP BY /*tmpMI.MovementId
-                                    , tmpMI.InvNumber
-                                    , tmpMI.OperDate
-                                    , tmpMI.MovementDescName
-                                    , */tmpMI.GoodsId
-                                    , tmpMI.MovementDescName
-                                    , MILinkObject_GoodsKind.ObjectId
-                                    , MIString_KVK.ValueData 
-                                    , MILinkObject_PersonalKVK.ObjectId
-                                    , DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd()))
-                                    , Movement_Partion.Id
-                                    , CASE WHEN MIString_PartionGoods.ValueData <> ''
-                                                THEN MIString_PartionGoods.ValueData
-                                           WHEN MI_Partion.Id > 0
-                                                THEN 
-                                              ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
-                                            || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
-                                            || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
-                                            || ' парти€=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
-                                            || ' є <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
-                                              )
-                                           ELSE MIFloat_MovementItemId.ValueData :: TVarChar
-                                      END
-                               )
+   , tmpWeighingProductionAll AS (SELECT tmpMI.MovementDescName
+                                       , tmpMI.GoodsId
+                                       , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                       , SUM (tmpMI.Amount) AS Amount
+                                       , MIString_KVK.ValueData            AS KVK
+                                       , MILinkObject_PersonalKVK.ObjectId AS PersonalId_KVK
+                                       , DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) AS PartionDate    --дата партии
+                                       , COALESCE (Movement_Partion.InvNumber, '')         ::TVarChar AS InvNumber_partion
+                                       , COALESCE (Object_GoodsKindComplete.ValueData, '') ::TVarChar AS GoodsKindComplete_partion
+                                       , Movement_Partion.Id               AS MovementId_Partion
+                                       , CASE WHEN MIString_PartionGoods.ValueData <> ''
+                                                   THEN MIString_PartionGoods.ValueData
+                                              WHEN MI_Partion.Id > 0
+                                                   THEN 
+                                                 ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
+                                               || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
+                                               || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
+                                               || ' парти€=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                                               || ' є <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                                                 )
+                                              ELSE MIFloat_MovementItemId.ValueData :: TVarChar
+                                         END :: TVarChar AS PartionGoods
+   
+                                  FROM tmpMI
+                                       LEFT JOIN tmpMILO AS MILinkObject_PersonalKVK
+                                                         ON MILinkObject_PersonalKVK.MovementItemId = tmpMI.MI_Id
+                                                        AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+                                       LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
+                                                         ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MI_Id
+                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+   
+                                       LEFT JOIN tmpMovementItemString AS MIString_KVK
+                                                                       ON MIString_KVK.MovementItemId = tmpMI.MI_Id
+                                                                      AND MIString_KVK.DescId = zc_MIString_KVK()
+   
+                                       LEFT JOIN tmpMovementItemString AS MIString_PartionGoods
+                                                                       ON MIString_PartionGoods.MovementItemId = tmpMI.MI_Id
+                                                                      AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+   
+                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_MovementItemId
+                                                                      ON MIFloat_MovementItemId.MovementItemId = tmpMI.MI_Id
+                                                                     AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                                       LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
+                                       LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                                             AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+   
+                                       LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                                        ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
+                                                                       AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                       LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+                                       LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                                   ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                                                  AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+   
+                                  WHERE (COALESCE (MILinkObject_PersonalKVK.ObjectId,0) <> 0 OR COALESCE (MIString_KVK.ValueData,'') <> '')
+                                    AND (COALESCE (MILinkObject_PersonalKVK.ObjectId,0) = inPersonalKVKId OR inPersonalKVKId = 0)
+                                    AND (COALESCE (MIString_KVK.ValueData,'') = inKVK OR COALESCE (inKVK,'') = '')
+                                  GROUP BY /*tmpMI.MovementId
+                                       , tmpMI.InvNumber
+                                       , tmpMI.OperDate
+                                       , tmpMI.MovementDescName
+                                       , */tmpMI.GoodsId
+                                       , tmpMI.MovementDescName
+                                       , MILinkObject_GoodsKind.ObjectId
+                                       , MIString_KVK.ValueData 
+                                       , MILinkObject_PersonalKVK.ObjectId
+                                       , DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd()))
+                                       , COALESCE (Object_GoodsKindComplete.ValueData, '') 
+                                       , Movement_Partion.Id
+                                       , COALESCE (Movement_Partion.InvNumber, '')
+                                       , CASE WHEN MIString_PartionGoods.ValueData <> ''
+                                                   THEN MIString_PartionGoods.ValueData
+                                              WHEN MI_Partion.Id > 0
+                                                   THEN 
+                                                 ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
+                                               || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
+                                               || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
+                                               || ' парти€=<' || DATE (COALESCE (Movement_Partion.OperDate, zc_DateEnd())) || '>'
+                                               || ' є <' || COALESCE (Movement_Partion.InvNumber, '') || '>'
+                                                 )
+                                              ELSE MIFloat_MovementItemId.ValueData :: TVarChar
+                                         END
+                                  )
 
    -- 2) другое кол-во находим дл€ ContainerId из п1. везде где они есть в zc_Movement_ProductionUnion.zc_MI_Child 
    --    потом через ParentId получаем его zc_Movement_ProductionUnion.zc_MI_Master.Amount + здесь должен быть такой же zc_MIString_KVK + zc_MILinkObject_PersonalKVK в мастере
    
-   , tmpMIContainer AS (SELECT *
+   , tmpMIContainer AS (SELECT MIContainer.*
                         FROM MovementItemContainer AS MIContainer
-                        WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpWeighingProduction.MovementId_Partion FROM tmpWeighingProduction)
+                             JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                              AND MovementItem.DescId = zc_MI_Master()
+                        WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpWeighingProductionAll.MovementId_Partion FROM tmpWeighingProductionAll)
+                         AND MIContainer.DescId = 1
                         )
 
-   , tmpMIChild_PU AS (SELECT *
-                       FROM MovementItem 
-                       WHERE MovementItem.Id IN (SELECT DISTINCT tmpMIContainer.MovementItemId FROM tmpMIContainer)
-                         AND MovementItem.DescId = zc_MI_Child()
-                         AND  MovementItem.isErased = FALSE
+   , tmpWeighingProduction AS (SELECT tmp.MovementDescName
+                                    , tmp.GoodsId
+                                    , tmp.GoodsKindId
+                                    , tmp.KVK
+                                    , tmp.PersonalId_KVK
+                                    , tmp.PartionDate    --дата партии
+                                    , tmp.InvNumber_partion
+                                    , tmp.GoodsKindComplete_partion
+                                    , tmpMIContainer.ContainerId
+                                    , tmp.PartionGoods
+                                    , SUM (tmp.Amount) AS Amount
+                               FROM tmpWeighingProductionAll AS tmp
+                                    LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = tmp.MovementId_Partion
+                               GROUP BY tmp.MovementDescName
+                                      , tmp.GoodsId
+                                      , tmp.GoodsKindId
+                                      , tmp.KVK
+                                      , tmp.PersonalId_KVK
+                                      , tmp.PartionDate    --дата партии
+                                      , tmp.InvNumber_partion
+                                      , tmp.GoodsKindComplete_partion
+                                      , tmpMIContainer.ContainerId
+                                      , tmp.PartionGoods
+                               )
+
+
+   , tmpMIChild_PU AS (SELECT DISTINCT MIContainer.ContainerId
+                         --  , MIContainer.MovementItemId
+                          -- , MIContainer.MovementId
+                           , MovementItem.ParentId
+                       FROM MovementItemContainer AS MIContainer
+                            JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                             AND MovementItem.DescId = zc_MI_Child()
+                                             AND MovementItem.isErased = FALSE
+                       WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpMIContainer.ContainerId FROM tmpMIContainer)
+                        AND MIContainer.DescId = 1
                        )
 
    , tmpMI_String_KVK AS (SELECT *
@@ -220,51 +250,46 @@ BEGIN
                                AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PersonalKVK())
                             )
 
-   , tmpMI_Master_PU AS (SELECT MovementItem.*
+   , tmpMI_Master_PU AS (SELECT tmpMIChild_PU.ContainerId
                               , MIString_KVK.ValueData            AS KVK
                               , MILinkObject_PersonalKVK.ObjectId AS PersonalId_KVK
-                         FROM MovementItem 
+                              , SUM (MovementItem.Amount* CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount
+                         FROM tmpMIChild_PU
+                            INNER JOIN MovementItem ON MovementItem.Id = tmpMIChild_PU.ParentId
+                                                   AND MovementItem.DescId = zc_MI_Master()
+                                                   AND MovementItem.isErased = FALSE
                             LEFT JOIN tmpMI_String_KVK AS MIString_KVK
                                                        ON MIString_KVK.MovementItemId = MovementItem.Id
                                                       AND MIString_KVK.DescId = zc_MIString_KVK()
                             LEFT JOIN tmpMILO_PersonalKVK AS MILinkObject_PersonalKVK
                                                           ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
-                         WHERE MovementItem.Id IN (SELECT DISTINCT tmpMIChild_PU.ParentId FROM tmpMIChild_PU)
-                           AND MovementItem.DescId = zc_MI_Master()
-                           AND MovementItem.isErased = FALSE
-                         --  AND COALESCE (MILinkObject_PersonalKVK.ObjectId,0) <> 0 OR COALESCE (MIString_KVK.ValueData,'') <> ''
+
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                         GROUP BY tmpMIChild_PU.ContainerId
+                                , MIString_KVK.ValueData
+                                , MILinkObject_PersonalKVK.ObjectId
                        )
 
-   , tmpProductionUnion AS (SELECT Movement.*
-                                 , MovementDesc.ItemName AS MovementDescName
-                            FROM Movement
-                                 LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-                            WHERE Movement.Id IN (SELECT tmpMI_Master_PU.MovementId FROM tmpMI_Master_PU)
-                           )
-
      --–≈«”Ћ№“ј“
-     SELECT /*tmpWeighingProduction.MovementId
-          , tmpWeighingProduction.InvNumber
-          , tmpWeighingProduction.OperDate
-          , tmpWeighingProduction.MovementDescName
-          , Object_From.ValueData               AS FromName
-          , Object_To.ValueData                 AS ToName
-          , Object_User.ValueData               AS UserName
-
-          , */
-          tmpWeighingProduction.MovementDescName
-          , tmpProductionUnion.InvNumber      AS InvNumber_pu
-          , tmpProductionUnion.OperDate         AS OperDate_pu
-          , tmpProductionUnion.MovementDescName AS MovementDescName_pu
-
+     SELECT tmpWeighingProduction.MovementDescName
+          , Object_Goods.Id                   ::Integer AS GoodsId
           , Object_Goods.ObjectCode           ::Integer AS GoodsCode
           , Object_Goods.ValueData                      AS GoodsName
+          , Object_GoodsGroup.Id                        AS GoodsGroupId
+          , Object_GoodsGroup.ValueData                 AS GoodsGroupName
           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
           , Object_Measure.ValueData                    AS MeasureName
           , Object_GoodsKind.ValueData                  AS GoodsKindName
           , tmpWeighingProduction.PartionDate ::TDateTime
           , tmpWeighingProduction.PartionGoods
+          , tmpWeighingProduction.InvNumber_partion ::TVarChar
+          , tmpWeighingProduction.GoodsKindComplete_partion ::TVarChar
 
           , Object_PersonalKVK.Id          AS PersonalKVKId
           , Object_PersonalKVK.ValueData   AS PersonalKVKName
@@ -279,12 +304,10 @@ BEGIN
           , (COALESCE (tmpMI_Master_PU.Amount,0) - COALESCE (tmpWeighingProduction.Amount,0)) ::TFloat AS Amount_diff
 
      FROM tmpWeighingProduction
-          LEFT JOIN tmpMI_Master_PU ON tmpMI_Master_PU.ObjectId = tmpWeighingProduction.GoodsId
-                                   AND tmpMI_Master_PU.MovementId = tmpWeighingProduction.MovementId_Partion
+          LEFT JOIN tmpMI_Master_PU ON tmpMI_Master_PU.ContainerId = tmpWeighingProduction.ContainerId
                                    AND COALESCE (tmpMI_Master_PU.PersonalId_KVK,0) = COALESCE (tmpWeighingProduction.PersonalId_KVK,0)
                                    AND COALESCE (tmpMI_Master_PU.KVK,'') = COALESCE (tmpWeighingProduction.KVK,'')
-          LEFT JOIN tmpProductionUnion ON tmpProductionUnion.Id = tmpMI_Master_PU.MovementId
-          
+
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpWeighingProduction.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpWeighingProduction.GoodsKindId
 
@@ -300,21 +323,11 @@ BEGIN
                               AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
           LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
 
-          /*LEFT JOIN tmpMLO AS MovementLinkObject_User
-                           ON MovementLinkObject_User.MovementId = tmpWeighingProduction.MovementId
-                          AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN tmpMLO AS MovementLinkObject_From
-                           ON MovementLinkObject_From.MovementId = tmpWeighingProduction.MovementId
-                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-          LEFT JOIN tmpMLO AS MovementLinkObject_To
-                           ON MovementLinkObject_To.MovementId = tmpWeighingProduction.MovementId
-                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-          */
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -337,3 +350,6 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpReport_Losses_KVK (inStartDate := ('01.09.2021')::TDateTime , inEndDate := ('01.10.2021')::TDateTime , inUnitId:=0, inUserId:=0, inPersonalKVKId:=14667, inKVK:='', inSession := '5');
+
+-- 1) считаем одно кол-во из  - zc_Movement_WeighingProduction + zc_MIFloat_MovementItemId +  заполненные zc_MIString_KVK + zc_MILinkObject_PersonalKVK - получаем ContainerId из партии производства  zc_Movement_ProductionUnion.zc_MI_Master    2) другое кол-во находим дл€ ContainerId из п1. везде где они есть в zc_Movement_ProductionUnion.zc_MI_Child - потом через ParentId получаем его zc_Movement_ProductionUnion.zc_MI_Master.Amount + здесь должен быть такой же zc_MIString_KVK + zc_MILinkObject_PersonalKVK в мастере
+ 

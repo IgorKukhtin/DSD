@@ -193,6 +193,8 @@ type
     colEndDate: TcxGridDBColumn;
     ÒolPaidKindName: TcxGridDBColumn;
     PaidKindChoiceForm——: TOpenChoiceForm;
+    actShowErasedCC: TBooleanStoredProcAction;
+    bbShowErasedCC: TdxBarButton;
   private
     { Private declarations }
   public

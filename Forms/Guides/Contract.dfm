@@ -2024,6 +2024,14 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbSetErasedCC'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'#1057#1057
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormCondition'
         end
         item
@@ -2097,6 +2105,14 @@
           ItemName = 'bbContractGoodsChoiceOpenForm'
         end>
     end
+    object bbSetErasedCC: TdxBarButton
+      Action = dsdSetErasedCC
+      Category = 0
+    end
+    object bbSetUnErasedСС: TdxBarButton
+      Action = dsdSetUnErasedСС
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2143,6 +2159,20 @@
         end>
       isShowModal = False
     end
+    object dsdSetErasedCC: TdsdUpdateErased
+      Category = 'Condition'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedCC
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCC
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = ContractConditionDS
+    end
     object actSetErased_ContractPriceList: TdsdUpdateErased
       Category = 'ContractPriceList'
       MoveParams = <>
@@ -2160,6 +2190,21 @@
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractPriceListDS
+    end
+    object dsdSetUnErasedСС: TdsdUpdateErased
+      Category = 'Condition'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedCC
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCC
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ContractConditionDS
     end
     object actRefreshContract: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2447,7 +2492,7 @@
       isShowModal = False
     end
     object ProtocolOpenFormCondition: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Condition'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
@@ -2729,7 +2774,7 @@
           StoredProc = spErasedUnErasedCCPartner
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -2872,7 +2917,7 @@
           StoredProc = spErasedUnErasedPartner
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 8238
       ErasedFieldName = 'isErased'
@@ -3048,7 +3093,7 @@
       isShowModal = False
     end
     object ContractConditionKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
+      Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ContractConditionKindChoiceForm'
@@ -3732,8 +3777,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 160
+    Left = 136
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3879,8 +3924,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 464
+    Left = 152
+    Top = 440
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'
@@ -4677,5 +4722,22 @@
     PackSize = 1
     Left = 984
     Top = 200
+  end
+  object spErasedUnErasedCC: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ContractCondition'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 504
   end
 end

@@ -14,18 +14,19 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
     Width = 1064
     Height = 257
     TabOrder = 3
+    ExplicitTop = 91
     ExplicitWidth = 1064
-    ExplicitHeight = 291
+    ExplicitHeight = 257
     ClientRectBottom = 257
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
-      ExplicitHeight = 291
+      ExplicitHeight = 257
       inherited cxGrid: TcxGrid
         Width = 1064
         Height = 257
         ExplicitWidth = 1064
-        ExplicitHeight = 291
+        ExplicitHeight = 257
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -164,42 +165,6 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object MovementDescName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'MovementDescName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 69
-          end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 48
-          end
-          object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 59
-          end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 107
-          end
-          object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 137
-          end
           object PersonalKVKName: TcxGridDBColumn
             Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
             DataBinding.FieldName = 'PersonalKVKName'
@@ -225,27 +190,6 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
             Options.Editing = False
             Width = 83
-          end
-          object MovementDescName_pu: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082'. '#1087#1088#1086#1080#1079#1074'.'#1089#1084#1077#1096'.'
-            DataBinding.FieldName = 'MovementDescName_pu'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 69
-          end
-          object OperDate_pu: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1086#1080#1079#1074'.'#1089#1084#1077#1096'.'
-            DataBinding.FieldName = 'OperDate_pu'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 48
-          end
-          object InvNumber_pu: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1080#1079#1074'.'#1089#1084#1077#1096'.'
-            DataBinding.FieldName = 'InvNumber_pu'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 59
           end
           object KVK: TcxGridDBColumn
             Caption = #8470' '#1050#1042#1050
@@ -292,7 +236,6 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -301,11 +244,26 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           object PartionDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1055#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'PartionDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object InvNumber_partion: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'InvNumber_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object GoodsKindComplete_partion: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'GoodsKindComplete_partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1072#1088#1090#1080#1103')'
+            Width = 75
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
@@ -445,6 +403,37 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
     TabOrder = 7
     Width = 207
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesPersonalKVK
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUser
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object actRefresh_Detail: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
@@ -562,8 +551,8 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsName;GoodsKindName;KVK;PersonalKVKName;U' +
-            'serName'
+            'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionDate;InvNumber' +
+            '_partion;KVK;PersonalKVKName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -588,13 +577,121 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1044#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' ('#1050#1042#1050')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' ('#1050#1042#1050')'
+      ReportName = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1087#1086#1090#1077#1088#1080' '#1050#1042#1050
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1087#1086#1090#1077#1088#1080' '#1050#1042#1050
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actReport_MotionGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
+      ImageIndex = 26
+      FormName = 'TReport_MotionGoodsForm'
+      FormNameParam.Value = 'TReport_MotionGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42309d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42309d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftWideString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAllMO'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAllAuto'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -691,6 +788,26 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_MotionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -704,6 +821,10 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbReport_MotionGoods: TdxBarButton
+      Action = actReport_MotionGoods
       Category = 0
     end
   end

@@ -310,6 +310,11 @@ type
     bsContractPartner: TdxBarSubItem;
     bsContractConditionPartner: TdxBarSubItem;
     bsContractGoods: TdxBarSubItem;
+    dsdSetErasedCC: TdsdUpdateErased;
+    dsdSetUnErased——: TdsdUpdateErased;
+    spErasedUnErasedCC: TdsdStoredProc;
+    bbSetErasedCC: TdxBarButton;
+    bbSetUnErased——: TdxBarButton;
 
   private
     { Private declarations }
