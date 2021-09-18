@@ -24,6 +24,18 @@ type
     cxSplitter1: TcxSplitter;
     bbactStartLoad: TdxBarButton;
     AmountAccrued: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    ceTotalSummPhone: TcxCurrencyEdit;
+    ceTotalSummSale: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceHoursWork: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    deDateCalculation: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    actCalculationAll: TMultiAction;
+    actExecCalculationAll: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    spCalculationAll: TdsdStoredProc;
   private
     { Private declarations }
   public

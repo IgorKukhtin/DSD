@@ -1,5 +1,5 @@
 inherited WagesVIPForm: TWagesVIPForm
-  Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1090#1086#1095#1077#1082
+  Caption = #1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
   ClientHeight = 479
   ClientWidth = 799
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
@@ -8,22 +8,22 @@ inherited WagesVIPForm: TWagesVIPForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 109
     Width = 799
-    Height = 356
-    ExplicitTop = 123
+    Height = 370
+    ExplicitTop = 109
     ExplicitWidth = 799
-    ExplicitHeight = 356
-    ClientRectBottom = 356
+    ExplicitHeight = 370
+    ClientRectBottom = 370
     ClientRectRight = 799
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 799
-      ExplicitHeight = 332
+      ExplicitHeight = 346
       inherited cxGrid: TcxGrid
         Width = 799
-        Height = 324
+        Height = 338
         ExplicitWidth = 799
-        ExplicitHeight = 324
+        ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -81,6 +81,7 @@ inherited WagesVIPForm: TWagesVIPForm
             DataBinding.FieldName = 'HoursWork'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 84
           end
           object AmountAccrued: TcxGridDBColumn
@@ -91,6 +92,7 @@ inherited WagesVIPForm: TWagesVIPForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object isIssuedBy: TcxGridDBColumn
@@ -112,7 +114,7 @@ inherited WagesVIPForm: TWagesVIPForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 324
+        Top = 338
         Width = 799
         Height = 8
         Touch.ParentTabletOptions = False
@@ -123,38 +125,102 @@ inherited WagesVIPForm: TWagesVIPForm
   end
   inherited DataPanel: TPanel
     Width = 799
-    Height = 97
+    Height = 83
     TabOrder = 3
     ExplicitWidth = 799
-    ExplicitHeight = 97
+    ExplicitHeight = 83
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Top = 20
       ExplicitLeft = 8
+      ExplicitTop = 20
     end
     inherited cxLabel1: TcxLabel
       Left = 8
+      Top = 2
       ExplicitLeft = 8
+      ExplicitTop = 2
     end
     inherited edOperDate: TcxDateEdit
       Left = 108
+      Top = 20
       EditValue = 42767d
       Properties.DisplayFormat = 'mmmm yyyy'
       ExplicitLeft = 108
+      ExplicitTop = 20
     end
     inherited cxLabel2: TcxLabel
       Left = 108
+      Top = 2
       ExplicitLeft = 108
+      ExplicitTop = 2
     end
     inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
+      Top = 40
+      ExplicitTop = 40
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 62
-      ExplicitTop = 62
+      Top = 57
+      ExplicitTop = 57
       ExplicitWidth = 200
       ExplicitHeight = 22
       Width = 200
+    end
+    object cxLabel3: TcxLabel
+      Left = 238
+      Top = 8
+      Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1085#1103#1090#1099#1093' '#1087#1086' '#1090#1077#1083#1077#1092#1086#1085#1091' '#1079#1072#1082#1072#1079#1086#1074
+    end
+    object ceTotalSummPhone: TcxCurrencyEdit
+      Left = 447
+      Top = 7
+      TabStop = False
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 89
+    end
+    object ceTotalSummSale: TcxCurrencyEdit
+      Left = 447
+      Top = 32
+      TabStop = False
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 89
+    end
+    object cxLabel4: TcxLabel
+      Left = 238
+      Top = 33
+      Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
+    end
+    object ceHoursWork: TcxCurrencyEdit
+      Left = 447
+      Top = 57
+      TabStop = False
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 89
+    end
+    object cxLabel5: TcxLabel
+      Left = 238
+      Top = 58
+      Caption = #9#1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074' '#1074#1089#1077#1084#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
+    end
+    object deDateCalculation: TcxDateEdit
+      Left = 572
+      Top = 20
+      EditValue = 42767d
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 157
+    end
+    object cxLabel6: TcxLabel
+      Left = 572
+      Top = 2
+      Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -223,6 +289,34 @@ inherited WagesVIPForm: TWagesVIPForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    object actCalculationAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecCalculationAll
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Hint = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      ImageIndex = 38
+    end
+    object actExecCalculationAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCalculationAll
+      StoredProcList = <
+        item
+          StoredProc = spCalculationAll
+        end>
+      Caption = 'actExecCalculationAll'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_WagesVIP'
@@ -278,6 +372,10 @@ inherited WagesVIPForm: TWagesVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -306,6 +404,10 @@ inherited WagesVIPForm: TWagesVIPForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actCalculationAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -420,6 +522,34 @@ inherited WagesVIPForm: TWagesVIPForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPhone'
+        Value = Null
+        Component = ceTotalSummPhone
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummSale'
+        Value = Null
+        Component = ceTotalSummSale
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursWork'
+        Value = Null
+        Component = ceHoursWork
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateCalculation'
+        Value = Null
+        Component = deDateCalculation
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -520,62 +650,19 @@ inherited WagesVIPForm: TWagesVIPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inUserID'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'UserID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inisIssuedBy'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPlanMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMax'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summ'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummPlanMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummPlanMax'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
+        ComponentItem = 'isIssuedBy'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -585,8 +672,7 @@ inherited WagesVIPForm: TWagesVIPForm
     Top = 288
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 432
-    Top = 272
+    Left = 464
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_WagesVIP_TotalSumm'
@@ -625,5 +711,23 @@ inherited WagesVIPForm: TWagesVIPForm
       end>
     Left = 652
     Top = 196
+  end
+  object spCalculationAll: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_WagesVIP_CalculationAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 552
+    Top = 192
   end
 end

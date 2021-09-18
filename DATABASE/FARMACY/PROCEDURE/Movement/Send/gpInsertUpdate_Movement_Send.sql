@@ -22,10 +22,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
-$body$
+$BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUserUnitId Integer;
+   DECLARE vbParentId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
@@ -45,12 +46,22 @@ BEGIN
           vbUnitKey := '0';
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
+        vbParentId := 0;
         
         IF COALESCE (vbUserUnitId, 0) = 0
         THEN 
           RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';     
         END IF;     
         
+        IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
+        THEN
+          SELECT ObjectLink_Unit_Parent.ChildObjectId
+          INTO vbParentId
+          FROM ObjectLink AS ObjectLink_Unit_Parent
+          WHERE  ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+            AND ObjectLink_Unit_Parent.ObjectId = vbUserUnitId;
+        END IF;
+
         IF COALESCE (ioId, 0) <> 0
         THEN
           IF EXISTS(SELECT 
@@ -64,13 +75,16 @@ BEGIN
                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                     WHERE Movement.Id = ioId 
                       AND COALESCE (MovementLinkObject_From.ObjectId, 0) <> COALESCE (vbUserUnitId, 0) 
-                      AND COALESCE (MovementLinkObject_To.ObjectId, 0) <> COALESCE (vbUserUnitId, 0))
+                      AND COALESCE (MovementLinkObject_To.ObjectId, 0) <> COALESCE (vbUserUnitId, 0) 
+                      AND COALESCE (MovementLinkObject_From.ObjectId, 0) <> COALESCE (vbParentId, 0) 
+                      AND COALESCE (MovementLinkObject_To.ObjectId, 0) <> COALESCE (vbParentId, 0))
           THEN
             RAISE EXCEPTION 'Ошибка. Изменение подразделения запрещено..';                       
           END IF;
         END IF;
         
-        IF COALESCE (inFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (inToId, 0) <> COALESCE (vbUserUnitId, 0) 
+        IF COALESCE (inFromId, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (inToId, 0) <> COALESCE (vbUserUnitId, 0) AND
+           COALESCE (inFromId, 0) <> COALESCE (vbParentId, 0) AND COALESCE (inToId, 0) <> COALESCE (vbParentId, 0) 
         THEN 
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
