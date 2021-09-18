@@ -616,6 +616,7 @@ BEGIN
                                           , inParentId               := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
                                           , inMovementId             := inMovementId
                                           , inMovementId_OrderClient := COALESCE (_tmpReserveRes.MovementId_order, tmpMI_Child.MovementId_order) :: Integer
+                                          , inPartionId              := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
                                           , inObjectId               := COALESCE (_tmpReserveRes.GoodsId, tmpMI_Child.GoodsId)
                                           , inAmount                 := COALESCE (_tmpReserveRes.Amount, 0)
                                           , inUserId                 := inUserId
@@ -668,5 +669,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Status_Income(inMovementId := 76 , inStatusCode := 2 ,  inSession := '5');
-select * from gpUpdate_Status_Income(inMovementId := 353 , inStatusCode := 2 ,  inSession := '5');
+-- SELECT * FROM gpUpdate_Status_Income (inMovementId:= 76 , inStatusCode:= 2, inSession:= zfCalc_UserAdmin());

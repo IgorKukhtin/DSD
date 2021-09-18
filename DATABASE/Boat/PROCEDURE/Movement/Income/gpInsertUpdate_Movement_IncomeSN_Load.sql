@@ -11,35 +11,44 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeSN_Load(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId           Integer;  
+  DECLARE vbUserId           Integer;
+  DECLARE vbToId             Integer;
   DECLARE vbGoodsId          Integer;
   DECLARE vbMovementId       Integer;
   DECLARE vbMovementItemId   Integer;
   DECLARE vbPartnerId        Integer;
   DECLARE vbVATPercent       TFloat;
   DECLARE vbDiscountTax      TFloat;
-  DECLARE vbOperPriceList    TFloat; 
+  DECLARE vbOperPriceList    TFloat;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpGetUserBySession (inSession);
+     -- Временно - Склад
+     vbToId:= 35139;
 
---               RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
+     -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
+
+     -- Проверка
+     /*IF TRIM (COALESCE (inPartNumber, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найден inPartNumber = <%>.', inPartNumber;
+     END IF;*/
 
 
-   IF COALESCE (inArticle,'') <> ''
-   THEN
+     IF COALESCE (inArticle,'') <> ''
+     THEN
           -- поиск в спр. товара
           vbGoodsId := (SELECT ObjectString_Article.ObjectId
                         FROM ObjectString AS ObjectString_Article
-                             INNER JOIN Object ON Object.Id = ObjectString_Article.ObjectId
-                                              AND Object.DescId = zc_Object_Goods()
+                             INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
+                                              AND Object.DescId   = zc_Object_Goods()
                                               AND Object.isErased = FALSE
-                        WHERE ObjectString_Article.DescId = zc_ObjectString_Article()
-                          AND ObjectString_Article.ValueData = inArticle
-                        limit 1
-                        );
-   
+                        WHERE ObjectString_Article.ValueData = inArticle
+                          AND ObjectString_Article.DescId    = zc_ObjectString_Article()
+                        LIMIT 1
+                       );
+
           -- Eсли не нашли пропускаем
           IF COALESCE (vbGoodsId,0) = 0
           THEN
@@ -51,30 +60,30 @@ BEGIN
           SELECT Object_Partner.Id
                , ObjectFloat_TaxKind_Value.ValueData::TFloat
                , ObjectFloat_DiscountTax.ValueData ::TFloat
-          INTO vbPartnerId, vbVATPercent, vbDiscountTax
-           FROM ObjectLink AS ObjectLink_Goods_Partner
-                LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
+                 INTO vbPartnerId, vbVATPercent, vbDiscountTax
+          FROM ObjectLink AS ObjectLink_Goods_Partner
+               LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Goods_Partner.ChildObjectId
 
-                LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                     ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
-                                    AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
-      
-                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                      ON ObjectFloat_TaxKind_Value.ObjectId = COALESCE (ObjectLink_TaxKind.ChildObjectId, zc_Enum_TaxKind_Basis())
-                                     AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+               LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                    ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
+                                   AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
 
-                LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
-                                      ON ObjectFloat_DiscountTax.ObjectId = Object_Partner.Id
-                                     AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Partner_DiscountTax()
+               LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                     ON ObjectFloat_TaxKind_Value.ObjectId = COALESCE (ObjectLink_TaxKind.ChildObjectId, zc_Enum_TaxKind_Basis())
+                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
-           WHERE ObjectLink_Goods_Partner.ObjectId = vbGoodsId
-             AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
-           limit 1;
+               LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax
+                                     ON ObjectFloat_DiscountTax.ObjectId = Object_Partner.Id
+                                    AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Partner_DiscountTax()
+
+          WHERE ObjectLink_Goods_Partner.ObjectId = vbGoodsId
+            AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+          --LIMIT 1
+         ;
 
           -- Eсли не нашли пропускаем
           IF COALESCE (vbPartnerId,0) = 0
           THEN
-                
                RETURN;
           END IF;
 
@@ -83,95 +92,94 @@ BEGIN
                            FROM Movement
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                               ON MovementLinkObject_From.MovementId = Movement.Id
-                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                             AND MovementLinkObject_From.ObjectId = vbPartnerId
+                                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                             AND MovementLinkObject_From.ObjectId   = vbPartnerId
                                 INNER JOIN MovementString AS MovementString_Comment
                                                           ON MovementString_Comment.MovementId = Movement.Id
-                                                         AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                                                         AND MovementString_Comment.ValueData = 'auto S/N'
-                           WHERE Movement.DescId = zc_Movement_Income()
-                             AND Movement.OperDate = inOperDate
+                                                         AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+                                                         AND MovementString_Comment.ValueData  ILIKE 'auto S/N'
+                           WHERE Movement.OperDate = inOperDate
+                             AND Movement.DescId   = zc_Movement_Income()
                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                           );
+                          );
           -- Eсли не нашли создаем
           IF COALESCE (vbMovementId,0) = 0
           THEN
                --
                vbMovementId := lpInsertUpdate_Movement_Income(ioId                 := 0
-                                                            , inInvNumber          := CAST (NEXTVAL ('movement_Income_seq') AS TVarChar) 
-                                                            , inInvNumberPartner   := ''            ::TVarChar
-                                                            , inOperDate           := inOperDate    ::TDateTime
-                                                            , inOperDatePartner    := NULL          ::TDateTime
-                                                            , inPriceWithVAT       := False         ::Boolean
-                                                            , inVATPercent         := vbVATPercent  ::TFloat
-                                                            , inDiscountTax        := vbDiscountTax ::TFloat
-                                                            , inFromId             := vbPartnerId   ::Integer
-                                                            , inToId               := 35139         ::Integer -- Склад
-                                                            , inPaidKindId         := zc_Enum_PaidKind_FirstForm() ::Integer
-                                                            , inComment            := 'auto S/N'    ::TVarChar
-                                                            , inUserId             := vbUserId      ::Integer
+                                                            , inInvNumber          := CAST (NEXTVAL ('movement_Income_seq') AS TVarChar)
+                                                            , inInvNumberPartner   := ''
+                                                            , inOperDate           := inOperDate
+                                                            , inOperDatePartner    := inOperDate
+                                                            , inPriceWithVAT       := FALSE
+                                                            , inVATPercent         := vbVATPercent
+                                                            , inDiscountTax        := vbDiscountTax
+                                                            , inFromId             := vbPartnerId
+                                                            , inToId               := vbToId
+                                                            , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
+                                                            , inComment            := 'auto S/N'
+                                                            , inUserId             := vbUserId
                                                             );
           END IF;
-          
-          --ищем такой товар, вдруг уже загрузили, тогда обновляем 
+
+          -- поиск элемента с таким товаром + Партия, вдруг уже загрузили, тогда обновляем
           vbMovementItemId := (SELECT MovementItem.Id
                                FROM MovementItem
-                                 INNER JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                             AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                                    LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                 ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
                                WHERE MovementItem.MovementId = vbMovementId
                                  AND MovementItem.DescId     = zc_MI_Master()
-                                 AND MovementItem.isErased   = False
-                                 AND MovementItem.ObjectId = vbGoodsId
-                                 
-                               );
-                               
+                                 AND MovementItem.isErased   = FALSE
+                                 AND MovementItem.ObjectId   = vbGoodsId
+                                 AND COALESCE (MIString_PartNumber.ValueData, '') = inPartNumber
+
+                              );
+
           -- сохранили <Элемент документа>
-          vbMovementItemId:= lpInsertUpdate_MovementItem_Income (ioId            := COALESCE (vbMovementItemId,0) ::Integer
-                                                               , inMovementId    := vbMovementId ::Integer
-                                                               , inPartionId     := Null         ::Integer
-                                                               , inGoodsId       := vbGoodsId    ::Integer
-                                                               , inAmount        := 1            ::TFloat
-                                                               , inOperPrice     := inPrice      ::TFloat
-                                                               , inCountForPrice := 1            ::TFloat
-                                                               , inPartNumber    := COALESCE(inPartNumber,'') ::TVarChar
-                                                               , inComment       := ''           ::TVarChar
-                                                               , inUserId        := vbUserId     ::Integer
-                                                               );
+          vbMovementItemId:= lpInsertUpdate_MovementItem_Income (ioId            := vbMovementItemId
+                                                               , inMovementId    := vbMovementId
+                                                               , inGoodsId       := vbGoodsId
+                                                               , inAmount        := 1
+                                                               , inOperPrice     := inPrice
+                                                               , inCountForPrice := 1
+                                                               , inPartNumber    := inPartNumber
+                                                               , inComment       := ''
+                                                               , inUserId        := vbUserId
+                                                                );
 
 
 
-         --цена продажи из базового прайса
+         -- цена продажи из базового прайса
          vbOperPriceList :=(SELECT tmp.ValuePrice
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := inOperDate) AS tmp
                             WHERE tmp.GoodsId = vbGoodsId
-                            );
-                       
-          --сохраняем партию
-          PERFORM lpInsertUpdate_Object_PartionGoods(inMovementItemId    := vbMovementItemId     ::Integer       -- Ключ партии
-                                                   , inMovementId        := vbMovementId         ::Integer       -- Ключ Документа
-                                                   , inFromId            := vbPartnerId          ::Integer       -- Поставщик или Подразделение (место сборки)
-                                                   , inUnitId            := 0                    ::Integer       -- Подразделение(прихода)
-                                                   , inOperDate          := inOperDate           ::TDateTime     -- Дата прихода
-                                                   , inObjectId          := vbGoodsId            ::Integer       -- Комплектующие или Лодка
-                                                   , inAmount            := 1                    ::TFloat        -- Кол-во приход
-                                                   , inEKPrice           := inPrice              ::TFloat        -- Цена вх. без НДС
-                                                   , inCountForPrice     := 1                    ::TFloat  -- Цена за количество
-                                                   , inEmpfPrice         := ObjectFloat_EmpfPrice.ValueData ::TFloat        -- Цена рекоменд. без НДС
-                                                   , inOperPriceList     := COALESCE (vbOperPriceList,0)      ::TFloat        -- Цена продажи, !!!грн!!!
-                                                   , inOperPriceList_old := 0                    ::TFloat        -- Цена продажи, ДО изменения строки
-                                                   , inGoodsGroupId      := ObjectLink_Goods_GoodsGroup.ChildObjectId       ::Integer       -- Группа товара
-                                                   , inGoodsTagId        := ObjectLink_Goods_GoodsTag.ChildObjectId         ::Integer       -- Категория
-                                                   , inGoodsTypeId       := ObjectLink_Goods_GoodsType.ChildObjectId        ::Integer       -- Тип детали 
-                                                   , inGoodsSizeId       := ObjectLink_Goods_GoodsSize.ChildObjectId        ::Integer       -- Размер
-                                                   , inProdColorId       := ObjectLink_Goods_ProdColor.ChildObjectId        ::Integer       -- Цвет
-                                                   , inMeasureId         := ObjectLink_Goods_Measure.ChildObjectId          ::Integer       -- Единица измерения
-                                                   , inTaxKindId         := COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, 0) ::Integer       -- Тип НДС (!информативно!)
-                                                   , inTaxKindValue      := COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) ::TFloat        -- Значение НДС (!информативно!)
-                                                   , inUserId            := vbUserId             ::Integer       --
-                                                 )
+                           );
+
+          -- сохраняем партию
+          PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := vbMovementItemId
+                                                    , inMovementId        := vbMovementId
+                                                    , inFromId            := vbPartnerId
+                                                    , inUnitId            := vbToId
+                                                    , inOperDate          := inOperDate
+                                                    , inObjectId          := vbGoodsId
+                                                    , inAmount            := 1
+                                                    , inEKPrice           := inPrice
+                                                    , inCountForPrice     := 1
+                                                    , inEmpfPrice         := ObjectFloat_EmpfPrice.ValueData
+                                                    , inOperPriceList     := vbOperPriceList
+                                                    , inOperPriceList_old := 0
+                                                    , inGoodsGroupId      := ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                    , inGoodsTagId        := ObjectLink_Goods_GoodsTag.ChildObjectId
+                                                    , inGoodsTypeId       := ObjectLink_Goods_GoodsType.ChildObjectId
+                                                    , inGoodsSizeId       := ObjectLink_Goods_GoodsSize.ChildObjectId
+                                                    , inProdColorId       := ObjectLink_Goods_ProdColor.ChildObjectId
+                                                    , inMeasureId         := ObjectLink_Goods_Measure.ChildObjectId
+                                                    , inTaxKindId         := COALESCE (ObjectLink_Goods_TaxKind.ChildObjectId, 0)
+                                                    , inTaxKindValue      := COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0)
+                                                    , inUserId            := vbUserId
+                                                     )
           FROM Object
                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = Object.Id
@@ -202,7 +210,7 @@ BEGIN
                                     AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
           WHERE Object.Id = vbGoodsId;
 
-   END IF;
+     END IF;
 
 END;
 $BODY$

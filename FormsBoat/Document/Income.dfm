@@ -2342,14 +2342,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -3052,14 +3044,6 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

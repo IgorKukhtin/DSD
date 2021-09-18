@@ -1,12 +1,13 @@
 -- Function: lpInsertUpdate_MI_Income_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Income_Child (Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Income_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Income_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer   , -- Заказ Клиента
+    IN inPartionId              Integer   , -- Партия
     IN inObjectId               Integer   , -- Комплектующие
     IN inAmount                 TFloat    , -- Количество резерв
     IN inUserId                 Integer     -- сессия пользователя
@@ -21,7 +22,7 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, Null, inMovementId, inAmount, inParentId, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inPartionId, inMovementId, inAmount, inParentId, inUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);
