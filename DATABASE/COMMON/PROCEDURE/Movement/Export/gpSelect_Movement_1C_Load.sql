@@ -100,6 +100,8 @@ BEGIN
                    )
         , tmpMF AS (SELECT MovementFloat.* FROM MovementFloat WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                    )
+        , tmpMF_TotalSumm AS (SELECT tmpMF.* FROM tmpMF WHERE tmpMF.DescId = zc_MovementFloat_TotalSumm()
+                             )
        , tmpMov AS (SELECT Movement.*
                          , tmpContract.InfoMoneyId
                          , Object_Partner.Id                AS PartnerId
@@ -126,7 +128,7 @@ BEGIN
                                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                                 AND Movement.DescId <> zc_Movement_Sale()
-                         LEFT JOIN tmpMF AS MovementFloat_TotalSumm
+                         LEFT JOIN tmpMF_TotalSumm AS MovementFloat_TotalSumm
                                                  ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
       
