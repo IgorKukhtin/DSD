@@ -324,7 +324,7 @@ BEGIN
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
 
-        IF vbUserId in (12325076, 6406669)
+        IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
         THEN
           SELECT ObjectLink_Unit_Parent.ChildObjectId
           INTO vbParentId
