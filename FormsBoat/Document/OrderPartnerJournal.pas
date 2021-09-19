@@ -61,7 +61,7 @@ type
     actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;
     bbUnComplete: TdxBarButton;
-    N2: TMenuItem;
+    miUpdate: TMenuItem;
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
@@ -82,11 +82,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     InvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
-    actMIContainer: TdsdOpenForm;
-    bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;
@@ -100,11 +95,10 @@ type
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
+    mactSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;

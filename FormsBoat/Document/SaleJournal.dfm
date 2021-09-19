@@ -12,7 +12,7 @@ object SaleJournalForm: TSaleJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
@@ -229,7 +229,7 @@ object SaleJournalForm: TSaleJournalForm
         Width = 91
       end
       object ToName: TcxGridDBColumn
-        Caption = 'Lieferanten'
+        Caption = 'Kunden'
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -516,12 +516,10 @@ object SaleJournalForm: TSaleJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -543,10 +541,6 @@ object SaleJournalForm: TSaleJournalForm
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -579,13 +573,65 @@ object SaleJournalForm: TSaleJournalForm
     Images = dmMain.ImageList
     Left = 80
     Top = 64
+    object actMIContainer: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -650,38 +696,24 @@ object SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsert: TdsdInsertUpdateAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      FormName = 'TSaleForm'
-      FormNameParam.Value = 'TSaleForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spSelect
+      StoredProcList = <
         item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
+          StoredProc = spSelect
         end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object MovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -713,11 +745,46 @@ object SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = False
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TSaleForm'
       FormNameParam.Value = 'TSaleForm'
       FormNameParam.DataType = ftString
@@ -749,20 +816,6 @@ object SaleJournalForm: TSaleJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUnComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spMovementUnComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementUnComplete
-        end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
-      Status = mtUncomplete
-      DataSource = DataSource
-    end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -775,6 +828,20 @@ object SaleJournalForm: TSaleJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = DataSource
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
       DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
@@ -791,27 +858,28 @@ object SaleJournalForm: TSaleJournalForm
       Status = mtDelete
       DataSource = DataSource
     end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
-    end
-    object actCompleteList: TMultiAction
+    object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleCompleteList
+          Action = mactSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object mactCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactSimpleCompleteList
         end
         item
           Action = actRefresh
@@ -822,12 +890,12 @@ object SaleJournalForm: TSaleJournalForm
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 12
     end
-    object actUnCompleteList: TMultiAction
+    object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleUncompleteList
+          Action = mactSimpleUncompleteList
         end
         item
           Action = actRefresh
@@ -838,18 +906,76 @@ object SaleJournalForm: TSaleJournalForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 11
     end
-    object actSetErasedList: TMultiAction
+    object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = spErased
+          Action = mactSimpleErasedList
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
+    end
+    object mactSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object mactSimpleCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object mactSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object mactSimpleErasedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
     end
     object spCompete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -873,25 +999,6 @@ object SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'spUncomplete'
     end
-    object actShowErased: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
-    end
     object spErased: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -902,146 +1009,6 @@ object SaleJournalForm: TSaleJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
-    end
-    object actSimpleCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spCompete
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-    end
-    object actSimpleUncompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUncomplete
-        end>
-      View = cxGridDBTableView
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-    end
-    object actSimpleErased: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleErased
-        end
-        item
-          Action = actRefresh
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-    end
-    object actMIContainer: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 57
-      FormName = 'TMovementItemContainerForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object spReCompete: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementReComplete
-        end>
-      Caption = 'spReCompete'
-    end
-    object actSimpleReCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spReCompete
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-    end
-    object ExecuteDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      RefreshDispatcher = RefreshDispatcher
-      OpenBeforeShow = True
-    end
-    object actReCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleReCompleteList
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      ImageIndex = 12
-    end
-    object actRefreshStart: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object actPrintStickerTermo: TdsdPrintAction
       Category = 'DSDLib'
@@ -1275,7 +1242,7 @@ object SaleJournalForm: TSaleJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale'
     DataSet = ClientDataSet
     DataSets = <
@@ -1354,16 +1321,16 @@ object SaleJournalForm: TSaleJournalForm
       Caption = '-'
     end
     object N1: TMenuItem
-      Action = actReCompleteList
+      Action = mactReCompleteList
     end
     object N10: TMenuItem
-      Action = actCompleteList
+      Action = mactCompleteList
     end
     object N11: TMenuItem
-      Action = actUnCompleteList
+      Action = mactUnCompleteList
     end
     object N12: TMenuItem
-      Action = actSetErasedList
+      Action = mactSetErasedList
     end
   end
   object spMovementUnComplete: TdsdStoredProc
@@ -1448,31 +1415,6 @@ object SaleJournalForm: TSaleJournalForm
       end>
     Left = 584
     Top = 48
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Sale'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
   end
   object spSelectPrintOld: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

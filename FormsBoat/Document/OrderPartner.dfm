@@ -798,8 +798,33 @@ object OrderPartnerForm: TOrderPartnerForm
               DataBinding.FieldName = 'FromName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1054#1090' '#1082#1086#1075#1086
+              HeaderHint = #1050#1083#1080#1077#1085#1090
               Width = 103
+            end
+            object CIN_ch3: TcxGridDBColumn
+              Caption = 'CIN Nr. (Boat)'
+              DataBinding.FieldName = 'CIN'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 100
+            end
+            object EngineNum_ch3: TcxGridDBColumn
+              Caption = 'Engine Nr. (Boat)'
+              DataBinding.FieldName = 'EngineNum'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
+            end
+            object EngineName_ch3: TcxGridDBColumn
+              Caption = 'Engine (Boat)'
+              DataBinding.FieldName = 'EngineName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
             end
             object ProductName_ch3: TcxGridDBColumn
               Caption = 'Boat'
@@ -810,17 +835,10 @@ object OrderPartnerForm: TOrderPartnerForm
               Options.Editing = False
               Width = 163
             end
-            object CIN_ch3: TcxGridDBColumn
-              Caption = 'CIN Nr. (boat)'
-              DataBinding.FieldName = 'CIN'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 100
-            end
             object BrandName_ch3: TcxGridDBColumn
-              Caption = 'Brand  (boat)'
+              Caption = 'Brand (Boat)'
               DataBinding.FieldName = 'BrandName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -890,7 +908,7 @@ object OrderPartnerForm: TOrderPartnerForm
               Options.Editing = False
               Width = 70
             end
-            object GoodsId: TcxGridDBColumn
+            object GoodsId_ch3: TcxGridDBColumn
               DataBinding.FieldName = 'GoodsId'
               Visible = False
               VisibleForCustomization = False

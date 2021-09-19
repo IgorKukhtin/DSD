@@ -619,6 +619,29 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 100
             end
+            object EngineNum: TcxGridDBColumn
+              Caption = 'Engine Nr.'
+              DataBinding.FieldName = 'EngineNum'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 80
+            end
+            object EngineName: TcxGridDBColumn
+              Caption = 'Engine'
+              DataBinding.FieldName = 'EngineName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
+            end
             object GoodsName: TcxGridDBColumn
               Caption = #1051#1086#1076#1082#1072' / '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
               DataBinding.FieldName = 'ObjectName'

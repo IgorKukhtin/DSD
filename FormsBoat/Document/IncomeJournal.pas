@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -99,7 +99,7 @@ type
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
+    mactSimpleReCompleteList: TMultiAction;
     mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;

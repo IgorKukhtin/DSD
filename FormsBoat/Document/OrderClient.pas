@@ -379,6 +379,8 @@ type
     bbOpenForm_Invoice: TdxBarButton;
     actOpenBankAccountJournalByInvoice: TdsdOpenForm;
     bbOpenBankAccountJournalByInvoice: TdxBarButton;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

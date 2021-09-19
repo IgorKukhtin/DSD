@@ -186,6 +186,8 @@ type
     spUpdate_MI_Child: TdsdStoredProc;
     actUpdate_MI_Child: TdsdExecStoredProc;
     bbUpdate_MI_Child: TdxBarButton;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

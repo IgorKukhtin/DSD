@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -82,11 +82,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     InvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
-    actMIContainer: TdsdOpenForm;
-    bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;
@@ -100,11 +95,10 @@ type
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactSimpleReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
@@ -119,6 +113,8 @@ type
     spSelectPrint_barcode: TdsdStoredProc;
     actPrintBarcode: TdsdPrintAction;
     bbPrintBarcode: TdxBarButton;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

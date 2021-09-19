@@ -172,6 +172,8 @@ type
     cxLabel9: TcxLabel;
     ceComment_parent: TcxTextEdit;
     GuidesParent: TdsdGuides;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

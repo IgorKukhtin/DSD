@@ -3,7 +3,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 850
   AddOnFormData.isSingle = False
   ExplicitWidth = 866
-  ExplicitHeight = 714
+  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -125,6 +125,76 @@ inherited AncestorJournalForm: TAncestorJournalForm
   inherited ActionList: TActionList
     Left = 183
     Top = 210
+    object actMovementItemContainer: TdsdOpenForm [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actShowErased: TBooleanStoredProcAction [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -218,20 +288,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUnComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spMovementUnComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementUnComplete
-        end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 11
-      Status = mtUncomplete
-      DataSource = MasterDS
-    end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -244,6 +300,20 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = MasterDS
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 11
+      Status = mtUncomplete
       DataSource = MasterDS
     end
     object actSetErased: TdsdChangeMovementStatus
@@ -260,12 +330,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtDelete
       DataSource = MasterDS
     end
-    object actReCompleteList: TMultiAction
+    object mactReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleReCompleteList
+          Action = mactSimpleReCompleteList
         end
         item
           Action = actRefresh
@@ -276,12 +346,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object actCompleteList: TMultiAction
+    object mactCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleCompleteList
+          Action = mactSimpleCompleteList
         end
         item
           Action = actRefresh
@@ -292,12 +362,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
-    object actUnCompleteList: TMultiAction
+    object mactUnCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleUncompleteList
+          Action = mactSimpleUncompleteList
         end
         item
           Action = actRefresh
@@ -308,12 +378,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 11
     end
-    object actSetErasedList: TMultiAction
+    object mactSetErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleErased
+          Action = mactSimpleErasedList
         end
         item
           Action = actRefresh
@@ -324,75 +394,49 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
     end
-    object actMovementItemContainer: TdsdOpenForm
+    object mactSimpleReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 57
-      FormName = 'TMovementItemContainerForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          Action = spReCompete
         end>
-      isShowModal = False
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object MovementProtocolOpenForm: TdsdOpenForm
+    object mactSimpleCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 34
-      FormName = 'TMovementProtocolForm'
-      FormNameParam.Value = 'TMovementProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          Action = spCompete
         end>
-      isShowModal = False
+      View = cxGridDBTableView
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object actShowErased: TBooleanStoredProcAction
+    object mactSimpleUncompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spSelect
+          Action = spUncomplete
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object mactSimpleErasedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
     object spReCompete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -437,50 +481,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
-    end
-    object actSimpleCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spCompete
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-    end
-    object actSimpleUncompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUncomplete
-        end>
-      View = cxGridDBTableView
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-    end
-    object actSimpleReCompleteList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spReCompete
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-    end
-    object actSimpleErased: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spErased
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
   end
   inherited MasterDS: TDataSource
@@ -593,6 +593,9 @@ inherited AncestorJournalForm: TAncestorJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
@@ -668,16 +671,16 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = '-'
     end
     object miReComplete: TMenuItem [7]
-      Action = actReCompleteList
+      Action = mactReCompleteList
     end
     object N10: TMenuItem [8]
-      Action = actCompleteList
+      Action = mactCompleteList
     end
     object N11: TMenuItem [9]
-      Action = actUnCompleteList
+      Action = mactUnCompleteList
     end
     object N12: TMenuItem [10]
-      Action = actSetErasedList
+      Action = mactSetErasedList
     end
     object N6: TMenuItem [11]
       Caption = '-'

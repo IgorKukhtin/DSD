@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -78,9 +78,6 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
@@ -96,11 +93,10 @@ type
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactSimpleReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;

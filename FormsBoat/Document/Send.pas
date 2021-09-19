@@ -175,6 +175,8 @@ type
     bbOpenFormOrderClient: TdxBarButton;
     bbOpenFormOrderPartner: TdxBarButton;
     isOn: TcxGridDBColumn;
+    EngineNum_ch2: TcxGridDBColumn;
+    EngineName_ch2: TcxGridDBColumn;
   private
   public
   end;

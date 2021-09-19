@@ -305,6 +305,23 @@ object ProductionPersonalForm: TProductionPersonalForm
             Options.Editing = False
             Width = 100
           end
+          object EngineNum: TcxGridDBColumn
+            Caption = 'Engine Nr.'
+            DataBinding.FieldName = 'EngineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EngineName: TcxGridDBColumn
+            Caption = 'Engine'
+            DataBinding.FieldName = 'EngineName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'

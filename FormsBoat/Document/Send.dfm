@@ -581,6 +581,28 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
+          object EngineNum_ch2: TcxGridDBColumn
+            Caption = 'Engine Nr.'
+            DataBinding.FieldName = 'EngineNum'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object EngineName_ch2: TcxGridDBColumn
+            DataBinding.FieldName = 'EngineName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object ProductName_ch2: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'

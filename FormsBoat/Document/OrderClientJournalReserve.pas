@@ -37,9 +37,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -54,17 +52,8 @@ type
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    actComplete: TdsdChangeMovementStatus;
-    spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
-    bbComplete: TdxBarButton;
-    actUnComplete: TdsdChangeMovementStatus;
-    spMovementUnComplete: TdsdStoredProc;
-    bbUnComplete: TdxBarButton;
-    N2: TMenuItem;
-    bbDelete: TdxBarButton;
-    actSetErased: TdsdChangeMovementStatus;
-    spMovementSetErased: TdsdStoredProc;
+    miUpdate: TMenuItem;
     PriceWithVAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
@@ -82,11 +71,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     InvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
-    actMIContainer: TdsdOpenForm;
-    bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;
@@ -98,13 +82,7 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     Comment: TcxGridDBColumn;
-    spMovementReComplete: TdsdStoredProc;
-    spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
-    N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
@@ -119,7 +97,7 @@ type
     cxLabel6: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    dsdChoiceGuides1: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     cbPeriodAll: TcxCheckBox;
     actRefreshPeriod: TdsdDataSetRefresh;
@@ -127,6 +105,8 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     edArticle: TcxTextEdit;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

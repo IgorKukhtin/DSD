@@ -203,12 +203,14 @@ type
     macErasedMI_Master_list: TMultiAction;
     macErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
-    GoodsId: TcxGridDBColumn;
+    GoodsId_ch3: TcxGridDBColumn;
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
     cxLabel9: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
     GuidesInvoice: TdsdGuides;
+    EngineNum_ch3: TcxGridDBColumn;
+    EngineName_ch3: TcxGridDBColumn;
   private
   public
   end;

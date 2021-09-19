@@ -149,6 +149,8 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

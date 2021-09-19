@@ -37,10 +37,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
+    spSelect: TdsdStoredProc;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
@@ -54,17 +51,7 @@ type
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    actComplete: TdsdChangeMovementStatus;
-    spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
-    bbComplete: TdxBarButton;
-    actUnComplete: TdsdChangeMovementStatus;
-    spMovementUnComplete: TdsdStoredProc;
-    bbUnComplete: TdxBarButton;
-    N2: TMenuItem;
-    bbDelete: TdxBarButton;
-    actSetErased: TdsdChangeMovementStatus;
-    spMovementSetErased: TdsdStoredProc;
     PriceWithVAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
@@ -82,11 +69,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     InvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
-    actMIContainer: TdsdOpenForm;
-    bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;
@@ -98,13 +80,7 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     Comment: TcxGridDBColumn;
-    spMovementReComplete: TdsdStoredProc;
-    spReCompete: TdsdExecStoredProc;
-    actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
-    N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
@@ -119,9 +95,13 @@ type
     cxLabel6: TcxLabel;
     edClient: TcxButtonEdit;
     GuidesClient: TdsdGuides;
-    dsdChoiceGuides1: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     BarCode: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    miUpdate: TMenuItem;
+    EngineNum: TcxGridDBColumn;
+    EngineName: TcxGridDBColumn;
   private
   public
   end;

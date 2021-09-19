@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderPartner_Child(
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, Invnumber TVarChar, StatusCode Integer
              , FromId Integer, FromCode Integer, FromName TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
+             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountPartner TFloat
              , OperPrice TFloat
@@ -60,6 +60,8 @@ BEGIN
            , Object_Brand.Id                            AS BrandId
            , Object_Brand.ValueData                     AS BrandName
            , ObjectString_CIN.ValueData                 AS CIN
+           , ObjectString_EngineNum.ValueData           AS EngineNum
+           , Object_Engine.ValueData                    AS EngineName
 
            , MovementItem.Id                          AS Id
            , Object_Goods.Id                          AS GoodsId
@@ -72,7 +74,7 @@ BEGIN
 
            , ObjectString_Article.ValueData AS Article
            , Object_PartionGoods.EKPrice
-                           
+
        FROM tmpOrderClient AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
@@ -103,6 +105,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_CIN
                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+            LEFT JOIN ObjectString AS ObjectString_EngineNum
+                                   ON ObjectString_EngineNum.ObjectId = Object_Product.Id
+                                  AND ObjectString_EngineNum.DescId   = zc_ObjectString_Product_EngineNum()
+            LEFT JOIN ObjectLink AS ObjectLink_Engine
+                                 ON ObjectLink_Engine.ObjectId = Object_Product.Id
+                                AND ObjectLink_Engine.DescId   = zc_ObjectLink_Product_Engine()
+            LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Brand
                                  ON ObjectLink_Brand.ObjectId = Object_Product.Id
                                 AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
@@ -115,7 +124,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.04.21         *
 */
 

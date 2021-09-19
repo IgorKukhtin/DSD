@@ -199,6 +199,8 @@ type
     actOpenFormOrderClient: TdsdOpenForm;
     bbOpenFormOrderPartner: TdxBarButton;
     bbOpenFormOrderClient: TdxBarButton;
+    EngineNum_ch2: TcxGridDBColumn;
+    EngineName_ch2: TcxGridDBColumn;
   private
   public
   end;

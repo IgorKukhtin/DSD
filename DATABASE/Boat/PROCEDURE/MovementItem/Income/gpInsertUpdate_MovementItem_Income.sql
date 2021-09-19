@@ -132,7 +132,7 @@ BEGIN
           LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.ObjectId   = vbGoodsId
+       AND MovementItem.ObjectId   = inGoodsId
        AND MovementItem.Id         <> ioId
        AND COALESCE (MIF.ValueData, 0) <> inOperPriceList
      ;

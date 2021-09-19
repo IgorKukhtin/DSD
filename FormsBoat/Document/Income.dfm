@@ -846,6 +846,29 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object EngineNum_ch2: TcxGridDBColumn
+            Caption = 'Engine Nr.'
+            DataBinding.FieldName = 'EngineNum'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object EngineName_ch2: TcxGridDBColumn
+            Caption = 'Engine'
+            DataBinding.FieldName = 'EngineName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object ProductName_ch2: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
@@ -888,6 +911,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0

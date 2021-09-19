@@ -663,10 +663,10 @@ object IncomeJournalForm: TIncomeJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -853,10 +853,10 @@ object IncomeJournalForm: TIncomeJournalForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1017,7 +1017,7 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleReCompleteList
+          Action = mactSimpleReCompleteList
         end
         item
           Action = actRefresh
@@ -1033,7 +1033,7 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleCompleteList
+          Action = mactSimpleCompleteList
         end
         item
           Action = actRefresh
@@ -1049,7 +1049,7 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleUncompleteList
+          Action = mactSimpleUncompleteList
         end
         item
           Action = actRefresh
@@ -1065,7 +1065,7 @@ object IncomeJournalForm: TIncomeJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSimpleErased
+          Action = mactSimpleErasedList
         end
         item
           Action = actRefresh
@@ -1076,7 +1076,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
     end
-    object actSimpleReCompleteList: TMultiAction
+    object mactSimpleReCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1087,7 +1087,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object actSimpleCompleteList: TMultiAction
+    object mactSimpleCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1098,7 +1098,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object actSimpleUncompleteList: TMultiAction
+    object mactSimpleUncompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1109,15 +1109,12 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object actSimpleErased: TMultiAction
+    object mactSimpleErasedList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
           Action = spErased
-        end
-        item
-          Action = actRefresh
         end>
       View = cxGridDBTableView
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
@@ -1287,7 +1284,7 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income'
     DataSet = ClientDataSet
     DataSets = <

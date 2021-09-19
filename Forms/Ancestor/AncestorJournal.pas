@@ -58,9 +58,9 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     N12: TMenuItem;
-    actCompleteList: TMultiAction;
-    actUnCompleteList: TMultiAction;
-    actSetErasedList: TMultiAction;
+    mactCompleteList: TMultiAction;
+    mactUnCompleteList: TMultiAction;
+    mactSetErasedList: TMultiAction;
     actMovementItemContainer: TdsdOpenForm;
     bbMovementItemContainer: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
@@ -69,15 +69,15 @@ type
     spCompete: TdsdExecStoredProc;
     spUncomplete: TdsdExecStoredProc;
     spErased: TdsdExecStoredProc;
-    actSimpleCompleteList: TMultiAction;
-    actSimpleUncompleteList: TMultiAction;
-    actSimpleErased: TMultiAction;
+    mactSimpleCompleteList: TMultiAction;
+    mactSimpleUncompleteList: TMultiAction;
+    mactSimpleErasedList: TMultiAction;
     bbInsertMask: TdxBarButton;
-    actSimpleReCompleteList: TMultiAction;
+    mactSimpleReCompleteList: TMultiAction;
     spReCompete: TdsdExecStoredProc;
     spMovementReComplete: TdsdStoredProc;
     miReComplete: TMenuItem;
-    actReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     bbMovementProtocol: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
   private
