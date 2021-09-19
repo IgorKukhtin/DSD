@@ -93,7 +93,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
   object cxLabel5: TcxLabel
     Left = 8
     Top = 193
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    Caption = #1043#1088#1091#1087#1087#1072':'
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 10

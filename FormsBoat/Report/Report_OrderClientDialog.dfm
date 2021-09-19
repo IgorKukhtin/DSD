@@ -84,7 +84,7 @@ object Report_OrderClientDialogForm: TReport_OrderClientDialogForm
   object cxLabel2: TcxLabel
     Left = 253
     Top = 59
-    Caption = #1058#1086#1074#1072#1088':'
+    Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
   end
   object cxLabel6: TcxLabel
     Left = 11

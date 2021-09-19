@@ -699,6 +699,7 @@ BEGIN
                    , (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbPartionId_1 AND MIS.DescId = zc_MIString_PartNumber()))
            <> (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbPartionId_1 AND MIS.DescId = zc_MIString_PartNumber())
            AND vbPartionId_1 > 0
+           AND 1=0
         THEN
             RAISE EXCEPTION 'Ошибка.У Лодки уже установлен Engine Nr = <%>. Нельзя установить новый Engine Nr = <%>'
                           , (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = vbProductId AND OS.DescId = zc_ObjectString_Product_EngineNum() AND OS.ValueData <> '')

@@ -5,7 +5,7 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -410,12 +410,12 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 255
+      Left = 221
       Top = 31
-      Caption = #1058#1086#1074#1072#1088':'
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
     object edGoods: TcxButtonEdit
-      Left = 295
+      Left = 315
       Top = 30
       Properties.Buttons = <
         item
@@ -427,12 +427,12 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
       Width = 209
     end
     object cxLabel8: TcxLabel
-      Left = 228
+      Left = 249
       Top = 6
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
     end
     object edPartner: TcxButtonEdit
-      Left = 295
+      Left = 315
       Top = 4
       Properties.Buttons = <
         item
@@ -444,7 +444,7 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
       Width = 209
     end
     object cbisEmpty: TcxCheckBox
-      Left = 520
+      Left = 537
       Top = 4
       Action = actRefreshEmpty
       Properties.ReadOnly = False

@@ -376,6 +376,7 @@ object SaleForm: TSaleForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Width = 80
             end
             object EngineName: TcxGridDBColumn
               Caption = 'Engine'

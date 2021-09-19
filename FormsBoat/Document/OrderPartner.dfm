@@ -527,14 +527,14 @@ object OrderPartnerForm: TOrderPartnerForm
               Width = 70
             end
             object OperPrice: TcxGridDBColumn
-              Caption = 'Ladenpreis'
+              Caption = 'Netto EK'
               DataBinding.FieldName = 'OperPrice'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+              HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
               Options.Editing = False
               Width = 80
             end
@@ -563,7 +563,7 @@ object OrderPartnerForm: TOrderPartnerForm
               Width = 80
             end
             object Summ: TcxGridDBColumn
-              Caption = 'Total LP'
+              Caption = 'Total EK'
               DataBinding.FieldName = 'Summ'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -571,7 +571,7 @@ object OrderPartnerForm: TOrderPartnerForm
               Properties.ReadOnly = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+              HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
               Options.Editing = False
               Width = 91
             end
@@ -592,6 +592,7 @@ object OrderPartnerForm: TOrderPartnerForm
             object Comment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 267
