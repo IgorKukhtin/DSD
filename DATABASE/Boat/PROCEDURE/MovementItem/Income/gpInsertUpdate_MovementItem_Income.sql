@@ -1,16 +1,16 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TDateTime, Integer, Integer
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , Integer, Integer, Integer, Integer, Integer, Integer
                                                           , TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>  
-    --IN inFromId              Integer   , -- 
-    --IN inToId                Integer   , -- 
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    --IN inFromId              Integer   , --
+    --IN inToId                Integer   , --
     --IN inOperDate            TDateTime , --
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
@@ -21,11 +21,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     --IN inTaxKindValue        TFloat    , -- Значение НДС (!информативно!)
     IN inGoodsGroupId        Integer   , -- Группа товара
     IN inGoodsTagId          Integer   , -- Категория
-    IN inGoodsTypeId         Integer   , -- Тип детали 
+    IN inGoodsTypeId         Integer   , -- Тип детали
     IN inGoodsSizeId         Integer   , -- Размер
     IN inProdColorId         Integer   , -- Цвет
     IN inMeasureId           Integer   , -- Единица измерения
-    --IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)                                            
+    --IN inTaxKindId           Integer   , -- Тип НДС (!информативно!)
     IN inPartNumber          TVarChar  , --№ по тех паспорту
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -71,11 +71,11 @@ BEGIN
     ;
 
      --проверка если не нашли TaxKindId - выдается ошибка
-     IF COALESCE (vbTaxKindId,0) = 0 
+     IF COALESCE (vbTaxKindId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не определен Тип НДС.';
      END IF;
-     
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -85,17 +85,18 @@ BEGIN
      ELSE
          vbOperPriceList_old := inOperPriceList;
      END IF;
-     
+
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem_Income (ioId         ::Integer
-                                               , inMovementId ::Integer
-                                               , inGoodsId    ::Integer
-                                               , inAmount     ::TFloat
-                                               , inOperPrice  ::TFloat
-                                               , inCountForPrice ::TFloat
-                                               , inPartNumber ::TVarChar
-                                               , inComment    ::TVarChar
-                                               , vbUserId     ::Integer
+     ioId := lpInsertUpdate_MovementItem_Income (ioId
+                                               , inMovementId
+                                               , inGoodsId
+                                               , inAmount
+                                               , inOperPrice
+                                               , inCountForPrice
+                                               , inOperPriceList
+                                               , inPartNumber
+                                               , inComment
+                                               , vbUserId
                                                );
 
      -- сохранили партию
@@ -113,7 +114,7 @@ BEGIN
                                                , inOperPriceList_old := vbOperPriceList_old  ::TFloat        -- Цена продажи, ДО изменения строки
                                                , inGoodsGroupId      := inGoodsGroupId       ::Integer       -- Группа товара
                                                , inGoodsTagId        := inGoodsTagId         ::Integer       -- Категория
-                                               , inGoodsTypeId       := inGoodsTypeId        ::Integer       -- Тип детали 
+                                               , inGoodsTypeId       := inGoodsTypeId        ::Integer       -- Тип детали
                                                , inGoodsSizeId       := inGoodsSizeId        ::Integer       -- Размер
                                                , inProdColorId       := inProdColorId        ::Integer       -- Цвет
                                                , inMeasureId         := inMeasureId          ::Integer       -- Единица измерения
@@ -121,6 +122,23 @@ BEGIN
                                                , inTaxKindValue      := vbTaxKindValue       ::TFloat        -- Значение НДС (!информативно!)
                                                , inUserId            := vbUserId             ::Integer       --
                                                 );
+
+     -- дописали партию
+     UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId;
+
+     -- по ВСЕМ товарам исправили OperPriceList
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)
+     FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_OperPriceList()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.ObjectId   = vbGoodsId
+       AND MovementItem.Id         <> ioId
+       AND COALESCE (MIF.ValueData, 0) <> inOperPriceList
+     ;
+
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 END;
 $BODY$
@@ -134,4 +152,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
+--

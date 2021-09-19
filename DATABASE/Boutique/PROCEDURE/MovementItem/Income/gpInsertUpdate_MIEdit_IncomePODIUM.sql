@@ -559,7 +559,7 @@ BEGIN
                                                 );
 
 
-     -- по товарам исправили OperPriceList - НЕ для загрузки из Sybase т.к. там ???
+     -- по ВСЕМ товарам исправили OperPriceList - НЕ для загрузки из Sybase т.к. там ???
      IF 1=1 -- vbUserId <> zc_User_Sybase()
      THEN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, inOperPriceList)

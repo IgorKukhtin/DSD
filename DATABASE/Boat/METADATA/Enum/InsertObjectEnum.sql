@@ -99,7 +99,7 @@ BEGIN
     -- Создаем Тип загрузки 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка всех справочников Тест1', 
+                                                       inName          := 'Загрузка справочник Boat', 
                                                        inProcedureName := 'gpInsertUpdate_Object_Boat_From_Excel', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -108,7 +108,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка всех справочников Тест1',
+                                                              inName         := 'Загрузка справочник Boat',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -1345,7 +1345,7 @@ BEGIN
     -- Создаем Тип загрузки 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Групп товаров', 
+                                                       inName          := 'Загрузка справочник Группы комплектующих', 
                                                        inProcedureName := 'gpInsertUpdate_Object_GoodsGroup_From_Excel', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -1354,7 +1354,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Групп товаров',
+                                                              inName         := 'Загрузка справочник Группы комплектующих',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -1454,7 +1454,7 @@ BEGIN
     -- Создаем Тип загрузки 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Постащиков', 
+                                                       inName          := 'Загрузка справочник Поставщики', 
                                                        inProcedureName := 'gpInsertUpdate_Object_Partner_From_Excel', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -1463,7 +1463,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Постащиков',
+                                                              inName         := 'Загрузка справочник Поставщики',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -1851,7 +1851,7 @@ BEGIN
     -- Создаем Тип загрузки 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Артикулов', 
+                                                       inName          := 'Загрузка справочник Комплектующие', 
                                                        inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -1860,7 +1860,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Артикулов',
+                                                              inName         := 'Загрузка справочник Комплектующие',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -1923,7 +1923,7 @@ BEGIN
                                                                 inParamNumber   := 3, 
                                                                 inName          := 'inName', 
                                                                 inParamType     := 'ftString', 
-                                                                inUserParamName := 'Название +', 
+                                                                inUserParamName := 'Название', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -2421,7 +2421,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка УП Статьи, назначение, группы', 
+                                                       inName          := 'Загрузка справочник УП Статьи, назначение, группы', 
                                                        inProcedureName := 'gpInsertUpdate_Object_InfoMoney_Load', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -2430,7 +2430,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка УП Статьи, назначение, группы',
+                                                              inName         := 'Загрузка справочник УП Статьи, назначение, группы',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -2586,7 +2586,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка документов Прихода', 
+                                                       inName          := 'Загрузка документы Приход от Поставщика', 
                                                        inProcedureName := 'gpInsertUpdate_Movement_Income_Load', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -2595,7 +2595,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка документов Прихода',
+                                                              inName         := 'Загрузка документы Приход от Поставщика',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -2715,7 +2715,7 @@ BEGIN
                                                                 inParamNumber   := 6, 
                                                                 inName          := 'inPartNumber', 
                                                                 inParamType     := 'ftString', 
-                                                                inUserParamName := 'Код поставщика (соответствия)', 
+                                                                inUserParamName := '№ по техпаспорту', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -2847,7 +2847,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка документов Прихода S/N', 
+                                                       inName          := 'Загрузка документы S/N Приход от Поставщика', 
                                                        inProcedureName := 'gpInsertUpdate_Movement_IncomeSN_Load', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -2856,7 +2856,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка документов Прихода S/N',
+                                                              inName         := 'Загрузка документы S/N Приход от Поставщика',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
@@ -2994,7 +2994,7 @@ BEGIN
     -- Создаем 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Счетов, назначений, групп', 
+                                                       inName          := 'Загрузка справочник Счета, назначений, групп', 
                                                        inProcedureName := 'gpInsertUpdate_Object_Account_Load', 
                                                        inJSONParamName := '' ::TVarChar,
                                                        inSession       := vbUserId::TVarChar);
@@ -3003,7 +3003,7 @@ BEGIN
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка Счетов, назначений, групп',
+                                                              inName         := 'Загрузка справочник Счета, назначений, групп',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
                                                               inFileTypeId   := zc_Enum_FileTypeKind_Excel(),

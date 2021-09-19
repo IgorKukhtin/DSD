@@ -83,11 +83,6 @@ BEGIN
          --
          INSERT INTO MovementItem (DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
                            VALUES (inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
-         -- дописали партию
-         IF inDescId = zc_MI_Master() AND vbMovementDescId IN (zc_Movement_Income())
-         THEN
-             UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId;
-         END IF;
 
      ELSE
          --
@@ -109,11 +104,6 @@ BEGIN
             --
             INSERT INTO MovementItem (Id, DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
                               VALUES (ioId, inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
-            -- дописали партию
-            IF inDescId = zc_MI_Master() AND vbMovementDescId IN (zc_Movement_Income())
-            THEN
-                UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId;
-            END IF;
 
          END IF;
  

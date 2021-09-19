@@ -33,10 +33,10 @@ BEGIN
      vbToId:= 35139;
 
      -- Проверка
-     IF inPartNumber <> ''
+     /*IF inPartNumber <> ''
      THEN
          RAISE EXCEPTION 'Ошибка.Найден inPartNumber = <%>.', inPartNumber;
-     END IF;
+     END IF;*/
 
 
      -- Загружается, если установлен Код
@@ -64,7 +64,7 @@ BEGIN
                                           AND MovementItem.isErased   = FALSE
                     WHERE Movement.DescId = zc_Movement_Income() AND Movement.StatusId <> zc_Enum_Status_Erased()
                    )
-         THEN 
+         THEN
              RETURN; -- !!!Выход
          END IF;
 
@@ -93,7 +93,12 @@ BEGIN
          ;
 
          -- Eсли не нашли пропускаем
-         IF COALESCE (vbPartnerId,0) = 0 THEN RETURN; END IF;
+         IF COALESCE (vbPartnerId,0) = 0
+         THEN
+             -- RETURN;
+             -- !!!временно
+             vbPartnerId:= 40048;
+         END IF;
 
 
          -- пробуем найти документ
@@ -147,11 +152,11 @@ BEGIN
                                                               , inAmount        := inAmount     ::TFloat
                                                               , inOperPrice     := inPrice      ::TFloat
                                                               , inCountForPrice := 1            ::TFloat
-                                                              , inPartNumber    := inPartNumber ::TVarChar
+                                                              , inOperPriceList := inOperPriceList
+                                                              , inPartNumber    := '' -- !!!ОШИБКА - откуда здесь inPartNumber
                                                               , inComment       := ''           ::TVarChar
                                                               , inUserId        := vbUserId     ::Integer
                                                               );
-
 
 
          -- сохраняем партию
@@ -203,6 +208,9 @@ BEGIN
                                    ON ObjectLink_Goods_ProdColor.ObjectId = Object.Id
                                   AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
          WHERE Object.Id = vbGoodsId;
+
+         -- дописали партию
+         UPDATE MovementItem SET PartionId = vbMovementItemId WHERE MovementItem.Id = vbMovementItemId;
 
      END IF;
 

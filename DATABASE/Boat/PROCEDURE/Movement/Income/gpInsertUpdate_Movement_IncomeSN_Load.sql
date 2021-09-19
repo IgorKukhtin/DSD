@@ -136,6 +136,13 @@ BEGIN
 
                               );
 
+         -- цена продажи из базового прайса
+         vbOperPriceList :=(SELECT tmp.ValuePrice
+                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                                                                     , inOperDate   := inOperDate) AS tmp
+                            WHERE tmp.GoodsId = vbGoodsId
+                           );
+
           -- сохранили <Элемент документа>
           vbMovementItemId:= lpInsertUpdate_MovementItem_Income (ioId            := vbMovementItemId
                                                                , inMovementId    := vbMovementId
@@ -143,19 +150,11 @@ BEGIN
                                                                , inAmount        := 1
                                                                , inOperPrice     := inPrice
                                                                , inCountForPrice := 1
+                                                               , inOperPriceList := COALESCE (vbOperPriceList, 0)
                                                                , inPartNumber    := inPartNumber
                                                                , inComment       := ''
                                                                , inUserId        := vbUserId
                                                                 );
-
-
-
-         -- цена продажи из базового прайса
-         vbOperPriceList :=(SELECT tmp.ValuePrice
-                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                     , inOperDate   := inOperDate) AS tmp
-                            WHERE tmp.GoodsId = vbGoodsId
-                           );
 
           -- сохраняем партию
           PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := vbMovementItemId
@@ -168,7 +167,7 @@ BEGIN
                                                     , inEKPrice           := inPrice
                                                     , inCountForPrice     := 1
                                                     , inEmpfPrice         := ObjectFloat_EmpfPrice.ValueData
-                                                    , inOperPriceList     := vbOperPriceList
+                                                    , inOperPriceList     := COALESCE (vbOperPriceList, 0)
                                                     , inOperPriceList_old := 0
                                                     , inGoodsGroupId      := ObjectLink_Goods_GoodsGroup.ChildObjectId
                                                     , inGoodsTagId        := ObjectLink_Goods_GoodsTag.ChildObjectId
@@ -209,6 +208,9 @@ BEGIN
                                      ON ObjectFloat_EmpfPrice.ObjectId = Object.Id
                                     AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
           WHERE Object.Id = vbGoodsId;
+
+         -- дописали партию
+         UPDATE MovementItem SET PartionId = vbMovementItemId WHERE MovementItem.Id = vbMovementItemId;
 
      END IF;
 

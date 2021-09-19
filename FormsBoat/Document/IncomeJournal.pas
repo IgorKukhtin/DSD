@@ -83,9 +83,7 @@ type
     cxLabel2: TcxLabel;
     OperDatePartner: TcxGridDBColumn;
     InvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
@@ -102,10 +100,9 @@ type
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
-    actReCompleteList: TMultiAction;
+    mactReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    actRefreshStart: TdsdDataSetRefresh;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
@@ -113,11 +110,11 @@ type
     spGetImportSettingId: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting_Income: TdsdExecStoredProc;
-    actStartLoad: TMultiAction;
+    mactStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId_SN: TdsdStoredProc;
     actGetImportSetting_Income_SN: TdsdExecStoredProc;
-    actStartLoad_SN: TMultiAction;
+    mactStartLoad_SN: TMultiAction;
     bbStartLoad_SN: TdxBarButton;
     actDoLoad_SN: TExecuteImportSettingsAction;
   private

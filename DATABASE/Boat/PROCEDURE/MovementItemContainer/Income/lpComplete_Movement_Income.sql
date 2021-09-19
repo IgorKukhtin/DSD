@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Income (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -145,12 +145,12 @@ BEGIN
              , tmp.GoodsId
              , tmp.PartionId
              , tmp.OperCount
-             
+
                -- Цена вх. без НДС, БЕЗ учета скидки
              , tmp.OperPrice AS OperPrice_orig
                -- Цена вх. без НДС, с учетом скидки
              , CASE WHEN vbDiscountTax <> 0 THEN zfCalc_SummDiscountTax (tmp.OperPrice, vbDiscountTax) ELSE tmp.OperPrice END AS OperPrice
-               -- 
+               --
              , tmp.CountForPrice
 
               -- конечная сумма по Поставщику - без НДС
@@ -180,7 +180,7 @@ BEGIN
                     -- учитываем % Скидки для суммы без НДС
                    , CASE WHEN vbPriceWithVAT = TRUE
                                THEN zfCalc_SummDiscountTax
-                                   (zfCalc_Summ_NoVAT 
+                                   (zfCalc_Summ_NoVAT
                                    (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbVATPercent), vbDiscountTax)
                                ELSE zfCalc_SummDiscountTax
                                    (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbDiscountTax)
@@ -610,41 +610,41 @@ BEGIN
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
     ;
-    
-    -- Сохранили "новый" Резерв
-    PERFORM lpInsertUpdate_MI_Income_Child (ioId                     := tmpMI_Child.MovementItemId
-                                          , inParentId               := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
-                                          , inMovementId             := inMovementId
-                                          , inMovementId_OrderClient := COALESCE (_tmpReserveRes.MovementId_order, tmpMI_Child.MovementId_order) :: Integer
-                                          , inPartionId              := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
-                                          , inObjectId               := COALESCE (_tmpReserveRes.GoodsId, tmpMI_Child.GoodsId)
-                                          , inAmount                 := COALESCE (_tmpReserveRes.Amount, 0)
-                                          , inUserId                 := inUserId
-                                           )
-    FROM _tmpReserveRes
-         -- существующие элементы - Резерв
-         FULL JOIN (SELECT MovementItem.Id               AS MovementItemId
-                         , MovementItem.ParentId         AS ParentId
-                         , MovementItem.ObjectId         AS GoodsId
-                         , MIFloat_MovementId.ValueData  AS MovementId_order
-                    FROM MovementItem
-                         LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                       --INNER JOIN MovementItem AS MI_Master
-                       --                        ON MI_Master.Id  = MovementItem.ParentId
-                       --                       -- Мастер НЕ удален
-                       --                       AND MI_Master.isErased = FALSE
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.DescId     = zc_MI_Child()
-                      AND MovementItem.isErased   = FALSE
-                    ) AS tmpMI_Child ON tmpMI_Child.ParentId         = _tmpReserveRes.ParentId
-                                    AND tmpMI_Child.MovementId_order = _tmpReserveRes.MovementId_order
-                                    AND tmpMI_Child.GoodsId          = _tmpReserveRes.GoodsId
-                                    ;
 
-    --         
-    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpReserveRes);
+     -- Сохранили "новый" Резерв
+     PERFORM lpInsertUpdate_MI_Income_Child (ioId                     := tmpMI_Child.MovementItemId
+                                           , inParentId               := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
+                                           , inMovementId             := inMovementId
+                                           , inMovementId_OrderClient := COALESCE (_tmpReserveRes.MovementId_order, tmpMI_Child.MovementId_order) :: Integer
+                                           , inPartionId              := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
+                                           , inObjectId               := COALESCE (_tmpReserveRes.GoodsId, tmpMI_Child.GoodsId)
+                                           , inAmount                 := COALESCE (_tmpReserveRes.Amount, 0)
+                                           , inUserId                 := inUserId
+                                            )
+     FROM _tmpReserveRes
+          -- существующие элементы - Резерв
+          FULL JOIN (SELECT MovementItem.Id               AS MovementItemId
+                          , MovementItem.ParentId         AS ParentId
+                          , MovementItem.ObjectId         AS GoodsId
+                          , MIFloat_MovementId.ValueData  AS MovementId_order
+                     FROM MovementItem
+                          LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                      ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                        --INNER JOIN MovementItem AS MI_Master
+                        --                        ON MI_Master.Id  = MovementItem.ParentId
+                        --                       -- Мастер НЕ удален
+                        --                       AND MI_Master.isErased = FALSE
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId     = zc_MI_Child()
+                       AND MovementItem.isErased   = FALSE
+                     ) AS tmpMI_Child ON tmpMI_Child.ParentId         = _tmpReserveRes.ParentId
+                                     AND tmpMI_Child.MovementId_order = _tmpReserveRes.MovementId_order
+                                     AND tmpMI_Child.GoodsId          = _tmpReserveRes.GoodsId
+                                     ;
+
+     --
+     --RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpReserveRes);
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

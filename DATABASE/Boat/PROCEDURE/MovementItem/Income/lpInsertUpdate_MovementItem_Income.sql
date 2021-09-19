@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за кол.
+    IN inOperPriceList       TFloat    , -- Цена продажи
     IN inPartNumber          TVarChar  , -- № по тех паспорту
     IN inComment             TVarChar  ,
     IN inUserId              Integer     -- сессия пользователя
@@ -22,12 +23,14 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN ioId > 0 THEN ioId ELSE NULL END, inMovementId, inAmount, NULL, inUserId);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
+     -- сохранили свойство <OperPriceList>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
 
      -- <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
@@ -47,7 +50,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
      END IF;
 
-     -- пересчитали Итоговые суммы
+     -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
