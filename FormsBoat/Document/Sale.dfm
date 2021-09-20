@@ -2148,7 +2148,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_parent'
+        Name = 'InvNumber_Parent'
         Value = Null
         Component = GuidesParent
         ComponentItem = 'TextValue'
