@@ -74,7 +74,7 @@ BEGIN
 
                            FROM (SELECT MIContainer.MovementItemId            AS MovementItemId
                                       , Object_PartionGoods.Id                AS PartionGoodsId
-                                      , Object_PartionGoods.ValueData         AS PartionGoods
+                                      , CASE WHEN Object_PartionGoods.ValueData = '0' THEN '' ELSE Object_PartionGoods.ValueData END AS PartionGoods
                                       , ObjectDate_Value.ValueData            AS PartionDate
                                       , ObjectLink_Unit.ChildObjectId         AS UnitId
                                       , ObjectLink_Storage.ChildObjectId      AS StorageId
@@ -385,7 +385,7 @@ BEGIN
                                 , tmp.Price
                            FROM (SELECT MIContainer.MovementItemId            AS MovementItemId
                                       , Object_PartionGoods.Id                AS PartionGoodsId
-                                      , Object_PartionGoods.ValueData         AS PartionGoods
+                                      , CASE WHEN Object_PartionGoods.ValueData = '0' THEN '' ELSE Object_PartionGoods.ValueData END AS PartionGoods
                                       , ObjectDate_Value.ValueData            AS PartionDate
                                       , ObjectLink_Unit.ChildObjectId         AS UnitId
                                       , ObjectLink_Storage.ChildObjectId      AS StorageId
@@ -395,7 +395,8 @@ BEGIN
                                       INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                      ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                                     AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                      LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                      LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id        = CLO_PartionGoods.ObjectId
+
                                       INNER JOIN ObjectLink AS ObjectLink_Unit
                                                             ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id
                                                            AND ObjectLink_Unit.DescId   = zc_ObjectLink_PartionGoods_Unit()
@@ -436,7 +437,7 @@ BEGIN
            , tmpMI_Goods.Count                  AS Count
            , tmpMI_Goods.HeadCount              AS HeadCount
            , COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id ) AS PartionGoodsId
-           , COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, tmpMI_Goods.PartionGoods)    :: TVarChar  AS PartionGoods
+           , COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, CASE WHEN tmpMI_Goods.PartionGoodsId > 0 THEN '' ELSE tmpMI_Goods.PartionGoods END)    :: TVarChar  AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id        AS GoodsKindId_Complete
