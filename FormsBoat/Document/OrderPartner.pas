@@ -211,6 +211,8 @@ type
     GuidesInvoice: TdsdGuides;
     EngineNum_ch3: TcxGridDBColumn;
     EngineName_ch3: TcxGridDBColumn;
+    TotalAmountPartner: TcxGridDBColumn;
+
   private
   public
   end;
