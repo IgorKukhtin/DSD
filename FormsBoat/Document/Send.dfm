@@ -2,8 +2,8 @@ object SendForm: TSendForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 561
-  ClientWidth = 855
+  ClientHeight = 567
+  ClientWidth = 882
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 855
+    Width = 882
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 855
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -165,25 +166,31 @@ object SendForm: TSendForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 855
-    Height = 438
+    Width = 882
+    Height = 444
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 438
-    ClientRectRight = 855
+    ExplicitWidth = 855
+    ExplicitHeight = 438
+    ClientRectBottom = 444
+    ClientRectRight = 882
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 855
+      ExplicitHeight = 414
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 855
-        Height = 261
+        Width = 882
+        Height = 267
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 855
+        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -455,14 +462,16 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 269
-        Width = 855
+        Top = 275
+        Width = 882
         Height = 145
         Align = alBottom
         TabOrder = 1
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
+        ExplicitTop = 269
+        ExplicitWidth = 855
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -634,12 +643,14 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 261
-        Width = 855
+        Top = 267
+        Width = 882
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 261
+        ExplicitWidth = 855
       end
     end
   end
@@ -787,6 +798,10 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
         end
         item
           BeginGroup = True
@@ -971,7 +986,7 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbcInsert_MI_Send_Child: TdxBarButton
-      Action = macInsert_MI_Send_Child
+      Action = macInsert_MI_Send
       Category = 0
     end
     object bbOpenFormOrderClient: TdxBarButton
@@ -980,6 +995,10 @@ object SendForm: TSendForm
     end
     object bbOpenFormOrderPartner: TdxBarButton
       Action = actOpenFormOrderPartner
+      Category = 0
+    end
+    object bbUnErasedChild: TdxBarButton
+      Action = SetUnErasedChild
       Category = 0
     end
   end
@@ -1196,9 +1215,8 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = MasterDS
+      DataSource = ChildDS
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1217,6 +1235,24 @@ object SendForm: TSendForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
+    end
+    object SetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIchild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIchild
+        end
+        item
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1593,31 +1629,35 @@ object SendForm: TSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       ImageIndex = 0
     end
-    object macInsert_MI_Send_Child: TMultiAction
+    object macInsert_MI_Send: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsert_MI_Send_Child
+          Action = actInsert_MI_Send
         end>
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074'?'
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
       ImageIndex = 27
     end
-    object actInsert_MI_Send_Child: TdsdExecStoredProc
+    object actInsert_MI_Send: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsert_MI_Send_Child
+      StoredProc = spInsert_MI_Send
       StoredProcList = <
         item
-          StoredProc = spInsert_MI_Send_Child
+          StoredProc = spInsert_MI_Send
+        end
+        item
+          StoredProc = spSelectMI
         end
         item
           StoredProc = spSelectMIChild
         end>
-      Caption = 'actInsert_MI_Send_Child'
+      Caption = 'actInsert_MI_Send'
       ImageIndex = 27
     end
     object actOpenFormOrderPartner: TdsdOpenForm
@@ -2119,8 +2159,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 654
-    Top = 280
+    Left = 694
+    Top = 264
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
@@ -2144,8 +2184,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 206
-    Top = 472
+    Left = 798
+    Top = 272
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -2303,6 +2343,7 @@ object SendForm: TSendForm
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
     OnDblClickActionList = <
       item
       end
@@ -2352,8 +2393,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 698
-    Top = 461
+    Left = 706
+    Top = 493
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased_Child'
@@ -2377,8 +2418,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 670
-    Top = 488
+    Left = 310
+    Top = 480
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2429,8 +2470,8 @@ object SendForm: TSendForm
       end>
     Left = 304
   end
-  object spInsert_MI_Send_Child: TdsdStoredProc
-    StoredProcName = 'gpInsert_MI_Send_Child'
+  object spInsert_MI_Send: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2445,5 +2486,30 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 750
     Top = 207
+  end
+  object spUnErasedMIchild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Send_SetUnErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 201
+    Top = 472
   end
 end

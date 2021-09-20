@@ -166,9 +166,9 @@ type
     CIN_ch2: TcxGridDBColumn;
     ProductName_ch2: TcxGridDBColumn;
     BrandName_ch2: TcxGridDBColumn;
-    spInsert_MI_Send_Child: TdsdStoredProc;
-    actInsert_MI_Send_Child: TdsdExecStoredProc;
-    macInsert_MI_Send_Child: TMultiAction;
+    spInsert_MI_Send: TdsdStoredProc;
+    actInsert_MI_Send: TdsdExecStoredProc;
+    macInsert_MI_Send: TMultiAction;
     bbcInsert_MI_Send_Child: TdxBarButton;
     actOpenFormOrderClient: TdsdOpenForm;
     actOpenFormOrderPartner: TdsdOpenForm;
@@ -177,6 +177,9 @@ type
     isOn: TcxGridDBColumn;
     EngineNum_ch2: TcxGridDBColumn;
     EngineName_ch2: TcxGridDBColumn;
+    spUnErasedMIchild: TdsdStoredProc;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbUnErasedChild: TdxBarButton;
   private
   public
   end;

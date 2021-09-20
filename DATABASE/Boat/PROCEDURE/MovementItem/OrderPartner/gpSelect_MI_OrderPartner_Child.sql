@@ -43,6 +43,11 @@ BEGIN
                                                      AND (MovementItem.isErased = False OR inIsErased = TRUE)
                               INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                                  AND Movement.DescId= zc_Movement_OrderClient()
+
+                              LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
                          WHERE MovementItemFloat.DescId = zc_MIFloat_MovementId()
                            AND MovementItemFloat.ValueData ::Integer = inMovementId
                          )

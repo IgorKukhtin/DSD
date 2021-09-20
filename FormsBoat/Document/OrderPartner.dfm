@@ -364,6 +364,11 @@ object OrderPartnerForm: TOrderPartnerForm
               item
                 Format = ',0.####'
                 Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = TotalAmountPartner
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -393,6 +398,11 @@ object OrderPartnerForm: TOrderPartnerForm
               item
                 Format = ',0.####'
                 Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = TotalAmountPartner
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -525,6 +535,16 @@ object OrderPartnerForm: TOrderPartnerForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 70
+            end
+            object TotalAmountPartner: TcxGridDBColumn
+              Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079' '#1087#1086#1089#1090'.'
+              DataBinding.FieldName = 'TotalAmountPartner'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 89
             end
             object OperPrice: TcxGridDBColumn
               Caption = 'Netto EK'
