@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar
              , Amount                   TFloat
+             , Amount_sh                TFloat
+             , Amount_kg                TFloat
              , AmountForecast           TFloat
              , AmountForecastOrder      TFloat
              , AmountForecastPromo      TFloat
@@ -57,6 +59,16 @@ BEGIN
            , Object_Measure.ValueData           AS MeasureName
 
            , tmpMI.Amount                               :: TFloat AS Amount
+           , CAST (CASE WHEN  Object_Measure.Id = zc_Measure_Sh() 
+                        THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                                  THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                  ELSE 0
+                             END
+                        ELSE 0
+                   END  AS NUMERIC (16,0)) ::TFloat AS Amount_sh
+
+           , tmpMI.Amount ::TFloat AS Amount_kg --CASE WHEN  Object_Measure.Id <> zc_Measure_Sh() THEN tmpMI.Amount ELSE 0 END ::TFloat AS Amount_kg
+
            , MIFloat_AmountForecast.ValueData           :: TFloat AS AmountForecast
            , MIFloat_AmountForecastOrder.ValueData      :: TFloat AS AmountForecastOrder
            , MIFloat_AmountForecastPromo.ValueData      :: TFloat AS AmountForecastPromo
@@ -92,11 +104,13 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId =  Object_Goods.Id
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
            ;
 
 END;

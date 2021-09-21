@@ -134,6 +134,8 @@ type
     bbInsert_OrderGoodsDetail_Master: TdxBarButton;
     actRefresh_Detail_Master: TdsdDataSetRefresh;
     PeriodChoice: TPeriodChoice;
+    dsdGridToExceDetailMaster: TdsdGridToExcel;
+    bbGridToExceDetailMaster: TdxBarButton;
   private
     { Private declarations }
   public
