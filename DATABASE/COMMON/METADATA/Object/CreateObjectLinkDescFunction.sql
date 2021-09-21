@@ -2646,9 +2646,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_UpdateisPromo() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_UpdateisPromo', 'Пользователь (корр. Акция)', zc_Object_Goods(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_UpdateisPromo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InsuranceCompanies_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InsuranceCompanies_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InsuranceCompanies_Juridical', 'Связь с юр лицом', zc_Object_InsuranceCompanies(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InsuranceCompanies_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberIC_InsuranceCompanies() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberIC_InsuranceCompanies'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MemberIC_InsuranceCompanies', 'Связь с страховой компанией', zc_Object_MemberIC(), zc_Object_InsuranceCompanies() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberIC_InsuranceCompanies');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.06.21                                                                                      * zc_ObjectLink_InsuranceCompanies_Juridical, zc_ObjectLink_MemberIC_InsuranceCompanies
  15.06.21                                                                                      * zc_ObjectLink_Goods_Update...
  31.05.21                                                                                      * zc_ObjectLink_PayrollType_PayrollType
  06.08.21         * zc_ObjectLink_Personal_ ....
