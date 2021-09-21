@@ -196,10 +196,10 @@ BEGIN
                   ELSE tmpMI.AmountSecond * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
              END                      ::TFloat   AS Total_kg
 
-           , CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
-                  THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE tmpMI.AmountSecond
-             END                      ::TFloat   AS Total_sh
+           , CAST (CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                        THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                        ELSE tmpMI.AmountSecond
+                   END AS NUMERIC (16,0))                       ::TFloat   AS Total_sh
 
 
 
@@ -294,13 +294,13 @@ BEGIN
                   ELSE MIFloat_AmountSecond.ValueData * CASE WHEN  Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 1 END
              END                      ::TFloat   AS Total_kg
 
-           , CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
-                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
-                            THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
-                            ELSE MIFloat_AmountSecond.ValueData
-                       END
-                  ELSE 0
-             END                      ::TFloat   AS Total_sh
+           , CAST (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                        THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (tmpMI.Amount,0) <> 0
+                                  THEN tmpMI.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                  ELSE MIFloat_AmountSecond.ValueData
+                             END
+                        ELSE 0
+                   END AS NUMERIC (16,0)) ::TFloat   AS Total_sh
 
            , MIFloat_Price.ValueData  ::TFloat   AS Price
            
