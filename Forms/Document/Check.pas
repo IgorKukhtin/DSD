@@ -201,6 +201,7 @@ type
     spUpdate_ClearFiscal: TdsdStoredProc;
     actUpdate_ClearFiscal: TdsdExecStoredProc;
     dxBarButton17: TdxBarButton;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

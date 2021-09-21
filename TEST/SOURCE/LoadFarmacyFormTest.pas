@@ -1543,12 +1543,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_byReportBadmForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnit_byReportBadmForm');
     exit;
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsDialogForm');
-    exit;
+ {   exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPromoForm');

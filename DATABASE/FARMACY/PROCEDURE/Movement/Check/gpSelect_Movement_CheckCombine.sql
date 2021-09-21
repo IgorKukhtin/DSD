@@ -371,18 +371,18 @@ BEGIN
                           FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                           WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                          )
-           , tmpMI_Sum AS (SELECT  MovementItem.*
-                                 , MIFloat_Price.ValueData             AS Price
-                                 , MIFloat_PriceSale.ValueData         AS PriceSale
-                                 , MIFloat_ChangePercent.ValueData     AS ChangePercent
-                                 , MIFloat_SummChangePercent.ValueData AS SummChangePercent
-                                 , MIFloat_AmountOrder.ValueData       AS AmountOrder
-                                 , MIFloat_MovementItem.ValueData      AS PricePartionDate
-                                 , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
-                                                   , COALESCE (MB_RoundingDown.ValueData, False)
-                                                   , COALESCE (MB_RoundingTo10.ValueData, False)
-                                                   , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
-                             FROM tmpMI_all AS MovementItem
+          , tmpMI_Sum AS (SELECT  MovementItem.*
+                                , MIFloat_Price.ValueData             AS Price
+                                , MIFloat_PriceSale.ValueData         AS PriceSale
+                                , MIFloat_ChangePercent.ValueData     AS ChangePercent
+                                , MIFloat_SummChangePercent.ValueData AS SummChangePercent
+                                , MIFloat_AmountOrder.ValueData       AS AmountOrder
+                                , MIFloat_MovementItem.ValueData      AS PricePartionDate
+                                , zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData
+                                                  , COALESCE (MB_RoundingDown.ValueData, False)
+                                                  , COALESCE (MB_RoundingTo10.ValueData, False)
+                                                  , COALESCE (MB_RoundingTo50.ValueData, False)) AS AmountSumm
+                            FROM tmpMI_all AS MovementItem
 
                                 LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
                                                             ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
@@ -412,6 +412,8 @@ BEGIN
                                                           ON MB_RoundingTo50.MovementId = MovementItem.MovementId
                                                          AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
                             )
+           , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
+                                 WHERE MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all))
 
        -- Результат
        SELECT
@@ -449,13 +451,15 @@ BEGIN
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
+           , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
+           , Object_Juridical.ValueData                                          AS JuridicalName
 
        FROM tmpMI_Sum AS MovementItem
 
           LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
           LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+          LEFT JOIN tmpMILinkObject AS MILinkObject_NDSKind
                                            ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
@@ -463,7 +467,7 @@ BEGIN
                                ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
 
           --Типы срок/не срок
-          LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
+          LEFT JOIN tmpMILinkObject AS MI_PartionDateKind
                                            ON MI_PartionDateKind.MovementItemId = MovementItem.Id
                                           AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
           LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
@@ -480,16 +484,20 @@ BEGIN
           -- Размещение товара
           LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DiscountExternal
                                            ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
                                           AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
           LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
                                            ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                           AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
           LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
 
+          LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                           ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
        );
 
     RETURN NEXT Cursor2;
@@ -796,6 +804,8 @@ BEGIN
                                                           ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                                          AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
                             )
+           , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
+                                 WHERE MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all))
 
        -- Результат
        SELECT
@@ -833,13 +843,15 @@ BEGIN
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
+           , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
+           , Object_Juridical.ValueData                                          AS JuridicalName
 
        FROM tmpMI_Sum AS MovementItem
 
           LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
           LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+          LEFT JOIN tmpMILinkObject AS MILinkObject_NDSKind
                                            ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
@@ -847,7 +859,7 @@ BEGIN
                                ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
 
           --Типы срок/не срок
-          LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
+          LEFT JOIN tmpMILinkObject AS MI_PartionDateKind
                                            ON MI_PartionDateKind.MovementItemId = MovementItem.Id
                                           AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
           LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
@@ -864,16 +876,20 @@ BEGIN
           -- Размещение товара
           LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DiscountExternal
                                            ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
                                           AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
           LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+          LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
                                            ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                           AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
           LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
 
+          LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                           ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
        );
 
     RETURN NEXT Cursor4;

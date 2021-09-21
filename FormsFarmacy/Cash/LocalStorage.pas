@@ -304,15 +304,17 @@ begin
       //***03.06.19
       AddIntField(LocalDataBaseBody,   'PDKINDID');    //Тип срок/не срок
       //***24.06.19
-      AddFloatField(LocalDataBaseBody, 'PRICEPD');    //Отпускная цена согласно партии
+      AddFloatField(LocalDataBaseBody, 'PRICEPD');     //Отпускная цена согласно партии
       //***15.04.20
-      AddIntField(LocalDataBaseBody,   'NDSKINDID'); //Ставка НДС
+      AddIntField(LocalDataBaseBody,   'NDSKINDID');   //Ставка НДС
       //***19.06.20
-      AddIntField(LocalDataBaseBody,   'DISCEXTID'); //Дисконтная программы
+      AddIntField(LocalDataBaseBody,   'DISCEXTID');   //Дисконтная программы
       //***19.06.20
-      AddIntField(LocalDataBaseBody,   'DIVPARTID'); //Разделение партий в кассе для продажи
+      AddIntField(LocalDataBaseBody,   'DIVPARTID');   //Разделение партий в кассе для продажи
       //***02.10.20
-      AddBoolField(LocalDataBaseBody,  'ISPRESENT'); //Подарок
+      AddBoolField(LocalDataBaseBody,  'ISPRESENT');   //Подарок
+      //***20.09.21
+      AddIntField(LocalDataBaseBody,  'JURIDID');      //Товар поставщика
 
       LocalDataBaseBody.CreateTable;
     end
@@ -342,6 +344,8 @@ begin
         if FindField('DIVPARTID') = nil then AddIntField(LFieldDefs, 'DIVPARTID');
         //***02.10.20
         if FindField('ISPRESENT') = nil then AddBoolField(LFieldDefs, 'ISPRESENT');
+        //***20.09.21
+        if FindField('JURIDID') = nil then AddIntField(LFieldDefs,  'JURIDID');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -378,7 +382,9 @@ begin
         //***16.08.20
         (FindField('DIVPARTID') = nil) or
         //***02.10.20
-        (FindField('ISPRESENT') = nil));
+        (FindField('ISPRESENT') = nil) or
+        //***20.09.21
+        (FindField('JURIDID') = nil));
 
       Close;
 

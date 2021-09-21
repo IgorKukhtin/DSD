@@ -294,18 +294,29 @@ BEGIN
                         AND MovementItem.DescId = zc_MI_Child()
                         AND MovementItem.Amount > 0
                      )
-         , tmpMI_Master AS (SELECT MovementItem.*
+         , tmpMI_ChildSUM AS (SELECT MovementItem.ParentID
+                                   , SUM(MovementItem.Amount)   AS Amount
+                              FROM tmpMI_Child AS MovementItem
+                              GROUP BY MovementItem.ParentID
+                               )
+         , tmpMI_Master AS (SELECT MovementItem.Id
+                                 , MovementItem.ObjectID
+                                 , MovementItem.Amount - COALESCE(tmpMI_ChildSUM.Amount, 0) AS Amount  
+                                 , MovementItem.isErased 
                             FROM MovementItem
+                            
+                                 LEFT JOIN tmpMI_ChildSUM ON tmpMI_ChildSUM.ParentID = MovementItem.ID 
+                                 
                             WHERE MovementItem.MovementId = inMovementId
                                AND MovementItem.DescId = zc_MI_Master()
-                               AND MovementItem.Amount > 0
-                               AND MovementItem.isErased = FALSE
-                               AND MovementItem.ID not In (SELECT tmpMI_Child.ParentID FROM tmpMI_Child)
+                              -- AND MovementItem.Amount > 0
+                              -- AND MovementItem.isErased = FALSE
+                              -- AND MovementItem.ID not In (SELECT tmpMI_Child.ParentID FROM tmpMI_Child)
                             )
          , tmpMIFloat_ContainerId AS (SELECT MovementItemFloat.MovementItemId
                                            , MovementItemFloat.ValueData::Integer  AS ContainerId
                                       FROM MovementItemFloat
-                                      WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
+                                      WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
          , tmpMI_Container AS (SELECT *
@@ -318,8 +329,8 @@ BEGIN
                                             , MovementItem.ParentID               AS ParentID
                                             , SUM(MovementItem.Amount)            AS Amount
                                        FROM tmpMI_Child AS MovementItem
-                                            INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                            INNER JOIN tmpMI_Container AS Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                            LEFT JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
+                                            LEFT JOIN tmpMI_Container AS Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
                                        GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId, Container.Id
                                        )
           , tmpContainerPD AS (SELECT Container.ParentId                                          AS ContainerId

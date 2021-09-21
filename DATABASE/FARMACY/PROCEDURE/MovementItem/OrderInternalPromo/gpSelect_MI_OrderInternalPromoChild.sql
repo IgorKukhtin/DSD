@@ -28,7 +28,7 @@ BEGIN
 
     -- данные из шапки документа
     SELECT DATE_PART ( 'day', ((Movement.OperDate - MovementDate_StartSale.ValueData)+ INTERVAL '1 DAY')) :: TFloat
-   INTO vbDays
+    INTO vbDays
     FROM Movement
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
@@ -74,7 +74,7 @@ BEGIN
       , tmpMI_Master AS (SELECT MovementItem.Id
                               , MovementItem.Amount
                               , (COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0)) AS Amount_calc
-                              , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
+                              , CASE WHEN COALESCE (tmpChild.AmountOut,0) <> 0 AND vbDays <> 0 
                                      THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount,0) - COALESCE (tmpChild_AmountManual.AmountManual,0) ) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                      ELSE 0
                                 END AS RemainsDay
@@ -103,11 +103,12 @@ BEGIN
                              FROM tmpMI_Child
                                   LEFT JOIN tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                              WHERE COALESCE (tmpMI_Child.AmountManual,0) = 0
+                               AND tmpMI_Master.RemainsDay <> 0
                             )
 
       -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
       , tmpMI_Master2 AS (SELECT MovementItem.Id
-                               , CASE WHEN (COALESCE (tmpChild.AmountOut,0) / vbDays) <> 0 
+                               , CASE WHEN COALESCE (tmpChild.AmountOut,0) <> 0 AND vbDays <> 0 
                                       THEN (COALESCE (tmpChild.Remains,0) + COALESCE (MovementItem.Amount_calc,0)) / (COALESCE (tmpChild.AmountOut,0) / vbDays)
                                       ELSE 0
                                  END AS RemainsDay
@@ -129,6 +130,7 @@ BEGIN
                               FROM tmpMI_Child_Calc AS tmpMI_Child
                                    LEFT JOIN tmpMI_Master2 AS tmpMI_Master ON tmpMI_Master.Id = tmpMI_Child.ParentId
                               WHERE COALESCE (tmpMI_Child.Koeff,0) > 0
+                                AND tmpMI_Master.RemainsDay <> 0
                              )
        
            SELECT MovementItem.Id
@@ -163,3 +165,5 @@ $BODY$
 */
 
 --select * from gpSelect_MI_OrderInternalPromoChild(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MI_OrderInternalPromoChild(inMovementId := 24868017 , inIsErased := 'False' ,  inSession := '3');

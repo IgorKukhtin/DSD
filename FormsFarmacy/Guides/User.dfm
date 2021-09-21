@@ -1292,6 +1292,15 @@ object UserForm: TUserForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWorkingMultiple'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWorkingMultiple'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

@@ -78,9 +78,6 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
     end
   end
   inherited ActionList: TActionList
-    inherited actSimpleReCompleteList: TMultiAction
-      Enabled = False
-    end
     inherited actPrint: TdsdPrintAction
       DataSets = <
         item
@@ -88,6 +85,26 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
         end
         item
           DataSet = PrintItemsCDS
+        end>
+    end
+    inherited actCashSummaForDey: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'CashRegisterName'
+          Component = MasterCDS
+          ComponentItem = 'CashRegisterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Date'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
   end
@@ -100,6 +117,55 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSP'
+        Value = False
+        Component = edIsSP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsVip'
+        Value = False
+        Component = edIsVip
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Top = 147
   end
   inherited BarManager: TdxBarManager

@@ -4,7 +4,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,11 +205,9 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
     ExplicitWidth = 841
     inherited deStart: TcxDateEdit
       EditValue = 42705d
-      Properties.ReadOnly = True
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42735d
-      Properties.ReadOnly = True
     end
     object cxLabel4: TcxLabel
       Left = 430

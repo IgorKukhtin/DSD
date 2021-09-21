@@ -608,6 +608,8 @@ BEGIN
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
+           , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
+           , Object_Juridical.ValueData                                          AS JuridicalName
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -658,6 +660,11 @@ BEGIN
                                            ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                           AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
           LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
+
+          LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                           ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)
