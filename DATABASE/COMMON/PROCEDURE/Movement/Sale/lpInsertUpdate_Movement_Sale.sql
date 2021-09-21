@@ -122,7 +122,7 @@ BEGIN
                                                    , inPartnerId      := inToId
                                                    , inMovementDescId := zc_Movement_Sale()
                                                    , inOperDate_order := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE NULL END 
-                                                   , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0 THEN NULL ELSE inOperDate END
+                                                   , inOperDatePartner:= inOperDatePartner -- CASE WHEN inMovementId_Order <> 0 THEN NULL ELSE inOperDate END
                                                    , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                    , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
                                                    , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Order AND MD.DescId = zc_MovementDate_OperDatePartner())
@@ -132,6 +132,11 @@ BEGIN
          -- SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
          --        INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
          -- FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inToId, inOperDate:= inOperDatePartner);
+--IF inUserId = 5
+--THEN
+--    RAISE EXCEPTION 'Ошибка.<%>', lfGet_Object_ValueData_sh(ioPriceListId);
+--END IF;
+
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
