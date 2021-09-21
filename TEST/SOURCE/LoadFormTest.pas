@@ -2157,7 +2157,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Losses_KVKForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Losses_KVKDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Losses_KVKDialogForm');
-  //exit;
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKForm');

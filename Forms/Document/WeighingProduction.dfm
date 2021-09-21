@@ -1732,8 +1732,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 8
+    Left = 688
+    Top = 65528
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2232,7 +2232,6 @@ object WeighingProductionForm: TWeighingProductionForm
         MultiSelectSeparator = ','
       end>
     Left = 743
-    Top = 16
   end
   object GuidesDocumentKind: TdsdGuides
     KeyField = 'Id'
@@ -2260,8 +2259,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1072
-    Top = 65528
+    Left = 1032
+    Top = 8
   end
   object spSelectPrintCeh: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Ceh_Print'
@@ -2338,8 +2337,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 704
-    Top = 48
+    Left = 728
+    Top = 72
   end
   object GuidesGoodsTypeKind: TdsdGuides
     KeyField = 'Id'

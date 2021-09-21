@@ -30,7 +30,7 @@ type
     MeasureName: TcxGridDBColumn;
     GoodsKindComplete_partion: TcxGridDBColumn;
     PersonalKVKName: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     KVK: TcxGridDBColumn;
     actRefresh_Detail: TdsdDataSetRefresh;
     cxLabel4: TcxLabel;
@@ -46,6 +46,8 @@ type
     GuidesPersonalKVK: TdsdGuides;
     actReport_MotionGoods: TdsdOpenForm;
     bbReport_MotionGoods: TdxBarButton;
+    DocumentKindName: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public
