@@ -101,7 +101,7 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UserName
+              Column = UnitName
             end
             item
               Format = ',0.####'
@@ -165,6 +165,13 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object DocumentKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074#1079#1074#1077#1096'.'
+            DataBinding.FieldName = 'DocumentKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 112
+          end
           object PersonalKVKName: TcxGridDBColumn
             Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
             DataBinding.FieldName = 'PersonalKVKName'
@@ -284,7 +291,7 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1082'.'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077')'
             Options.Editing = False
-            Width = 60
+            Width = 91
           end
           object Amount_diff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
@@ -298,14 +305,21 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
             Options.Editing = False
             Width = 60
           end
-          object UserName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'UserName'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            HeaderHint = 'ContainerId'
+            Width = 70
           end
         end
       end
@@ -552,7 +566,7 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
             'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionDate;InvNumber' +
-            '_partion;KVK;PersonalKVKName'
+            '_partion;PersonalKVKName;KVK'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -588,11 +602,11 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
     object actReport_MotionGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       ImageIndex = 26
-      FormName = 'TReport_MotionGoodsForm'
-      FormNameParam.Value = 'TReport_MotionGoodsForm'
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -611,18 +625,29 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsId'
+          Name = 'UnitGroupId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsId'
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsName'
+          Name = 'LocationName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -645,50 +670,27 @@ inherited Report_Losses_KVKForm: TReport_Losses_KVKForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitGroupId'
-          Value = '0'
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitGroupName'
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationId'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftWideString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAllMO'
+          Name = 'IsPartner'
           Value = False
           DataType = ftBoolean
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAllAuto'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isInfoMoney'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False

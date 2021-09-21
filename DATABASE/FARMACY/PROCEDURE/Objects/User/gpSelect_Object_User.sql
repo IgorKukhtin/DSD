@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , InDate TDateTime, FarmacyCashDate TDateTime
              , PasswordWages TVarChar
+             , isWorkingMultiple Boolean
               )
 AS
 $BODY$
@@ -78,6 +79,8 @@ END IF;
        , ObjectDate_User_In.ValueData               AS InDate
        , ObjectDate_User_FarmacyCash.ValueData      AS FarmacyCashDate
        , ObjectString_PasswordWages.ValueData
+ 
+       , COALESCE (ObjectBoolean_WorkingMultiple.ValueData, FALSE)::Boolean  AS isWorkingMultiple
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -110,6 +113,9 @@ END IF;
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
                                 ON ObjectBoolean_Site.ObjectId = Object_User.Id
                                AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_WorkingMultiple
+                                ON ObjectBoolean_WorkingMultiple.ObjectId = Object_User.Id
+                               AND ObjectBoolean_WorkingMultiple.DescId = zc_ObjectBoolean_User_WorkingMultiple()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
                               ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id

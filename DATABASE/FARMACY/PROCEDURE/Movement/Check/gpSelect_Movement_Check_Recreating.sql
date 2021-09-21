@@ -141,7 +141,7 @@ BEGIN
     END IF;
       
     PERFORM gpUnComplete_Movement_Check (inMovementId, inSession, inSession);
-    PERFORM gpSetErased_Movement_Check (inMovementId, inSession);
+    PERFORM gpSetErased_Movement_Check (inMovementId, zfCalc_UserAdmin());
 
     PERFORM gpComplete_Movement_Check (outMovementId, inSession);
     

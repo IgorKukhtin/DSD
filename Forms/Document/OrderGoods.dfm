@@ -41,7 +41,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = Summa
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = AmountSecond
             end
@@ -72,7 +72,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = Summa
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = AmountSecond
             end
@@ -158,7 +158,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -396,13 +396,23 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = AmountForecastOrderPromo_ch2
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Amount_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_sh_ch2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_kg_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -431,13 +441,23 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = AmountForecastOrderPromo_ch2
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = Amount_ch2
             end
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_sh_ch2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_kg_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -505,10 +525,34 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_sh_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1096#1090') ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Amount_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_kg_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1075') ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Amount_kg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountForecast_ch2: TcxGridDBColumn
@@ -938,6 +982,16 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object dsdGridToExceDetailMaster: TdsdGridToExcel [2]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridDetailMaster
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
+      ImageIndex = 6
+    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -970,7 +1024,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           StoredProc = spSelect_Child
         end>
     end
-    object actPrintNoGroup: TdsdPrintAction [9]
+    object actPrintNoGroup: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -1048,7 +1102,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1544,6 +1598,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExceDetailMaster'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -1567,16 +1625,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Action = matInsert_OrderGoodsDetail_Master
       Category = 0
     end
+    object bbGridToExceDetailMaster: TdxBarButton
+      Action = dsdGridToExceDetailMaster
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 18
       end>
     Left = 686
     Top = 201
@@ -2299,7 +2359,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 878
+    Left = 918
     Top = 193
   end
   object spSelectDetailMaster: TdsdStoredProc

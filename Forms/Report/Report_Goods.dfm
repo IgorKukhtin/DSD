@@ -852,6 +852,40 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 40
           end
+          object PersonalKVKName: TcxGridDBColumn
+            Caption = #1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050' ('#1060'.'#1048'.'#1054')'
+            DataBinding.FieldName = 'PersonalKVKName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object PositionName_KVK: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'PositionName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 78
+          end
+          object UnitName_KVK: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087'. '#1050#1042#1050')'
+            DataBinding.FieldName = 'UnitName_KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050')'
+            Options.Editing = False
+            Width = 83
+          end
+          object KVK: TcxGridDBColumn
+            Caption = #8470' '#1050#1042#1050
+            DataBinding.FieldName = 'KVK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cbSumm_branch: TcxCheckBox
@@ -1213,7 +1247,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'isPartner'
-          Value = 'False'
+          Value = False
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInput
@@ -1263,7 +1297,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1272,7 +1306,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'inChangePercentAmount'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

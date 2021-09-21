@@ -63,6 +63,10 @@ BEGIN
 
             , CAST (NULL AS Integer)                AS PersonalId_KVK
             , CAST (NULL AS TVarchar)               AS PersonalName_KVK
+            , CAST (NULL AS Integer)                AS PositionCode_KVK
+            , CAST (NULL AS TVarchar)               AS PositionName_KVK
+            , CAST (NULL AS Integer)                AS UnitCode_KVK
+            , CAST (NULL AS TVarchar)               AS UnitName_KVK
             , CAST (NULL AS TVarchar)               AS KVK
 
        FROM (SELECT Object_Goods.Id                          AS GoodsId
@@ -141,9 +145,13 @@ BEGIN
 
             , MovementItem.isErased               AS isErased
 
-           , Object_PersonalKVK.Id        AS PersonalId_KVK
-           , Object_PersonalKVK.ValueData AS PersonalName_KVK
-           , MIString_KVK.ValueData       AS KVK
+           , Object_PersonalKVK.Id          AS PersonalId_KVK
+           , Object_PersonalKVK.ValueData   AS PersonalName_KVK
+           , Object_PositionKVK.ObjectCode  AS PositionCode_KVK
+           , Object_PositionKVK.ValueData   AS PositionName_KVK
+           , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
+           , Object_UnitKVK.ValueData       AS UnitName_KVK
+           , MIString_KVK.ValueData         AS KVK
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -175,6 +183,16 @@ BEGIN
                                               ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
              LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
+                                  ON ObjectLink_Personal_PositionKVK.ObjectId = Object_PersonalKVK.Id
+                                 AND ObjectLink_Personal_PositionKVK.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN Object AS Object_PositionKVK ON Object_PositionKVK.Id = ObjectLink_Personal_PositionKVK.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_UnitKVK
+                                  ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
+                                 AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
+             LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -284,9 +302,12 @@ BEGIN
 
             , MovementItem.isErased               AS isErased
 
-            , Object_PersonalKVK.Id        AS PersonalId_KVK
-            , Object_PersonalKVK.ValueData AS PersonalName_KVK
-            , MIString_KVK.ValueData       AS KVK
+            , Object_PersonalKVK.Id          AS PersonalId_KVK
+            , Object_PersonalKVK.ValueData   AS PersonalName_KVK
+            , Object_PositionKVK.ObjectCode  AS PositionCode_KVK
+            , Object_PositionKVK.ValueData   AS PositionName_KVK
+            , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
+            , Object_UnitKVK.ValueData       AS UnitName_KVK
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -318,6 +339,16 @@ BEGIN
                                               ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
              LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
+                                  ON ObjectLink_Personal_PositionKVK.ObjectId = Object_PersonalKVK.Id
+                                 AND ObjectLink_Personal_PositionKVK.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN Object AS Object_PositionKVK ON Object_PositionKVK.Id = ObjectLink_Personal_PositionKVK.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_UnitKVK
+                                  ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
+                                 AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
+             LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id

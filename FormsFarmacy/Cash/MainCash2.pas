@@ -15,7 +15,7 @@ uses
   cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
-  ActiveX, Math, ShellApi,
+  ActiveX, Math, ShellApi, System.JSON,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink,
   cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
@@ -584,6 +584,8 @@ type
     actDoctors: TAction;
     actCheckJackdawsGreenJournalCash: TdsdOpenForm;
     N61: TMenuItem;
+    spCheck_PairSunAmount: TdsdStoredProc;
+    CheckJuridicalName: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -791,7 +793,7 @@ type
     // процедура обновляет параметры для введения нового чека
     procedure NewCheck(ANeedRemainsRefresh: Boolean = True);
     // Изменение тела чека
-    procedure InsertUpdateBillCheckItems;
+    procedure InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = '');
     // Обновить остаток согласно пришедшей разнице
     procedure UpdateRemainsFromDiff(ADiffCDS: TClientDataSet);
     // Возвращает товар в верхний грид
@@ -3046,61 +3048,70 @@ end;
 // проверили что есть остаток
 function TMainCashForm2.fCheck_RemainsError: Boolean;
 var
-  GoodsId_list, Amount_list, PartionDate_list, NDS_list, DivisionPartiesId_list: String;
+  JsonArray: TJSONArray;
+  JSONObject: TJSONObject;
+  JsonText: String;
   B: TBookmark;
+
+  procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
+    var intValue: integer;
+  begin
+    if AValue = NULL then
+      JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
+    else if ADataType = ftDateTime then
+      JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+    else if ADataType = ftFloat then
+      JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(AValue))
+    else if ADataType = ftInteger then
+    begin
+      if TryStrToInt(AValue, intValue) then
+        JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
+      else
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+    end
+    else
+      JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+  end;
+
 begin
   Result := false;
   //
-  GoodsId_list := '';
-  Amount_list := '';
-  PartionDate_list := '';
-  NDS_list := '';
-  DivisionPartiesId_list := '';
-  //
-  // формируется список товаров
-  with CheckCDS do
-  begin
-    B := GetBookmark;
-    DisableControls;
-    try
-      First;
-      while Not Eof do
-      Begin
-        if GoodsId_list <> '' then
-        begin
-          GoodsId_list := GoodsId_list + ';';
-          Amount_list := Amount_list + ';';
-          PartionDate_list := PartionDate_list + ';';
-          NDS_list := NDS_list + ';';
-          DivisionPartiesId_list := DivisionPartiesId_list + ';';
-        end;
-        GoodsId_list := GoodsId_list +
-          IntToStr(FieldByName('GoodsId').AsInteger);
-        Amount_list := Amount_list +
-          FloatToStr(FieldByName('Amount').asCurrency);
-        PartionDate_list := PartionDate_list +
-          IntToStr(FieldByName('PartionDateKindId').AsInteger);
-        NDS_list := NDS_list +
-          IntToStr(FieldByName('NDSKindId').AsInteger);
-        DivisionPartiesId_list := DivisionPartiesId_list +
-          IntToStr(FieldByName('DivisionPartiesId').AsInteger);
-        Next;
-      End;
-      GotoBookmark(B);
-      FreeBookmark(B);
-    finally
-      EnableControls;
+  JSONArray := TJSONArray.Create();
+  try
+    // формируется список товаров
+    with CheckCDS do
+    begin
+      B := GetBookmark;
+      DisableControls;
+      try
+        First;
+        while Not Eof do
+        Begin
+          JSONObject := TJSONObject.Create;
+          AddParamToJSON('GoodsId', FieldByName('GoodsId').AsVariant, FieldByName('GoodsId').DataType);
+          AddParamToJSON('Amount', FieldByName('Amount').AsVariant, FieldByName('Amount').DataType);
+          AddParamToJSON('PartionDateKindId', FieldByName('PartionDateKindId').AsVariant, FieldByName('PartionDateKindId').DataType);
+          AddParamToJSON('NDSKindId', FieldByName('NDSKindId').AsVariant, FieldByName('NDSKindId').DataType);
+          AddParamToJSON('DivisionPartiesId', FieldByName('DivisionPartiesId').AsVariant, FieldByName('DivisionPartiesId').DataType);
+          AddParamToJSON('JuridicalId', FieldByName('JuridicalId').AsVariant, FieldByName('JuridicalId').DataType);
+          JsonArray.AddElement(JSONObject);
+          Next;
+        End;
+        GotoBookmark(B);
+        FreeBookmark(B);
+      finally
+        EnableControls;
+      end;
     end;
+  finally
+    JsonText := JSONArray.ToString;
+    JSONArray.Free;
   end;
   //
   // теперь вызов
   with spCheck_RemainsError do
     try
-      ParamByName('inGoodsId_list').Value := GoodsId_list;
-      ParamByName('inAmount_list').Value := Amount_list;
-      ParamByName('inPartionDate_list').Value := PartionDate_list;
-      ParamByName('inNDS_list').Value := NDS_list;
-      ParamByName('inDivisionPartiesId_list').Value := DivisionPartiesId_list;
+      ParamByName('inJSON').Value := JsonText;
       Execute;
       Result := ParamByName('outMessageText').Value = '';
       // if not Result then ShowMessage(ParamByName('outMessageText').Value);
@@ -3194,11 +3205,17 @@ begin
       exit;
     end;
 
+    if cbSpec.Checked or cbSpecCorr.Checked then
+    begin
+      ShowMessage('Ошибка.Пробейте снова, чек по СП не погашен поскольку проходит галкой.');
+      exit;
+    end;
+
     if (CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
       ('Amount').asCurrency) > FormParams.ParamByName('HelsiQty').Value then
     begin
       ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
-        FormParams.ParamByName('HelsiQty').Value) + ' едениц'#13#10'В чеке: ' +
+        FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
         FormatCurr('0.####', CheckCDS.FieldByName('CountSP').asCurrency *
         CheckCDS.FieldByName('Amount').asCurrency) +
         #13#10'Уменьшите количество.');
@@ -3311,7 +3328,8 @@ begin
             First;
             while not Eof do
             begin
-              if FieldByName('GoodsPairSunMainId').AsInteger = GoodsIdPS then
+              if (FieldByName('GoodsPairSunMainId').AsInteger = GoodsIdPS) and
+                 ((FieldByName('GoodsPairSunAmount').AsCurrency = 1) or (FieldByName('JuridicalId').AsInteger <> 0)) then
                 nAmountPS := nAmountPS + FieldByName('Amount').AsCurrency * FieldByName('GoodsPairSunAmount').AsCurrency;
               Next;
             end;
@@ -4070,6 +4088,8 @@ begin
           vipList.FieldByName('GoodsPairSunAmount').AsVariant;
         CheckCDS.FieldByName('isPresent').AsVariant :=
           vipList.FieldByName('isPresent').AsVariant;
+        CheckCDS.FieldByName('JuridicalId').AsVariant :=
+          vipList.FieldByName('JuridicalId').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -4936,7 +4956,7 @@ begin
     try
       Amount := AAmountPresent;
       FormParams.ParamByName('MovementId').Value := AMovementId;
-      Label10.Caption := 'Выбирите ' + CurrToStr(AAmountPresent) + ' едениц товара для вставки в документ';
+      Label10.Caption := 'Выбирите ' + CurrToStr(AAmountPresent) + ' единиц товара для вставки в документ';
       actRefresh.Execute;
       if ShowModal = mrOk then
       begin
@@ -7644,16 +7664,17 @@ begin
   Result := false;
 end;
 
-procedure TMainCashForm2.InsertUpdateBillCheckItems;
+procedure TMainCashForm2.InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = '');
 var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
-    nAmount, nAmountPS, nAmountPSM, nAmountM, nGoodsPairSunAmount: Currency;
-  lMsg: String; bOk : boolean;
-  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsPairSunMainId: Integer;
+    nAmount, nAmountPS, nAmountPSJ, nAmountPSM, nAmountM, nGoodsPairSunAmount, nRemains: Currency;
+  lMsg: String; bOk, bBadJuridical : boolean;
+  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsPairSunMainId,
+  nJuridicalId, nJuridicalPSId : Integer;
   nMultiplicity: Currency;
   nFixEndDate: Variant;
   Bookmark : TBookmark;
-  cFilterOld : String;
+  cFilterOld, cJuridicalName, cJuridicalPSName : String;
   ChoosingPairSunForm : TChoosingPairSunForm;
 begin
 
@@ -7662,6 +7683,8 @@ begin
   nMultiplicity := 0;
   lTypeDiscount := 0;
   nFixEndDate := Null;
+  nJuridicalId := AJuridicalId;
+  cJuridicalName := AJuridicalName;
 
   if pnlHelsiError.Visible then
   begin
@@ -7743,6 +7766,149 @@ begin
   nGoodsPairSunMainId := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
   nGoodsPairSunAmount := SourceClientDataSet.FieldByName('GoodsPairSunAmount').AsInteger;
 
+  if (nGoodsPairSunAmount > 1)  then
+  begin
+
+    Bookmark := CheckCDS.GetBookmark;
+    try
+      // Собираем сколько уже есть
+      nAmountPS := 0;
+      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+          VarArrayOf([nId,
+          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
+          SourceClientDataSet.FindField('NDSKindId').AsVariant,
+          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) then
+      begin
+        nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
+      end;
+    finally
+      CheckCDS.GotoBookmark(Bookmark);
+    end;
+
+    // проверяем наличие по поставщику
+    if not gc_User.Local then
+    begin
+      spCheck_PairSunAmount.ParamByName('inGoodsId').Value := nId;
+      spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := SourceClientDataSet.FieldByName('NDSKindId').AsVariant;
+      spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := SourceClientDataSet.FieldByName('PartionDateKindId').AsVariant;
+      spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := SourceClientDataSet.FieldByName('DivisionPartiesId').AsVariant;
+      spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmountPS + nAmount;
+      spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+      spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+      spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
+      spCheck_PairSunAmount.Execute;
+      nJuridicalId := spCheck_PairSunAmount.ParamByName('outJuridicalId').Value;
+      cJuridicalName := spCheck_PairSunAmount.ParamByName('outJuridicalName').Value;
+    end;
+
+    // Правим привязку к поставщику
+    if nAmount < 0 then
+    try
+      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+          VarArrayOf([nId,
+          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
+          SourceClientDataSet.FindField('NDSKindId').AsVariant,
+          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) and
+          (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
+      begin
+        CheckCDS.Edit;
+        if nJuridicalId = 0 then
+        begin
+          CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+          CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+        end else
+        begin
+          CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
+          CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
+        end;
+        CheckCDS.Post;
+      end;
+    finally
+      CheckCDS.GotoBookmark(Bookmark);
+    end;
+
+  end else if not FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
+  begin
+
+    Bookmark := CheckCDS.GetBookmark;
+    try
+      nAmountPS := 0;
+      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+          VarArrayOf([nId,
+          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
+          SourceClientDataSet.FindField('NDSKindId').AsVariant,
+          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) and
+          (CheckCDS.FieldByName('JuridicalId').AsInteger <> 0) then
+      begin
+        nJuridicalId := CheckCDS.FieldByName('JuridicalId').AsVariant;
+        cJuridicalName := CheckCDS.FieldByName('JuridicalName').AsVariant;
+        nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
+      end;
+    finally
+      CheckCDS.GotoBookmark(Bookmark);
+    end;
+
+    if nJuridicalId <> 0 then
+    begin
+
+      // проверяем наличие по поставщику
+      if not gc_User.Local then
+      begin
+        spCheck_PairSunAmount.ParamByName('inGoodsId').Value := nId;
+        spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := SourceClientDataSet.FieldByName('NDSKindId').AsVariant;
+        spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := SourceClientDataSet.FieldByName('PartionDateKindId').AsVariant;
+        spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := SourceClientDataSet.FieldByName('DivisionPartiesId').AsVariant;
+        spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmountPS + nAmount;
+        spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+        spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+        spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
+        spCheck_PairSunAmount.Execute;
+        if spCheck_PairSunAmount.ParamByName('outJuridicalId').Value <> nJuridicalId then
+        begin
+          ShowMessage('Нет товара в наличии по поставщику ' + cJuridicalName + ' попробуйте распределить от основного товара!');
+          Exit;
+        end;
+      end;
+
+    end;
+  end else if FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
+  begin
+
+    Bookmark := CheckCDS.GetBookmark;
+    try
+      nAmountPS := 0;
+      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+          VarArrayOf([nId,
+          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
+          SourceClientDataSet.FindField('NDSKindId').AsVariant,
+          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) and
+          (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
+      begin
+        CheckCDS.Edit;
+        if nJuridicalId = 0 then
+        begin
+          CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+          CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+        end else
+        begin
+          CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
+          CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
+        end;
+        CheckCDS.Post;
+      end;
+    finally
+      CheckCDS.GotoBookmark(Bookmark);
+    end;
+  end;
+
 //  if (nAmount > 0) and SourceClientDataSet.FieldByName('isPresent').AsBoolean and
 //    (FormParams.ParamByName('LoyaltyGoodsId').Value <> nId) then
 //  begin
@@ -7782,7 +7948,7 @@ begin
           RemainsCDS.Filtered := False;
           RemainsCDS.Filter := 'Remains > 1 and GoodsPairSunMainId = ' + IntToStr(nId);
           RemainsCDS.Filtered := True;
-          RemainsCDS.FindFirst;
+          RemainsCDS.First;
           nAmountM := nAmount;
           ChoosingPairSunForm := TChoosingPairSunForm.Create(Self);
           try
@@ -7791,19 +7957,45 @@ begin
             while not RemainsCDS.Eof do
             begin
               if (RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency)
-                 and (Frac(nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency) = 0) then
+                 and (Frac(nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency) = 0)
+                 and ((RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency = 1) or
+                      not gc_User.Local and (RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1)) then
               begin
-                ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
-                             [RemainsCDS.FieldByName('Id').AsInteger,
-                              RemainsCDS.FindField('GoodsCode').AsVariant,
-                              RemainsCDS.FindField('GoodsName').AsVariant,
-                              RemainsCDS.FindField('Remains').AsVariant,
-                              nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency,
-                              RemainsCDS.FindField('Price').AsVariant,
-                              RemainsCDS.FindField('PartionDateKindId').AsVariant,
-                              RemainsCDS.FindField('NDSKindId').AsVariant,
-                              RemainsCDS.FindField('DiscountExternalID').AsVariant,
-                              RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
+
+                if RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1 then
+                begin
+                  spCheck_PairSunAmount.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
+                  spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+                  spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+                  spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := RemainsCDS.FieldByName('DivisionPartiesId').AsVariant;
+                  spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
+                  spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+                  spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+                  spCheck_PairSunAmount.Execute;
+                  if spCheck_PairSunAmount.ParamByName('outJuridicalId').Value > 0 then
+                    ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
+                               [RemainsCDS.FieldByName('Id').AsInteger,
+                                RemainsCDS.FindField('GoodsCode').AsVariant,
+                                RemainsCDS.FindField('GoodsName').AsVariant,
+                                RemainsCDS.FindField('Remains').AsVariant,
+                                nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency,
+                                RemainsCDS.FindField('Price').AsVariant,
+                                RemainsCDS.FindField('PartionDateKindId').AsVariant,
+                                RemainsCDS.FindField('NDSKindId').AsVariant,
+                                RemainsCDS.FindField('DiscountExternalID').AsVariant,
+                                RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
+                end else
+                    ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
+                               [RemainsCDS.FieldByName('Id').AsInteger,
+                                RemainsCDS.FindField('GoodsCode').AsVariant,
+                                RemainsCDS.FindField('GoodsName').AsVariant,
+                                RemainsCDS.FindField('Remains').AsVariant,
+                                nAmount,
+                                RemainsCDS.FindField('Price').AsVariant,
+                                RemainsCDS.FindField('PartionDateKindId').AsVariant,
+                                RemainsCDS.FindField('NDSKindId').AsVariant,
+                                RemainsCDS.FindField('DiscountExternalID').AsVariant,
+                                RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
               end;
               RemainsCDS.Next;
             end;
@@ -8433,6 +8625,15 @@ begin
               CheckCDS.FieldByName('Color_ExpirationDate').AsInteger := clBlack;
             end;
           end;
+          if nJuridicalId = 0 then
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+          end else
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
+          end;
 
           if CheckCDS.FieldByName('isPresent').AsVariant then
             CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
@@ -8581,13 +8782,46 @@ begin
               SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
           CheckCDS.FieldByName('Multiplicity').AsVariant := nMultiplicity;
           CheckCDS.FieldByName('FixEndDate').AsVariant := nFixEndDate;
+          if nJuridicalId = 0 then
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+          end else
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
+          end;
 
           if CheckCDS.FieldByName('isPresent').AsVariant then
             CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
 
           CheckCDS.Post;
 
-        End else if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then 
+        End else if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent',
+          VarArrayOf([nId,
+          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
+          SourceClientDataSet.FindField('NDSKindId').AsVariant,
+          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
+          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
+          FormParams.ParamByName('AddPresent').Value]), []) and
+          (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
+        Begin
+          if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then
+            lPriceSale := CheckCDS.FieldByName('PriceSale').asCurrency;
+
+          CheckCDS.Edit;
+          if nJuridicalId = 0 then
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+          end else
+          begin
+            CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
+          end;
+          CheckCDS.Post;
+
+        end else if CheckCDS.FieldByName('AmountOrder').asCurrency > 0 then
           lPriceSale := CheckCDS.FieldByName('PriceSale').asCurrency;
       finally
         CheckCDS.Filtered := True;
@@ -8724,6 +8958,8 @@ begin
     if not FStepSecond and not UnitConfigCDS.FindField('isPairedOnlyPromo').AsBoolean and
        (nGoodsPairSunMainId <> 0) then
     begin
+      nAmountPS := 0; nAmountPSJ := 0; nAmountPSM := 0; nJuridicalPSId := 0; cJuridicalPSName := '';
+      bBadJuridical := False;
       Bookmark := CheckCDS.GetBookmark;
 
       // Собираем наличие
@@ -8732,33 +8968,77 @@ begin
       while not CheckCDS.Eof do
       begin
         if (checkCDS.FieldByName('GoodsPairSunMainId').AsInteger = nGoodsPairSunMainId) and
-          (Frac(checkCDS.FieldByName('Amount').AsCurrency) = 0) then
+          (Frac(checkCDS.FieldByName('Amount').AsCurrency) = 0)  then
+        begin
           nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
+          if checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1 then
+          begin
+            nAmountPSJ := nAmountPSJ + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
+            if (checkCDS.FieldByName('JuridicalId').AsInteger <> 0) then
+            begin
+              if (bBadJuridical = False) and ((nJuridicalPSId = 0) or (nJuridicalPSId = checkCDS.FieldByName('JuridicalId').AsInteger)) then
+              begin
+                nJuridicalPSId := checkCDS.FieldByName('JuridicalId').AsInteger;
+                cJuridicalPSName := checkCDS.FieldByName('JuridicalName').AsString;
+              end else bBadJuridical := True;
+            end else bBadJuridical := True;
+          end
+        end;
+
         if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSunMainId then
           nAmountPSM := nAmountPSM + checkCDS.FieldByName('Amount').AsCurrency;
         CheckCDS.Next;
       end;
       CheckCDS.GotoBookmark(Bookmark);
+
+      if (bBadJuridical = True) or gc_User.Local then
+      begin
+        nAmountPS := nAmountPS - nAmountPSJ;
+        nJuridicalPSId := 0;
+        cJuridicalPSName := '';
+        nAmountPSJ := 0;
+      end;
+
       nAmountPS := Floor (nAmountPS);
 
       if nAmountPSM < nAmountPS then
       begin
 
+        cFilterOld := RemainsCDS.Filter;
+        RemainsCDS.DisableControls;
+        RemainsCDS.Filtered := False;
+        RemainsCDS.Filter := 'Remains > 1 and Id = ' + IntToStr(nGoodsPairSunMainId);
+        RemainsCDS.Filtered := True;
+        RemainsCDS.First;
         try
-          if RemainsCDS.Locate('ID', nGoodsPairSunMainId, []) then
+          while not RemainsCDS.Eof do
           begin
-            if RemainsCDS.FieldByName('Remains').AsCurrency >= 1 then
+
+            if nJuridicalPSId > 0 then
+            begin
+              spCheck_PairSunAmount.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsVariant;
+              spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+              spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+              spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := RemainsCDS.FieldByName('DivisionPartiesId').AsVariant;
+              spCheck_PairSunAmount.ParamByName('inAmount').Value := RemainsCDS.FieldByName('Remains').AsCurrency;
+              spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+              spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+              spCheck_PairSunAmount.Execute;
+              nRemains := spCheck_PairSunAmount.ParamByName('outAmount').Value;
+            end else nRemains := RemainsCDS.FieldByName('Remains').AsCurrency ;
+
+            if nRemains >= 1 then
             begin
               try
                 FStepSecond := True;
-                if RemainsCDS.FieldByName('Remains').AsCurrency <= (nAmountPS - nAmountPSM) then
-                  nAmount := RemainsCDS.FieldByName('Remains').AsCurrency
+                if nRemains <= (nAmountPS - nAmountPSM) then
+                  nAmount := nRemains
                 else nAmount := nAmountPS - nAmountPSM;
                 nAmountPSM := nAmountPSM + nAmount;
                 SoldRegim := True;
                 edAmount.Text := CurrToStr(nAmount);
                 SourceClientDataSet := RemainsCDS;
-                InsertUpdateBillCheckItems;
+                InsertUpdateBillCheckItems(nJuridicalPSId, cJuridicalPSName);
               finally
                 FStepSecond := False;
               end;
@@ -8766,6 +9046,10 @@ begin
             RemainsCDS.Next;
           end;
         finally
+          RemainsCDS.Filtered := False;
+          RemainsCDS.Filter := cFilterOld;
+          RemainsCDS.Filtered := True;
+          RemainsCDS.EnableControls;
           RemainsCDS.Locate('ID', nID, []);
         end;
 
@@ -8784,7 +9068,7 @@ begin
               CheckGrid.SetFocus;
               SourceClientDataSet := checkCDS;
               edAmount.Text := CurrToStr(nAmount);
-              InsertUpdateBillCheckItems;
+              InsertUpdateBillCheckItems(nJuridicalPSId, cJuridicalPSName);
             finally
               FStepSecond := False;
             end;
@@ -11100,7 +11384,8 @@ begin
           ADS.FieldByName('GoodsPairSunAmount').AsVariant;
         myVIPListCDS.FieldByName('isPresent').Value :=
           ADS.FieldByName('isPresent').AsVariant;
-
+        myVIPListCDS.FieldByName('JuridicalId').Value :=
+          ADS.FieldByName('JuridicalId').AsVariant;
         myVIPListCDS.Post;
         ADS.Next;
       End;
@@ -11387,7 +11672,9 @@ begin
             // ***19.06.20
             ADS.FieldByName('DivisionPartiesID').AsInteger, // Разделение партий в кассе для продажи
             // ***02.10.20
-            ADS.FieldByName('isPresent').AsBoolean // Разделение партий в кассе для продажи
+            ADS.FieldByName('isPresent').AsBoolean, // Разделение партий в кассе для продажи
+            // ***20.09.21
+            ADS.FieldByName('JuridicalId').AsInteger // Товар поставщика
             ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
@@ -12176,14 +12463,14 @@ begin
       nOut) or (nOut = 0) then
     begin
       ActiveControl := edAmount;
-      ShowMessage('Ошибка. Не заполнено количество едениц продажи.');
+      ShowMessage('Ошибка. Не заполнено количество единиц продажи.');
     end;
 
     if not TryStrToInt(Copy(edAmount.Text, Pos('/', edAmount.Text) + 1,
       Length(edAmount.Text)), nPack) or (nPack = 0) then
     begin
       ActiveControl := edAmount;
-      ShowMessage('Ошибка. Не заполнено количество едениц в упаковке.');
+      ShowMessage('Ошибка. Не заполнено количество единиц в упаковке.');
     end;
 
     nOut := abs(nOut);

@@ -34,6 +34,10 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
               , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
               , isPage3 Boolean, isExistsPage3 Boolean
+              , KVK TVarChar
+              , PersonalKVKId Integer, PersonalKVKName TVarChar
+              , PositionCode_KVK Integer, PositionName_KVK TVarChar
+              , UnitCode_KVK Integer, UnitName_KVK TVarChar
                )
 AS
 $BODY$
@@ -442,10 +446,30 @@ BEGIN
                                WHERE tmpMI_Summ.Amount_Period <> 0
                               )
 
+      , tmpMIString_KVK AS (SELECT *
+                            FROM MovementItemString
+                            WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMIContainer_all.MovementItemId FROM tmpMIContainer_all)
+                              AND MovementItemString.DescId = zc_MIString_KVK()
+                           )
+   
+      , tmpMILO_PersonalKVK AS (SELECT *
+                                FROM MovementItemLinkObject
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIContainer_all.MovementItemId FROM tmpMIContainer_all)
+                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_PersonalKVK()
+                               )
+
+      , tmpMIFloat_Price AS (SELECT *
+                             FROM MovementItemFloat
+                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIContainer_all.MovementItemId FROM tmpMIContainer_all)
+                               AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                            )
+
       , tmpMIContainer_group AS (SELECT tmpMIContainer_all.MovementId
                                       -- , 0 AS MovementItemId
                                       , tmpMIContainer_all.ParentId
                                       , tmpMIContainer_all.LocationId
+                                      , MIString_KVK.ValueData            AS KVK
+                                      , MILinkObject_PersonalKVK.ObjectId AS PersonalId_KVK
                                       , tmpMIContainer_all.GoodsId
                                       , tmpMIContainer_all.GoodsKindId
                                       , tmpMIContainer_all.PartionGoodsId
@@ -490,9 +514,15 @@ BEGIN
                                       
                                       , COALESCE (MIF_Price.ValueData, 0) AS Price_real
                                 FROM tmpMIContainer_all
-                                     LEFT JOIN MovementItemFloat AS MIF_Price
-                                                                 ON MIF_Price.MovementItemId = tmpMIContainer_all.MovementItemId
-                                                                AND MIF_Price.DescId         = zc_MIFloat_Price()
+                                     LEFT JOIN tmpMIFloat_Price AS MIF_Price
+                                                                ON MIF_Price.MovementItemId = tmpMIContainer_all.MovementItemId
+                                                               AND MIF_Price.DescId         = zc_MIFloat_Price()
+
+                                       LEFT JOIN tmpMILO_PersonalKVK AS MILinkObject_PersonalKVK
+                                                                     ON MILinkObject_PersonalKVK.MovementItemId = tmpMIContainer_all.MovementItemId
+   
+                                       LEFT JOIN tmpMIString_KVK AS MIString_KVK
+                                                                 ON MIString_KVK.MovementItemId = tmpMIContainer_all.MovementItemId
                                  GROUP BY tmpMIContainer_all.MovementId
                                         -- , tmpMIContainer_all.MovementItemId
                                         , tmpMIContainer_all.ParentId
@@ -505,6 +535,8 @@ BEGIN
                                         , tmpMIContainer_all.isReprice
                                         , tmpMIContainer_all.PartionGoods_item
                                         , COALESCE (MIF_Price.ValueData, 0)
+                                        , MIString_KVK.ValueData
+                                        , MILinkObject_PersonalKVK.ObjectId
                                 )
 
   ----
@@ -695,7 +727,14 @@ BEGIN
                 
                         , FALSE AS isPage3
                         , FALSE AS isExistsPage3
-                
+                        
+                        , tmpMIContainer_group.KVK
+                        , Object_PersonalKVK.Id          AS PersonalKVKId
+                        , Object_PersonalKVK.ValueData   AS PersonalKVKName
+                        , Object_PositionKVK.ObjectCode  AS PositionCode_KVK
+                        , Object_PositionKVK.ValueData   AS PositionName_KVK
+                        , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
+                        , Object_UnitKVK.ValueData       AS UnitName_KVK
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -749,7 +788,20 @@ BEGIN
                                              ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
                                             AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
+
+                        LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = tmpMIContainer_group.PersonalId_KVK
+               
+                        LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
+                                             ON ObjectLink_Personal_PositionKVK.ObjectId = Object_PersonalKVK.Id
+                                            AND ObjectLink_Personal_PositionKVK.DescId = zc_ObjectLink_Personal_Position()
+                        LEFT JOIN Object AS Object_PositionKVK ON Object_PositionKVK.Id = ObjectLink_Personal_PositionKVK.ChildObjectId
+               
+                        LEFT JOIN ObjectLink AS ObjectLink_Personal_UnitKVK
+                                             ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
+                                            AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
+                        LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
                    )
+
    -- –≈«”À‹“¿“
    SELECT tmpDataAll.MovementId AS MovementId
         , tmpDataAll.InvNumber  ::TVarChar AS InvNumber
@@ -819,6 +871,14 @@ BEGIN
         , tmpDataAll.isPage3
         , tmpDataAll.isExistsPage3
 
+        , tmpDataAll.KVK
+        , tmpDataAll.PersonalKVKId
+        , tmpDataAll.PersonalKVKName
+        , tmpDataAll.PositionCode_KVK
+        , tmpDataAll.PositionName_KVK
+        , tmpDataAll.UnitCode_KVK
+        , tmpDataAll.UnitName_KVK
+
    FROM tmpDataAll
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
@@ -855,6 +915,14 @@ BEGIN
         , tmpDataAll.Price_partner
         */, tmpDataAll.isPage3
         , tmpDataAll.isExistsPage3
+
+        , tmpDataAll.KVK
+        , tmpDataAll.PersonalKVKId
+        , tmpDataAll.PersonalKVKName
+        , tmpDataAll.PositionCode_KVK
+        , tmpDataAll.PositionName_KVK
+        , tmpDataAll.UnitCode_KVK
+        , tmpDataAll.UnitName_KVK
    ;
 
    END IF;

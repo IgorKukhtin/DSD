@@ -40,6 +40,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isPresent Boolean
              , FixEndDate TDateTime
              , UKTZED TVarChar
+             , JuridicalId Integer
+             , JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -150,6 +152,10 @@ BEGIN
                           AND length(REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')) <= 10
                           AND Object_Goods_Juridical.GoodsMainId <> 0
                         )
+   , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
+                         WHERE MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI))
+   , tmpObject AS (SELECT * FROM Object 
+                         WHERE Object.Id IN (SELECT DISTINCT tmpMILinkObject.ObjectId FROM tmpMILinkObject))
 
        SELECT
              MovementItem.Id
@@ -198,6 +204,9 @@ BEGIN
            , Null::TDateTime                                                     AS FixEndDate 
            , tmpGoodsUKTZED.UKTZED                                               AS UKTZED
 
+           , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
+           , Object_Juridical.ValueData                                          AS JuridicalName
+
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime      AS OperDate_Income
@@ -239,14 +248,19 @@ BEGIN
                                           ON MIBoolean_Present.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+            LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
-            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
+            LEFT JOIN tmpObject AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
 
             -- Коды UKTZED
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
+
+            LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                             ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+            LEFT JOIN tmpObject AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
       ;
 END;
 $BODY$

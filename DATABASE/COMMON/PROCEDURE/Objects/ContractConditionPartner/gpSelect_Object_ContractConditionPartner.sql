@@ -11,7 +11,6 @@ RETURNS TABLE (Id Integer, Code Integer
              , Address TVarChar
              , isConnected Boolean
              , isErased Boolean
-        
              ) AS
 $BODY$
    DECLARE vbUserId Integer;

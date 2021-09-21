@@ -2,14 +2,11 @@
 
 --DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (Text, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check_RemainsError(
-    IN inGoodsId_list           TVarChar  , -- список Id товаров для проверки
-    IN inAmount_list            TVarChar  , -- список кол-ва для проверки
-    IN inPartionDate_list       TVarChar  , -- список сроков для проверки
-    IN inNDS_list               TVarChar  , -- список НДС для проверки
-    IN inDivisionPartiesId_list TVarChar  , -- Разделение партий в кассе для продажи
+    IN inJSON                   Text      , -- json     
    OUT outMessageText           Text      , -- вернули, если есть ошибка
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -41,35 +38,26 @@ BEGIN
     FROM lpSelect_PartionDateKind_SetDate ();
 
     -- таблица
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Amount TFloat, PartionDateKindId Integer, NDSKindId Integer, DivisionPartiesId Integer) ON COMMIT DROP;
-    -- парсим товары
-    vbIndex := 1;
-    WHILE SPLIT_PART (inGoodsId_list, ';', vbIndex) <> '' LOOP
-        -- добавляем то что нашли
-        INSERT INTO _tmpGoods (GoodsId, Amount, PartionDateKindId, NDSKindId, DivisionPartiesId)
-           SELECT tmp.GoodsId, tmp.Amount, tmp.PartionDateKindId, tmp.NDSKindId, tmp.DivisionPartiesId
-           FROM (SELECT SPLIT_PART (inGoodsId_list, ';', vbIndex) :: Integer AS GoodsId
-                      , CASE WHEN -- если должен быть разделитель зпт. - тогда заменим на зпт.
-                                  SPLIT_PART ((0 :: TFloat) :: TVarChar, ',', 2) <> ''
-                                  THEN REPLACE (SPLIT_PART (inAmount_list, ';', vbIndex), '.', ',')
-                             WHEN -- если должен быть разделитель тчк. - тогда заменим на тчк.
-                                  SPLIT_PART ((0 :: TFloat) :: TVarChar, '.', 2) <> ''
-                                  THEN REPLACE (SPLIT_PART (inAmount_list, ';', vbIndex), ',', '.')
-                             ELSE ''
-                        END :: TFloat AS Amount
-                      , SPLIT_PART (inPartionDate_list, ';', vbIndex) :: Integer AS PartionDateKindId
-                      , SPLIT_PART (inNDS_list, ';', vbIndex) :: Integer AS NDSKindId
-                      , SPLIT_PART (inDivisionPartiesId_list, ';', vbIndex) :: Integer AS DivisionPartiesId
-                ) AS tmp;
-        -- теперь следуюющий
-        vbIndex := vbIndex + 1;
-    END LOOP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer
+                               , Amount TFloat
+                               , PartionDateKindId Integer
+                               , NDSKindId Integer
+                               , DivisionPartiesId Integer
+                               , JuridicalId Integer) ON COMMIT DROP;
 
+    INSERT INTO _tmpGoods
+    SELECT *
+    FROM json_populate_recordset(null::_tmpGoods, replace(replace(replace(inJSON, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
 
     -- проверим что есть остатки
     outMessageText:= 'Ошибка.Товара нет в наличии:'||Chr(13)
-                                || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, SUM (_tmpGoods.Amount) AS Amount FROM _tmpGoods
+                                || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, SUM (_tmpGoods.Amount) AS Amount 
+                                                     FROM _tmpGoods
                                                      GROUP BY _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId)
+                                       , tmpFromJuridical AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, _tmpGoods.JuridicalId, SUM (_tmpGoods.Amount) AS Amount 
+                                                              FROM _tmpGoods
+                                                              WHERE COALESCE(_tmpGoods.JuridicalId, 0) <> 0
+                                                              GROUP BY _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, _tmpGoods.JuridicalId)
                                        , tmpContainerAll AS (SELECT tmpFrom.GoodsId, 
                                                                     Container.Id, 
                                                                     Container.Amount,
@@ -99,7 +87,8 @@ BEGIN
                                                                  CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
                                                                       THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId,
-                                                                 ContainerLinkObject_DivisionParties.ObjectId                                   AS DivisionPartiesId
+                                                                 ContainerLinkObject_DivisionParties.ObjectId                                   AS DivisionPartiesId,
+                                                                 MovementLinkObject_From.ObjectId                                               AS JuridicalId
                                                            FROM tmpContainerAll AS Container
                                                            
                                                                 LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.GoodsId
@@ -111,6 +100,10 @@ BEGIN
                                                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                                                              ON MovementLinkObject_NDSKind.MovementId = Container.M_Income
                                                                                             AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                                                                             
+                                                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                                             ON MovementLinkObject_From.MovementId = Container.M_Income
+                                                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
                                                                 LEFT JOIN ContainerlinkObject AS ContainerLinkObject_DivisionParties
                                                                                               ON ContainerLinkObject_DivisionParties.Containerid = Container.Id
@@ -173,6 +166,25 @@ BEGIN
                                                           , tmpFrom.PartionDateKindId
                                                           , tmpFrom.DivisionPartiesId
                                                   )
+                                       , tmpToJuridical AS (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.PartionDateKindId, tmpFrom.DivisionPartiesId, tmpFrom.JuridicalId, 
+                                                          SUM (COALESCE (tmpContainerPD.Amount, Container.Amount)) AS Amount
+                                                   FROM tmpFromJuridical AS tmpFrom
+
+                                                        INNER JOIN tmpContainer AS Container
+                                                                                ON Container.NDSKindId                      = tmpFrom.NDSKindId
+                                                                               AND Container.GoodsId                        = tmpFrom.GoodsId
+                                                                               AND COALESCE(Container.DivisionPartiesId, 0) = COALESCE(tmpFrom.DivisionPartiesId, 0)
+                                                                               AND COALESCE(Container.JuridicalId, 0)       = COALESCE(tmpFrom.JuridicalId, 0)
+
+                                                        LEFT OUTER JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.ID
+
+                                                   WHERE COALESCE(tmpContainerPD.PartionDateKindId, 0) = COALESCE (tmpFrom.PartionDateKindId, 0)
+                                                   GROUP BY tmpFrom.GoodsId
+                                                          , tmpFrom.NDSKindId
+                                                          , tmpFrom.PartionDateKindId
+                                                          , tmpFrom.DivisionPartiesId
+                                                          , tmpFrom.JuridicalId
+                                                  )
                                     SELECT STRING_AGG (tmp.Value, Chr(13))
                                     FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '')||
                                                      '; НДС ' || zfConvert_FloatToString(ObjectFloat_NDSKind_NDS.ValueData) ||
@@ -195,6 +207,32 @@ BEGIN
                                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = tmp.NDSKindId
                                                LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmp.PartionDateKindId
                                                LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = tmp.DivisionPartiesId
+                                          UNION ALL 
+                                          SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '')||
+                                                     '; НДС ' || zfConvert_FloatToString(ObjectFloat_NDSKind_NDS.ValueData) ||
+                                                     CASE WHEN COALESCE(Object_PartionDateKind.ID, 0) <> 0 THEN '; Тип срока : '||Object_PartionDateKind.ValueData  ELSE '' END ||
+                                                     CASE WHEN COALESCE(Object_DivisionParties.ID, 0) <> 0 THEN '; Разделение партий : '||Object_DivisionParties.ValueData  ELSE '' END ||
+                                                     CASE WHEN COALESCE(Object_Juridical.ID, 0) <> 0 THEN '; Поставщик : '||Object_Juridical.ValueData  ELSE '' END ||
+                                                     ' в чеке : ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') ||
+                                                     '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
+                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.PartionDateKindId, tmpFrom.DivisionPartiesId, tmpFrom.JuridicalId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
+                                                FROM tmpFromJuridical AS tmpFrom
+                                                     LEFT JOIN tmpToJuridical AS tmpTo 
+                                                                     ON tmpTo.GoodsId = tmpFrom.GoodsId
+                                                                    AND tmpTo.NDSKindId = tmpFrom.NDSKindId
+                                                                    AND COALESCE(tmpTo.PartionDateKindId, 0) = COALESCE(tmpFrom.PartionDateKindId, 0)
+                                                                    AND COALESCE(tmpTo.DivisionPartiesId, 0) = COALESCE(tmpFrom.DivisionPartiesId, 0)
+                                                                    AND COALESCE(tmpTo.JuridicalId, 0)       = COALESCE(tmpFrom.JuridicalId, 0)
+                                                WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
+                                               LEFT JOIN Object ON Object.Id = tmp.GoodsId
+                                               LEFT JOIN ObjectLink ON ObjectLink.ObjectId = tmp.GoodsId
+                                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure()
+                                               LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink.ChildObjectId
+                                               LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                                          ON ObjectFloat_NDSKind_NDS.ObjectId = tmp.NDSKindId
+                                               LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = tmp.PartionDateKindId
+                                               LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = tmp.DivisionPartiesId
+                                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmp.JuridicalId
                                          ) AS tmp
                                     );
 
@@ -209,7 +247,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Check_RemainsError (inGoodsId_list:= '358;349;373', inAmount_list:= '1.1;1.1;1,1', inSession:= zfCalc_UserAdmin())
 
-
-select * from gpGet_Movement_Check_RemainsError(inGoodsId_list := '36076;36076' , inAmount_list := '1;1' , inPartionDate_list := '0;0' , inNDS_list := '8;8' , inDivisionPartiesId_list := '14839320;0' ,  inSession := '3');
+select * from gpGet_Movement_Check_RemainsError(inJSON  := '[{"goodsid":4282,"amount":5,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]',  inSession := '3');

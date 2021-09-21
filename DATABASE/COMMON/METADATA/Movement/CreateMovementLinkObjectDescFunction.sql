@@ -519,6 +519,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_TopicsTestingTuning() RETURNS I
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_TopicsTestingTuning', 'Темы тестирования сотрудников' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TopicsTestingTuning');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_InsuranceCompanies() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InsuranceCompanies'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_InsuranceCompanies', 'Страховые компании' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InsuranceCompanies');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberIC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberIC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberIC', 'ФИО покупателя (Страховой компании)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberIC');
+
 
 /*-------------------------------------------------------------------------------
 
@@ -526,6 +534,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.09.21                                                                                     * zc_MovementLinkObject_InsuranceCompanies, zc_MovementLinkObject_MemberIC
  21.08.21         * zc_MovementLinkObject_WorkTimeKind
  09.08.21         * zc_MovementLinkObject_CheckedHead
                     zc_MovementLinkObject_CheckedPersonal

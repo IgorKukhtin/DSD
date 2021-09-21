@@ -51,6 +51,8 @@ RETURNS TABLE (Id Integer
              , MultiplicitySale TFloat
              , isMultiplicityError boolean
              , FixEndDate TDateTime
+             , JuridicalId Integer
+             , JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -281,7 +283,11 @@ BEGIN
                               , COALESCE(Object_Goods_Retail.PairSunAmount, 1)::TFloat AS GoodsPairSunAmount
                          FROM Object_Goods_Retail
                          WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
-                           AND Object_Goods_Retail.RetailId = 4)
+                           AND Object_Goods_Retail.RetailId = 4),
+     tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
+                         WHERE MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)),
+     tmpObject AS (SELECT * FROM Object 
+                         WHERE Object.Id IN (SELECT DISTINCT tmpMILinkObject.ObjectId FROM tmpMILinkObject))
 
        SELECT
              MovementItem.Id
@@ -334,8 +340,10 @@ BEGIN
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
            , Null::TDateTime                                                     AS FixEndDate 
+           , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
+           , Object_Juridical.ValueData                                          AS JuridicalName
            
-           FROM tmpMI AS MovementItem
+       FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                         ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
@@ -350,27 +358,32 @@ BEGIN
                                           ON Object_Goods_PairSun_Main.Id = MovementItem.GoodsId
 
             --Типы срок/не срок
-            LEFT JOIN MovementItemLinkObject AS MI_PartionDateKind
+            LEFT JOIN tmpMILinkObject AS MI_PartionDateKind
                                              ON MI_PartionDateKind.MovementItemId = MovementItem.Id
                                             AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
-            LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
+            LEFT JOIN tmpObject AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
             LEFT JOIN ObjectFloat AS ObjectFloatDay
                                   ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
                                  AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
+            LEFT JOIN tmpMILinkObject AS MILinkObject_DiscountExternal
                                              ON MILinkObject_DiscountExternal.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DiscountExternal.DescId         = zc_MILinkObject_DiscountExternal()
-            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
+            LEFT JOIN tmpObject AS Object_DiscountExternal ON Object_DiscountExternal.Id = MILinkObject_DiscountExternal.ObjectId
 
             -- Коды UKTZED
             LEFT JOIN tmpGoodsUKTZED ON tmpGoodsUKTZED.GoodsMainId = Object_Goods_Retail.GoodsMainId
                                     AND tmpGoodsUKTZED.Ord = 1
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
+            LEFT JOIN tmpMILinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MovementItem.Id
                                             AND MILinkObject_DivisionParties.DescId         = zc_MILinkObject_DivisionParties()
-            LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
+            LEFT JOIN tmpObject AS Object_DivisionParties ON Object_DivisionParties.Id = MILinkObject_DivisionParties.ObjectId
+            
+            LEFT JOIN tmpMILinkObject AS MILinkObject_Juridical
+                                             ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
+            LEFT JOIN tmpObject AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
        ;
 END;
 $BODY$
@@ -386,4 +399,5 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
 --
- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
+ 
+ select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 24916938 ,  inSession := '3');

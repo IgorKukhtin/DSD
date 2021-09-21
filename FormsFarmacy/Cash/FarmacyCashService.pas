@@ -118,8 +118,10 @@ type
     DISCEXTID: Integer;     // Дисконтная программы
     //***20.06.20
     DIVPARTID: Integer;     // Разделение партий в кассе для продажи
-    //***05.10.20
+    //***20.09.21
     ISPRESENT: Boolean;     // Подарок
+    //***05.10.20
+    JURIDID: Integer;       // Списывать товар поставщика
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -1460,6 +1462,8 @@ begin
                     DIVPARTID := FieldByName('DIVPARTID').AsInteger;
                     // ***05.10.20
                     ISPRESENT := FieldByName('ISPRESENT').AsBoolean;
+                    // ***20.09.21
+                    DIVPARTID := FieldByName('JURIDID').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1690,6 +1694,8 @@ begin
                     dsdSave.ParamByName('inDivisionPartiesID').Value := Body[I].DIVPARTID;
                     // ***05.10.20
                     dsdSave.ParamByName('inPresent').Value := Body[I].ISPRESENT;
+                    // ***20.09.21
+                    dsdSave.ParamByName('inJuridicalID').Value := Body[I].JURIDID;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //

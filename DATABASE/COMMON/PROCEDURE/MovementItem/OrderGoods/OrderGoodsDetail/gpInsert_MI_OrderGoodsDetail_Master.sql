@@ -47,7 +47,7 @@ BEGIN
        GROUP BY MovementItem.ObjectId;
          
      --
-     CREATE TEMP TABLE tmpAll (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountOrderBranch TFloat, AmountSale TFloat, AmountSalePromo TFloat, AmountBranch TFloat, TotalAmountSale TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpAll (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountSale TFloat, AmountSalePromo TFloat, TotalAmountSale TFloat) ON COMMIT DROP;
     
      -- Готовая продукция
       WITH tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
@@ -265,15 +265,15 @@ BEGIN
             HAVING SUM (COALESCE (Movement.Amount, 0)) <> 0   
            )
 
-    INSERT INTO tmpAll (GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountOrderBranch, AmountSale, AmountSalePromo, AmountBranch, TotalAmountSale)
+    INSERT INTO tmpAll (GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountSale, AmountSalePromo, TotalAmountSale)
             SELECT tmpMIAll.GoodsId
                  , tmpMIAll.GoodsKindId
                  , SUM (tmpMIAll.AmountOrder       ) AS AmountOrder
                  , SUM (tmpMIAll.AmountOrderPromo  ) AS AmountOrderPromo
-                 , SUM (tmpMIAll.AmountOrderBranch ) AS AmountOrderBranch
+                 --, SUM (tmpMIAll.AmountOrderBranch ) AS AmountOrderBranch
                  , SUM (tmpMIAll.AmountSale        ) AS AmountSale
                  , SUM (tmpMIAll.AmountSalePromo   ) AS AmountSalePromo
-                 , SUM (tmpMIAll.AmountBranch      ) AS AmountBranch
+                 --, SUM (tmpMIAll.AmountBranch      ) AS AmountBranch
                  , SUM (SUM (tmpMIAll.AmountSale)) OVER (PARTITION BY tmpMIAll.GoodsId) AS TotalAmountSale
             FROM tmpMIAll
                  INNER JOIN tmpGoodsMaster ON tmpGoodsMaster.GoodsId = tmpMIAll.GoodsId 
@@ -281,10 +281,8 @@ BEGIN
                    , tmpMIAll.GoodsKindId
             HAVING SUM (tmpMIAll.AmountOrder       ) <> 0
                 OR SUM (tmpMIAll.AmountOrderPromo  ) <> 0
-                OR SUM (tmpMIAll.AmountOrderBranch ) <> 0
                 OR SUM (tmpMIAll.AmountSale        ) <> 0
                 OR SUM (tmpMIAll.AmountSalePromo   ) <> 0
-                OR SUM (tmpMIAll.AmountBranch      ) <> 0
    ;
 
    -- сохраненные строки
@@ -313,23 +311,23 @@ BEGIN
    PERFORM lpInsert_MI_OrderGoodsDetail_Master(inId                       := COALESCE (tmpMI_Master.Id, 0) ::Integer
                                              , inMovementId               := vbMovementId
                                              , inParentId                 := inParentId
-                                             , inObjectId                 := tmpAll.GoodsId
-                                             , inGoodsKindId              := tmpAll.GoodsKindId
-                                             , inAmount                   := CASE WHEN COALESCE (tmpAll.TotalAmountSale,0) <> 0 
-                                                                                  THEN (CAST (tmpAll.AmountSale/tmpAll.TotalAmountSale AS NUMERIC (16,2))) * tmpGoodsMaster.Amount
-                                                                                  ELSE 0
-                                                                             END ::TFloat
-                                             , inAmountForecast           := tmpAll.AmountSale       ::TFloat
-                                             , inAmountForecastOrder      := tmpAll.AmountOrder      ::TFloat
-                                             , inAmountForecastPromo      := tmpAll.AmountSalePromo  ::TFloat
-                                             , inAmountForecastOrderPromo := tmpAll.AmountOrderPromo ::TFloat
+                                             , inObjectId                 := COALESCE (tmpAll.GoodsId, tmpGoodsMaster.GoodsId)
+                                             , inGoodsKindId              := COALESCE (tmpAll.GoodsKindId,0)
+                                             , inAmount                   := CAST (CASE WHEN COALESCE (tmpAll.TotalAmountSale,0) <> 0 
+                                                                                        THEN (tmpAll.AmountSale/tmpAll.TotalAmountSale) * tmpGoodsMaster.Amount
+                                                                                        ELSE tmpGoodsMaster.Amount
+                                                                                   END AS NUMERIC (16,3)) ::TFloat
+                                             , inAmountForecast           := COALESCE (tmpAll.AmountSale,0)       ::TFloat
+                                             , inAmountForecastOrder      := COALESCE (tmpAll.AmountOrder,0)      ::TFloat
+                                             , inAmountForecastPromo      := COALESCE (tmpAll.AmountSalePromo,0)  ::TFloat
+                                             , inAmountForecastOrderPromo := COALESCE (tmpAll.AmountOrderPromo,0) ::TFloat
                                              , inUserId                   := vbUserId
                                               )
-   FROM tmpAll
+   FROM tmpGoodsMaster
+       LEFT JOIN tmpAll ON tmpAll.GoodsId = tmpGoodsMaster.GoodsId
        LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpAll.GoodsId
                              AND tmpMI_Master.GoodsKindId = tmpAll.GoodsKindId
-       LEFT JOIN tmpGoodsMaster ON tmpGoodsMaster.GoodsId = tmpAll.GoodsId
-       ;                              
+       ;                            
 
 END;
 $BODY$

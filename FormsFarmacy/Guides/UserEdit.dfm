@@ -313,7 +313,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWorkingMultiple'
+        Name = 'inisWorkingMultiple'
         Value = Null
         Component = cbWorkingMultiple
         DataType = ftBoolean

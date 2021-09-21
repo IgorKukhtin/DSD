@@ -268,6 +268,14 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 60
           end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colColor_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False

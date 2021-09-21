@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpReport_Losses_KVK(
     IN inKVK                TVarChar  ,
     IN inSession            TVarChar       -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (MovementDescName TVarChar
+RETURNS TABLE (MovementDescName TVarChar, DocumentKindName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureName TVarChar, GoodsKindName TVarChar
@@ -26,6 +27,7 @@ RETURNS TABLE (MovementDescName TVarChar
              , Amount TFloat
              , Amount_pu TFloat
              , Amount_diff TFloat
+             , ContainerId Integer
               )
 AS
 $BODY$
@@ -33,15 +35,16 @@ BEGIN
 
      RETURN QUERY 
      WITH 
-     tmpMovementAll AS (SELECT Movement.Id as MovementId
-                             , Movement.InvNumber  AS InvNumber
-                             , Movement.OperDate
-                             , MovementDesc.ItemName AS MovementDescName
+     tmpMovementAll AS (SELECT Movement.Id               AS MovementId
+                             , Movement.InvNumber        AS InvNumber
+                             , Movement.OperDate         AS OperDate
+                             , MovementDesc.ItemName     AS MovementDescName
+                             , MLO_DocumentKind.ObjectId AS DocumentKindId
                         FROM Movement
-                             INNER JOIN MovementLinkObject AS MLO_DocumentKind
+                             LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                            ON MLO_DocumentKind.MovementId = Movement.Id
                                                           AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
-                                                          AND MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight()
+                                  --                        AND MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight()
                              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                         WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate      -->'01.09.2021'--
@@ -58,6 +61,7 @@ BEGIN
                )
 
    , tmpMovement AS (SELECT tmpMovementAll.*
+                          , MovementLinkObject_From.ObjectId AS UnitId
                      FROM tmpMovementAll
                           LEFT JOIN tmpMLO AS MovementLinkObject_User
                                            ON MovementLinkObject_User.MovementId = tmpMovementAll.MovementId
@@ -105,6 +109,8 @@ BEGIN
                 )
 
    , tmpWeighingProductionAll AS (SELECT tmpMI.MovementDescName
+                                       , tmpMI.DocumentKindId
+                                       , tmpMI.UnitId
                                        , tmpMI.GoodsId
                                        , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                                        , SUM (tmpMI.Amount) AS Amount
@@ -166,6 +172,8 @@ BEGIN
                                        , tmpMI.OperDate
                                        , tmpMI.MovementDescName
                                        , */tmpMI.GoodsId
+                                       , tmpMI.UnitId
+                                       , tmpMI.DocumentKindId
                                        , tmpMI.MovementDescName
                                        , MILinkObject_GoodsKind.ObjectId
                                        , MIString_KVK.ValueData 
@@ -200,6 +208,8 @@ BEGIN
                         )
 
    , tmpWeighingProduction AS (SELECT tmp.MovementDescName
+                                    , tmp.UnitId
+                                    , tmp.DocumentKindId
                                     , tmp.GoodsId
                                     , tmp.GoodsKindId
                                     , tmp.KVK
@@ -213,6 +223,8 @@ BEGIN
                                FROM tmpWeighingProductionAll AS tmp
                                     LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = tmp.MovementId_Partion
                                GROUP BY tmp.MovementDescName
+                                      , tmp.UnitId
+                                      , tmp.DocumentKindId
                                       , tmp.GoodsId
                                       , tmp.GoodsKindId
                                       , tmp.KVK
@@ -278,6 +290,9 @@ BEGIN
 
      --–≈«”À‹“¿“
      SELECT tmpWeighingProduction.MovementDescName
+          , Object_DocumentKind.ValueData    ::TVarChar AS DocumentKindName
+          , Object_Unit.Id                   ::Integer  AS UnitId
+          , Object_Unit.ValueData            ::TVarChar AS UnitName
           , Object_Goods.Id                   ::Integer AS GoodsId
           , Object_Goods.ObjectCode           ::Integer AS GoodsCode
           , Object_Goods.ValueData                      AS GoodsName
@@ -302,12 +317,15 @@ BEGIN
           , tmpWeighingProduction.Amount ::TFloat AS Amount
           , tmpMI_Master_PU.Amount       ::TFloat AS Amount_pu          
           , (COALESCE (tmpMI_Master_PU.Amount,0) - COALESCE (tmpWeighingProduction.Amount,0)) ::TFloat AS Amount_diff
+          , tmpWeighingProduction.ContainerId ::Integer
 
      FROM tmpWeighingProduction
           LEFT JOIN tmpMI_Master_PU ON tmpMI_Master_PU.ContainerId = tmpWeighingProduction.ContainerId
                                    AND COALESCE (tmpMI_Master_PU.PersonalId_KVK,0) = COALESCE (tmpWeighingProduction.PersonalId_KVK,0)
                                    AND COALESCE (tmpMI_Master_PU.KVK,'') = COALESCE (tmpWeighingProduction.KVK,'')
 
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpWeighingProduction.DocumentKindId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpWeighingProduction.UnitId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpWeighingProduction.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpWeighingProduction.GoodsKindId
 
