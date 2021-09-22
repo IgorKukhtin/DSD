@@ -1091,7 +1091,11 @@ uses
   DiscountExternalSupplierEdit in '..\..\FormsFarmacy\Guides\DiscountExternalSupplierEdit.pas' {DiscountExternalSupplierEditForm: TParentForm},
   EmployeeScheduleUserVIP in '..\..\FormsFarmacy\Document\EmployeeScheduleUserVIP.pas' {EmployeeScheduleUserVIPForm: TParentForm},
   WagesVIPJournal in '..\..\FormsFarmacy\Document\WagesVIPJournal.pas',
-  WagesVIP in '..\..\FormsFarmacy\Document\WagesVIP.pas' {WagesVIPForm: TParentForm};
+  WagesVIP in '..\..\FormsFarmacy\Document\WagesVIP.pas' {WagesVIPForm: TParentForm},
+  MemberICEdit in '..\..\FormsFarmacy\Guides\MemberICEdit.pas' {MemberICEditForm: TParentForm},
+  MemberIC in '..\..\FormsFarmacy\Guides\MemberIC.pas' {MemberICForm: TParentForm},
+  InsuranceCompanies in '..\..\FormsFarmacy\Guides\InsuranceCompanies.pas' {InsuranceCompaniesForm: TParentForm},
+  InsuranceCompaniesEdit in '..\..\FormsFarmacy\Guides\InsuranceCompaniesEdit.pas' {InsuranceCompaniesEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

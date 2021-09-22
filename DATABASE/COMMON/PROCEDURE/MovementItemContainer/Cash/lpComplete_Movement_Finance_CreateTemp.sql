@@ -34,7 +34,7 @@ BEGIN
                                , PartionMovementId Integer, PartionGoodsId Integer, AssetId Integer
                                , AnalyzerId Integer, ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer, ContainerId_Analyzer Integer, ContainerIntId_analyzer Integer
                                , CurrencyId Integer
-                               , CarId Integer, NDSKindId Integer, DivisionPartiesId Integer
+                               , CarId Integer, NDSKindId Integer, DivisionPartiesId Integer, JuridicalId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
      END IF;

@@ -1463,7 +1463,7 @@ begin
                     // ***05.10.20
                     ISPRESENT := FieldByName('ISPRESENT').AsBoolean;
                     // ***20.09.21
-                    DIVPARTID := FieldByName('JURIDID').AsInteger;
+                    JURIDID := FieldByName('JURIDID').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1659,6 +1659,8 @@ begin
                   dsdSave.Params.AddParam('inDivisionPartiesID', ftInteger, ptInput, Null);
                   // ***05.10.20
                   dsdSave.Params.AddParam('inPresent', ftBoolean, ptInput, Null);
+                  // ***05.10.20
+                  dsdSave.Params.AddParam('inJuridicalID', ftInteger, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //

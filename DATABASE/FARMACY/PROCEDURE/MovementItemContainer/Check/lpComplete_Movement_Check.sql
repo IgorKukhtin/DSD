@@ -167,8 +167,8 @@ BEGIN
     END IF;
 
     -- предварительно сохранили продажи
-    INSERT INTO _tmpItem (MovementItemId, ObjectId, NDSKindId, DivisionPartiesId, OperSumm, Price)
-       SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId), COALESCE (MILinkObject_DivisionParties.ObjectId, 0),  MI.Amount, COALESCE (MIFloat_Price.ValueData, 0)
+    INSERT INTO _tmpItem (MovementItemId, ObjectId, NDSKindId, DivisionPartiesId, JuridicalId, OperSumm, Price)
+       SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId), COALESCE (MILinkObject_DivisionParties.ObjectId, 0), COALESCE (MILinkObject_Juridical.ObjectId, 0),  MI.Amount, COALESCE (MIFloat_Price.ValueData, 0)
        FROM MovementItem AS MI
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MI.Id
@@ -193,6 +193,10 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MI.Id
                                             AND MILinkObject_DivisionParties.DescId = zc_MILinkObject_DivisionParties()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
+                                             ON MILinkObject_Juridical.MovementItemId = MI.Id
+                                            AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
 
        WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE
          AND COALESCE (MIChild.Id, 0) = 0;
@@ -229,7 +233,7 @@ BEGIN
             , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                                 AS DivisionPartiesId
             , CASE WHEN vbDiscountExternalId = 0 THEN Container.Amount ELSE FLOOR(Container.Amount) END AS Amount
             , Movement.OperDate
-            , tmpSupplier.JuridicalId
+            , COALESCE (tmpSupplier.JuridicalId, ItemJuridical.JuridicalId)
        FROM (SELECT DISTINCT ObjectId FROM _tmpItem) AS tmp
             INNER JOIN Container ON Container.DescId = zc_Container_Count()
                                 AND Container.WhereObjectId = vbUnitId
@@ -276,9 +280,22 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
             LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
+            
+            LEFT JOIN (SELECT DISTINCT _tmpItem.ObjectId
+                            , _tmpItem.NDSKindId
+                            , _tmpItem.DivisionPartiesId
+                            , _tmpItem.JuridicalId 
+                       FROM _tmpItem 
+                       WHERE COALESCE(JuridicalId, 0) <> 0) AS ItemJuridical 
+                                                            ON ItemJuridical.ObjectId = Container.ObjectId
+                                                           AND COALESCE(ItemJuridical.NDSKindId, 0) = CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                                                                                             OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                                                                           THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END 
+                                                           AND COALESCE(ItemJuridical.DivisionPartiesId, 0) = COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0) 
 
        WHERE COALESCE (PDContainer.id, 0) = 0
          AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0 AND Container.Amount >= 1)
+         AND (COALESCE (ItemJuridical.JuridicalId, 0) = 0 OR MovementLinkObject_From.ObjectId = COALESCE (ItemJuridical.JuridicalId, 0))
        ;
          
 /*    IF COALESCE (vbDiscountExternalId, 0) <> 0
@@ -360,10 +377,11 @@ BEGIN
            outMessageText:= '' || (SELECT STRING_AGG (tmp.Value, ' (***) ')
                                     FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') ||
                                                  CASE WHEN COALESCE(Object_DivisionParties.Id, 0) <> 0 THEN '; Разделение партий: '||Object_DivisionParties.ValueData ELSE '' END||
+                                                 CASE WHEN COALESCE(Object_Juridical.Id, 0) <> 0 THEN '; По поставщику: '||Object_Juridical.ValueData ELSE '' END||
                                                  ' в чеке: ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') ||
                                                  '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
-                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.DivisionPartiesId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
-                                                FROM (SELECT ObjectId AS GoodsId, NDSKindId, DivisionPartiesId, SUM (OperSumm) AS Amount
+                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.DivisionPartiesId, tmpFrom.JuridicalId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
+                                                FROM (SELECT ObjectId AS GoodsId, NDSKindId, DivisionPartiesId, MAX(JuridicalId) AS JuridicalId, SUM (OperSumm) AS Amount
                                                       FROM _tmpItem GROUP BY ObjectId, NDSKindId, DivisionPartiesId) AS tmpFrom
                                                       LEFT JOIN (SELECT _tmpItem_remains.GoodsId, _tmpItem_remains.NDSKindId, _tmpItem_remains.DivisionPartiesId, SUM (Amount) AS Amount
                                                                  FROM _tmpItem_remains
@@ -372,6 +390,7 @@ BEGIN
                                                 WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
                                                LEFT JOIN Object ON Object.Id = tmp.GoodsId
                                                LEFT JOIN Object AS Object_DivisionParties ON Object_DivisionParties.Id = tmp.DivisionPartiesId
+                                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmp.JuridicalId
                                                LEFT JOIN ObjectLink ON ObjectLink.ObjectId = tmp.GoodsId
                                                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure()
                                                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink.ChildObjectId

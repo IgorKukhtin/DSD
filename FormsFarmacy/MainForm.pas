@@ -867,6 +867,11 @@ type
     N315: TMenuItem;
     actWagesVIP: TdsdOpenForm;
     VIP4: TMenuItem;
+    actInsuranceCompanies: TdsdOpenForm;
+    actMemberIC: TdsdOpenForm;
+    N316: TMenuItem;
+    N317: TMenuItem;
+    N318: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

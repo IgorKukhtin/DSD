@@ -78,6 +78,7 @@ type
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadInstructionsFormTest;
+    procedure LoadInsuranceCompaniesFormTest;
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadIlliquidUnitFormTest;
@@ -97,6 +98,7 @@ type
     procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadMemberICFormTest;
     procedure LoadMemberIncomeCheckFormTest;
     procedure LoadMovementReportUnLiquidFormtest;
     procedure LoadKindFormTest;
@@ -772,6 +774,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadMemberICFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberICEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberICEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberICForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberICForm');
 end;
 
 procedure TLoadFormTest.LoadMemberIncomeCheckFormTest;
@@ -2425,6 +2436,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInstructionsCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInstructionsCashForm');
+end;
+
+procedure TLoadFormTest.LoadInsuranceCompaniesFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompaniesEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompaniesEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompaniesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompaniesForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;
