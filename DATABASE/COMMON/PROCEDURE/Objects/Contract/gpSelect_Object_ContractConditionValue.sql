@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar  
              , BonusKindId Integer, BonusKindName TVarChar
              , BankId Integer, BankName TVarChar
-             , ContractConditionComment TVarChar 
+             , ContractConditionId Integer, ContractConditionComment TVarChar 
              , Value TFloat
              , StartDate_ch TDateTime, EndDate_ch TDateTime
              , InfoMoneyGroupCode_ch Integer, InfoMoneyGroupName_ch TVarChar
@@ -117,6 +117,7 @@ BEGIN
        , Object_Bank.Id               AS BankId
        , Object_Bank.ValueData        AS BankName
 
+       , tmpContractCondition.ContractConditionId
        , tmpContractCondition.Comment      AS ContractConditionComment
        , ObjectFloat_Value.ValueData       AS Value
 
@@ -135,7 +136,7 @@ BEGIN
        , Object_ContractSend.ValueData        AS ContractSendName
        , Object_ContractSendStateKind.ObjectCode  AS ContractStateKindCode_Send
      
-       , Object_ContractSendTag.ValueData         AS ContractTagName_Send
+       , Object_ContractSendTag.ValueData     AS ContractTagName_Send
        , Object_InfoMoneySend.ObjectCode      AS InfoMoneyCode_Send
        , Object_InfoMoneySend.ValueData       AS InfoMoneyName_Send 
        , Object_JuridicalSend.ObjectCode      AS JuridicalCode_Send
@@ -291,7 +292,6 @@ BEGIN
                              ON ObjectDate_EndDate.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
    WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0
-
    ;
   
 END;

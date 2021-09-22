@@ -409,16 +409,22 @@ end;
 procedure TLoadFormTest.LoadContractFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
+  { exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-   {exit;
-
+   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
-
+   exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;

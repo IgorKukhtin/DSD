@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractConditionPartner (Integer,
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractConditionPartner(
- INOUT ioId                      Integer   ,    -- ключ объекта < Улица/проспект> 
+ INOUT ioId                      Integer   ,    -- ключ объекта < > 
     IN inCode                    Integer   ,    -- Код объекта <>
     IN inContractConditionId     Integer   ,    --   
     IN inPartnerId               Integer   ,    --   

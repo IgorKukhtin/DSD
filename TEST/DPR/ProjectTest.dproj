@@ -1784,7 +1784,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractPartnerEdit.pas">
-				<Form>ContractPartnerEditForm</Form>
+				<Form>ContractConditionPartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\RoleMaskEdit.pas">
@@ -4530,6 +4530,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_CashUserDialog.pas">
 				<Form>Report_CashUserDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContractConditionPartnerValue.pas">
+				<Form>ContractConditionPartnerValueForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContractConditionPartnerValueEdit.pas">
+				<Form>ContractConditionPartnerValueEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

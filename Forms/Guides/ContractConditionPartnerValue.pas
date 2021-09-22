@@ -1,4 +1,4 @@
-unit ContractConditionValue;
+unit ContractConditionPartnerValue;
 
 interface
 
@@ -26,11 +26,10 @@ uses
   dsdGuides, cxTextEdit, cxLabel;
 
 type
-  TContractConditionValueForm = class(TParentForm)
+  TContractConditionPartnerValueForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     InvNumber: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -56,15 +55,10 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    SigningDate: TcxGridDBColumn;
-    StartDate: TcxGridDBColumn;
-    EndDate: TcxGridDBColumn;
     ContractKindName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     JuridicalCode: TcxGridDBColumn;
-    InvNumberArchive: TcxGridDBColumn;
-    PersonalName: TcxGridDBColumn;
     InfoMoneyGroupCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationCode: TcxGridDBColumn;
@@ -79,8 +73,6 @@ type
     InfoMoneyName_ch: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
-    AreaName: TcxGridDBColumn;
-    ContractArticleName: TcxGridDBColumn;
     ContractStateKindCode: TcxGridDBColumn;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
     OKPO: TcxGridDBColumn;
@@ -90,11 +82,9 @@ type
     JuridicalChoiceForm: TOpenChoiceForm;
     ContractKindChoiceForm: TOpenChoiceForm;
     InfoMoneyChoiceForm: TOpenChoiceForm;
-    JuridicalBasisName: TcxGridDBColumn;
     ContractConditionKindName: TcxGridDBColumn;
     Value: TcxGridDBColumn;
-    Code: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     actInsertJuridical: TdsdInsertUpdateAction;
     bbInsertJuridical: TdxBarButton;
     actMultiInsertJuridical: TMultiAction;
@@ -112,16 +102,8 @@ type
     spContractRead: TdsdStoredProc;
     spContractPartner: TdsdStoredProc;
     spContractClose: TdsdStoredProc;
-    ContractConditionComment: TcxGridDBColumn;
+    ContractConditionName: TcxGridDBColumn;
     BonusKindName: TcxGridDBColumn;
-    BankName: TcxGridDBColumn;
-    BankAccountExternal: TcxGridDBColumn;
-    IsDefault: TcxGridDBColumn;
-    IsStandart: TcxGridDBColumn;
-    IsUnique: TcxGridDBColumn;
-    IsPersonal: TcxGridDBColumn;
-    ContractSendName: TcxGridDBColumn;
-    CurrencyName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
@@ -130,7 +112,13 @@ type
     ExecuteDialog: TExecuteDialog;
     RefreshDispatcher: TRefreshDispatcher;
     PaidKindName_Condition: TcxGridDBColumn;
+    spErasedUnErasedCCPartner: TdsdStoredProc;
+    actSetErasedCCPartner: TdsdUpdateErased;
+    actSetUnErased——Partner: TdsdUpdateErased;
+    bbSetErasedCCPartner: TdxBarButton;
+    bbSetUnErased——Partner: TdxBarButton;
     FormParams: TdsdFormParams;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -142,6 +130,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractConditionValueForm);
+  RegisterClass(TContractConditionPartnerValueForm);
 
 end.

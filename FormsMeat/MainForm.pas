@@ -1330,6 +1330,8 @@ type
     miReport_PromoInvoice: TMenuItem;
     actReport_Losses_KVK: TdsdOpenForm;
     miReport_Losses_KVK: TMenuItem;
+    actContractConditionPartnerValue: TdsdOpenForm;
+    miContractConditionPartnerValue: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

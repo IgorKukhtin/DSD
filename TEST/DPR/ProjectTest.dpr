@@ -604,7 +604,7 @@ uses
   TransferDebtOut_Order in '..\..\Forms\Document\TransferDebtOut_Order.pas' {TransferDebtOut_OrderForm: TParentForm},
   TransferDebtOut_OrderJournal in '..\..\Forms\Document\TransferDebtOut_OrderJournal.pas' {TransferDebtOut_OrderJournalForm: TParentForm},
   ContractPartner in '..\..\Forms\Guides\ContractPartner.pas' {ContractPartnerForm: TParentForm},
-  ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractPartnerEditForm: TParentForm},
+  ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractConditionPartnerEditForm: TParentForm},
   RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm},
   RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   ToolsWeighingPlace_Object in '..\..\Forms\Guides\ToolsWeighingPlace_Object.pas' {ToolsWeighingPlace_ObjectForm: TParentForm},
@@ -1312,7 +1312,9 @@ uses
   gpReport_PromoInvoice in '..\..\Forms\Report\gpReport_PromoInvoice.pas' {Report_PromoInvoiceForm: TParentForm},
   Report_Losses_KVKDialog in '..\..\Forms\Report\Report_Losses_KVKDialog.pas' {Report_Losses_KVKDialogForm: TParentForm},
   Report_Losses_KVK in '..\..\Forms\Report\Report_Losses_KVK.pas' {Report_Losses_KVKForm: TParentForm},
-  Report_CashUserDialog in '..\..\Forms\Report\Report_CashUserDialog.pas' {Report_CashUserDialogForm: TParentForm};
+  Report_CashUserDialog in '..\..\Forms\Report\Report_CashUserDialog.pas' {Report_CashUserDialogForm: TParentForm},
+  ContractConditionPartnerValue in '..\..\Forms\Guides\ContractConditionPartnerValue.pas' {ContractConditionPartnerValueForm: TParentForm},
+  ContractConditionPartnerValueEdit in '..\..\Forms\Guides\ContractConditionPartnerValueEdit.pas' {ContractConditionPartnerValueEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

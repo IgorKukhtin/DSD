@@ -308,6 +308,7 @@ BEGIN
             , Object_PositionKVK.ValueData   AS PositionName_KVK
             , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
             , Object_UnitKVK.ValueData       AS UnitName_KVK
+            , MIString_KVK.ValueData       AS KVK
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
