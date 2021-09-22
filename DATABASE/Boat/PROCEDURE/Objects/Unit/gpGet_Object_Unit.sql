@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ParentId Integer, ParentName TVarChar
              , ChildId Integer, ChildName  TVarChar
+             , AccountDirectionId Integer, AccountDirectionName TVarChar
  ) 
 AS
 $BODY$
@@ -35,7 +36,9 @@ BEGIN
            ,  0 :: Integer                          AS ParentId         
            , '' :: TVarChar                         AS ParentName       
            ,  0 :: Integer                          AS ChildId          
-           , '' :: TVarChar                         AS ChildName        
+           , '' :: TVarChar                         AS ChildName  
+           , CAST (0 as Integer)    AS AccountDirectionId
+           , CAST ('' as TVarChar)  AS AccountDirectionName      
        ;
    ELSE
        RETURN QUERY
@@ -52,7 +55,9 @@ BEGIN
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.Id                 AS ChildId
            , Object_Child.ValueData          AS ChildName
-    
+
+           , Object_AccountDirection.Id         AS AccountDirectionId
+           , Object_AccountDirection.ValueData  AS AccountDirectionName
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS ObjectString_Address
                                    ON ObjectString_Address.ObjectId = Object_Unit.Id
@@ -79,6 +84,11 @@ BEGIN
                                 AND ObjectLink_Unit_Child.DescId = zc_ObjectLink_Unit_Child()
             LEFT JOIN Object AS Object_Child ON Object_Child.Id = ObjectLink_Unit_Child.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+            LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
+
       WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -92,6 +102,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.09.21         *
  22.10.20         *
 */
 

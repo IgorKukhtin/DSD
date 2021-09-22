@@ -53,6 +53,9 @@ type
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     GuidesJuridical: TdsdGuides;
+    ceAccountDirection: TcxButtonEdit;
+    GuidesAccountDirection: TdsdGuides;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

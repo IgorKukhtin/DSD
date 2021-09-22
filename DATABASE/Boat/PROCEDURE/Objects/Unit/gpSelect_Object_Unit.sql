@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, Phone TVarChar
              , Comment TVarChar
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
+             , AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean)
@@ -35,6 +36,10 @@ BEGIN
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.ValueData          AS ChildName
+
+           , Object_AccountDirection.Id         AS AccountDirectionId
+           , Object_AccountDirection.ObjectCode AS AccountDirectionCode
+           , Object_AccountDirection.ValueData  AS AccountDirectionName
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
@@ -67,6 +72,10 @@ BEGIN
                                 AND ObjectLink_Unit_Child.DescId = zc_ObjectLink_Unit_Child()
             LEFT JOIN Object AS Object_Child ON Object_Child.Id = ObjectLink_Unit_Child.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+            LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Unit.Id
@@ -88,6 +97,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.09.21         *
  22.10.20         *
 */
 

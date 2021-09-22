@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
     IN inChildId                  Integer   ,    -- ключ объекта <Склад>
+    IN inAccountDirectionId       Integer   ,    -- Аналитики счетов - направления
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -50,6 +52,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Склад>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Child(), ioId, inChildId);
+   -- сохранили связь с <Аналитики счетов - направления>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -70,7 +74,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.10.20          *
+ 22.09.21         *
+ 22.10.20         *
 */
 
 -- тест

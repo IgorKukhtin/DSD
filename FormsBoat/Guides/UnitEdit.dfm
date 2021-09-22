@@ -2,7 +2,7 @@ object UnitEditForm: TUnitEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1082#1083#1072#1076'>'
-  ClientHeight = 394
+  ClientHeight = 450
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton1: TcxButton
     Left = 35
-    Top = 355
+    Top = 416
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 355
+    Top = 416
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -67,7 +67,7 @@ object UnitEditForm: TUnitEditForm
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 192
     Properties.Buttons = <
       item
@@ -76,7 +76,7 @@ object UnitEditForm: TUnitEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 275
+    Width = 273
   end
   object edAddress: TcxTextEdit
     Left = 10
@@ -106,7 +106,7 @@ object UnitEditForm: TUnitEditForm
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 234
     Properties.Buttons = <
       item
@@ -115,7 +115,7 @@ object UnitEditForm: TUnitEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 275
+    Width = 273
   end
   object cxLabel8: TcxLabel
     Left = 10
@@ -123,7 +123,7 @@ object UnitEditForm: TUnitEditForm
     Caption = #1057#1082#1083#1072#1076
   end
   object ceChild: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 277
     Properties.Buttons = <
       item
@@ -132,18 +132,35 @@ object UnitEditForm: TUnitEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 275
+    Width = 273
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 304
+    Top = 356
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 322
+    Top = 374
     TabOrder = 17
     Width = 273
+  end
+  object ceAccountDirection: TcxButtonEdit
+    Left = 10
+    Top = 323
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 273
+  end
+  object cxLabel9: TcxLabel
+    Left = 10
+    Top = 305
+    Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
   end
   object ActionList: TActionList
     Left = 144
@@ -247,6 +264,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inChildId'
         Value = Null
         Component = GuidesChild
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountDirectionId'
+        Value = Null
+        Component = GuidesAccountDirection
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -359,6 +384,21 @@ object UnitEditForm: TUnitEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = Null
+        Component = GuidesAccountDirection
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = Null
+        Component = GuidesAccountDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -439,7 +479,7 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end>
     Left = 192
-    Top = 250
+    Top = 258
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -469,5 +509,34 @@ object UnitEditForm: TUnitEditForm
       end>
     Left = 128
     Top = 162
+  end
+  object GuidesAccountDirection: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountDirection
+    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAccountDirectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAccountDirection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAccountDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 237
+    Top = 314
   end
 end

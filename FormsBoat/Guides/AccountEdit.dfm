@@ -418,8 +418,8 @@
     Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 136
+    Left = 65528
+    Top = 184
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'

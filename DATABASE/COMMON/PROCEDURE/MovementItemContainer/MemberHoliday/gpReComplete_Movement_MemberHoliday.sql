@@ -19,6 +19,8 @@ BEGIN
          -- Распроводим Документ
          PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                       , inUserId     := vbUserId);
+         --при распроведении или удалении - в табеле удаляется WorkTimeKind
+         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, TRUE, inSession);
      END IF;
 
      -- проводим Документ + сохранили протокол
@@ -26,6 +28,9 @@ BEGIN
                                 , inDescId     := zc_Movement_MemberHoliday()
                                 , inUserId     := vbUserId
                                  );
+
+     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, FALSE, inSession);
 
 END;
 $BODY$
