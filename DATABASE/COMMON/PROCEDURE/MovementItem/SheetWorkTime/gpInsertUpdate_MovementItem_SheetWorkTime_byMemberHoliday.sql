@@ -32,8 +32,8 @@ BEGIN
                                                      , tmp.PersonalGroupId    :: Integer    -- Группировка Сотрудника
                                                      , tmp.StorageLineId      :: Integer    -- линия произ-ва
                                                      , tmp.OperDate           :: TDateTime  -- дата
-                                                     , tmp.Value              :: TVarChar   -- часы
-                                                     , tmp.WorkTimeKindId     :: Integer    
+                                                     , COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
+                                                     , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer    
                                                      , inSession              :: TVarChar
                                                      )
      FROM (WITH

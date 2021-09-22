@@ -31,6 +31,8 @@ BEGIN
      THEN
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := inUserId);
+         --при распроведении или удалении - в табеле удаляется WorkTimeKind
+         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, inUserId::TVarChar);
      END IF;
      
      -- определяем признак Создание/Корректировка
