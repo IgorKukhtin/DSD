@@ -83,7 +83,6 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_ShortName
                                     ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE 0 END
                                    AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
-         LIMIT 1
      ) AS tmp
      ;
 
