@@ -82,6 +82,7 @@ type
     actUpdateNotMCS: TdsdExecStoredProc;
     bbUpdateNotMCS: TdxBarButton;
     isNotMCS: TcxGridDBColumn;
+    CommentCustomer: TcxGridDBColumn;
   private
     { Private declarations }
   public

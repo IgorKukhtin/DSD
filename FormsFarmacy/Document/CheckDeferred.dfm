@@ -203,6 +203,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
             Options.Editing = False
             Width = 57
           end
+          object CommentCustomer: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1082#1083#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'CommentCustomer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False

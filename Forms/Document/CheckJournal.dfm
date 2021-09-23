@@ -536,6 +536,14 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
+          object CommentCustomer: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1082#1083#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'CommentCustomer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
         end
       end
     end

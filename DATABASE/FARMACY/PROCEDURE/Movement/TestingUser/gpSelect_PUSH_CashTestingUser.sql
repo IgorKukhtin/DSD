@@ -108,7 +108,7 @@ BEGIN
                            GROUP BY tmpUser.UserId
                            )
 
-   SELECT 'У вас не сдан экзамен - сдача обязательна!'::TBlob AS Message,
+   SELECT 'У вас не сдан экзамен! Сдайте его в текущем месяце!'::TBlob AS Message,
           ''::TVarChar            AS FormName,
           ''::TVarChar            AS Button,
           ''::TVarChar            AS Params,
