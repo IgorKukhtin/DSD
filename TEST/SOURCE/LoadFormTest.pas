@@ -2955,6 +2955,11 @@ end;
 
 procedure TLoadFormTest.LoadReportPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_PlanFactForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_PlanFactForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_PlanFactDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_PlanFactDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturn_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturn_byPromoForm');

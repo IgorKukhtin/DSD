@@ -1314,7 +1314,9 @@ uses
   Report_Losses_KVK in '..\..\Forms\Report\Report_Losses_KVK.pas' {Report_Losses_KVKForm: TParentForm},
   Report_CashUserDialog in '..\..\Forms\Report\Report_CashUserDialog.pas' {Report_CashUserDialogForm: TParentForm},
   ContractConditionPartnerValue in '..\..\Forms\Guides\ContractConditionPartnerValue.pas' {ContractConditionPartnerValueForm: TParentForm},
-  ContractConditionPartnerValueEdit in '..\..\Forms\Guides\ContractConditionPartnerValueEdit.pas' {ContractConditionPartnerValueEditForm: TParentForm};
+  ContractConditionPartnerValueEdit in '..\..\Forms\Guides\ContractConditionPartnerValueEdit.pas' {ContractConditionPartnerValueEditForm: TParentForm},
+  Report_Promo_PlanFact in '..\..\Forms\Report\Report_Promo_PlanFact.pas' {Report_Promo_PlanFactForm: TParentForm},
+  Report_Promo_PlanFactDialog in '..\..\Forms\Report\Report_Promo_PlanFactDialog.pas' {Report_Promo_PlanFactDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
