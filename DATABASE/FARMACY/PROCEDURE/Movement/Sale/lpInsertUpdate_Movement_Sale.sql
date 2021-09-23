@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTi
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
@@ -22,6 +23,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inMemberSP              Integer    , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
     IN inisNP                  Boolean    , -- Доставка "Новой почтой"
+    IN inInsuranceCompaniesId  Integer    , -- Страховые компании
+    IN inMemberICId            Integer    , -- ФИО покупателя (Страховой компании)
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -72,6 +75,11 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerMedical(), ioId, inPartnerMedicalId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GroupMemberSP(), ioId, inGroupMemberSPId);
+
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InsuranceCompanies(), ioId, inInsuranceCompaniesId);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberIC(), ioId, inMemberICId);
 
     -- сохранили <>
 

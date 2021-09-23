@@ -1095,7 +1095,8 @@ uses
   MemberICEdit in '..\..\FormsFarmacy\Guides\MemberICEdit.pas' {MemberICEditForm: TParentForm},
   MemberIC in '..\..\FormsFarmacy\Guides\MemberIC.pas' {MemberICForm: TParentForm},
   InsuranceCompanies in '..\..\FormsFarmacy\Guides\InsuranceCompanies.pas' {InsuranceCompaniesForm: TParentForm},
-  InsuranceCompaniesEdit in '..\..\FormsFarmacy\Guides\InsuranceCompaniesEdit.pas' {InsuranceCompaniesEditForm: TParentForm};
+  InsuranceCompaniesEdit in '..\..\FormsFarmacy\Guides\InsuranceCompaniesEdit.pas' {InsuranceCompaniesEditForm: TParentForm},
+  InsuranceCompanies_Object in '..\..\FormsFarmacy\Guides\InsuranceCompanies_Object.pas' {InsuranceCompanies_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -2445,6 +2445,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompaniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompaniesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompanies_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompanies_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

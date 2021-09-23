@@ -468,6 +468,7 @@ BEGIN
      -- !!! Виды соц.проектов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SPKind_SP(),   inDescId:= zc_Object_SPKind(), inCode:= 1, inName:= 'Соц. проект',        inEnumName:= 'zc_Enum_SPKind_SP');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SPKind_1303(), inDescId:= zc_Object_SPKind(), inCode:= 2, inName:= 'Постановление 1303', inEnumName:= 'zc_Enum_SPKind_1303');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SPKind_InsuranceCompanies(), inDescId:= zc_Object_SPKind(), inCode:= 3, inName:= 'Продажи через страховые компании', inEnumName:= 'zc_Enum_SPKind_InsuranceCompanies');
 
 
 END $$;

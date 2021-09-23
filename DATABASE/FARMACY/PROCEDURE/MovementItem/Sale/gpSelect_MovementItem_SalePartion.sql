@@ -434,6 +434,13 @@ BEGIN
                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
 
                              )
+              , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                    , ObjectFloat_NDSKind_NDS.ValueData
+                               FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                               WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                               )
+              , tmpMLinkObject AS (SELECT * FROM MovementLinkObject 
+                                   WHERE MovementId IN (SELECT DISTINCT MIC_InfoFull.MovementIncomeId FROM MIC_InfoFull))
               , MIC_InfoAll AS (
                              SELECT
                                   MIC.ContainerId
@@ -441,7 +448,7 @@ BEGIN
                                 , MIC.Amount
                                 , MIC.PriceOut
                                 , CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN  MIFloat_Price.ValueData
-                                     ELSE (MIFloat_Price.ValueData * (1 + Movement_Income.NDS/100))::TFloat END AS PriceWithVAT
+                                     ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData /100))::TFloat END AS PriceWithVAT
 
                                 , CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData,FALSE) = FALSE
                                   THEN  MIFloat_Price.ValueData
@@ -449,16 +456,15 @@ BEGIN
                                   END::TFloat AS PriceWithOutVAT
 
                                 , MovementLinkObject_From.ObjectId        AS JuridicalId
+                                , Object_Juridical.ValueData              AS JuridicalName
                                 , ObjectFloat_NDSKind_NDS.ValueData       AS NDS
                                 , MIC.MovementIncomeId                    AS MovementId
 
                              FROM
                                  MIC_InfoFull AS MIC
 
-                                 LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MIC.GoodsId
-                                 LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
-
-                                 LEFT JOIN Movement_Income_View AS Movement_Income ON Movement_Income.Id = MIC.MovementIncomeId
+                                 LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MIC.GoodsId
+                                 LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId =  MIC.MIIncomeId
@@ -473,14 +479,15 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                               ON MovementLinkObject_NDSKind.MovementId = MIC.MovementIncomeId
                                                              AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                 LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                       ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
-                                                                                                    OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
-                                                                                                  THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END
-                                                      AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                              ON MovementLinkObject_From.MovementId = MIC.MovementIncomeId
-                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                                                                                   OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                                                                 THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END
+                                 LEFT JOIN tmpMLinkObject AS MovementLinkObject_From
+                                                           ON MovementLinkObject_From.MovementId = MIC.MovementIncomeId
+                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN Object AS Object_Juridical
+                                                  ON Object_Juridical.Id = MovementLinkObject_From.ObjectId
                              )
               , MIC_Info AS (
                              SELECT
@@ -494,22 +501,20 @@ BEGIN
 
                                 , MIC_InfoAll.PriceWithOutVAT
 
-                                , MIC_InfoAll.JuridicalId
+                                , MIC_InfoAll.JuridicalName
                                 , MIC_InfoAll.NDS
                                 , MIC_InfoAll.MovementId
 
                              FROM
                                  MIC_InfoAll
-
                              GROUP BY
                                       MIC_InfoAll.GoodsId
                                     , MIC_InfoAll.PriceWithVAT
                                     , MIC_InfoAll.PriceWithOutVAT
-                                    , MIC_InfoAll.JuridicalId
+                                    , MIC_InfoAll.JuridicalName
                                     , MIC_InfoAll.NDS
                                     , MIC_InfoAll.MovementId
                              )
-
               , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                           AND ObjectFloat_Goods_Price.ValueData > 0
                                          THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
@@ -536,6 +541,8 @@ BEGIN
                              WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
+              , tmpMovement AS (SELECT * FROM Movement
+                                WHERE Movement.Id IN (SELECT DISTINCT MIC_Info.MovementId FROM MIC_Info))
 
             --
             SELECT
@@ -551,7 +558,7 @@ BEGIN
                , CASE WHEN COALESCE (MIC_Info.PriceWithVAT,0) <> 0 THEN (tmpPrice.Price - MIC_Info.PriceWithVAT) *100 / MIC_Info.PriceWithVAT ELSE 0 END :: TFloat AS ChargePersent
 
 
-               , Object_Juridical.ValueData
+               , MIC_Info.JuridicalName
                , MIC_Info.SummOut
                , (MIC_Info.SummOut - MIC_Info.SummWithVAT)::TFloat                                AS Margin
                , CASE WHEN COALESCE(MIC_Info.SummWithVAT,0)<> 0
@@ -563,10 +570,8 @@ BEGIN
                , Movement.InvNumber
             FROM
                 MIC_Info
-                LEFT OUTER JOIN Object AS Object_Juridical
-                                       ON Object_Juridical.Id = MIC_Info.JuridicalId
 
-                LEFT JOIN Movement ON Movement.Id = MIC_Info.MovementId
+                LEFT JOIN tmpMovement AS Movement ON Movement.Id = MIC_Info.MovementId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MIC_Info.GoodsId
             ;
      END IF;
@@ -588,3 +593,4 @@ $BODY$
 */
 -- select * from gpSelect_MovementItem_SalePartion(inMovementId := 19240372   , inShowAll := 'False' ,  inSession := '3');
 
+select * from gpSelect_MovementItem_SalePartion(inMovementId := 23745396 , inShowAll := 'False' ,  inSession := '3');

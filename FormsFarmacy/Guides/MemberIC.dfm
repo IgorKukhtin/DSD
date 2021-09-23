@@ -27,7 +27,6 @@ object MemberICForm: TMemberICForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 674
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -99,7 +98,6 @@ object MemberICForm: TMemberICForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 674
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9
@@ -368,41 +366,25 @@ object MemberICForm: TMemberICForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GroupMemberICId'
+          Name = 'InsuranceCardNumber'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'GroupMemberICId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GroupMemberICName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GroupMemberICName'
+          ComponentItem = 'InsuranceCardNumber'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'INN'
+          Name = 'InsuranceCompaniesId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'INN'
-          DataType = ftString
+          ComponentItem = 'InsuranceCompaniesId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Passport'
+          Name = 'InsuranceCompaniesName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Passport'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Address'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Address'
+          ComponentItem = 'InsuranceCompaniesName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -605,14 +587,14 @@ object MemberICForm: TMemberICForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'MasterPartnerMedicalId'
+        Name = 'InsuranceCompaniesId'
         Value = ''
         Component = GuidesInsuranceCompanies
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterPartnerMedicalName'
+        Name = 'InsuranceCompaniesIName'
         Value = ''
         Component = GuidesInsuranceCompanies
         ComponentItem = 'TextValue'
