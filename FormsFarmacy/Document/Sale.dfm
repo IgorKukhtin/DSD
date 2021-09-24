@@ -8,20 +8,20 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 219
+    Top = 250
     Width = 683
-    Height = 323
+    Height = 292
     ExplicitTop = 219
     ExplicitWidth = 683
     ExplicitHeight = 323
-    ClientRectBottom = 323
+    ClientRectBottom = 292
     ClientRectRight = 683
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 683
       ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 683
-        Height = 201
+        Height = 170
         ExplicitWidth = 683
         ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -194,12 +194,13 @@ inherited SaleForm: TSaleForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 209
+        Top = 178
         Width = 683
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 209
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -372,21 +373,22 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 201
+        Top = 170
         Width = 683
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 201
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 683
-    Height = 193
+    Height = 224
     TabOrder = 3
     ExplicitWidth = 683
-    ExplicitHeight = 193
+    ExplicitHeight = 224
     inherited edInvNumber: TcxTextEdit
       Left = 161
       Top = 22
@@ -632,6 +634,50 @@ inherited SaleForm: TSaleForm
       Caption = #1044#1086#1089#1090#1072#1074#1082#1072' "'#1053#1086#1074#1086#1081' '#1087#1086#1095#1090#1086#1081'"'
       TabOrder = 33
       Width = 186
+    end
+    object edInsuranceCompanies: TcxButtonEdit
+      Left = 8
+      Top = 200
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 34
+      Width = 252
+    end
+    object cxLabel19: TcxLabel
+      Left = 8
+      Top = 185
+      Caption = #1057#1090#1088#1072#1093#1086#1074#1072#1103' '#1082#1086#1084#1087#1072#1085#1080#1103
+    end
+    object edMemberIC: TcxButtonEdit
+      Left = 270
+      Top = 200
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 36
+      Width = 252
+    end
+    object cxLabel20: TcxLabel
+      Left = 270
+      Top = 185
+      Caption = #1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080')'
+    end
+    object edInsuranceCardNumber: TcxTextEdit
+      Left = 528
+      Top = 200
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 126
+    end
+    object cxLabel21: TcxLabel
+      Left = 528
+      Top = 185
+      Caption = #1053#1086#1084#1077#1088' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1072#1088#1090#1099
     end
   end
   object cxLabel8: TcxLabel [2]
@@ -1471,6 +1517,43 @@ inherited SaleForm: TSaleForm
         Component = cbIsNP
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesId'
+        Value = Null
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesName'
+        Value = Null
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberICId'
+        Value = Null
+        Component = GuidesMemberIC
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberICName'
+        Value = Null
+        Component = GuidesMemberIC
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCardNumber'
+        Value = Null
+        Component = edInsuranceCardNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -1597,6 +1680,21 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInsuranceCompaniesId'
+        Value = Null
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberICId'
+        Value = Null
+        Component = GuidesMemberIC
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1658,6 +1756,12 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = cbIsNP
+      end
+      item
+        Control = edInsuranceCompanies
+      end
+      item
+        Control = edMemberIC
       end>
     Left = 208
     Top = 233
@@ -2487,5 +2591,88 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 320
     Top = 339
+  end
+  object GuidesMemberIC: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberIC
+    FormNameParam.Value = 'TMemberICForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberICForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberIC
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberIC
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesId'
+        Value = ''
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesName'
+        Value = ''
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCardNumber'
+        Value = ''
+        Component = edInsuranceCardNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 408
+    Top = 184
+  end
+  object GuidesInsuranceCompanies: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsuranceCompanies
+    FormNameParam.Value = 'TInsuranceCompanies_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInsuranceCompanies_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 184
   end
 end

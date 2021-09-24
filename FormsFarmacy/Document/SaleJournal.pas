@@ -40,6 +40,15 @@ type
     SPKindName: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;
     isNP: TcxGridDBColumn;
+    InsuranceCompaniesName: TcxGridDBColumn;
+    MemberICName: TcxGridDBColumn;
+    InsuranceCardNumber: TcxGridDBColumn;
+    actInsertInsuranceCompanies: TdsdInsertUpdateAction;
+    bbInsertInsuranceCompanies: TdxBarButton;
+    actChoiceInsuranceCompanies: TOpenChoiceForm;
+    actChoiceMemberIC: TOpenChoiceForm;
+    actExecInsert_InsuranceCompanies: TdsdExecStoredProc;
+    spInsert_InsuranceCompanies: TdsdStoredProc;
   private
     { Private declarations }
   public

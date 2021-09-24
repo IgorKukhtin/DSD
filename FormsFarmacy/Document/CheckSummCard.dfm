@@ -224,6 +224,14 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 87
           end
+          object CommentCustomer: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1082#1083#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'CommentCustomer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
         end
       end
     end
@@ -275,25 +283,37 @@ inherited CheckSummCardForm: TCheckSummCardForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actReCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleReCompleteList: TMultiAction
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1086#1090#1086#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+    end
+    inherited mactSimpleCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleUncompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleErasedList: TMultiAction
       Enabled = False
     end
     inherited spCompete: TdsdExecStoredProc
@@ -303,18 +323,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
       Enabled = False
     end
     inherited spErased: TdsdExecStoredProc
-      Enabled = False
-    end
-    inherited actSimpleCompleteList: TMultiAction
-      Enabled = False
-    end
-    inherited actSimpleUncompleteList: TMultiAction
-      Enabled = False
-    end
-    inherited actSimpleReCompleteList: TMultiAction
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1086#1090#1086#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-    end
-    inherited actSimpleErased: TMultiAction
       Enabled = False
     end
     object actGet_UserUnit: TdsdExecStoredProc
@@ -485,7 +493,6 @@ inherited CheckSummCardForm: TCheckSummCardForm
   end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [11]
-      Action = actSimpleReCompleteList
     end
   end
   inherited RefreshDispatcher: TRefreshDispatcher

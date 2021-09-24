@@ -35,6 +35,9 @@ RETURNS TABLE (Id Integer
              , Address_MemberSP TVarChar
              , INN_MemberSP TVarChar
              , Passport_MemberSP TVarChar
+             , InsuranceCompaniesName TVarChar
+             , MemberICName TVarChar
+             , InsuranceCardNumber TVarChar
              , SPKindId   Integer
              , SPKindName TVarChar
              , isSP Boolean
@@ -114,6 +117,10 @@ BEGIN
           , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
           , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
           
+          , Object_InsuranceCompanies.ValueData                          AS InsuranceCompaniesName
+          , Object_MemberIC.ValueData                                    AS MemberICName
+          , ObjectString_InsuranceCardNumber.ValueData                   AS InsuranceCardNumber
+
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
 
@@ -177,6 +184,18 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_NP
                                       ON MovementBoolean_NP.MovementId = Movement_Sale.Id
                                      AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
+
+            LEFT JOIN MovementLinkObject AS MLO_InsuranceCompanies
+                                         ON MLO_InsuranceCompanies.MovementId = Movement_Sale.Id
+                                        AND MLO_InsuranceCompanies.DescId = zc_MovementLinkObject_InsuranceCompanies()
+            LEFT JOIN Object AS Object_InsuranceCompanies ON Object_InsuranceCompanies.Id = MLO_InsuranceCompanies.ObjectId  
+            LEFT JOIN MovementLinkObject AS MLO_MemberIC
+                                         ON MLO_MemberIC.MovementId = Movement_Sale.Id
+                                        AND MLO_MemberIC.DescId = zc_MovementLinkObject_MemberIC()
+            LEFT JOIN Object AS Object_MemberIC ON Object_MemberIC.Id = MLO_MemberIC.ObjectId  
+            LEFT JOIN ObjectString AS ObjectString_InsuranceCardNumber
+                                   ON ObjectString_InsuranceCardNumber.ObjectId = Object_MemberIC.Id
+                                  AND ObjectString_InsuranceCardNumber.DescId = zc_ObjectString_MemberIC_InsuranceCardNumber() 
        ;
 
 END;
@@ -197,4 +216,5 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());

@@ -94,6 +94,7 @@ type
     isDoctors: TcxGridDBColumn;
     isDiscountCommit: TcxGridDBColumn;
     colZReport: TcxGridDBColumn;
+    CommentCustomer: TcxGridDBColumn;
   private
     { Private declarations }
   public

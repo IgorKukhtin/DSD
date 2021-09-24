@@ -51,7 +51,8 @@ RETURNS TABLE (
   SummCard TFloat,
   isBanAdd boolean, 
   isNotMCS Boolean, 
-  isDiscountCommit Boolean
+  isDiscountCommit Boolean, 
+  CommentCustomer TVarChar
  )
 AS
 $BODY$
@@ -191,6 +192,7 @@ BEGIN
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS isNotMCS
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
+            , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -366,6 +368,9 @@ BEGIN
                                       ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
                                      AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
 
+            LEFT JOIN MovementString AS MovementString_CommentCustomer
+                                     ON MovementString_CommentCustomer.MovementId = Movement.Id
+                                    AND MovementString_CommentCustomer.DescId = zc_MovementString_CommentCustomer()
        ;
 
 END;

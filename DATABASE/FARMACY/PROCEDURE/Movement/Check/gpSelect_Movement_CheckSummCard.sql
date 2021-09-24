@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CancelReason TVarChar
              , isDeliverySite Boolean
              , SummaDelivery TFloat
+             , CommentCustomer TVarChar
               )
 AS
 $BODY$
@@ -123,6 +124,8 @@ BEGIN
                   THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
            , COALESCE(MovementBoolean_DeliverySite.ValueData, False)      AS isDeliverySite
            , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
+
+           , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -340,6 +343,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementString AS MovementString_CommentCustomer
+                                     ON MovementString_CommentCustomer.MovementId = Movement_Check.Id
+                                    AND MovementString_CommentCustomer.DescId = zc_MovementString_CommentCustomer()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CancelReason
                                          ON MovementLinkObject_CancelReason.MovementId = Movement_Check.Id

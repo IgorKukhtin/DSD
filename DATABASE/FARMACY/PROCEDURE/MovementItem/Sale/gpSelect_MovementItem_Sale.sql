@@ -225,7 +225,9 @@ BEGIN
                    COALESCE(MovementItemContainer.Amount, 0), 0)::TFloat AS AmountRemains
                  , COALESCE(tmpRemainsFull.Price, tmpPriceSite.Price, tmpPrice.Price)        AS Price
                  , COALESCE(tmpRemainsFull.PriceSale, tmpPriceSite.Price, tmpPrice.Price)    AS PriceSale
-                 , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (tmpRemainsFull.ChangePercent, 100) ELSE tmpRemainsFull.ChangePercent END :: TFloat AS ChangePercent
+                 , CASE WHEN vbSPKindId IN (zc_Enum_SPKind_1303(), zc_Enum_SPKind_InsuranceCompanies()) 
+                        THEN COALESCE (tmpRemainsFull.ChangePercent, 100) 
+                        ELSE tmpRemainsFull.ChangePercent END :: TFloat  AS ChangePercent
                  , tmpRemainsFull.Summ
                  , tmpRemainsFull.isSP        ::Boolean
                  , tmpMarion.isResolution_224 ::Boolean
@@ -423,4 +425,3 @@ $BODY$
 -- 
 
 select * from gpSelect_MovementItem_Sale(inMovementId := 23407745  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
-

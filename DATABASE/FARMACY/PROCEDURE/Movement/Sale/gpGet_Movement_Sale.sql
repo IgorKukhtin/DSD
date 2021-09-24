@@ -36,6 +36,11 @@ RETURNS TABLE (Id Integer
              , Passport_MemberSP TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
+             , InsuranceCompaniesId Integer
+             , InsuranceCompaniesName TVarChar
+             , MemberICId Integer
+             , MemberICName TVarChar
+             , InsuranceCardNumber TVarChar
              , SPKindId   Integer
              , SPKindName TVarChar
              , isDeferred Boolean
@@ -91,6 +96,12 @@ BEGIN
 
           , NULL::Integer                                    AS GroupMemberSPId
           , NULL::TVarChar                                   AS GroupMemberSPName
+
+          , NULL::Integer                                    AS InsuranceCompaniesId
+          , NULL::TVarChar                                   AS InsuranceCompaniesName
+          , NULL::Integer                                    AS MemberICId
+          , NULL::TVarChar                                   AS MemberICName
+          , NULL::TVarChar                                   AS InsuranceCardNumber
 
           , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
@@ -153,6 +164,12 @@ BEGIN
           , Movement_Sale.GroupMemberSPId
           , Movement_Sale.GroupMemberSPName
 
+          , Object_InsuranceCompanies.Id                                 AS InsuranceCompaniesId
+          , Object_InsuranceCompanies.ValueData                          AS InsuranceCompaniesName
+          , Object_MemberIC.Id                                           AS MemberICId
+          , Object_MemberIC.ValueData                                    AS MemberICName
+          , ObjectString_InsuranceCardNumber.ValueData                   AS InsuranceCardNumber
+
           , Movement_Sale.SPKindId
           , Movement_Sale.SPKindName 
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
@@ -175,6 +192,18 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_NP
                                    ON MovementBoolean_NP.MovementId = Movement_Sale.Id
                                   AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
+         LEFT JOIN MovementLinkObject AS MLO_InsuranceCompanies
+                                      ON MLO_InsuranceCompanies.MovementId = Movement_Sale.Id
+                                     AND MLO_InsuranceCompanies.DescId = zc_MovementLinkObject_InsuranceCompanies()
+         LEFT JOIN Object AS Object_InsuranceCompanies ON Object_InsuranceCompanies.Id = MLO_InsuranceCompanies.ObjectId  
+
+         LEFT JOIN MovementLinkObject AS MLO_MemberIC
+                                      ON MLO_MemberIC.MovementId = Movement_Sale.Id
+                                     AND MLO_MemberIC.DescId = zc_MovementLinkObject_MemberIC()
+         LEFT JOIN Object AS Object_MemberIC ON Object_MemberIC.Id = MLO_MemberIC.ObjectId  
+         LEFT JOIN ObjectString AS ObjectString_InsuranceCardNumber
+                                ON ObjectString_InsuranceCardNumber.ObjectId = Object_MemberIC.Id
+                               AND ObjectString_InsuranceCardNumber.DescId = zc_ObjectString_MemberIC_InsuranceCardNumber() 
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 
@@ -195,5 +224,4 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
  13.10.15                                                                        *
 */
 
---select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '8720522');
-
+-- select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '8720522');

@@ -120,6 +120,14 @@ type
     spUpdate_PriceSale: TdsdStoredProc;
     bbactUpdatePriceSale: TdxBarButton;
     cbIsNP: TcxCheckBox;
+    edInsuranceCompanies: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    edMemberIC: TcxButtonEdit;
+    cxLabel20: TcxLabel;
+    GuidesMemberIC: TdsdGuides;
+    edInsuranceCardNumber: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    GuidesInsuranceCompanies: TdsdGuides;
   private
     { Private declarations }
   public

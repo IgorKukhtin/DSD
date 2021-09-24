@@ -54,6 +54,7 @@ type
     isDeliverySite: TcxGridDBColumn;
     SummaDelivery: TcxGridDBColumn;
     isCallOrder: TcxGridDBColumn;
+    CommentCustomer: TcxGridDBColumn;
   private
     { Private declarations }
   public

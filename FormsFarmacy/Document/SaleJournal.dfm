@@ -289,6 +289,30 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 68
           end
+          object InsuranceCompaniesName: TcxGridDBColumn
+            Caption = #1057#1090#1088#1072#1093#1086#1074#1072#1103' '#1082#1086#1084#1087#1072#1085#1080#1103
+            DataBinding.FieldName = 'InsuranceCompaniesName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object MemberICName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1057#1090#1088#1072#1093'. '#1082#1086#1084#1087'.)'
+            DataBinding.FieldName = 'MemberICName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object InsuranceCardNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1089#1090#1088#1072#1093'. '#1082#1072#1088#1090#1099
+            DataBinding.FieldName = 'InsuranceCardNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
@@ -453,6 +477,124 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 3
     end
+    object actInsertInsuranceCompanies: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      BeforeAction = actExecInsert_InsuranceCompanies
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1086#1076#1072#1078#1091' '#1095#1077#1088#1077#1079' '#1089#1090#1088#1072#1093#1086#1074#1091#1102' '#1082#1086#1084#1087#1072#1085#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1086#1076#1072#1078#1091' '#1095#1077#1088#1077#1079' '#1089#1090#1088#1072#1093#1086#1074#1091#1102' '#1082#1086#1084#1087#1072#1085#1080#1102
+      ShortCut = 16429
+      ImageIndex = 0
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actChoiceInsuranceCompanies: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceInsuranceCompanies'
+      FormName = 'TInsuranceCompanies_ObjectForm'
+      FormNameParam.Value = 'TInsuranceCompanies_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InsuranceCompaniesId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InsuranceCompaniesIName'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberIC: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceInsuranceCompanies
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceInsuranceCompanies'
+      FormName = 'TMemberICForm'
+      FormNameParam.Value = 'TMemberICForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InsuranceCompaniesId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InsuranceCompaniesId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InsuranceCompaniesIName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InsuranceCompaniesIName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MemberICID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecInsert_InsuranceCompanies: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceMemberIC
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_InsuranceCompanies
+      StoredProcList = <
+        item
+          StoredProc = spInsert_InsuranceCompanies
+        end>
+      Caption = 'actExecInsert_InsuranceCompanies'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale'
@@ -492,6 +634,14 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertInsuranceCompanies'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -545,6 +695,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 0
       ImageIndex = 15
     end
+    object bbInsertInsuranceCompanies: TdxBarButton
+      Action = actInsertInsuranceCompanies
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 464
@@ -576,6 +730,43 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 216
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsuranceCompaniesIName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberICID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 32
     Top = 400
   end
@@ -727,5 +918,40 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 640
     Top = 208
+  end
+  object spInsert_InsuranceCompanies: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_InsuranceCompanies'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInsuranceCompaniesId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InsuranceCompaniesId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberICId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MemberICID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 384
+    Top = 328
   end
 end

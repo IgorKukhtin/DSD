@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTi
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -20,6 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inMemberSP              TVarChar   , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
     IN inisNP                  Boolean    , -- Доставка "Новой почтой"
+    IN inInsuranceCompaniesId  Integer    , -- Страховые компании
+    IN inMemberICId            Integer    , -- ФИО покупателя (Страховой компании)
    OUT outSPKindName           TVarChar   , -- вид соц.проекта
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -144,6 +147,8 @@ BEGIN
                                         , inMemberSP        := COALESCE (vbMemberSPId,0)
                                         , inComment         := inComment
                                         , inisNP            := inisNP
+                                        , inInsuranceCompaniesId := inInsuranceCompaniesId
+                                        , inMemberICId           := inMemberICId
                                         , inUserId          := vbUserId
                                         );
 

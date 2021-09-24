@@ -460,11 +460,11 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
 
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;
 
@@ -2445,6 +2445,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompaniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompaniesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInsuranceCompanies_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInsuranceCompanies_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;

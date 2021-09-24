@@ -54,6 +54,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummaDelivery TFloat
              , isDoctors Boolean
              , isDiscountCommit Boolean
+             , CommentCustomer TVarChar
               )
 AS
 $BODY$
@@ -165,7 +166,7 @@ BEGIN
            , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
 
-
+           , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementString_CommentError.ValueData               AS CommentError
@@ -402,6 +403,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_BookingId
                                      ON MovementString_BookingId.MovementId = Movement_Check.Id
                                     AND MovementString_BookingId.DescId = zc_MovementString_BookingId()
+
+            LEFT JOIN MovementString AS MovementString_CommentCustomer
+                                     ON MovementString_CommentCustomer.MovementId = Movement_Check.Id
+                                    AND MovementString_CommentCustomer.DescId = zc_MovementString_CommentCustomer()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicForSale
                                          ON MovementLinkObject_MedicForSale.MovementId =  Movement_Check.Id
