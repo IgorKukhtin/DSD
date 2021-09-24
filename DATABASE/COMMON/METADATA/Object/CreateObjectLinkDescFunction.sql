@@ -2654,9 +2654,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberIC_InsuranceCompanies() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MemberIC_InsuranceCompanies', 'Связь с страховой компанией', zc_Object_MemberIC(), zc_Object_InsuranceCompanies() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberIC_InsuranceCompanies');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrectWagesPercentage_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectWagesPercentage_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CorrectWagesPercentage_Unit', 'Связь с Подразделением', zc_Object_CorrectWagesPercentage(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectWagesPercentage_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrectWagesPercentage_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectWagesPercentage_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CorrectWagesPercentage_User', 'Связь с пользователем', zc_Object_CorrectWagesPercentage(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectWagesPercentage_User');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.06.21                                                                                      * zc_ObjectLink_CorrectWagesPercentage_Unit, zc_ObjectLink_CorrectWagesPercentage_User
  20.06.21                                                                                      * zc_ObjectLink_InsuranceCompanies_Juridical, zc_ObjectLink_MemberIC_InsuranceCompanies
  15.06.21                                                                                      * zc_ObjectLink_Goods_Update...
  31.05.21                                                                                      * zc_ObjectLink_PayrollType_PayrollType

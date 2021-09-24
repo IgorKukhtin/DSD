@@ -12,7 +12,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit, cxButtonEdit, cxSplitter;
+  cxCurrencyEdit, cxButtonEdit, cxSplitter, cxContainer, cxTextEdit, cxMemo,
+  cxDBEdit, Vcl.ExtCtrls;
 
 type
   TCheckDeferredForm = class(TAncestorDBGridForm)
@@ -93,6 +94,8 @@ type
     bbUpdateNotMCS: TdxBarButton;
     isNotMCS: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
+    Panel1: TPanel;
+    cxDBMemo1: TcxDBMemo;
   private
     { Private declarations }
   public
