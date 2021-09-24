@@ -100,7 +100,9 @@ BEGIN
                                                               OR (lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40200()
                                                               AND lfSelect.UnitName ILIKE '%Транспорт%')
                                                           )
-       ;
+       ORDER BY View_Unit.Id
+       LIMIT 1
+      ;
 
      ELSE
 
@@ -263,7 +265,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -278,4 +279,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransportService (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TransportService (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= '2')

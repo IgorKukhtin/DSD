@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 599
   ClientWidth = 1127
-  ExplicitTop = -167
   ExplicitWidth = 1133
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -622,6 +621,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -634,11 +634,12 @@
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceListPromo: TcxButtonEdit [19]
-    Left = 5
-    Top = 486
+    Left = 6
+    Top = 484
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -1783,10 +1784,12 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 184
     Top = 8
@@ -1805,10 +1808,12 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 384
     Top = 304
@@ -1820,10 +1825,12 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 480
     Top = 296
@@ -1851,7 +1858,7 @@
       end
       item
         Name = 'inoperdate'
-        Value = 'NULL'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -2042,8 +2049,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 442
+    Left = 280
+    Top = 434
   end
   object RetailReportGuides: TdsdGuides
     KeyField = 'Id'

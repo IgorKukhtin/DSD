@@ -32,7 +32,7 @@ $BODY$BEGIN
       , tmpWorkTimeKind.Summ
       , tmpWorkTimeKind.isNoSheetChoice
       , tmpWorkTimeKind.isErased
-   FROM gpSelect_Object_WorkTimeKind (inisShowAll, inisErased, inSession) AS tmpWorkTimeKind
+   FROM gpSelect_Object_WorkTimeKind (TRUE, inisErased, inSession) AS tmpWorkTimeKind
    WHERE tmpWorkTimeKind.Id IN (zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_Holiday())
    ;
   

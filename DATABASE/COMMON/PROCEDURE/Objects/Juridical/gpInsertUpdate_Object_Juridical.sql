@@ -54,9 +54,11 @@ BEGIN
    THEN
        -- RAISE EXCEPTION 'Ошибка.Нет прав устанавливать прайс <%>.', lfGet_Object_ValueData_sh (inPriceListId);
        PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
-   ELSEIF COALESCE (ioId, 0) = 0 AND inPriceListId > 0 AND inPriceListId <> zc_PriceList_Basis()
+   ELSEIF COALESCE (ioId, 0) = 0 -- AND inPriceListId > 0 AND inPriceListId <> zc_PriceList_Basis()
    THEN
-       PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
+       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Object_Juridical_PriceList());
+      inPriceListId:= NULL;
+      inPriceListPromoId:= NULL;
    END IF;
 
 

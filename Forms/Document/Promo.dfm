@@ -4,14 +4,13 @@
   ClientHeight = 707
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 745
+  ExplicitHeight = 742
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
     Width = 1366
     Height = 568
-    Properties.ActivePage = cxTabSheetPromoInvoice
     ExplicitTop = 139
     ExplicitWidth = 1366
     ExplicitHeight = 568
@@ -843,9 +842,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1256,9 +1252,6 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1587,9 +1580,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1904,9 +1894,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2000,9 +1987,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2247,9 +2231,6 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2829,8 +2810,8 @@
       Width = 225
     end
     object deEndReturn: TcxDateEdit
-      Left = 278
-      Top = 90
+      Left = 282
+      Top = 81
       Hint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1087#1086' '#1072#1082#1094#1080#1086#1085#1085#1086#1081' '#1094#1077#1085#1077
       EditValue = 42132d
       Properties.SaveTime = False
@@ -3331,9 +3312,6 @@
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
     end
     object InsertRecord: TInsertRecord [19]
       Category = 'Goods'
@@ -4997,6 +4975,7 @@
       Category = 'Invoice'
       TabSheet = cxTabSheetPromoInvoice
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompletePromoInvoice
       StoredProcList = <
         item
@@ -5012,6 +4991,7 @@
       Category = 'Invoice'
       TabSheet = cxTabSheetPromoInvoice
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedPromoInvoice
       StoredProcList = <
         item
@@ -5027,6 +5007,7 @@
       Category = 'Invoice'
       TabSheet = cxTabSheetPromoInvoice
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompletePromoInvoice
       StoredProcList = <
         item

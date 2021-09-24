@@ -63,6 +63,7 @@ BEGIN
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
                   )
+     --AND vbUserId <> 5
     THEN
         IF EXISTS (SELECT 1
                          FROM Object_Personal_View
@@ -292,26 +293,31 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), vbMovementId, vbUserId);
 
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+    IF vbUserId <> 5 OR 1=1
+    THEN
+        PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+    END IF;
 
-if vbUserId = 5 AND 1=1
-then
-    RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
-                      , zfConvert_DateToString (inOperDate)
-                      , inUnitId
-                      , inMemberId
-                      , inPositionId
-                      , zfConvert_DateToString (vbEndDate)
-                      , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
-                      , vbMovementItemId
-                       ;
-                       
-end if;
+    if vbUserId = 5 AND 1=1
+    then
+        RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
+                          , zfConvert_DateToString (inOperDate)
+                          , inUnitId
+                          , inMemberId
+                          , inPositionId
+                          , zfConvert_DateToString (vbEndDate)
+                          , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
+                          , vbMovementItemId
+                           ;
+                           
+    end if;
 
-if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
-then
-    RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)', vbMovementItemId;
-end if;
+    if 0 = COALESCE ((SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId), 0)
+       -- AND vbUserId <> 5
+    then
+        RAISE EXCEPTION 'Ошибка.Данные протокола не сохранены (%)', vbMovementItemId;
+
+    end if;
 
 END;
 $BODY$

@@ -85,4 +85,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_FounderService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_FounderService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
