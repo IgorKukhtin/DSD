@@ -872,6 +872,8 @@ type
     N316: TMenuItem;
     N317: TMenuItem;
     N318: TMenuItem;
+    actCorrectWagesPercentage: TdsdOpenForm;
+    N319: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

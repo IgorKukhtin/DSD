@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsADV
+    ActivePage = tsDanhsonPharma
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -191,10 +191,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -212,8 +208,6 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -2575,8 +2569,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         '     , Object_MedicForSale.ValueData                            ' +
         '    AS MedicForSaleName'
       
-        '     , Object_BuyerForSale.ValueData                            ' +
-        '    AS BuyerForSaleName'
+        '     , COALESCE(Object_BuyerForSale.ValueData, MovementString_Co' +
+        'mment.ValueData)                     AS BuyerForSaleName'
       
         '     , ObjectString_BuyerForSale_Phone.ValueData                ' +
         '    AS Phone'
@@ -2633,6 +2627,14 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       
         '                      AND ObjectString_BuyerForSale_Phone.DescId' +
         ' = zc_ObjectString_BuyerForSale_Phone()'
+      ''
+      '     LEFT JOIN MovementString AS MovementString_Comment'
+      
+        '                              ON MovementString_Comment.Movement' +
+        'Id = Movement.Id'
+      
+        '                             AND MovementString_Comment.DescId =' +
+        ' zc_MovementString_Comment()'
       '')
     Params = <
       item

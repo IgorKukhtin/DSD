@@ -1024,9 +1024,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_BarCode_DiscountSite() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_BarCode(), 'zc_ObjectBoolean_BarCode_DiscountSite', 'Показывать цену на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_BarCode_DiscountSite');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CorrectWagesPercentage_Check() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CorrectWagesPercentage_Check'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectBoolean_CorrectWagesPercentage_Check', '	Расчет от чеков' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CorrectWagesPercentage_Check');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CorrectWagesPercentage_Store() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CorrectWagesPercentage_Store'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectBoolean_CorrectWagesPercentage_Store', 'Расчет по приходам' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CorrectWagesPercentage_Store');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.09.21                                                                                                          * zc_ObjectBoolean_CorrectWagesPercentage_...
  15.09.21                                                                                                          * zc_ObjectBoolean_BarCode_DiscountSite
  14.09.21                                                                                                          * zc_ObjectBoolean_Unit_BlockCommentSendTP
  13.09.21                                                                                                          * zc_ObjectBoolean_User_WorkingMultiple
