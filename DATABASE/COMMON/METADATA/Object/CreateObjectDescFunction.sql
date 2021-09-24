@@ -1472,6 +1472,10 @@ CREATE OR REPLACE FUNCTION zc_Object_MemberIC() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MemberIC', 'ФИО покупателя (Страховой компании)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberIC');
 
+CREATE OR REPLACE FUNCTION zc_Object_CorrectWagesPercentage() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CorrectWagesPercentage'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CorrectWagesPercentage', 'Корректировочный процент при расчете ЗП по сотруднику' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CorrectWagesPercentage');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1488,6 +1492,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 24.09.21                                                                                        * zc_Object_CorrectWagesPercentage
  20.09.21                                                                                        * zc_Object_InsuranceCompanies, zc_Object_MemberIC
  14.09.21                                                                                        * zc_Object_PayrollTypeVIP
  30.07.21                                                                                        * zc_Object_ZReportLog

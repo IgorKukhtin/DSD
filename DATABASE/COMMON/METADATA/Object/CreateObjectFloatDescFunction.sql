@@ -2069,9 +2069,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PromoBonus() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PromoBonus', 'Бонус по акции' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PromoBonus');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CorrectWagesPercentage_Percent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CorrectWagesPercentage_Percent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectFloat_CorrectWagesPercentage_Percent', 'Процент от начислено' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CorrectWagesPercentage_Percent');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.09.21                                                                                      * zc_ObjectFloat_CorrectWagesPercentage_Percent
  16.09.21                                                                                      * zc_ObjectFloat_Goods_PromoBonus
  15.09.21                                                                                      * zc_ObjectFloat_BarCode_DiscountProcent
  14.09.21                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Percent...
