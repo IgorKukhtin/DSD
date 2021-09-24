@@ -3945,6 +3945,9 @@ begin
     Exit;
   end;
 
+  //теперь будем всегда очищать
+  if sdSaveFile.FileName <> '' then sdSaveFile.FileName:= '';
+  //
   if sdSaveFile.Execute then
   try
     AssignFile(F, ExtractFilePath(sdSaveFile.FileName) + '\' + FilenamePrefix + ExtractFileName(sdSaveFile.FileName) + FileExt);
