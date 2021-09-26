@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
+             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -41,7 +41,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-     WITH 
+     WITH
      tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
              UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
              UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
@@ -130,6 +130,8 @@ BEGIN
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+             , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
+             , Object_Engine.ValueData                    AS EngineName
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id               AS MovementId_Invoice
@@ -209,6 +211,13 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_CIN
                                ON ObjectString_CIN.ObjectId = Object_Product.Id
                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+        LEFT JOIN ObjectString AS ObjectString_EngineNum
+                               ON ObjectString_EngineNum.ObjectId = Object_Product.Id
+                              AND ObjectString_EngineNum.DescId   = zc_ObjectString_Product_EngineNum()
+        LEFT JOIN ObjectLink AS ObjectLink_Engine
+                             ON ObjectLink_Engine.ObjectId = Object_Product.Id
+                            AND ObjectLink_Engine.DescId   = zc_ObjectLink_Product_Engine()
+        LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
         LEFT JOIN ObjectLink AS ObjectLink_Brand
                              ON ObjectLink_Brand.ObjectId = Object_Product.Id
                             AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()

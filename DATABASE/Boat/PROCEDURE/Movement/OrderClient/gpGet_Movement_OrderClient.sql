@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , Comment TVarChar
+             , isChild_Recalc Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
               )
@@ -55,6 +56,7 @@ BEGIN
              , CAST ('' AS TVarChar)     AS BrandName
              , CAST ('' AS TVarChar)     AS CIN
              , CAST ('' AS TVarChar)     AS Comment
+             , TRUE :: Boolean           AS isChild_Recalc
              , 0                         AS MovementId_Invoice
              , CAST ('' as TVarChar)     AS InvNumber_Invoice
              , CAST ('' as TVarChar)     AS Comment_Invoice
@@ -100,6 +102,8 @@ BEGIN
           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+          , FALSE                                          :: Boolean  AS isChild_Recalc
+
           , Movement_Invoice.Id                                        AS MovementId_Invoice
           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
           , MovementString_Comment_Invoice.ValueData                   AS Comment_Invoice

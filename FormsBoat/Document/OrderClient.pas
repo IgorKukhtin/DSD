@@ -381,6 +381,7 @@ type
     bbOpenBankAccountJournalByInvoice: TdxBarButton;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    cbChild_Recalc: TcxCheckBox;
   private
   public
   end;

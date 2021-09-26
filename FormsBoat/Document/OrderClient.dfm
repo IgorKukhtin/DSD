@@ -126,7 +126,7 @@ object OrderClientForm: TOrderClientForm
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 110
+      Width = 78
     end
     object cxLabel7: TcxLabel
       Left = 309
@@ -285,6 +285,16 @@ object OrderClientForm: TOrderClientForm
       Properties.ReadOnly = True
       TabOrder = 32
       Width = 146
+    end
+    object cbChild_Recalc: TcxCheckBox
+      Left = 568
+      Top = 63
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090'.'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 33
+      Width = 77
     end
   end
   object cxPageControl: TcxPageControl
@@ -2100,9 +2110,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2160,9 +2167,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2746,13 +2750,13 @@ object OrderClientForm: TOrderClientForm
     Width = 156
   end
   object cxLabel14: TcxLabel
-    Left = 520
+    Left = 487
     Top = 45
     Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1044#1086#1087#1086#1083#1085#1080#1090'.'
     Caption = '% '#1057#1082#1080#1076#1082#1080' '#8470'2'
   end
   object edDiscountNextTax: TcxCurrencyEdit
-    Left = 520
+    Left = 487
     Top = 63
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -2760,7 +2764,7 @@ object OrderClientForm: TOrderClientForm
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 125
+    Width = 78
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -4380,6 +4384,12 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isChild_Recalc'
+        Value = Null
+        Component = cbChild_Recalc
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PaidKindId'
         Value = Null
         Component = GuidesPaidKind
@@ -4570,6 +4580,14 @@ object OrderClientForm: TOrderClientForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChild_Recalc'
+        Value = Null
+        Component = cbChild_Recalc
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
