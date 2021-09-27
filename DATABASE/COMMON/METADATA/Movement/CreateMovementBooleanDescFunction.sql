@@ -123,6 +123,12 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_PrintComment', 'Печатать Примечание в Расходной накладной (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PrintComment');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Export() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Export'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Export', 'Сформирована Выгрузка (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Export');
+
+
+
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_Deferred() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Deferred'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -363,6 +369,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 27.09.21         * zc_MovementBoolean_Export
  14.09.21                                                                                   * zc_MovementBoolean_CallOrder
  21.08.21                                                                                   * zc_MovementBoolean_DiscountCommit
  10.08.21         * zc_MovementBoolean_ClosedAuto

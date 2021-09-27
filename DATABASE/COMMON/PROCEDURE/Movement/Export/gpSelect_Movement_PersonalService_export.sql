@@ -318,6 +318,8 @@ BEGIN
          RAISE EXCEPTION '%', er;
      END IF;
 
+     -- сохранили свойство <Сформирована Выгрузка (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, TRUE);
 
      -- Результат
      RETURN QUERY
