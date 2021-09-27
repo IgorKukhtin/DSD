@@ -2,8 +2,8 @@ object PartnerForm: TPartnerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
-  ClientHeight = 464
-  ClientWidth = 1000
+  ClientHeight = 432
+  ClientWidth = 1011
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,14 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 1000
-    Height = 403
+    Width = 1011
+    Height = 371
     Align = alClient
     TabOrder = 1
+    ExplicitLeft = -40
+    ExplicitTop = -11
+    ExplicitWidth = 1000
+    ExplicitHeight = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -216,6 +220,16 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object UnitMobileName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
+        DataBinding.FieldName = 'UnitMobileName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
+        Options.Editing = False
+        Width = 70
       end
       object PriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -685,10 +699,11 @@ object PartnerForm: TPartnerForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 1000
+    Width = 1011
     Height = 35
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 1000
     object edRetail: TcxButtonEdit
       Left = 389
       Top = 6
@@ -756,6 +771,23 @@ object PartnerForm: TPartnerForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
+    Width = 176
+  end
+  object edUnitMobile_text: TcxLabel
+    Left = 577
+    Top = 140
+    Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
+  end
+  object edUnitMobile: TcxButtonEdit
+    Left = 577
+    Top = 163
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 176
   end
   object DataSource: TDataSource
@@ -894,6 +926,26 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbedUnitMobile_text'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedUnitMobile'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_UnitMobile'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -919,10 +971,6 @@ object PartnerForm: TPartnerForm
         item
           Visible = True
           ItemName = 'bbProtocolOpen'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -967,9 +1015,9 @@ object PartnerForm: TPartnerForm
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
-      Caption = '     '
+      Caption = '   '
       Category = 0
-      Hint = '     '
+      Hint = '   '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -1016,9 +1064,9 @@ object PartnerForm: TPartnerForm
       Category = 0
     end
     object dxBarStatic2: TdxBarStatic
-      Caption = '     '
+      Caption = '    '
       Category = 0
-      Hint = '     '
+      Hint = '    '
       Visible = ivAlways
     end
     object bbShowCurPartnerOnMap: TdxBarButton
@@ -1031,6 +1079,25 @@ object PartnerForm: TPartnerForm
     end
     object bbUpdate_Category: TdxBarButton
       Action = actUpdate_Category
+      Category = 0
+    end
+    object bbedUnitMobile_text: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edUnitMobile_text
+    end
+    object bbedUnitMobile: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edUnitMobile
+    end
+    object bbUpdate_UnitMobile: TdxBarButton
+      Action = macUpdate_UnitMobile
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)>'
       Category = 0
     end
   end
@@ -1820,6 +1887,44 @@ object PartnerForm: TPartnerForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1058#1058
       ImageIndex = 41
     end
+    object actUpdate_UnitMobile: TdsdExecStoredProc
+      Category = 'UnitMobile'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_UnitMobile
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_UnitMobile
+        end>
+      Caption = 'actUpdate_UnitMobile'
+      ImageIndex = 76
+    end
+    object macUpdate_UnitMobile_list: TMultiAction
+      Category = 'UnitMobile'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_UnitMobile
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_UnitMobile_list'
+      ImageIndex = 76
+    end
+    object macUpdate_UnitMobile: TMultiAction
+      Category = 'UnitMobile'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_UnitMobile_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1089#1077#1084' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' <'#1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)>?'
+      InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088' <'#1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
+      Caption = 'macUpdate_UnitMobile'
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner'
@@ -2127,7 +2232,7 @@ object PartnerForm: TPartnerForm
       end>
     PackSize = 1
     Left = 816
-    Top = 200
+    Top = 160
   end
   object spUpdateEdiInvoice: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Partner_Edi'
@@ -2357,5 +2462,60 @@ object PartnerForm: TPartnerForm
     PackSize = 1
     Left = 624
     Top = 320
+  end
+  object GuidesUnitMobile: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitMobile
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 632
+    Top = 151
+  end
+  object spUpdate_UnitMobile: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Partner_UnitMobile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitMobileId'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 264
   end
 end

@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
+-- Function: gpUpdate_Object_Member_Transport(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Member_Transport (Integer, TVarChar, TDateTime, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, TVarChar);
 

@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 509
+  ClientHeight = 532
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 537
+  ExplicitHeight = 560
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 439
-    Top = 472
+    Top = 486
     TabOrder = 2
     ExplicitLeft = 439
-    ExplicitTop = 472
+    ExplicitTop = 486
   end
   inherited bbCancel: TcxButton
     Left = 590
-    Top = 472
+    Top = 486
     ExplicitLeft = 590
-    ExplicitTop = 472
+    ExplicitTop = 486
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -743,6 +743,23 @@
     TabOrder = 98
     Width = 190
   end
+  object cxLabel47: TcxLabel [99]
+    Left = 15
+    Top = 502
+    Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
+  end
+  object edUnitMobile: TcxButtonEdit [100]
+    Left = 141
+    Top = 501
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 100
+    Width = 212
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
     Top = 331
@@ -1063,6 +1080,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitMobileId'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartPromo'
         Value = 0d
         Component = edStartPromo
@@ -1198,8 +1223,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 427
+    Left = 592
+    Top = 443
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -1761,9 +1786,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitMobileId'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitMobileName'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 560
-    Top = 424
+    Left = 536
+    Top = 448
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -2091,8 +2131,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 468
+    Left = 184
+    Top = 436
   end
   object RegionGuides: TdsdGuides
     KeyField = 'Id'
@@ -2387,5 +2427,35 @@
       end>
     Left = 560
     Top = 333
+  end
+  object GuidesUnitMobile: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitMobile
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 487
   end
 end

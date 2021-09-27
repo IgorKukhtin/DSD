@@ -16,10 +16,17 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);*/ 
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer); 
+*/
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer); 
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -52,7 +59,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки
 
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
-                        
+    
+    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
+
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -141,6 +150,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
 
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitMobile(), ioId, inUnitMobileId);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));
       -- сохранили свойство <>
@@ -162,6 +174,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.21         *
  25.05.21         *
  29.04.21         * Category
  19.06.17         * add inPersonalMerchId

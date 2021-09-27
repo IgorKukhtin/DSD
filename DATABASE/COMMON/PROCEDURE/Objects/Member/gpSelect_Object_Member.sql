@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
+             , UnitMobileId Integer, UnitMobileName TVarChar
              , PositionCode Integer, PositionName TVarChar
              , ObjectToId Integer, ObjectToName TVarChar, DescName TVarChar
              , isDateOut Boolean, PersonalId Integer
@@ -167,6 +168,8 @@ end if;
          , Object_Branch.ValueData    AS BranchName
          , Object_Unit.ObjectCode     AS UnitCode
          , Object_Unit.ValueData      AS UnitName
+         , Object_UnitMobile.Id        AS UnitMobileId
+         , Object_UnitMobile.ValueData AS UnitMobileName
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
 
@@ -455,6 +458,10 @@ end if;
                              AND ObjectLink_Member_BankChild.DescId = zc_ObjectLink_Member_BankChild()
          LEFT JOIN Object AS Object_BankChild ON Object_BankChild.Id = ObjectLink_Member_BankChild.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_UnitMobile
+                              ON ObjectLink_Member_UnitMobile.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_UnitMobile.DescId = zc_ObjectLink_Member_UnitMobile()
+         LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Member_UnitMobile.ChildObjectId
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -512,6 +519,8 @@ end if;
            , '' :: TVarChar AS BranchName
            , 0              AS UnitCode
            , '' :: TVarChar AS UnitName
+           , CAST (0 as Integer)    AS UnitMobileId
+           , CAST ('' as TVarChar)  AS UnitMobileName
            , 0              AS PositionCode
            , '' :: TVarChar AS PositionName
 
@@ -574,6 +583,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.09.21         * UnitMobile
  06.02.20         * add isNotCompensation
  09.09.19         *
  03.03.17         * add Bank, BankSecond, BankChild

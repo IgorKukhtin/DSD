@@ -408,6 +408,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inPriceListId     := NULL
                                         , inPriceListId_30201:= NULL
                                         , inPriceListPromoId:= NULL
+                                        , inUnitMobileId    := NULL
                                         , inStartPromo      := NULL
                                         , inEndPromo        := NULL
                                         , inUserId          := vbUserId

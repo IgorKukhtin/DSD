@@ -20,9 +20,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
@@ -67,6 +73,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
 
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
@@ -174,6 +181,7 @@ BEGIN
                                         , inPriceListId     := inPriceListId
                                         , inPriceListId_30201 := inPriceListId_30201
                                         , inPriceListPromoId:= inPriceListPromoId
+                                        , inUnitMobileId    := inUnitMobileId
                                         , inStartPromo      := inStartPromo
                                         , inEndPromo        := inEndPromo
                                         , inUserId          := vbUserId
