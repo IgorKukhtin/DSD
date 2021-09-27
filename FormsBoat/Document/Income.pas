@@ -201,6 +201,8 @@ type
     bbOpenFormOrderClient: TdxBarButton;
     EngineNum_ch2: TcxGridDBColumn;
     EngineName_ch2: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
   public
   end;
