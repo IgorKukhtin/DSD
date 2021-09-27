@@ -12,10 +12,17 @@ RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbDescId_From Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderExternal());
+     --из шапки документа получаем вид параметра <от кого>
+     vbDescId_From := (SELECT Object.DescId
+                       FROM MovementLinkObject AS MLO
+                           LEFT JOIN Object ON Object.Id = MLO.ObjectId
+                       WHERE MLO.MovementId = inMovementId 
+                         AND MLO.DescId = zc_MovementLinkObject_From());
 
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, CASE WHEN vbDescId_From = zc_Object_Unit() THEN zc_Enum_Process_Complete_OrderExternalUnit() ELSE zc_Enum_Process_Complete_OrderExternal() END);
 
      -- меняем статус документа + сохранили протокол
      SELECT tmp.outPrinted, tmp.outMessageText
@@ -24,7 +31,6 @@ BEGIN
                                            , inUserId    := vbUserId
                                             ) AS tmp;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -32,6 +38,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.21         *
  21.04.17                                        *
  25.08.14                                        *
 */
