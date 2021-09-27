@@ -32,6 +32,18 @@ BEGIN
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
 
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> уже была выгружена.%Для повторной выгрузки необходимо перепровести документ.'
+                       , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                       , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                       , CHR(13)
+                        ;
+                         
+     END IF;
+
 
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК

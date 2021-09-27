@@ -27,6 +27,7 @@ BEGIN
                  WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76970 -- œ¿“ "Œ“œ ¡¿Õ "
 
                       THEN 'OTP_'
+                 ELSE ''
             END AS FileNamePrefix
           , CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 6314382 -- œ¿“ "¡¿Õ  ¬Œ—“Œ "
                   AND ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()

@@ -34,6 +34,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Качественное удостоверение>.';
      END IF;
 
+     -- замена
+     IF inRetailId > 0
+     THEN
+         inRetailId:= NULL;
+     END IF;
+
      -- Проверка - в один день может быть только один документ для одного <Качественное удостоверение>
      IF EXISTS (SELECT Movement.OperDate
                 FROM Movement
