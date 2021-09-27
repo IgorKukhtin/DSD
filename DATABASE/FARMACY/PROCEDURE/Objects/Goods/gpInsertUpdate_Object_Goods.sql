@@ -238,6 +238,9 @@ BEGIN
                                                  , inSession          := inSession
                                                   )
      FROM Object AS Object_Retail
+          INNER JOIN Object_Goods_Main ON Object_Goods_Main.ObjectCode = 1046
+          INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.ID
+                                       AND Object_Goods_Retail.RetailId = Object_Retail.Id
      WHERE Object_Retail.DescId = zc_Object_Retail()
        -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
      ;
@@ -324,3 +327,5 @@ $BODY$
 
 -- тест
 --select * from gpInsertUpdate_Object_Goods(ioId := 4414 , inCode := '2272' , inName := 'Клотримазол крем 1% 20г (Глаксо)' , inGoodsGroupId := 394774 , inMeasureId := 323 , inNDSKindId := 9 , inMinimumLot := 0 , inReferCode := 0 , inReferPrice := 0 , inPrice := 0 , inIsClose := 'False' , inTOP := 'False' , inPercentMarkup := 0 , inMorionCode := 64453 , inBarCode := '5900008005937' , inNameUkr := '' , inCodeUKTZED := '' , inExchangeId := 0 ,  inSession := '183242');
+
+

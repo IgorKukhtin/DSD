@@ -20,6 +20,9 @@ BEGIN
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+                                  
+     --при распроведении признак Export ставим  = FALSE
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, FALSE);
 
 END;
 $BODY$

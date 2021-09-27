@@ -4688,6 +4688,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actCorrectWagesPercentage: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1095#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1080' '#1088#1072#1089#1095#1077#1090#1077' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+      FormName = 'TCorrectWagesPercentageForm'
+      FormNameParam.Value = 'TCorrectWagesPercentageForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5944,6 +5955,9 @@
         end
         object N191: TMenuItem
           Action = actPayrollType
+        end
+        object N319: TMenuItem
+          Action = actCorrectWagesPercentage
         end
         object N314: TMenuItem
           Action = actPayrollTypeVIP
