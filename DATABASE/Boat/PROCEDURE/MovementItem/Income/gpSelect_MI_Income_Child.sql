@@ -55,6 +55,8 @@ BEGIN
                             JOIN MovementItem ON MovementItem.MovementId = tmpMI.MovementId_order
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = FALSE
+                                             -- элементы шаблона
+                                             AND MovementItem.ParentId   IS NULL
                             -- ValueData - MovementId заказа Поставщику
                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id

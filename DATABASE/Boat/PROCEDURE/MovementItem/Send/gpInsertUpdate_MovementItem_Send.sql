@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inOperPrice           TFloat    , -- Цена со скидкой
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inComment             TVarChar  , --
-    IN inisOn                Boolean   , -- вкл
+    IN inIsOn                Boolean   , -- вкл
    OUT outIsErased           Boolean   , -- удален
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -20,19 +20,23 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Send());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE (inisOn, FALSE) = TRUE
-     THEN
-         --снимаем отметку об удалении
-         outIsErased := gpMovementItem_Send_SetUnErased (ioId, inSession);
-     ENd IF;
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     -- замена
+     IF vbIsInsert = TRUE THEN inIsOn:= TRUE; END IF;
+
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+     THEN
+         -- надо восстановить
+         outIsErased := gpMovementItem_Send_SetUnErased (ioId, inSession);
+     ENd IF;
+
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
@@ -47,8 +51,8 @@ BEGIN
                                           , vbUserId
                                           ) AS tmp;
      
-     --(разделила т.к. если внесут еще какие-то изменения в строку то ощибка что элемент удален)
-     IF COALESCE (inisOn, FALSE) = FALSE
+     -- (разделила т.к. если внесут еще какие-то изменения в строку то ощибка что элемент удален)
+     IF COALESCE (inIsOn, FALSE) = FALSE
      THEN
          --ставим отметку об удалении 
          outIsErased := gpMovementItem_Send_SetErased (ioId, inSession);

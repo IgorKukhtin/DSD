@@ -205,7 +205,7 @@ BEGIN
                                                                     , inDiscountTax        := inDiscountTax
                                                                     , inDiscountNextTax    := inDiscountNextTax
                                                                     , inFromId             := inClientId
-                                                                    , inToId               := 0
+                                                                    , inToId               := zc_Unit_Production()
                                                                     , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
                                                                     , inProductId          := ioId
                                                                     , inMovementId_Invoice := 0

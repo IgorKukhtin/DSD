@@ -69,10 +69,9 @@ BEGIN
        WITH -- Заказ клиента - zc_MI_Child
             tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId
-                           , MovementItem.Amount
                       FROM MovementItemLinkObject AS MILinkObject_Partner
-                           INNER JOIN MovementItem ON MovementItem.Id      = MILinkObject_Partner.MovementItemId
-                                                  AND MovementItem.DescId  = zc_MI_Child()
+                           INNER JOIN MovementItem ON MovementItem.Id       = MILinkObject_Partner.MovementItemId
+                                                  AND MovementItem.DescId   = zc_MI_Child()
                                                   AND MovementItem.isErased = FALSE
                            INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                               AND Movement.DescId   = zc_Movement_OrderClient()
