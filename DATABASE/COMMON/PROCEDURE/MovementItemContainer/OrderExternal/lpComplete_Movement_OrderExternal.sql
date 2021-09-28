@@ -289,7 +289,8 @@ order by Movement.OperDate*/
                         , zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))
                          ;*/
          outMessageText:= 'Ошибка.Разрешены заявки с общим весом >= ' || zfConvert_FloatToString (vbCriticalWeight) || ' кг.'
-            || CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.'
+            || CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.';
+
          -- !!! выход !!!
          RETURN;
       END IF;

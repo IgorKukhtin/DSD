@@ -23,7 +23,19 @@ $BODY$
    DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                     JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Unit()
+                WHERE MLO.MovementId = inMovementId 
+                  AND MLO.DescId     = zc_MovementLinkObject_From()
+               )
+     THEN
+         -- так для zc_Object_Unit
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
+     ELSE
+         -- для остальных 
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+     END IF;
 
 
      -- сразу запомнили время начала выполнения Проц.

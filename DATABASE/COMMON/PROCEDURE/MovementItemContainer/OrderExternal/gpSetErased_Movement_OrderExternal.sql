@@ -12,19 +12,24 @@ RETURNS Boolean
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbDescId_From Integer;
 BEGIN
-     --из шапки документа получаем вид параметра <от кого>
-     vbDescId_From := (SELECT Object.DescId
-                       FROM MovementLinkObject AS MLO
-                           LEFT JOIN Object ON Object.Id = MLO.ObjectId
-                       WHERE MLO.MovementId = inMovementId 
-                         AND MLO.DescId = zc_MovementLinkObject_From());
-
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, CASE WHEN vbDescId_From = zc_Object_Unit() THEN zc_Enum_Process_SetErased_OrderExternalUnit() ELSE zc_Enum_Process_SetErased_OrderExternal() END);
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                     JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Unit()
+                WHERE MLO.MovementId = inMovementId 
+                  AND MLO.DescId     = zc_MovementLinkObject_From()
+               )
+     THEN
+         -- так для zc_Object_Unit
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_OrderExternalUnit());
+     ELSE
+         -- для остальных 
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_OrderExternal());
+     END IF;
 
-     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := False,  inSession := inSession);
+     --
+     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := inSession);
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
