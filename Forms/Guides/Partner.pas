@@ -156,6 +156,16 @@ type
     bbStartLoad: TdxBarButton;
     actUpdate_Category: TdsdInsertUpdateAction;
     bbUpdate_Category: TdxBarButton;
+    edUnitMobile_text: TcxLabel;
+    edUnitMobile: TcxButtonEdit;
+    GuidesUnitMobile: TdsdGuides;
+    bbedUnitMobile_text: TdxBarControlContainerItem;
+    bbedUnitMobile: TdxBarControlContainerItem;
+    spUpdate_UnitMobile: TdsdStoredProc;
+    actUpdate_UnitMobile: TdsdExecStoredProc;
+    macUpdate_UnitMobile_list: TMultiAction;
+    macUpdate_UnitMobile: TMultiAction;
+    bbUpdate_UnitMobile: TdxBarButton;
   private
     { Private declarations }
   public

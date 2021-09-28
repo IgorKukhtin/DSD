@@ -12,9 +12,17 @@ RETURNS Boolean
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbDescId_From Integer;
 BEGIN
+     --из шапки документа получаем вид параметра <от кого>
+     vbDescId_From := (SELECT Object.DescId
+                       FROM MovementLinkObject AS MLO
+                           LEFT JOIN Object ON Object.Id = MLO.ObjectId
+                       WHERE MLO.MovementId = inMovementId 
+                         AND MLO.DescId = zc_MovementLinkObject_From());
+
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_OrderExternal());
+     vbUserId:= lpCheckRight(inSession, CASE WHEN vbDescId_From = zc_Object_Unit() THEN zc_Enum_Process_SetErased_OrderExternalUnit() ELSE zc_Enum_Process_SetErased_OrderExternal() END);
 
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := False,  inSession := inSession);
 
@@ -40,6 +48,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.21         *
  06.06.14                                                       *
 */
 

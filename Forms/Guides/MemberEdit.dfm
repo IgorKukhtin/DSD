@@ -35,9 +35,6 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077
       ImageIndex = 0
-      ExplicitLeft = 3
-      ExplicitTop = 55
-      ExplicitHeight = 593
       object edMeasureName: TcxTextEdit
         Left = 14
         Top = 60
@@ -62,7 +59,7 @@
       object edCardIBAN: TcxTextEdit
         Left = 14
         Top = 402
-        TabOrder = 20
+        TabOrder = 19
         Width = 130
       end
       object cxLabel15: TcxLabel
@@ -185,7 +182,7 @@
           end>
         Properties.ReadOnly = True
         TabOrder = 10
-        Width = 289
+        Width = 151
       end
       object cxLabel11: TcxLabel
         Left = 171
@@ -277,11 +274,27 @@
         TabOrder = 35
         Width = 137
       end
+      object cxLabel47: TcxLabel
+        Left = 171
+        Top = 292
+        Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
+      end
+      object edUnitMobile: TcxButtonEdit
+        Left = 171
+        Top = 313
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 37
+        Width = 131
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1099
       ImageIndex = 1
-      ExplicitHeight = 465
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -309,7 +322,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1072#1089#1087#1086#1088#1090
       ImageIndex = 2
-      ExplicitHeight = 465
       object cxLabel17: TcxLabel
         Left = 10
         Top = 13
@@ -490,7 +502,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1080
       ImageIndex = 3
-      ExplicitHeight = 465
       object cxLabel29: TcxLabel
         Left = 230
         Top = 10
@@ -648,7 +659,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1055#1088#1086#1095#1077#1077
       ImageIndex = 4
-      ExplicitHeight = 465
       object cxLabel41: TcxLabel
         Left = 10
         Top = 14
@@ -712,8 +722,7 @@
     Top = 383
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 48
-    Top = 311
+    Top = 383
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
@@ -895,6 +904,14 @@
         Name = 'inInfoMoneyId'
         Value = Null
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitMobileId'
+        Value = Null
+        Component = GuidesUnitMobile
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1335,6 +1352,21 @@
         Component = ceCardBankSecond
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitMobileId'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitMobileName'
+        Value = Null
+        Component = GuidesUnitMobile
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -1400,8 +1432,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 344
+    Left = 280
+    Top = 360
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1430,7 +1462,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
+    Left = 64
     Top = 319
   end
   object GuidesBank: TdsdGuides
@@ -1989,5 +2021,35 @@
       end>
     Left = 61
     Top = 182
+  end
+  object GuidesUnitMobile: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitMobile
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitMobile
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 327
   end
 end

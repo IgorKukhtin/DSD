@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankChildId Integer, BankChildName TVarChar
              , PersonalId Integer
              , UnitId     Integer, UnitName TVarChar
+             , UnitMobileId Integer, UnitMobileName TVarChar
              , PositionId Integer, PositionName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , isOfficial Boolean
@@ -99,6 +100,8 @@ BEGIN
            , 0                      AS PersonalId
            , 0                      AS UnitId
            , CAST ('' AS TVarChar)  AS UnitName
+           , CAST (0 as Integer)    AS UnitMobileId
+           , CAST ('' as TVarChar)  AS UnitMobileName
            , 0                      AS PositionId
            , CAST ('' AS TVarChar)  AS PositionName
            , 0                      AS PersonalServiceListId
@@ -215,6 +218,8 @@ BEGIN
             , tmpPersonal.PersonalId
             , Object_Unit.Id            AS UnitId
             , Object_Unit.ValueData     AS UnitName
+            , Object_UnitMobile.Id        AS UnitMobileId
+            , Object_UnitMobile.ValueData AS UnitMobileName
             , Object_Position.Id        AS PositionId
             , Object_Position.ValueData AS PositionName
             , Object_PersonalServiceList.Id        AS PersonalServiceListId
@@ -366,6 +371,11 @@ BEGIN
                              AND ObjectLink_Member_City_Real.DescId = zc_ObjectLink_Member_City_Real()
          LEFT JOIN Object AS Object_City_Real ON Object_City_Real.Id = ObjectLink_Member_City_Real.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_UnitMobile
+                              ON ObjectLink_Member_UnitMobile.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_UnitMobile.DescId = zc_ObjectLink_Member_UnitMobile()
+         LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Member_UnitMobile.ChildObjectId
+
          LEFT JOIN ObjectDate AS ObjectDate_Birthday
                               ON ObjectDate_Birthday.ObjectId = Object_Member.Id
                              AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
@@ -447,6 +457,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.09.21         * UnitMobile
  09.09.21         *
  06.02.20         * add isNotCompensation
  09.09.19         * CardIBAN, CardIBANSecond

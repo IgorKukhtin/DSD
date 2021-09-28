@@ -46,7 +46,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean, 
                Value5 Boolean, Value6 Boolean, Value7 Boolean,      
                Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean, 
-               Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean   
+               Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
+             , UnitMobileId Integer, UnitMobileName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -158,7 +159,11 @@ BEGIN
            , False  AS Delivery4
            , False  AS Delivery5
            , False  AS Delivery6
-           , False  AS Delivery7  
+           , False  AS Delivery7 
+
+           , CAST (0 as Integer)    AS UnitMobileId
+           , CAST ('' as TVarChar)  AS UnitMobileName
+
            ;
    ELSE
        RETURN QUERY 
@@ -264,7 +269,9 @@ BEGIN
            , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 5) AS Boolean) END  ::Boolean   AS Value5
            , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 6) AS Boolean) END  ::Boolean   AS Value6
            , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 7) AS Boolean) END  ::Boolean   AS Value7
-           
+
+           , Object_UnitMobile.Id        AS UnitMobileId
+           , Object_UnitMobile.ValueData AS UnitMobileName
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -422,7 +429,12 @@ BEGIN
                                 ON ObjectLink_Partner_GoodsProperty.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
-        
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitMobile
+                                ON ObjectLink_Partner_UnitMobile.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
+           LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
+
          
            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- по улице
                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId

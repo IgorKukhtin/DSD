@@ -140,6 +140,9 @@ type
     cxLabel46: TcxLabel;
     ceCardBank: TcxTextEdit;
     ceCardBankSecond: TcxTextEdit;
+    cxLabel47: TcxLabel;
+    edUnitMobile: TcxButtonEdit;
+    GuidesUnitMobile: TdsdGuides;
   private
     { Private declarations }
   public

@@ -180,6 +180,10 @@ type
     spUnErasedMIchild: TdsdStoredProc;
     SetUnErasedChild: TdsdUpdateErased;
     bbUnErasedChild: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    actReport_Goods_child: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    bbReport_Goods_child: TdxBarButton;
   private
   public
   end;

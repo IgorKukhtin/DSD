@@ -20,7 +20,7 @@ $BODY$
 BEGIN
 --return;
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
 
 
       -- Проверка - что б не копировали два раза

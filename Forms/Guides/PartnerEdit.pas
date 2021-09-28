@@ -140,6 +140,9 @@ type
     cxLabel40: TcxLabel;
     cePriceList30201: TcxButtonEdit;
     GuidesPriceList30201: TdsdGuides;
+    cxLabel47: TcxLabel;
+    edUnitMobile: TcxButtonEdit;
+    GuidesUnitMobile: TdsdGuides;
 
   private
     { Private declarations }

@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
 
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
+               UnitMobileId Integer, UnitMobileName TVarChar,
                isErased Boolean,
                Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean,
                Value5 Boolean, Value6 Boolean, Value7 Boolean,
@@ -205,6 +206,9 @@ BEGIN
          , Object_Unit.Id         AS UnitId
          , Object_Unit.ObjectCode AS UnitCode
          , Object_Unit.ValueData  AS UnitName
+
+         , Object_UnitMobile.Id        AS UnitMobileId
+         , Object_UnitMobile.ValueData AS UnitMobileName
 
          , Object_Partner.isErased   AS isErased
 
@@ -423,6 +427,11 @@ BEGIN
                               ON ObjectLink_Partner_GoodsProperty.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
          LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitMobile
+                              ON ObjectLink_Partner_UnitMobile.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
+         LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                  ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
