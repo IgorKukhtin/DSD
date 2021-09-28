@@ -117,6 +117,7 @@ type
     mactStartLoad_SN: TMultiAction;
     bbStartLoad_SN: TdxBarButton;
     actDoLoad_SN: TExecuteImportSettingsAction;
+    spSelectPrintSticker: TdsdStoredProc;
   private
   public
   end;

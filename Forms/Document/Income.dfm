@@ -2444,6 +2444,7 @@ object IncomeForm: TIncomeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -3686,8 +3687,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 305
+    Left = 656
+    Top = 281
   end
   object spInsertUpdate_IncomeCost: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeCost'
@@ -4021,8 +4022,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 631
-    Top = 208
+    Left = 671
+    Top = 216
   end
   object spCheckDescTransport: TdsdStoredProc
     StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
