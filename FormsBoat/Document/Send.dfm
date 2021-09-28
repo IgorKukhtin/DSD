@@ -896,7 +896,6 @@ object SendForm: TSendForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -2396,13 +2395,13 @@ object SendForm: TSendForm
     Aggregates = <>
     Params = <>
     Left = 548
-    Top = 297
+    Top = 257
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 548
-    Top = 350
+    Top = 302
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'

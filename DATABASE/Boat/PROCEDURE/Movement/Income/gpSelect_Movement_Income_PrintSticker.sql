@@ -14,6 +14,8 @@ $BODY$
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
+    DECLARE vbFromCode Integer;
+    DECLARE vbFromName TVarChar;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -22,8 +24,15 @@ BEGIN
 
      -- параметры из документа
      SELECT Movement.DescId, Movement.StatusId, Movement.OperDate
+          , Object_From.ObjectCode                     AS FromCode
+          , Object_From.ValueData                      AS FromName
    INTO vbDescId, vbStatusId, vbOperDate
+      , vbFromCode, vbFromName
      FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+         LEFT JOIN Object AS Object_From   ON Object_From.Id   = MovementLinkObject_From.ObjectId
      WHERE Movement.Id = inMovementId;
 
      -- проверка - с каким статусом можно печатать
@@ -59,6 +68,8 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
            , ObjectString_Article.ValueData AS Article
            , MIString_PartNumber.ValueData  AS PartNumber
+           , vbFromCode AS FromCode
+           , vbFromName AS FromName
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
