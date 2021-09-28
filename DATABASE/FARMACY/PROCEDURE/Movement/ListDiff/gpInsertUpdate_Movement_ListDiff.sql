@@ -23,6 +23,20 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     
+     
+     IF  COALESCE (ioId, 0) <> 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+       IF COALESCE(inUnitId, 0) <> (SELECT MovementLinkObject_Unit.ObjectId 
+                                    FROM MovementLinkObject AS MovementLinkObject_Unit
+                                    WHERE MovementLinkObject_Unit.MovementId = ioId
+                                      AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit())
+       THEN
+         RAISE EXCEPTION 'Ошибка. Изменение подразделение вам запрещено';
+       
+       END IF;
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ListDiff(), inInvNumber, inOperDate, NULL);
 

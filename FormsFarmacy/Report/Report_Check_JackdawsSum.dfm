@@ -3,6 +3,7 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
   ClientHeight = 632
   ClientWidth = 1007
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1023
   ExplicitHeight = 671
   PixelsPerInch = 96
@@ -952,6 +953,39 @@ inherited Report_Check_JackdawsSumForm: TReport_Check_JackdawsSumForm
   end
   object FormParams: TdsdFormParams
     Params = <
+      item
+        Name = 'StartDate'
+        Value = 42491d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 42491d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'SummaReceivedFact'
         Value = 0.000000000000000000

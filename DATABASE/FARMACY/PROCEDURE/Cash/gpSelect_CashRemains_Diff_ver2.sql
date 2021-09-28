@@ -35,7 +35,8 @@ RETURNS TABLE (
     GoodsPairSunMainId Integer,
     GoodsDiscountMaxPrice TFloat, 
     isGoodsPairSun Boolean, 
-    GoodsPairSunAmount TFloat
+    GoodsPairSunAmount TFloat,
+    GoodsDiscountProcentSite TFloat
 )
 AS
 $BODY$
@@ -437,6 +438,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                              , Object_Object.ValueData                                   AS GoodsDiscountName
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
                                              , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                                             , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -455,6 +457,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                               LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
                                                                     ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
                                                                    AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                              LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                                    ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False
                                           GROUP BY Object_Goods_Retail.GoodsMainId
@@ -546,10 +552,15 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
               AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
-            Object_Goods_PairSun.GoodsPairSunID                               AS GoodsPairSunMainId,
+            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+                 THEN NULL
+                 ELSE Object_Goods_PairSun.GoodsPairSunID END::INTEGER        AS GoodsPairSunMainId,
             tmpGoodsDiscount.MaxPrice                                         AS GoodsDiscountMaxPrice,
             COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                AS isGoodsPairSun,
-            Object_Goods_PairSun.GoodsPairSunAmount                           AS GoodsPairSunAmount
+            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+                 THEN NULL
+                 ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat     AS GoodsPairSunAmount,
+            tmpGoodsDiscount.DiscountProcent                                  AS GoodsDiscountProcentSite
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -632,4 +643,4 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
+SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '4000094')

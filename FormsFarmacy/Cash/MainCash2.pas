@@ -586,6 +586,7 @@ type
     N61: TMenuItem;
     spCheck_PairSunAmount: TdsdStoredProc;
     CheckJuridicalName: TcxGridDBColumn;
+    MemDataGOODSDIPR: TCurrencyField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1359,6 +1360,8 @@ begin
         FLocalDataBaseDiff.FieldByName('GOODSPROJ').AsVariant;
       MemData.FieldByName('GOODSDIMP').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSDIMP').AsVariant;
+      MemData.FieldByName('GOODSDIPR').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('GOODSDIPR').AsVariant;
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -1876,7 +1879,6 @@ begin
 
     end;
   end;
-  //
 
   if (FormParams.ParamByName('isDiscountCommit').Value = False) and
     ((FormParams.ParamByName('DiscountExternalId').Value <> 0) or
@@ -3403,6 +3405,22 @@ begin
           AddDistributionPromo (RemainsCDS.FieldByName('DistributionPromoID').AsInteger, FieldByName('Amount').AsCurrency, FieldByName('Summ').AsCurrency);
         end;
 
+        if (Frac(FieldByName('Amount').AsCurrency) <> 0) and (DiscountServiceForm.gCode <> 0) then
+        begin
+          ShowMessage('Деление медикамента для дисконтных программ запрещено!');
+          exit;
+        end;
+
+        if ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) or
+           (FormParams.ParamByName('isDiscountCommit').Value = False) and
+           (FormParams.ParamByName('InvNumberOrder').Value <> '') and
+           (FormParams.ParamByName('isBanAdd').Value = False)) and
+        (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) and (DiscountServiceForm.gCode <> 2) then
+        begin
+          ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект Abbott card)');
+          exit;
+        end;
+
         Next;
       end;
     end;
@@ -3541,7 +3559,6 @@ begin
       exit;
     end;
   end;
-
 
   // проверили что есть остаток
   if not gc_User.Local then
@@ -5252,6 +5269,8 @@ begin
           MemData.FieldByName('GOODSPROJ').AsVariant;
         RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsVariant :=
           MemData.FieldByName('GOODSDIMP').AsVariant;
+        RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsVariant :=
+          MemData.FieldByName('GOODSDIPR').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -5324,6 +5343,8 @@ begin
             MemData.FieldByName('GOODSPROJ').AsVariant;
           RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsVariant :=
             MemData.FieldByName('GOODSDIMP').AsVariant;
+          RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsVariant :=
+            MemData.FieldByName('GOODSDIPR').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -5606,6 +5627,9 @@ var
   DiscountExternalId: Integer; MovementItemID, gCode : Integer;
   DiscountExternalName, DiscountCardNumber: String;
   lMsg: String;
+  GoodsId: Integer;
+  PartionDateKindId, NDSKindId, DiscountExternalGoodsID, DivisionPartiesID: Variant;
+  nPriceSite: boolean;
 begin
 
   if pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible
@@ -5651,6 +5675,22 @@ begin
     exit;
   end;
 
+  with CheckCDS do
+  begin
+    First;
+    while not Eof do
+    begin
+
+      if (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+      begin
+        ShowMessage('Деление медикамента для дисконтных программ запрещено!');
+        exit;
+      end;
+
+      Next;
+    end;
+  end;
+
   with TDiscountDialogForm.Create(nil) do
     try
       DiscountExternalId := Self.FormParams.ParamByName
@@ -5688,7 +5728,7 @@ begin
              (RemainsCDS.FieldByName('GoodsDiscountName').AsString = DiscountExternalName) then
           begin
 
-            if (RemainsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Reserved').AsCurrency) < FieldByName('Amount').AsCurrency then
+            if (RemainsCDS.FieldByName('Remains').AsCurrency < 0) and (FormParams.ParamByName('ConfirmedKindName').AsString <> 'Подтвержден') then
             begin
                 ShowMessage('Товар <' + FieldByName('GoodsName').AsString +
                   '> входит в дисконтную программу <' + DiscountExternalName + '> наличия нет для продажи.');
@@ -5753,6 +5793,60 @@ begin
     end;
   end;
 
+  nPriceSite := False;
+
+  // Проверим и пересчитаем цену без скидки для Abbott card с нашего сайта
+  if (FormParams.ParamByName('isDiscountCommit').Value = False) and
+     (FormParams.ParamByName('InvNumberOrder').Value <> '') and
+     (FormParams.ParamByName('isBanAdd').Value = False) then
+  begin
+    // Проверим цену
+    GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+    NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+    DiscountExternalGoodsID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
+    DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
+    try
+      RemainsCDS.DisableControls;
+      RemainsCDS.Filtered := false;
+      with CheckCDS do
+      begin
+        First;
+        while not Eof do
+        begin
+
+          if FieldByName('Amount').AsCurrency > 0 then
+          begin
+
+            if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                VarArrayOf([FieldByName('GoodsId').AsInteger,
+                FieldByName('PartionDateKindId').AsVariant,
+                FieldByName('NDSKindId').AsVariant,
+                FieldByName('DiscountExternalID').AsVariant,
+                FieldByName('DivisionPartiesID').AsVariant]), []) then
+              if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
+                 (FieldByName('Amount').AsCurrency > 0) and
+                 (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency > 0) and
+                 (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency < 100) then
+              begin
+                nPriceSite := True;
+                Edit;
+                FieldByName('PriceSale').AsCurrency := GetPrice(FieldByName('Price').AsCurrency * 100 / (100 - RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency), 0);
+                Post;
+              end;
+          end;
+
+          Next;
+        end;
+      end;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+        VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalGoodsID, DivisionPartiesID]), []);
+      RemainsCDS.EnableControls;
+    end;
+  end;
+
   FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
@@ -5760,7 +5854,8 @@ begin
   // update DataSet - еще раз по всем "обновим" Дисконт
   DiscountServiceForm.fUpdateCDS_Discount(CheckCDS, lMsg,
     FormParams.ParamByName('DiscountExternalId').Value,
-    FormParams.ParamByName('DiscountCardNumber').Value);
+    FormParams.ParamByName('DiscountCardNumber').Value,
+    nPriceSite);
 
   // Проверим цену
   try
@@ -8276,7 +8371,45 @@ begin
               .asCurrency), 0);
           end else
           begin
-            case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+
+              if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0 then
+              begin
+                ShowMessage
+                  ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
+                  + 'Отпускать со скидкой разрешено кратно ' +
+                  SourceClientDataSet.FieldByName('Multiplicity').AsString +
+                  ' упаковки.');
+                if trunc(abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0 then
+                begin
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                           SourceClientDataSet.FieldByName('Price').asCurrency), 0);
+                end else
+                begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              SourceClientDataSet.FieldByName('PriceChange').asCurrency)) + ' грн.');
+
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 1;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    SourceClientDataSet.FieldByName('PriceChange').asCurrency);
+                end;
+              end else
+              begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              SourceClientDataSet.FieldByName('PriceChange').asCurrency)) + ' грн.');
+
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 1;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    SourceClientDataSet.FieldByName('PriceChange').asCurrency);
+              end;
+
+         {   case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
               'Yes - Цена со скидкой: ' +
               CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
               ('Price').asCurrency, SourceClientDataSet.FieldByName('PriceChange')
@@ -8320,7 +8453,7 @@ begin
                 end;
               mrCancel:
                 exit;
-            end;
+            end;     }
           end;
         end
         else
@@ -8338,7 +8471,51 @@ begin
               .asCurrency), 0);
           end else
           begin
-            case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10
+
+              if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0 then
+              begin
+                ShowMessage
+                  ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
+                  + 'Отпускать со скидкой разрешено кратно ' +
+                  SourceClientDataSet.FieldByName('Multiplicity').AsString +
+                  ' упаковки.');
+                if trunc(abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0 then
+                begin
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                           SourceClientDataSet.FieldByName('Price').asCurrency),
+                           SourceClientDataSet.FieldByName('FixPercent').asCurrency);
+                end else
+                begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                                                              SourceClientDataSet.FieldByName('Price').asCurrency),
+                                                              SourceClientDataSet.FieldByName('FixPercent').asCurrency)) + ' грн.');
+
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 2;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    SourceClientDataSet.FieldByName('PriceChange').asCurrency);
+                end;
+              end else
+              begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                                                              SourceClientDataSet.FieldByName('Price').asCurrency),
+                                                              SourceClientDataSet.FieldByName('FixPercent').asCurrency)) + ' грн.');
+
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 2;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                           SourceClientDataSet.FieldByName('Price').asCurrency),
+                           SourceClientDataSet.FieldByName('FixPercent').asCurrency);
+              end;
+
+           { case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10
               + 'Yes - Цена со скидкой: ' +
               CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
               ('Price').asCurrency,
@@ -8386,7 +8563,7 @@ begin
                 end;
               mrCancel:
                 exit;
-            end;
+            end;  }
           end;
         end
         else
@@ -8404,7 +8581,49 @@ begin
               .asCurrency), 0);
           end else
           begin
-            case MessageDlg
+
+              if SourceClientDataSet.FieldByName('Multiplicity').asCurrency <> 0 then
+              begin
+                ShowMessage
+                  ('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10
+                  + 'Отпускать со скидкой разрешено кратно ' +
+                  SourceClientDataSet.FieldByName('Multiplicity').AsString +
+                  ' упаковки.');
+                if trunc(abs(nAmount) / SourceClientDataSet.FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0 then
+                begin
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                           SourceClientDataSet.FieldByName('Price').asCurrency), 0);
+                end else
+                begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                                                              SourceClientDataSet.FieldByName('Price').asCurrency) - SourceClientDataSet.FieldByName('FixDiscount').asCurrency)) + ' грн.');
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 3;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                    SourceClientDataSet.FieldByName('Price').asCurrency) - SourceClientDataSet.FieldByName('FixDiscount').asCurrency);
+                end;
+              end else
+              begin
+                  ShowMessage('Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                                                              IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                                                              SourceClientDataSet.FieldByName('Price').asCurrency) - SourceClientDataSet.FieldByName('FixDiscount').asCurrency)) + ' грн.');
+
+                  nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').asCurrency;
+                  nFixEndDate := SourceClientDataSet.FieldByName('FixEndDate').AsVariant;
+                  lTypeDiscount := 3;
+                  CalcPriceSale(lPriceSale, lPrice, lChangePercent,
+                    SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                    IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
+                    SourceClientDataSet.FieldByName('Price').asCurrency) - SourceClientDataSet.FieldByName('FixDiscount').asCurrency);
+              end;
+
+
+           { case MessageDlg
               ('Подтверждение цены со скидкой препарата'#13#10#13#10 +
               'Yes - Цена со скидкой: ' +
               CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName
@@ -8454,7 +8673,7 @@ begin
                 end;
               mrCancel:
                 exit;
-            end;
+            end; }
           end;
         end
         else if SourceClientDataSet.FieldByName('PricePartionDate').asCurrency <> 0 then

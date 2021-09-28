@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat,
-               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice TFloat,
+               GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice TFloat, GoodsDiscountProcentSite TFloat,
                UKTZED TVarChar,
                GoodsPairSunId Integer, isGoodsPairSun boolean, GoodsPairSunMainId Integer, GoodsPairSunAmount TFloat, 
                AmountSendIn TFloat,
@@ -574,6 +574,7 @@ BEGIN
                                              , Object_Object.ValueData                                   AS GoodsDiscountName
                                              , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
                                              , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                                             , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent 
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -592,6 +593,9 @@ BEGIN
                                               LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
                                                                     ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
                                                                    AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                              LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                                    ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                                   AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
                                                                    
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False
@@ -1030,11 +1034,16 @@ BEGIN
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
           , COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)    AS isGoodsForProject
           , tmpGoodsDiscount.MaxPrice                              AS GoodsDiscountMaxPrice
+          , tmpGoodsDiscount.DiscountProcent                       AS GoodsDiscountProcentSite
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
           , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
           , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
-          , Object_Goods_PairSun.GoodsPairSunID                    AS GoodsPairSunMainId
-          , Object_Goods_PairSun.GoodsPairSunAmount                AS GoodsPairSunAmount
+          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+                 THEN NULL
+                 ELSE Object_Goods_PairSun.GoodsPairSunID END::INTEGER     AS GoodsPairSunMainId
+          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+                 THEN NULL
+                 ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat  AS GoodsPairSunAmount
 
           , tmpDeferredSendIn.Amount :: TFloat                     AS AmountSendIn
           , COALESCE (Object_Goods_Main.isNotTransferTime, False)  AS NotTransferTime
@@ -1203,7 +1212,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
+-- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
 SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
+--where COALESCE(GoodsPairSunMainId, 0) <> 0
