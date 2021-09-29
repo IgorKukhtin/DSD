@@ -295,6 +295,7 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       Top = 22
       ExplicitLeft = 12
       ExplicitTop = 22
+      ExplicitHeight = 22
     end
     object Panel1: TPanel
       Left = 409
@@ -516,6 +517,22 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
       ImageIndex = 77
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1086#1090#1084#1077#1090#1082#1091' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1079#1072' '#1076#1077#1085#1100' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
     end
+    object actSetPayrollTypeVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetPayrollTypeVIP
+      StoredProcList = <
+        item
+          StoredProc = spSetPayrollTypeVIP
+        end>
+      Caption = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099
+      Hint = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099
+      ImageIndex = 50
+      QuestionBeforeExecute = #1042#1099#1089#1090#1072#1074#1080#1090#1100' '#1089#1084#1077#1085#1099' '#1087#1086' '#1074#1089#1077#1084' '#1086#1090#1084#1077#1090#1082#1072#1084' '#1073#1077#1079' '#1089#1084#1077#1085#1099'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -643,6 +660,10 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -752,6 +773,10 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     end
     object dxBarButton11: TdxBarButton
       Action = actDelUserDay
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actSetPayrollTypeVIP
       Category = 0
     end
   end
@@ -1228,5 +1253,24 @@ inherited EmployeeScheduleVIPForm: TEmployeeScheduleVIPForm
     PackSize = 1
     Left = 776
     Top = 353
+  end
+  object spSetPayrollTypeVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 522
+    Top = 344
   end
 end

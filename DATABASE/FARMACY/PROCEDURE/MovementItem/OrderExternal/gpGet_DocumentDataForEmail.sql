@@ -1,4 +1,4 @@
--- Function: gpGet_Object_City()
+ -- Function: gpGet_Object_City()
 
 DROP FUNCTION IF EXISTS gpGet_DocumentDataForEmail(integer, TVarChar);
 
@@ -101,17 +101,17 @@ BEGIN
                                                  AND View_ContactPerson_Contract_Unit_2.RetailId            IS NULL
                                                  AND View_ContactPerson_Contract_Unit_2.AreaId              = tmpMovement.AreaId
                                                  AND View_ContactPerson_Contract_Unit_2.UnitId              = tmpMovement.ToId
-                                                 AND View_ContactPerson_Contract_Unit_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_Unit_1.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_Unit_0.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_Unit_1.ContractId IS NULL
               LEFT JOIN tmpContactPerson AS View_ContactPerson_Contract_Unit_3
                                                   ON View_ContactPerson_Contract_Unit_3.ContractId          = tmpMovement.ContractId
                                                  AND View_ContactPerson_Contract_Unit_3.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
                                                  AND View_ContactPerson_Contract_Unit_3.RetailId            IS NULL
                                                  AND View_ContactPerson_Contract_Unit_3.AreaId              = zc_Area_Basis()
                                                  AND View_ContactPerson_Contract_Unit_3.UnitId              = tmpMovement.ToId
-                                                 AND View_ContactPerson_Contract_Unit_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_Unit_1.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_Unit_2.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_Unit_0.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_Unit_1.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_Unit_2.ContractId IS NULL
 
               -- Потом ищем по Юр.Лицам + Подразделение
               LEFT JOIN tmpContactPerson AS View_ContactPerson_Unit_0
@@ -158,24 +158,24 @@ BEGIN
                                                  AND View_ContactPerson_Contract_1.RetailId            = tmpMovement.RetailId
                                                  AND View_ContactPerson_Contract_1.AreaId              = zc_Area_Basis()
                                                  AND View_ContactPerson_Contract_1.UnitId IS NULL
-                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_0.ContractId IS NULL
               LEFT JOIN tmpContactPerson AS View_ContactPerson_Contract_2
                                                   ON View_ContactPerson_Contract_2.ContractId          = tmpMovement.ContractId
                                                  AND View_ContactPerson_Contract_2.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
                                                  AND View_ContactPerson_Contract_2.RetailId            IS NULL
                                                  AND View_ContactPerson_Contract_2.AreaId              = tmpMovement.AreaId
                                                  AND View_ContactPerson_Contract_2.UnitId IS NULL
-                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_1.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_0.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_1.ContractId IS NULL
               LEFT JOIN tmpContactPerson AS View_ContactPerson_Contract_3
                                                   ON View_ContactPerson_Contract_3.ContractId          = tmpMovement.ContractId
                                                  AND View_ContactPerson_Contract_3.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
                                                  AND View_ContactPerson_Contract_3.RetailId            IS NULL
                                                  AND View_ContactPerson_Contract_3.AreaId              = zc_Area_Basis()
                                                  AND View_ContactPerson_Contract_3.UnitId IS NULL
-                                                 AND View_ContactPerson_Contract_0.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_1.JuridicalId IS NULL
-                                                 AND View_ContactPerson_Contract_2.JuridicalId IS NULL
+                                                 AND View_ContactPerson_Contract_0.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_1.ContractId IS NULL
+                                                 AND View_ContactPerson_Contract_2.ContractId IS NULL
 
               -- Потом ищем по Юр.Лицам
               LEFT JOIN tmpContactPerson AS View_ContactPerson_0
@@ -346,4 +346,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_DocumentDataForEmail (inId:= 19329018  , inSession:= '377790');
+--SELECT * FROM gpGet_DocumentDataForEmail (inId:= 19329018  , inSession:= '377790');

@@ -69,6 +69,9 @@ type
     actDelUserDay: TdsdExecStoredProc;
     spDelUserDay: TdsdStoredProc;
     dxBarButton11: TdxBarButton;
+    spSetPayrollTypeVIP: TdsdStoredProc;
+    actSetPayrollTypeVIP: TdsdExecStoredProc;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public

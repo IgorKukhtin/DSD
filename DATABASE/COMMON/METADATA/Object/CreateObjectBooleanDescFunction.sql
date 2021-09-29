@@ -1032,10 +1032,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CorrectWagesPercentage_Store() RETUR
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectBoolean_CorrectWagesPercentage_Store', 'Расчет по приходам' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CorrectWagesPercentage_Store');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_Recipe() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Recipe'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_Recipe', 'Рецептура / Не рецептура' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_Recipe');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 29.09.21                                                                                                          * zc_ObjectBoolean_Goods_Recipe
  24.09.21                                                                                                          * zc_ObjectBoolean_CorrectWagesPercentage_...
  15.09.21                                                                                                          * zc_ObjectBoolean_BarCode_DiscountSite
  14.09.21                                                                                                          * zc_ObjectBoolean_Unit_BlockCommentSendTP
