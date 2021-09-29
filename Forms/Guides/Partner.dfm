@@ -25,10 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 371
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -40
-    ExplicitTop = -11
-    ExplicitWidth = 1000
-    ExplicitHeight = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -227,7 +223,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086')'
         Options.Editing = False
         Width = 70
       end
@@ -703,7 +699,6 @@ object PartnerForm: TPartnerForm
     Height = 35
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1000
     object edRetail: TcxButtonEdit
       Left = 389
       Top = 6
@@ -1097,7 +1092,7 @@ object PartnerForm: TPartnerForm
     end
     object bbUpdate_UnitMobile: TdxBarButton
       Action = macUpdate_UnitMobile
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)>'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086')>'
       Category = 0
     end
   end
