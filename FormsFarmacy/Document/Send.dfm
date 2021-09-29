@@ -720,6 +720,7 @@ inherited SendForm: TSendForm
     Width = 992
     Height = 129
     TabOrder = 3
+    ExplicitTop = -1
     ExplicitWidth = 992
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -797,16 +798,19 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
-      Left = 804
+      Left = 788
       Top = 1
-      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
+      Caption = #1055#1077#1088'. '#1088#1072#1089#1095'. '#1053#1058#1047
     end
     object cbisDeferred: TcxCheckBox
       Left = 667
       Top = 39
+      AutoSize = False
       Caption = #1054#1090#1083#1086#1078#1077#1085
+      ParentFont = False
       Properties.ReadOnly = True
       TabOrder = 11
+      Height = 21
       Width = 69
     end
     object cxLabel29: TcxLabel
@@ -829,111 +833,126 @@ inherited SendForm: TSendForm
     end
     object cbSun: TcxCheckBox
       Left = 477
-      Top = 67
+      Top = 73
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      AutoSize = False
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.1)'
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 14
+      Height = 21
       Width = 172
     end
     object cbDefSun: TcxCheckBox
       Left = 667
-      Top = 81
+      Top = 90
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      AutoSize = False
       Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1086' '#1057#1059#1053
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 15
+      Height = 21
       Width = 126
     end
     object cbReceived: TcxCheckBox
       Left = 667
-      Top = 67
+      Top = 73
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      AutoSize = False
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 16
+      Height = 21
       Width = 95
     end
     object cbSent: TcxCheckBox
       Left = 667
-      Top = 53
+      Top = 56
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      AutoSize = False
       Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 17
+      Height = 21
       Width = 103
     end
     object edIsAuto: TcxCheckBox
       Left = 477
       Top = 39
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      AutoSize = False
       Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      ParentFont = False
       Properties.ReadOnly = True
       TabOrder = 18
+      Height = 21
       Width = 188
     end
     object cbSun_v2: TcxCheckBox
       Left = 477
-      Top = 81
+      Top = 90
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
+      AutoSize = False
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.2)'
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 19
+      Height = 21
       Width = 189
     end
     object cxCurrencyEdit1: TcxCurrencyEdit
-      Left = 804
+      Left = 788
       Top = 19
+      Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
+      ParentShowHint = False
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 20
-      Width = 37
+      Width = 69
     end
     object cxLabel9: TcxLabel
       Left = 400
       Top = 41
       Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
     end
-    object cbSUN_v3: TcxCheckBox
+    object cbSUN_v4: TcxCheckBox
       Left = 477
-      Top = 95
-      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+      Top = 107
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
+      AutoSize = False
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 22
-      Width = 148
-    end
-    object cbSUN_v4: TcxCheckBox
-      Left = 477
-      Top = 109
-      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
-      ParentShowHint = False
-      Properties.ReadOnly = True
-      ShowHint = True
-      TabOrder = 23
+      Height = 21
       Width = 176
     end
     object cbNotDisplaySUN: TcxCheckBox
       Left = 477
-      Top = 53
+      Top = 56
       Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
+      AutoSize = False
       Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
+      ParentFont = False
       Properties.ReadOnly = True
-      TabOrder = 24
+      TabOrder = 23
+      Height = 21
       Width = 188
     end
     object edNumberSeats: TcxCurrencyEdit
@@ -942,22 +961,25 @@ inherited SendForm: TSendForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = False
-      TabOrder = 25
+      TabOrder = 24
       Width = 65
     end
     object edDay: TcxCurrencyEdit
-      Left = 804
-      Top = 59
+      Left = 873
+      Top = 19
+      Hint = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
+      ParentShowHint = False
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
-      TabOrder = 26
-      Width = 37
+      ShowHint = True
+      TabOrder = 25
+      Width = 64
     end
     object cxLabel6: TcxLabel
-      Left = 804
-      Top = 41
-      Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
+      Left = 873
+      Top = 1
+      Caption = #1057#1090#1088'. '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1061' '#1076#1085#1077#1081
     end
     object cxLabel8: TcxLabel
       Left = 8
@@ -973,7 +995,7 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = False
-      TabOrder = 29
+      TabOrder = 28
       Width = 181
     end
     object cxLabel7: TcxLabel
@@ -985,72 +1007,88 @@ inherited SendForm: TSendForm
       Left = 195
       Top = 103
       Properties.ReadOnly = False
-      TabOrder = 31
+      TabOrder = 30
       Width = 270
     end
     object cbVIP: TcxCheckBox
       Left = 667
-      Top = 95
+      Top = 107
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1042#1048#1055
+      AutoSize = False
       Caption = #1042#1048#1055
+      ParentFont = False
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 31
+      Height = 21
+      Width = 46
+    end
+    object cbConfirmed: TcxCheckBox
+      Left = 799
+      Top = 73
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1089#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' VIP'
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 32
-      Width = 46
-    end
-    object cbConfirmed: TcxCheckBox
-      Left = 667
-      Top = 109
-      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1089#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' VIP'
-      ParentShowHint = False
-      Properties.ReadOnly = True
-      ShowHint = True
-      TabOrder = 33
       Width = 30
     end
     object cbUrgently: TcxCheckBox
       Left = 716
-      Top = 95
+      Top = 107
       Hint = #1057#1088#1086#1095#1085#1086' '
+      AutoSize = False
       Caption = #1057#1088#1086#1095#1085#1086' '
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 34
+      TabOrder = 33
+      Height = 21
       Width = 64
     end
     object edConfirmed: TcxTextEdit
-      Left = 684
-      Top = 109
+      Left = 816
+      Top = 74
       TabStop = False
+      AutoSize = False
       ParentColor = True
+      ParentFont = False
       Properties.ReadOnly = True
       Style.BorderStyle = ebsNone
-      TabOrder = 35
+      TabOrder = 34
       Text = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
+      Height = 21
       Width = 125
     end
     object cbisBanFiscalSale: TcxCheckBox
       Left = 799
-      Top = 81
+      Top = 39
       Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      AutoSize = False
       Caption = #1047#1072#1087#1088'. '#1082' '#1092#1080#1089#1082'. '#1087#1088#1086#1076#1072#1078#1077
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 36
+      TabOrder = 35
+      Height = 21
       Width = 126
     end
     object cbSendLoss: TcxCheckBox
       Left = 799
-      Top = 95
+      Top = 56
       Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      AutoSize = False
       Caption = #1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
+      ParentFont = False
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 37
+      TabOrder = 36
+      Height = 21
       Width = 126
     end
   end
@@ -2632,7 +2670,6 @@ inherited SendForm: TSendForm
       item
         Name = 'isSUN_v3'
         Value = Null
-        Component = cbSUN_v3
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end

@@ -1,6 +1,6 @@
 -- View: Object_Contract_ContractKey_View
 
--- DROP VIEW IF EXISTS Object_ContactPerson_View;
+--DROP VIEW IF EXISTS Object_ContactPerson_View;
 
 CREATE OR REPLACE VIEW Object_ContactPerson_View
 AS
@@ -51,7 +51,10 @@ SELECT
            , Object_Area.Id                      AS AreaId
            , Object_Area.ValueData               AS AreaName 
 
-           , Object_ContactPerson.isErased    AS isErased
+           , Object_Unit.Id                      AS UnitId
+           , Object_Unit.ValueData               AS UnitName 
+
+           , Object_ContactPerson.isErased       AS isErased
            
        FROM Object AS Object_ContactPerson
            -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_ContactPerson.AccessKeyId
@@ -86,6 +89,11 @@ SELECT
                                 AND ObjectLink_ContactPerson_Area.DescId = zc_ObjectLink_ContactPerson_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = COALESCE (ObjectLink_ContactPerson_Area.ChildObjectId, zc_Area_Basis())
 
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Unit
+                                 ON ObjectLink_ContactPerson_Unit.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Unit.DescId = zc_ObjectLink_ContactPerson_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_ContactPerson_Unit.ChildObjectId
+
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson();
      
 ALTER TABLE Object_ContactPerson_View  OWNER TO postgres;
@@ -94,7 +102,8 @@ ALTER TABLE Object_ContactPerson_View  OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.09.21                                                       * 
  18.11.14                        *
 */
 

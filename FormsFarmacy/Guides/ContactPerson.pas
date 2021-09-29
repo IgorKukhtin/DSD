@@ -28,6 +28,7 @@ type
     EmailKindName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     AreaName_Mail: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

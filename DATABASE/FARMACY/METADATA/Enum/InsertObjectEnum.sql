@@ -382,6 +382,7 @@ BEGIN
 -- !!! Типы расчета заработной платы для VIP менеджеров
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollTypeVIP_WorkCS(),    inDescId:= zc_Object_PayrollTypeVIP(), inCode:= 1, inName:= 'Полная смена'                , inEnumName:= 'zc_Enum_PayrollTypeVIP_WorkCS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollTypeVIP_WorkAS(),    inDescId:= zc_Object_PayrollTypeVIP(), inCode:= 2, inName:= 'Средняя смена'               , inEnumName:= 'zc_Enum_PayrollTypeVIP_WorkAS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollTypeVIP_Hospital(),  inDescId:= zc_Object_PayrollTypeVIP(), inCode:= 3, inName:= 'Больничный'         , inEnumName:= 'zc_Enum_PayrollTypeVIP_Hospital');
 
      -- !!! Типы формирования налогового документа
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      		 inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая', inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');

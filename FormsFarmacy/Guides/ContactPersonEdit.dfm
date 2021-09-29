@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 563
-  ClientWidth = 380
+  ClientHeight = 460
+  ClientWidth = 684
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1060#1048#1054
   end
   object cxButton1: TcxButton
-    Left = 87
-    Top = 523
+    Left = 203
+    Top = 419
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 237
-    Top = 523
+    Left = 444
+    Top = 419
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -73,13 +73,13 @@
     Width = 121
   end
   object cxLabel3: TcxLabel
-    Left = 41
-    Top = 169
+    Left = 42
+    Top = 271
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
-  object ceJuridical: TcxButtonEdit
-    Left = 41
-    Top = 186
+  object ceJuridical_Object: TcxButtonEdit
+    Left = 42
+    Top = 288
     Properties.Buttons = <
       item
         Default = True
@@ -89,9 +89,9 @@
     TabOrder = 9
     Width = 294
   end
-  object ceContract: TcxButtonEdit
-    Left = 41
-    Top = 226
+  object ceContract_Object: TcxButtonEdit
+    Left = 42
+    Top = 330
     Properties.Buttons = <
       item
         Default = True
@@ -102,13 +102,13 @@
     Width = 294
   end
   object cxLabel5: TcxLabel
-    Left = 41
-    Top = 129
+    Left = 42
+    Top = 231
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
-  object cePartner: TcxButtonEdit
-    Left = 41
-    Top = 145
+  object cePartner_Object: TcxButtonEdit
+    Left = 42
+    Top = 247
     Properties.Buttons = <
       item
         Default = True
@@ -119,8 +119,8 @@
     Width = 294
   end
   object cxLabel6: TcxLabel
-    Left = 41
-    Top = 210
+    Left = 42
+    Top = 314
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel4: TcxLabel
@@ -135,24 +135,24 @@
     Width = 160
   end
   object edComment: TcxTextEdit
-    Left = 41
-    Top = 491
+    Left = 360
+    Top = 107
     TabOrder = 16
     Width = 294
   end
   object cxLabel7: TcxLabel
-    Left = 41
-    Top = 472
+    Left = 360
+    Top = 88
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxLabel8: TcxLabel
     Left = 42
-    Top = 297
+    Top = 153
     Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
   end
   object ceContactPersonKind: TcxButtonEdit
     Left = 41
-    Top = 314
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -162,9 +162,9 @@
     TabOrder = 19
     Width = 294
   end
-  object ceUnit: TcxButtonEdit
-    Left = 41
-    Top = 270
+  object ceUnit_Object: TcxButtonEdit
+    Left = 42
+    Top = 374
     Properties.Buttons = <
       item
         Default = True
@@ -175,18 +175,18 @@
     Width = 294
   end
   object cxLabel9: TcxLabel
-    Left = 42
-    Top = 252
+    Left = 43
+    Top = 356
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel10: TcxLabel
-    Left = 42
-    Top = 342
+    Left = 361
+    Top = 51
     Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
   end
   object ceEmail: TcxButtonEdit
-    Left = 41
-    Top = 359
+    Left = 360
+    Top = 68
     Properties.Buttons = <
       item
         Default = True
@@ -197,13 +197,13 @@
     Width = 294
   end
   object cxLabel19: TcxLabel
-    Left = 42
-    Top = 386
+    Left = 361
+    Top = 231
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   object ceRetail: TcxButtonEdit
-    Left = 41
-    Top = 403
+    Left = 360
+    Top = 247
     Properties.Buttons = <
       item
         Default = True
@@ -214,13 +214,13 @@
     Width = 293
   end
   object cxLabel11: TcxLabel
-    Left = 42
-    Top = 430
+    Left = 361
+    Top = 271
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object edArea: TcxButtonEdit
-    Left = 41
-    Top = 448
+    Left = 361
+    Top = 288
     Properties.Buttons = <
       item
         Default = True
@@ -229,6 +229,28 @@
     Properties.ReadOnly = True
     TabOrder = 27
     Width = 293
+  end
+  object cxLabel12: TcxLabel
+    Left = 43
+    Top = 210
+    Caption = #1050#1086#1085#1090#1072#1082#1090' '#1076#1083#1103' '#1086#1073#1098#1077#1082#1090#1072':'
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 359
+    Top = 330
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 294
+  end
+  object cxLabel13: TcxLabel
+    Left = 360
+    Top = 314
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 272
@@ -318,7 +340,7 @@
       item
         Name = 'inObjectId_Partner'
         Value = ''
-        Component = PartnerGuides
+        Component = Partner_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -326,7 +348,7 @@
       item
         Name = 'inObjectId_Juridical'
         Value = ''
-        Component = JuridicalGuides
+        Component = Juridical_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -334,7 +356,7 @@
       item
         Name = 'inObjectId_Contract'
         Value = ''
-        Component = ContractGuides
+        Component = Contract_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -342,7 +364,7 @@
       item
         Name = 'inObjectId_Unit'
         Value = Null
-        Component = UnitGuides
+        Component = Unit_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -378,10 +400,17 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 112
+    Left = 415
+    Top = 174
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -391,8 +420,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 32
-    Top = 513
+    Left = 440
+    Top = 25
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContactPerson'
@@ -458,46 +487,46 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
+        Name = 'Partner_ObjectId'
         Value = ''
-        Component = PartnerGuides
+        Component = Partner_ObjectGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerName'
+        Name = 'Partner_ObjectName'
         Value = ''
-        Component = PartnerGuides
+        Component = Partner_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
+        Name = 'Juridical_ObjectId'
         Value = ''
-        Component = JuridicalGuides
+        Component = Juridical_ObjectGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
+        Name = 'Juridical_ObjectName'
         Value = ''
-        Component = JuridicalGuides
+        Component = Juridical_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractId'
+        Name = 'Contract_ObjectId'
         Value = ''
-        Component = ContractGuides
+        Component = Contract_ObjectGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractName'
+        Name = 'Contract_ObjectName'
         Value = ''
-        Component = ContractGuides
+        Component = Contract_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -518,16 +547,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitId'
+        Name = 'Unit_ObjectId'
         Value = Null
-        Component = UnitGuides
+        Component = Unit_ObjectGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'Unit_ObjectName'
         Value = Null
-        Component = UnitGuides
+        Component = Unit_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -576,6 +605,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -600,9 +644,9 @@
     Left = 344
     Top = 64
   end
-  object JuridicalGuides: TdsdGuides
+  object Juridical_ObjectGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridical
+    LookupControl = ceJuridical_Object
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -612,7 +656,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = Juridical_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -620,18 +664,18 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = Juridical_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 151
-    Top = 183
+    Left = 230
+    Top = 277
   end
-  object ContractGuides: TdsdGuides
+  object Contract_ObjectGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceContract
+    LookupControl = ceContract_Object
     FormNameParam.Value = 'TContract_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -641,7 +685,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = Contract_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -649,18 +693,18 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = Contract_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 175
-    Top = 231
+    Left = 118
+    Top = 317
   end
-  object PartnerGuides: TdsdGuides
+  object Partner_ObjectGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePartner
+    LookupControl = cePartner_Object
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -670,7 +714,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PartnerGuides
+        Component = Partner_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -678,14 +722,14 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartnerGuides
+        Component = Partner_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 177
-    Top = 127
+    Left = 224
+    Top = 221
   end
   object ContactPersonKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -713,12 +757,12 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 263
-    Top = 240
+    Left = 182
+    Top = 142
   end
-  object UnitGuides: TdsdGuides
+  object Unit_ObjectGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
+    LookupControl = ceUnit_Object
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -728,7 +772,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = Unit_ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -736,14 +780,14 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = Unit_ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 175
-    Top = 294
+    Left = 174
+    Top = 364
   end
   object EmailGuides: TdsdGuides
     KeyField = 'Id'
@@ -771,8 +815,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 191
-    Top = 372
+    Left = 534
+    Top = 60
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
@@ -801,8 +845,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 384
+    Left = 463
+    Top = 240
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'
@@ -831,7 +875,36 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 440
+    Left = 575
+    Top = 272
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 518
+    Top = 316
   end
 end

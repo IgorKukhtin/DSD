@@ -7857,6 +7857,9 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataGOODSDIMP: TFloatField
       FieldName = 'GOODSDIMP'
     end
+    object MemDataGOODSDIPR: TCurrencyField
+      FieldName = 'GOODSDIPR'
+    end
   end
   object mdCheck: TdxMemData
     Indexes = <>

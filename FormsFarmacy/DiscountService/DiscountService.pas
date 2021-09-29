@@ -60,7 +60,7 @@ type
     //                                    lCardNumber : string; lDiscountExternalId, lGoodsId : Integer; lQuantity, lPriceSale : Currency;
     //                                    lGoodsCode : Integer; lGoodsName  : string) :Boolean;
     // Update Дисконт в CDS - по всем "обновим" Дисконт
-    function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+    function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string; bFixPrice : Boolean = False) :Boolean;
     // Commit Дисконт из CDS - по всем
     function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
                                   lCardNumber : string; var AisDiscountCommit : Boolean) :Boolean;
@@ -1339,7 +1339,7 @@ end;
 
 
 // Update Дисконт в CDS - по всем "обновим" Дисконт
-function TDiscountServiceForm.fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) :Boolean;
+function TDiscountServiceForm.fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string; bFixPrice : Boolean = False) :Boolean;
 var
   GoodsId : Integer;
   //
@@ -1671,6 +1671,9 @@ begin
                 begin
                   if TryStrToCurr(StringReplace(XMLNode.ChildNodes.FindNode('PatientPrice').Text, '.', FormatSettings.DecimalSeparator, [rfReplaceAll]), lPrice) then
                   begin
+                     // Сохранаем цену сайта
+                     if bFixPrice then lPrice := CheckCDS.FieldByName('Price').asCurrency;
+
                      //Предполагаемое кол-во товара
                      lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
                      lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);

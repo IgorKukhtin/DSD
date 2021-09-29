@@ -785,6 +785,65 @@ BEGIN
        END IF;
      END IF;
    END IF;
+   
+   
+   -- Зеленные галка Бажан
+   IF vbUserId IN (3, 9383066)
+   THEN
+
+      WITH tmpMovement AS (SELECT Movement.*
+                                , Object_Unit.ValueData  AS UnitName
+                           FROM Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                INNER JOIN Object AS Object_Unit ON Object_Unit.ID = MovementLinkObject_Unit.ObjectId
+
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                                             ON MovementLinkObject_JackdawsChecks.MovementId =  Movement.Id
+                                                            AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+                                LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
+ 
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                             ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                                            AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                                                                       
+                           WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND Movement.DescId = zc_Movement_Check()
+                             AND (COALESCE(Object_JackdawsChecks.ObjectCode, 0) <> 0
+                              OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0))                
+         , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                        , MovementProtocol.OperDate
+                                        , CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П'
+                                               THEN TRUE ELSE FALSE END AS Status
+                                   FROM tmpMovement AS Movement
+  
+                                        INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                                                   AND COALESCE(MovementProtocol.UserId, 0) <> 0)
+         , tmpProtocol AS (SELECT MovementProtocol.MovementId
+                                , MAX(MovementProtocol.OperDate) AS OperDate 
+                           FROM tmpMovementProtocol AS MovementProtocol
+                           GROUP BY  MovementProtocol.MovementId)
+                                                                              
+     SELECT string_agg(Movement.InvNumber||' от '||TO_CHAR(Movement.OperDate, 'DD.MM.YYYY')||' аптека '||Movement.UnitName, CHR(13))
+     INTO vbText
+     FROM tmpProtocol    
+          INNER JOIN tmpMovement AS Movement ON Movement.ID = tmpProtocol.MovementId
+     WHERE tmpProtocol.OperDate >= vbDatePUSH;
+               
+               
+     IF COALESCE (vbText, '') <> ''
+     THEN         
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (19, 'Появилась новая галка-чек:'||CHR(13)||CHR(13)||vbText, 
+                   'TReport_Check_JackdawsSumForm', 'Галки чеки за период', 
+                   'StartDate,EndDate,UnitId,UnitName', 
+                   'ftDateTime,ftDateTime,ftInteger,ftString', TO_CHAR(CURRENT_DATE - INTERVAL '3 DAY', 'YYYY-MM-DD')||','||TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD')||',0,');
+     END IF;
+   END IF;
+   
 
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
@@ -812,4 +871,4 @@ LANGUAGE plpgsql VOLATILE;
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
 -- 
-SELECT * FROM gpGet_PUSH_Farmacy(1, '390046')
+SELECT * FROM gpGet_PUSH_Farmacy(1, '3')

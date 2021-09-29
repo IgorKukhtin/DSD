@@ -2074,9 +2074,21 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectFloat_CorrectWagesPercentage_Percent', 'Процент от начислено' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CorrectWagesPercentage_Percent');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_NumberPlates() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_NumberPlates'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_NumberPlates', 'Кол-во пластин в упаковке' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_NumberPlates');
+  
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_QtyPackage() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_QtyPackage'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_QtyPackage', 'Кол-во в упаковке' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_QtyPackage');
+  
+  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.09.21                                                                                      * zc_ObjectFloat_Goods_NumberPlates, zc_ObjectFloat_Goods_QtyPackage
  24.09.21                                                                                      * zc_ObjectFloat_CorrectWagesPercentage_Percent
  16.09.21                                                                                      * zc_ObjectFloat_Goods_PromoBonus
  15.09.21                                                                                      * zc_ObjectFloat_BarCode_DiscountProcent

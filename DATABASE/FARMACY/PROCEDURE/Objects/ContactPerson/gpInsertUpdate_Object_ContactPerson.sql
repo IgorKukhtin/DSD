@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
     IN inEmailId                  Integer   ,    --
     IN inRetailId                 Integer   ,    --
     IN inAreaId                   Integer   ,    --
+    IN inUnitId                   Integer   ,    -- 
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -43,6 +45,7 @@ BEGIN
                                              , inEmailId            := inEmailId
                                              , inRetailId           := inRetailId
                                              , inAreaId             := inAreaId
+                                             , inUnitId             := inUnitId
                                              , inUserId             := vbUserId
                                               );
    

@@ -64,6 +64,7 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -554,7 +555,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintSticker'
         end
         item
           Visible = True
@@ -1242,8 +1243,10 @@ object IncomeJournalForm: TIncomeJournalForm
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelectPrintSticker
       StoredProcList = <
         item
+          StoredProc = spSelectPrintSticker
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -1609,5 +1612,26 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 640
     Top = 240
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 839
+    Top = 160
   end
 end

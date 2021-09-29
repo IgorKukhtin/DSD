@@ -203,6 +203,8 @@ type
     EngineName_ch2: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
   private
   public
   end;

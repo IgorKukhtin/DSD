@@ -80,7 +80,7 @@ OPEN Cursor1 FOR
 
     OPEN Cursor2 FOR
       SELECT
-             MovementItem.*
+            MovementItem.*
        FROM MovementItem
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.isErased   = false;

@@ -7,15 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContactPerson(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
-             , PartnerId Integer, PartnerName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
-             , ContractId Integer, ContractName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , Partner_ObjectId Integer, Partner_ObjectName TVarChar
+             , Juridical_ObjectId Integer, Juridical_ObjectName TVarChar
+             , Contract_ObjectId Integer, Contract_ObjectName TVarChar
+             , Unit_ObjectId Integer, Unit_ObjectName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , EmailId Integer, EmailName TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , RetailId Integer, RetailName TVarChar
              , AreaId Integer, AreaName TVarChar, AreaName_Mail TVarChar
+             , UnitId Integer, UnitName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -53,16 +54,16 @@ BEGIN
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Partner() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS PartnerId
+             END                                 AS Partner_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Partner() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS PartnerName
+             END                                 AS Partner_ObjectName
 
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Juridical() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS JuridicalId
+             END                                 AS Juridical_ObjectId
            , CASE WHEN COALESCE (Object_Juridical.Id, 0) <> 0 
                   THEN Object_Juridical.ValueData
                   ELSE
@@ -70,24 +71,24 @@ BEGIN
                           WHEN zc_Object_Juridical() THEN ContactPerson_Object.ValueData                   
                           ELSE ''::TVarChar
                       END
-             END                                 AS JuridicalName
+             END                                 AS Juridical_ObjectName
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Contract() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS ContractId
+             END                                 AS Contract_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Contract() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS ContractName
+             END                                 AS Contract_ObjectName
 
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Unit() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS UnitId
+             END                                 AS Unit_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Unit() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS UnitName
+             END                                 AS Unit_ObjectName
 
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
@@ -104,6 +105,9 @@ BEGIN
            , Object_Area.ValueData               AS AreaName 
            , Object_Area_Email.ValueData         AS AreaName_Mail
            
+           , Object_Unit.Id                      AS UnitId
+           , Object_Unit.ValueData               AS UnitName 
+
            , Object_ContactPerson.isErased       AS isErased
            
        FROM Object AS Object_ContactPerson
@@ -162,6 +166,11 @@ BEGIN
                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId 
                  
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Unit
+                                 ON ObjectLink_ContactPerson_Unit.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Unit.DescId = zc_ObjectLink_ContactPerson_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_ContactPerson_Unit.ChildObjectId                           
+
      WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
        -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;

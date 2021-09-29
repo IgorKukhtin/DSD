@@ -106,7 +106,7 @@ BEGIN
           , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
           , FALSE::Boolean                                       AS isDeferred
-          , CASE WHEN inSession = '8720522' THEN TRUE ELSE FALSE END::Boolean AS isNP
+          , CASE WHEN inSession IN ('8720522', '374175') THEN TRUE ELSE FALSE END::Boolean AS isNP
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -224,4 +224,4 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
  13.10.15                                                                        *
 */
 
--- select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '8720522');
+-- select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '374175');

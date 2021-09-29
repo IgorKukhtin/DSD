@@ -35,7 +35,7 @@ BEGIN
                   WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'
                   WHEN inJuridicalId = 59612 THEN 'volitskayairina@ventaltd.com.ua'
                   WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'
-                  WHEN inJuridicalId = 410822 THEN 's.boiko@ametrin.com.ua'
+                  WHEN inJuridicalId = 410822 THEN 'zakaz@ametrin.com.ua'
                   ELSE '' END;          
    
     -- проверка
@@ -52,7 +52,7 @@ BEGIN
     -- Временно для теста
     IF vbUserId = 3
     THEN
-      vbMail := 'olegsh1264@gmail.com';
+      vbMail := 'olegsh1264@gmail.com,palladino27@gmail.com';
     END IF;
     
     -- Результат
@@ -89,4 +89,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_OrderInternalPromoForEmail (inMovementId := 23631157 , inJuridicalId := 410822 , inSession:= '298786');
+SELECT * FROM gpGet_OrderInternalPromoForEmail (inMovementId := 24671713  , inJuridicalId := 410822 , inSession:= '3');

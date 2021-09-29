@@ -2671,9 +2671,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrectWagesPercentage_User() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CorrectWagesPercentage_User', 'Связь с пользователем', zc_Object_CorrectWagesPercentage(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrectWagesPercentage_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ContactPerson_Unit', 'Связь с подразделением', zc_Object_ContactPerson(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_FormDispensing() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_FormDispensing'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_FormDispensing', 'Форма отпуска', zc_Object_Goods(), zc_Object_FormDispensing() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_FormDispensing');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.09.21                                                                                      * zc_ObjectLink_Goods_FormDispensing
+ 28.09.21                                                                                      * zc_ObjectLink_ContactPerson_Unit
  27.09.21         * zc_ObjectLink_Member_UnitMobile
  24.06.21                                                                                      * zc_ObjectLink_CorrectWagesPercentage_Unit, zc_ObjectLink_CorrectWagesPercentage_User
  20.06.21                                                                                      * zc_ObjectLink_InsuranceCompanies_Juridical, zc_ObjectLink_MemberIC_InsuranceCompanies
