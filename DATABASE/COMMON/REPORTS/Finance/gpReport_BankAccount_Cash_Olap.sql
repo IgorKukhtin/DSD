@@ -216,6 +216,7 @@ BEGIN
                                        , tmpContainer.CashId
                                        , tmpContainer.CurrencyId
                                        , tmpContainer.BranchId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.MovementDescId ELSE 0 END AS MovementDescId
                                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm
                                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm
                                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END)                                        AS Summ_Currency
@@ -238,6 +239,7 @@ BEGIN
                                          , MIContainer.MovementItemId
                                          , MIContainer.ContainerId
                                          , MIContainer.OperDate
+                                         , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.MovementDescId ELSE 0 END
                                   )
           -- ВСЕ св-ва
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
@@ -353,6 +355,7 @@ BEGIN
                                  , inStartDate :: TDatetime AS OperDate
                                  , 1                         AS NomStr
                                  , '1. Нач. сальдо'          AS InfoText
+                                 , 0                         AS MovementDescId
                             FROM tmpContainer
                                  LEFT JOIN tmpMIContainer AS MIContainer 
                                                           ON MIContainer.Containerid = tmpContainer.ContainerId
@@ -383,6 +386,7 @@ BEGIN
                                  , inEndDate :: TDatetime AS OperDate
                                  , 3                         AS NomStr
                                  , '3. Конечн. сальдо'       AS InfoText
+                                 , 0                         AS MovementDescId
                             FROM tmpContainer
                                  LEFT JOIN tmpMIContainer AS MIContainer
                                                           ON MIContainer.Containerid = tmpContainer.ContainerId
@@ -413,6 +417,7 @@ BEGIN
 
                                  , 2 AS NomStr
                                  , '2. Обороты' AS InfoText
+                                 , tmpContainer.MovementDescId
                             FROM tmpContainerBalance AS tmpContainer
                                    LEFT JOIN tmpMoneyPlace_Balance AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
                                    LEFT JOIN tmpContract_Balance   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
@@ -425,7 +430,8 @@ BEGIN
                                      MILO_MoneyPlace.ObjectId, 
                                      MILO_Contract.ObjectId,
                                      tmpContainer.OperDate,
-                                     tmpContainer.BranchId
+                                     tmpContainer.BranchId,
+                                     tmpContainer.MovementDescId
                             UNION ALL
                             -- движение  в валюте операции
                             SELECT 0                                         AS ContainerId
@@ -448,8 +454,9 @@ BEGIN
                                  , tmpContainer.isActive                     AS isActive
                                  , tmpContainer.OperDate                     AS OperDate
 
-                                 , 2 AS NomStr
-                                 , '2. Обороты' AS InfoText
+                                 , 2                         AS NomStr
+                                 , '2. Обороты'              AS InfoText
+                                 , 0                         AS MovementDescId
                             FROM tmpContainerCurrency AS tmpContainer
                                    LEFT JOIN tmpMoneyPlace_Currency AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
                                    LEFT JOIN tmpContract_Currency   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
@@ -469,6 +476,7 @@ BEGIN
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
                                     , Operation_all.InfoText
+                                    , Operation_all.MovementDescId
                                     , SUM (Operation_all.DebetSumm)   AS DebetSumm
                                     , SUM (Operation_all.KreditSumm)  AS KreditSumm
                                     , SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency
@@ -483,6 +491,7 @@ BEGIN
                                      , Operation_all.isActive, Operation_all.OperDate
                                      , Operation_all.NomStr
                                      , Operation_all.InfoText
+                                     , Operation_all.MovementDescId
                               HAVING SUM (Operation_all.DebetSumm) <> 0
                                   OR SUM (Operation_all.KreditSumm) <> 0
                                   OR SUM (Operation_all.DebetSumm_Currency) <> 0
@@ -490,7 +499,7 @@ BEGIN
                                   OR SUM (Operation_all.StartAmount)          <> 0
                                   OR SUM (Operation_all.EndAmount)            <> 0
                              )
-      -- считаем нач.сальдо для всех дат
+        -- считаем нач.сальдо для всех дат
       , tmpOperation_Group AS (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId, Operation_all.BranchId
                                     , Operation_all.OperDate
                                     , SUM (Operation_all.DebetSumm)   AS DebetSumm
@@ -538,6 +547,7 @@ BEGIN
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
                                     , Operation_all.InfoText
+                                    , Operation_all.MovementDescId
                                     , Operation_all.DebetSumm   AS DebetSumm
                                     , Operation_all.KreditSumm  AS KreditSumm
                                     , Operation_all.DebetSumm_Currency   AS DebetSumm_Currency
@@ -555,12 +565,13 @@ BEGIN
                                 , tmpCalc.OperDate
                                 , tmpCalc.NomStr
                                 , tmpCalc.InfoText
+                                , 0  AS MovementDescId
                                 , 0  AS DebetSumm
                                 , 0  AS KreditSumm
                                 , 0  AS DebetSumm_Currency
                                 , 0  AS KreditSumm_Currency
-                                , 0       AS Summ_Currency
-                                , 0    AS Summ_Currency_pl
+                                , 0  AS Summ_Currency
+                                , 0  AS Summ_Currency_pl
                                 , CASE WHEN tmpCalc.NomStr = 1 THEN tmpCalc.Amount_calc ELSE 0 END AS StartAmount
                                 , CASE WHEN tmpCalc.NomStr = 3 THEN tmpCalc.Amount_calc ELSE 0 END AS EndAmount
                            FROM tmpCalc
@@ -657,6 +668,7 @@ BEGIN
                                  , inStartDate :: TDatetime AS OperDate
                                  , 1                         AS NomStr
                                  , '1. Нач. сальдо'          AS InfoText
+                                 , 0                         AS MovementDescId
                             FROM tmpContainer_2 AS tmpContainer
                                  LEFT JOIN tmpMIContainer_2 AS MIContainer
                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -684,6 +696,7 @@ BEGIN
                                  , inEndDate :: TDatetime AS OperDate
                                  , 3                         AS NomStr
                                  , '3. Конечн. сальдо'       AS InfoText
+                                 , 0                         AS MovementDescId
                             FROM tmpContainer_2 AS tmpContainer
                                  LEFT JOIN tmpMIContainer_2 AS MIContainer
                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -714,6 +727,7 @@ BEGIN
 
                                  , 2 AS NomStr
                                  , '2. Обороты' AS InfoText
+                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.MovementDescId ELSE 0 END AS MovementDescId
                             FROM tmpContainer_2 AS tmpContainer
                                  INNER JOIN tmpMIContainer_2 AS MIContainer
                                                              ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -735,6 +749,7 @@ BEGIN
                                    , MIContainer.MovementDescId
                                    , MIContainer.OperDate :: TDatetime
                                    , tmpContainer.BranchId
+                                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.MovementDescId ELSE 0 END
                            UNION ALL
                             -- 2.2. движение в валюте операции
                             SELECT tmpContainer.ContainerId
@@ -756,8 +771,9 @@ BEGIN
                                  , 0                         AS Summ_pl
                                  , MIContainer.OperDate :: TDatetime AS OperDate
 
-                                 , 2 AS NomStr
+                                 , 2            AS NomStr
                                  , '2. Обороты' AS InfoText
+                                 , 0            AS MovementDescId
                             FROM tmpContainer_2 AS tmpContainer
                                  INNER JOIN tmpMIContainer_2 AS MIContainer
                                                              ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
@@ -800,8 +816,9 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_pl
                                  , MIContainer.OperDate :: TDatetime AS OperDate
 
-                                 , 2 AS NomStr
+                                 , 2            AS NomStr
                                  , '2. Обороты' AS InfoText
+                                 , 0            AS MovementDescId
                             FROM tmpContainer_2 AS tmpContainer
                                  INNER JOIN tmpMIContainer_2 AS MIContainer 
                                                              ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -832,6 +849,7 @@ BEGIN
                                 , Operation_all.OperDate
                                 , Operation_all.NomStr
                                 , Operation_all.InfoText
+                                , Operation_all.MovementDescId
                                 , SUM (Operation_all.DebetSumm)            AS DebetSumm
                                 , SUM (Operation_all.KreditSumm)           AS KreditSumm
                                 , SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency
@@ -846,6 +864,7 @@ BEGIN
                                   , Operation_all.OperDate
                                   , Operation_all.NomStr
                                   , Operation_all.InfoText
+                                  , Operation_all.MovementDescId
                            HAVING SUM (Operation_all.DebetSumm)   <> 0
                                OR SUM (Operation_all.KreditSumm)  <> 0
                                OR SUM (Operation_all.DebetSumm_Currency)   <> 0
@@ -905,6 +924,7 @@ BEGIN
                                     , Operation_all.OperDate
                                     , Operation_all.NomStr
                                     , Operation_all.InfoText
+                                    , Operation_all.MovementDescId
                                     , Operation_all.DebetSumm   AS DebetSumm
                                     , Operation_all.KreditSumm  AS KreditSumm
                                     , Operation_all.DebetSumm_Currency   AS DebetSumm_Currency
@@ -923,6 +943,7 @@ BEGIN
                                 , tmpCalc.OperDate
                                 , tmpCalc.NomStr
                                 , tmpCalc.InfoText
+                                , 0  AS MovementDescId
                                 , 0  AS DebetSumm
                                 , 0  AS KreditSumm
                                 , 0  AS DebetSumm_Currency
@@ -960,6 +981,7 @@ BEGIN
                                   , 'касса' :: TVarChar AS Type_info
                                   , Operation.NomStr
                                   , Operation.InfoText
+                                  , Operation.MovementDescId
                             FROM tmpOperation_1 AS Operation
                            UNION
                             -- результат р.счет
@@ -986,6 +1008,7 @@ BEGIN
                                   , 'р.счет' :: TVarChar AS Type_info
                                   , Operation.NomStr
                                   , Operation.InfoText
+                                  , Operation.MovementDescId
                             FROM tmpOperation_2 AS Operation
                             )
 
@@ -1026,17 +1049,19 @@ BEGIN
                                 , (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 1) :: TVarChar AS MonthName1
                                 , (SELECT tmpMonth.MonthName FROM tmpMonth WHERE tmpMonth.Ord = 2) :: TVarChar AS MonthName2
                                   
-                                , CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
+                                , CASE WHEN Operation.MovementDescId = zc_Movement_Currency() THEN (SELECT Object.ObjectCode FROM Object WHERE Object.DescId = zc_Object_CashFlow() AND Object.ValueData ILIKE '%продажа вал%' LIMIT 1)
+                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_in
                                        WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowCode_out
-                                       WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 3405
-                                       WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 3415
+                                       WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 34050
+                                       WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 34150
                                        ELSE NULL
                                   END  ::Integer   AS CashFlowCode
                           
-                                , CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
+                                , CASE WHEN Operation.MovementDescId = zc_Movement_Currency() THEN (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_CashFlow() AND Object.ValueData ILIKE '%продажа вал%' LIMIT 1)
+                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_in
                                        WHEN COALESCE (Operation.KreditSumm,0) <> 0 THEN tmpInfoMoney.CashFlowName_out
-                                       WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 'Остаток денежных средств на начало периода' --'(3405) Остаток денежных средств на начало периода '
-                                       WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 'Остаток денежных средств на конец периода'    --'(3415) Остаток денежных средств на конец периода'
+                                       WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 'Остаток денежных средств на начало периода' --'(34050) Остаток денежных средств на начало периода '
+                                       WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 'Остаток денежных средств на конец периода'    --'(34150) Остаток денежных средств на конец периода'
                                        ELSE ''
                                   END  :: TVarChar AS CashFlowName
                           
@@ -1055,12 +1080,13 @@ BEGIN
                                   END  ::TFloat    AS Sum2_CashFlow
                           
                                   -- для итогов по группам
-                                , CASE WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3000 AND 3195 THEN 1
-                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3000 AND 3195 THEN 1
-                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3200 AND 3295 THEN 2
-                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3200 AND 3295 THEN 2
-                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3300 AND 3395 THEN 3
-                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3300 AND 3395 THEN 3
+                                , CASE WHEN Operation.MovementDescId = zc_Movement_Currency()                                               THEN 3
+                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3000 AND 3195  THEN 1
+                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3000 AND 3195  THEN 1
+                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3200 AND 3295  THEN 2
+                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3200 AND 3295  THEN 2
+                                       WHEN COALESCE (Operation.DebetSumm,0) <> 0  AND tmpInfoMoney.CashFlowCode_in  BETWEEN 3300 AND 33950 THEN 3
+                                       WHEN COALESCE (Operation.KreditSumm,0) <> 0 AND tmpInfoMoney.CashFlowCode_out BETWEEN 3300 AND 33950 THEN 3
                                        WHEN COALESCE (Operation.StartAmount,0) <> 0 THEN 4
                                        WHEN COALESCE (Operation.EndAmount,0) <> 0 THEN 5
                                        ELSE 0
@@ -1071,7 +1097,7 @@ BEGIN
                                 LEFT JOIN tmpMonth ON tmpMonth.MonthNum = Operation.MonthNum
                            )
     
-        , tmpOperation_DDC AS (SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId, 0 AS BranchId
+        , tmpOperation_DDC AS (/*SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS CashId, 0 AS InfoMoneyId, 0 AS CurrencyId, 0 AS BranchId
                                 , 0 AS UnitId, 0 AS MoneyPlaceId, 0 AS ContractId
                                 , inStartDate AS OperDate
                                 , EXTRACT (MONTH FROM inStartDate)  ::Integer AS MonthNum
@@ -1097,29 +1123,29 @@ BEGIN
                                 , 0 AS Sum2_CashFlow
                                 
                                   -- для итогов по группам
-                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 3195
-                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 3295
-                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 3395
-                                       WHEN tmpCashFlow.Code = 3405 THEN 3405
-                                       WHEN tmpCashFlow.Code = 3415 THEN 3415
+                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195  THEN 3195
+                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295  THEN 3295
+                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 33950 THEN 3395
+                                       WHEN tmpCashFlow.Code = 34050 THEN tmpCashFlow.Code
+                                       WHEN tmpCashFlow.Code = 34150 THEN tmpCashFlow.Code
                                        ELSE NULL
                                   END  ::Integer   AS CashFlowGroupCode
 
-                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 'Чистое движение денежных средств от операционной деятельности'
-                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 'Чистое движение денежных средств от инвистиционной деятельности'
-                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 'Чистое движение денежных средств от финансовой деятельности'
-                                       WHEN tmpCashFlow.Code = 3405 THEN 'Начальный остаток'
-                                       WHEN tmpCashFlow.Code = 3415 THEN 'Конечный остаток'
+                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195  THEN 'Чистое движение денежных средств от операционной деятельности'
+                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295  THEN 'Чистое движение денежных средств от инвестиционной деятельности'
+                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 33950 THEN 'Чистое движение денежных средств от финансовой деятельности'
+                                       WHEN tmpCashFlow.Code = 34050 THEN tmpCashFlow.Code
+                                       WHEN tmpCashFlow.Code = 34150 THEN tmpCashFlow.Code
                                        ELSE ''
                                   END  ::TVarChar   AS CashFlowGroupName
                                   
-                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195 THEN 1
-                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295 THEN 2
-                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 3395 THEN 3
+                                , CASE WHEN tmpCashFlow.Code BETWEEN 3000 AND 3195  THEN 1
+                                       WHEN tmpCashFlow.Code BETWEEN 3200 AND 3295  THEN 2
+                                       WHEN tmpCashFlow.Code BETWEEN 3300 AND 33950 THEN 3
                                        ELSE 0
                                   END  ::Integer   AS PrintGroup
                            FROM tmpCashFlow
-                          UNION
+                          UNION*/
                           -- все данные
                            SELECT Operation.ContainerId, Operation.AccountId, Operation.CashId, Operation.InfoMoneyId, Operation.CurrencyId, Operation.BranchId
                                 , Operation.UnitId, Operation.MoneyPlaceId, Operation.ContractId
@@ -1146,19 +1172,19 @@ BEGIN
                                 , Operation.Sum1_CashFlow
                                 , Operation.Sum2_CashFlow
 
-                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195 THEN 3195
-                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295 THEN 3295
-                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 3395 THEN 3395
-                                       WHEN Operation.CashFlowCode = 3405 THEN 3405
-                                       WHEN Operation.CashFlowCode = 3415 THEN 3415
+                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195  THEN 3195
+                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295  THEN 3295
+                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 33950 THEN 3395
+                                       WHEN Operation.CashFlowCode = 34050 THEN Operation.CashFlowCode
+                                       WHEN Operation.CashFlowCode = 34150 THEN Operation.CashFlowCode
                                        ELSE NULL
                                   END  ::Integer   AS CashFlowGroupCode
 
-                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195 THEN 'Чистое движение денежных средств от операционной деятельности'
-                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295 THEN 'Чистое движение денежных средств от инвистиционной деятельности'
-                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 3395 THEN 'Чистое движение денежных средств от финансовой деятельности'
-                                       WHEN Operation.CashFlowCode = 3405 THEN 'Начальный остаток'
-                                       WHEN Operation.CashFlowCode = 3415 THEN 'Конечный остаток'
+                                , CASE WHEN Operation.CashFlowCode BETWEEN 3000 AND 3195  THEN 'Чистое движение денежных средств от операционной деятельности'
+                                       WHEN Operation.CashFlowCode BETWEEN 3200 AND 3295  THEN 'Чистое движение денежных средств от инвестиционной деятельности'
+                                       WHEN Operation.CashFlowCode BETWEEN 3300 AND 33950 THEN 'Чистое движение денежных средств от финансовой деятельности'
+                                       WHEN Operation.CashFlowCode = 34050 THEN 'Начальный остаток'
+                                       WHEN Operation.CashFlowCode = 34150 THEN 'Конечный остаток'
                                        ELSE ''
                                   END  ::TVarChar  AS CashFlowGroupName
 
@@ -1269,4 +1295,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_BankAccount_Cash_Olap(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('02.12.2019')::TDateTime , inAccountId := 0 , inCashId := 0 , inBankAccountId:=0, inCurrencyId := 0 , inSession := '5');
+-- select * from gpReport_BankAccount_Cash_Olap(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('02.12.2021')::TDateTime , inAccountId := 0 , inCashId := 0 , inBankAccountId:=0, inCurrencyId := 0 , inSession := '5');

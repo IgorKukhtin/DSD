@@ -1462,11 +1462,19 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStatusCode'
+        Name = 'ioStatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStatusName'
+        Value = Null
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

@@ -65,6 +65,8 @@ BEGIN
                                                            , inOperDate   := zc_DateStart()
                                                            , inValue      := inOperPriceList
                                                            , inIsLast     := TRUE
+                                                           , inIsDiscountDelete:= FALSE
+                                                           , inIsDiscount := FALSE -- Цена со скидкой (1-Да, 0-НЕТ)
                                                            , inSession    := vbUserId :: TVarChar
                                                             );
 
@@ -76,7 +78,7 @@ BEGIN
 
 
      -- 1.1. дальше перепроводим все док. где эта партия участвовала
-     PERFORM CASE WHEN Movement.DescId = zc_Movement_Sale() THEN gpReComplete_Movement_Sale (Movement.Id, '-' || inSession)
+     PERFORM CASE WHEN Movement.DescId = zc_Movement_Sale() THEN gpReComplete_Movement_Sale (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_Inventory() THEN gpReComplete_Movement_Inventory (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_ReturnOut() THEN gpReComplete_Movement_ReturnOut (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_Send() THEN gpReComplete_Movement_Send (Movement.Id, inSession)

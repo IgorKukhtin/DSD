@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpUpdateMI_OrderExternal_AmountPartner (Integer, TDateTi
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderExternal_AmountPartner(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-    IN inUnitId              Integer   , -- 
+    IN inUnitId              Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -16,9 +16,9 @@ $BODY$
    DECLARE vbPriceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
 
-    -- 
+    --
     vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
 
     -- таблица -
@@ -41,7 +41,7 @@ BEGIN
                                  FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
                                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountPartner
-                                       FROM Movement 
+                                       FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -62,14 +62,14 @@ BEGIN
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
-                                       HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0   
+                                       HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0
                                        ) AS tmpOrder
                                  FULL JOIN
-                                (SELECT MovementItem.Id                               AS MovementItemId 
+                                (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                       , MovementItem.Amount
-                                 FROM MovementItem 
+                                 FROM MovementItem
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -100,7 +100,7 @@ BEGIN
                                                            , inPrice              := COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) :: TFloat
                                                            , inCountForPrice      := 1
                                                            , inUserId             := vbUserId
-                                                            ) 
+                                                            )
        FROM tmpAll
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpAll.GoodsId
                                   AND tmpPriceList.GoodsKindId IS NULL

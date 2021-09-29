@@ -205,6 +205,7 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
                               AND MIContainer.isActive = FALSE
+                            --AND (MIContainer.MovementId = 20615866 OR vbUserId <> 5)
                             GROUP BY MIContainer.ContainerId
                                      -- Подраделение (ОПиУ)
                                    , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())

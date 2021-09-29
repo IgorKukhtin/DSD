@@ -10,13 +10,13 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement(
   RETURNS VOID
 AS
 $BODY$
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbDescId Integer;
-   DECLARE vbCloseDate TDateTime;
-   DECLARE vbAccessKeyId Integer;
-   DECLARE vbStatusId Integer;
-
-   DECLARE vbRoleName TVarChar;
+   DECLARE vbOperDate        TDateTime;
+   DECLARE vbOperDatePartner TDateTime;
+   DECLARE vbDescId          Integer;
+   DECLARE vbCloseDate       TDateTime;
+   DECLARE vbAccessKeyId     Integer;
+   DECLARE vbStatusId        Integer;
+ --DECLARE vbRoleName TVarChar;
 BEGIN
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
@@ -34,6 +34,9 @@ BEGIN
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
   RETURNING OperDate, DescId, AccessKeyId, StatusId INTO vbOperDate, vbDescId, vbAccessKeyId, vbStatusId;
 
+
+  -- 1.0.
+  vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
 
   -- 1.1. Проверка
   IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)
@@ -116,6 +119,17 @@ BEGIN
                             , inAccessKeyId   := vbAccessKeyId
                             , inUserId        := inUserId
                              );
+
+  IF vbOperDatePartner IS NOT NULL
+  THEN
+      -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+      PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+                                , inMovementId    := inMovementId
+                                , inMovementDescId:= inDescId
+                                , inAccessKeyId   := vbAccessKeyId
+                                , inUserId        := inUserId
+                                 );
+  END IF;
 
   -- есть !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!, поэтому все что дальше - не надо
   /*

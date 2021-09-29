@@ -12,9 +12,15 @@ $BODY$
   DECLARE vbUserId   Integer;
   DECLARE vbStatusId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Sale());
-    -- vbUserId:= lpGetUserBySession (inSession);
+    IF zfConvert_StringToNumber (inSession) < 0
+    THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight ((-1 * zfConvert_StringToNumber (inSession)) :: TVarChar, zc_Enum_Process_UnComplete_Sale());
+    ELSE
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Sale());
+        -- vbUserId:= lpGetUserBySession (inSession);
+    END IF;
 
 
     -- Проверка - Дата Документа

@@ -11,8 +11,14 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
+    IF zfConvert_StringToNumber (inSession) < 0
+    THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight ((-1 * zfConvert_StringToNumber (inSession)) :: TVarChar, zc_Enum_Process_Complete_Sale());
+    ELSE
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
+    END IF;
 
 
      -- Проверка - Дата Документа
@@ -23,7 +29,8 @@ BEGIN
 
      -- собственно проводки
      PERFORM lpComplete_Movement_Sale (inMovementId  -- Документ
-                                     , vbUserId);    -- Пользователь
+                                     , CASE WHEN zfConvert_StringToNumber (inSession) < 0 THEN -1 * vbUserId ELSE vbUserId END
+                                      );    -- Пользователь
 
 END;
 $BODY$

@@ -13,9 +13,15 @@ BEGIN
      -- !!!бпелеммн - DROP!!!
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
-         DROP TABLE _tmpPay;
-         DROP TABLE _tmpItem_SummClient;
          DROP TABLE _tmpItem;
+     END IF;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPay'))
+     THEN
+         DROP TABLE _tmpPay;
+     END IF;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_SummClient'))
+     THEN
+         DROP TABLE _tmpItem_SummClient;
      END IF;
 
 

@@ -13,7 +13,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_UnitMobile());
+   --vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_UnitMobile());
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_UnitMobile(), inId, inUnitMobileId);

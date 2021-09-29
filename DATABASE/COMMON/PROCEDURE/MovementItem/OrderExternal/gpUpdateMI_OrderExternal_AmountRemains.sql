@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpUpdateMI_OrderExternal_AmountRemains (Integer, TDateTi
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderExternal_AmountRemains(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-    IN inUnitId              Integer   , -- 
+    IN inUnitId              Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -16,17 +16,17 @@ $BODY$
    DECLARE vbPriceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternalUnit());
 
 
-     -- 
+     --
      vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
- 
+
      -- таблица
      CREATE TEMP TABLE tmpContainer_Count (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE tmpContainer (GoodsId Integer, GoodsKindId Integer, Amount_end TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount_end TFloat, Amount TFloat) ON COMMIT DROP;
-     
+
      --
      INSERT INTO tmpContainer_Count (ContainerId, GoodsId, GoodsKindId, Amount)
         WITH tmpGoods AS (SELECT Id AS GoodsId FROM Object WHERE DescId = zc_Object_Goods())
@@ -37,11 +37,11 @@ BEGIN
         FROM tmpGoods
              INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                  AND Container.DescId = zc_Container_Count()
-             INNER JOIN ContainerLinkObject AS CLO_Unit 
+             INNER JOIN ContainerLinkObject AS CLO_Unit
                                             ON CLO_Unit.ContainerId = Container.Id
                                            AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                            AND CLO_Unit.ObjectId = inUnitId
-             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
+             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                            ON CLO_GoodsKind.ContainerId = Container.Id
                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
       --     LEFT JOIN ContainerLinkObject AS CLO_Account
@@ -49,7 +49,7 @@ BEGIN
       --                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
       --WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
        ;
- 
+
      --
      INSERT INTO tmpContainer (GoodsId, GoodsKindId, Amount_end)
         SELECT tmpContainer_Count.GoodsId
@@ -70,7 +70,7 @@ BEGIN
         GROUP BY tmpContainer_Count.GoodsId
                , tmpContainer_Count.GoodsKindId
         HAVING SUM (tmpContainer_Count.Amount_end) <> 0
-       ;      
+       ;
 
      --
      INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, Amount_end, Amount)
@@ -81,11 +81,11 @@ BEGIN
                       , COALESCE (tmp.Amount, 0)                             AS Amount
                  FROM tmpContainer
                       FULL JOIN
-                           (SELECT MovementItem.Id                               AS MovementItemId 
+                           (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , MovementItem.Amount
-                            FROM MovementItem 
+                            FROM MovementItem
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -116,7 +116,7 @@ BEGIN
                                                          , inPrice              := COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) :: TFloat
                                                          , inCountForPrice      := 1
                                                          , inUserId             := vbUserId
-                                                          ) 
+                                                          )
      FROM tmpAll
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpAll.GoodsId
                                 AND tmpPriceList.GoodsKindId IS NULL

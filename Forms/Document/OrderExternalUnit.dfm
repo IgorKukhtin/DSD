@@ -3,7 +3,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   ClientHeight = 399
   ClientWidth = 1024
   ExplicitWidth = 1040
-  ExplicitHeight = 437
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1024
     Height = 233
     ExplicitTop = 166
-    ExplicitWidth = 1031
+    ExplicitWidth = 1024
     ExplicitHeight = 233
     ClientRectBottom = 233
     ClientRectRight = 1024
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1031
+      ExplicitWidth = 1024
       ExplicitHeight = 209
       inherited cxGrid: TcxGrid
         Width = 1024
         Height = 209
-        ExplicitWidth = 1031
+        ExplicitWidth = 1024
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -401,7 +401,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1024
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1031
+    ExplicitWidth = 1024
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1436,11 +1436,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStatusCode'
+        Name = 'ioStatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStatusName'
+        Value = Null
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1480,7 +1488,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1696,14 +1704,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'OperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1816,7 +1824,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDateStart'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1824,7 +1832,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDateEnd'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2050,43 +2058,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 654
     Top = 304
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 590
     Top = 344
   end
@@ -2199,14 +2175,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2676,7 +2652,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2750,7 +2726,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput

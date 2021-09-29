@@ -9,10 +9,11 @@ CREATE OR REPLACE FUNCTION lpUnComplete_Movement(
   RETURNS VOID
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
-  DECLARE vbDescId Integer;
-  DECLARE vbAccessKeyId Integer;
-  DECLARE vbStatusId_old Integer;
+  DECLARE vbOperDate        TDateTime;
+  DECLARE vbOperDatePartner TDateTime;
+  DECLARE vbDescId          Integer;
+  DECLARE vbAccessKeyId     Integer;
+  DECLARE vbStatusId_old    Integer;
 BEGIN
 
   -- 0. Проверка
@@ -23,6 +24,7 @@ BEGIN
 
   -- 1.0.
   vbStatusId_old:= (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+  vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
 
   -- 1.1. Проверки на "распроведение" / "удаление"
   IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
@@ -39,6 +41,16 @@ BEGIN
                                  , inAccessKeyId   := vbAccessKeyId
                                  , inUserId        := inUserId
                                   );
+       IF vbOperDatePartner IS NOT NULL
+       THEN
+           -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+           PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+                                     , inMovementId    := inMovementId
+                                     , inMovementDescId:= vbDescId
+                                     , inAccessKeyId   := vbAccessKeyId
+                                     , inUserId        := inUserId
+                                      );
+       END IF;
   END IF;
 
 

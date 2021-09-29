@@ -11,9 +11,16 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
-    --vbUserId:= lpGetUserBySession (inSession);
+
+    IF zfConvert_StringToNumber (inSession) < 0
+    THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight ((-1 * zfConvert_StringToNumber (inSession)) :: TVarChar, zc_Enum_Process_Complete_Sale());
+    ELSE
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
+        --vbUserId:= lpGetUserBySession (inSession);
+    END IF;
 
     -- только если документ проведен
     IF EXISTS (SELECT 1 FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_Complete())

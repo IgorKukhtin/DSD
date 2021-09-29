@@ -50,6 +50,12 @@ BEGIN
                         , lfGet_Object_ValueData_sh ((SELECT OL_Contract_PaidKind.ChildObjectId FROM ObjectLink AS OL_Contract_PaidKind WHERE OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind() AND OL_Contract_PaidKind.ObjectId = inContractId))
                          ;
       END IF;
+      
+      -- Замена
+      IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.ObjectId = inPartnerId AND ObjectLink.ObjectId = zc_ObjectLink_Partner_UnitMobile() AND ObjectLink.ChildObjectId > 0)
+      THEN
+          inUnitId:= (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inPartnerId AND ObjectLink.ObjectId = zc_ObjectLink_Partner_UnitMobile());
+      END IF;
 
 
       -- определение идентификатора заявки по глобальному уникальному идентификатору

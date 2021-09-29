@@ -631,7 +631,7 @@ BEGIN
 
 
      -- проверка: ОСТАТОК должен быть
-     IF inUserId <> zc_User_Sybase()
+     IF inUserId <> zc_User_Sybase() AND inUserId >= 0
      -- AND inUserId <> 1017903 -- 
      THEN
          --
@@ -684,7 +684,7 @@ BEGIN
                                              , inAccountDirectionId     := vbAccountDirectionId_From
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
-                                             , inUserId                 := inUserId
+                                             , inUserId                 := ABS (inUserId)
                                               ) AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT DISTINCT _tmpItem.InfoMoneyDestinationId FROM _tmpItem) AS _tmpItem_group
@@ -730,7 +730,7 @@ BEGIN
                                              , inAccountDirectionId     := vbAccountDirectionId_To
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
-                                             , inUserId                 := inUserId
+                                             , inUserId                 := ABS (inUserId)
                                               ) AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT DISTINCT _tmpItem_SummClient.InfoMoneyDestinationId FROM _tmpItem_SummClient) AS _tmpItem_group
@@ -1358,14 +1358,14 @@ BEGIN
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Sale()
-                                , inUserId     := inUserId
+                                , inUserId     := ABS (inUserId)
                                  );
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- меняются ИТОГОВЫЕ суммы по покупателю - !!!ПОСЛЕ Итоговые суммы по накладной!!!
-     PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
+     PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= ABS (inUserId));
 
 END;
 $BODY$
