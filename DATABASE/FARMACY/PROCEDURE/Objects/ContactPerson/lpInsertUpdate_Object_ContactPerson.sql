@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContactPerson (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContactPerson (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContactPerson (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_ContactPerson(
     IN inEmailId                  Integer   ,    --
     IN inRetailId                 Integer   ,    --
     IN inAreaId                   Integer   ,    --
+    IN inUnitId                   Integer   ,    -- 
     IN inUserId                   Integer
 )
 RETURNS Integer
@@ -97,6 +99,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Retail(), ioId, inRetailId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Area(), ioId, inAreaId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Unit(), ioId, inUnitId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);

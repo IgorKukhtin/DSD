@@ -42,13 +42,13 @@ type
     cxLabel2: TcxLabel;
     edPhone: TcxTextEdit;
     cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    ceContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
+    ceJuridical_Object: TcxButtonEdit;
+    Juridical_ObjectGuides: TdsdGuides;
+    ceContract_Object: TcxButtonEdit;
+    Contract_ObjectGuides: TdsdGuides;
     cxLabel5: TcxLabel;
-    cePartner: TcxButtonEdit;
-    PartnerGuides: TdsdGuides;
+    cePartner_Object: TcxButtonEdit;
+    Partner_ObjectGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel4: TcxLabel;
     edMail: TcxTextEdit;
@@ -57,9 +57,9 @@ type
     cxLabel8: TcxLabel;
     ceContactPersonKind: TcxButtonEdit;
     ContactPersonKindGuides: TdsdGuides;
-    ceUnit: TcxButtonEdit;
+    ceUnit_Object: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    UnitGuides: TdsdGuides;
+    Unit_ObjectGuides: TdsdGuides;
     cxLabel10: TcxLabel;
     ceEmail: TcxButtonEdit;
     EmailGuides: TdsdGuides;
@@ -69,6 +69,10 @@ type
     cxLabel11: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    cxLabel12: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

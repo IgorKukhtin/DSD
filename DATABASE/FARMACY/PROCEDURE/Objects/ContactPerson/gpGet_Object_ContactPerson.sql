@@ -11,15 +11,16 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ContactPerson(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
-             , PartnerId Integer, PartnerName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
-             , ContractId Integer, ContractName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , Partner_ObjectId Integer, Partner_ObjectName TVarChar
+             , Juridical_ObjectId Integer, Juridical_ObjectName TVarChar
+             , Contract_ObjectId Integer, Contract_ObjectName TVarChar
+             , Unit_ObjectId Integer, Unit_ObjectName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , EmailId Integer, EmailName TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , RetailId Integer, RetailName TVarChar
              , AreaId Integer, AreaName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -40,18 +41,18 @@ BEGIN
            , CAST ('' as TVarChar)  AS Mail
            , CAST ('' as TVarChar)  AS Comment
 
-           , inPartnerId                           AS PartnerId
-           , lfGet_Object_ValueData (inPartnerId)  AS PartnerName
+           , inPartnerId                           AS Partner_ObjectId
+           , lfGet_Object_ValueData (inPartnerId)  AS Partner_ObjectName
           
   
-           , CAST (0 as Integer)    AS JuridicalId
-           , CAST ('' as TVarChar)  AS JuridicalName
+           , CAST (0 as Integer)    AS Juridical_ObjectId
+           , CAST ('' as TVarChar)  AS Juridical_ObjectName
     
-           , CAST (0 as Integer)    AS ContractId
-           , CAST ('' as TVarChar)  AS ContractName
+           , CAST (0 as Integer)    AS Contract_ObjectId
+           , CAST ('' as TVarChar)  AS Contrac_ObjectName
 
-           , CAST (0 as Integer)    AS UnitId
-           , CAST ('' as TVarChar)  AS UnitName
+           , CAST (0 as Integer)    AS Unit_ObjectId
+           , CAST ('' as TVarChar)  AS Unit_ObjectName
 
            , inContactPersonKindId                           AS ContactPersonKindId
            , lfGet_Object_ValueData (inContactPersonKindId)  AS ContactPersonKindName
@@ -67,6 +68,9 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName 
            
+           , CAST (0 as Integer)    AS UnitId
+           , CAST ('' as TVarChar)  AS UnitName
+
            , CAST (NULL AS Boolean) AS isErased
 
        FROM Object AS Object_ContactPerson
@@ -85,38 +89,38 @@ BEGIN
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Partner() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS PartnerId
+             END                                 AS Partner_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Partner() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS PartnerName
+             END                                 AS Partner_ObjectName
 
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Juridical() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS JuridicalId
+             END                                 AS Juridical_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Juridical() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS JuridicalName
+             END                                 AS Juridical_ObjectName
 
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Contract() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS ContractId
+             END                                 AS Contract_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Contract() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS ContractName
+             END                                 AS Contract_ObjectName
 
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Unit() THEN ContactPerson_Object.Id                   
                  ELSE 0
-             END                                 AS UnitId
+             END                                 AS Unit_ObjectId
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Unit() THEN ContactPerson_Object.ValueData                   
                  ELSE ''::TVarChar
-             END                                 AS UnitName
+             END                                 AS Unit_ObjectName
 
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
@@ -131,6 +135,9 @@ BEGIN
            
            , Object_Area.Id              AS AreaId
            , Object_Area.ValueData       AS AreaName 
+           
+           , Object_Unit.Id              AS UnitId
+           , Object_Unit.ValueData       AS UnitName 
            
            , Object_ContactPerson.isErased AS isErased
            
@@ -175,6 +182,11 @@ BEGIN
                                  ON ObjectLink_ContactPerson_Area.ObjectId = Object_ContactPerson.Id 
                                 AND ObjectLink_ContactPerson_Area.DescId = zc_ObjectLink_ContactPerson_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_ContactPerson_Area.ChildObjectId                           
+
+            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_Unit
+                                 ON ObjectLink_ContactPerson_Unit.ObjectId = Object_ContactPerson.Id 
+                                AND ObjectLink_ContactPerson_Unit.DescId = zc_ObjectLink_ContactPerson_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_ContactPerson_Unit.ChildObjectId                           
 
        WHERE Object_ContactPerson.Id = inId;
       
