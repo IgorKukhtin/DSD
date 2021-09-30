@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Promo()
 
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoInvoice (Integer, Integer, TVarChar, TVarChar, TDateTime, Integer, Integer, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoInvoice (Integer, Integer, TVarChar, TVarChar, TDateTime, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoInvoice (Integer, Integer, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoInvoice(
  INOUT ioId                    Integer    , -- Ключ объекта <>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoInvoice(
     IN inOperDate              TDateTime  , --
     IN inBonusKindId           Integer    , --
     IN inPaidKindId            Integer    , -- 
+    IN inContractId            Integer    , -- 
     IN inTotalSumm             TFloat     , --
     IN inComment               TVarChar   , --
     IN inSession               TVarChar     -- сессия пользователя
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoInvoice(
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbJuridicalId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -40,6 +42,19 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BonusKind(), ioId, inBonusKindId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
+
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+    
+    --получаем юр.лицо из договора
+    vbJuridicalId := (SELECT ObjectLink_Contract_Juridical.ChildObjectId
+                      FROM ObjectLink AS ObjectLink_Contract_Juridical
+                      WHERE ObjectLink_Contract_Juridical.ObjectId = inContractId 
+                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                      );
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, vbJuridicalId);
+
         -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
     -- сохранили <Примечание>
@@ -71,5 +86,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.21         *
  04.09.21         *
 */

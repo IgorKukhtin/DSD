@@ -42,6 +42,12 @@ type
     cxLabel15: TcxLabel;
     ceInvoice: TcxButtonEdit;
     GuidesPromo: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    edContract: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

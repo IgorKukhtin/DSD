@@ -34,7 +34,6 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
                                      ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
         LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-        LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
 
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id

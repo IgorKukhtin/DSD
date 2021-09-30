@@ -17,7 +17,12 @@ RETURNS TABLE (Id                Integer
              , BonusKindName      TVarChar
              , PaidKindId       Integer  
              , PaidKindCode     Integer  
-             , PaidKindName     TVarChar 
+             , PaidKindName     TVarChar
+             , ContractId       Integer
+             , ContractCode     Integer
+             , ContractName     TVarChar
+             , JuridicalId      Integer
+             , JuridicalName    TVarChar
              , TotalSumm        TFloat 
              , Comment          TVarChar
              , isErased         Boolean
@@ -38,7 +43,7 @@ BEGIN
         SELECT Movement_PromoInvoice.Id
              , Movement_PromoInvoice.ParentId             --Ссылка на основной документ <Акции> (zc_Movement_Promo)
              , Movement_PromoInvoice.OperDate
-             , Movement_PromoInvoice.Invnumber
+             , Movement_PromoInvoice.Invnumber ::integer
              , Movement_PromoInvoice.InvnumberPartner
 
              , Movement_PromoInvoice.BonusKindId
@@ -48,6 +53,12 @@ BEGIN
              , Movement_PromoInvoice.PaidKindId
              , Movement_PromoInvoice.PaidKindCode
              , Movement_PromoInvoice.PaidKindName
+
+             , Movement_PromoInvoice.ContractId
+             , Movement_PromoInvoice.ContractCode
+             , Movement_PromoInvoice.ContractName
+             , Movement_PromoInvoice.JuridicalId
+             , Movement_PromoInvoice.JuridicalName
 
              , Movement_PromoInvoice.TotalSumm
              , Movement_PromoInvoice.Comment
@@ -73,5 +84,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.21         *
  04.09.21         *
 */
+
+-- test
+-- SELECT * FROM gpSelect_Movement_PromoInvoice (inMovementId:= 0, inIsErased := false,  inSession:= zfCalc_UserAdmin())
