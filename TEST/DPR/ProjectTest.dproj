@@ -2628,10 +2628,6 @@
 				<Form>OrderIncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\NameBefore.pas">
-				<Form>NameBeforeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\NameBeforeEdit.pas">
 				<Form>NameBeforeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4550,6 +4546,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractChoice_byPromo.pas">
 				<Form>ContractChoice_byPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\NameBefore.pas">
+				<Form>NameBeforeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

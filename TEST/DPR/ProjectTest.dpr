@@ -824,7 +824,6 @@ uses
   Report_WageDialog in '..\..\Forms\Report\Report_WageDialog.pas' {Report_WageDialogForm: TParentForm},
   ReestrKind in '..\..\Forms\Kind\ReestrKind.pas' {ReestrKindForm: TParentForm},
   OrderIncome in '..\..\Forms\Document\OrderIncome.pas' {OrderIncomeForm: TParentForm},
-  NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm},
   NameBeforeEdit in '..\..\Forms\Guides\NameBeforeEdit.pas' {NameBeforeEditForm: TParentForm},
   OrderIncomeJournal in '..\..\Forms\Document\OrderIncomeJournal.pas' {OrderIncomeJournalForm: TParentForm},
   InvoiceJournal in '..\..\Forms\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
@@ -1317,7 +1316,8 @@ uses
   ContractConditionPartnerValueEdit in '..\..\Forms\Guides\ContractConditionPartnerValueEdit.pas' {ContractConditionPartnerValueEditForm: TParentForm},
   Report_Promo_PlanFact in '..\..\Forms\Report\Report_Promo_PlanFact.pas' {Report_Promo_PlanFactForm: TParentForm},
   Report_Promo_PlanFactDialog in '..\..\Forms\Report\Report_Promo_PlanFactDialog.pas' {Report_Promo_PlanFactDialogForm: TParentForm},
-  ContractChoice_byPromo in '..\..\Forms\Guides\ContractChoice_byPromo.pas' {ContractChoice_byPromoForm: TParentForm};
+  ContractChoice_byPromo in '..\..\Forms\Guides\ContractChoice_byPromo.pas' {ContractChoice_byPromoForm: TParentForm},
+  NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
