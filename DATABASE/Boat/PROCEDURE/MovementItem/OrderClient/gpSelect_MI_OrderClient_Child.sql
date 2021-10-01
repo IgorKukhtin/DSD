@@ -45,6 +45,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbReceiptProdModelId Integer;
 
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
@@ -52,6 +53,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 
      vbUserId:= lpGetUserBySession (inSession);
+     
+     --из шапки лодка по ней находим модель
+     vbReceiptProdModelId := (SELECT ObjectLink_Product_ReceiptProdModel.ChildObjectId
+                              FROM MovementLinkObject AS MovementLinkObject_Product
+                                   LEFT JOIN ObjectLink AS ObjectLink_Product_ReceiptProdModel
+                                                        ON ObjectLink_Product_ReceiptProdModel.ObjectId = MovementLinkObject_Product.ObjectId
+                                                       AND ObjectLink_Product_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
+                              WHERE MovementLinkObject_Product.MovementId = inMovementId
+                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                              );
 
      -- таблица - элементы документа, со всеми свойствами
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, ParentId Integer, PartionId Integer
@@ -179,6 +190,31 @@ BEGIN
           AND Object_ProdColorItems.isErased = FALSE
        ;
 
+     -- таблица - элементы _tmpReceiptLevel
+     CREATE TEMP TABLE _tmpReceiptLevel (GoodsId Integer, ReceiptLevelName TVarChar) ON COMMIT DROP;
+     --
+     INSERT INTO _tmpReceiptLevel ( GoodsId, ReceiptLevelName)
+        SELECT DISTINCT
+               _tmpItem.ObjectId AS GoodsId
+             , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
+        FROM _tmpItem
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
+                                 ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = _tmpItem.ObjectId
+                                AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+            ---берем  не удаленные
+            INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                                             AND Object_ReceiptProdModelChild.IsErased = FALSE
+            -- ReceiptProdModel по лодке
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                  ON ObjectLink_ReceiptProdModel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                 AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                 AND ObjectLink_ReceiptProdModel.ChildObjectId = vbReceiptProdModelId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_ReceiptLevel
+                                 ON ObjectLink_ReceiptProdModelChild_ReceiptLevel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                AND ObjectLink_ReceiptProdModelChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+            LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptProdModelChild_ReceiptLevel.ChildObjectId
+       ;
 
      -- Результат
      OPEN Cursor1 FOR
@@ -205,6 +241,7 @@ BEGIN
                             WHERE _tmpItem.GoodsId > 0
                             GROUP BY _tmpItem.GoodsId
                            )
+ 
       SELECT
              _tmpItem.MovementItemId                  AS MovementItemId
            , _tmpItem.ObjectId                        AS KeyId
@@ -261,6 +298,7 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
 
            , tmpSumm.PartNumber :: TVarChar AS PartNumber
+           , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
 
        FROM _tmpItem
             LEFT JOIN tmpProdColor ON tmpProdColor.GoodsId = _tmpItem.ObjectId
@@ -309,6 +347,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId = Movement_OrderPartner.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId--  and 1=0
+
        -- без этой структуры
        WHERE _tmpItem.GoodsId  = 0
          AND _tmpItem.ParentId = 0
@@ -373,6 +414,8 @@ BEGIN
            
            , _tmpItem.PartionId
 
+           , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
+
        FROM _tmpItem
             LEFT JOIN _tmpItem AS _tmpItem_parent ON _tmpItem_parent.MovementItemId = _tmpItem.ParentId
             
@@ -417,8 +460,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId = Movement_OrderPartner.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN _tmpReceiptLevel ON _tmpReceiptLevel.GoodsId = _tmpItem.ObjectId  and 1=0
      --WHERE _tmpItem.GoodsId > 0
-       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern()
+       WHERE Object_Object.DescId <> zc_Object_ProdColorPattern() 
      ;
      RETURN NEXT Cursor2;
 
