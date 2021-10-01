@@ -554,4 +554,4 @@ and b.ValueData = a.ValueData
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (TRUE, 201, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (FALSE, 201, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (FALSE, 301, zfCalc_UserAdmin())

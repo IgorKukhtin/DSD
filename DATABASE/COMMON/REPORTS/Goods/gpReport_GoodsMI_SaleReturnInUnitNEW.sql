@@ -746,7 +746,7 @@ BEGIN
                                      LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                )
 
-, tmpOperationGroup2 AS (SELECT MIContainer.ObjectId_Analyzer                 AS GoodsId
+ , tmpOperationGroup2 AS (SELECT MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , 0                                            AS BranchId

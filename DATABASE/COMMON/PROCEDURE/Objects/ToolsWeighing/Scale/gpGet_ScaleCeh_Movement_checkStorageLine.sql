@@ -50,4 +50,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_Movement_checkStorageLine (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_ScaleCeh_Movement_checkStorageLine (inMovementId:= 0, inSession:= '5')

@@ -417,4 +417,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_Movement_checkPartion (inMovementId:= 1, inGoodsId:= 1, inPartionGoods:= '1', inOperCount:= 1, inValueStep:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_ScaleCeh_Movement_checkPartion (inMovementId:= 1, inGoodsId:= 1, inPartionGoods:= '1', inOperCount:= 1, inValueStep:= 1, inSession:= '5')

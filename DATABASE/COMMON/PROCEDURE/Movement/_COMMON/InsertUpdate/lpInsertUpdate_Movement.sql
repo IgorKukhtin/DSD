@@ -16,6 +16,13 @@ BEGIN
      END IF;
 
 
+     -- Проверка
+     IF COALESCE (inOperDate, zc_DateStart()) < '01.01.2015'
+     THEN
+         RAISE EXCEPTION 'Ошибка.Создание документа с датой <%> невозможно.', zfConvert_DateToString (COALESCE (inOperDate, zc_DateStart()));
+     END IF;
+
+
   IF COALESCE (ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId, AccessKeyId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
@@ -29,12 +36,12 @@ BEGIN
      --
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
      --
      IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
 
      --

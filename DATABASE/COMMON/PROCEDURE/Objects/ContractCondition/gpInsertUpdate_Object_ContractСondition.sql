@@ -19,16 +19,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
     IN inContractSendId            Integer   , -- Договор маркетинга
     IN inPaidKindId                Integer   , -- Форма оплаты
     IN inStartDate                 TDateTime , -- Дейстует с...
+   OUT outEndDate                  TDateTime , -- Дейстует до...
     IN inSession                   TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
-   
+  
     -- проверка
    IF COALESCE (inContractId, 0) = 0
    THEN
@@ -45,8 +47,8 @@ BEGIN
                                             AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                             AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                        INNER JOIN ObjectDate AS ObjectDate_StartDate
-                                             ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                            AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+                                             ON ObjectDate_StartDate.ObjectId  = ObjectLink_ContractCondition_Contract.ObjectId
+                                            AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
                                             AND ObjectDate_StartDate.ValueData = inStartDate
                    WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                      AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
@@ -93,10 +95,36 @@ BEGIN
                                                                       WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                                                         AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                                                                      )
+                                                              OR EXISTS (SELECT 1
+                                                                         FROM ObjectDate AS ObjectDate_EndDate
+                                                                         WHERE ObjectDate_EndDate.ObjectId  = ioId
+                                                                           AND ObjectDate_EndDate.DescId    = zc_ObjectDate_ContractCondition_EndDate()
+                                                                           AND ObjectDate_EndDate.ValueData IS NOT NULL
+                                                                        )
    THEN
        --
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, inStartDate);
        
+       -- EndDate - обнуляем ВСЕМ
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, NULL)
+       FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId AS Id
+                              FROM ObjectLink AS ObjectLink_Contract
+                                   INNER JOIN ObjectLink AS ObjectLink_ContractConditionKind
+                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                        AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                   INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                         ON ObjectDate_EndDate.ObjectId  = ObjectLink_Contract.ObjectId
+                                                        AND ObjectDate_EndDate.DescId    = zc_ObjectDate_ContractCondition_EndDate()
+                                                        AND ObjectDate_EndDate.ValueData IS NOT NULL
+                              WHERE ObjectLink_Contract.ChildObjectId = inContractId
+                                AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+                             )
+             SELECT tmpData.Id
+             FROM tmpData
+             ) AS tmp
+            ;
+
        -- EndDate - апдейтим ВСЕМ
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, tmp.EndDate)
        FROM (WITH tmpData AS (SELECT ObjectLink_Contract.ObjectId                          AS Id
@@ -109,10 +137,10 @@ BEGIN
                                                         AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
-                                   LEFT JOIN ObjectDate AS ObjectDate_StartDate
-                                                        ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
-                                                       AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
-                                                     --AND ObjectDate_StartDate.ValueData > zc_DateStart()
+                                   INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                                         ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
+                                                        AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
+                                                        AND ObjectDate_StartDate.ValueData > zc_DateStart()
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )
@@ -189,7 +217,7 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractConditionKind
                                                         ON ObjectLink_ContractConditionKind.ObjectId      = ObjectLink_Contract.ObjectId
                                                        AND ObjectLink_ContractConditionKind.DescId        = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                       AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                     --AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
                                    INNER JOIN ObjectDate AS ObjectDate_StartDate
@@ -206,8 +234,20 @@ BEGIN
              ) AS tmp
       ;
    END IF;
+
+   -- вернули новое значение
+   outEndDate:= (SELECT ObjectDate_EndDate.ValueData
+                 FROM ObjectDate AS ObjectDate_EndDate
+                 WHERE ObjectDate_EndDate.ObjectId  = ioId
+                   AND ObjectDate_EndDate.DescId    = zc_ObjectDate_ContractCondition_EndDate()
+                );
    
-   
+   --
+   IF vbUserId = 5 AND 1=0
+   THEN
+       RAISE EXCEPTION 'Ошибка.%.', outEndDate;
+   END IF;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
