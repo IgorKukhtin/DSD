@@ -41,6 +41,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Название (Товар/ОС/Работы)> или <Товар>.';
      END IF;
 
+     -- проверка
+     IF TRIM ((SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsId)) <> (SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Отличается <Название (Товар/ОС/Работы)> = <%> и <Товар> = <%>.', inNameBeforeName, (SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsId);
+     END IF;
+
      -- замена
      IF ioGoodsId > 0 AND inNameBeforeName <> COALESCE ((SELECT ValueData FROM Object WHERE Id = ioGoodsId), '')
         AND zc_Object_Goods() = (SELECT DescId FROM Object WHERE Id = ioGoodsId)
