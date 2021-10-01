@@ -46,6 +46,7 @@ $BODY$
     DECLARE vbPrice_DocumentTaxKind       TVarChar;
 
     DECLARE vbOperDate_Begin1 TDateTime;
+    DECLARE vbInfoMoneyId Integer;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -170,6 +171,8 @@ order by 4*/
             END AS OperDate_rus
           
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
+          
+          , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId             --уп.статья из договора
 
 
           , ObjectString_Goods.ValueData        :: TVarChar AS Goods_DocumentTaxKind
@@ -179,6 +182,7 @@ order by 4*/
        
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
                , vbOperDate_begin, vbOperDate_rus, vbIsLongUKTZED
+               , vbInfoMoneyId
                
                , vbGoods_DocumentTaxKind
                , vbMeasure_DocumentTaxKind
@@ -221,6 +225,10 @@ order by 4*/
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                               ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -236,6 +244,7 @@ order by 4*/
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                               -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL*/
+                              
         -- свойства для DocumentTaxKind
         LEFT JOIN ObjectString AS ObjectString_Code
                                ON ObjectString_Code.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
@@ -842,7 +851,7 @@ order by 4*/
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
-           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201()
                         THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (vbGoods_DocumentTaxKind, '') <> '' THEN vbGoods_DocumentTaxKind
                                   ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                              END
@@ -865,7 +874,7 @@ order by 4*/
                         END
               END) :: TVarChar AS GoodsName
 
-           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() 
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201()
                         THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (vbGoods_DocumentTaxKind, '') <> '' THEN vbGoods_DocumentTaxKind
                                   ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                              END
@@ -888,12 +897,12 @@ order by 4*/
 
            , Object_GoodsKind.ValueData             AS GoodsKindName
 
-           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasure_DocumentTaxKind, '') <> ''
+           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasure_DocumentTaxKind, '') <> ''
                   THEN vbMeasure_DocumentTaxKind
                   ELSE Object_Measure.ValueData
              END              AS MeasureName
 
-           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasureCode_DocumentTaxKind, '') <> ''
+           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasureCode_DocumentTaxKind, '') <> ''
                   THEN vbMeasureCode_DocumentTaxKind
                   ELSE CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
                             WHEN Object_Measure.ObjectCode=2 THEN '2009'
@@ -1170,6 +1179,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.09.21         * 
  29.01.19         *
  05.11.18         *
  04.03.18         * MovementString_ToINN.ValueData
