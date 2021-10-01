@@ -1361,9 +1361,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberIC_InsuranceCardNumber() RETURN
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberIC_InsuranceCardNumber', zc_Object_MemberIC(), 'Номер страховой карты' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberIC_InsuranceCardNumber');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_MedicalProgramSP_ProgramId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MedicalProgramSP_ProgramId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MedicalProgramSP_ProgramId', zc_Object_MedicalProgramSP(), 'Идентификатор медицинской программы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MedicalProgramSP_ProgramId');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 01.10.21                                                                                                         * zc_ObjectString_MedicalProgramSP_ProgramId
  20.09.21                                                                                                         * zc_ObjectString_MemberIC_InsuranceCardNumber
  16.09.21                                                                                                         * zc_ObjectString_Goods_PromoBonusName
  14.09.21                                                                                                         * zc_ObjectString_PayrollTypeVIP_ShortName
