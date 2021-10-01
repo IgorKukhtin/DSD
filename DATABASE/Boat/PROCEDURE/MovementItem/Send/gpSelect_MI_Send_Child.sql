@@ -14,6 +14,14 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , MovementId_OrderPartner Integer, InvNumber_OrderPartner_Full TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
              , isErased Boolean
+
+             , OperPrice_cost        TFloat
+             , TotalOperPrice_cost   TFloat
+             , EKPrice               TFloat
+             , CountForPrice_partion TFloat
+             , OperDate_partion      TDateTime
+             , InvNumber_partion     TVarChar
+             , PartnerName_partion   TVarChar
               )
 AS
 $BODY$
@@ -32,6 +40,7 @@ BEGIN
                               )
              -- Существующие Элементы Резерв
            , tmpMI AS (SELECT MovementItem.Id
+                            , MovementItem.PartionId
                             , MovementItem.ParentId
                             , MovementItem.ObjectId   AS GoodsId
                             , MovementItem.Amount
@@ -62,6 +71,13 @@ BEGIN
                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                       )
 
+
+     , tmpPartionGoods AS (SELECT Object_PartionGoods.*
+                           FROM Object_PartionGoods
+                           WHERE Object_PartionGoods.MovementItemId IN (SELECT tmpMI.PartionId FROM tmpMI)
+                             AND Object_PartionGoods.isErased = FALSE
+                           )
+
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
@@ -85,6 +101,16 @@ BEGIN
 
              , MovementItem.isErased
 
+              --Данные из партии
+              -- Цена вх. с затратами без НДС
+             , (tmpPartionGoods.EKPrice / tmpPartionGoods.CountForPrice + COALESCE (tmpPartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+             , (MovementItem.Amount * (tmpPartionGoods.EKPrice / tmpPartionGoods.CountForPrice + COALESCE (tmpPartionGoods.CostPrice,0) )) ::TFloat AS TotalOperPrice_cost
+              --Цена вх. без НДС
+             , tmpPartionGoods.EKPrice       ::TFloat
+             , tmpPartionGoods.CountForPrice ::TFloat    AS CountForPrice_partion
+             , Movement_Partion.OperDate      ::TDateTime AS OperDate_partion
+             , Movement_Partion.InvNumber     ::TVarChar  AS InvNumber_partion
+             , Object_Partner.ValueData       ::TVarChar  AS PartnerName_partion
         FROM tmpMI AS MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN ObjectString AS ObjectString_Article
@@ -107,6 +133,10 @@ BEGIN
              LEFT JOIN tmpMI_order ON tmpMI_order.GoodsId          = MovementItem.GoodsId
                                   AND tmpMI_order.MovementId_order = MovementItem.MovementId_order
              LEFT JOIN Movement AS Movement_OrderPartner ON Movement_OrderPartner.Id = tmpMI_order.MovementId_order_income
+             
+             LEFT JOIN tmpPartionGoods ON tmpPartionGoods.MovementItemId = MovementItem.PartionId
+             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpPartionGoods.MovementId
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartionGoods.FromId
        ;
 
 END;
