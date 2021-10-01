@@ -191,8 +191,8 @@ BEGIN
                                            AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
                 WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
                   AND Movement.DescId = zc_Movement_Wages()
-                  AND (MovementDate_Calculation.ValueData IS NULL)
-                   OR MovementDate_Calculation.ValueData + INTERVAL '1 HOUR' <= CURRENT_TIMESTAMP)
+                  AND (MovementDate_Calculation.ValueData IS NULL
+                   OR MovementDate_Calculation.ValueData + INTERVAL '1 HOUR' <= CURRENT_TIMESTAMP))
       THEN
          PERFORM gpInsertUpdate_Movement_Wages_CalculationAll(inMovementId := (SELECT Movement.ID
                                                                                FROM Movement

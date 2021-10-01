@@ -55,7 +55,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIlliquidAssets(), ioId, inIlliquidAssets);
 
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
     --RAISE EXCEPTION 'Ошибка. Прошло % %', (select valuedata from Object where id = inUserId), inIlliquidAssets;
 

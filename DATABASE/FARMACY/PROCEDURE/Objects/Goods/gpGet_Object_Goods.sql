@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NameUkr TVarChar, CodeUKTZED TVarChar, ExchangeId Integer, ExchangeName TVarChar,
                NotTransferTime boolean,
                isSUN_v3 boolean, KoeffSUN_v3 TFloat,
+               MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean,
                isErased boolean
                ) AS
 $BODY$
@@ -65,6 +66,13 @@ BEGIN
                   , CAST (FALSE AS Boolean) AS NotTransferTime
                   , FALSE ::Boolean         AS isSUN_v3
                   , 0     :: TFloat         AS KoeffSUN_v3
+
+                  , ''::TVarChar  AS MakerName
+                  , 0::Integer    AS FormDispensingId
+                  , ''::TVarChar  AS FormDispensingName
+                  , 0::Integer    AS NumberPlates
+                  , 0::Integer    AS QtyPackage
+                  , FALSE ::Boolean         AS isRecipe
 
                   , CAST (FALSE AS Boolean) AS isErased
 
@@ -158,8 +166,14 @@ BEGIN
                   , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
                   , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
                   
-                  , Object_Goods_View.isErased       AS isErased
-                  
+                  , Object_Goods_Main.MakerName
+                  , Object_Goods_Main.FormDispensingId
+                  , Object_FormDispensing.ValueData      AS FormDispensingName
+                  , Object_Goods_Main.NumberPlates
+                  , Object_Goods_Main.QtyPackage
+                  , Object_Goods_Main.isRecipe
+
+                  , Object_Goods_View.isErased       AS isErased                  
                   
              FROM Object_Goods_View
                   LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferCode
@@ -201,6 +215,10 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
                                           ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id 
                                          AND ObjectBoolean_Goods_SUN_v3.DescId = zc_ObjectBoolean_Goods_SUN_v3()
+
+                  LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = tmpGoodsMain.GoodsMainId
+
+                  LEFT JOIN Object AS Object_FormDispensing ON Object_FormDispensing.Id = Object_Goods_Main.FormDispensingId
 
              WHERE Object_Goods_View.Id = inId;
 

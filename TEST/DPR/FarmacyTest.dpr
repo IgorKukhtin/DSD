@@ -1097,7 +1097,12 @@ uses
   InsuranceCompanies in '..\..\FormsFarmacy\Guides\InsuranceCompanies.pas' {InsuranceCompaniesForm: TParentForm},
   InsuranceCompaniesEdit in '..\..\FormsFarmacy\Guides\InsuranceCompaniesEdit.pas' {InsuranceCompaniesEditForm: TParentForm},
   InsuranceCompanies_Object in '..\..\FormsFarmacy\Guides\InsuranceCompanies_Object.pas' {InsuranceCompanies_ObjectForm: TParentForm},
-  CorrectWagesPercentage in '..\..\FormsFarmacy\Guides\CorrectWagesPercentage.pas' {CorrectWagesPercentageForm: TParentForm};
+  CorrectWagesPercentage in '..\..\FormsFarmacy\Guides\CorrectWagesPercentage.pas' {CorrectWagesPercentageForm: TParentForm},
+  FormDispensing in '..\..\FormsFarmacy\Guides\FormDispensing.pas' {FormDispensingForm: TParentForm},
+  FormDispensingEdit in '..\..\FormsFarmacy\Guides\FormDispensingEdit.pas' {FormDispensingEditForm: TParentForm},
+  GoodsAdditionalEdit in '..\..\FormsFarmacy\Guides\GoodsAdditionalEdit.pas' {GoodsAdditionalEditForm: TParentForm},
+  GoodsMakerName in '..\..\FormsFarmacy\Guides\GoodsMakerName.pas' {GoodsMakerNameForm: TParentForm},
+  GoodsAdditionalEditDialog in '..\..\FormsFarmacy\Guides\GoodsAdditionalEditDialog.pas' {GoodsAdditionalEditDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

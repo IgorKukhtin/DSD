@@ -59,7 +59,9 @@ BEGIN
                                          AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
         WHERE Movement.Id = inMovementId) = zc_Enum_SPKind_1303()                    -- Постановление 1303
     THEN
-        IF (vbOperDate < CURRENT_DATE) AND (vbUserId NOT IN (3, 235009, 183242 ))  -- только Колеуш И. И. (ID 235009) можно проводить док. задним числом
+        IF (vbOperDate < CURRENT_DATE) AND 
+           NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
+           (vbUserId NOT IN (3, 235009, 183242 ))  -- только Колеуш И. И. (ID 235009) можно проводить док. задним числом
         THEN
             RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
         END IF;

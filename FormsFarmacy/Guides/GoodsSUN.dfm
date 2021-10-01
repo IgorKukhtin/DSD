@@ -1733,11 +1733,11 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_GoodsPairSun'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbUpdate_GoodsPairSun'
         end
         item
           Visible = True

@@ -672,10 +672,23 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSUNForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAdditionalEditForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAdditionalEditDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAdditionalEditDialogForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMakerNameForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsMakerNameForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormDispensingEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TFormDispensingEditForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormDispensingForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TFormDispensingForm');
+
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSUNForm');
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_GoodsPairSun_EditForm'));
@@ -717,11 +730,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
 
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
     exit;
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 

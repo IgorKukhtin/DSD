@@ -1038,10 +1038,10 @@ BEGIN
           , tmpGoodsUKTZED.UKTZED                                  AS UKTZED
           , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
           , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
-          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunID END::INTEGER     AS GoodsPairSunMainId
-          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+          , CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat  AS GoodsPairSunAmount
 
