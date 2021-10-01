@@ -14,6 +14,8 @@ RETURNS TABLE (MovementId Integer, StatusCode Integer, InvNumber TVarChar, InvNu
              , OperDate TDateTime
              , PaidKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar             
              , Comment TVarChar
              , TotalSumm TFloat  -- 
              , ServiceSumma TFloat
@@ -21,6 +23,8 @@ RETURNS TABLE (MovementId Integer, StatusCode Integer, InvNumber TVarChar, InvNu
              , BankSumma TFloat
              , RemEnd TFloat
              , Amount_ProfitLossService TFloat
+             , Amount_PromoInvoice TFloat
+             , Amount_diff TFloat
 
              , MovementId_promo Integer
              , OperDate_promo TDateTime
@@ -52,6 +56,11 @@ BEGIN
                            , Object_BonusKind.ValueData             AS BonusKindName
                            , Object_PaidKind.Id                     AS PaidKindId
                            , Object_PaidKind.ValueData              AS PaidKindName
+                           , Object_Contract.Id                     AS ContractId
+                           , Object_Contract.ObjectCode             AS ContractCode
+                           , Object_Contract.ValueData              AS ContractName
+                           , Object_Juridical.Id                    AS JuridicalId
+                           , Object_Juridical.ValueData             AS JuridicalName
                       FROM Movement AS Movement
                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_BonusKind
@@ -63,7 +72,16 @@ BEGIN
                                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-                   
+
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
                       WHERE Movement.DescId = zc_Movement_PromoInvoice()
                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -91,6 +109,11 @@ BEGIN
                                , Movement.PaidKindName
                                , Movement.BonusKindId
                                , Movement.BonusKindName
+                               , Movement.ContractId
+                               , Movement.ContractCode
+                               , Movement.ContractName
+                               , Movement.JuridicalId
+                               , Movement.JuridicalName
                                , MovementFloat_TotalSumm.ValueData         AS TotalSumm
                                , MovementString_Comment.ValueData          AS Comment
                           FROM tmpMovement AS Movement
@@ -173,7 +196,6 @@ BEGIN
                                                                    ON MovementLinkObject_PromoKind.MovementId = tmpPromo.MovementId
                                                                   AND MovementLinkObject_PromoKind.DescId = zc_MovementLinkObject_PromoKind()
                                    LEFT JOIN Object AS Object_PromoKind ON Object_PromoKind.Id = MovementLinkObject_PromoKind.ObjectId
-
                              )
 
 
@@ -235,8 +257,8 @@ BEGIN
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                       INNER JOIN (SELECT DISTINCT tmpMLM.ContractId FROM tmpMLM) AS tmpContract
-                                                                                                  ON tmpContract.ContractId = MILinkObject_Contract.ObjectId
+                                       INNER JOIN (SELECT DISTINCT tmpPromoInvoice.ContractId FROM tmpPromoInvoice) AS tmpContract
+                                                                                                                    ON tmpContract.ContractId = MILinkObject_Contract.ObjectId
 
                                   WHERE Movement.DescId = zc_Movement_ProfitLossService()
                                     AND Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
@@ -244,12 +266,13 @@ BEGIN
                                   GROUP BY MILinkObject_Contract.ObjectId
                                   )
        -- все zc_Movement_PromoInvoice (кроме текущего) к этому договору  -- что значит кроме текущего
-      /* , tmpPromoInvoice_period AS (SELECT 
-                                    FROM Movement
-                                    WHERE Movement.DescId = zc_Movement_PromoInvoice()
-                                      AND Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
+       , tmpPromoInvoice_period AS (SELECT Movement.ContractId
+                                         , SUM(COALESCE(Movement.TotalSumm,0)) AS Amount
+                                    FROM Movement_PromoInvoice_View AS Movement
+                                    WHERE Movement.OperDate BETWEEN inStartDate2 AND inEndDate2
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                                    ) */
+                                    GROUP BY Movement.ContractId
+                                    ) 
 
 
 
@@ -264,6 +287,11 @@ BEGIN
             , tmpPromoInvoice.PaidKindName
             , tmpPromoInvoice.BonusKindId
             , tmpPromoInvoice.BonusKindName
+            , tmpPromoInvoice.ContractId
+            , tmpPromoInvoice.ContractCode
+            , tmpPromoInvoice.ContractName
+            , tmpPromoInvoice.JuridicalId
+            , tmpPromoInvoice.JuridicalName
             , tmpPromoInvoice.Comment
      
             , tmpPromoInvoice.TotalSumm           :: TFloat AS TotalSumm
@@ -273,7 +301,9 @@ BEGIN
             , tmpMLM.BankSumma                 :: TFloat AS BankSumma
             , (tmpPromoInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
             
-            , COALESCE (tmpProfitLossService.Amount,0) :: TFloat AS Amount_ProfitLossService
+            , COALESCE (tmpProfitLossService.Amount,0)   :: TFloat AS Amount_ProfitLossService
+            , COALESCE (tmpPromoInvoice_period.Amount,0) :: TFloat AS Amount_PromoInvoice
+            , (COALESCE (tmpPromoInvoice_period.Amount,0) - COALESCE (tmpProfitLossService.Amount,0)) :: TFloat AS Amount_diff
 
             , tmpMovementPromo.MovementId AS MovementId_promo
             , tmpMovementPromo.OperDate   AS OperDate_promo
@@ -290,7 +320,8 @@ BEGIN
        FROM tmpPromoInvoice
             LEFT JOIN tmpMLM ON tmpMLM.MovementId_PromoInvoice = tmpPromoInvoice.MovementId
             LEFT JOIN tmpMovementPromo ON tmpMovementPromo.MovementId = tmpPromoInvoice.ParentId
-            LEFT JOIN tmpProfitLossService ON tmpProfitLossService.ContractId = tmpMLM.ContractId
+            LEFT JOIN tmpProfitLossService ON tmpProfitLossService.ContractId = tmpPromoInvoice.ContractId
+            LEFT JOIN tmpPromoInvoice_period ON tmpPromoInvoice_period.ContractId = tmpPromoInvoice.ContractId
 
       ) AS tmpResult
       ;

@@ -34,6 +34,13 @@ CREATE OR REPLACE VIEW Movement_PromoInvoice_View AS
       , Object_Update.ValueData             AS UpdateName
       , MovementDate_Update.ValueData       AS UpdateDate
 
+      , Object_Contract.Id                     AS ContractId
+      , Object_Contract.ObjectCode             AS ContractCode
+      , Object_Contract.ValueData              AS ContractName
+
+      , Object_Juridical.Id                    AS JuridicalId
+      , Object_Juridical.ValueData             AS JuridicalName
+
     FROM Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
     
@@ -46,6 +53,16 @@ CREATE OR REPLACE VIEW Movement_PromoInvoice_View AS
                                      ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                     ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                    AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
         LEFT OUTER JOIN MovementString AS MovementString_InvNumberPartner
                                        ON MovementString_InvNumberPartner.MovementId = Movement.Id
@@ -86,7 +103,8 @@ ALTER TABLE Movement_PromoInvoice_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 04.09.21         * 
+ 30.09.21         *
+ 04.09.21         *
 */
 
 -- ÚÂÒÚ

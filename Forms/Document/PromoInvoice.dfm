@@ -1,29 +1,29 @@
 ﻿inherited PromoInvoiceForm: TPromoInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090' '#1076#1083#1103' '#1072#1082#1094#1080#1080'>'
-  ClientHeight = 206
-  ClientWidth = 572
+  ClientHeight = 258
+  ClientWidth = 567
   AddOnFormData.isSingle = False
-  ExplicitWidth = 578
-  ExplicitHeight = 234
+  ExplicitWidth = 573
+  ExplicitHeight = 286
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 152
-    Top = 167
+    Top = 220
     Width = 74
     Height = 26
     ExplicitLeft = 152
-    ExplicitTop = 167
+    ExplicitTop = 220
     ExplicitWidth = 74
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 296
-    Top = 167
+    Top = 220
     Width = 74
     Height = 26
     ExplicitLeft = 296
-    ExplicitTop = 167
+    ExplicitTop = 220
     ExplicitWidth = 74
     ExplicitHeight = 26
   end
@@ -82,12 +82,12 @@
   end
   object cxLabel10: TcxLabel [9]
     Left = 8
-    Top = 100
+    Top = 153
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [10]
     Left = 8
-    Top = 119
+    Top = 172
     TabOrder = 6
     Width = 547
   end
@@ -142,17 +142,51 @@
     TabOrder = 17
     Width = 152
   end
+  object edContract: TcxButtonEdit [18]
+    Left = 8
+    Top = 126
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 273
+  end
+  object cxLabel9: TcxLabel [19]
+    Left = 8
+    Top = 108
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object cxLabel4: TcxLabel [20]
+    Left = 293
+    Top = 108
+    Caption = #1070#1088'. '#1083#1080#1094#1086
+  end
+  object edJuridical: TcxButtonEdit [21]
+    Left = 293
+    Top = 126
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 262
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 30
-    Top = 136
+    Top = 189
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 235
-    Top = 112
+    Top = 165
   end
   inherited ActionList: TActionList
     Left = 408
-    Top = 149
+    Top = 202
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -175,7 +209,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 131
-    Top = 120
+    Top = 173
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PromoInvoice'
@@ -236,6 +270,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContractId'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inTotalSumm'
         Value = 0.000000000000000000
         Component = ceTotalSumm
@@ -252,7 +294,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 473
-    Top = 156
+    Top = 209
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoInvoice'
@@ -368,15 +410,45 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Invnumber_parent'
+        Name = 'InvNumber_ParentFull'
         Value = Null
         Component = GuidesPromo
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 529
-    Top = 148
+    Left = 513
+    Top = 169
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -423,7 +495,7 @@
       end>
     ActionItemList = <>
     Left = 246
-    Top = 140
+    Top = 193
   end
   object GuidesBonusKind: TdsdGuides
     KeyField = 'Id'
@@ -548,5 +620,98 @@
       end>
     Left = 452
     Top = 59
+  end
+  object GuidesContract: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractChoice_byPromoForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractChoice_byPromoForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterMovementId'
+        Value = Null
+        Component = GuidesPromo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterInvNumber'
+        Value = Null
+        Component = GuidesPromo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 112
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 405
+    Top = 104
   end
 end

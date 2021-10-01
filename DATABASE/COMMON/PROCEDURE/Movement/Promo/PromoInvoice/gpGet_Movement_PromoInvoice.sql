@@ -14,13 +14,18 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumber        Integer
              , InvNumberFull    TVarChar
              , InvNumberPartner TVarChar
-             , InvNumber_Parent TVarChar
+             , InvNumber_Parent TVarChar, InvNumber_ParentFull TVarChar
              , StatusCode       Integer
              , StatusName       TVarChar
              , BonusKindId      Integer
              , BonusKindName    TVarChar
              , PaidKindId       Integer
              , PaidKindName     TVarChar
+             , ContractId       Integer
+             , ContractCode     Integer
+             , ContractName     TVarChar
+             , JuridicalId      Integer
+             , JuridicalName    TVarChar
              , TotalSumm        TFloat
              , Comment          TVarChar
              )
@@ -44,6 +49,7 @@ BEGIN
           , ''  :: TVarChar                                   AS InvNumberFull
           , ''  :: TVarChar                                   AS InvNumberPartner
           , Movement_parent.InvNumber                         AS InvNumber_Parent
+          , ('№ ' || Movement_parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_parent.OperDate)  ) :: TVarChar AS InvNumber_ParentFull
           
           , Object_Status.Code               	              AS StatusCode
           , Object_Status.Name              		      AS StatusName
@@ -52,6 +58,11 @@ BEGIN
           , Object_BonusKind.ValueData                        AS BonusKindName
           , Object_PaidKind.Id                                AS PaidKindId
           , Object_PaidKind.ValueData                         AS PaidKindName
+          , 0                                                 AS ContractId
+          , 0                                                 AS ContractCode
+          , ''  :: TVarChar                                   AS ContractName
+          , 0                                                 AS JuridicalId
+          , ''  :: TVarChar                                   AS JuridicalName
           , NULL::TFloat                                      AS TotalSumm
           , NULL::TVarChar                                    AS Comment
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -69,6 +80,7 @@ BEGIN
              , ('№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate)  ) :: TVarChar AS InvNumberFull
              , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
              , Movement_parent.InvNumber              AS InvNumber_Parent
+             , ('№ ' || Movement_parent.InvNumber || ' от ' || zfConvert_DateToString (Movement_parent.OperDate)  ) :: TVarChar AS InvNumber_ParentFull
 
              , Object_Status.ObjectCode               AS StatusCode         --код статуса
              , Object_Status.ValueData                AS StatusName         --Статус
@@ -78,7 +90,14 @@ BEGIN
        
              , Object_PaidKind.Id                     AS PaidKindId
              , Object_PaidKind.ValueData              AS PaidKindName
-       
+
+             , Object_Contract.Id                     AS ContractId
+             , Object_Contract.ObjectCode             AS ContractCode
+             , Object_Contract.ValueData              AS ContractName
+
+             , Object_Juridical.Id                    AS JuridicalId
+             , Object_Juridical.ValueData             AS JuridicalName
+
              , MovementFloat_TotalSumm.ValueData      AS TotalSumm
              , MovementString_Comment.ValueData       AS Comment
        
@@ -93,7 +112,17 @@ BEGIN
                                             ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-       
+
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                            ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                           AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
                LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                         ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
