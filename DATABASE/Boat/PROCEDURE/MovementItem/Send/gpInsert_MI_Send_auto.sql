@@ -47,7 +47,7 @@ BEGIN
 
     -- zc_MI_Master - текущее Перемещение
     CREATE TEMP TABLE _tmpMI_Master (Id Integer, ObjectId Integer, Ord Integer) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Master (Id, ObjectId)
+    INSERT INTO _tmpMI_Master (Id, ObjectId, Ord)
           SELECT MovementItem.Id
                , MovementItem.ObjectId
                  -- № п/п
@@ -261,7 +261,7 @@ BEGIN
                             --
                          , _tmpReserve.PartionId
                          , _tmpReserve.MovementId_order
-                         , CASE WHEN tmpMI_Master.ObjectId.Ord = 1 THEN _tmpReserve.Amount ELSE 0 END AS Amount
+                         , CASE WHEN tmpMI_Master.Ord = 1 THEN _tmpReserve.Amount ELSE 0 END AS Amount
                     FROM tmpMI_Master
                          LEFT JOIN _tmpReserve ON _tmpReserve.ObjectId      = tmpMI_Master.ObjectId
                     ) AS tmpMI_new ON tmpMI_new.PartionId        = _tmpMI_Child.PartionId
@@ -269,6 +269,14 @@ BEGIN
                                   AND tmpMI_new.MovementId_order = _tmpMI_Child.MovementId_order
     ;
 
+    -- удаление zc_MI_Master кол-во = 0
+    PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
+    FROM MovementItem
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.isErased   = FALSE
+      AND MovementItem.Amount     = 0
+   ;
 
 END;
 $BODY$
