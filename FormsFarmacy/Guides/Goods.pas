@@ -195,14 +195,6 @@ type
     macUpdateGoods_LimitSUN_list: TMultiAction;
     macUpdateGoods_LimitSUN: TMultiAction;
     bbUpdateGoods_LimitSUN: TdxBarButton;
-    GoodsPairSunName: TcxGridDBColumn;
-    spUpdate_GoodsPairSun: TdsdStoredProc;
-    actUpdate_GoodsPairSun: TdsdDataSetRefresh;
-    GoodsPairSunCode: TcxGridDBColumn;
-    ExecuteDialogGoodsPairSun: TExecuteDialog;
-    macUpdate_GoodsPairSun: TMultiAction;
-    bbUpdate_GoodsPairSun: TdxBarButton;
-    PairSunDate: TcxGridDBColumn;
     actUpdateisSupplementSUN1: TMultiAction;
     execUpdate_SupplementSUN1: TdsdExecStoredProc;
     spUpdate_isSupplementSUN1_Revert: TdsdStoredProc;
@@ -280,12 +272,25 @@ type
     spUpdate_isMultiplicityError_Revert: TdsdStoredProc;
     dxBarButton12: TdxBarButton;
     isUkrainianTranslation: TcxGridDBColumn;
-    PairSunAmount: TcxGridDBColumn;
     actDialogPercentMarkup: TExecuteDialog;
     macPercentMarkup: TMultiAction;
     actStoredProcPercentMarkup: TdsdExecStoredProc;
     spUpdatePercentMarkup: TdsdStoredProc;
     dxBarButton13: TdxBarButton;
+    MakerName: TcxGridDBColumn;
+    FormDispensingName: TcxGridDBColumn;
+    NumberPlates: TcxGridDBColumn;
+    QtyPackage: TcxGridDBColumn;
+    isRecipe: TcxGridDBColumn;
+    actUpdateAdditional: TdsdInsertUpdateAction;
+    bbUpdateAdditional: TdxBarButton;
+    ProtocolOpenMainForm: TdsdOpenForm;
+    dxBarButton14: TdxBarButton;
+    spUpdateGoodsAdditional: TdsdStoredProc;
+    actUpdateGoodsAdditional: TdsdExecStoredProc;
+    actDialogGoodsAdditional: TExecuteDialog;
+    dxBarButton15: TdxBarButton;
+    mactUpdateGoodsAdditional: TMultiAction;
   private
     { Private declarations }
   public

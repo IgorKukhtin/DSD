@@ -552,12 +552,12 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             COALESCE (ObjectBoolean_BanFiscalSale.ValueData, False) 
               AND NOT Object_Goods_Main.isExceptionUKTZED                     AS isBanFiscalSale,
             COALESCE(tmpGoodsDiscount.isGoodsForProject, FALSE)               AS isGoodsForProject,
-            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunID END::INTEGER        AS GoodsPairSunMainId,
             tmpGoodsDiscount.MaxPrice                                         AS GoodsDiscountMaxPrice,
             COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0                AS isGoodsPairSun,
-            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbUnitId <> 377595 
+            CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat     AS GoodsPairSunAmount,
             tmpGoodsDiscount.DiscountProcent                                  AS GoodsDiscountProcentSite
@@ -643,4 +643,4 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar) OWNER TO post
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
 --
-SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '4000094')
+SELECT * FROM gpSelect_CashRemains_Diff_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')

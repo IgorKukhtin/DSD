@@ -549,6 +549,8 @@ begin
 
   UID := '';
   if CheckCDS.Active then CheckCDS.Close;
+  CheckCDS.FieldDefs.Clear;
+  CheckCDS.FieldDefs.Assign(MainCashForm.CheckCDS.FieldDefs);
   CheckCDS.CreateDataSet;
 
   CheckCDS.Append;

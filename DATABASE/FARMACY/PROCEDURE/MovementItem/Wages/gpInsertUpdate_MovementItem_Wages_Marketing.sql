@@ -25,10 +25,10 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. Документ не сохранен.';
     END IF;
-    
+
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
-    
+
     IF vbIsInsert = TRUE
     THEN
 
@@ -36,26 +36,26 @@ BEGIN
       ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inUserId, inMovementId, 0, NULL);
 
       -- сохранили свойство <Подразделение>
-      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);   
-      
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
     ELSE
-    
+
       IF EXISTS(SELECT 1
                 FROM MovementItemBoolean AS MIB_isIssuedBy
                 WHERE MIB_isIssuedBy.MovementItemId = ioId
                   AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
                   AND MIB_isIssuedBy.ValueData = True)
       THEN
-        RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
+        RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';
       END IF;
-      
-    END IF; 
+
+    END IF;
 
      -- сохранили свойство <Маркетинг>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Marketing(), ioId, inMarketing);
 
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
     --RAISE EXCEPTION 'Ошибка. Прошло.';
 
