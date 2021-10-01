@@ -769,6 +769,19 @@ object SendForm: TSendForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -785,15 +798,6 @@ object SendForm: TSendForm
           ItemName = 'bbStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErasedChild'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1649,11 +1653,14 @@ object SendForm: TSendForm
       ActionList = <
         item
           Action = actInsert_MI_Send
+        end
+        item
+          Action = actRefresh
         end>
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074'?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
-      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1077#1079#1077#1088#1074
+      QuestionBeforeExecute = #1055#1077#1088#1077#1084#1077#1089#1090#1080#1090#1100' '#1042#1045#1057#1068' '#1088#1077#1079#1077#1088#1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1055#1077#1088#1077#1084#1077#1089#1090#1080#1090#1100' '#1042#1045#1057#1068' '#1088#1077#1079#1077#1088#1074
+      Hint = #1055#1077#1088#1077#1084#1077#1089#1090#1080#1090#1100' '#1042#1045#1057#1068' '#1088#1077#1079#1077#1088#1074
       ImageIndex = 27
     end
     object actInsert_MI_Send: TdsdExecStoredProc
@@ -2639,7 +2646,7 @@ object SendForm: TSendForm
     Left = 304
   end
   object spInsert_MI_Send: TdsdStoredProc
-    StoredProcName = 'gpInsert_MI_Send'
+    StoredProcName = 'gpInsert_MI_Send_auto'
     DataSets = <>
     OutputType = otResult
     Params = <
