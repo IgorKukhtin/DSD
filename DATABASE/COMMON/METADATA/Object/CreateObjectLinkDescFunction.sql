@@ -2679,10 +2679,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_FormDispensing() RETURNS Integer 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_FormDispensing', 'Форма отпуска', zc_Object_Goods(), zc_Object_FormDispensing() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_FormDispensing');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSP_SPKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSP_SPKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MedicalProgramSP_SPKind', 'Виды соц. проектов', zc_Object_MedicalProgramSP(), zc_Object_SPKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSP_SPKind');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.10.21                                                                                      * zc_ObjectLink_MedicalProgramSP_SPKind
  29.09.21                                                                                      * zc_ObjectLink_Goods_FormDispensing
  28.09.21                                                                                      * zc_ObjectLink_ContactPerson_Unit
  27.09.21         * zc_ObjectLink_Member_UnitMobile
