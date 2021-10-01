@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Income_Child(
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer   , -- Заказ Клиента
-    IN inPartionId              Integer   , -- Партия
     IN inObjectId               Integer   , -- Комплектующие
+    IN inPartionId              Integer   , -- Партия
     IN inAmount                 TFloat    , -- Количество резерв
     IN inUserId                 Integer     -- сессия пользователя
 )
@@ -24,7 +24,7 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inPartionId, inMovementId, inAmount, inParentId, inUserId);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <Заказ Клиента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);
      
      
