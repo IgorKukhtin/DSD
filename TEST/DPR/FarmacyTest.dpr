@@ -1102,7 +1102,11 @@ uses
   FormDispensingEdit in '..\..\FormsFarmacy\Guides\FormDispensingEdit.pas' {FormDispensingEditForm: TParentForm},
   GoodsAdditionalEdit in '..\..\FormsFarmacy\Guides\GoodsAdditionalEdit.pas' {GoodsAdditionalEditForm: TParentForm},
   GoodsMakerName in '..\..\FormsFarmacy\Guides\GoodsMakerName.pas' {GoodsMakerNameForm: TParentForm},
-  GoodsAdditionalEditDialog in '..\..\FormsFarmacy\Guides\GoodsAdditionalEditDialog.pas' {GoodsAdditionalEditDialogForm: TParentForm};
+  GoodsAdditionalEditDialog in '..\..\FormsFarmacy\Guides\GoodsAdditionalEditDialog.pas' {GoodsAdditionalEditDialogForm: TParentForm},
+  MedicalProgramSPEdit in '..\..\FormsFarmacy\Guides\MedicalProgramSPEdit.pas' {MedicalProgramSPEditForm: TParentForm},
+  MedicalProgramSP in '..\..\FormsFarmacy\Guides\MedicalProgramSP.pas' {MedicalProgramSPForm: TParentForm},
+  MedicalProgramSPLinkEdit in '..\..\FormsFarmacy\Guides\MedicalProgramSPLinkEdit.pas' {MedicalProgramSPLinkEditForm: TParentForm},
+  MedicalProgramSPLink in '..\..\FormsFarmacy\Guides\MedicalProgramSPLink.pas' {MedicalProgramSPLinkForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -8357,7 +8357,9 @@ begin
           (IfZero(SourceClientDataSet.FieldByName('PricePartionDate').asCurrency,
           SourceClientDataSet.FieldByName('Price').asCurrency) >
           CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price')
-          .asCurrency, SourceClientDataSet.FieldByName('PriceChange').asCurrency))
+          .asCurrency, SourceClientDataSet.FieldByName('PriceChange').asCurrency)) and
+          (SourceClientDataSet.FieldByName('FixEndDate').IsNull or
+          (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime >= Date))
         then
         begin
 
@@ -8458,7 +8460,9 @@ begin
         end
         else
         // Если есть процент скидки
-        if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
+        if (SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0) and
+           (SourceClientDataSet.FieldByName('FixEndDate').IsNull or
+           (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime >= Date)) then
         begin
 
           if not SourceClientDataSet.FieldByName('FixEndDate').IsNull and
@@ -8568,7 +8572,9 @@ begin
         end
         else
         // Если есть сумма скидки
-        if SourceClientDataSet.FieldByName('FixDiscount').asCurrency > 0 then
+        if (SourceClientDataSet.FieldByName('FixDiscount').asCurrency > 0) and
+           (SourceClientDataSet.FieldByName('FixEndDate').IsNull or
+           (SourceClientDataSet.FieldByName('FixEndDate').AsDateTime >= Date)) then
         begin
 
           if not SourceClientDataSet.FieldByName('FixEndDate').IsNull and

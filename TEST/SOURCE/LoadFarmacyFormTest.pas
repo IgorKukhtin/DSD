@@ -3090,6 +3090,16 @@ procedure TLoadFormTest.LoadSPKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSPKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSPKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPLinkEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPLinkEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPLinkForm');
 end;
 
 procedure TLoadFormTest.LoadPartionDateKindFormTest;
