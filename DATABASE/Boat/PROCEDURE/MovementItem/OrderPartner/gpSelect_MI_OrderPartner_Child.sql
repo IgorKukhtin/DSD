@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderPartner_Child(
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, Invnumber TVarChar, StatusCode Integer
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, StatusCode Integer
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -29,7 +29,7 @@ BEGIN
       WITH
       tmpOrderClient AS (SELECT MovementItem.MovementId
                               , Movement.OperDate
-                              , Movement.Invnumber
+                              , Movement.InvNumber
                               , Movement.StatusId
                               , MovementItem.Id
                               , MovementItem.ObjectId
@@ -40,9 +40,10 @@ BEGIN
                          FROM MovementItemFloat
                               INNER JOIN MovementItem ON MovementItem.Id = MovementItemFloat.MovementItemId
                                                      AND MovementItem.DescId = zc_MI_Child()
-                                                     AND (MovementItem.isErased = False OR inIsErased = TRUE)
-                              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                                 AND Movement.DescId= zc_Movement_OrderClient()
+                                                     AND MovementItem.isErased = FALSE
+                              -- это точно Заказ Клиента
+                              INNER JOIN Movement ON Movement.Id     = MovementItem.MovementId
+                                                 AND Movement.DescId = zc_Movement_OrderClient()
 
                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -55,17 +56,17 @@ BEGIN
         SELECT
              MovementItem.MovementId
            , MovementItem.OperDate
-           , MovementItem.Invnumber
-           , Object_Status.ObjectCode AS StatusCode
+           , zfCalc_InvNumber_isErased ('', MovementItem.InvNumber, MovementItem.OperDate, MovementItem.StatusId) AS InvNumber
+           , Object_Status.ObjectCode                   AS StatusCode
            , Object_From.Id                             AS FromId
            , Object_From.ObjectCode                     AS FromCode
            , Object_From.ValueData                      AS FromName
            , Object_Product.Id                          AS ProductId
-           , CASE WHEN Object_Product.isErased = TRUE THEN '--- ' || Object_Product.ValueData ELSE Object_Product.ValueData END :: TVarChar AS ProductName
+           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
            , Object_Brand.Id                            AS BrandId
            , Object_Brand.ValueData                     AS BrandName
-           , ObjectString_CIN.ValueData                 AS CIN
-           , ObjectString_EngineNum.ValueData           AS EngineNum
+           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)       AS CIN
+           , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
            , Object_Engine.ValueData                    AS EngineName
 
            , MovementItem.Id                          AS Id

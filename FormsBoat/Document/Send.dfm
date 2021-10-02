@@ -356,6 +356,7 @@ object SendForm: TSendForm
               item
                 Action = actGoodsChoiceForm
                 Default = True
+                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -526,9 +527,41 @@ object SendForm: TSendForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object InvNumber_partion_ch2: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'InvNumber_partion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object OperDate_partion_ch2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object PartnerName_ch2: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
           object Artikel_ch2: TcxGridDBColumn
             Caption = 'Artikel Nr'
-            DataBinding.FieldName = 'Artikel'
+            DataBinding.FieldName = 'Article'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -556,6 +589,7 @@ object SendForm: TSendForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -577,7 +611,7 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1077#1079#1077#1088#1074
             Options.Editing = False
-            Width = 103
+            Width = 70
           end
           object InvNumber_OrderClientFull_ch2: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
@@ -640,6 +674,7 @@ object SendForm: TSendForm
             Properties.Buttons = <
               item
                 Default = True
+                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -699,30 +734,6 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object InvNumber_partion_ch2: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'InvNumber_partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 102
-          end
-          object OperDate_partion_ch2: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate_partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 63
-          end
-          object PartnerName_ch2: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'PartnerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 86
           end
           object IsErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
