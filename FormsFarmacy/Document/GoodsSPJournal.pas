@@ -41,6 +41,7 @@ type
     actInsertMask1: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
+    MedicalProgramSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

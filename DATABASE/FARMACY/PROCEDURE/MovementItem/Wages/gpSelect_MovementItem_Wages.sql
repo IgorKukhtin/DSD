@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , TestingStatus TVarChar,  TestingDate TDateTime
+             , TestingStatus TVarChar,  TestingDate TDateTime, TestingAttempts Integer
              , isIssuedBy Boolean, DateIssuedBy TDateTime
              , isErased Boolean
              , Color_Calc Integer
@@ -111,6 +111,7 @@ BEGIN
                  , Object_Unit.ValueData              AS UnitName
                  , NULL::TVarChar                     AS TestingStatus
                  , NULL::TDateTime                    AS TestingDate
+                 , NULL::Integer                      AS TestingAttempts
 
                  , False                              AS isIssuedBy
                  , NULL::TDateTime                    AS DateIssuedBy
@@ -175,6 +176,7 @@ BEGIN
                         THEN TestingUser.Status      
                         ELSE CASE WHEN MIBoolean_isTestingUser.ValueData = TRUE THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS TestingStatus
                  , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
+                 , TestingUser.Attempts                                     AS TestingAttempts
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
@@ -291,6 +293,8 @@ BEGIN
                  , Object_Unit.ValueData              AS UnitName
                  , NULL::TVarChar                     AS TestingStatus
                  , NULL::TDateTime                    AS TestingDate
+                 , NULL::Integer                      AS TestingAttempts
+                 
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
                  , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 
@@ -381,6 +385,7 @@ BEGIN
                         THEN TestingUser.Status      
                         ELSE CASE WHEN MIBoolean_isTestingUser.ValueData = TRUE THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS TestingStatus
                  , date_trunc('day', TestingUser.DateTimeTest)::TDateTime   AS TestingDate
+                 , TestingUser.Attempts                                     AS TestingAttempts
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
                  , MIDate_IssuedBy.ValueData                                AS DateIssuedBy
 
@@ -497,6 +502,8 @@ BEGIN
                  , Object_Unit.ValueData              AS UnitName
                  , NULL::TVarChar                     AS TestingStatus
                  , NULL::TDateTime                    AS TestingDate
+                 , NULL::Integer                      AS TestingAttempts
+
                  , tmpAdditionalExpenses.isIssuedBy   AS isIssuedBy
                  , tmpAdditionalExpenses.DateIssuedBy AS DateIssuedBy
 

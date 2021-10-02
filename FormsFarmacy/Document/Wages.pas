@@ -121,6 +121,7 @@ type
     cxLabel3: TcxLabel;
     MarketingRepayment: TcxGridDBBandedColumn;
     IlliquidAssetsRepayment: TcxGridDBBandedColumn;
+    TestingAttempts: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

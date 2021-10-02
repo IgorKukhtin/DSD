@@ -73,6 +73,9 @@ type
     actGetImportSettingHelsi: TdsdExecStoredProc;
     actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
+    GuidesMedicalProgramSP: TdsdGuides;
+    edMedicalProgramSP: TcxButtonEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

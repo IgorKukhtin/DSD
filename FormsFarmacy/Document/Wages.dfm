@@ -129,7 +129,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 21
+            Width = 20
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -141,7 +141,7 @@ inherited WagesForm: TWagesForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 127
+            Width = 109
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -153,7 +153,7 @@ inherited WagesForm: TWagesForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 76
+            Width = 80
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -164,7 +164,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 43
+            Width = 36
             Position.BandIndex = 0
             Position.ColIndex = 6
             Position.RowIndex = 0
@@ -175,7 +175,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 51
+            Width = 39
             Position.BandIndex = 0
             Position.ColIndex = 7
             Position.RowIndex = 0
@@ -186,9 +186,20 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 92
+            Width = 68
             Position.BandIndex = 0
             Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object TestingAttempts: TcxGridDBBandedColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1087#1099#1090#1086#1082
+            DataBinding.FieldName = 'TestingAttempts'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+            Position.BandIndex = 0
+            Position.ColIndex = 10
             Position.RowIndex = 0
           end
           object UnitName: TcxGridDBBandedColumn

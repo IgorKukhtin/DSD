@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
+             , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
               )
 
 AS
@@ -36,11 +37,19 @@ BEGIN
             , Object_Status.ValueData               AS StatusName
             , MovementDate_OperDateStart.ValueData  AS OperDateStart
             , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
+            , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
+            , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
+            , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
 
        FROM tmpStatus
             LEFT JOIN Movement ON Movement.DescId = zc_Movement_GoodsSP()
                               AND Movement.StatusId = tmpStatus.StatusId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                         ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                        AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+            LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MLO_MedicalProgramSP.ObjectId  
 
             LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                    ON MovementDate_OperDateStart.MovementId = Movement.Id

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
+             , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
               )
 AS
 $BODY$
@@ -39,6 +40,9 @@ BEGIN
               , Object_Status.Name           AS StatusName
               , CURRENT_DATE::TDateTime      AS OperDateStart
               , CURRENT_DATE::TDateTime      AS OperDateEnd
+              , 0                            AS MedicalProgramSPId
+              , 0                            AS MedicalProgramSPCode
+              , ''::TVarChar                 AS MedicalProgramSPName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      
@@ -50,7 +54,10 @@ BEGIN
               , Object_Status.ValueData                AS StatusName
               , MovementDate_OperDateStart.ValueData   AS OperDateStart
               , MovementDate_OperDateEnd.ValueData     AS OperDateEnd
-   
+              , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
+              , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
+              , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
+
          FROM Movement
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
    
@@ -61,6 +68,12 @@ BEGIN
                LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                      AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+               LEFT JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                            ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                           AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+               LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MLO_MedicalProgramSP.ObjectId  
+
          WHERE Movement.Id = inMovementId
            AND Movement.DescId = zc_Movement_GoodsSP();
 

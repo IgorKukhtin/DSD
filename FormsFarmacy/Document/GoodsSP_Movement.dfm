@@ -4,7 +4,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
   ClientWidth = 1043
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
   ExplicitWidth = 1059
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -20,7 +20,6 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 444
-        ExplicitLeft = 24
         ExplicitWidth = 1043
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -329,7 +328,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Width = 166
     end
     object edOperDateEnd: TcxDateEdit
-      Left = 511
+      Left = 472
       Top = 23
       EditValue = 43326d
       Properties.SaveTime = False
@@ -338,13 +337,30 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Width = 103
     end
     object cxLabel4: TcxLabel
-      Left = 511
+      Left = 472
       Top = 5
       Caption = #1054#1082#1086#1085'. '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
     end
+    object edMedicalProgramSP: TcxButtonEdit
+      Left = 592
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 296
+    end
+    object cxLabel5: TcxLabel
+      Left = 592
+      Top = 5
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+    end
   end
   object edOperDateStart: TcxDateEdit [2]
-    Left = 405
+    Left = 373
     Top = 23
     EditValue = 43326d
     Properties.SaveTime = False
@@ -353,7 +369,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Width = 93
   end
   object cxLabel3: TcxLabel [3]
-    Left = 405
+    Left = 373
     Top = 5
     Caption = #1053#1072#1095'.'#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
   end
@@ -1001,7 +1017,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'inMask'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1030,8 +1046,8 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     Top = 240
   end
   inherited StatusGuides: TdsdGuides
-    Left = 56
-    Top = 24
+    Left = 57
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_GoodsSP'
@@ -1053,7 +1069,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'inMask'
-        Value = 'false'
+        Value = False
         Component = FormParams
         ComponentItem = 'inMask'
         DataType = ftBoolean
@@ -1062,7 +1078,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1100,16 +1116,31 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'OperDateStart'
-        Value = ''
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
-        Value = ''
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPId'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPName'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1144,7 +1175,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'inOperDateStart'
-        Value = ''
+        Value = Null
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1152,9 +1183,17 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Name = 'inOperDateEnd'
-        Value = ''
+        Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1166,6 +1205,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = GuidesMedicalProgramSP
       end
       item
       end
@@ -1189,6 +1229,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Control = edOperDateStart
       end
       item
+        Control = edMedicalProgramSP
       end>
     Left = 232
     Top = 193
@@ -1698,13 +1739,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
@@ -1846,5 +1887,35 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     PackSize = 1
     Left = 840
     Top = 360
+  end
+  object GuidesMedicalProgramSP: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicalProgramSP
+    FormNameParam.Value = 'TMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 777
+    Top = 11
   end
 end
