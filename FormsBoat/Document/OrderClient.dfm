@@ -1438,6 +1438,14 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 80
           end
+          object ReceiptLevelName_ch3: TcxGridDBColumn
+            Caption = 'Level'
+            DataBinding.FieldName = 'ReceiptLevelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
           object PartnerName_ch3: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
@@ -1796,6 +1804,14 @@ object OrderClientForm: TOrderClientForm
             Options.Editing = False
             Width = 80
           end
+          object ReceiptLevelName_ch4: TcxGridDBColumn
+            Caption = 'Level'
+            DataBinding.FieldName = 'ReceiptLevelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object PartnerName_ch4: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
@@ -2110,6 +2126,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2167,6 +2186,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0

@@ -1484,6 +1484,10 @@ CREATE OR REPLACE FUNCTION zc_Object_MedicalProgramSP() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MedicalProgramSP', 'Медицинские программы соц. проектов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MedicalProgramSP');
 
+CREATE OR REPLACE FUNCTION zc_Object_MedicalProgramSPLink() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MedicalProgramSPLink'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MedicalProgramSPLink', 'Связь медицинских программы соц. проектов и подразделений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MedicalProgramSPLink');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1500,7 +1504,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
- 01.10.21                                                                                        * zc_Object_MedicalProgramSP
+ 01.10.21                                                                                        * zc_Object_MedicalProgramSP, zc_Object_MedicalProgramSPLink
  29.09.21                                                                                        * zc_Object_FormDispensing
  24.09.21                                                                                        * zc_Object_CorrectWagesPercentage
  20.09.21                                                                                        * zc_Object_InsuranceCompanies, zc_Object_MemberIC

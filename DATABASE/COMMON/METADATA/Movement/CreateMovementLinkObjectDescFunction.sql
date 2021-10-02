@@ -527,6 +527,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberIC() RETURNS Integer AS $
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_MemberIC', 'ФИО покупателя (Страховой компании)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberIC');
 
+CREATE OR REPLACE FUNCTION zc_MovementLink_MedicalProgramSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLink_MedicalProgramSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLink_MedicalProgramSP', 'Медицинская программа соц. проектов' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLink_MedicalProgramSP');
+
 
 /*-------------------------------------------------------------------------------
 
@@ -534,6 +538,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 01.10.21                                                                                     * zc_MovementLink_MedicalProgramSP, 
  20.09.21                                                                                     * zc_MovementLinkObject_InsuranceCompanies, zc_MovementLinkObject_MemberIC
  21.08.21         * zc_MovementLinkObject_WorkTimeKind
  09.08.21         * zc_MovementLinkObject_CheckedHead

@@ -4699,6 +4699,39 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actMedicalProgramSP: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1080#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
+      FormName = 'TMedicalProgramSPForm'
+      FormNameParam.Value = 'TMedicalProgramSPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SPKindId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = ''
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actMedicalProgramSPLink: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1074#1103#1079#1100' '#1084#1077#1076#1080#1094#1080#1085#1089#1082#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074' '#1080' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      FormName = 'TMedicalProgramSPLinkForm'
+      FormNameParam.Value = 'TMedicalProgramSPLinkForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4827,6 +4860,12 @@
         end
         object N139: TMenuItem
           Action = actSPKind
+        end
+        object N320: TMenuItem
+          Action = actMedicalProgramSP
+        end
+        object N321: TMenuItem
+          Action = actMedicalProgramSPLink
         end
         object N118: TMenuItem
           Caption = '-'

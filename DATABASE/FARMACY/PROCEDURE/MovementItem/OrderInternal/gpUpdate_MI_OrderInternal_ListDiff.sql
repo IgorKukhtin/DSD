@@ -121,8 +121,7 @@ BEGIN
                 FROM tmpListDiff_MI_All
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
                      LEFT JOIN tmpMI_Comment    ON tmpMI_Comment.MovementItemId    = tmpListDiff_MI_All.Id
-                WHERE tmpMI_MovementId.ValueData IS NULL
-                  AND (tmpListDiff_MI_All.Amount - COALESCE(tmpListDiff_MI_All.AmountSend, 0)) > 0;
+                WHERE tmpMI_MovementId.ValueData IS NULL;
            
      -- сохраняем свойства, если такого товара нет в заказе дописываем
      PERFORM lpInsertUpdate_MI_OrderInternal_ListDiff (inId             := COALESCE (_tmp_MI.Id, 0)
@@ -145,7 +144,7 @@ BEGIN
                                                      )
      FROM _tmp_MI
           FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
-                          , SUM (_tmpListDiff_MI.Amount) AS Amount 
+                          , CASE WHEN SUM (_tmpListDiff_MI.Amount) > 0 THEN SUM (_tmpListDiff_MI.Amount) ELSE 0 END  AS Amount 
                           , STRING_AGG (DISTINCT _tmpListDiff_MI.Comment, ';')  || STRING_AGG (DISTINCT _tmpListDiff_MI.DiffKindName, ';') :: TVarChar AS Comment
                           --, STRING_AGG (DISTINCT _tmpListDiff_MI.DiffKindName, ';') :: TVarChar AS DiffKindName
                      FROM _tmpListDiff_MI

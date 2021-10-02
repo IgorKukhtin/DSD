@@ -2683,10 +2683,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSP_SPKind() RETURNS Integ
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MedicalProgramSP_SPKind', 'Виды соц. проектов', zc_Object_MedicalProgramSP(), zc_Object_SPKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSP_SPKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP', 'Связь с Медицинской программой соц. проектов', zc_Object_MedicalProgramSPLink(), zc_Object_MedicalProgramSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSPLink_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSPLink_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_MedicalProgramSPLink_Unit', 'Связь с Подразделеним', zc_Object_MedicalProgramSPLink(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSPLink_Unit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 01.10.21                                                                                      * zc_ObjectLink_MedicalProgramSP_SPKind
+ 01.10.21                                                                                      * zc_ObjectLink_MedicalProgramSP...
  29.09.21                                                                                      * zc_ObjectLink_Goods_FormDispensing
  28.09.21                                                                                      * zc_ObjectLink_ContactPerson_Unit
  27.09.21         * zc_ObjectLink_Member_UnitMobile

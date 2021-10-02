@@ -77,6 +77,23 @@ BEGIN
                                       ON MovementLinkObject_BuyerForSite.MovementId = Movement.Id
                                      AND MovementLinkObject_BuyerForSite.DescId = zc_MovementLinkObject_BuyerForSite()
     WHERE Movement.Id = inMovementId;    
+    
+    IF EXISTS (SELECT * FROM MovementString AS MovementString_InvNumberOrder
+               WHERE MovementString_InvNumberOrder.MovementId = inMovementId
+                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder())
+    THEN
+    
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementString_InvNumberOrder(), outMovementId, MovementLinkObject_InvNumberOrder.ObjectId)
+            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKindClient(), outMovementId, zc_Enum_ConfirmedKind_SmsYes())
+      FROM Movement
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_InvNumberOrder
+                                        ON MovementLinkObject_InvNumberOrder.MovementId = Movement.Id
+                                       AND MovementLinkObject_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+      WHERE Movement.Id = inMovementId;    
+    
+    END IF;
 
     UPDATE MovementItem SET MovementId = outMovementId WHERE MovementItem.ID = inMovementItemId;
     

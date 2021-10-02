@@ -491,6 +491,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalOperPrice_cost_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -501,6 +506,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalOperPrice_cost_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -645,6 +655,74 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object EKPrice_ch2: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            Width = 70
+          end
+          object OperPrice_cost_ch2: TcxGridDBColumn
+            Caption = 'Netto EK cost'
+            DataBinding.FieldName = 'OperPrice_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1079#1072#1090#1088#1072#1090#1072#1084#1080' '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+          end
+          object TotalOperPrice_cost_ch2: TcxGridDBColumn
+            Caption = 'Total EK cost'
+            DataBinding.FieldName = 'TotalOperPrice_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1079#1072#1090#1088#1072#1090#1072#1084#1080' '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+          end
+          object CountForPrice_partion_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice_partion'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object InvNumber_partion_ch2: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'InvNumber_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object OperDate_partion_ch2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate_partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object PartnerName_ch2: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object IsErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -1777,8 +1855,8 @@ object SendForm: TSendForm
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1086#1090' '#1082#1086#1075#1086')'
+      Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1086#1090' '#1082#1086#1075#1086')'
       ImageIndex = 40
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
@@ -1854,8 +1932,8 @@ object SendForm: TSendForm
     object actReport_Goods_child: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1076#1077#1090#1072#1083#1080')'
+      Caption = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1082#1086#1084#1091')'
+      Hint = #1054#1090#1095#1077#1090' <'#1076#1074#1080#1078#1077#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1082#1086#1084#1091')'
       ImageIndex = 40
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
@@ -1865,7 +1943,7 @@ object SendForm: TSendForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = GuidesFrom
+          Component = GuidesTo
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1873,7 +1951,7 @@ object SendForm: TSendForm
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = GuidesFrom
+          Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1882,7 +1960,7 @@ object SendForm: TSendForm
         item
           Name = 'GoodsId'
           Value = Null
-          Component = ChildCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1890,7 +1968,7 @@ object SendForm: TSendForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = ChildCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
@@ -1912,7 +1990,7 @@ object SendForm: TSendForm
         item
           Name = 'Article'
           Value = Null
-          Component = ChildCDS
+          Component = MasterCDS
           ComponentItem = 'Article'
           DataType = ftString
           ParamType = ptInput
@@ -1921,7 +1999,7 @@ object SendForm: TSendForm
         item
           Name = 'Code'
           Value = Null
-          Component = ChildCDS
+          Component = MasterCDS
           ComponentItem = 'GoodsCode'
           ParamType = ptInput
           MultiSelectSeparator = ','
