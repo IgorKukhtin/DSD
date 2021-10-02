@@ -55,6 +55,13 @@ type
     actOpenFormPartner: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
     actRefreshEmpty: TdsdDataSetRefresh;
+    AmountBasis: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountPartner_real: TcxGridDBColumn;
+    Amount_sk_reserve: TcxGridDBColumn;
+    AmountIncome_real: TcxGridDBColumn;
+    Amount_pr_reserve: TcxGridDBColumn;
+    AmountSend_reserve: TcxGridDBColumn;
   private
     { Private declarations }
   public

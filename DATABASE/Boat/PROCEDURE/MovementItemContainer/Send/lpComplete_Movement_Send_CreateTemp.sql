@@ -22,13 +22,11 @@ BEGIN
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                    , GoodsId Integer
                                    , OperCount TFloat
-                                   , AccountId_From Integer, AccountId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     ) ON COMMIT DROP;
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
                                          , GoodsId Integer, PartionId Integer
-                                         , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
-                                         , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
                                          , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat
                                          , MovementId_order Integer
                                           ) ON COMMIT DROP;
@@ -41,7 +39,10 @@ BEGIN
          -- таблица - элементы Перемещаем Резерв для Заказов клиента
          CREATE TEMP TABLE _tmpReserveRes (MovementItemId Integer, ParentId Integer
                                          , GoodsId Integer, PartionId Integer
-                                         , Amount TFloat
+                                         , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
+                                         , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
+                                         , AccountId_From Integer, AccountId_To Integer
+                                         , Amount TFloat, OperSumm TFloat
                                          , MovementId_order Integer
                                           ) ON COMMIT DROP;
      END IF;

@@ -1,6 +1,6 @@
--- Function: lpComplete_Movement_Income_CreateTemp ()
+-- Function: lpComplete_Movement_Income_CreateTemp()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Income_CreateTemp ();
+DROP FUNCTION IF EXISTS lpComplete_Movement_Income_CreateTemp();
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Income_CreateTemp()
 RETURNS VOID

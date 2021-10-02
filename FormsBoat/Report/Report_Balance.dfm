@@ -28,7 +28,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42736d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42736d
+      EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 2
+    TabOrder = 1
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -124,8 +124,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
     end
     object pvAmountDebetStart: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 0
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountDebetStart'
@@ -136,8 +135,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = 'AmountDebetStart'
     end
     object pvAmountKreditStart: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountKreditStart'
@@ -149,7 +147,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountActiveStart: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountActiveStart'
@@ -161,7 +159,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountPassiveStart: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountPassiveStart'
@@ -173,7 +171,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountDebet: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountDebet'
@@ -185,7 +183,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountKredit: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountKredit'
@@ -196,8 +194,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 8
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'
@@ -208,8 +205,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = 'AmountDebetEnd'
     end
     object pvAmountKreditEnd: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 9
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountKreditEnd'
@@ -221,7 +217,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountActiveEnd: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 6
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountActiveEnd'
@@ -233,7 +229,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object pvAmountPassiveEnd: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 7
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountPassiveEnd'
@@ -618,7 +614,7 @@ object Report_BalanceForm: TReport_BalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -629,7 +625,7 @@ object Report_BalanceForm: TReport_BalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -672,6 +668,9 @@ object Report_BalanceForm: TReport_BalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -693,7 +692,7 @@ object Report_BalanceForm: TReport_BalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -704,7 +703,7 @@ object Report_BalanceForm: TReport_BalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -747,6 +746,9 @@ object Report_BalanceForm: TReport_BalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -809,6 +811,8 @@ object Report_BalanceForm: TReport_BalanceForm
         Action = MultiAction1
         ShortCut = 13
       end>
+    ColorRuleList = <>
+    SummaryList = <>
     Left = 392
     Top = 272
   end

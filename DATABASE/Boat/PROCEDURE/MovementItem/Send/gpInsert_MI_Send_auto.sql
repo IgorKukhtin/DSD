@@ -97,7 +97,7 @@ BEGIN
                                  -- На всякий случай - zc_MI_Master не удален
                                  INNER JOIN MovementItem AS MI_Master
                                                          ON MI_Master.MovementId = Movement.Id
-                                                        AND MI_Master.DescId     = zc_MI_Master()
+                                                        AND MI_Master.DescId     = zc_MI_Child() -- !!!НЕ Ошибка!!!
                                                         AND MI_Master.Id         = MovementItem.ParentId
                                                         AND MI_Master.isErased   = FALSE
                                  -- ограничение - только для этого Склада
@@ -204,12 +204,16 @@ BEGIN
      WHERE tmpMI_Child.Amount - COALESCE (tmpMI_Send.Amount, 0) > 0
     ;
 
+    -- test
+    --RAISE EXCEPTION '%', (select count(*)  from _tmpReserve);
+
+
     -- сохраняем - zc_MI_Master - текущее Перемещение
     PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := COALESCE (_tmpMI_Master.Id, 0)
                                             , inMovementId             := inMovementId
                                             , inGoodsId                := COALESCE (tmp.ObjectId, _tmpMI_Master.ObjectId)
                                               -- кол-во резерв
-                                            , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
+                                            , inAmount                 := CASE WHEN _tmpMI_Master.ORD = 1 OR COALESCE (_tmpMI_Master.Id, 0) = 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
                                             , inOperPrice              := COALESCE (tmp.OperPrice, 0)
                                             , inCountForPrice          := COALESCE (tmp.CountForPrice, 1)
                                             , inComment                :='' ::TVarChar

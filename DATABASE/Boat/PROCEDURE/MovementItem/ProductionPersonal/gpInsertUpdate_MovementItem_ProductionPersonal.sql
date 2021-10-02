@@ -35,14 +35,14 @@ BEGIN
      -- найдем OrderClient
      IF TRIM (inBarCode_OrderClient) <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode_OrderClient) >= 12
+         IF CHAR_LENGTH (inBarCode_OrderClient) = 13
          THEN -- по штрих коду, но для "проверки" ограничение - 8 DAY
               vbMovementId_OrderClient:= (SELECT Movement.Id
                                           FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_OrderClient, 4, 13-4)) AS MovementId
                                                ) AS tmp
                                                INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                                   AND Movement.DescId = zc_Movement_OrderClient()
-                                                                  AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                                  AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '160 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
                                          );
          ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
@@ -50,7 +50,7 @@ BEGIN
                                           FROM Movement
                                           WHERE Movement.InvNumber = TRIM (inBarCode_OrderClient)
                                             AND Movement.DescId = zc_Movement_OrderClient()
-                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '160 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                                          );
          END IF;
@@ -59,7 +59,7 @@ BEGIN
          IF COALESCE (vbMovementId_OrderClient, 0) = 0
          THEN
              --RAISE EXCEPTION '', inBarCode_OrderClient;
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> с № <%> не найден.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ <Заказ Клиента> с ' || CASE WHEN CHAR_LENGTH (inBarCode_OrderClient) = 13 THEN 'Ш/К' ELSE '№' END || ' <%> не найден.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'     :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_OrderClient                                :: TVarChar
@@ -73,7 +73,7 @@ BEGIN
                          );
          IF COALESCE (vbProductId,0) = 0
          THEN
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не определена лодка в Документе <Заказ Клиента> с № <%>.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Не определена лодка в Документе <Заказ Клиента> с ' || CASE WHEN CHAR_LENGTH (inBarCode_OrderClient) = 13 THEN 'Ш/К' ELSE '№' END || ' № <%>.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'     :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_OrderClient                                :: TVarChar
@@ -90,7 +90,7 @@ BEGIN
  
      IF COALESCE (inBarCode_start,'') <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode_start) >= 12
+         IF CHAR_LENGTH (inBarCode_start) = 13
          THEN -- по штрих коду
               vbPersonalId:= (SELECT Object.Id
                               FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_start, 4, 13-4)) AS ObjectId
@@ -105,7 +105,7 @@ BEGIN
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
             -- RAISE EXCEPTION 'Ошибка.Сотрудник с № <%> не найден.', inBarCode_start;
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с № <%> не найден.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с ' || CASE WHEN CHAR_LENGTH (inBarCode_OrderClient) = 13 THEN 'Ш/К' ELSE '№' END || ' <%> не найден.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'   :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_start                       :: TVarChar
@@ -169,7 +169,7 @@ BEGIN
 
     IF COALESCE (inBarCode_end,'') <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode_end) >= 12
+         IF CHAR_LENGTH (inBarCode_end) = 13
          THEN -- по штрих коду
               vbPersonalId:= (SELECT Object.Id
                               FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode_end, 4, 13-4)) AS ObjectId
@@ -183,7 +183,7 @@ BEGIN
          -- Проверка
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с № <%> не найден.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Сотрудник с ' || CASE WHEN CHAR_LENGTH (inBarCode_end) = 13 THEN 'Ш/К' ELSE '№' END || ' <%> не найден.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MovementItem_ProductionPersonal'   :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_end                         :: TVarChar
@@ -192,7 +192,7 @@ BEGIN
          END IF;
 
          
-         vbEndBegin   := CURRENT_TIMESTAMP;
+         vbEndBegin   := CURRENT_TIMESTAMP + INTERVAL '3 HOUR';
 
          -- находим строку по сотруднику с пустой датой окончания
          SELECT MovementItem.Id

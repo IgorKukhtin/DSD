@@ -321,17 +321,31 @@ object SendForm: TSendForm
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object GoodsName: TcxGridDBColumn
@@ -493,10 +507,8 @@ object SendForm: TSendForm
           OptionsBehavior.IncSearch = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -576,9 +588,16 @@ object SendForm: TSendForm
           object CIN_ch2: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'CIN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object EngineNum_ch2: TcxGridDBColumn
@@ -588,6 +607,7 @@ object SendForm: TSendForm
             Properties.Buttons = <
               item
                 Default = True
+                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -606,9 +626,15 @@ object SendForm: TSendForm
           object ProductName_ch2: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 120
           end
           object BrandName_ch2: TcxGridDBColumn
@@ -1653,9 +1679,6 @@ object SendForm: TSendForm
       ActionList = <
         item
           Action = actInsert_MI_Send
-        end
-        item
-          Action = actRefresh
         end>
       QuestionBeforeExecute = #1055#1077#1088#1077#1084#1077#1089#1090#1080#1090#1100' '#1042#1045#1057#1068' '#1088#1077#1079#1077#1088#1074'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
