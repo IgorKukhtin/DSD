@@ -86,6 +86,7 @@ OPEN Cursor1 FOR
                             , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')') ::TVarChar AS ModelName_full
                             , Object_From.ObjectCode                     AS FromCode
                             , Object_From.ValueData                      AS FromName
+                            , ObjectLink_Product_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
                             , SUM (MovementItem.Amount) AS Amount
                        FROM MovementItem
                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -122,6 +123,10 @@ OPEN Cursor1 FOR
                                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
                                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
                             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Product_ReceiptProdModel
+                                                 ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id
+                                                AND ObjectLink_Product_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Child()
                          AND MovementItem.isErased   = FALSE
@@ -140,12 +145,17 @@ OPEN Cursor1 FOR
                             , Object_Model.ValueData
                             , (Object_Model.ValueData ||' (' || Object_Brand.ValueData||')')
                             , Movement_OrderClient.OperDate
+                            , ObjectLink_Product_ReceiptProdModel.ChildObjectId
                       )
+
 
        SELECT MovementItem.Id          
             , MovementItem.GoodsId      AS GoodsId
             , Object_Goods.ObjectCode   AS GoodsCode
             , Object_Goods.ValueData    AS GoodsName
+            , Object_GoodsGroup.ValueData               AS GoodsGroupName
+            , ObjectString_Article.ValueData            AS Article
+            , Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
             , tmpMI_Child.MovementId_order
             , tmpMI_Child.OperDate
             , tmpMI_Child.InvNumber_order
@@ -168,8 +178,37 @@ OPEN Cursor1 FOR
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = MovementItem.GoodsId
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            -- получаем ReceiptLevel
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_Object
+                                 ON ObjectLink_ReceiptProdModelChild_Object.ChildObjectId = MovementItem.GoodsId
+                                AND ObjectLink_ReceiptProdModelChild_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+            ---берем не удаленные
+            INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                                             AND Object_ReceiptProdModelChild.IsErased = FALSE
+            -- ReceiptProdModel по лодке
+            INNER JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                  ON ObjectLink_ReceiptProdModel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                 AND ObjectLink_ReceiptProdModel.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                 AND ObjectLink_ReceiptProdModel.ChildObjectId = tmpMI_Child.ReceiptProdModelId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModelChild_ReceiptLevel
+                                 ON ObjectLink_ReceiptProdModelChild_ReceiptLevel.ObjectId = ObjectLink_ReceiptProdModelChild_Object.ObjectId
+                                AND ObjectLink_ReceiptProdModelChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+            LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptProdModelChild_ReceiptLevel.ChildObjectId
+
        ORDER BY tmpMI_Child.OperDate
               , tmpMI_Child.InvNumber_order
+              , Object_ReceiptLevel.ValueData
+              , Object_GoodsGroup.ValueData
               , Object_Goods.ValueData
        
 ;
