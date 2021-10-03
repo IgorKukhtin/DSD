@@ -2423,6 +2423,7 @@ object SendForm: TSendForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
       end
       item
         Guides = GuidesTo
