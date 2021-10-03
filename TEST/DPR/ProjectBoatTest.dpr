@@ -283,7 +283,8 @@ uses
   Report_ProductionPersonalDialog in '..\..\FormsBoat\Report\Report_ProductionPersonalDialog.pas' {Report_ProductionPersonalDialogForm: TParentForm},
   Report_ProductionPersonal in '..\..\FormsBoat\Report\Report_ProductionPersonal.pas' {Report_ProductionPersonalForm: TParentForm},
   Sale in '..\..\FormsBoat\Document\Sale.pas' {SaleForm: TParentForm},
-  SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm};
+  SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  FormsUnit in '..\..\FormsBoat\System\FormsUnit.pas' {FormsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

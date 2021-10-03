@@ -42,7 +42,6 @@ type
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     ObjectByName: TcxGridDBColumn;
-    OperDatePartner: TcxGridDBColumn;
     ObjectByCode: TcxGridDBColumn;
     AmountStart: TcxGridDBColumn;
     Price: TcxGridDBColumn;
@@ -65,7 +64,6 @@ type
     edUnitGroup: TcxButtonEdit;
     GuidesUnitGroup: TdsdGuides;
     GuidesPartion: TdsdGuides;
-    Amount_Change: TcxGridDBColumn;
     bbSumm_branch: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;

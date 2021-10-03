@@ -35,8 +35,8 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId = zc_MI_Child()
-       AND MovementItem.isEreased = False
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE
      ;
 
 

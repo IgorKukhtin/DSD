@@ -97,7 +97,7 @@ BEGIN
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
-             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)       AS CIN
              , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
              , Object_Engine.ValueData                    AS EngineName
 

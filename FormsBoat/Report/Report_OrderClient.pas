@@ -62,6 +62,9 @@ type
     AmountIncome_real: TcxGridDBColumn;
     Amount_pr_reserve: TcxGridDBColumn;
     AmountSend_reserve: TcxGridDBColumn;
+    ProdOptionsName: TcxGridDBColumn;
+    EngineNum: TcxGridDBColumn;
+    EngineName_boat: TcxGridDBColumn;
   private
     { Private declarations }
   public

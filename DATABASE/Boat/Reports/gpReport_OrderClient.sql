@@ -28,14 +28,16 @@ RETURNS TABLE  (
               , ProductName TVarChar
               , BrandId Integer
               , BrandName TVarChar
-              , CIN        TVarChar
+              , CIN              TVarChar
+              , EngineNum        TVarChar
+              , EngineName_boat  TVarChar
               , Comment    TVarChar
               , MovementId_Invoice  Integer
               , InvNumber_Invoice TVarChar
                 -- заказ поставщику
               , MovementId_OrderPartner  Integer
               , OperDate_OrderPartner TDateTime
-              , InvNumber_OrderPartner  Integer
+              , InvNumber_OrderPartner TVarChar
               , OperDatePartner_OrderPartner TDateTime
               , InvNumberPartner_OrderPartner TVarChar
               , StatusCode_OrderPartner Integer
@@ -48,7 +50,8 @@ RETURNS TABLE  (
               , PaidKindId_OrderPartner Integer
               , PaidKindName_OrderPartner TVarChar
                 --
-              , PartnerName TVarChar
+              , PartnerName        TVarChar
+              , ProdOptionsName    TVarChar
 
                 -- Количество шаблон сборки
               , AmountBasis        TFloat
@@ -131,6 +134,9 @@ BEGIN
                          , MovementItem.Amount
                            -- Количество шаблон сборки
                          , MIFloat_AmountBasis.ValueData AS AmountBasis
+                         
+                         , MILinkObject_Unit.ObjectId          AS UnitId
+                         , MILinkObject_ProdOptions.ObjectId   AS ProdOptionsId
                            --
                          , MILinkObject_Partner.ObjectId AS PartnerId
                          , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderPartner
@@ -145,6 +151,18 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_AmountBasis
                                                      ON MIFloat_AmountBasis.MovementItemId = MovementItem.Id
                                                     AND MIFloat_AmountBasis.DescId         = zc_MIFloat_AmountBasis()
+                         -- какой узел собирается
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                          ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                         -- Подразделение -  происходит резерв
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                         -- Опция
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                                                          ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
 
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                           ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -158,6 +176,7 @@ BEGIN
                          OR inIsEmpty = FALSE -- или Все
                           )
                       AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                      AND MILinkObject_Goods.ObjectId IS NULL
                    )
     -- св-ва
   , tmpMIFloat AS (SELECT MovementItemFloat.*
@@ -184,6 +203,8 @@ BEGIN
                                      , Object_Brand.Id                            AS BrandId
                                      , Object_Brand.ValueData                     AS BrandName
                                      , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+                                     , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
+                                     , Object_Engine.ValueData                    AS EngineName
                                      , MovementString_Comment.ValueData :: TVarChar AS Comment
                                        -- № док. Счет
                                      , Movement_Invoice.Id               AS MovementId_Invoice
@@ -231,6 +252,14 @@ BEGIN
                                                          ON ObjectLink_Brand.ObjectId = Object_Product.Id
                                                         AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
                                     LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
+                                    
+                                    LEFT JOIN ObjectString AS ObjectString_EngineNum
+                                                           ON ObjectString_EngineNum.ObjectId = Object_Product.Id
+                                                          AND ObjectString_EngineNum.DescId   = zc_ObjectString_Product_EngineNum()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Engine
+                                                         ON ObjectLink_Engine.ObjectId = Object_Product.Id
+                                                        AND ObjectLink_Engine.DescId   = zc_ObjectLink_Product_Engine()
+                                    LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
                                 )
     -- Заказ Поставщику
   , tmpMovement_OrderPartner AS (SELECT Movement.*
@@ -278,6 +307,7 @@ BEGIN
   , tmpMI_OpderPartner AS (SELECT MovementItem.MovementId
                                 , MovementItem.ObjectId       AS GoodsId
                                 , MIFloat_OperPrice.ValueData AS OperPrice
+                                , MovementItem.Amount
                            FROM tmpMovement_OrderPartner AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -288,6 +318,60 @@ BEGIN
                                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
                            )
+   -- ВСЕ Приходы от поставщика - zc_MI_Child - детализация по заказ Клиента
+ , tmpIncomePartner AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_order
+                             , MovementItem.ObjectId
+                               -- Кол-во - попало в Резерв
+                             , SUM (MovementItem.Amount) AS Amount
+                        FROM Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Child()
+                                                    AND MovementItem.isErased   = FALSE
+                             -- zc_MI_Master не удален
+                             INNER JOIN MovementItem AS MI_Master
+                                                     ON MI_Master.MovementId = Movement.Id
+                                                    AND MI_Master.DescId     = zc_MI_Master()
+                                                    AND MI_Master.Id         = MovementItem.ParentId
+                                                    AND MI_Master.isErased   = FALSE
+                             -- ValueData - MovementId заказ Клиента
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                         -- ограничили только этими
+                                                         AND MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMovement_OrderClient.MovementId FROM tmpMovement_OrderClient)
+                        WHERE Movement.DescId   = zc_Movement_Income()
+                          -- Проведенные
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                        GROUP BY MIFloat_MovementId.ValueData
+                               , MovementItem.ObjectId
+                       )
+            -- ВСЕ Перемещения - zc_MI_Child - детализация по заказ Клиента
+          , tmpSend AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_order
+                             , MovementItem.ObjectId
+                               -- Кол-во - попало в Резерв
+                             , SUM (MovementItem.Amount) AS Amount
+                        FROM Movement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Child()
+                                                    AND MovementItem.isErased   = FALSE
+                             -- zc_MI_Master не удален
+                             INNER JOIN MovementItem AS MI_Master
+                                                     ON MI_Master.MovementId = Movement.Id
+                                                    AND MI_Master.DescId     = zc_MI_Master()
+                                                    AND MI_Master.Id         = MovementItem.ParentId
+                                                    AND MI_Master.isErased   = FALSE
+                             -- ValueData - MovementId заказ Клиента
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                         -- ограничили только этими
+                                                         AND MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpMovement_OrderClient.MovementId FROM tmpMovement_OrderClient)
+                        WHERE Movement.DescId   = zc_Movement_Send()
+                          -- Проведенные
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                        GROUP BY MIFloat_MovementId.ValueData
+                               , MovementItem.ObjectId
+                       )
     -- Параметры - Комплектующие
   , tmpGoodsParams AS (SELECT tmpGoods.GoodsId
                             , Object_Goods.ObjectCode            AS GoodsCode
@@ -384,13 +468,15 @@ BEGIN
            , tmpMovement_OrderClient.BrandId
            , tmpMovement_OrderClient.BrandName
            , tmpMovement_OrderClient.CIN       :: TVarChar
+           , tmpMovement_OrderClient.EngineNum :: TVarChar
+           , tmpMovement_OrderClient.EngineName:: TVarChar AS EngineName_boat
            , tmpMovement_OrderClient.Comment   :: TVarChar
            , tmpMovement_OrderClient.MovementId_Invoice
            , tmpMovement_OrderClient.InvNumber_Invoice AS InvNumber_Invoice
            -- заказ поставщику
            , tmpMovement_OrderPartner.Id           AS MovementId_OrderPartner
            , tmpMovement_OrderPartner.OperDate     AS OperDate_OrderPartner
-           , tmpMovement_OrderPartner.InvNumber  :: Integer AS InvNumber_OrderPartner
+           , zfCalc_InvNumber_isErased ('', tmpMovement_OrderPartner.InvNumber, tmpMovement_OrderPartner.OperDate, tmpMovement_OrderPartner.StatusId) AS InvNumber_OrderPartner
            , tmpMovement_OrderPartner.OperDatePartner   AS OperDatePartner_OrderPartner
            , tmpMovement_OrderPartner.InvNumberPartner AS InvNumberPartner_OrderPartner
            , tmpMovement_OrderPartner.StatusCode ::Integer AS StatusCode_OrderPartner
@@ -403,7 +489,8 @@ BEGIN
            , tmpMovement_OrderPartner.PaidKindId   AS PaidKindId_OrderPartner
            , tmpMovement_OrderPartner.PaidKindName AS PaidKindName_OrderPartner
            --
-           , Object_Partner.ValueData AS PartnerName
+           , Object_Partner.ValueData              AS PartnerName
+           , Object_ProdOptions.ValueData          AS ProdOptionsName
 
              -- Кол-во шаблон сборки
            , tmpMI_Child.AmountBasis
@@ -411,18 +498,18 @@ BEGIN
              -- План Кол-во Заказ Поставщику
            , MIFloat_AmountPartner.ValueData ::TFloat AS AmountPartner     
              -- Факт Кол-во Заказ Поставщику
-           , 0 :: TFloat AS AmountPartner_real
+           , tmpMI_OpderPartner.Amount :: TFloat AS AmountPartner_real
              -- Факт Кол-во Приход от Поставщика
-           , 0 :: TFloat AS AmountIncome_real
+           , tmpIncomePartner.Amount :: TFloat AS AmountIncome_real
 
              -- Итого Кол-во резерв остатка
            , tmpMI_Child_reserve.Amount :: TFloat AS Amount
              -- Кол-во резерв Склад
-           , 0 :: TFloat AS Amount_sk_reserve
+           , tmpMI_Child_reserve_sk.Amount :: TFloat AS Amount_sk_reserve
              -- Кол-во резерв Производство
-           , 0 :: TFloat AS Amount_pr_reserve
+           , tmpMI_Child_reserve_pr.Amount :: TFloat AS Amount_pr_reserve
              -- Кол-во резерв Перемещение
-           , 0 :: TFloat AS AmountSend_reserve
+           , tmpSend.Amount :: TFloat AS AmountSend_reserve
 
              -- Цена вх без НДС
            , MIFloat_OperPrice.ValueData     ::TFloat AS OperPrice         
@@ -447,17 +534,45 @@ BEGIN
            , tmpGoodsParams.EKPrice             ::TFloat
 
       FROM tmpMI_Child
-           LEFT JOIN tmpMovement_OrderClient ON tmpMovement_OrderClient.MovementId = tmpMI_Child.MovementId
-           LEFT JOIN tmpMovement_OrderPartner ON tmpMovement_OrderPartner.Id = tmpMI_Child.MovementId_OrderPartner
-           LEFT JOIN tmpMI_OpderPartner ON tmpMI_OpderPartner.MovementId = tmpMovement_OrderPartner.Id
-                                       AND tmpMI_OpderPartner.GoodsId = tmpMI_Child.GoodsId
+           LEFT JOIN tmpMovement_OrderClient  ON tmpMovement_OrderClient.MovementId = tmpMI_Child.MovementId
+           LEFT JOIN tmpMovement_OrderPartner ON tmpMovement_OrderPartner.Id        = tmpMI_Child.MovementId_OrderPartner
 
+           -- Заказы Поставщику - Факт
+           LEFT JOIN tmpMI_OpderPartner ON tmpMI_OpderPartner.MovementId = tmpMI_Child.MovementId_OrderPartner
+                                       AND tmpMI_OpderPartner.GoodsId    = tmpMI_Child.GoodsId
+           -- Итого резервы в Заказах Клиента
            LEFT JOIN (SELECT tmpMI_Child.MovementId, tmpMI_Child.GoodsId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.MovementId, tmpMI_Child.GoodsId
-                     ) AS tmpMI_Child_reserve ON tmpMI_Child_reserve.MovementId = tmpMI_Child.MovementId AND tmpMI_Child_reserve.GoodsId = tmpMI_Child.GoodsId
+                     ) AS tmpMI_Child_reserve ON tmpMI_Child_reserve.MovementId = tmpMI_Child.MovementId
+                                             AND tmpMI_Child_reserve.GoodsId    = tmpMI_Child.GoodsId
            
+           -- Факт Приход от Поставщика
+           LEFT JOIN tmpIncomePartner ON tmpIncomePartner.MovementId_order = tmpMI_Child.MovementId
+                                     AND tmpIncomePartner.ObjectId         = tmpMI_Child.GoodsId
+
+           -- Итого Кол-во резерв Производство
+           LEFT JOIN (SELECT tmpMI_Child.MovementId, tmpMI_Child.GoodsId, SUM (tmpMI_Child.Amount) AS Amount
+                      FROM tmpMI_Child
+                      WHERE tmpMI_Child.UnitId = zc_Unit_Production()
+                      GROUP BY tmpMI_Child.MovementId, tmpMI_Child.GoodsId
+                     ) AS tmpMI_Child_reserve_pr ON tmpMI_Child_reserve_pr.MovementId = tmpMI_Child.MovementId
+                                                AND tmpMI_Child_reserve_pr.GoodsId    = tmpMI_Child.GoodsId
+
+           -- Итого Кол-во резерв Склад
+           LEFT JOIN (SELECT tmpMI_Child.MovementId, tmpMI_Child.GoodsId, SUM (tmpMI_Child.Amount) AS Amount
+                      FROM tmpMI_Child
+                      WHERE tmpMI_Child.UnitId <> zc_Unit_Production()
+                      GROUP BY tmpMI_Child.MovementId, tmpMI_Child.GoodsId
+                     ) AS tmpMI_Child_reserve_sk ON tmpMI_Child_reserve_sk.MovementId = tmpMI_Child.MovementId
+                                                AND tmpMI_Child_reserve_sk.GoodsId    = tmpMI_Child.GoodsId
+           -- Факт Перемещение - резерв
+           LEFT JOIN tmpSend ON tmpSend.MovementId_order = tmpMI_Child.MovementId
+                            AND tmpSend.ObjectId         = tmpMI_Child.GoodsId
+
+
            LEFT JOIN tmpGoodsParams ON tmpGoodsParams.GoodsId = tmpMI_Child.GoodsId
 
-           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id   = tmpMI_Child.PartnerId
+           LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = tmpMI_Child.PartnerId
+           LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = tmpMI_Child.ProdOptionsId
 
            LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
                                 ON MIFloat_AmountPartner.MovementItemId = tmpMI_Child.MovementItemId

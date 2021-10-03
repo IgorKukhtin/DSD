@@ -553,7 +553,7 @@ BEGIN
                              -- !!! без этой структуры !!!
                              AND COALESCE (MILinkObject_Goods.ObjectId, 0) = 0
                           )
-                -- существующие резервы
+                -- существующие резервы - в заказах Клиентов
               , tmpOrderClient AS (SELECT MovementItem.PartionId     AS PartionId
                                         , MILinkObject_Unit.ObjectId AS UnitId
                                         , SUM (MovementItem.Amount)  AS Amount
@@ -571,20 +571,49 @@ BEGIN
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                    GROUP BY MovementItem.PartionId
                                           , MILinkObject_Unit.ObjectId
-                                -- Добавили перемещения под резерв
-                                --UNION
                                   )
+                -- перемещения под резерв - факт что пришло
+              , tmpSend AS (SELECT MovementItem.PartionId     AS PartionId
+                                 , MLO_To.ObjectId            AS UnitId
+                                 , SUM (MovementItem.Amount)  AS Amount
+                            FROM Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Child()
+                                                        AND MovementItem.isErased   = FALSE
+                                                        -- ограничили товарами
+                                                        AND MovementItem.ObjectId IN (SELECT DISTINCT tmpItem.ObjectId FROM tmpItem)
+                                 -- zc_MI_Master не удален
+                                 INNER JOIN MovementItem AS MI_Master
+                                                         ON MI_Master.MovementId = Movement.Id
+                                                        AND MI_Master.DescId     = zc_MI_Master()
+                                                        AND MI_Master.Id         = MovementItem.ParentId
+                                                        AND MI_Master.isErased   = FALSE
+                                 LEFT JOIN MovementLinkObject AS MLO_To
+                                                              ON MLO_To.MovementId = MovementItem.MovementId
+                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                            WHERE Movement.DescId   = zc_Movement_Send()
+                              -- !!!проведенные!!!
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              -- !!!test!!!
+                              AND 1=0
+                            GROUP BY MovementItem.PartionId
+                                   , MLO_To.ObjectId
+                           )
             -- из остатка отняли резервы
           , tmpContainer_all AS (SELECT Container.Id
                                       , Container.PartionId
                                       , Container.ObjectId
                                       , Container.WhereObjectId
-                                      , Container.Amount - COALESCE (tmpOrderClient.Amount, 0) AS Amount
+                                      , Container.Amount - COALESCE (tmpOrderClient.Amount, 0) - COALESCE (tmpSend.Amount, 0) AS Amount
                                  FROM Container
+                                      -- резервы - в заказах Клиентов
                                       LEFT JOIN tmpOrderClient ON tmpOrderClient.PartionId = Container.PartionId
                                                               AND tmpOrderClient.UnitId    = Container.WhereObjectId
+                                      -- перемещения под резерв - Приход
+                                      LEFT JOIN tmpSend ON tmpSend.PartionId = Container.PartionId
+                                                       AND tmpSend.UnitId    = Container.WhereObjectId
                                  WHERE Container.DescId = zc_Container_Count()
-                                   AND Container.Amount - COALESCE (tmpOrderClient.Amount, 0) > 0
+                                   AND Container.Amount - COALESCE (tmpOrderClient.Amount, 0) - COALESCE (tmpSend.Amount, 0) > 0
                                    -- ограничили товарами
                                    AND Container.ObjectId IN (SELECT tmpItem.ObjectId FROM tmpItem)
                                    -- !!! временно для отладки
@@ -695,7 +724,7 @@ BEGIN
         ;
 
 
-         -- формируем второй раз - есть ParentId
+         -- формируем второй раз - есть ParentId - здесть только резерв с PartionId
          PERFORM lpInsertUpdate_MI_OrderClient_Child (ioId                  := 0
                                                     , inParentId            := _tmpItem.MovementItemId
                                                     , inMovementId          := inMovementId

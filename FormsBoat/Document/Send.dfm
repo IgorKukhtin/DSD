@@ -660,6 +660,7 @@ object SendForm: TSendForm
             Width = 80
           end
           object EngineName_ch2: TcxGridDBColumn
+            Caption = 'Engine'
             DataBinding.FieldName = 'EngineName'
             Visible = False
             HeaderAlignmentHorz = taCenter

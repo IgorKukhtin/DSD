@@ -204,6 +204,30 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
             Options.Editing = False
             Width = 100
           end
+          object EngineNum: TcxGridDBColumn
+            Caption = 'Engine Nr. (boat)'
+            DataBinding.FieldName = 'EngineNum'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object EngineName_boat: TcxGridDBColumn
+            Caption = 'Engine (boat)'
+            DataBinding.FieldName = 'EngineName_boat'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
@@ -268,6 +292,14 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
             Options.Editing = False
             Width = 100
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
@@ -276,15 +308,6 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
             Options.Editing = False
             Width = 70
           end
-          object GoodsCode: TcxGridDBColumn
-            Caption = 'Interne Nr'
-            DataBinding.FieldName = 'GoodsCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
@@ -292,6 +315,14 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object ProdOptionsName: TcxGridDBColumn
+            Caption = #1054#1087#1094#1080#1103
+            DataBinding.FieldName = 'ProdOptionsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object GoodsTagName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
