@@ -1208,6 +1208,7 @@ object SendForm: TSendForm
           StoredProc = spSelectMI
         end
         item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
