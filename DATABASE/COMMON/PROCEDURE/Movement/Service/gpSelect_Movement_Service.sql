@@ -36,6 +36,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              , AssetId Integer, AssetCode Integer, AssetName TVarChar
+             , ProfitLossGroupName     TVarChar
+             , ProfitLossDirectionName TVarChar
+             , ProfitLossName          TVarChar
+             , ProfitLossName_all      TVarChar
              )
 AS
 $BODY$
@@ -96,6 +100,28 @@ BEGIN
                                       OR (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) = 0 AND inSettingsServiceId < 0)
                                       OR inSettingsServiceId = 0
                                    )
+           , tmpMovement AS (SELECT Movement.*
+                             FROM tmpStatus
+                                  JOIN Movement ON Movement.DescId = zc_Movement_Service()
+                                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                               AND Movement.StatusId = tmpStatus.StatusId
+                                  JOIN (SELECT DISTINCT Object_RoleAccessKey_View.AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
+                             )
+
+         --ProfitLoss îïðåäåëÿåì ÷åðåç ïðîâîäêè
+         , tmpMIÑ_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+                                      , CLO_ProfitLoss.ObjectId AS ProfitLossId
+                                 FROM MovementItemContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ïðèáûëü òåêóùåãî ïåðèîäà
+                                )
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIÑ_ProfitLoss.ProfitLossId FROM tmpMIÑ_ProfitLoss))
+
 
        SELECT
              Movement.Id                                    AS Id
@@ -163,11 +189,11 @@ BEGIN
            , Object_Asset.ObjectCode                        AS AssetCode
            , Object_Asset.ValueData                         AS AssetName
 
-       FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_Service()
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         AND Movement.StatusId = tmpStatus.StatusId
-            JOIN (SELECT DISTINCT Object_RoleAccessKey_View.AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+           , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
+           , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName          ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
+       FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -190,6 +216,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+            --ProfitLoss
+            LEFT JOIN tmpMIÑ_ProfitLoss ON tmpMIÑ_ProfitLoss.MovementId = Movement.Id
+            LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIÑ_ProfitLoss.ProfitLossId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
@@ -269,6 +298,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 04.10.21         * ProfitLoss...
  24.02.20         *
  28.01.19         * add inSettingsServiceId
  01.08.17         *
@@ -289,5 +319,7 @@ $BODY$
 
 -- òåñò
 -- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsWith:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '01.09.2021'::TDateTime, inEndDate:= '03.09.2021'::TDateTime, inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+
 --3175171
 

@@ -245,7 +245,7 @@ procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
-  //exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
   exit;
@@ -364,14 +364,12 @@ begin
 
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationBonusForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalBonusForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialog_BonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialog_BonusForm');
-
-  {
 
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
@@ -1275,7 +1273,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalReportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalReportJournalForm');
 end;
-
 
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
@@ -3204,11 +3201,13 @@ end;
 
 procedure TLoadFormTest.LoadProfitLossServiceFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_51201JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_51201JournalForm')
 end;

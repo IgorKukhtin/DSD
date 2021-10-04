@@ -44,7 +44,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , PersonalId_main Integer, PersonalName_main TVarChar
              , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , isLoad Boolean
-             
+
+             , ProfitLossGroupName     TVarChar
+             , ProfitLossDirectionName TVarChar
+             , ProfitLossName          TVarChar
+             , ProfitLossName_all      TVarChar
                )
 AS
 $BODY$
@@ -95,6 +99,21 @@ BEGIN
                                                               , zc_MovementFloat_PercentRet()
                                                               , zc_MovementFloat_PartKg())
                                 )
+
+         -- ProfitLoss ËÁ ÔÓ‚Ó‰ÓÍ
+         , tmpMI—_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+                                      , CLO_ProfitLoss.ObjectId AS ProfitLossId
+                                 FROM MovementItemContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ÔË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
+                                )
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMI—_ProfitLoss.ProfitLossId FROM tmpMI—_ProfitLoss))
+
+
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -184,6 +203,10 @@ BEGIN
            
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
+           , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
+           , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName          ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN  MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -216,6 +239,9 @@ BEGIN
             LEFT JOIN tmpMovementFloat AS MovementFloat_PartKg
                                        ON MovementFloat_PartKg.MovementId = Movement.Id
                                       AND MovementFloat_PartKg.DescId = zc_MovementFloat_PartKg()
+            --
+            LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.MovementId = Movement.Id
+            LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMI—_ProfitLoss.ProfitLossId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 

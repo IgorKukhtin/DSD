@@ -8,7 +8,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1006
-  ExplicitHeight = 337
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -279,6 +279,41 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object ProfitLossName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'ProfitLossName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object ProfitLossName_all: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ProfitLossName_all'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object ProfitLossGroupName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'ProfitLossGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 167
           end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
