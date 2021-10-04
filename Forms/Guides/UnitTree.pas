@@ -69,6 +69,7 @@ type
     Address: TcxGridDBColumn;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
