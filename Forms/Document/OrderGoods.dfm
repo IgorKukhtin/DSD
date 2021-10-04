@@ -396,11 +396,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = AmountForecastOrderPromo_ch2
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-              Column = Amount_ch2
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -439,11 +434,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastOrderPromo_ch2
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-              Column = Amount_ch2
             end
             item
               Format = ',0.####'
@@ -621,6 +611,9 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetailChild: TcxGrid
         Left = 0
         Top = 0

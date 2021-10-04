@@ -184,6 +184,7 @@ type
     actReport_Goods_child: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
+    AmountSecond: TcxGridDBColumn;
   private
   public
   end;
