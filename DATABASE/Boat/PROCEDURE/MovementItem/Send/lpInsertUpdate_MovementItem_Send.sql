@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за кол.
+    IN inPartNumber          TVarChar  , -- № по тех паспорту
     IN inComment             TVarChar  , 
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -27,7 +29,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
      -- сохранили свойство <Цена за кол.>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
-     
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 

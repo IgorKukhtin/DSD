@@ -247,6 +247,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_unit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -280,6 +285,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_unit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSecond
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -299,7 +309,7 @@ object SendForm: TSendForm
             DataBinding.FieldName = 'isOn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 38
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -307,7 +317,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 108
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
@@ -362,7 +372,15 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 233
+            Width = 201
+          end
+          object PartNumber: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Width = 90
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -372,6 +390,17 @@ object SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountSecond: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
+            Options.Editing = False
             Width = 70
           end
           object CountForPrice: TcxGridDBColumn
@@ -402,6 +431,7 @@ object SendForm: TSendForm
             DataBinding.FieldName = 'Amount_unit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2131,6 +2161,15 @@ object SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

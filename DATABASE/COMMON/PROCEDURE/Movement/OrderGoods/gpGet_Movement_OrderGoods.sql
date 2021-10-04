@@ -31,7 +31,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_OrderGoods_seq') AS TVarChar) AS InvNumber
-             , DATE_TRUNC ('Month',inOperDate)                  AS OperDate
+             , DATE_TRUNC ('Month',inOperDate)       ::TDateTime AS OperDate
              , zfCalc_MonthName (inOperDate)         ::TVarChar AS MonthName
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
