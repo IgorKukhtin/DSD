@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_Unit
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inPersonalSheetWorkTimeId Integer   , -- Сотрудник (доступ к табелю р.времени)
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
+    IN inComment                 TVarChar  , -- Примечание
     IN inSession                 TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -102,6 +105,8 @@ BEGIN
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_SheetWorkTime(), ioId, inSheetWorkTimeId);
 
+   -- Сохранили <Примечание>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Comment(), ioId, inComment);
 
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
@@ -152,6 +157,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.21         * add inComment
  06.03.17         * add PartionGoodsKind
  16.11.16         * add inSheetWorkTimeId
  24.11.15         * add PersonalSheetWorkTime

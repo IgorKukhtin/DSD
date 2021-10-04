@@ -23,7 +23,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean, isPartionGoodsKind boolean,
-               Address TVarChar
+               Address TVarChar,
+               Comment TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -84,6 +85,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isPartionDate
            , CAST (FALSE AS Boolean) AS isPartionGoodsKind
            , CAST ('' as TVarChar)  AS Address
+           , CAST ('' as TVarChar)  AS Comment
 ;
    ELSE
        RETURN QUERY 
@@ -138,6 +140,7 @@ BEGIN
            , ObjectBoolean_PartionDate.ValueData      AS isPartionDate
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
            , ObjectString_Unit_Address.ValueData      AS Address
+           , ObjectString_Unit_Comment.ValueData      AS Comment
 
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -145,6 +148,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit_View.Id 
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Comment
+                                   ON ObjectString_Unit_Comment.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_Comment.DescId = zc_ObjectString_Unit_Comment()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit_View.Id
@@ -201,6 +208,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.21         * Comment
  06.03.17         * add PartionGoodsKind
  16.11.16         * add SheetWorkTime
  26.07.16         *
