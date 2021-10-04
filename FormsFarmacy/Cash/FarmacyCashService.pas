@@ -91,6 +91,8 @@ type
     ISDISCCOM  : boolean;       //Дисконт проведен на сайте
     //***01.09.21
     ZREPORT  : integer;         //ФИО врача (МИС «Каштан»)
+    //***04.10.21
+    MEDPRSPID  : integer;         //Медицинская программа соц. проектов
 
   end;
   TBodyRecord = record
@@ -1424,6 +1426,8 @@ begin
                 ISDISCCOM := FieldByName('ISDISCCOM').AsBoolean;
                 //***01.09.21
                 ZREPORT := FieldByName('ZREPORT').AsInteger;
+                //***04.10.21
+                MEDPRSPID := FieldByName('MEDPRSPID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1601,6 +1605,8 @@ begin
                   dsdSave.Params.AddParam('isDiscountCommit', ftBoolean, ptInput, Head.ISDISCCOM);
                   //***01.09.21
                   dsdSave.Params.AddParam('inZReport', ftInteger, ptInput, Head.ZREPORT);
+                  //***04.10.21
+                  dsdSave.Params.AddParam('inMedicalProgramSP', ftInteger, ptInput, Head.MEDPRSPID);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

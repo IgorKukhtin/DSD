@@ -324,7 +324,18 @@ BEGIN
                              WHERE tmpPDPriceWithVAT.ObjectId = inGoodsId
                                AND tmpPDPriceWithVAT.PartionDateKindId = inPartionDateKindId
                                AND tmpPDPriceWithVAT.Ord = 1)
-       , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+       , tmpMedicalProgramSPUnit AS (SELECT  ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                       FROM Object AS Object_MedicalProgramSPLink
+                                            INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                                  ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                            INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                  ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                                                 AND ObjectLink_Unit.ChildObjectId = inUnitId 
+                                        WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                          AND Object_MedicalProgramSPLink.isErased = False)
+         , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
                                , MIFloat_PriceSP.ValueData     AS PriceSP
@@ -345,6 +356,11 @@ BEGIN
                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                             ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                            AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+                               LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
@@ -383,6 +399,7 @@ BEGIN
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
                          )
 
                  , tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId

@@ -70,10 +70,12 @@ type
     FHelsiName : string;
     FHelsiQty : currency;
     FHelsiDate : TDateTime;
+    FProgramId : string;
+    FProgramName : string;
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
+       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
 
@@ -156,7 +158,7 @@ begin
 
     if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
-      Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
+      Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate, FProgramId, FProgramName);
     end else if MainCash2.MainCashForm.UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
     begin
       Result := GetLikiDniproeHealthReceipt(ANumber, FHelsiID, FHelsiIDList, FHelsiName, FHelsiQty, FHelsiDate);
@@ -312,9 +314,9 @@ end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
+  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String): boolean;
 Begin
-      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';
+      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := '';
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
@@ -400,11 +402,15 @@ Begin
           AHelsiIDList        := FHelsiIDList;
           AHelsiName          := FHelsiName;
           AHelsiQty           := FHelsiQty;
+          AHelsiProgramId     := FProgramId;
+          AHelsiProgramName   := FProgramName;
         end else
         begin
           AHelsiID            := '';
           AHelsiName          := '';
           AHelsiQty           := 0;
+          AHelsiProgramId     := '';
+          AHelsiProgramName   := '';
          end;
 
       end
@@ -422,6 +428,8 @@ Begin
               AHelsiID            := '';
               AHelsiName          := '';
               AHelsiQty           := 0;
+              AHelsiProgramId     := '';
+              AHelsiProgramName   := '';
            end;
 end;
 

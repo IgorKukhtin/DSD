@@ -120,7 +120,16 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
-          object CountSP: TcxGridDBColumn [7]
+          object CountSPMin: TcxGridDBColumn [7]
+            Caption = #1052#1110#1085#1110#1084#1072#1083#1100#1085#1072' '#1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1092#1086#1088#1084' '#1074#1080#1087#1091#1089#1082#1091' '#1076#1086' '#1087#1088#1086#1076#1072#1078#1091
+            DataBinding.FieldName = 'CountSPMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
+          object CountSP: TcxGridDBColumn [8]
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1086#1076#1080#1085#1080#1094#1100' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' '#1091' '#1089#1087#1086#1078#1080#1074#1095#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110' (6)'
             DataBinding.FieldName = 'CountSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -129,7 +138,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object GroupSP: TcxGridDBColumn [8]
+          object GroupSP: TcxGridDBColumn [9]
             Caption = #1043#1088#1091#1087#1080' '#1074#1110#1076#1096#1082#1086#1076#1091'-'#1074#1072#1085#1085#1103' '#8211' '#1030' '#1072#1073#1086' '#1030#1030
             DataBinding.FieldName = 'GroupSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -139,28 +148,28 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
-          object CodeATX: TcxGridDBColumn [9]
+          object CodeATX: TcxGridDBColumn [10]
             Caption = #1050#1086#1076' '#1040#1058#1061' (7)'
             DataBinding.FieldName = 'CodeATX'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object MakerSP: TcxGridDBColumn [10]
+          object MakerSP: TcxGridDBColumn [11]
             Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072', '#1082#1088#1072#1111#1085#1072' (8)'
             DataBinding.FieldName = 'MakerSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object ReestrSP: TcxGridDBColumn [11]
+          object ReestrSP: TcxGridDBColumn [12]
             Caption = #1053#1086#1084#1077#1088' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103' '#1085#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1080#1081' '#1079#1072#1089#1110#1073' (9)'
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 116
           end
-          object ReestrDateSP: TcxGridDBColumn [12]
+          object ReestrDateSP: TcxGridDBColumn [13]
             Caption = 
               #1044#1072#1090#1072' '#1079#1072#1082#1110#1085#1095#1077#1085#1085#1103' '#1089#1090#1088#1086#1082#1091' '#1076#1110#1111' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103' '#1085#1072' '#1083#1110#1082#1072#1088#1089#1100 +
               #1082#1080#1081' '#1079#1072#1089#1110#1073' (10)'
@@ -169,7 +178,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object PriceOptSP: TcxGridDBColumn [13]
+          object PriceOptSP: TcxGridDBColumn [14]
             Caption = #1054#1087#1090#1086#1074#1086'- '#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (11)'
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -178,7 +187,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object PriceRetSP: TcxGridDBColumn [14]
+          object PriceRetSP: TcxGridDBColumn [15]
             Caption = #1056#1086#1079#1076#1088#1110#1073#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (12)'
             DataBinding.FieldName = 'PriceRetSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +196,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object DailyNormSP: TcxGridDBColumn [15]
+          object DailyNormSP: TcxGridDBColumn [16]
             Caption = #1044#1086#1073#1086#1074#1072' '#1076#1086#1079#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1072' '#1042#1054#1054#1047' (13)'
             DataBinding.FieldName = 'DailyNormSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -196,7 +205,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 135
           end
-          object DailyCompensationSP: TcxGridDBColumn [16]
+          object DailyCompensationSP: TcxGridDBColumn [17]
             Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1076#1086#1073#1086#1074#1086#1111' '#1076#1086#1079#1080' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (14)'
             DataBinding.FieldName = 'DailyCompensationSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -206,7 +215,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 111
           end
-          object PriceSP: TcxGridDBColumn [17]
+          object PriceSP: TcxGridDBColumn [18]
             Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (15)'
             DataBinding.FieldName = 'PriceSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -216,7 +225,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
-          object PaymentSP: TcxGridDBColumn [18]
+          object PaymentSP: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
             DataBinding.FieldName = 'PaymentSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -226,7 +235,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object IdSP: TcxGridDBColumn [19]
+          object IdSP: TcxGridDBColumn [20]
             Caption = 'ID '#1083#1110#1082#1072#1088'. '#1079#1072#1089#1086#1073#1091
             DataBinding.FieldName = 'IdSP'
             HeaderAlignmentHorz = taCenter
@@ -234,7 +243,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderHint = 'ID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
             Width = 60
           end
-          object DosageIdSP: TcxGridDBColumn [20]
+          object DosageIdSP: TcxGridDBColumn [21]
             Caption = 'DosageID '#1083#1110#1082#1072#1088'. '#1079#1072#1089#1086#1073#1091
             DataBinding.FieldName = 'DosageIdSP'
             HeaderAlignmentHorz = taCenter
@@ -242,7 +251,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderHint = 'DosageID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
             Width = 63
           end
-          object NumeratorUnitSP: TcxGridDBColumn [21]
+          object NumeratorUnitSP: TcxGridDBColumn [22]
             Caption = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
             DataBinding.FieldName = 'NumeratorUnitSP'
             HeaderAlignmentHorz = taCenter
@@ -250,7 +259,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
             Width = 60
           end
-          object DenumeratorValueSP: TcxGridDBColumn [22]
+          object DenumeratorValueSP: TcxGridDBColumn [23]
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1089#1091#1090#1085#1086#1089#1090#1110
             DataBinding.FieldName = 'DenumeratorValueSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -259,7 +268,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object DenumeratorUnitSP: TcxGridDBColumn [23]
+          object DenumeratorUnitSP: TcxGridDBColumn [24]
             Caption = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1091#1090#1085#1086#1089#1090#1110
             DataBinding.FieldName = 'DenumeratorUnitSP'
             HeaderAlignmentHorz = taCenter
@@ -267,25 +276,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1091#1090#1085#1086#1089#1090#1110
             Width = 60
           end
-          object ProgramIdSP: TcxGridDBColumn [24]
+          object ProgramIdSP: TcxGridDBColumn [25]
             Caption = 'ID '#1091#1095#1072#1089#1085#1080#1082#1072' '#1087#1088#1086#1075#1088#1072#1084#1080
             DataBinding.FieldName = 'ProgramIdSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'ID '#1091#1095#1072#1089#1085#1080#1082#1072' '#1087#1088#1086#1075#1088#1072#1084#1080
             Width = 65
-          end
-          object DynamicsSP: TcxGridDBColumn [25]
-            Caption = 
-              #1044#1080#1085#1072#1084#1110#1082#1072' '#1094#1110#1085#1080' '#1088#1077#1111#1084#1073#1091#1088#1089#1072#1094#1110#1111' '#1097#1086#1076#1086' '#1087#1086#1087#1077#1088#1077#1076#1085#1100#1086#1075#1086' '#1088#1077#1108#1089#1090#1088#1091' ('#1076#1086#1074#1110#1076#1082#1086#1074#1072' ' +
-              #1110#1085#1092#1086#1088#1084#1072#1094#1110#1103')'
-            DataBinding.FieldName = 'DynamicsSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1044#1080#1085#1072#1084#1110#1082#1072' '#1094#1110#1085#1080' '#1088#1077#1111#1084#1073#1091#1088#1089#1072#1094#1110#1111' '#1097#1086#1076#1086' '#1087#1086#1087#1077#1088#1077#1076#1085#1100#1086#1075#1086' '#1088#1077#1108#1089#1090#1088#1091' ('#1076#1086#1074#1110#1076#1082#1086#1074#1072' ' +
-              #1110#1085#1092#1086#1088#1084#1072#1094#1110#1103')'
-            Width = 117
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -1309,6 +1306,15 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCountSPMin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountSPMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCountSP'
         Value = Null
         Component = MasterCDS
@@ -1475,15 +1481,6 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DenumeratorUnitSP'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDynamicsSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DynamicsSP'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

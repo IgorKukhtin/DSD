@@ -477,6 +477,7 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = colColor_calc

@@ -76,6 +76,7 @@ type
     GuidesMedicalProgramSP: TdsdGuides;
     edMedicalProgramSP: TcxButtonEdit;
     cxLabel5: TcxLabel;
+    CountSPMin: TcxGridDBColumn;
   private
     { Private declarations }
   public
