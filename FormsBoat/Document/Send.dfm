@@ -527,6 +527,15 @@ object SendForm: TSendForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object PartNumber_ch2: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Options.Editing = False
+            Width = 83
+          end
           object InvNumber_partion_ch2: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'InvNumber_partion'
@@ -660,6 +669,7 @@ object SendForm: TSendForm
             Width = 80
           end
           object EngineName_ch2: TcxGridDBColumn
+            Caption = 'Engine'
             DataBinding.FieldName = 'EngineName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1198,6 +1208,7 @@ object SendForm: TSendForm
           StoredProc = spSelectMI
         end
         item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -2413,6 +2424,7 @@ object SendForm: TSendForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
       end
       item
         Guides = GuidesTo

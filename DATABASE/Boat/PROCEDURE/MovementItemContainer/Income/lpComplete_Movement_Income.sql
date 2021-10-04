@@ -229,7 +229,7 @@ BEGIN
                -- в налоговую - Сумма НДС
              , _tmpItem.OperSumm_VAT                       AS OperSumm_VAT
         FROM _tmpItem
-        ;
+       ;
 
 
      -- 1.заполняем таблицу - сколько осталось зарезервировать для Заказов клиента
@@ -248,17 +248,19 @@ BEGIN
                                                      AND Movement.DescId   = zc_Movement_OrderClient()
                                                      -- все НЕ удаленные
                                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                     -- элементы шаблона, хотя они здесь и так
+                                                     --AND MovementItem.ParentId IS NULL
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                  -- ValueData - MovementId заказа Поставщику
+                                  -- ValueData - MovementId заказ Поставщику
                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                              WHERE -- !!!ограничение по Поставщику
                                    MILinkObject_Partner.ObjectId = vbPartnerId
                                AND MILinkObject_Partner.DescId   = zc_MILinkObject_Partner()
-                               -- если заказ Поставщику был сформирован
+                               -- ???если заказ Поставщику был сформирован
                                AND MIFloat_MovementId.ValueData > 0
                             )
              -- Приходы, в которых есть Резервы под Заказ клиента
@@ -269,8 +271,8 @@ BEGIN
                                     -- Заказ клиента
                                   , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
                              FROM MovementItemFloat AS MIFloat_MovementId
-                                  INNER JOIN MovementItem ON MovementItem.Id      = MIFloat_MovementId.MovementItemId
-                                                         AND MovementItem.DescId  = zc_MI_Child()
+                                  INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                         AND MovementItem.DescId   = zc_MI_Child()
                                                          AND MovementItem.isErased = FALSE
                                   -- это точно Приход от Поставщика
                                   INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
@@ -300,7 +302,8 @@ BEGIN
                        ) AS tmpMI_Income
                          ON tmpMI_Income.MovementId_order = tmpMI_Child.MovementId
                         AND tmpMI_Income.ObjectId         = tmpMI_Child.ObjectId
-        ;
+        WHERE tmpMI_Child.AmountPartner - COALESCE (tmpMI_Income.Amount, 0) > 0
+       ;
 
      -- 2.заполняем таблицу - элементы Резерв для Заказов клиента
 
@@ -588,10 +591,12 @@ BEGIN
             , FALSE                           AS isActive
 
        FROM (-- !!!одна!!! проводка в валюте Баланса
-             SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId, tmp.AccountId, SUM (tmp.OperSumm) AS OperSumm FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId, tmp.AccountId
+             SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId, tmp.AccountId, SUM (tmp.OperSumm) AS OperSumm
+             FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId, tmp.AccountId
             UNION ALL
              -- !!!одна!!! проводка для "забалансового" Валютного счета - если НАДО
-             SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId_VAT AS ContainerId, tmp.AccountId_VAT AS AccountId, -1 * SUM (tmp.OperSumm_VAT) AS OperSumm FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId_VAT, tmp.AccountId_VAT
+             SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId_VAT AS ContainerId, tmp.AccountId_VAT AS AccountId, -1 * SUM (tmp.OperSumm_VAT) AS OperSumm
+             FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId_VAT, tmp.AccountId_VAT
             ) AS _tmpItem_group
        -- !!!не будем ограничивать, т.к. эти проводки ?МОГУТ? понадобится в отчетах!!!
        -- WHERE _tmpItem_group.OperSumm <> 0
@@ -616,13 +621,13 @@ BEGIN
                                            , inParentId               := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
                                            , inMovementId             := inMovementId
                                            , inMovementId_OrderClient := COALESCE (_tmpReserveRes.MovementId_order, tmpMI_Child.MovementId_order) :: Integer
-                                           , inPartionId              := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
                                            , inObjectId               := COALESCE (_tmpReserveRes.GoodsId, tmpMI_Child.GoodsId)
+                                           , inPartionId              := COALESCE (_tmpReserveRes.ParentId, tmpMI_Child.ParentId)
                                            , inAmount                 := COALESCE (_tmpReserveRes.Amount, 0)
                                            , inUserId                 := inUserId
                                             )
      FROM _tmpReserveRes
-          -- существующие элементы - Резерв
+          -- текущие элементы - Резерв
           FULL JOIN (SELECT MovementItem.Id               AS MovementItemId
                           , MovementItem.ParentId         AS ParentId
                           , MovementItem.ObjectId         AS GoodsId
@@ -641,7 +646,8 @@ BEGIN
                      ) AS tmpMI_Child ON tmpMI_Child.ParentId         = _tmpReserveRes.ParentId
                                      AND tmpMI_Child.MovementId_order = _tmpReserveRes.MovementId_order
                                      AND tmpMI_Child.GoodsId          = _tmpReserveRes.GoodsId
-                                     ;
+   --WHERE 1=0
+    ;
 
      --
      --RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpReserveRes);

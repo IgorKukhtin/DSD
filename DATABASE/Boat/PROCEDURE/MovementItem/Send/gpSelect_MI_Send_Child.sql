@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , OperDate_partion      TDateTime
              , InvNumber_partion     TVarChar
              , PartnerName_partion   TVarChar
+             , PartNumber            TVarChar
               )
 AS
 $BODY$
@@ -73,7 +74,11 @@ BEGIN
 
 
      , tmpPartionGoods AS (SELECT Object_PartionGoods.*
+                                , MIString_PartNumber.ValueData AS PartNumber
                            FROM Object_PartionGoods
+                                 LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                              ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                            WHERE Object_PartionGoods.MovementItemId IN (SELECT tmpMI.PartionId FROM tmpMI)
                              AND Object_PartionGoods.isErased = FALSE
                            )
@@ -97,7 +102,7 @@ BEGIN
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , Object_Brand.Id                            AS BrandId
              , Object_Brand.ValueData                     AS BrandName
-             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)       AS CIN
              , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
              , Object_Engine.ValueData                    AS EngineName
 
@@ -113,6 +118,7 @@ BEGIN
              , Movement_Partion.OperDate      ::TDateTime AS OperDate_partion
              , (zfCalc_InvNumber_isErased ('', Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) || ' (' || MovementItem.PartionId :: TVarChar || ')') :: TVarChar AS InvNumber_partion
              , Object_Partner.ValueData       ::TVarChar  AS PartnerName_partion
+             , tmpPartionGoods.PartNumber    ::TVarChar
         FROM tmpMI AS MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
              LEFT JOIN ObjectString AS ObjectString_Article

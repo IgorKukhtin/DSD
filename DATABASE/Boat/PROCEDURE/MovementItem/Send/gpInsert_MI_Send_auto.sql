@@ -281,6 +281,13 @@ BEGIN
       AND MovementItem.isErased   = FALSE
       AND MovementItem.Amount     = 0
    ;
+    -- test!!!
+    PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
+    FROM MovementItem
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Child()
+      AND MovementItem.isErased   = FALSE
+   ;
 
 END;
 $BODY$
