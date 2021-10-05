@@ -35,6 +35,9 @@ type
     cxLabel2: TcxLabel;
     edJuridicalMedic: TcxButtonEdit;
     GuidesJuridicalMedic: TdsdGuides;
+    ceMedicalProgramSP: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    MedicalProgramSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

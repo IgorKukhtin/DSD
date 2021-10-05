@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
-  ClientHeight = 255
+  ClientHeight = 286
   ClientWidth = 367
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 74
-    Top = 213
+    Top = 237
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 213
+    Top = 237
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -88,6 +88,13 @@
     Top = 177
     TabOrder = 9
     Width = 296
+  end
+  object cbisFree: TcxCheckBox
+    Left = 48
+    Top = 208
+    Caption = #1041#1077#1079#1087#1083#1072#1090#1085#1086
+    TabOrder = 10
+    Width = 121
   end
   object ActionList: TActionList
     Left = 256
@@ -165,6 +172,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFree'
+        Value = Null
+        Component = cbisFree
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 307
@@ -227,6 +242,13 @@
         Value = Null
         Component = edProgramId
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isFree'
+        Value = Null
+        Component = cbisFree
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
