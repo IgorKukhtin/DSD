@@ -136,12 +136,13 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
    LoadReportFromFile('Отчет Производство_потери КВК', ReportPath + '\Отчеты (производство)\Отчет Производство_потери КВК.fr3');
   exit;
 
   LoadReportFromFile('Путевой лист (затраты)', ReportPath + '\Транспорт\Путевой лист (затраты).fr3');
   exit;
-    {
+
   LoadReportFromFile('Отчет Данные документа взвешивания (КВК)', ReportPath + '\Отчеты (производство)\Отчет Данные документа взвешивания (КВК).fr3');
   exit;
 
@@ -181,10 +182,10 @@ begin
 
   LoadReportFromFile('Print_Object_BarCodeBox', ReportPath + '\Товарный Учет\Print_Object_BarCodeBox.fr3');
   exit;
-  }
-    LoadReportFromFile('PrintMovement_WeighingProductionStikerKVK', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionStikerKVK.fr3');
+
+  LoadReportFromFile('PrintMovement_WeighingProductionStikerKVK', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionStikerKVK.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;
 
@@ -503,10 +504,10 @@ begin
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
 
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Quality32049199_2393', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199_2393.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Quality32294926', ReportPath + '\Товарный Учет\PrintMovement_Quality32294926.fr3');
   exit;
 
@@ -548,18 +549,20 @@ begin
   LoadReportFromFile('PrintMovement_TaxCorrective0317', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0317.fr3');
 
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
- }
+
     LoadReportFromFile('PrintMovement_Bill_WithVAT', ReportPath + '\Товарный Учет\PrintMovement_Bill_WithVAT.fr3');
     exit;
-{
+
   LoadReportFromFile('PrintMovement_TaxCorrective0321', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0321.fr3');
     exit;
 
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
+  }
 
-
-  LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
+  LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
+  exit;
+  {LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
 
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');

@@ -284,6 +284,8 @@ type
     bbPrint_QualityDoc_two: TdxBarButton;
     PersonalDriverName_TTN: TcxGridDBColumn;
     PersonalName_4_TTN: TcxGridDBColumn;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

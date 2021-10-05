@@ -471,6 +471,9 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 194
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportGoodsForm'
       FormNameParam.Value = 'TTransportGoodsForm'
@@ -520,8 +523,42 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actMovementItemContainer: TdsdOpenForm
-      Enabled = False
+    object actSPPrintTTNProcName: TdsdExecStoredProc [22]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
+    object mactPrint_TTN: TMultiAction [23]
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 3
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -566,6 +603,8 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -828,7 +867,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       ImageIndex = 41
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = mactPrint_TTN
       Category = 0
     end
     object bbPrintTax_Us: TdxBarButton
@@ -926,6 +965,13 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       end
       item
         Name = 'ReportNameLossTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1034,5 +1080,30 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 296
   end
 end
