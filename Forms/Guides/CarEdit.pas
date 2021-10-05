@@ -68,6 +68,12 @@ type
     cxLabel33: TcxLabel;
     cxLabel11: TcxLabel;
     edPartnerMin: TcxCurrencyEdit;
+    edLength: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edWidth: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edHeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public
