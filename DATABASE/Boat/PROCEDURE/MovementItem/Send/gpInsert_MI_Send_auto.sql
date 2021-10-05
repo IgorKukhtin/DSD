@@ -236,6 +236,8 @@ BEGIN
                     ) AS tmp ON tmp.ObjectId = _tmpMI_Master.objectId
     ;   
 
+/*zc_MI_Child - будут формироваться при проведении док
+
     -- сохраняем - zc_MI_Child - текущее Перемещение
     PERFORM lpInsertUpdate_MI_Send_Child (ioId                     := COALESCE (_tmpMI_Child.Id, 0)
                                         , inParentId               := COALESCE (tmpMI_new.ParentId, _tmpMI_Child.ParentId)
@@ -273,6 +275,9 @@ BEGIN
                                   AND tmpMI_new.MovementId_order = _tmpMI_Child.MovementId_order
     ;
 
+*/
+
+
     -- удаление zc_MI_Master кол-во = 0
     PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
     FROM MovementItem
@@ -282,12 +287,14 @@ BEGIN
       AND MovementItem.Amount     = 0
    ;
     -- test!!!
+/*
     PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
     FROM MovementItem
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Child()
       AND MovementItem.isErased   = FALSE
    ;
+   */
 
 END;
 $BODY$

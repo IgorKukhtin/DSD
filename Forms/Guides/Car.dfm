@@ -42,7 +42,6 @@ object CarForm: TCarForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,6 +50,7 @@ object CarForm: TCarForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 52
       end
       object CarModelName: TcxGridDBColumn
@@ -58,6 +58,7 @@ object CarForm: TCarForm
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object Name: TcxGridDBColumn
@@ -65,6 +66,7 @@ object CarForm: TCarForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object FuelMasterName: TcxGridDBColumn
@@ -72,6 +74,7 @@ object CarForm: TCarForm
         DataBinding.FieldName = 'FuelMasterName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object FuelChildName: TcxGridDBColumn
@@ -79,24 +82,28 @@ object CarForm: TCarForm
         DataBinding.FieldName = 'FuelChildName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 110
       end
       object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object RegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object JuridicalName: TcxGridDBColumn
@@ -105,6 +112,7 @@ object CarForm: TCarForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object AssetCode: TcxGridDBColumn
@@ -114,6 +122,7 @@ object CarForm: TCarForm
         Properties.DisplayFormat = ',0.;-,0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object AssetName: TcxGridDBColumn
@@ -130,6 +139,7 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+        Options.Editing = False
         Width = 142
       end
       object KoeffHoursWork: TcxGridDBColumn
@@ -141,6 +151,7 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
+        Options.Editing = False
         Width = 92
       end
       object PartnerMin: TcxGridDBColumn
@@ -152,6 +163,33 @@ object CarForm: TCarForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 82
+      end
+      object Length: TcxGridDBColumn
+        Caption = #1044#1083#1080#1085#1072
+        DataBinding.FieldName = 'Length'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 57
+      end
+      object Width: TcxGridDBColumn
+        Caption = #1064#1080#1088#1080#1085#1072
+        DataBinding.FieldName = 'Width'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 58
+      end
+      object Height: TcxGridDBColumn
+        Caption = #1042#1099#1089#1086#1090#1072
+        DataBinding.FieldName = 'Height'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 57
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -169,6 +207,7 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 72
       end
     end
@@ -572,6 +611,18 @@ object CarForm: TCarForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Car_size
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Car_size
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Car'
@@ -644,5 +695,49 @@ object CarForm: TCarForm
     PackSize = 1
     Left = 288
     Top = 208
+  end
+  object spUpdate_Car_size: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Car_size'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLength'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Length'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Width'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHeight'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Height'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 176
   end
 end

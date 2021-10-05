@@ -686,8 +686,8 @@ object UnitForm: TUnitForm
     MasterFields = 'Id'
     PacketRecords = 0
     Params = <>
-    Left = 352
-    Top = 176
+    Left = 320
+    Top = 152
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'

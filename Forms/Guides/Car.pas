@@ -71,6 +71,8 @@ type
     bbShowAll: TdxBarButton;
     KoeffHoursWork: TcxGridDBColumn;
     PartnerMin: TcxGridDBColumn;
+    spUpdate_Car_size: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
