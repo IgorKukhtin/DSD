@@ -98,6 +98,8 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
   private
   public
   end;

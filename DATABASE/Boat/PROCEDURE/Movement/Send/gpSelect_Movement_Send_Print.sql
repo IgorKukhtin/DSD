@@ -55,6 +55,7 @@ OPEN Cursor1 FOR
      WITH
      tmpMI AS (SELECT MovementItem.ObjectId                           AS GoodsId
                     , MovementItem.Amount
+                    , MIFloat_AmountSecond.ValueData                  AS AmountSecond
                     , MIFloat_OperPrice.ValueData                     AS OperPrice
                     , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                     , zfCalc_SummIn (COALESCE (MovementItem.Amount, 0), MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 1)) ::TFloat AS Summ
@@ -66,6 +67,9 @@ OPEN Cursor1 FOR
                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                              ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                WHERE MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
@@ -170,6 +174,7 @@ OPEN Cursor1 FOR
             , tmpMI_Child.FromName
             
             , MovementItem.Amount           ::TFloat
+            , MovementItem.AmountSecond     ::TFloat
             , tmpMI_Child.Amount            ::TFloat AS Amount_unit
             , MovementItem.CountForPrice    ::TFloat
             , MovementItem.OperPrice        ::TFloat
