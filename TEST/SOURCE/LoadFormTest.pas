@@ -1724,10 +1724,10 @@ begin
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceSummReestrDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceSummReestrDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceJournalForm');
 end;

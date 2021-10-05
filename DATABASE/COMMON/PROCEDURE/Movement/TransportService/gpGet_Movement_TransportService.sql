@@ -237,9 +237,9 @@ BEGIN
                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
 
-            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_CarTrailer
-                                                ON MILinkObject_CarTrailer.MovementItemId = MovementItem.Id 
-                                               AND MILinkObject_CarTrailer.DescId = zc_MILinkObject_CarTrailer()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CarTrailer
+                                             ON MILinkObject_CarTrailer.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_CarTrailer.DescId = zc_MILinkObject_CarTrailer()
             LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MILinkObject_CarTrailer.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
