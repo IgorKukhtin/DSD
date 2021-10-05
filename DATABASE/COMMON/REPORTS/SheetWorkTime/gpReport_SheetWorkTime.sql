@@ -136,6 +136,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_StaffListSumm_StaffListSummKind
                                   ON ObjectLink_StaffListSumm_StaffListSummKind.ObjectId = ObjectLink_StaffListSumm_StaffList.ObjectId
                                  AND ObjectLink_StaffListSumm_StaffListSummKind.DescId = zc_ObjectLink_StaffListSumm_StaffListSummKind()
+                                 AND 1=0
              LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
 
         WHERE Object_StaffList.DescId = zc_Object_StaffList()
