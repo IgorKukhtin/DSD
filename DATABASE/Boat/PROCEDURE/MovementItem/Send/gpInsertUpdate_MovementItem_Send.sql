@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена со скидкой
     IN inCountForPrice       TFloat    , -- Цена за кол.
+    IN inPartNumber          TVarChar  , --№ по тех паспорту
     IN inComment             TVarChar  , --
     IN inIsOn                Boolean   , -- вкл
    OUT outIsErased           Boolean   , -- удален
@@ -47,6 +49,7 @@ BEGIN
                                           , inAmount
                                           , inOperPrice
                                           , inCountForPrice
+                                          , inPartNumber
                                           , inComment
                                           , vbUserId
                                           ) AS tmp;

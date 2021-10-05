@@ -6,7 +6,7 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 991
-  ExplicitHeight = 586
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -304,6 +304,41 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object ProfitLossName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'ProfitLossName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object ProfitLossName_all: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ProfitLossName_all'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object ProfitLossGroupName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'ProfitLossGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 167
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -653,6 +688,9 @@ inherited CashJournalForm: TCashJournalForm
   inherited ActionList: TActionList
     Left = 143
     Top = 114
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      FormNameParam.Value = ''
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TCashOperationForm'
       GuiParams = <
@@ -729,9 +767,6 @@ inherited CashJournalForm: TCashJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    inherited MovementProtocolOpenForm: TdsdOpenForm
-      FormNameParam.Value = ''
     end
     object actReport_Cash: TdsdOpenForm
       Category = 'DSDLib'

@@ -33,6 +33,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
              , isCopy Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+
+             , ProfitLossGroupName     TVarChar
+             , ProfitLossDirectionName TVarChar
+             , ProfitLossName          TVarChar
+             , ProfitLossName_all      TVarChar
               )
 AS
 $BODY$
@@ -118,6 +123,33 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+         , tmpMovement AS (SELECT Movement.*
+                           FROM tmpStatus
+                               JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
+                                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND Movement.StatusId = tmpStatus.StatusId
+                           )
+
+         , tmpMI AS (SELECT MovementItem.*
+                     FROM MovementItem
+                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       AND MovementItem.DescId = zc_MI_Master()
+                     )
+
+         -- ProfitLoss ËÁ ÔÓ‚Ó‰ÓÍ
+         , tmpMI—_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+                                      , CLO_ProfitLoss.ObjectId AS ProfitLossId
+                                 FROM MovementItemContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ÔË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
+                                )
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMI—_ProfitLoss.ProfitLossId FROM tmpMI—_ProfitLoss))
+
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -178,13 +210,18 @@ BEGIN
              ) :: TVarChar AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
 
-       FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         AND Movement.StatusId = tmpStatus.StatusId
+           , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
+           , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName          ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
+       FROM tmpMovement AS Movement
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpStatus.StatusId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            --
+            LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.MovementId = Movement.Id
+            LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMI—_ProfitLoss.ProfitLossId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = Movement.Id
@@ -224,8 +261,8 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
-
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            --
+            LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
 

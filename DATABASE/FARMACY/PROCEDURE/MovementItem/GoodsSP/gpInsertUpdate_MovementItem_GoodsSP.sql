@@ -19,6 +19,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                            , TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , -- Ключ записи
     IN inMovementId           Integer   ,
@@ -27,6 +32,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
     IN inBrandSPId            Integer ,
     IN inKindOutSPId          Integer ,
     IN inColSP                TFloat  ,
+    IN inCountSPMin           TFloat  ,
     IN inCountSP              TFloat  ,
     IN inPriceOptSP           TFloat  ,
     IN inPriceRetSP           TFloat  ,
@@ -49,7 +55,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
     IN inProgramIdSP          TVarChar  ,    --
     IN inNumeratorUnitSP      TVarChar  ,    --
     IN inDenumeratorUnitSP    TVarChar  ,    --
-    IN inDynamicsSP           TVarChar  ,    --
 
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -71,6 +76,7 @@ BEGIN
                                                , inBrandSPId           := inBrandSPId
                                                , inKindOutSPId         := inKindOutSPId
                                                , inColSP               := inColSP
+                                               , inCountSPMin          := inCountSPMin
                                                , inCountSP             := inCountSP
                                                , inPriceOptSP          := inPriceOptSP
                                                , inPriceRetSP          := inPriceRetSP
@@ -90,7 +96,6 @@ BEGIN
                                                , inProgramIdSP         := inProgramIdSP
                                                , inNumeratorUnitSP     := inNumeratorUnitSP
                                                , inDenumeratorUnitSP   := inDenumeratorUnitSP
-                                               , inDynamicsSP          := inDynamicsSP
                                                , inUserId              := vbUserId);
 
 END;

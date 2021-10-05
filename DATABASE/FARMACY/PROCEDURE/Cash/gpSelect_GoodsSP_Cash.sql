@@ -69,6 +69,17 @@ BEGIN
 
     RETURN QUERY
 WITH -- Товары соц-проект
+           tmpMedicalProgramSPUnit AS (SELECT  ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                       FROM Object AS Object_MedicalProgramSPLink
+                                            INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                                  ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                            INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                  ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                                                 AND ObjectLink_Unit.ChildObjectId = vbUnitId 
+                                        WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                          AND Object_MedicalProgramSPLink.isErased = False),
            tmpMovement AS (SELECT Movement.Id
                                 , Movement.OperDate
                            FROM Movement
@@ -83,8 +94,14 @@ WITH -- Товары соц-проект
                                                        AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                        AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
 
+                               INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                             ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                            AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+                               LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                             AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
                           ),
            tmpMovementItem AS (SELECT MovementItem.Id
                                     , Object_Goods_Retail.Id       AS ObjectId

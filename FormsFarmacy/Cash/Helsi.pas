@@ -55,6 +55,7 @@ type
 
     FMedication_request_id : String;    // ID рецепта
     FMedical_program_id : String;       // ID соц. программы программы
+    FMedical_program_Name : String;     // Название соц. программы программы
 
     FRequest_number : String;           // Номер рецепта из чека
     FStatus : string;                   // Статус чека
@@ -104,7 +105,7 @@ type
   end;
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime) : boolean;
+  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
 
 function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
 
@@ -460,6 +461,7 @@ begin
         begin
           j := jValue.FindValue('medical_program');
           FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
+          FMedical_program_Name := DelDoubleQuote(j.FindValue('name').ToString);
         end else FMedical_program_id := '';
 
         if jValue.FindValue('medication_info') <> Nil then
@@ -486,6 +488,7 @@ begin
               if (FMedical_program_id = '') and (JSONA.Items[0].FindValue('program_id') <> Nil) then
               begin
                 FMedical_program_id := DelDoubleQuote(JSONA.Items[0].FindValue('program_id').ToString);
+                FMedical_program_Name := DelDoubleQuote(JSONA.Items[0].FindValue('program_name').ToString);
               end;
 
               if JSONA.Items[0].FindValue('participants') <> Nil then
@@ -967,6 +970,12 @@ begin
   if IntegrationClientKeyInfo then
   begin
 
+    if (gc_User.Session = '3') then
+    begin
+      Result := True;
+      Exit;
+    end;
+
     if FUser_taxId <> FKey_taxId then
     begin
       ShowMessage('Учетные данные сотрудника не соответствуют ключу !...');
@@ -1102,7 +1111,7 @@ end;
 
 
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
-  var AQty : currency; var ADate : TDateTime) : boolean;
+  var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
   var I : integer;
 begin
   Result := False;
@@ -1164,6 +1173,8 @@ begin
     AName := HelsiApi.FMedication_Name;
     AQty := HelsiApi.FMedication_Qty;
     ADate := HelsiApi.FCreated_at;
+    AprogramId := HelsiApi.FMedical_program_id;
+    AprogramName := HelsiApi.FMedical_program_Name;
     Result := True;
   end else if HelsiApi.FStatus = 'EXPIRED' then
   begin
@@ -1343,8 +1354,6 @@ begin
 
   Result := HelsiApi.IntegrationClientSign;
 end;
-
-
 
 function ProcessSignedDispense : boolean;
 begin

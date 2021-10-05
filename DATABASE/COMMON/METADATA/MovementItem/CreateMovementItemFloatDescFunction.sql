@@ -1025,6 +1025,10 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_CountSP() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_CountSP', 'Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountSP');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_CountSPMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountSPMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_CountSPMin', 'Мінімальна кількість форм випуску до продажу' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountSPMin');
+
 CREATE OR REPLACE FUNCTION zc_MIFloat_PriceOptSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceOptSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PriceOptSP', 'Оптово-відпускна ціна за упаковку, грн(Соц. проект)(11)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceOptSP');
@@ -1463,6 +1467,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 04.10.21                                                                                                     * zc_MIFloat_CountSPMin
  21.08.21                                                                                                     * zc_MIFloat_AmountSend
  25.04.21                                                                                                     * zc_MIFloat_IlliquidAssetsRepayment
  23.03.21                                                                                                     * zc_MIFloat_MarketingRepayment

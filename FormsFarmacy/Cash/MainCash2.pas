@@ -587,6 +587,7 @@ type
     spCheck_PairSunAmount: TdsdStoredProc;
     CheckJuridicalName: TcxGridDBColumn;
     MemDataGOODSDIPR: TCurrencyField;
+    spAvailabilityCheckMedicalProgram: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -906,6 +907,7 @@ type
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
+      AMedicalProgramSPId: Integer;
       ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
@@ -1558,6 +1560,7 @@ begin
         FormParams.ParamByName('isCorrectIlliquidAssets').Value,
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
+        FormParams.ParamByName('MedicalProgramSPId').Value,
 
         False, // NeedComplete
         0,     // ZReport
@@ -1596,6 +1599,7 @@ begin
   FormParams.ParamByName('SPTax').Value := 0;
   FormParams.ParamByName('SPKindId').Value := 0;
   FormParams.ParamByName('SPKindName').Value := '';
+  FormParams.ParamByName('MedicalProgramSPId').Value := 0;
   // ***05.02.18
   FormParams.ParamByName('PromoCodeID').Value := 0;
   FormParams.ParamByName('PromoCodeGUID').Value := '';
@@ -1621,6 +1625,8 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
+  FormParams.ParamByName('HelsiProgramId').Value := '';
+  FormParams.ParamByName('HelsiProgramName').Value := '';
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
@@ -3753,6 +3759,7 @@ begin
         FormParams.ParamByName('isCorrectIlliquidAssets').Value,
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
+        FormParams.ParamByName('MedicalProgramSPId').Value,
 
         True, // NeedComplete
         ZReport,     // Номер Z отчета
@@ -3764,7 +3771,9 @@ begin
 
         if (FormParams.ParamByName('HelsiID').Value <> '') then
         begin
-          if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+
+          if (gc_User.Session = '3') then HelsiError := True
+          else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
           begin
             HelsiError := not SetPayment(CheckNumber,
               CheckCDS.FieldByName('Summ').asCurrency);
@@ -5487,6 +5496,8 @@ begin
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
     , FormParams.ParamByName('isDiscountCommit').Value
+    // ***04.10.21
+    , FormParams.ParamByName('MedicalProgramSPId').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -5600,6 +5611,8 @@ begin
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
     , FormParams.ParamByName('isDiscountCommit').Value
+    // ***04.10.21
+    , FormParams.ParamByName('MedicalProgramSPId').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -6120,7 +6133,7 @@ var
     MemberSP: String;
   OperDateSP: TDateTime;
   SPTax: Currency;
-  HelsiID, HelsiIDList, HelsiName: string;
+  HelsiID, HelsiIDList, HelsiName, HelsiProgramId, HelsiProgramName: string;
   HelsiQty: Currency;
   Res : TArray<string>;
 begin
@@ -6193,6 +6206,8 @@ begin
       HelsiIDList := Self.FormParams.ParamByName('HelsiIDList').Value;
       HelsiName := Self.FormParams.ParamByName('HelsiName').Value;
       HelsiQty := Self.FormParams.ParamByName('HelsiQty').Value;
+      HelsiProgramId := Self.FormParams.ParamByName('HelsiProgramId').Value;
+      HelsiProgramName := Self.FormParams.ParamByName('HelsiProgramName').Value;
 
       //
       if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0 then
@@ -6202,12 +6217,27 @@ begin
       if not DiscountDialogExecute(PartnerMedicalId, SPKindId,
         PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName,
         OperDateSP, SPTax, MemberSPID, MemberSP, HelsiID, HelsiIDList,
-        HelsiName, HelsiQty) then
+        HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName) then
         exit;
     finally
       Free;
     end;
   //
+
+  if SPKindId = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger then
+  begin
+    spAvailabilityCheckMedicalProgram.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
+    spAvailabilityCheckMedicalProgram.ParamByName('inProgramId').Value := HelsiProgramId;
+    spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value := Null;
+    spAvailabilityCheckMedicalProgram.Execute;
+    if spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = Null then
+    begin
+      ShowMessage('Медицынская программа <' + HelsiProgramName + '> не подключена для аптеки.');
+      exit;
+    end;
+    FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID9').Value;
+  end;
+
   FormParams.ParamByName('PartnerMedicalId').Value := PartnerMedicalId;
   FormParams.ParamByName('PartnerMedicalName').Value := PartnerMedicalName;
   FormParams.ParamByName('Ambulance').Value := Ambulance;
@@ -6224,6 +6254,8 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
   FormParams.ParamByName('HelsiName').Value := HelsiName;
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
+  FormParams.ParamByName('HelsiProgramId').Value := HelsiProgramId;
+  FormParams.ParamByName('HelsiProgramName').Value := HelsiProgramName;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -6236,7 +6268,9 @@ begin
   begin
     Label30.Caption := '     Медикамент.: ';
     Label7.Caption := 'Вып.';
+    Label31.Caption := 'Программа.';
     lblPartnerMedicalName.Caption := '  ' + HelsiName;
+    lblMemberSP.Caption := '  ' + HelsiProgramName;
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -6312,6 +6346,7 @@ begin
   begin
     Label30.Caption := '     Мед.уч.: ';
     Label7.Caption := 'ФИО Врача:';
+    Label31.Caption := 'ФИО Пациента:';
 
     lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName
       ('PartnerMedicalName').Value;
@@ -6328,7 +6363,7 @@ procedure TMainCashForm2.actSetSPHelsiExecute(Sender: TObject);
 var
   InvNumberSP: String;
   OperDateSP: TDateTime;
-  HelsiID, HelsiIDList, HelsiName: string;
+  HelsiID, HelsiIDList, HelsiName, ProgramId, ProgramName: string;
   HelsiQty: Currency;
   Res: TArray<string>;
   I: Integer;
@@ -6424,7 +6459,7 @@ begin
   if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
   begin
     if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-      OperDateSP) then
+      OperDateSP, ProgramId, ProgramName) then
     begin
       NewCheck(false);
       exit;
@@ -6439,6 +6474,17 @@ begin
     end;
   end;
 
+  spAvailabilityCheckMedicalProgram.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
+  spAvailabilityCheckMedicalProgram.ParamByName('inProgramId').Value := ProgramId;
+  spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value := Null;
+  spAvailabilityCheckMedicalProgram.Execute;
+  if spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = Null then
+  begin
+    ShowMessage('Медицынская программа <' + ProgramName + '> не подключена для аптеки.');
+    exit;
+  end;
+  FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;
+
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;
   FormParams.ParamByName('SPKindId').Value :=
@@ -6449,6 +6495,8 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
   FormParams.ParamByName('HelsiName').Value := HelsiName;
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
+  FormParams.ParamByName('HelsiProgramId').Value := ProgramId;
+  FormParams.ParamByName('HelsiProgramName').Value := ProgramName;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -6461,7 +6509,9 @@ begin
   begin
     Label30.Caption := '     Медикамент.: ';
     Label7.Caption := 'Вып.';
+    Label31.Caption := 'Программа.';
     lblPartnerMedicalName.Caption := '  ' + HelsiName;
+    lblMemberSP.Caption := ' ' + ProgramName;
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -6627,6 +6677,8 @@ begin
     , FormParams.ParamByName('isCorrectIlliquidAssets').Value
     , FormParams.ParamByName('isDoctors').Value
     , FormParams.ParamByName('isDiscountCommit').Value
+    // ***04.10.21
+    , FormParams.ParamByName('MedicalProgramSPId').Value
 
     , false // NeedComplete
     , 0 // ZReport
@@ -9815,6 +9867,7 @@ begin
   FormParams.ParamByName('SPTax').Value := 0;
   FormParams.ParamByName('SPKindId').Value := 0;
   FormParams.ParamByName('SPKindName').Value := '';
+  FormParams.ParamByName('MedicalProgramSPId').Value := 0;
   // ***05.02.18
   FormParams.ParamByName('PromoCodeID').Value := 0;
   FormParams.ParamByName('PromoCodeGUID').Value := '';
@@ -9840,6 +9893,8 @@ begin
   FormParams.ParamByName('HelsiIDList').Value := '';
   FormParams.ParamByName('HelsiName').Value := '';
   FormParams.ParamByName('HelsiQty').Value := 0;
+  FormParams.ParamByName('HelsiProgramId').Value := '';
+  FormParams.ParamByName('HelsiProgramName').Value := '';
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
@@ -11444,6 +11499,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
+  AMedicalProgramSPId: Integer;
   ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
@@ -11520,6 +11576,7 @@ begin
     myVIPCDS.FieldByName('SPTax').AsFloat := ASPTax;
     myVIPCDS.FieldByName('SPKindId').AsInteger := ASPKindId;
     myVIPCDS.FieldByName('SPKindName').AsString := ASPKindName;
+    myVIPCDS.FieldByName('MedicalProgramSPId').AsInteger := AMedicalProgramSPId;
     // ***02.02.18
     myVIPCDS.FieldByName('PromoCodeID').Value := APromoCodeID; // Id промокода
     // ***27.06.18
@@ -11716,7 +11773,8 @@ begin
           AisCorrectIlliquidAssets, // Корректировка суммы нелеквида в ЗП по подразделению
           AisDoctors,                // Врачи
           AisDiscountCommit,         // Дисконт проведен на сайте
-          AZReport                   // Номер Z отчета
+          AZReport,                   // Номер Z отчета
+          AMedicalProgramSPId       // Медицинская программа соц. проектов
           ]));
       End
       else
@@ -11832,6 +11890,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISDISCCOM').Value := AisDiscountCommit;
         //Номер Z отчета
         FLocalDataBaseHead.FieldByName('ZREPORT').Value := AZReport;
+        //Медицинская программа соц. проектов
+        FLocalDataBaseHead.FieldByName('MEDPRSPID').Value := AMedicalProgramSPId;
         FLocalDataBaseHead.Post;
       End;
     except

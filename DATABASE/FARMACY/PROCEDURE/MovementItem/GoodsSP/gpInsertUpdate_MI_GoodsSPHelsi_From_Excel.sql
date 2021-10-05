@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_MI_GoodsSPHelsi_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPHelsi_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPHelsi_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                             , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_Excel(
     IN inMovementId          Integer   ,    -- 
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
+    IN inCountSPMin          TFloat    ,    -- Мінімальна кількість форм випуску до продажу
     IN inCountSP             TFloat    ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
 
     IN inColSP               TFloat    ,    --
@@ -35,7 +36,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPHelsi_From_Excel(
     IN inProgramId           TVarChar  ,    --
     IN inNumeratorUnit       TVarChar  ,    --
     IN inDenumeratorUnit     TVarChar  ,    --
-    IN inDynamics            TVarChar  ,    --
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -144,6 +144,7 @@ BEGIN
                                                , inBrandSPId           := vbBrandSPId
                                                , inKindOutSPId         := vbKindOutSPId
                                                , inColSP               := COALESCE (inColSP, 0) :: TFloat
+                                               , inCountSPMin          := COALESCE (inCountSPMin, 0) :: TFloat
                                                , inCountSP             := COALESCE (inCountSP, 0) :: TFloat
                                                , inPriceOptSP          := COALESCE (inPriceOptSP, 0) :: TFloat
                                                , inPriceRetSP          := COALESCE (inPriceRetSP, 0) :: TFloat
@@ -163,7 +164,6 @@ BEGIN
                                                , inProgramIdSP         := TRIM(inProgramId)::TVarChar
                                                , inNumeratorUnitSP     := TRIM(inNumeratorUnit)::TVarChar
                                                , inDenumeratorUnitSP   := TRIM(inDenumeratorUnit)::TVarChar
-                                               , inDynamicsSP          := TRIM(inDynamics)::TVarChar
                                                , inUserId              := vbUserId);
 
     -- сохранили протокол

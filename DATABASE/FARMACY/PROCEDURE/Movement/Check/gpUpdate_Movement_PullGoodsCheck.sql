@@ -83,13 +83,13 @@ BEGIN
                  AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder())
     THEN
     
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementString_InvNumberOrder(), outMovementId, MovementLinkObject_InvNumberOrder.ObjectId)
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), outMovementId, MovementString_InvNumberOrder.ValueData)
             , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKindClient(), outMovementId, zc_Enum_ConfirmedKind_SmsYes())
       FROM Movement
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_InvNumberOrder
-                                        ON MovementLinkObject_InvNumberOrder.MovementId = Movement.Id
-                                       AND MovementLinkObject_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+           LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                    ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                   AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
       WHERE Movement.Id = inMovementId;    
     

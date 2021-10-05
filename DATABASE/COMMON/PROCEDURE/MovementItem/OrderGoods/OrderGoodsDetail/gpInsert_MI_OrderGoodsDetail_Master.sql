@@ -36,11 +36,32 @@ BEGIN
    CREATE TEMP TABLE tmpGoodsMaster (GoodsId Integer, Amount TFloat) ON COMMIT DROP;
     INSERT INTO tmpGoodsMaster (GoodsId, Amount)
        SELECT MovementItem.ObjectId   AS GoodsId
-            , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
+            --, SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
+            -- если товар шт приводим к штукам если товар кг то считаем кг
+            , SUM (CAST (CASE WHEN  Object_Measure.Id = zc_Measure_Sh()
+                              THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 AND COALESCE (MovementItem.Amount,0) <> 0
+                                        THEN MovementItem.Amount / COALESCE (ObjectFloat_Weight.ValueData,1)
+                                        ELSE MIFloat_AmountSecond.ValueData
+                                   END
+                              ELSE CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
+                                        THEN MovementItem.Amount  
+                                        ELSE MIFloat_AmountSecond.ValueData * COALESCE (ObjectFloat_Weight.ValueData,1)
+                                   END
+                         END AS NUMERIC (16,0))
+                   ) ::TFloat AS Amount
        FROM MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
        WHERE MovementItem.MovementId = inParentId
          AND MovementItem.DescId = zc_MI_Master()
          AND MovementItem.isErased = FALSE

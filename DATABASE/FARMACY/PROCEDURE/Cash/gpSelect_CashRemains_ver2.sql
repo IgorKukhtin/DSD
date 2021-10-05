@@ -167,12 +167,24 @@ BEGIN
 
     RETURN QUERY
       WITH -- Товары соц-проект
-           tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+           tmpMedicalProgramSPUnit AS (SELECT  ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                       FROM Object AS Object_MedicalProgramSPLink
+                                            INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                                  ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                            INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                  ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                                                 AND ObjectLink_Unit.ChildObjectId = vbUnitId 
+                                        WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                          AND Object_MedicalProgramSPLink.isErased = False)
+         , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
                                , MIFloat_PriceSP.ValueData     AS PriceSP
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
+                               , MIFloat_CountSPMin.ValueData  AS CountSPMin
                                , MIString_IdSP.ValueData       AS IdSP
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
@@ -188,6 +200,11 @@ BEGIN
                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                             ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                            AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+                               LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
@@ -212,6 +229,10 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_CountSP
                                                            ON MIFloat_CountSP.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                               -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
+                                                           ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
                                -- ID лікарського засобу
                                LEFT JOIN MovementItemString AS MIString_IdSP
                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id
@@ -226,6 +247,7 @@ BEGIN
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
                          )
          , GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                    AS GoodsId        -- здесь товар "главный товар"
                                , SUM(CASE WHEN vbPromoForSale ILIKE ','||tmp.InvNumber||',' THEN 1 ELSE 0 END) > 0  AS isPromoForSale
@@ -993,7 +1015,7 @@ BEGIN
           , Object_Goods_Main.AnalogATC                            AS GoodsAnalogATC
           , Object_Goods_Main.ActiveSubstance                      AS GoodsActiveSubstance
           , tmpGoodsSP.CountSP::TFloat                             AS CountSP
-          , tmpGoodsSP.CountSP::TFloat                             AS CountSPMin
+          , tmpGoodsSP.CountSPMin::TFloat                          AS CountSPMin
           , tmpGoodsSP.IdSP::TVarChar                              AS IdSP
           , tmpGoodsSP.ProgramIdSP::TVarChar                       AS ProgramIdSP
           , tmpGoodsSP.DosageIdSP::TVarChar                        AS DosageIdSP
@@ -1215,4 +1237,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
 SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
---where COALESCE(GoodsPairSunMainId, 0) <> 0
+where COALESCE(CountSP, 0) <> 0

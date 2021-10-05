@@ -26,7 +26,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isLeaf Boolean, isPartionDate Boolean, isPartionGoodsKind boolean,
                isErased Boolean,
-               Address TVarChar
+               Address TVarChar,
+               Comment TVarChar
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -139,7 +140,7 @@ BEGIN
 
            , Object_SheetWorkTime.Id               AS SheetWorkTimeId 
            , Object_SheetWorkTime.ValueData        AS SheetWorkTimeName
-
+ 
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
@@ -147,6 +148,7 @@ BEGIN
            , Object_Unit_View.isErased
 
            , ObjectString_Unit_Address.ValueData   AS Address
+           , ObjectString_Unit_Comment.ValueData   AS Comment
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -154,6 +156,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit_View.Id 
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Comment
+                                   ON ObjectString_Unit_Comment.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_Comment.DescId = zc_ObjectString_Unit_Comment()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                  ON ObjectLink_Unit_HistoryCost.ObjectId = Object_Unit_View.Id
@@ -278,7 +284,8 @@ BEGIN
            , FALSE AS isPartionDate
            , FALSE AS isPartionGoodsKind
            , FALSE AS isErased
-           , CAST ('' as TVarChar)  AS Address 
+           , CAST ('' as TVarChar)  AS Address
+           , CAST ('' as TVarChar)  AS Comment
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -351,6 +358,7 @@ BEGIN
            , FALSE AS isPartionGoodsKind
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
+           , CAST ('' as TVarChar)  AS Comment 
       ;
 
 END;
@@ -362,6 +370,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.10.21         * Comment
  05.04.19         * UnitId_HistoryCost
  06.03.17         * add isPartionGoodsKind
  16.11.16         * SheetWorkTime

@@ -48,6 +48,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountSumm_x  TFloat
              , CurrencyValue_calc    TFloat
              , CurrencyValue_mi_calc TFloat
+
+             , ProfitLossGroupName     TVarChar
+             , ProfitLossDirectionName TVarChar
+             , ProfitLossName          TVarChar
+             , ProfitLossName_all      TVarChar
               )
 AS
 $BODY$
@@ -122,10 +127,10 @@ then
                            WHERE lfSelect.Ord = 1
                           )
           , tmpMLO AS (SELECT MovementLinkObject.*
-                                FROM MovementLinkObject
-                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                   AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
-                               )
+                       FROM MovementLinkObject
+                       WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
+                      )
           , tmpMovementDate AS (SELECT MovementDate.*
                                 FROM MovementDate
                                 WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -189,6 +194,19 @@ then
                         AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                       GROUP BY MovementItemContainer.MovementId
                      )
+
+         , tmpMIС_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+                                      , CLO_ProfitLoss.ObjectId AS ProfitLossId
+                                 FROM MovementItemContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- прибыль текущего периода
+                                )
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
+
            -- остаток суммы на дату в ГРН
          , tmpListContainer_SummCurrency AS
                     (SELECT Container.ParentId AS ContainerId
@@ -427,9 +445,15 @@ then
 --       , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
 --       , MovementFloat_AmountCurrency.ValueData
 
+         , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
+         , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
+         , tmpProfitLoss_View.ProfitLossName          ::TVarChar
+         , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
        FROM tmpMovement
 
             LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
+            LEFT JOIN tmpMIС_ProfitLoss ON tmpMIС_ProfitLoss.MovementId = tmpMovement.Id
+            LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIС_ProfitLoss.ProfitLossId
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpMovement.Id
@@ -745,6 +769,19 @@ ELSE
                         AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                       GROUP BY MovementItemContainer.MovementId
                      )
+   
+         , tmpMIС_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+                                      , CLO_ProfitLoss.ObjectId AS ProfitLossId
+                                 FROM MovementItemContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- прибыль текущего периода
+                                )
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
+
            -- остаток суммы на дату в ГРН
          , tmpListContainer_SummCurrency AS
                     (SELECT Container.ParentId AS ContainerId
@@ -983,9 +1020,16 @@ ELSE
 --       , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
 --       , MovementFloat_AmountCurrency.ValueData
 
+         , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
+         , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
+         , tmpProfitLoss_View.ProfitLossName          ::TVarChar
+         , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
+
        FROM tmpMovement
 
             LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
+            LEFT JOIN tmpMIС_ProfitLoss ON tmpMIС_ProfitLoss.MovementId = tmpMovement.Id
+            LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIС_ProfitLoss.ProfitLossId
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpMovement.Id
@@ -1164,6 +1208,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.10.21         * add ProfitLossId
  09.01.19         * немного оптимизации
  01.09.18         * add Car
  21.05.17         * add CurrencyPartner
@@ -1183,4 +1228,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpSelect_Movement_Cash(inStartDate := ('09.09.2019')::TDateTime , inEndDate := ('10.09.2019')::TDateTime , inCashId := 619818 , inCurrencyId := 76965 , inJuridicalBasisId := 9399 , inIsErased := 'False' ,  inSession := '5');
+-- select * from gpSelect_Movement_Cash (inStartDate := ('09.09.2021')::TDateTime , inEndDate := ('10.09.2021')::TDateTime , inCashId := 14462 , inCurrencyId :=  zc_Enum_Currency_Basis() , inJuridicalBasisId := 0 , inIsErased := 'False' ,  inSession := '5');

@@ -346,6 +346,21 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Object_RepriceSheduler_RepriceSite', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- —брос фиксированных скидок
+    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer = 4 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 25
+      THEN
+         PERFORM gpUpdate_Object_PriceChangeClear(inId := PriceChange.ID, inSession := inSession) 
+         FROM gpSelect_Object_PriceChange(inRetailId := 4 , inUnitId := 0 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3') AS PriceChange
+         WHERE PriceChange.FixEndDate < CURRENT_DATE
+           AND (COALESCE(PriceChange.FixValue, 0) <> 0 OR COALESCE(PriceChange.FixPercent) <> 0 OR COALESCE(PriceChange.FixDiscount) <> 0);
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Object_PriceChangeClear', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

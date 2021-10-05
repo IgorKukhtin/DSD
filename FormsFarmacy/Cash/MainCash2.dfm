@@ -6710,6 +6710,11 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MedicalProgramSPId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PromoCodeId'
         Value = Null
         MultiSelectSeparator = ','
@@ -6809,6 +6814,18 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'HelsiQty'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HelsiProgramId'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HelsiProgramName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -9640,7 +9657,34 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 232
+    Left = 864
+    Top = 224
+  end
+  object spAvailabilityCheckMedicalProgram: TdsdStoredProc
+    StoredProcName = 'gpGet_AvailabilityCheckMedicalProgram'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProgramId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMedicalProgramSPID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 288
   end
 end

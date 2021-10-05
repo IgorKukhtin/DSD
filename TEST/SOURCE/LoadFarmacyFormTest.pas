@@ -2156,8 +2156,8 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 //
@@ -2170,8 +2170,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesMoneyBoxSunForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesMoneyBoxSunForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrectWagesPercentageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCorrectWagesPercentageForm');

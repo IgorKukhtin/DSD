@@ -17,6 +17,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, I
                                                            , TVarChar, TVarChar, TVarChar, TVarChar
                                                            , Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , --  люч объекта <Ёлемент документа>
     IN inMovementId           Integer   ,
@@ -25,6 +31,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inBrandSPId            Integer ,
     IN inKindOutSPId          Integer ,
     IN inColSP                TFloat  ,
+    IN inCountSPMin           TFloat  , 
     IN inCountSP              TFloat  ,
     IN inPriceOptSP           TFloat  ,
     IN inPriceRetSP           TFloat  ,
@@ -45,7 +52,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inProgramIdSP          TVarChar  ,    --
     IN inNumeratorUnitSP      TVarChar  ,    --
     IN inDenumeratorUnitSP    TVarChar  ,    --
-    IN inDynamicsSP           TVarChar  ,    --
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -61,6 +67,8 @@ BEGIN
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ColSP(), ioId, inColSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSPMin(), ioId, inCountSPMin);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSP(), ioId, inCountSP);
     -- сохранили <>
@@ -102,8 +110,6 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_NumeratorUnitSP(), ioId, inNumeratorUnitSP);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DenumeratorUnitSP(), ioId, inDenumeratorUnitSP);
-    -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DynamicsSP(), ioId, inDynamicsSP);
     
     -- сохранили св€зь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_IntenalSP(), ioId, inIntenalSPId);

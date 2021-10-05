@@ -13,6 +13,7 @@ RETURNS TABLE (Id            Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , ColSP         TFloat
+             , CountSPMin    TFloat
              , CountSP       TFloat
              , PriceOptSP    TFloat
              , PriceRetSP    TFloat
@@ -67,6 +68,7 @@ BEGIN
              , Object_Goods.ValueData                                AS GoodsName
 
              , MIFloat_ColSP.ValueData                               AS ColSP
+             , MIFloat_CountSPMin.ValueData                          AS CountSPMin
              , MIFloat_CountSP.ValueData                             AS CountSP
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
@@ -112,6 +114,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_ColSP
                                          ON MIFloat_ColSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_ColSP.DescId = zc_MIFloat_ColSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
+                                         ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
              LEFT JOIN MovementItemFloat AS MIFloat_CountSP
                                          ON MIFloat_CountSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
@@ -201,6 +206,7 @@ BEGIN
              , Object_Goods.ValueData                                AS GoodsName
 
              , MIFloat_ColSP.ValueData                               AS ColSP
+             , MIFloat_CountSPMin.ValueData                          AS CountSPMin
              , MIFloat_CountSP.ValueData                             AS CountSP
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
@@ -243,6 +249,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountSP
                                         ON MIFloat_CountSP.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
+                                        ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
             LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                         ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()

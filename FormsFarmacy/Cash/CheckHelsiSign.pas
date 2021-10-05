@@ -127,12 +127,13 @@ end;
 
 procedure TCheckHelsiSignForm.actSignExecute(Sender: TObject);
   var HelsiError : boolean; OperDateSP : TDateTime;
-      HelsiID, HelsiIDList, HelsiName, ConfirmationCode : string; HelsiQty : currency;
+      HelsiID, HelsiIDList, HelsiName, ConfirmationCode, ProgramId, ProgramName :
+      string; HelsiQty : currency;
 begin
   HelsiError := True;
   try
 
-    if not GetHelsiReceipt(ClientDataSet.FieldByName('InvNumberSP').AsString, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP) then
+    if not GetHelsiReceipt(ClientDataSet.FieldByName('InvNumberSP').AsString, HelsiID, HelsiIDList, HelsiName, HelsiQty, OperDateSP, ProgramId, ProgramName) then
     begin
       Exit;
     end;
