@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -38,6 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inRouteId                  Integer   , -- Маршрут
     IN inCarId                    Integer   , -- Автомобиль
+    IN inCarTrailerId             Integer   , -- Прицеп
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
     IN inUnitForwardingId         Integer   , -- Подразделение (Место отправки)
 
@@ -306,6 +308,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Route(), ioMIId, inRouteId);
      -- сохранили связь с <Автомобиль>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Car(), ioMIId, inCarId);
+     -- сохранили связь с <Автомобиль>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CarTrailer(), ioMIId, inCarTrailerId);
      -- сохранили связь с <Типы условий договоров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), ioMIId, inContractConditionKindId);
      -- сохранили связь с <Физические лица(сторонние)>
@@ -361,6 +365,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.10.21         * add inCarTrailerId
  10.12.20         * add inSummTransport
  27.01.20         * add inMemberExternalName
                         inDriverCertificate

@@ -72,6 +72,7 @@ type
     spSelectPrintCost: TdsdStoredProc;
     bbPrintCost: TdxBarButton;
     actPrintCost: TdsdPrintAction;
+    CarTrailerChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
