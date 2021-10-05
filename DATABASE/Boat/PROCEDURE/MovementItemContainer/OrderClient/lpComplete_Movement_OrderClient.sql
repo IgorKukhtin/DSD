@@ -595,7 +595,7 @@ BEGIN
                               -- !!!проведенные!!!
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               -- !!!test!!!
-                              AND 1=0
+                              -- AND 1=0
                             GROUP BY MovementItem.PartionId
                                    , MLO_To.ObjectId
                            )

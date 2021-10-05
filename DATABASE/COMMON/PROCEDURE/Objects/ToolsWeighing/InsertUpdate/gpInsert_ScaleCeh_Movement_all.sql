@@ -1000,6 +1000,13 @@ BEGIN
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
                                                        AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
 
+                           LEFT JOIN MovementItemString AS MIString_KVK
+                                                        ON MIString_KVK.MovementItemId = MovementItem.Id
+                                                       AND MIString_KVK.DescId = zc_MIString_KVK()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                                            ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_PersonalKVK.DescId         = zc_MILinkObject_PersonalKVK()
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

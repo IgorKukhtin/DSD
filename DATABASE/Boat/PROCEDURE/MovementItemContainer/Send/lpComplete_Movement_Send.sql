@@ -107,17 +107,14 @@ BEGIN
      -- заполн€ем таблицу - элементы zc_MI_Child документа
      INSERT INTO _tmpItem_Child (MovementItemId, ParentId
                                , GoodsId, PartionId
-                               , OperCount, OperPrice, CountForPrice, OperSumm
+                               , OperCount
                                , MovementId_order
                                 )
         SELECT MovementItem.Id, MovementItem.ParentId
              , MovementItem_parent.ObjectId
              , MovementItem.PartionId
              , MovementItem.Amount
-             , Object_PartionGoods.EKPrice + Object_PartionGoods.CostPrice AS OperPrice
-             , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
-             , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.EKPrice + Object_PartionGoods.CostPrice, Object_PartionGoods.CountForPrice) AS OperSumm
-             , MIFloat_MovementId.ValueData
+             , MIFloat_MovementId.ValueData AS MovementId_order
         FROM MovementItem
              INNER JOIN MovementItem AS MovementItem_parent
                                      ON MovementItem_parent.MovementId = MovementItem.MovementId
@@ -366,7 +363,7 @@ BEGIN
                                            , ContainerId_SummFrom, ContainerId_GoodsFrom
                                            , ContainerId_SummTo, ContainerId_GoodsTo
                                            , AccountId_From, AccountId_To
-                                           , Amount, OperSumm
+                                           , Amount
                                            , MovementId_order
                                             )
                     SELECT 0                AS MovementItemId         -- —формируем позже
@@ -380,7 +377,6 @@ BEGIN
                          , 0                AS AccountId_From         -- —чет(справочника), сформируем позже
                          , 0                AS AccountId_To           -- —чет(справочника), сформируем позже
                          , vbAmount         AS Amount
-                         , 0                AS OperSumm               -- сформируем позже
                          , vbMovementId_order
                           ;
                  -- обнул€ем кол-во что бы больше не искать
@@ -393,21 +389,20 @@ BEGIN
                                            , ContainerId_SummFrom, ContainerId_GoodsFrom
                                            , ContainerId_SummTo, ContainerId_GoodsTo
                                            , AccountId_From, AccountId_To
-                                           , Amount, OperSumm
+                                           , Amount
                                            , MovementId_order
                                             )
                     SELECT 0                AS MovementItemId         -- —формируем позже
                          , vbMovementItemId AS ParentId
                          , vbGoodsId        AS GoodsId
                          , vbPartionId      AS PartionId
-                         , vbAmount_Reserve AS bAmount
                          , 0                AS ContainerId_SummFrom   -- сформируем позже
                          , 0                AS ContainerId_GoodsFrom  -- сформируем позже
                          , 0                AS ContainerId_SummTo     -- сформируем позже
                          , 0                AS ContainerId_GoodsTo    -- сформируем позже
-                         , 0                AS OperSumm               -- сформируем позже
                          , 0                AS AccountId_From         -- —чет(справочника), сформируем позже
                          , 0                AS AccountId_To           -- —чет(справочника), сформируем позже
+                         , vbAmount_Reserve AS Amount
                          , vbMovementId_order
                           ;
                  -- уменьшаем ѕеремещение на кол-во которое нашли и продолжаем поиск
@@ -416,8 +411,8 @@ BEGIN
 
 
              -- !!!если надо найти другие партии, без резерва!!!
-             IF vbAmount > 0 THEN
-             END IF
+             -- IF vbAmount > 0 THEN
+             -- END IF;
 
 
          END LOOP; -- финиш цикла по курсору2. - –езервы

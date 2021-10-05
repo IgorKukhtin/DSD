@@ -389,6 +389,7 @@ type
     fEnterKey13:Boolean;
     fSaveAll:Boolean;
     ValueStep_obv: Integer;
+    ValueStep_kvk: Integer;
 
     MU110: TMU110;
     Scale_BI: TCasBI;
@@ -843,6 +844,7 @@ end;
 function TMainCehForm.Save_MI:Boolean;
 var ParamsWorkProgress:TParams;
     MovementInfo : String;
+    isCheckKVK : Boolean;
 begin
      Result:=false;
      //
@@ -906,8 +908,19 @@ begin
                 end;
 
        //Проверка
+       if (ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+       then isCheckKVK:= DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkKVK(ValueStep_kvk
+                                                                           , ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                                                           , ParamsMovement.ParamByName('DocumentKindId').AsInteger
+                                                                           , ParamsMI.ParamByName('GoodsId').AsInteger
+                                                                           , ParamsMI.ParamByName('PartionGoodsDate').AsDateTime
+                                                                            )
+       else isCheckKVK:= false;
+
+       //Проверка
        if (ParamsMovement.ParamByName('PersonalId_KVK').AsInteger = 0)
            and(ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+           and (isCheckKVK = TRUE)
        then begin
            ShowMessage('Ошибка.Не установлено значение <Оператор КВК>.');
            pSetPersonalKVK;
@@ -916,6 +929,7 @@ begin
        //Проверка
        if (trim(EditNumberKVK.Text) = '')
            and(ParamsMovement.ParamByName('isKVK').AsBoolean = TRUE)
+           and (isCheckKVK = TRUE)
        then begin
            ActiveControl:=EditNumberKVK;
            ShowMessage('Ошибка.Не установлено значение <№ КВК>.');
@@ -1024,6 +1038,10 @@ begin
 
        //сохранение MovementItem
        Result:= DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
+
+       //
+       if Result = TRUE
+       then ValueStep_kvk:= 0;
 
        //
        // Сразу печатаем Этикетку - для сырья
@@ -2621,6 +2639,7 @@ procedure TMainCehForm.FormCreate(Sender: TObject);
 begin
   fSaveAll:= false;
   ValueStep_obv:= 0;
+  ValueStep_kvk:= 0;
 
   // определили IP
   fPrintModeSorting_test:= (System.Pos('ves=',ParamStr(1))>0)

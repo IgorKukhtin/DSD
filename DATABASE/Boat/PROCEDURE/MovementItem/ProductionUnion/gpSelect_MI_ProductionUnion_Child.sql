@@ -36,7 +36,6 @@ BEGIN
      DROP TABLE IF EXISTS _tmpReceiptGoodsChild;
 
      --получим данные ReceiptProdModelChild
-     PERFORM gpSelect_Object_ReceiptProdModelChild_Goods(0, FALSE, inSession);
      CREATE TEMP TABLE _tmpReceiptProdModelChild ON COMMIT DROP AS
           (SELECT tmp.ReceiptProdModelId
                 , tmp.NPP

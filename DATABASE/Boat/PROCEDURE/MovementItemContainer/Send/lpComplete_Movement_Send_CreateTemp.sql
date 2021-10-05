@@ -27,7 +27,7 @@ BEGIN
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
                                          , GoodsId Integer, PartionId Integer
-                                         , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat
+                                         , OperCount TFloat
                                          , MovementId_order Integer
                                           ) ON COMMIT DROP;
 
@@ -42,7 +42,7 @@ BEGIN
                                          , ContainerId_SummFrom Integer, ContainerId_GoodsFrom Integer
                                          , ContainerId_SummTo   Integer, ContainerId_GoodsTo   Integer
                                          , AccountId_From Integer, AccountId_To Integer
-                                         , Amount TFloat, OperSumm TFloat
+                                         , Amount TFloat
                                          , MovementId_order Integer
                                           ) ON COMMIT DROP;
      END IF;

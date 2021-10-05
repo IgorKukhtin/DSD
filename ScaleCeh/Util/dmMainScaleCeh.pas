@@ -57,6 +57,7 @@ type
     //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(var ValueStep_obv : Integer; MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
+    function gpGet_ScaleCeh_Movement_checkKVK (var ValueStep_kvk : Integer; MovementDescId, DocumentKindId, GoodsId : Integer; PartionGoodsDate : TDateTime) : Boolean;
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkStorageLine(MovementId : Integer): String;
     //ScaleCeh - Light
@@ -470,6 +471,35 @@ begin
              then ShowMessage('('+IntToStr(ValueStep_obv)+') ' + spSelect.DataSet.FieldByName('MessageStr').AsString)
              else ShowMessage(spSelect.DataSet.FieldByName('MessageStr').AsString)
         else Result:=MessageDlg(spSelect.DataSet.FieldByName('MessageStr').AsString,mtConfirmation,mbYesNoCancel,0) = 6;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkKVK (var ValueStep_kvk : Integer; MovementDescId, DocumentKindId, GoodsId : Integer; PartionGoodsDate : TDateTime) : Boolean;
+begin
+    Result:= (MovementDescId = zc_Movement_ProductionUnion);
+    if not Result then exit;
+    //
+    //Result:= DocumentKindId > 0;
+    //if Result then exit;
+    //
+    with spSelect do begin
+       StoredProcName:='gpGet_ScaleCeh_Movement_checkKVK';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, MovementDescId);
+       Params.AddParam('inDocumentKindId', ftInteger, ptInput, DocumentKindId);
+       Params.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+       Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, PartionGoodsDate);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inValueStep', ftInteger, ptInput, ValueStep_kvk);
+       //try
+         Execute;
+         Result:=(DataSet.FieldByName('isCheck').asBoolean = TRUE);
+         ValueStep_kvk:= ValueStep_kvk + 1;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ScaleCeh_Movement_checkKVK');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
