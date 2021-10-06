@@ -65,14 +65,14 @@ BEGIN
        END IF;   
        vbUnitId := vbUnitKey::Integer;
        
-       IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
+/*       IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
        THEN
          SELECT ObjectLink_Unit_Parent.ChildObjectId
          INTO vbParentId
          FROM ObjectLink AS ObjectLink_Unit_Parent
          WHERE  ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
            AND ObjectLink_Unit_Parent.ObjectId = vbUnitId;
-       END IF;
+       END IF;*/
      ELSE
        vbUnitId := 0;
      END IF;

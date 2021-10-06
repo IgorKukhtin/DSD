@@ -8993,7 +8993,34 @@ begin
           // ***25.04.19
           CheckCDS.FieldByName('IdSP').AsString := SourceClientDataSet.FieldByName('IdSP').AsString;
 
-          if FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger  then
+          if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
+           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+          begin
+
+            if FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger  then
+            begin
+              CheckCDS.FieldByName('ProgramIdSP').AsString := SourceClientDataSet.FieldByName('ProgramIdSP').AsString;
+              CheckCDS.FieldByName('CountSP').asCurrency :=
+                SourceClientDataSet.FieldByName('CountSP').asCurrency;
+              CheckCDS.FieldByName('PriceRetSP').asCurrency :=
+                SourceClientDataSet.FieldByName('PriceRetSP').asCurrency;
+              CheckCDS.FieldByName('PaymentSP').asCurrency :=
+                SourceClientDataSet.FieldByName('PaymentSP').asCurrency;
+            end else
+            begin
+
+              LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
+
+              CheckCDS.FieldByName('ProgramIdSP').AsString := MedicalProgramSPGoodsCDS.FieldByName('ProgramIdSP').AsString;
+              CheckCDS.FieldByName('CountSP').asCurrency :=
+                MedicalProgramSPGoodsCDS.FieldByName('CountSP').asCurrency;
+              CheckCDS.FieldByName('PriceRetSP').asCurrency :=
+                MedicalProgramSPGoodsCDS.FieldByName('PriceRetSP').asCurrency;
+              CheckCDS.FieldByName('PaymentSP').asCurrency :=
+                MedicalProgramSPGoodsCDS.FieldByName('PaymentSP').asCurrency;
+            end;
+
+          end else
           begin
             CheckCDS.FieldByName('ProgramIdSP').AsString := SourceClientDataSet.FieldByName('ProgramIdSP').AsString;
             CheckCDS.FieldByName('CountSP').asCurrency :=
@@ -9002,18 +9029,6 @@ begin
               SourceClientDataSet.FieldByName('PriceRetSP').asCurrency;
             CheckCDS.FieldByName('PaymentSP').asCurrency :=
               SourceClientDataSet.FieldByName('PaymentSP').asCurrency;
-          end else
-          begin
-
-            LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
-
-            CheckCDS.FieldByName('ProgramIdSP').AsString := MedicalProgramSPGoodsCDS.FieldByName('ProgramIdSP').AsString;
-            CheckCDS.FieldByName('CountSP').asCurrency :=
-              MedicalProgramSPGoodsCDS.FieldByName('CountSP').asCurrency;
-            CheckCDS.FieldByName('PriceRetSP').asCurrency :=
-              MedicalProgramSPGoodsCDS.FieldByName('PriceRetSP').asCurrency;
-            CheckCDS.FieldByName('PaymentSP').asCurrency :=
-              MedicalProgramSPGoodsCDS.FieldByName('PaymentSP').asCurrency;
           end;
 
           CheckCDS.FieldByName('PartionDateKindId').AsVariant :=

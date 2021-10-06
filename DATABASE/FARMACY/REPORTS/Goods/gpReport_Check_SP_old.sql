@@ -1,15 +1,15 @@
 -- Function:  gpReport_Check_SP()
 
 DROP FUNCTION IF EXISTS gpReport_Check_SP_old (TDateTime, TDateTime, Integer,Integer,Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Check_SP_old (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Check_SP_old(
-    IN inStartDate        TDateTime,  -- Дата начала
-    IN inEndDate          TDateTime,  -- Дата окончания
-    IN inJuridicalId      Integer  ,  -- Юр.лицо
-    IN inUnitId           Integer  ,  -- Аптека
-    IN inHospitalId       Integer  ,  -- Больница
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inStartDate           TDateTime,  -- Дата начала
+    IN inEndDate             TDateTime,  -- Дата окончания
+    IN inJuridicalId         Integer  ,  -- Юр.лицо
+    IN inUnitId              Integer  ,  -- Аптека
+    IN inHospitalId          Integer  ,  -- Больница
+    IN inMedicalProgramSPId  Integer  ,  -- Медицинская программа соц. проектов
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
              , InvNumber_Full TVarChar
@@ -154,10 +154,12 @@ BEGIN
                                    , tmp.OperDateStart
                                    , tmp.OperDateEnd
                                    , tmp.OperDate
-                              FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
+                                   , tmp.MedicalProgramSPId
+                              FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate, inMedicalProgramSPId:= inMedicalProgramSPId) AS tmp
                               )
 
           , tmpGoodsSP AS (SELECT DISTINCT MovementItem.GoodsId                         AS GoodsMainId
+                                , MovementItem.MedicalProgramSPId                       AS MedicalProgramSPId
                                 , MovementItem.OperDateStart                            AS OperDateStart
                                 , MovementItem.OperDateEnd                              AS OperDateEnd
                                 , MovementItem.OperDate                                 AS InsertDateSP
@@ -258,6 +260,7 @@ BEGIN
                                    , tmpUnit.JuridicalId
                                    , MovementLinkObject_PartnerMedical.ObjectId                AS HospitalId
                                    , MovementString_InvNumberSP.ValueData                      AS InvNumberSP
+                                   , COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) AS MedicalProgramSPId
                               FROM Movement AS Movement_Check
                                    INNER JOIN MovementString AS MovementString_InvNumberSP
                                                              ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
@@ -275,13 +278,18 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                                                 ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
                                                                AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                                                ON MovementLinkObject_MedicalProgramSP.MovementId = Movement_Check.Id
+                                                               AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
      
                               WHERE Movement_Check.DescId = zc_Movement_Check()
                                 AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                                 AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                                -- AND MovementLinkObject_PartnerMedical.ObjectId <> 0
-                                AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) <> zc_Enum_SPKind_1303()
+                                AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
+                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
                               )
 
         --
@@ -313,6 +321,7 @@ BEGIN
                                 , Movement_Check.JuridicalId
                                 , Movement_Check.InvNumberSP
                                 , Movement_Check.HospitalId
+                                , Movement_Check.MedicalProgramSPId
                                 , MovementString_MedicSP.ValueData   AS MedicSPName
                                 , MovementDate_OperDateSP.ValueData  AS OperDateSP
 
@@ -360,6 +369,7 @@ BEGIN
                           , Movement_Check.HospitalId
                           , Movement_Check.MedicSPName
                           , Movement_Check.OperDateSP
+                          , Movement_Check.MedicalProgramSPId
                           , Movement_Invoice.InvNumber_Invoice
                           , Movement_Invoice.InvNumber_Invoice_Full
                           , Movement_Invoice.OperDate_Invoice  
@@ -428,6 +438,7 @@ BEGIN
                          , Movement_Check.HospitalId
                          , Movement_Check.MedicSPName
                          , Movement_Check.OperDateSP
+                         , Movement_Check.MedicalProgramSPId
                          , Movement_Check.InvNumber_Invoice
                          , Movement_Check.InvNumber_Invoice_Full
                          , Movement_Check.OperDate_Invoice
@@ -475,6 +486,7 @@ BEGIN
                            , Movement_Check.HospitalId
                            , Movement_Check.MedicSPName
                            , Movement_Check.OperDateSP
+                           , Movement_Check.MedicalProgramSPId
                            , Movement_Check.InvNumber_Invoice
                            , Movement_Check.InvNumber_Invoice_Full
                            , Movement_Check.OperDate_Invoice
@@ -870,6 +882,7 @@ BEGIN
                                   ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) >= tmpGoodsSP.OperDateStart
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) <= tmpGoodsSP.OperDateEnd
+                                 AND tmpGoodsSP.MedicalProgramSPId = tmpData.MedicalProgramSPId
              
              LEFT JOIN tmp_err ON tmp_err.Id = tmpData.MovementId_err
 /*
@@ -916,5 +929,3 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
 -- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
 
-
-select * from gpReport_Check_SP(inStartDate := ('01.03.2021')::TDateTime , inEndDate := ('15.03.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 ,  inSession := '3');

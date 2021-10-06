@@ -2691,9 +2691,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSPLink_Unit() RETURNS Int
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MedicalProgramSPLink_Unit', 'Связь с Подразделеним', zc_Object_MedicalProgramSPLink(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSPLink_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BanCommentSend_CommentSend() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BanCommentSend_CommentSend'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_BanCommentSend_CommentSend', 'Связь с Комментарий строк перемещений по СУН', zc_Object_BanCommentSend(), zc_Object_CommentSend() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BanCommentSend_CommentSend');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BanCommentSend_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BanCommentSend_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_BanCommentSend_Unit', 'Связь с Подразделеним', zc_Object_BanCommentSend(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BanCommentSend_Unit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.10.21                                                                                      * zc_ObjectLink_BanCommentSend_...
  01.10.21                                                                                      * zc_ObjectLink_MedicalProgramSP...
  29.09.21                                                                                      * zc_ObjectLink_Goods_FormDispensing
  28.09.21                                                                                      * zc_ObjectLink_ContactPerson_Unit
