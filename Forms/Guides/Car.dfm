@@ -165,30 +165,33 @@ object CarForm: TCarForm
         Width = 82
       end
       object Length: TcxGridDBColumn
-        Caption = #1044#1083#1080#1085#1072
+        Caption = #1044#1083#1080#1085#1072', '#1084#1084
         DataBinding.FieldName = 'Length'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1083#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
         Width = 57
       end
       object Width: TcxGridDBColumn
-        Caption = #1064#1080#1088#1080#1085#1072
+        Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
         DataBinding.FieldName = 'Width'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
         Width = 58
       end
       object Height: TcxGridDBColumn
-        Caption = #1042#1099#1089#1086#1090#1072
+        Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
         DataBinding.FieldName = 'Height'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1089#1086#1090#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
         Width = 57
       end
       object Comment: TcxGridDBColumn
