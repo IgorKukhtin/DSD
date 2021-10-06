@@ -3,15 +3,17 @@
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Check_SP(
-    IN inStartDate        TDateTime,  -- Дата начала
-    IN inEndDate          TDateTime,  -- Дата окончания
-    IN inJuridicalId      Integer  ,  -- Юр.лицо
-    IN inUnitId           Integer  ,  -- Аптека
-    IN inHospitalId       Integer  ,  -- Больница
-    IN inJuridicalMedicId Integer  ,  -- Юр.лицо плательщик с 01,04,2019
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inStartDate           TDateTime,  -- Дата начала
+    IN inEndDate             TDateTime,  -- Дата окончания
+    IN inJuridicalId         Integer  ,  -- Юр.лицо
+    IN inUnitId              Integer  ,  -- Аптека
+    IN inHospitalId          Integer  ,  -- Больница
+    IN inJuridicalMedicId    Integer  ,  -- Юр.лицо плательщик с 01,04,2019
+    IN inMedicalProgramSPId  Integer  ,  -- Медицинская программа соц. проектов
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
              , InvNumber_Full TVarChar
@@ -130,24 +132,26 @@ BEGIN
     RETURN QUERY
         -- результат
         SELECT tmp.*
-        FROM gpReport_Check_SP_01042019 (inStartDate        := inStartDate
-                                       , inEndDate          := inEndDate          
-                                       , inJuridicalId      := inJuridicalId      
-                                       , inUnitId           := inUnitId           
-                                       , inHospitalId       := inHospitalId       
-                                       , inJuridicalMedicId := inJuridicalMedicId 
-                                       , inSession          := inSession          
+        FROM gpReport_Check_SP_01042019 (inStartDate          := inStartDate
+                                       , inEndDate            := inEndDate          
+                                       , inJuridicalId        := inJuridicalId      
+                                       , inUnitId             := inUnitId           
+                                       , inHospitalId         := inHospitalId       
+                                       , inJuridicalMedicId   := inJuridicalMedicId 
+                                       , inMedicalProgramSPId := inMedicalProgramSPId
+                                       , inSession            := inSession          
                                          ) AS tmp;
     ELSE 
     RETURN QUERY
         -- результат
         SELECT tmp.*
-        FROM gpReport_Check_SP_old (inStartDate        := inStartDate
-                                  , inEndDate          := inEndDate          
-                                  , inJuridicalId      := inJuridicalId      
-                                  , inUnitId           := inUnitId           
-                                  , inHospitalId       := inHospitalId       
-                                  , inSession          := inSession          
+        FROM gpReport_Check_SP_old (inStartDate          := inStartDate
+                                  , inEndDate            := inEndDate          
+                                  , inJuridicalId        := inJuridicalId      
+                                  , inUnitId             := inUnitId           
+                                  , inHospitalId         := inHospitalId    
+                                  , inMedicalProgramSPId := inMedicalProgramSPId
+                                  , inSession            := inSession          
                                     ) AS tmp;
     END IF;
 
@@ -169,4 +173,4 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.02.2011')::TDateTime , inEndDate := ('02.02.2011')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');
 
 
-select * from gpReport_Check_SP(inStartDate := ('03.03.2021')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 ,  inSession := '3');
+select * from gpReport_Check_SP(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('05.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18076882 ,  inSession := '3');

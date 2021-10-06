@@ -3,7 +3,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1054#1090#1095#1077#1090#1072' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'>'
-  ClientHeight = 262
+  ClientHeight = 300
   ClientWidth = 378
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 74
-    Top = 222
+    Top = 254
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   end
   object cxButton2: TcxButton
     Left = 248
-    Top = 222
+    Top = 254
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -118,12 +118,12 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 30
-    Top = 158
+    Top = 190
     Caption = #1070#1088'.'#1083#1080#1094#1086' '#1054#1047' ('#1087#1083#1072#1090#1077#1083#1100#1096#1080#1082'):'
   end
   object edJuridicalMedic: TcxButtonEdit
     Left = 31
-    Top = 178
+    Top = 210
     Properties.Buttons = <
       item
         Default = True
@@ -132,6 +132,23 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 322
+  end
+  object ceMedicalProgramSP: TcxButtonEdit
+    Left = 31
+    Top = 170
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 322
+  end
+  object cxLabel3: TcxLabel
+    Left = 30
+    Top = 150
+    Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072':'
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -240,6 +257,21 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPId'
+        Value = Null
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPName'
+        Value = Null
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 23
@@ -358,7 +390,36 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 176
+    Left = 80
+    Top = 200
+  end
+  object MedicalProgramSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMedicalProgramSP
+    FormNameParam.Value = 'TMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 152
   end
 end

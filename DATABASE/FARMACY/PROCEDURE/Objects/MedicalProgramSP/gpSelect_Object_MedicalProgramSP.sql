@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MedicalProgramSP(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SPKindId Integer, SPKindName TVarChar
              , ProgramId TVarChar
+             , isFree Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -26,6 +27,7 @@ BEGIN
           , Object_SPKind.ValueData                    AS SPKindName
 
           , ObjectString_ProgramId.ValueData           AS ProgramId
+          , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS isFree
 
           , Object_MedicalProgramSP.isErased           AS isErased
      FROM Object AS Object_MedicalProgramSP
@@ -38,6 +40,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_ProgramId 	
                                 ON ObjectString_ProgramId.ObjectId = Object_MedicalProgramSP.Id
                                AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
+                                 ON ObjectBoolean_Free.ObjectId = Object_MedicalProgramSP.Id
+                                AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
 
      WHERE Object_MedicalProgramSP.DescId = zc_Object_MedicalProgramSP()
        AND (ObjectLink_MedicalProgramSP_SPKind.ChildObjectId = inSPKindId OR inSPKindId = 0);

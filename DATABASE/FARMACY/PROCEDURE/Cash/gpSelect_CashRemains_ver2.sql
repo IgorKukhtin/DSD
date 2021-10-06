@@ -28,7 +28,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat, FixEndDate TDateTime,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
-               CountSP TFloat, CountSPMin TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
+               MedicalProgramSPID Integer, MedicalProgramSPFree Boolean, CountSP TFloat, CountSPMin TFloat, 
+               IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
@@ -179,6 +180,8 @@ BEGIN
                                         WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
                                           AND Object_MedicalProgramSPLink.isErased = False)
          , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+                               , MLO_MedicalProgramSP.ObjectId AS MedicalProgramSPID
+                               , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS MedicalProgramSPFree
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
                                , MIFloat_PriceSP.ValueData     AS PriceSP
@@ -204,6 +207,10 @@ BEGIN
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                                LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
+                                                       ON ObjectBoolean_Free.ObjectId = MLO_MedicalProgramSP.ObjectId
+                                                      AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
 
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -1014,6 +1021,8 @@ BEGIN
           , Object_Goods_Main.Analog                               AS GoodsAnalog
           , Object_Goods_Main.AnalogATC                            AS GoodsAnalogATC
           , Object_Goods_Main.ActiveSubstance                      AS GoodsActiveSubstance
+          , tmpGoodsSP.MedicalProgramSPID                          AS MedicalProgramSPID
+          , tmpGoodsSP.MedicalProgramSPFree                        AS MedicalProgramSPFree
           , tmpGoodsSP.CountSP::TFloat                             AS CountSP
           , tmpGoodsSP.CountSPMin::TFloat                          AS CountSPMin
           , tmpGoodsSP.IdSP::TVarChar                              AS IdSP

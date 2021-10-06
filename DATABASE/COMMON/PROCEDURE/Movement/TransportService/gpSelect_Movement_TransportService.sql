@@ -27,7 +27,8 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar
-             , CarModelId Integer, CarModelName TVarChar           
+             , CarModelId Integer, CarModelName TVarChar
+             , CarTrailerId Integer, CarTrailerName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              , MemberExternalId Integer, MemberExternalName TVarChar, DriverCertificate TVarChar
@@ -125,6 +126,7 @@ BEGIN
                                                                                , zc_MILinkObject_PaidKind()
                                                                                , zc_MILinkObject_Route()
                                                                                , zc_MILinkObject_Car()
+                                                                               , zc_MILinkObject_CarTrailer()
                                                                                , zc_MILinkObject_ContractConditionKind()
                                                                                , zc_MILinkObject_MemberExternal())
                                         )
@@ -185,6 +187,8 @@ BEGIN
            , Object_Car.ValueData        AS CarName
            , Object_CarModel.Id          AS CarModelId
            , Object_CarModel.ValueData   AS CarModelName
+           , Object_CarTrailer.Id        AS CarTrailerId
+           , Object_CarTrailer.ValueData AS CarTrailerName
 
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
@@ -292,6 +296,11 @@ BEGIN
                                                AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
 
+            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_CarTrailer
+                                                ON MILinkObject_CarTrailer.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_CarTrailer.DescId = zc_MILinkObject_CarTrailer()
+            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MILinkObject_CarTrailer.ObjectId
+
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_MemberExternal
                                                 ON MILinkObject_MemberExternal.MovementItemId = MovementItem.Id 
                                                AND MILinkObject_MemberExternal.DescId = zc_MILinkObject_MemberExternal()
@@ -317,6 +326,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ. 
+ 05.10.21         * CarTrailerId
  10.12.20         * add SummTransport
  28.05.20         *
  07.10.16         * add inJuridicalBasisId

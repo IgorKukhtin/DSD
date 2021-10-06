@@ -62,6 +62,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
+    mactPrint_TTN: TMultiAction;
   private
     { Private declarations }
   public

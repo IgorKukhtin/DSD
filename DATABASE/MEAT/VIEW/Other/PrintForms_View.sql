@@ -821,6 +821,27 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
+      UNION
+      -- Печать ТТН
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('06.10.2021' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_071021' AS TVarChar)
+      UNION
+      -- Печать ТТН с 07,10,2021
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('07.10.2021' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_071021' AS TVarChar)
+
 --   ORDER BY 1,2,4
 
 
@@ -832,6 +853,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.21         *
  24.02.21         * add Tax0321, TaxCorrective0321
  17.12.18         * PrintMovement_Quality32049199
  26.10.17         * add PrintObject_Sticker

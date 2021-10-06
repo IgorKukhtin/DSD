@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MedicSPName TVarChar
              , Ambulance TVarChar
              , SPKindName TVarChar
+             , MedicalProgramSPName TVarChar
              , InvNumber_Invoice_Full TVarChar
              , StatusCode_PromoCode Integer
              , InvNumber_PromoCode_Full TVarChar
@@ -136,6 +137,7 @@ BEGIN
            , MovementString_MedicSP.ValueData                   AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
+           , Object_MedicalProgramSP.ValueData                  AS MedicalProgramSPName
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full 
            
            , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
@@ -328,6 +330,11 @@ BEGIN
                                           ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
              LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                          ON MovementLinkObject_MedicalProgramSP.MovementId = Movement_Check.Id
+                                         AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+             LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementLinkObject_MedicalProgramSP.ObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountCard.Id

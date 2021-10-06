@@ -9687,4 +9687,42 @@ inherited MainCashForm2: TMainCashForm2
     Left = 864
     Top = 288
   end
+  object spMedicalProgramSP_Goods: TdsdStoredProc
+    StoredProcName = 'gpSelect_MedicalProgramSP_Goods'
+    DataSet = MedicalProgramSPGoodsCDS
+    DataSets = <
+      item
+        DataSet = MedicalProgramSPGoodsCDS
+      end>
+    Params = <
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 344
+  end
+  object MedicalProgramSPGoodsCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'GoodsId'
+    Params = <>
+    Left = 864
+    Top = 392
+  end
 end

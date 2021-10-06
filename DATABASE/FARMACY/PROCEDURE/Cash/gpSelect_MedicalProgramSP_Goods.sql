@@ -1,14 +1,17 @@
 -- Function: gpSelect_MedicalProgramSP_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_MedicalProgramSP_Goods (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MedicalProgramSP_Goods (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MedicalProgramSP_Goods (
-    IN inSPKindId      Integer   ,  -- ключ объекта <СП> 
-    IN inProgramId     TVarChar  ,  -- ключ объекта <Программа> 
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inSPKindId            Integer   ,  -- ключ объекта <СП> 
+    IN inMedicalProgramSPId  Integer   ,  -- ключ объекта <Программа> 
+    IN inCashSessionId       TVarChar  ,  -- Сессия кассового места
+    IN inSession             TVarChar     -- сессия пользователя
 )
 
 RETURNS TABLE (GoodsId Integer
+             , MedicalProgramSPID Integer
+             , MedicalProgramSPFree Boolean 
              , IntenalSPId Integer
              , PriceRetSP TFloat
              , PriceSP TFloat
@@ -18,6 +21,7 @@ RETURNS TABLE (GoodsId Integer
              , IdSP TVarChar
              , ProgramIdSP TVarChar
              , DosageIdSP TVarChar
+             , PriceSaleSP TFloat
               )
 AS
 $BODY$
@@ -48,10 +52,7 @@ BEGIN
                                             INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
                                                                   ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
                                                                  AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
-                                            INNER JOIN ObjectString AS ObjectString_ProgramId 	
-                                                                    ON ObjectString_ProgramId.ObjectId = ObjectLink_MedicalProgramSP.ChildObjectId
-                                                                   AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
-                                                                   AND ObjectString_ProgramId.ValueData = inProgramId
+                                                                 AND ObjectLink_MedicalProgramSP.ChildObjectId = inMedicalProgramSPId
                                             INNER JOIN ObjectLink AS ObjectLink_Unit
                                                                   ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
                                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
@@ -59,6 +60,8 @@ BEGIN
                                         WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
                                           AND Object_MedicalProgramSPLink.isErased = False)
          , tmpGoodsSP AS (SELECT Object_Goods_Retail.Id        AS GoodsId
+                               , MLO_MedicalProgramSP.ObjectId AS MedicalProgramSPID 
+                               , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS MedicalProgramSPFree
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
                                , MIFloat_PriceRetSP.ValueData  AS PriceRetSP
                                , MIFloat_PriceSP.ValueData     AS PriceSP
@@ -83,8 +86,12 @@ BEGIN
                                INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
-                               INNER JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
 
+                               LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
+                                                       ON ObjectBoolean_Free.ObjectId = MLO_MedicalProgramSP.ObjectId
+                                                      AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
 
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -131,26 +138,99 @@ BEGIN
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 
+                             OR vbUserId = 3 AND MLO_MedicalProgramSP.ObjectId = inMedicalProgramSPId)
                           )
+         , tmpCashSessionSnapShot AS (SELECT DISTINCT CashSessionSnapShot.ObjectId
+                                           , CashSessionSnapShot.Price
+                                      FROM CashSessionSnapShot
+                                      WHERE CashSessionSnapShot.CashSessionId = inCashSessionId) 
                           
     SELECT tmpGoodsSP.GoodsId
+         , tmpGoodsSP.MedicalProgramSPID
+         , tmpGoodsSP.MedicalProgramSPFree
          , tmpGoodsSP.IntenalSPId
          , tmpGoodsSP.PriceRetSP
-         , tmpGoodsSP.PriceSP
+
+            --
+            -- Цена со скидкой для СП
+            --
+         ,  CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
+                 --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price,True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+
+            END :: TFloat AS PriceSP
          , tmpGoodsSP.PaymentSP
          , tmpGoodsSP.CountSP
          , tmpGoodsSP.CountSPMin
          , tmpGoodsSP.IdSP
          , tmpGoodsSP.ProgramIdSP
          , tmpGoodsSP.DosageIdSP
+
+            --
+            -- Цена без скидки для СП
+            --
+         ,  CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) -- по нашей цене, т.к. она меньше чем цена возмещения
+
+                 ELSE
+
+            CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, True) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
+                         - zfCalc_PriceCash(CashSessionSnapShot.Price, True)
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+
+            END
+          + COALESCE (tmpGoodsSP.PriceSP, 0)
+
+            END :: TFloat AS PriceSaleSP
     FROM tmpGoodsSP
+    
+         INNER JOIN tmpCashSessionSnapShot AS CashSessionSnapShot ON CashSessionSnapShot.ObjectId = tmpGoodsSP.GoodsId                                       
+         
     WHERE tmpGoodsSP.Ord = 1;
                          
                          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -159,5 +239,6 @@ ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, TVarChar, TVarChar) OWN
  31.07.19                                                       *
 */
 
--- 
-select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inProgramId := '63c1f32f-c8f4-4f5b-81a9-79b8452d6545' ,  inSession := '3');
+-- select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078175 , inCashSessionId := '{3444D087-A78F-4FDC-A48C-0FD43254A196}' ,  inSession := '3');
+
+select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078228 , inCashSessionId := '{3444D087-A78F-4FDC-A48C-0FD43254A196}' ,  inSession := '3');

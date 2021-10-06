@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Car(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffHoursWork TFloat, PartnerMin TFloat
+             , Length TFloat, Width TFloat, Height TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -26,7 +27,7 @@ BEGIN
 
    IF COALESCE (inId, 0) = 0
    THEN
-       RETURN QUERY 
+       RETURN QUERY
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Car()) AS Code
@@ -35,7 +36,11 @@ BEGIN
 
            , CAST (0 AS TFloat)     AS KoeffHoursWork
            , CAST (0 AS TFloat)     AS PartnerMin
-           
+
+           , CAST (0 AS TFloat)     AS Length
+           , CAST (0 AS TFloat)     AS Width 
+           , CAST (0 AS TFloat)     AS Height
+
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
 
@@ -81,6 +86,10 @@ BEGIN
            
            , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
            , COALESCE (ObjectFloat_PartnerMin.ValueData,0)     :: TFloat AS PartnerMin
+
+           , COALESCE (ObjectFloat_Length.ValueData,0)         :: TFloat  AS Length
+           , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat  AS Width 
+           , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat  AS Height
 
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData     AS Comment
@@ -132,6 +141,16 @@ BEGIN
                                   ON ObjectFloat_PartnerMin.ObjectId = Object_Car.Id
                                  AND ObjectFloat_PartnerMin.DescId = zc_ObjectFloat_Car_PartnerMin()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                                  ON ObjectFloat_Length.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Length.DescId = zc_ObjectFloat_Car_Length()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                  ON ObjectFloat_Width.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Width.DescId = zc_ObjectFloat_Car_Width()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                  ON ObjectFloat_Height.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Height.DescId = zc_ObjectFloat_Car_Height()
+
             LEFT JOIN ObjectLink AS Car_CarModel 
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -179,6 +198,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.10.21         *
  27.04.21         * PartnerMin
  29.10.19         * KoeffHoursWork
  28.11.16         * add Asset

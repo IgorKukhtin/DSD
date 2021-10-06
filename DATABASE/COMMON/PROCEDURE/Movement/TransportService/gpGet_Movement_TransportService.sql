@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar
+             , CarTrailerId Integer, CarTrailerName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              , MemberExternalId Integer, MemberExternalName TVarChar, DriverCertificate TVarChar
@@ -80,6 +81,8 @@ BEGIN
            
            , 0                                AS CarId
            , CAST ('' as TVarChar)            AS CarName
+           , 0                                AS CarTrailerId
+           , CAST ('' as TVarChar)            AS CarTrailerName
 
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
@@ -148,6 +151,9 @@ BEGIN
 
            , Object_Car.Id               AS CarId
            , Object_Car.ValueData        AS CarName
+
+           , Object_CarTrailer.Id        AS CarTrailerId
+           , Object_CarTrailer.ValueData AS CarTrailerName
 
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
@@ -230,6 +236,11 @@ BEGIN
                                              ON MILinkObject_Car.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CarTrailer
+                                             ON MILinkObject_CarTrailer.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_CarTrailer.DescId = zc_MILinkObject_CarTrailer()
+            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MILinkObject_CarTrailer.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 

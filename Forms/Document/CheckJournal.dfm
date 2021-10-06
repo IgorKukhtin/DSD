@@ -24,6 +24,7 @@ inherited CheckJournalForm: TCheckJournalForm
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
+        ExplicitLeft = 64
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -306,6 +307,13 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 124
+          end
+          object MedicalProgramSPName: TcxGridDBColumn
+            Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
+            DataBinding.FieldName = 'MedicalProgramSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 104
           end
           object clInvNumber_Invoice_Full: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' ('#1057#1055')'

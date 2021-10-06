@@ -454,6 +454,22 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
+          object CarTrailerName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1080#1094#1077#1087')'
+            DataBinding.FieldName = 'CarTrailerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CarTrailerChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
           object UnitForwardingName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
             DataBinding.FieldName = 'UnitForwardingName'
@@ -533,10 +549,34 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 274
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTransportServiceForm'
+    object CarTrailerChoiceForm: TOpenChoiceForm [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'CarTrailerChoiceForm'
+      FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarTrailerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarTrailerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
-    object CarChoiceForm: TOpenChoiceForm [3]
+    object CarChoiceForm: TOpenChoiceForm [4]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -570,7 +610,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    object ContractConditionKindChoiceForm: TOpenChoiceForm [4]
+    object ContractConditionKindChoiceForm: TOpenChoiceForm [5]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -604,7 +644,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    object RouteChoiceForm: TOpenChoiceForm [5]
+    object RouteChoiceForm: TOpenChoiceForm [6]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -630,32 +670,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTransportServiceForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
-    object ContractChoiceForm: TOpenChoiceForm [8]
+    object ContractChoiceForm: TOpenChoiceForm [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -717,7 +732,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    object PaidKindChoiceForm: TOpenChoiceForm [9]
+    object PaidKindChoiceForm: TOpenChoiceForm [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -743,7 +758,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    object InfoMoneyChoiceForm: TOpenChoiceForm [10]
+    object InfoMoneyChoiceForm: TOpenChoiceForm [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -768,6 +783,34 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TTransportServiceForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TTransportServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1286,6 +1329,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'carid'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarTrailerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CarTrailerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -95,6 +95,7 @@ type
     isDiscountCommit: TcxGridDBColumn;
     colZReport: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
+    MedicalProgramSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

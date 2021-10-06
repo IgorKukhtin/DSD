@@ -441,6 +441,7 @@ object ProductionPersonalForm: TProductionPersonalForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 2
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False

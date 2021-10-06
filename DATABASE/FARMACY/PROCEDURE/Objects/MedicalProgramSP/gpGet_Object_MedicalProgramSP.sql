@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MedicalProgramSP(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SPKindId Integer, SPKindName TVarChar
              , ProgramId TVarChar
+             , isFree boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -20,13 +21,14 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)    AS Id
+             CAST (0 as Integer)     AS Id
            , lfGet_ObjectCode(0, zc_Object_MedicalProgramSP()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           , CAST (0 as Integer)    AS SPKindId
-           , CAST ('' as TVarChar)  AS SPKindName
-           , CAST ('' as TVarChar)  AS ProgramId
-           , CAST (NULL AS Boolean) AS isErased;
+           , CAST ('' as TVarChar)   AS NAME
+           , CAST (0 as Integer)     AS SPKindId
+           , CAST ('' as TVarChar)   AS SPKindName
+           , CAST ('' as TVarChar)   AS ProgramId
+           , CAST (FALSE AS Boolean) AS isFree
+           , CAST (FALSE AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT Object_MedicalProgramSP.Id                 AS Id
@@ -37,6 +39,7 @@ BEGIN
             , Object_SPKind.ValueData                    AS SPKindName
 
             , ObjectString_ProgramId.ValueData           AS ProgramId
+            , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS isFree
 
             , Object_MedicalProgramSP.isErased           AS isErased
        FROM Object AS Object_MedicalProgramSP
@@ -50,6 +53,10 @@ BEGIN
                                   ON ObjectString_ProgramId.ObjectId = Object_MedicalProgramSP.Id
                                  AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
+                                   ON ObjectBoolean_Free.ObjectId = Object_MedicalProgramSP.Id
+                                  AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
+                                  
          WHERE Object_MedicalProgramSP.Id = inId;
    END IF;
    

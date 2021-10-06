@@ -155,6 +155,7 @@ BEGIN
                ,NULL:: TFloat                    AS MarginPercentNew   
                ,NULL:: Boolean                   AS isChecked          
                ,NULL:: Boolean                   AS isError_MarginPercent
+               ,NULL:: Boolean                   AS isNotSold
                ,NULL::TFloat                     AS MCSValueSun
             WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -1728,3 +1729,5 @@ where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Price(inUnitId := 11300059 , inGoodsId := 0 , inisShowAll := 'TRUE' , inisShowDel := 'False' ,  inSession := '3');
+
+select * from gpSelect_Object_Price(inUnitId := 0 , inGoodsId := 6346632 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

@@ -92,6 +92,9 @@ type
     InvNumber_Full: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
     PriceWithVAT: TcxGridDBColumn;
+    ceMedicalProgramSP: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    MedicalProgramSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

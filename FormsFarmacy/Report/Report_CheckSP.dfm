@@ -1004,33 +1004,50 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Width = 230
     end
     object cxLabel8: TcxLabel
-      Left = 897
-      Top = 6
+      Left = 832
+      Top = 34
       Caption = #1057#1095#1077#1090' '#8470
     end
     object edInvoice: TcxTextEdit
-      Left = 942
-      Top = 5
+      Left = 886
+      Top = 33
       TabOrder = 9
       Text = '0'
       Width = 79
     end
     object cxLabel7: TcxLabel
-      Left = 926
-      Top = 33
+      Left = 970
+      Top = 34
       Caption = #1086#1090
     end
     object edDateInvoice: TcxDateEdit
-      Left = 942
-      Top = 32
+      Left = 990
+      Top = 33
       EditValue = 42736d
       Properties.ShowTime = False
       TabOrder = 11
       Width = 79
     end
+    object ceMedicalProgramSP: TcxButtonEdit
+      Left = 541
+      Top = 33
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 285
+    end
+    object cxLabel9: TcxLabel
+      Left = 451
+      Top = 34
+      Caption = #1052#1077#1076'. '#1087#1088#1086#1075#1088#1072#1084#1084#1072':'
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 455
+    Left = 451
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088'-'#1090#1080#1077' '#1054#1047':'
   end
@@ -1044,16 +1061,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 316
+    Width = 199
   end
   object cxLabel6: TcxLabel [4]
-    Left = 455
-    Top = 34
+    Left = 746
+    Top = 6
     Caption = #1070#1088'.'#1083#1080#1094#1086' '#1054#1047' ('#1087#1083#1072#1090#1077#1083#1100#1096#1080#1082'):'
   end
   object edJuridicalMedic: TcxButtonEdit [5]
-    Left = 595
-    Top = 33
+    Left = 886
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -1061,7 +1078,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 262
+    Width = 183
   end
   inherited ActionList: TActionList
     object actGetReportNameSPDepartmen: TdsdExecStoredProc
@@ -1274,6 +1291,21 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicalProgramSPId'
+          Value = Null
+          Component = MedicalProgramSPGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicalProgramSPName'
+          Value = Null
+          Component = MedicalProgramSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1742,6 +1774,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = MedicalProgramSPGuides
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 224
@@ -1989,7 +2028,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 808
+    Left = 632
   end
   object spSavePrintMovement: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_Invoice_Check'
@@ -2176,7 +2215,36 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 32
+    Left = 912
+    Top = 8
+  end
+  object MedicalProgramSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMedicalProgramSP
+    FormNameParam.Value = 'TMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 736
+    Top = 24
   end
 end

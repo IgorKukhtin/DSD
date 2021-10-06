@@ -69,6 +69,9 @@ type
     edDriverCertificate: TcxTextEdit;
     cxLabel21: TcxLabel;
     edSummTransport: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    edCarTrailer: TcxButtonEdit;
+    GuidesCarTrailer: TdsdGuides;
   private
     { Private declarations }
   public

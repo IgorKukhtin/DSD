@@ -75,6 +75,7 @@ type
     bbStartLoad: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
     ProgramId: TcxGridDBColumn;
+    isFree: TcxGridDBColumn;
   private
     { Private declarations }
   public

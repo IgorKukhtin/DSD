@@ -185,6 +185,17 @@ type
     bbReport_Goods: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
     AmountSecond: TcxGridDBColumn;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    BarCode_Goods_ch1: TcxGridDBColumn;
+    BarCode_PartNumber_ch1: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    spSelectBarCode: TdsdStoredProc;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
   private
   public
   end;

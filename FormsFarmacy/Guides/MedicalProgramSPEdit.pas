@@ -11,7 +11,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TMedicalProgramSPEditForm = class(TParentForm)
@@ -35,6 +35,7 @@ type
     SPKindGuides: TdsdGuides;
     cxLabel2: TcxLabel;
     edProgramId: TcxTextEdit;
+    cbisFree: TcxCheckBox;
   private
     { Private declarations }
   public

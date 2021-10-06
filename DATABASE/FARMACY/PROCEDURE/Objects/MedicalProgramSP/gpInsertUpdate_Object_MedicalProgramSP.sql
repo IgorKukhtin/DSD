@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_MedicalProgramSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicalProgramSP(
  INOUT ioId	               Integer   ,    -- ключ объекта <Медицинские программы соц. проектов> 
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicalProgramSP(
     IN inName              TVarChar  ,    -- Название объекта <>
     IN inSPKindId          Integer   ,    -- Виды соц. проектов
     IN inProgramId         TVarChar  ,    -- Идентификатор медицинской программы
+    IN inisFree            Boolean   ,    -- Безплатно
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -39,6 +40,9 @@ BEGIN
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_MedicalProgramSP_ProgramId(), ioId, inProgramId);
+
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean( zc_ObjectBoolean_MedicalProgramSP_Free(), ioId, inisFree);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

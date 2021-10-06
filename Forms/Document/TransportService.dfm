@@ -169,15 +169,15 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [20]
-    Left = 8
+    Left = 312
     Top = 302
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [21]
-    Left = 8
+    Left = 312
     Top = 323
     TabOrder = 21
-    Width = 577
+    Width = 273
   end
   object cxLabel4: TcxLabel [22]
     Left = 312
@@ -324,12 +324,12 @@
   end
   object cxLabel19: TcxLabel [42]
     Left = 8
-    Top = 253
+    Top = 302
     Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1089#1090#1086#1088#1086#1085#1085#1080#1077')'
   end
   object edMemberExternal: TcxButtonEdit [43]
     Left = 8
-    Top = 276
+    Top = 323
     Properties.Buttons = <
       item
         Default = True
@@ -340,7 +340,7 @@
   end
   object cxLabel20: TcxLabel [44]
     Left = 202
-    Top = 255
+    Top = 302
     Hint = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
     Caption = #1042#1086#1076'. '#1091#1076#1086#1089#1090'.'
     ParentShowHint = False
@@ -348,7 +348,7 @@
   end
   object edDriverCertificate: TcxTextEdit [45]
     Left = 202
-    Top = 276
+    Top = 323
     TabOrder = 45
     Width = 88
   end
@@ -364,6 +364,23 @@
     Properties.DisplayFormat = ',0.####'
     TabOrder = 47
     Width = 90
+  end
+  object cxLabel22: TcxLabel [48]
+    Left = 8
+    Top = 253
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1080#1094#1077#1087')'
+  end
+  object edCarTrailer: TcxButtonEdit [49]
+    Left = 8
+    Top = 276
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 49
+    Width = 282
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -436,7 +453,7 @@
       end
       item
         Name = 'inStartRunPlan'
-        Value = 'NULL'
+        Value = Null
         Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
@@ -444,7 +461,7 @@
       end
       item
         Name = 'inStartRun'
-        Value = 'NULL'
+        Value = Null
         Component = edStartRun
         DataType = ftDateTime
         ParamType = ptInput
@@ -585,6 +602,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCarTrailerId'
+        Value = Null
+        Component = GuidesCarTrailer
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inContractConditionKindId'
         Value = ''
         Component = GuidesContractConditionKind
@@ -616,7 +641,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -833,14 +858,14 @@
       end
       item
         Name = 'StartRunPlan'
-        Value = 'NULL'
+        Value = Null
         Component = edStartRunPlan
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartRun'
-        Value = 'NULL'
+        Value = Null
         Component = edStartRun
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -878,6 +903,21 @@
         Name = 'DriverCertificate'
         Value = Null
         Component = edDriverCertificate
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarTrailerId'
+        Value = Null
+        Component = GuidesCarTrailer
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarTrailerName'
+        Value = Null
+        Component = GuidesCarTrailer
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1306,5 +1346,32 @@
       end>
     Left = 48
     Top = 258
+  end
+  object GuidesCarTrailer: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCarTrailer
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCarTrailer
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCarTrailer
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 249
   end
 end
