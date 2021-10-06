@@ -127,6 +127,7 @@ BEGIN
 
             , CASE WHEN MISale.Id > 0
                    AND (MISale.isErased = TRUE
+                     OR tmpMI.Amount                                  > COALESCE (MIFloat_AmountPartner.ValueData, 0)
                      OR MISale.ObjectId                               <> tmpMI.GoodsId
                      OR (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis() AND MILinkObject_GoodsKind.ObjectId <> 0)
                      OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price

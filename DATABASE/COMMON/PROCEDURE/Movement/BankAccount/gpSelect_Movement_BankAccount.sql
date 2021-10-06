@@ -137,15 +137,19 @@ BEGIN
                      )
 
          -- ProfitLoss ËÁ ÔÓ‚Ó‰ÓÍ
-         , tmpMI—_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+         , tmpMI— AS (SELECT DISTINCT MovementItemContainer.MovementId, MovementItemContainer.ContainerId
+                      FROM MovementItemContainer
+                      WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                        AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
+                        AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ÔË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
+                        AND 1=0
+                     )
+         , tmpMI—_ProfitLoss AS (SELECT DISTINCT CLO_ProfitLoss.ContainerId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
-                                 FROM MovementItemContainer
-                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
-                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
-                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
-                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
-                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ÔË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
+                                 FROM ContainerLinkObject AS CLO_ProfitLoss
+                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMI—.ContainerId FROM tmpMI—)
+                                   AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
+                                   AND 1=0
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMI—_ProfitLoss.ProfitLossId FROM tmpMI—_ProfitLoss))
 
@@ -220,7 +224,8 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             --
-            LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.MovementId = Movement.Id
+            LEFT JOIN tmpMI— ON tmpMI—.MovementId = Movement.Id
+            LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.ContainerId = tmpMI—.ContainerId
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMI—_ProfitLoss.ProfitLossId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy

@@ -185,27 +185,23 @@ then
                                                  AND MovementItem.ObjectId = inCashId
                      )
            -- проводки
-         , tmpMIС AS (SELECT MovementItemContainer.MovementId, SUM (MovementItemContainer.Amount) AS Amount
+         , tmpMIС AS (SELECT MovementItemContainer.MovementId, MAX (MovementItemContainer.ContainerId) AS ContainerId, SUM (MovementItemContainer.Amount) AS Amount
                       FROM MovementItemContainer
                       WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
                         AND MovementItemContainer.AccountId         = zc_Enum_Account_100301()   -- прибыль текущего периода
-                        AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
-                        AND inCurrencyId                            <> zc_Enum_Currency_Basis()
+                      --AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                      --AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                       GROUP BY MovementItemContainer.MovementId
                      )
 
-         , tmpMIС_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
+         , tmpMIС_ProfitLoss AS (SELECT CLO_ProfitLoss.ContainerId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
-                                 FROM MovementItemContainer
-                                      INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
-                                                                     ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
-                                                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
-                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                   AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
-                                   AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- прибыль текущего периода
+                                 FROM ContainerLinkObject AS CLO_ProfitLoss
+                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMIС.ContainerId FROM tmpMIС)
+                                   AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
                                 )
-         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
+         , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT DISTINCT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
 
            -- остаток суммы на дату в ГРН
          , tmpListContainer_SummCurrency AS
@@ -452,7 +448,7 @@ then
        FROM tmpMovement
 
             LEFT JOIN tmpMIС ON tmpMIС.MovementId = tmpMovement.Id
-            LEFT JOIN tmpMIС_ProfitLoss ON tmpMIС_ProfitLoss.MovementId = tmpMovement.Id
+            LEFT JOIN tmpMIС_ProfitLoss ON tmpMIС_ProfitLoss.ContainerId = tmpMIС.ContainerId
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIС_ProfitLoss.ProfitLossId
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
@@ -1015,7 +1011,14 @@ ELSE
              END :: TFloat AS CurrencyValue_calc
 
            -- факт. курс на дату - для курс разн.
-         , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0 THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData) ELSE 0 END :: TFloat AS CurrencyValue_mi_calc
+         , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0
+                 AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                 AND inCurrencyId                            <> zc_Enum_Currency_Basis()
+                     THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData)
+                ELSE 0
+           END :: TFloat AS CurrencyValue_mi_calc
+
+
 --       , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
 --       , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
 --       , MovementFloat_AmountCurrency.ValueData

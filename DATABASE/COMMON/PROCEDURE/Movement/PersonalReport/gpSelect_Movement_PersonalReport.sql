@@ -146,9 +146,10 @@ BEGIN
                                       INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
                                                                      ON CLO_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
                                                                     AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
-                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                 WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement WHERE tmpMovement.MovementDescId = zc_Movement_PersonalReport())
                                    AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
                                    AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- ÔË·˚Î¸ ÚÂÍÛ˘Â„Ó ÔÂËÓ‰‡
+                                 --AND 1=0
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMI—_ProfitLoss.ProfitLossId FROM tmpMI—_ProfitLoss))
 
@@ -232,7 +233,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
