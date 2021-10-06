@@ -1,11 +1,12 @@
--- Function: gpInsertUpdate_MI_Send_BarCode()
+-- Function: gpInsertUpdate_MI_Send_BarCode_PartNumber()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_PartNumber(Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_BarCode(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_BarCode_PartNumber(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inBarCode_Goods       TVarChar  , -- 
+    IN inBarCode_PartNumber  TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -16,7 +17,6 @@ $BODY$
    DECLARE vbCountForPrice TFloat;
    DECLARE vboperprice   TFloat;
    DECLARE vbAmount     TFloat;
-   DECLARE vbPartNumber  TVarChar;
    
 BEGIN
 
@@ -52,10 +52,11 @@ BEGIN
          IF COALESCE (vbGoodsId, 0) = 0
          THEN
              --RAISE EXCEPTION '', inBarCode_OrderClient;
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Комплектующие ' || CASE WHEN CHAR_LENGTH (inBarCode_Goods) = 13 THEN 'Ш/К' ELSE 'код' END || ' <%>  не найден.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Комплектующие ' || CASE WHEN CHAR_LENGTH (inBarCode_Goods) = 13 THEN 'Ш/К' ELSE 'код' END || ' <%>  <S/N> <%> не найден.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MI_Send_barcode'     :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_Goods      :: TVarChar
+                                                   , inParam2        := inBarCode_PartNumber :: TVarChar
                                                    );
          END IF;
 
@@ -65,18 +66,15 @@ BEGIN
               , MovementItem.Amount
               , MIFloat_OperPrice.ValueData     AS OperPrice
               , COALESCE (MIFloat_CountForPrice.ValueData, 1) AS CountForPrice
-              , MIString_PartNumber.ValueData   AS PartNumber
-        INTO ioId, vbAmount, vbOperPrice, vbCountForPrice, vbPartNumber
+        INTO ioId, vbAmount, vbOperPrice, vbCountForPrice
          FROM MovementItem
               LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                           ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                          AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+
               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-              LEFT JOIN MovementItemString AS MIString_PartNumber
-                                           ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId     =  zc_MI_Master()
            AND MovementItem.isErased   = FALSE
@@ -94,7 +92,7 @@ BEGIN
                                                   , (COALESCE (vbAmount,0) + 1) ::TFloat
                                                   , vbOperPrice
                                                   , vbCountForPrice
-                                                  , COALESCE (vbPartNumber,'') ::TVarChar
+                                                  , inBarCode_PartNumber
                                                   , ''::TVarChar
                                                   , vbUserId
                                                   ) AS tmp;
@@ -116,7 +114,7 @@ BEGIN
                                                   , (COALESCE (vbAmount,0) + 1) ::TFloat
                                                   , vbOperPrice
                                                   , vbCountForPrice
-                                                  , COALESCE (vbPartNumber,'') ::TVarChar
+                                                  , inBarCode_PartNumber
                                                   , ''::TVarChar
                                                   , vbUserId
                                                   ) AS tmp;

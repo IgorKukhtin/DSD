@@ -1,11 +1,12 @@
--- Function: gpInsertUpdate_MI_Send_BarCode()
+-- Function: gpInsertUpdate_MI_Send_BarCode_Amount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_Amount(Integer, Integer, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_BarCode(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_BarCode_Amount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inBarCode_Goods       TVarChar  , -- 
+    IN inAmount              TFloat  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -52,10 +53,11 @@ BEGIN
          IF COALESCE (vbGoodsId, 0) = 0
          THEN
              --RAISE EXCEPTION '', inBarCode_OrderClient;
-             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Комплектующие ' || CASE WHEN CHAR_LENGTH (inBarCode_Goods) = 13 THEN 'Ш/К' ELSE 'код' END || ' <%>  не найден.' :: TVarChar
+             RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Комплектующие ' || CASE WHEN CHAR_LENGTH (inBarCode_Goods) = 13 THEN 'Ш/К' ELSE 'код' END || ' <%>  <S/N> <%> не найден.' :: TVarChar
                                                    , inProcedureName := 'gpInsertUpdate_MI_Send_barcode'     :: TVarChar
                                                    , inUserId        := vbUserId
                                                    , inParam1        := inBarCode_Goods      :: TVarChar
+                                                   , inParam2        := inBarCode_PartNumber :: TVarChar
                                                    );
          END IF;
 
@@ -91,7 +93,7 @@ BEGIN
              FROM lpInsertUpdate_MovementItem_Send (COALESCE (ioId,0)
                                                   , inMovementId
                                                   , vbGoodsId
-                                                  , (COALESCE (vbAmount,0) + 1) ::TFloat
+                                                  , (COALESCE (vbAmount,0) + inAmount) ::TFloat
                                                   , vbOperPrice
                                                   , vbCountForPrice
                                                   , COALESCE (vbPartNumber,'') ::TVarChar
@@ -113,7 +115,7 @@ BEGIN
              FROM lpInsertUpdate_MovementItem_Send (COALESCE (ioId,0)
                                                   , inMovementId
                                                   , vbGoodsId
-                                                  , (COALESCE (vbAmount,0) + 1) ::TFloat
+                                                  , (COALESCE (vbAmount,0) + inAmount) ::TFloat
                                                   , vbOperPrice
                                                   , vbCountForPrice
                                                   , COALESCE (vbPartNumber,'') ::TVarChar

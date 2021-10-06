@@ -193,11 +193,33 @@ type
     BarCode_Goods_ch1: TcxGridDBColumn;
     BarCode_PartNumber_ch1: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    spSelectBarCode: TdsdStoredProc;
+    spSelectBarCode_PartNumber: TdsdStoredProc;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    spInsertUpdateMIMaster_BarCode_PartNumber: TdsdStoredProc;
+    spInsertUpdate_BarCode_PartNumber: TdsdStoredProc;
     actUpdateBarCodeDS: TdsdUpdateDataSet;
+    Panel1: TPanel;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    BarCode_Goods_ch4: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    cxGrid3: TcxGrid;
+    cxGridDBTableView3: TcxGridDBTableView;
+    Amount_ch5: TcxGridDBColumn;
+    BarCode_Goods_ch5: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    spSelectBarCode: TdsdStoredProc;
+    spSelectBarCode_Amount: TdsdStoredProc;
+    DataSource3: TDataSource;
+    ClientDataSet3: TClientDataSet;
+    DataSource2: TDataSource;
+    ClientDataSet2: TClientDataSet;
+    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    dsdDBViewAddOn3: TdsdDBViewAddOn;
+    spInsertUpdate_BarCode: TdsdStoredProc;
+    spInsertUpdate_BarCode_Amount: TdsdStoredProc;
+    actUpdateBarCodeDS3: TdsdUpdateDataSet;
+    actUpdateBarCodeDS2: TdsdUpdateDataSet;
   private
   public
   end;
