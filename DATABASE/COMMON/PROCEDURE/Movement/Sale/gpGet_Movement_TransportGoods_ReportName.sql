@@ -56,8 +56,11 @@ BEGIN
               END :: TVarChar
               INTO vbPrintFormName
        FROM Movement
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
             LEFT JOIN PrintForms_View
-                   ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                   ON COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
                   AND PrintForms_View.JuridicalId = 0
                   AND PrintForms_View.ReportType = 'TransportGoods'
                   AND PrintForms_View.DescId = zc_Movement_TransportGoods()
