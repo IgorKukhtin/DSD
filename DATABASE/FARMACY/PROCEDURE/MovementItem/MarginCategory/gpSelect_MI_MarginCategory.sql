@@ -119,7 +119,7 @@ BEGIN
               )
     -- Товары соц-проект (документ)
   , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbStartSale, inEndDate:= vbEndSale) AS tmp
+                   FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= vbStartSale, inEndDate:= vbEndSale, inUnitId := vbUnitId) AS tmp
                    )
               
   -- товары СП, дальше связь по главному товару

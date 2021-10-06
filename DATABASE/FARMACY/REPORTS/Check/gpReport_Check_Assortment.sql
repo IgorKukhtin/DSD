@@ -143,7 +143,7 @@ BEGIN
 
     -- Товары соц-проект (документ)
    , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                    FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inDateStart, inEndDate:= inDateFinal) AS tmp
+                    FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= inDateStart, inEndDate:= inDateFinal, inUnitId := inUnitId) AS tmp
                     )
 
    -- связь товара сети и главного товара и свойства 

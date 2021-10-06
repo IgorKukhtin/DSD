@@ -489,7 +489,7 @@ BEGIN
 
      -- Товары соц-проект (документ)
    , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
-                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                       FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := vbUnitId) AS tmp
                        )
      -- параметры из документа GoodsSP
    , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
@@ -1277,7 +1277,7 @@ BEGIN
 
     -- Товары соц-проект (документ)
   , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
-                      FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                      FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := inUnitId) AS tmp
                    )
     -- параметры из документа GoodsSP
   , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId

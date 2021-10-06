@@ -181,7 +181,7 @@ BEGIN
        -- Товары соц-проект (документ)
       , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId
                             , TRUE AS isSP
-                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
+                       FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate, inUnitId := inUnitId) AS tmp
                          )
 
       -- продажи

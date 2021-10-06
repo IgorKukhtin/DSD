@@ -878,6 +878,8 @@ type
     N320: TMenuItem;
     actMedicalProgramSPLink: TdsdOpenForm;
     N321: TMenuItem;
+    actBanCommentSend: TdsdOpenForm;
+    N322: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

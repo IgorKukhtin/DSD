@@ -2937,6 +2937,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashSUNForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanCommentSendEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBanCommentSendEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanCommentSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBanCommentSendForm');
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');
 

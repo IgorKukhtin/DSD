@@ -590,6 +590,7 @@ type
     spAvailabilityCheckMedicalProgram: TdsdStoredProc;
     spMedicalProgramSP_Goods: TdsdStoredProc;
     MedicalProgramSPGoodsCDS: TClientDataSet;
+    spGet_Goods_CodeRazom: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -3426,10 +3427,18 @@ begin
            (FormParams.ParamByName('isDiscountCommit').Value = False) and
            (FormParams.ParamByName('InvNumberOrder').Value <> '') and
            (FormParams.ParamByName('isBanAdd').Value = False)) and
-        (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) and (DiscountServiceForm.gCode <> 2) then
+           (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) and (DiscountServiceForm.gCode <> 2) then
         begin
-          ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект Abbott card)');
-          exit;
+          spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := 4521216;
+          spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
+          spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
+          spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
+          spGet_Goods_CodeRazom.Execute;
+          if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
+          begin
+            ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект Abbott card)');
+            exit;
+          end;
         end;
 
         Next;
@@ -8994,7 +9003,8 @@ begin
           CheckCDS.FieldByName('IdSP').AsString := SourceClientDataSet.FieldByName('IdSP').AsString;
 
           if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
-           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+           (FormParams.ParamByName('MedicalProgramSPId').Value <> 0)  then
           begin
 
             if FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger  then

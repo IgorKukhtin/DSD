@@ -324,14 +324,14 @@ BEGIN
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
 
-        IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
+/*        IF vbUserId in (12325076, 6406669, 3999086, 16175938, 4000094, 6002014, 6025400, 16411862)
         THEN
           SELECT ObjectLink_Unit_Parent.ChildObjectId
           INTO vbParentId
           FROM ObjectLink AS ObjectLink_Unit_Parent
           WHERE  ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             AND ObjectLink_Unit_Parent.ObjectId = vbUserUnitId;
-        END IF;
+        END IF;*/
 
         IF COALESCE (vbUserUnitId, 0) = 0
         THEN
@@ -412,6 +412,24 @@ BEGIN
               RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
             END IF;
           END IF;
+
+          IF COALESCE (inCommentSendID, 0) <> 0 AND
+             EXISTS (SELECT 1
+                     FROM Object AS Object_BanCommentSend
+                          LEFT JOIN ObjectLink AS ObjectLink_CommentSend
+                                               ON ObjectLink_CommentSend.ObjectId = Object_BanCommentSend.Id
+                                              AND ObjectLink_CommentSend.DescId = zc_ObjectLink_BanCommentSend_CommentSend()
+                          LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                               ON ObjectLink_Unit.ObjectId = Object_BanCommentSend.Id
+                                              AND ObjectLink_Unit.DescId = zc_ObjectLink_BanCommentSend_Unit()
+                      WHERE Object_BanCommentSend.DescId = zc_Object_BanCommentSend()
+                        AND Object_BanCommentSend.isErased = False 
+                        AND ObjectLink_Unit.ChildObjectId = vbFromId
+                        AND ObjectLink_CommentSend.ChildObjectId = inCommentSendID)
+          THEN
+            RAISE EXCEPTION 'Ошибка. Комментарий <%> вам запрещен к использованию.', (SELECT Object.ValueData FROM Object WHERE Object.Id = inCommentSendID);
+          END IF;
+          
         END IF;
 
 /*        IF EXISTS(SELECT 1 FROM MovementBoolean

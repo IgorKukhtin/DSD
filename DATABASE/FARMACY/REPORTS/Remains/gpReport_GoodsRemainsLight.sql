@@ -250,7 +250,7 @@ BEGIN
 
            -- Товары соц-проект (документ)
           , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                           FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inRemainsDate, inEndDate:= inRemainsDate) AS tmp
+                           FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= inRemainsDate, inEndDate:= inRemainsDate, inUnitId := inUnitId) AS tmp
                            )
                  
           , tmpGoodsMain AS (SELECT tmp.GoodsId
@@ -484,4 +484,3 @@ $BODY$
 -- тест
 --
 -- select * from gpReport_GoodsRemainsLight(inUnitId := 183292 , inRetailId := 0 , inJuridicalId := 0 , inRemainsDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'True' , inisUnitList := 'False' ,  inSession := '3');
-

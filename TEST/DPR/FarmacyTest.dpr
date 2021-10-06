@@ -1106,7 +1106,9 @@ uses
   MedicalProgramSPEdit in '..\..\FormsFarmacy\Guides\MedicalProgramSPEdit.pas' {MedicalProgramSPEditForm: TParentForm},
   MedicalProgramSP in '..\..\FormsFarmacy\Guides\MedicalProgramSP.pas' {MedicalProgramSPForm: TParentForm},
   MedicalProgramSPLinkEdit in '..\..\FormsFarmacy\Guides\MedicalProgramSPLinkEdit.pas' {MedicalProgramSPLinkEditForm: TParentForm},
-  MedicalProgramSPLink in '..\..\FormsFarmacy\Guides\MedicalProgramSPLink.pas' {MedicalProgramSPLinkForm: TParentForm};
+  MedicalProgramSPLink in '..\..\FormsFarmacy\Guides\MedicalProgramSPLink.pas' {MedicalProgramSPLinkForm: TParentForm},
+  BanCommentSendEdit in '..\..\FormsFarmacy\Guides\BanCommentSendEdit.pas' {BanCommentSendEditForm: TParentForm},
+  BanCommentSend in '..\..\FormsFarmacy\Guides\BanCommentSend.pas' {BanCommentSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

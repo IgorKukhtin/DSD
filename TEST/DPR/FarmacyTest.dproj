@@ -3968,6 +3968,14 @@
 				<Form>MedicalProgramSPLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BanCommentSendEdit.pas">
+				<Form>BanCommentSendEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BanCommentSend.pas">
+				<Form>BanCommentSendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
