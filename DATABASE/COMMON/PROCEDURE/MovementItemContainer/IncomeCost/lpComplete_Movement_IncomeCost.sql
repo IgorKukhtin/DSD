@@ -115,6 +115,10 @@ BEGIN
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Income.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
+             INNER JOIN MovementItemFloat AS MIF_Price
+                                          ON MIF_Price.MovementItemId = MovementItem.Id
+                                         AND MIF_Price.DescId         = zc_MIFloat_Price()
+                                         AND MIF_Price.ValueData      <> 0
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -182,6 +186,10 @@ BEGIN
                                       LEFT JOIN (SELECT tmpMIContainer_all.MovementItemId, SUM (tmpMIContainer_all.Amount) AS OperSumm FROM tmpMIContainer_all WHERE tmpMIContainer_all.DescId = zc_MIContainer_Summ() AND tmpMIContainer_all.Amount > 0 GROUP BY tmpMIContainer_all.MovementItemId
                                                 ) AS tmpMIContainer_Summ
                                                   ON tmpMIContainer_Summ.MovementItemId = tmpMIContainer_Count.MovementItemId
+                                      INNER JOIN MovementItemFloat AS MIF_Price
+                                                                   ON MIF_Price.MovementItemId = tmpMIContainer_Count.MovementItemId
+                                                                  AND MIF_Price.DescId         = zc_MIFloat_Price()
+                                                                  AND MIF_Price.ValueData      <> 0
                                  WHERE tmpMIContainer_Count.DescId = zc_MIContainer_Count()
                                    AND tmpMIContainer_Count.Amount > 0
                                 )
