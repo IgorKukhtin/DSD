@@ -259,10 +259,8 @@ BEGIN
           , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
           , tmpCarTrailer_param.Height :: TVarChar  AS Height_tr
           
-          
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
-
 
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                  ON ObjectLink_Personal_Member.ObjectId = tmpTransportGoods.PersonalDriverId

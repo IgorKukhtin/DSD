@@ -223,6 +223,8 @@ type
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

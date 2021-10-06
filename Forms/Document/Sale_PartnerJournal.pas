@@ -218,6 +218,8 @@ type
     actPrint_TTN_two: TdsdPrintAction;
     PersonalDriverName_TTN: TcxGridDBColumn;
     PersonalName_4_TTN: TcxGridDBColumn;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

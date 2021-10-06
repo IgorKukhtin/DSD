@@ -1323,11 +1323,11 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   }
@@ -1336,16 +1336,16 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementCheckForm');
 
@@ -1890,7 +1890,7 @@ end;
 
 procedure TLoadFormTest.LoadReestrFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournal_byReportForm');
 
@@ -1902,10 +1902,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateMovementForm');
-
+    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrStartDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateDialogForm'));
@@ -1913,7 +1913,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrPrintDialogForm');
-
+    }
 end;
 
 procedure TLoadFormTest.LoadReestrTransportGoodsFormTest;

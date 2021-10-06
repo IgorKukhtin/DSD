@@ -11,12 +11,49 @@ RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbPrintFormName TVarChar;
+   DECLARE vbPlaceOf TVarChar;
+   DECLARE vbLength TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransportGoods());
 
-       SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TTN')
+     -- если заполнено zc_objectString_Branch_PlaceOf + находим  ТТН + авто и если заполнено zc_ObjectFloat_Car_Length - тогда новая форма после 06,10,2021
+     -- если <= 06.10.2021 тогда всегда печатаем старый вариант
+     vbPlaceOf := (SELECT CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
+                               ELSE '' -- 'м.Днiпро'
+                          END  :: TVarChar   AS PlaceOf
+                   FROM MovementLinkObject AS MovementLinkObject_From
+                       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                            ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                       LEFT JOIN ObjectString AS ObjectString_PlaceOf                           
+                                              ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                             AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+                   WHERE MovementLinkObject_From.MovementId = inMovementId
+                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                   )::TVarChar;
+
+     vbLength := (SELECT ObjectFloat_Length.ValueData
+                  FROM (SELECT MovementLinkMovement.MovementChildId
+                        FROM MovementLinkMovement
+                        WHERE MovementLinkMovement.MovementId = inMovementId
+                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_TransportGoods()
+                       ) AS tmp
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                   ON MovementLinkObject_Car.MovementId = tmp.MovementChildId
+                                                  AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                      INNER JOIN ObjectFloat AS ObjectFloat_Length
+                                             ON ObjectFloat_Length.ObjectId = MovementLinkObject_Car.ObjectId
+                                            AND ObjectFloat_Length.DescId = zc_ObjectFloat_Car_Length()
+                  );
+
+
+     --Результат
+       SELECT CASE WHEN COALESCE (vbPlaceOf,'') <> '' AND COALESCE (vbLength,0) <> 0 
+                   THEN COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TTN')
+                   ELSE 'PrintMovement_TTN'
+              END :: TVarChar
               INTO vbPrintFormName
        FROM Movement
             LEFT JOIN PrintForms_View

@@ -215,6 +215,8 @@ type
     actPrint_PackWeight: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public
