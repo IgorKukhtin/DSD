@@ -196,6 +196,8 @@ type
     spSelectBarCode: TdsdStoredProc;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
+    spInsertUpdateMIMaster_BarCode_PartNumber: TdsdStoredProc;
+    actUpdateBarCodeDS: TdsdUpdateDataSet;
   private
   public
   end;

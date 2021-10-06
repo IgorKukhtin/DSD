@@ -184,9 +184,6 @@ object SendForm: TSendForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = 88
-        ExplicitHeight = 227
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -798,7 +795,6 @@ object SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 267
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -894,17 +890,17 @@ object SendForm: TSendForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode_Goods_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-            DataBinding.FieldName = 'BarCode_Goods'
-            Width = 212
-          end
           object BarCode_PartNumber_ch1: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <S/N> '#1080#1083#1080' '#1074#1074#1086#1076
+            Caption = ' <S/N>  '#1074#1074#1086#1076
             DataBinding.FieldName = 'BarCode_PartNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 219
+          end
+          object BarCode_Goods_ch1: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+            DataBinding.FieldName = 'BarCode_Goods'
+            Width = 212
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1397,6 +1393,21 @@ object SendForm: TSendForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actUpdateBarCodeDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster_BarCode_PartNumber
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster_BarCode_PartNumber
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DataSource
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -3045,6 +3056,7 @@ object SendForm: TSendForm
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
     OnDblClickActionList = <
       item
       end>
@@ -3059,10 +3071,10 @@ object SendForm: TSendForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
+        Column = BarCode_PartNumber_ch1
       end
       item
-      end
-      item
+        Column = BarCode_Goods_ch1
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
@@ -3071,7 +3083,7 @@ object SendForm: TSendForm
     Top = 153
   end
   object spSelectBarCode: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_ProductionPersonal_BarCode'
+    StoredProcName = 'gpSelect_MI_Send_BarCode'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -3089,5 +3101,46 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 456
     Top = 152
+  end
+  object spInsertUpdateMIMaster_BarCode_PartNumber: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Send_BarCode_PartNumber'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode_Goods'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode_PartNumber'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 766
+    Top = 151
   end
 end
