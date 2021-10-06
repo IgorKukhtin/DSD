@@ -1,9 +1,9 @@
-object CarForm: TCarForm
+object BanCommentSendForm: TBanCommentSendForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080'>'
-  ClientHeight = 367
-  ClientWidth = 853
+  Caption = #1047#1072#1087#1088#1077#1090' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+  ClientHeight = 332
+  ClientWidth = 805
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,14 +14,13 @@ object CarForm: TCarForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 853
-    Height = 341
+    Width = 805
+    Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -29,7 +28,7 @@ object CarForm: TCarForm
     LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -37,170 +36,64 @@ object CarForm: TCarForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.HeaderHeight = 40
+      OptionsSelection.InvertSelect = False
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 52
-      end
-      object CarModelName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 37
       end
-      object Name: TcxGridDBColumn
-        Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
-        DataBinding.FieldName = 'Name'
+      object DiscountExternalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1055#1088#1086#1077#1082#1090#1072
+        DataBinding.FieldName = 'DiscountExternalCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 70
       end
-      object FuelMasterName: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelMasterName'
+      object CommentSendName: TcxGridDBColumn
+        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+        DataBinding.FieldName = 'CommentSendName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object FuelChildName: TcxGridDBColumn
-        Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelChildName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 110
-      end
-      object PersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
-      end
-      object RegistrationCertificate: TcxGridDBColumn
-        Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
-        DataBinding.FieldName = 'RegistrationCertificate'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 240
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 293
       end
       object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
+        Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 194
+      end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
+        DataBinding.FieldName = 'UnitCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
-      end
-      object AssetCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1054#1057
-        DataBinding.FieldName = 'AssetCode'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.;-,0.; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 50
-      end
-      object AssetName: TcxGridDBColumn
-        Caption = #1054#1057
-        DataBinding.FieldName = 'AssetName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 60
-      end
-      object AssetInvNumber: TcxGridDBColumn
-        Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088' '#1054#1057
-        DataBinding.FieldName = 'AssetInvNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
-        Options.Editing = False
-        Width = 142
-      end
-      object KoeffHoursWork: TcxGridDBColumn
-        Caption = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088'.'#1074#1088'.'
-        DataBinding.FieldName = 'KoeffHoursWork'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
-        Options.Editing = False
-        Width = 92
-      end
-      object PartnerMin: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1080#1085#1091#1090' '#1085#1072' '#1058#1058
-        DataBinding.FieldName = 'PartnerMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 82
-      end
-      object Length: TcxGridDBColumn
-        Caption = #1044#1083#1080#1085#1072', '#1084#1084
-        DataBinding.FieldName = 'Length'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1083#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 57
-      end
-      object Width: TcxGridDBColumn
-        Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
-        DataBinding.FieldName = 'Width'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1064#1080#1088#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 58
-      end
-      object Height: TcxGridDBColumn
-        Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
-        DataBinding.FieldName = 'Height'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1099#1089#1086#1090#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 57
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -209,25 +102,24 @@ object CarForm: TCarForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 72
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 56
-    Top = 104
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
+    Left = 48
+    Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 160
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -241,8 +133,8 @@ object CarForm: TCarForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 104
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -261,8 +153,8 @@ object CarForm: TCarForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 104
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -303,7 +195,7 @@ object CarForm: TCarForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -312,14 +204,6 @@ object CarForm: TCarForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -376,24 +260,35 @@ object CarForm: TCarForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Category = 0
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Visible = ivAlways
+      ImageIndex = 7
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbShowAll: TdxBarButton
+    object dxBarButton1: TdxBarButton
+      Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      Category = 0
+      Hint = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      Visible = ivAlways
+      ImageIndex = 28
+    end
+    object dxBarButton2: TdxBarButton
       Action = actShowAll
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -414,8 +309,8 @@ object CarForm: TCarForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCarEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TBanCommentSendEditForm'
+      FormNameParam.Value = 'TBanCommentSendEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -425,7 +320,7 @@ object CarForm: TCarForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -435,22 +330,22 @@ object CarForm: TCarForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCarEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TBanCommentSendEditForm'
+      FormNameParam.Value = 'TBanCommentSendEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -467,7 +362,7 @@ object CarForm: TCarForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -483,78 +378,7 @@ object CarForm: TCarForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverCode'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalDriverName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CarModelName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'CarModelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'NameAll'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'NameAll'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -566,7 +390,7 @@ object CarForm: TCarForm
       ShortCut = 16472
     end
     object ProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
@@ -579,7 +403,7 @@ object CarForm: TCarForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -587,7 +411,7 @@ object CarForm: TCarForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -605,34 +429,22 @@ object CarForm: TCarForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Car_size
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Car_size
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Car'
-    DataSet = ClientDataSet
+    StoredProcName = 'gpSelect_Object_BanCommentSend'
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -644,26 +456,41 @@ object CarForm: TCarForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 48
-    Top = 216
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 160
+    Left = 160
+    Top = 152
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
         ShortCut = 13
       end
       item
@@ -679,68 +506,7 @@ object CarForm: TCarForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 168
-    Top = 216
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 208
-  end
-  object spUpdate_Car_size: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Car_size'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLength'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Length'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inWidth'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Width'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeight'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Height'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 536
-    Top = 176
+    Left = 368
+    Top = 128
   end
 end

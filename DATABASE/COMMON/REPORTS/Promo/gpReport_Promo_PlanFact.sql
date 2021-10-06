@@ -345,8 +345,8 @@ BEGIN
                                LEFT JOIN tmpMI_GoodsKind AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = tmpMovement.MovementItemId
                    
                                LEFT JOIN tmpMovementItemFloat2 AS MIFloat_AmountPartner
-                                                              ON MIFloat_AmountPartner.MovementItemId = tmpMovement.MovementItemId
-                                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                               ON MIFloat_AmountPartner.MovementItemId = tmpMovement.MovementItemId
+                                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                   
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpMovement.GoodsId

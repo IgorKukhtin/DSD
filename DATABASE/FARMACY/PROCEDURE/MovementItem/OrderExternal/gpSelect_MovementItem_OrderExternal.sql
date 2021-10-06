@@ -130,7 +130,7 @@ BEGIN
 
     -- Товары соц-проект (документ)
    , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate) AS tmp
+                   FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate, inUnitId := vbUnitId) AS tmp
                    )
 
    , tmpGoodsParam AS (SELECT ObjectBoolean.*

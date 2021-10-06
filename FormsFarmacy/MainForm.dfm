@@ -4732,6 +4732,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actBanCommentSend: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1087#1088#1077#1090' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      FormName = 'TBanCommentSendForm'
+      FormNameParam.Value = 'TBanCommentSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6061,6 +6072,9 @@
         end
         object Z2: TMenuItem
           Action = actReport_CheckZReport
+        end
+        object N322: TMenuItem
+          Action = actBanCommentSend
         end
         object GUID2: TMenuItem
           Action = actCheckoutTesting

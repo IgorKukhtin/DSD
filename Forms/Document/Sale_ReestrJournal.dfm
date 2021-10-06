@@ -1366,6 +1366,32 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
+    object actChecked: TdsdExecStoredProc [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object actElectron: TdsdExecStoredProc [20]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spElectron
+      StoredProcList = <
+        item
+          StoredProc = spElectron
+        end>
+      Caption = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
@@ -1397,32 +1423,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
-    end
-    object actChecked: TdsdExecStoredProc [19]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spChecked
-      StoredProcList = <
-        item
-          StoredProc = spChecked
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
-    object actElectron: TdsdExecStoredProc [20]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spElectron
-      StoredProcList = <
-        item
-          StoredProc = spElectron
-        end>
-      Caption = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 52
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
@@ -1567,7 +1567,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end
         item
           Name = 'inPrice'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1990,6 +1990,9 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           Action = actGet_TTN
         end
         item
+          Action = actSPPrintTTNProcName
+        end
+        item
           Action = actPrint_TTN
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
@@ -2022,7 +2025,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -2072,6 +2075,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2151,7 +2156,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end>
       Params = <
         item
@@ -3114,6 +3118,17 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = 'actPrint_Quality_ReportName'
     end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3681,6 +3696,13 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -3735,7 +3757,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4184,7 +4206,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -4834,5 +4856,30 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     PackSize = 1
     Left = 888
     Top = 408
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1096
+    Top = 160
   end
 end

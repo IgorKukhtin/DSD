@@ -9725,4 +9725,54 @@ inherited MainCashForm2: TMainCashForm2
     Left = 864
     Top = 392
   end
+  object spGet_Goods_CodeRazom: TdsdStoredProc
+    StoredProcName = 'gpGet_Goods_Juridical_value'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDiscountExternal'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outJuridicalID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCodeRazom'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvoiceNumber'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvoiceDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 56
+  end
 end

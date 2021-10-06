@@ -1724,6 +1724,14 @@ begin
                   exit;
             end;
             //finally
+          end else
+          begin
+              ShowMessage ('Ошибка не найден остаток по количеству одной партией нужного поставщика.' + #10+ #13
+              + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+              + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+               //ошибка
+              lMsg:='Error';
+              exit;
           end;
 
       end // if BarCode_find <> ''
