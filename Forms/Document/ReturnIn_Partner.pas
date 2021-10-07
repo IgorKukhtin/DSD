@@ -228,6 +228,16 @@ type
     mactPrintAkt: TMultiAction;
     bbPrintAkt: TdxBarButton;
     Amount_find: TcxGridDBColumn;
+    spGet_checkopen_Sale: TdsdStoredProc;
+    actOpenTax_child: TdsdOpenForm;
+    actOpenSale_child: TdsdOpenForm;
+    bbOpenSale_child: TdxBarButton;
+    bbOpenTax_child: TdxBarButton;
+    macOpenSale_child: TMultiAction;
+    actGet_checkopen_Sale: TdsdExecStoredProc;
+    macOpenTax_child: TMultiAction;
+    spGet_checkopen_Tax: TdsdStoredProc;
+    actGet_checkopen_Tax: TdsdExecStoredProc;
   private
     { Private declarations }
   public
