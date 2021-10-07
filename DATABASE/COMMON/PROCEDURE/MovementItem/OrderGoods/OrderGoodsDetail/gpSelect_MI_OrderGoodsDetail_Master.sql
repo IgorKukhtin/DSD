@@ -59,22 +59,34 @@ BEGIN
            , Object_Measure.ValueData           AS MeasureName
 
            , tmpMI.Amount                               :: TFloat AS Amount
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                        THEN tmpMI.Amount
-                        ELSE 0
-                   END  AS NUMERIC (16,0)) ::TFloat AS Amount_sh
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN tmpMI.Amount
+                  ELSE 0
+             END ::TFloat AS Amount_sh
 
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
-                        THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
-                        ELSE tmpMI.Amount
-                   END  AS NUMERIC (16,0)) ::TFloat AS Amount_kg
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE tmpMI.Amount
+             END ::TFloat AS Amount_kg
 
            --, tmpMI.Amount ::TFloat AS Amount_kg --CASE WHEN  Object_Measure.Id <> zc_Measure_Sh() THEN tmpMI.Amount ELSE 0 END ::TFloat AS Amount_kg
 
-           , MIFloat_AmountForecast.ValueData           :: TFloat AS AmountForecast
-           , MIFloat_AmountForecastOrder.ValueData      :: TFloat AS AmountForecastOrder
-           , MIFloat_AmountForecastPromo.ValueData      :: TFloat AS AmountForecastPromo
-           , MIFloat_AmountForecastOrderPromo.ValueData :: TFloat AS AmountForecastOrderPromo
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN (COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE  COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)
+             END ::TFloat AS AmountForecast
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)
+             END ::TFloat AS AmountForecastOrder
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN (COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE  COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
+             END ::TFloat AS AmountForecastPromo
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
+             END ::TFloat AS AmountForecastOrderPromo
 
            , tmpMI.isErased             AS isErased
 

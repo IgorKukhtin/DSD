@@ -1,17 +1,18 @@
 -- Function: lpInsert_MI_OrderGoodsDetail_Master()
-DROP FUNCTION IF EXISTS lpInsert_MI_OrderGoodsDetail_Master (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+
+DROP FUNCTION IF EXISTS lpInsert_MI_OrderGoodsDetail_Master (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsert_MI_OrderGoodsDetail_Master (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsert_MI_OrderGoodsDetail_Master(
     IN inId                        Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                Integer   , -- Ключ объекта
-    IN inParentId                  Integer   , -- 
     IN inObjectId                  Integer   , -- Товары
-    IN inGoodsKindId               Integer   , 
-    IN inAmount                    TFloat    , -- Количество кг
-    IN inAmountForecast            TFloat    , -- Количество шт
-    IN inAmountForecastOrder       TFloat    , --
-    IN inAmountForecastPromo       TFloat    , --
-    IN inAmountForecastOrderPromo  TFloat    , --
+    IN inGoodsKindId               Integer   , -- 
+    IN inAmount                    TFloat    , -- Количество ПЛАН
+    IN inAmountForecast            TFloat    , -- Статистика(продажа) - БЕЗ акций
+    IN inAmountForecastOrder       TFloat    , -- Статистика(заявка)  - БЕЗ акций
+    IN inAmountForecastPromo       TFloat    , -- Статистика(продажа) - ТОЛЬКО Акции
+    IN inAmountForecastOrderPromo  TFloat    , -- Статистика(заявка)  - ТОЛЬКО Акции
     IN inUserId                    Integer     -- сессия пользователя                                                
 )
 RETURNS VOID AS
@@ -24,7 +25,7 @@ BEGIN
      vbIsInsert:= COALESCE (inId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inObjectId, inMovementId, inAmount, NULL); --inParentId
+     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inObjectId, inMovementId, inAmount, NULL);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inId, inGoodsKindId);
