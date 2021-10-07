@@ -50,7 +50,7 @@ BEGIN
 
 
      --Результат
-       SELECT CASE WHEN COALESCE (vbPlaceOf,'') <> '' AND COALESCE (vbLength,0) <> 0 
+       SELECT CASE WHEN 1=1 /*COALESCE (vbPlaceOf,'') <> '' AND COALESCE (vbLength,0) <> 0*/
                    THEN COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TTN')
                    ELSE 'PrintMovement_TTN'
               END :: TVarChar
