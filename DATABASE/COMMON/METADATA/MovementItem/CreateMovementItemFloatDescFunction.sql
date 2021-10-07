@@ -1464,9 +1464,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountSend() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountSend', 'Количество в созданном ВИП перемещении'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSend');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountStorekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountStorekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountStorekeeper', 'Количество вопросов из темы при тесте кладовщику'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountStorekeeper');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 07.10.21                                                                                                     * zc_MIFloat_AmountStorekeeper
  04.10.21                                                                                                     * zc_MIFloat_CountSPMin
  21.08.21                                                                                                     * zc_MIFloat_AmountSend
  25.04.21                                                                                                     * zc_MIFloat_IlliquidAssetsRepayment

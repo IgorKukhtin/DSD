@@ -64,7 +64,7 @@ object BanCommentSendForm: TBanCommentSendForm
         Width = 70
       end
       object CommentSendName: TcxGridDBColumn
-        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+        Caption = #1042#1080#1076' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103' '#1057#1059#1053
         DataBinding.FieldName = 'CommentSendName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

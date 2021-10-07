@@ -167,12 +167,12 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 200
     end
     object cxLabel3: TcxLabel
-      Left = 238
+      Left = 222
       Top = 8
       Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1085#1103#1090#1099#1093' '#1087#1086' '#1090#1077#1083#1077#1092#1086#1085#1091' '#1079#1072#1082#1072#1079#1086#1074
     end
     object ceTotalSummPhone: TcxCurrencyEdit
-      Left = 447
+      Left = 431
       Top = 7
       TabStop = False
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -181,7 +181,7 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 89
     end
     object ceTotalSummSale: TcxCurrencyEdit
-      Left = 447
+      Left = 431
       Top = 32
       TabStop = False
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -190,13 +190,13 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 89
     end
     object cxLabel4: TcxLabel
-      Left = 238
+      Left = 222
       Top = 33
       Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
     end
     object ceHoursWork: TcxCurrencyEdit
-      Left = 447
-      Top = 57
+      Left = 703
+      Top = 58
       TabStop = False
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
       Properties.ReadOnly = True
@@ -204,12 +204,12 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 89
     end
     object cxLabel5: TcxLabel
-      Left = 238
+      Left = 526
       Top = 58
-      Caption = #9#1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074' '#1074#1089#1077#1084#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
+      Caption = #9#1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
     end
     object deDateCalculation: TcxDateEdit
-      Left = 572
+      Left = 635
       Top = 20
       EditValue = 42767d
       Properties.AssignedValues.DisplayFormat = True
@@ -218,9 +218,23 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 157
     end
     object cxLabel6: TcxLabel
-      Left = 572
+      Left = 635
       Top = 2
       Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
+    end
+    object ceTotalSummSaleNP: TcxCurrencyEdit
+      Left = 431
+      Top = 58
+      TabStop = False
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 89
+    end
+    object cxLabel7: TcxLabel
+      Left = 222
+      Top = 59
+      Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' "'#1053#1086#1074#1072#1103' '#1087#1086#1095#1090#1072'"'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -534,6 +548,13 @@ inherited WagesVIPForm: TWagesVIPForm
         Name = 'TotalSummSale'
         Value = Null
         Component = ceTotalSummSale
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummSaleNP'
+        Value = Null
+        Component = ceTotalSummSaleNP
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

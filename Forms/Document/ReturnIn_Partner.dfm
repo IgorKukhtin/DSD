@@ -723,8 +723,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1242
     Height = 140
     TabOrder = 3
-    ExplicitLeft = -72
-    ExplicitTop = 44
     ExplicitWidth = 1242
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -3030,6 +3028,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           StoredProc = spGet_checkopen_Tax
         end>
       Caption = 'actGet_checkopen_Sale'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       ImageIndex = 26
     end
     object actGet_checkopen_Sale: TdsdExecStoredProc
@@ -3425,10 +3424,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     object bbOpenSale_child: TdxBarButton
       Action = actGet_checkopen_Sale
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
       Category = 0
     end
     object bbOpenTax_child: TdxBarButton
       Action = actGet_checkopen_Tax
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       Category = 0
     end
   end

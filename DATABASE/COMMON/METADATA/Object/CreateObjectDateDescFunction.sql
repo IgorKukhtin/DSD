@@ -584,8 +584,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_CorrectWagesPercentage_DateEnd() RETURN
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_CorrectWagesPercentage(), 'zc_ObjectDate_CorrectWagesPercentage_DateEnd', 'Дата окончания действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CorrectWagesPercentage_DateEnd');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_Exam() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Exam'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_Exam', 'Сдача экзамена' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Exam');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 07.10.21                                                                                     * zc_ObjectDate_Unit_Exam
  24.09.21                                                                                     * zc_ObjectDate_CorrectWagesPercentage_Date... 
  15.09.21                                                                                     * zc_ObjectDate_Goods_Update... 
  09.09.21                                                                                     * zc_ObjectDate_Maker_StartDateUnPlanned, zc_ObjectDate_Maker_EndDateUnPlanned

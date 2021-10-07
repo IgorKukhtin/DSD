@@ -489,7 +489,7 @@ BEGIN
 
      -- Товары соц-проект (документ)
    , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
-                       FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := vbUnitId) AS tmp
+                       FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := inUnitId) AS tmp
                        )
      -- параметры из документа GoodsSP
    , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
@@ -1730,4 +1730,6 @@ where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
 -- тест
 -- SELECT * FROM gpSelect_Object_Price(inUnitId := 11300059 , inGoodsId := 0 , inisShowAll := 'TRUE' , inisShowDel := 'False' ,  inSession := '3');
 
-select * from gpSelect_Object_Price(inUnitId := 0 , inGoodsId := 6346632 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+--select * from gpSelect_Object_Price(inUnitId := 0 , inGoodsId := 6346632 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+
+select * from gpSelect_Object_Price(inUnitId := 13338606 , inGoodsId := 0 , inisShowAll := 'True' , inisShowDel := 'False' ,  inSession := '3');

@@ -63,7 +63,8 @@ RETURNS TABLE(
     ,AmountOutWeight_fact      TFloat    --Кол-во реализация (факт) Вес
     ,AmountIn_fact             TFloat    --Кол-во возврат (факт)
     ,AmountInWeight_fact       TFloat    --Кол-во возврат (факт) Вес
-    , PersentWeight            TFloat    --  % Отклонения факта продажи от плана
+    , PersentWeight            TFloat    -- % Отклонения факта продажи от плана  - средний план продаж расчет = средний план продаж * коэфф дней И факт продаж за период = запросом п.3 за период отчета
+    , PersentWeight_2          TFloat    -- % Отклонения факта продажи от плана (AmountPlanMin + AmountPlanMax) / 2 и zc_MIFloat_AmountOut - это ИТОГО за весь период
     ,GoodsKindName             TVarChar  --Вид упаковки
     ,GoodsKindCompleteName     TVarChar  --Вид упаковки ( примечание)
    -- ,GoodsKindName_List   TVarChar  --Вид товара (справочно)
@@ -112,6 +113,14 @@ BEGIN
                                , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
                                , MovementLinkObject_Unit.ObjectId            AS UnitId
                                , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
+
+                               --считаем какой период составляет акция в выбранном периоде отчета  
+                               /*(коэфф дней = факт_дней_акции_в периоде / факт дней акций итого, т.е всего дней акции = 50, в сентябре 22дн и в октябре 28дн, тогда для сент коэф= 22/50)*/
+                               , CASE WHEN MovementDate_StartSale.ValueData < inStartDate THEN inStartDate ELSE MovementDate_StartSale.ValueData END
+                               , CASE WHEN MovementDate_EndSale.ValueData > inEndDate THEN inEndDate ELSE MovementDate_EndSale.ValueData END
+                               , (DATE_PART ('DAY',(CASE WHEN MovementDate_EndSale.ValueData > inEndDate THEN inEndDate ELSE MovementDate_EndSale.ValueData END              --inEndDate
+                                                  - CASE WHEN MovementDate_StartSale.ValueData < inStartDate THEN inStartDate ELSE MovementDate_StartSale.ValueData END)     --inStartDate
+                                                   ) + 1) ::TFloat AS CountDay
                           FROM Movement AS Movement_Promo
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                           ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
@@ -156,6 +165,7 @@ BEGIN
                               , DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
                               , Object_Status.ObjectCode                    AS StatusCode         --
                               , Object_Status.ValueData                     AS StatusName         --
+                              , Movement_Promo.CountDay
                          FROM tmpMovement AS Movement_Promo
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
                              LEFT JOIN MovementDate AS MovementDate_StartPromo
@@ -447,8 +457,8 @@ BEGIN
           , MI_PromoGoods.AmountPlanAvg      ::TFloat --Cреднее планируемого объема продаж на акционный период (в кг) Вес
           , MI_PromoGoods.AmountPlanAvgWeight::TFloat --Среднее планируемого объема продаж на акционный период (в кг) Вес
 
-          , CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvg/Movement_Promo.CountDaySale * vbCountDay ELSE 0 END        AS NUMERIC (16,2))::TFloat AS AmountPlanAvg_calc--Cреднее планируемого объема продаж на период отчета(в кг) Вес
-          , CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * vbCountDay ELSE 0 END  AS NUMERIC (16,2))::TFloat AS AmountPlanAvgWeight_calc--Cреднее планируемого объема продаж на период отчета(в кг) Вес
+          , CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvg/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END        AS NUMERIC (16,2))::TFloat AS AmountPlanAvg_calc--Cреднее планируемого объема продаж на период отчета(в кг) Вес
+          , CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END  AS NUMERIC (16,2))::TFloat AS AmountPlanAvgWeight_calc--Cреднее планируемого объема продаж на период отчета(в кг) Вес
 
           , MI_PromoGoods.AmountReal         ::TFloat --Объем продаж в аналогичный период, кг
           , MI_PromoGoods.AmountRealWeight   ::TFloat --Объем продаж в аналогичный период, кг Вес
@@ -459,19 +469,30 @@ BEGIN
           , MI_PromoGoods.AmountIn           ::TFloat --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight     ::TFloat --Кол-во возврат (факт) Вес
 
-          , Movement_Promo.CountDaySale ::TFloat
-          , vbCountDay                  ::TFloat AS CountDay
+          , Movement_Promo.CountDaySale      ::TFloat
+          , Movement_Promo.CountDay          ::TFloat
 
           , tmpDataFact.AmountOut          ::TFloat AS AmountOut_fact      --Кол-во реализация (факт)
           , tmpDataFact.AmountOutWeight    ::TFloat AS AmountOutWeight_fact--Кол-во реализация (факт) Вес
           , tmpDataFact.AmountIn           ::TFloat AS AmountIn_fact       --Кол-во возврат (факт)
           , tmpDataFact.AmountInWeight     ::TFloat AS AmountInWeight_fact --Кол-во возврат (факт) Вес
 
-          , CAST (CASE WHEN (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * vbCountDay ELSE 0 END) <> 0 
-                 THEN (COALESCE (tmpDataFact.AmountOutWeight,0) - (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * vbCountDay ELSE 0 END) ) * 100
-                       / (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * vbCountDay ELSE 0 END)
+          /*, CAST (CASE WHEN (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END) <> 0 
+                 THEN (COALESCE (tmpDataFact.AmountOutWeight,0) - (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END) ) * 100
+                       / (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END)
                  ELSE 0
             END  AS NUMERIC (16,2)) ::TFloat AS PersentWeight
+            */
+
+          , CASE WHEN CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2)) <> 0
+                 THEN CAST( (100 - (tmpDataFact.AmountOutWeight * 100/ CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2))) ) AS NUMERIC (16,2))
+                 ELSE 0
+            END ::TFloat AS PersentWeight
+
+          , CASE WHEN MI_PromoGoods.AmountPlanAvgWeight <> 0
+                 THEN CAST( (100 - (MI_PromoGoods.AmountOutWeight * 100/ MI_PromoGoods.AmountPlanAvgWeight)) AS NUMERIC (16,2))
+                 ELSE 0
+            END ::TFloat AS PersentWeight_2        
 
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
           , MI_PromoGoods.GoodsKindCompleteName         ::TVarChar AS GoodsKindCompleteName

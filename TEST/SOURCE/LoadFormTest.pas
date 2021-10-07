@@ -1439,10 +1439,10 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
-    {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
    }

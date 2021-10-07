@@ -285,6 +285,14 @@ type
     actChoiceSale_reason: TOpenChoiceForm;
     StartDate_ch2: TcxGridDBColumn;
     EndDate_ch2: TcxGridDBColumn;
+    spGet_checkopen_Sale: TdsdStoredProc;
+    spGet_checkopen_Tax: TdsdStoredProc;
+    actGet_checkopen_Sale: TdsdExecStoredProc;
+    actOpenTax_child: TdsdOpenForm;
+    actOpenSale_child: TdsdOpenForm;
+    actGet_checkopen_Tax: TdsdExecStoredProc;
+    bbGet_checkopen_Sale: TdxBarButton;
+    bbGet_checkopen_Tax: TdxBarButton;
   private
     { Private declarations }
   public

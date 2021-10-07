@@ -353,9 +353,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 104
           end
           object AmountPlanAvg_calc: TcxGridDBColumn
-            Caption = 
-              #1057#1088#1077#1076#1085#1077#1077' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075','#1096#1090' ('#1088#1072 +
-              #1089#1095#1077#1090')'
+            Caption = 'C'#1088#1077#1076#1085#1080#1081' '#1087#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1088#1072#1089#1095#1077#1090', '#1096#1090' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'AmountPlanAvg_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -366,9 +364,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 99
           end
           object AmountPlanAvgWeight_calc: TcxGridDBColumn
-            Caption = 
-              #1057#1088#1077#1076#1085#1077#1077' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', ('#1074#1077#1089') ('#1088#1072 +
-              #1089#1095#1077#1090')'
+            Caption = 'C'#1088#1077#1076#1085#1080#1081' '#1087#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1088#1072#1089#1095#1077#1090', ('#1074#1077#1089') ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'AmountPlanAvgWeight_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -489,7 +485,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 69
           end
           object AmountOrder: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -500,7 +496,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 63
           end
           object AmountOrderWeight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1079#1072#1103#1074#1082#1080', '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -511,7 +507,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 63
           end
           object AmountOut: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090')'
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -522,17 +518,18 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 67
           end
           object AmountOutWeight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090') '#1042#1077#1089
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078', '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            DateTimeGrouping = dtgRelativeToToday
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
           object AmountIn: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -543,7 +540,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 62
           end
           object AmountInWeight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090', '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -554,7 +551,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 63
           end
           object AmountOut_fact: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090' '#1088#1072#1089#1095#1077#1090')'
+            Caption = #1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountOut_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -565,7 +562,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 67
           end
           object AmountOutWeight_fact: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090'  '#1088#1072#1089#1095#1077#1090') '#1042#1077#1089
+            Caption = #1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076', '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -575,7 +572,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 66
           end
           object AmountIn_fact: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090' '#1088#1072#1089#1095#1077#1090')'
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountIn_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -586,7 +583,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 62
           end
           object AmountInWeight_fact: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090' '#1088#1072#1089#1095#1077#1090') '#1042#1077#1089
+            Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1087#1077#1088#1080#1086#1076', '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight_fact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -597,7 +594,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 63
           end
           object CountDay: TcxGridDBColumn
-            Caption = #1044#1085#1077#1081' ('#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072')'
+            Caption = #1044#1085#1077#1081' '#1072#1082#1094#1080#1080' ('#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072')'
             DataBinding.FieldName = 'CountDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -619,13 +616,24 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
             Width = 63
           end
           object PersentWeight: TcxGridDBColumn
-            Caption = '% '#1086#1090#1082#1083'. '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072
+            Caption = '% '#1086#1090#1082#1083'.  '#1087#1083#1072#1085#1072' '#1086#1090' '#1092#1072#1082#1090#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'PersentWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083'. '#1092#1072#1082#1090#1072' '#1086#1090' '#1087#1083#1072#1085#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072' '#1080' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1072#1082#1094#1080#1080
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1087#1083#1072#1085#1072' '#1086#1090' '#1092#1072#1082#1090#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1086#1090#1095#1077#1090#1072' '#1080' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' '#1072#1082#1094#1080#1080
+            Width = 100
+          end
+          object PersentWeight_2: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'.  '#1087#1083#1072#1085#1072' '#1086#1090' '#1092#1072#1082#1090#1072' '#1048#1058#1054#1043#1054' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'PersentWeight_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'.  '#1087#1083#1072#1085#1072' '#1086#1090' '#1092#1072#1082#1090#1072' '#1048#1058#1054#1043#1054' '#1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
             Width = 100
           end
         end
