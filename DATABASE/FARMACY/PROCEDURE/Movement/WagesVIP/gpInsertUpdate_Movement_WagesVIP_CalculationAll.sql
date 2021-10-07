@@ -11,8 +11,9 @@ $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbOperDate    TDateTime;
    DECLARE vbStatusId    Integer;
-   DECLARE vbTotalSummPhone TFloat;
-   DECLARE vbTotalSummSale  TFloat;
+   DECLARE vbTotalSummPhone   TFloat;
+   DECLARE vbTotalSummSale    TFloat;
+   DECLARE vbTotalSummSaleNP  TFloat;
    DECLARE vbHoursWork      TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -53,6 +54,7 @@ BEGIN
     
     vbTotalSummPhone := 0;
     vbTotalSummSale := 0;
+    vbTotalSummSaleNP := 0;
     vbHoursWork := 0;
     
     -- Проведенные чеки
@@ -90,10 +92,36 @@ BEGIN
     INTO vbTotalSummPhone, vbTotalSummSale
     FROM tmpMovement AS Movement;  
 
+    -- Проведенные продажы "Новая почта" 
+    WITH tmpMovement AS (SELECT Movement.*
+                              , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+                         FROM Movement
+
+                              INNER JOIN MovementBoolean AS MovementBoolean_NP
+                                                         ON MovementBoolean_NP.MovementId = Movement.Id
+                                                        AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
+                                                        AND MovementBoolean_NP.ValueData = True
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                 
+                         WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
+                           AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                           AND Movement.DescId = zc_Movement_Sale()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                      )
+                      
+    SELECT SUM(Movement.TotalSumm)
+    INTO vbTotalSummSaleNP
+    FROM tmpMovement AS Movement;  
+
     -- сохранили отметку <Сумма реализации заказов принятых по телефону>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
     -- сохранили отметку <Сумма реализации заказов>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSale(), inMovementId, vbTotalSummSale);
+    -- сохранили отметку <Сумма реализации заказов>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSaleNP(), inMovementId, vbTotalSummSaleNP);
     
     -- таблица
     CREATE TEMP TABLE tmpCalculation (UserId Integer
@@ -149,8 +177,8 @@ BEGIN
     UPDATE tmpCalculation SET Summa = Calc.Summa
     FROM (SELECT tmpCalculation.UserId
                , tmpCalculation.PayrollTypeVIPID
-               , ROUND(vbTotalSummPhone * tmpCalculation.HoursWork * ObjectFloat_PercentPhone.ValueData / 100 / vbHoursWork +
-                       vbTotalSummSale* tmpCalculation.HoursWork * ObjectFloat_PercentOther.ValueData / 100 / vbHoursWork, 2) AS Summa
+               , ROUND((COALESCE(vbTotalSummPhone, 0) + COALESCE(vbTotalSummSaleNP, 0)) * tmpCalculation.HoursWork * ObjectFloat_PercentPhone.ValueData / 100 / vbHoursWork +
+                       COALESCE(vbTotalSummSale, 0) * tmpCalculation.HoursWork * ObjectFloat_PercentOther.ValueData / 100 / vbHoursWork, 2) AS Summa
 
           FROM tmpCalculation
                
@@ -214,4 +242,4 @@ $BODY$
 */
 
 -- 
-select * from gpInsertUpdate_Movement_WagesVIP_CalculationAll(inMovementId := 24892120  ,  inSession := '3');
+select * from gpInsertUpdate_Movement_WagesVIP_CalculationAll(inMovementId := 24892120 ,  inSession := '3');

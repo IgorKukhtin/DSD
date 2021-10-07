@@ -587,9 +587,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_ZReport() RETURNS Integer AS $BODY$B
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_ZReport', 'Номер Z отчета' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ZReport');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummSaleNP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSaleNP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummSaleNP', 'Сумма продаж "Новая почта"' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSaleNP');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 06.09.21                                                                                     * zc_MovementFloat_TotalSummSaleNP
  01.09.21                                                                                     * zc_MovementFloat_ZReport
  30.07.21                                                                                     * zc_MovementFloat_SummaReceivedFact
  23.07.21                                                                                     * zc_MovementFloat_SummaDelivery

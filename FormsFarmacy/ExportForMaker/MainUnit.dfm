@@ -205,6 +205,20 @@ object MainForm: TMainForm
         Options.Editing = False
         Width = 81
       end
+      object isQuarterAdd: TcxGridDBColumn
+        Caption = #1044#1086#1087#1086#1083#1085'. '#1082#1074#1072#1088#1090#1072#1083
+        DataBinding.FieldName = 'isQuarterAdd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 62
+      end
+      object is4MonthAdd: TcxGridDBColumn
+        Caption = #1044#1086#1087#1086#1083#1085'. 4 '#1084#1077#1089#1103#1094#1072
+        DataBinding.FieldName = 'is4MonthAdd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object StartDateUnPlanned: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1042#1054
         DataBinding.FieldName = 'StartDateUnPlanned'
@@ -370,7 +384,7 @@ object MainForm: TMainForm
   object qryMaker: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'SELECT * '
+      'SELECT *'
       
         '     , CASE WHEN COALESCE(AmountDay, 0) <> 25 THEN COALESCE(Amou' +
         'ntDay, 0) ELSE 0 END  AS AmountDaySend'
@@ -380,14 +394,33 @@ object MainForm: TMainForm
       
         '     , COALESCE(AmountDay, 0) = 25                              ' +
         '                      AS isCurrMonth'
+      
+        '     , COALESCE (isQuarter, FALSE) = TRUE AND date_part('#39'MONTH'#39',' +
+        ' CURRENT_DATE) IN (12, 3, 6, 9) AND'
+      
+        '       DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1   ' +
+        '                      AS isQuarterAdd'
+      
+        '     , COALESCE (isQuarter, FALSE) = TRUE AND date_part('#39'MONTH'#39',' +
+        ' CURRENT_DATE) IN (12, 4, 8) AND'
+      
+        '       DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1   ' +
+        '                      AS is4MonthAdd'
       'FROM gpSelect_Object_Maker( '#39'3'#39')'
-      'WHERE '
+      'WHERE'
       
         '(SendPlan <= CURRENT_TIMESTAMP AND (COALESCE(AmountDay, 0) NOT I' +
-        'N (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR '
+        'N (0, 25) OR COALESCE(AmountMonth, 0) <> 0) OR'
       
         'SendReal < CURRENT_DATE AND COALESCE(AmountDay, 0) = 25 AND DATE' +
         '_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'5 DAY'#39') = 1 OR'
+      
+        '(COALESCE (isQuarter, FALSE) = TRUE AND date_part('#39'MONTH'#39', CURRE' +
+        'NT_DATE) IN (12, 3, 6, 9) OR'
+      
+        ' COALESCE (is4Month, FALSE) = TRUE) AND date_part('#39'MONTH'#39', CURRE' +
+        'NT_DATE) IN (12, 4, 8) AND'
+      ' DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1 OR'
       'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       
         '(COALESCE (isReport1, FALSE) = TRUE OR COALESCE (isReport2, FALS' +
@@ -397,7 +430,7 @@ object MainForm: TMainForm
         ') = TRUE  OR'
       
         'COALESCE (isReport5, FALSE) = TRUE OR COALESCE (isReport6, FALSE' +
-        ') = TRUE OR '
+        ') = TRUE OR'
       'COALESCE (isReport7, FALSE) = TRUE OR'
       'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       'COALESCE (Mail, '#39#39') <> '#39#39';')

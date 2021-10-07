@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , EndDate TDateTime
              , TotalSummPhone TFloat
              , TotalSummSale TFloat
+             , TotalSummSaleNP TFloat
              , HoursWork TFloat
              , DateCalculation TDateTime
              )
@@ -56,6 +57,7 @@ BEGIN
           , (vbOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
           , Null::TFloat                                                      AS TotalSummPhone
           , Null::TFloat                                                      AS TotalSummSale
+          , Null::TFloat                                                      AS TotalSummSaleNP
           , Null::TFloat                                                      AS HoursWork
           , Null::TDateTime                                                   AS DateCalculation
 
@@ -71,6 +73,7 @@ BEGIN
           , (Movement.OperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
           , MovementFloat_TotalSummPhone.ValueData                                   AS TotalSummPhone
           , MovementFloat_TotalSummSale.ValueData                                    AS TotalSummSale
+          , MovementFloat_TotalSummSaleNP.ValueData                                  AS TotalSummSaleNP
           , MovementFloat_HoursWork.ValueData                                        AS HoursWork
           , MovementDate_Calculation.ValueData       AS DateCalculation
         FROM Movement
@@ -93,6 +96,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
                                     ON MovementFloat_TotalSummSale.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSaleNP
+                                    ON MovementFloat_TotalSummSaleNP.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummSaleNP.DescId = zc_MovementFloat_TotalSummSaleNP()
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
                                     ON MovementFloat_HoursWork.MovementId = Movement.Id
                                    AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
