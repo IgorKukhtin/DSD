@@ -184,10 +184,6 @@ object SendForm: TSendForm
         Height = 223
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 9
-        ExplicitTop = 128
-        ExplicitWidth = 882
-        ExplicitHeight = 154
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -816,10 +812,6 @@ object SendForm: TSendForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitLeft = 272
-          ExplicitTop = -28
-          ExplicitWidth = 393
-          ExplicitHeight = 81
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Append.Visible = False
@@ -924,9 +916,6 @@ object SendForm: TSendForm
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 2
-          ExplicitLeft = 0
-          ExplicitTop = 16
-          ExplicitHeight = 49
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Append.Visible = False
@@ -1038,8 +1027,6 @@ object SendForm: TSendForm
           Align = alRight
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitLeft = 671
-          ExplicitTop = -4
           object cxGridDBTableView3: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Append.Visible = False
@@ -3495,10 +3482,7 @@ object SendForm: TSendForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
-        Column = BarCode_PartNumber_ch1
-      end
-      item
-        Column = BarCode_Goods_ch1
+        Column = BarCode_Goods_ch4
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
@@ -3523,10 +3507,10 @@ object SendForm: TSendForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
-        Column = BarCode_PartNumber_ch1
+        Column = Amount_ch5
       end
       item
-        Column = BarCode_Goods_ch1
+        Column = BarCode_Goods_ch5
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
