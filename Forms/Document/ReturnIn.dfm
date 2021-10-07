@@ -17,7 +17,6 @@ inherited ReturnInForm: TReturnInForm
     ClientRectBottom = 453
     ClientRectRight = 1304
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1304
       ExplicitHeight = 429
       inherited cxGrid: TcxGrid
@@ -728,7 +727,7 @@ inherited ReturnInForm: TReturnInForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 291
-        Width = 8
+        Width = 1304
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -738,9 +737,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1106,6 +1102,8 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = -88
+        ExplicitTop = -24
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -4195,6 +4193,109 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actOpenSale_child: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 24
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'MovementId_sale'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inmask'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrinted'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenTax_child: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
+      ImageIndex = 26
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'MovementId_tax'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inmask'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'OperDate_Master'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actReasonOpenForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -4285,6 +4386,36 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = 'actUpdateDetailDS'
       DataSource = DetailDS_Reason
+    end
+    object actGet_checkopen_Sale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      AfterAction = actOpenSale_child
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_checkopen_Sale
+      StoredProcList = <
+        item
+          StoredProc = spGet_checkopen_Sale
+        end>
+      Caption = 'actGet_checkopen_Sale'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 24
+    end
+    object actGet_checkopen_Tax: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      AfterAction = actOpenTax_child
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_checkopen_Tax
+      StoredProcList = <
+        item
+          StoredProc = spGet_checkopen_Tax
+        end>
+      Caption = 'actGet_checkopen_Sale'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
+      ImageIndex = 26
     end
   end
   inherited MasterDS: TDataSource
@@ -4451,6 +4582,18 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbSetErasedTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGet_checkopen_Sale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGet_checkopen_Tax'
         end
         item
           Visible = True
@@ -4662,6 +4805,16 @@ inherited ReturnInForm: TReturnInForm
     end
     object bbPrintAkt: TdxBarButton
       Action = actPrintAkt
+      Category = 0
+    end
+    object bbGet_checkopen_Sale: TdxBarButton
+      Action = actGet_checkopen_Sale
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      Category = 0
+    end
+    object bbGet_checkopen_Tax: TdxBarButton
+      Action = actGet_checkopen_Tax
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       Category = 0
     end
   end
@@ -5793,8 +5946,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 588
-    Top = 140
+    Left = 700
+    Top = 100
   end
   object RefreshDispatcher: TRefreshDispatcher
     CheckIdParam = True
@@ -7214,8 +7367,8 @@ inherited ReturnInForm: TReturnInForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 1198
-    Top = 305
+    Left = 1126
+    Top = 297
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Detail'
@@ -7607,5 +7760,55 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 520
     Top = 560
+  end
+  object spGet_checkopen_Sale: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outFormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1267
+    Top = 234
+  end
+  object spGet_checkopen_Tax: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_checkopen'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementId_tax'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outFormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1267
+    Top = 274
   end
 end
