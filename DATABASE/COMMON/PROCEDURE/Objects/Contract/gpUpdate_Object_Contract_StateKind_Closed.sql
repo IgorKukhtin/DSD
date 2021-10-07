@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Contract_StateKind_Closed(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer; 
+   DECLARE vbUserId Integer;
+   DECLARE vbDebts TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Contract_StateKind_Closed());
@@ -33,6 +34,14 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.В договоре <%> установлена дата пролонгации <%>.', lfGet_Object_ValueData (inId), inEndDate_Term;
    END IF; 
+
+   --когда удаляют договор или ставят статус - закрыт, не должно быть  долгов (погрешнось в 1 грн, т.е. когда долг >1 или <-1)
+   vbDebts := (SELECT tmp.Amount FROM gpGet_Object_Contract_debts (inId, inSession) AS tmp);
+   IF COALESCE (vbDebts, 0) <> 0 
+   THEN
+       RAISE EXCEPTION 'Ошибка.По договору <%> есть долг в сумме <%>.', lfGet_Object_ValueData (inId), vbDebts;
+   END IF;
+
 
    -- если даты меньше текущей можем закрывать
    -- сохранили связь с <Состояние договора>

@@ -10,7 +10,6 @@ inherited ReturnInForm: TReturnInForm
     Top = 195
     Width = 1304
     Height = 453
-    Properties.ActivePage = cxTabSheet1
     ExplicitTop = 195
     ExplicitWidth = 1304
     ExplicitHeight = 453
@@ -1102,8 +1101,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = -88
-        ExplicitTop = -24
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -2290,16 +2287,11 @@ inherited ReturnInForm: TReturnInForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actShowErased: TBooleanStoredProcAction
       StoredProcList = <
@@ -2314,7 +2306,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
       ImageIndex = 26
@@ -2402,7 +2393,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
       ImageIndex = 24
@@ -2490,7 +2480,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
       ImageIndex = 25
@@ -3230,7 +3219,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1074#1103#1079#1082#1080'>'
       ImageIndex = 34
@@ -3260,11 +3248,9 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
-      Enabled = False
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -3499,7 +3485,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_ReturnIn_AmountPartner
       StoredProcList = <
@@ -3521,7 +3506,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
@@ -4197,7 +4181,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
       ImageIndex = 24
@@ -4255,7 +4238,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       ImageIndex = 26
