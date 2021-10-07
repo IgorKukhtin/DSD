@@ -15,7 +15,7 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Contract());
 
    --когда удаляют договор или ставят статус - закрыт, не должно быть  долгов (погрешнось в 1 грн, т.е. когда долг >1 или <-1)
-   vbDebts := (SELECT tmp.Amount FROM gpGet_Object_Contract_debts (inObjectId, inSession) AS tmp);
+   vbDebts := (SELECT * FROM gpGet_Object_Contract_debts (inObjectId, inSession) AS tmp);
    IF COALESCE (vbDebts, 0) <> 0 
    THEN
        RAISE EXCEPTION 'Ошибка.По договору <%> есть долг в сумме <%>.', lfGet_Object_ValueData (inObjectId), vbDebts;
