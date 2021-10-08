@@ -162,8 +162,8 @@ BEGIN
                               , Movement_Promo.EndSale                      AS EndSale            --Дата окончания отгрузки по акционной цене
                               , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
-                              --, DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
-                              , DATE_PART ('DAY', AGE (MovementDate_EndPromo.ValueData, MovementDate_StartPromo.ValueData) ) AS CountDaySale
+                              , DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
+                              --, DATE_PART ('DAY', AGE (MovementDate_EndPromo.ValueData, MovementDate_StartPromo.ValueData) ) AS CountDaySale
                               , Object_Status.ObjectCode                    AS StatusCode         --
                               , Object_Status.ValueData                     AS StatusName         --
                               , Movement_Promo.CountDay
@@ -486,12 +486,12 @@ BEGIN
             */
 
           , CASE WHEN CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2)) <> 0
-                 THEN CAST( (100 - (tmpDataFact.AmountOutWeight * 100/ CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2))) ) AS NUMERIC (16,2))
+                 THEN CAST( ( (tmpDataFact.AmountOutWeight * 100/ CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2))) - 100) AS NUMERIC (16,2))
                  ELSE 0
             END ::TFloat AS PersentWeight
 
           , CASE WHEN MI_PromoGoods.AmountPlanAvgWeight <> 0
-                 THEN CAST( (100 - (MI_PromoGoods.AmountOutWeight * 100/ MI_PromoGoods.AmountPlanAvgWeight)) AS NUMERIC (16,2))
+                 THEN CAST( ( (MI_PromoGoods.AmountOutWeight * 100/ MI_PromoGoods.AmountPlanAvgWeight) - 100) AS NUMERIC (16,2))
                  ELSE 0
             END ::TFloat AS PersentWeight_2        
 

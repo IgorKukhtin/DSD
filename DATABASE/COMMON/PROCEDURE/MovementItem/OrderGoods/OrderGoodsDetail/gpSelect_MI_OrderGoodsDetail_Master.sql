@@ -1,7 +1,7 @@
 -- Function: gpSelect_MI_OrderGoodsDetail_Master()
 
 
- DROP FUNCTION IF EXISTS gpSelect_MI_OrderGoodsDetail_Master (Integer, Boolean, Boolean, TVarChar); 
+ DROP FUNCTION IF EXISTS gpSelect_MI_OrderGoodsDetail_Master (Integer, Boolean,  TVarChar); 
  
 CREATE OR REPLACE FUNCTION gpSelect_MI_OrderGoodsDetail_Master(
     IN inParentId    Integer      , -- ÍÎ˛˜ ƒÓÍÛÏÂÌÚ‡ OrderGoods
@@ -13,6 +13,11 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsKindName TVarChar
              , GoodsGroupNameFull TVarChar             
              , MeasureName TVarChar
+             , ReceiptId Integer
+             , ReceiptName TVarChar
+             , ReceiptBasisId Integer
+             , ReceiptBasisName TVarChar
+             , isMain Boolean, isMain_Basis Boolean
              , Amount                   TFloat
              , Amount_sh                TFloat
              , Amount_kg                TFloat
@@ -20,6 +25,10 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , AmountForecastOrder      TFloat
              , AmountForecastPromo      TFloat
              , AmountForecastOrderPromo TFloat
+             , AmountForecast_sh           TFloat
+             , AmountForecastOrder_sh      TFloat
+             , AmountForecastPromo_sh      TFloat
+             , AmountForecastOrderPromo_sh TFloat
              , isErased Boolean
              )
 AS
@@ -58,6 +67,13 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData           AS MeasureName
 
+           , Object_ReceiptBasis.Id             AS ReceiptId
+           , Object_ReceiptBasis.ValueData      AS ReceiptName
+           , Object_ReceiptBasis.Id             AS ReceiptBasisId
+           , Object_ReceiptBasis.ValueData      AS ReceiptBasisName
+           , ObjectBoolean_Main.ValueData       ::Boolean AS isMain
+           , ObjectBoolean_Main_Basis.ValueData ::Boolean AS isMain_Basis
+
            , tmpMI.Amount                               :: TFloat AS Amount
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
                   THEN tmpMI.Amount
@@ -88,6 +104,23 @@ BEGIN
                   ELSE COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
              END ::TFloat AS AmountForecastOrderPromo
 
+           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN (COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)) 
+                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+             END AS NUMERIC (16,0)) ::TFloat AS AmountForecast_sh
+           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)
+                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+             END AS NUMERIC (16,0)) ::TFloat AS AmountForecastOrder_sh
+           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN (COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0))
+                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+             END AS NUMERIC (16,0)) ::TFloat AS AmountForecastPromo_sh
+           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() 
+                  THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
+                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+             END AS NUMERIC (16,0)) ::TFloat AS AmountForecastOrderPromo_sh
+
            , tmpMI.isErased             AS isErased
 
        FROM tmpMI
@@ -106,12 +139,26 @@ BEGIN
                                         ON MIFloat_AmountForecastOrderPromo.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_AmountForecastOrderPromo.DescId = zc_MIFloat_AmountForecastOrderPromo()
 
-
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                              ON MILO_GoodsKind.MovementItemId = tmpMI.MovementItemId
                                             AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILO_Receipt
+                                             ON MILO_Receipt.MovementItemId = tmpMI.MovementItemId
+                                            AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
+            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILO_Receipt.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILO_ReceiptBasis
+                                             ON MILO_ReceiptBasis.MovementItemId = tmpMI.MovementItemId
+                                            AND MILO_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
+            LEFT JOIN Object AS Object_ReceiptBasis ON Object_ReceiptBasis.Id = MILO_ReceiptBasis.ObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                    ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                   AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Basis
+                                    ON ObjectBoolean_Main_Basis.ObjectId = Object_ReceiptBasis.Id
+                                   AND ObjectBoolean_Main_Basis.DescId = zc_ObjectBoolean_Receipt_Main()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -134,6 +181,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.10.21         *
  15.09.21         *
 */
 
