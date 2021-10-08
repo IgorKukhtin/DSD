@@ -38,6 +38,8 @@ type
     spGet: TdsdStoredProc;
     actManual: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    QuestionStorekeeper: TcxGridDBColumn;
+    TimeTestStorekeeper: TcxGridDBColumn;
   private
     { Private declarations }
   public

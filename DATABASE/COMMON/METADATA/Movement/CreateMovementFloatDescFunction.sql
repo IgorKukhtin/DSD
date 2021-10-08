@@ -591,9 +591,9 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummSaleNP() RETURNS Integer AS
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummSaleNP', 'Сумма продаж "Новая почта"' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSaleNP');
 
-CREATE OR REPLACE FUNCTION zc_MovementFloat_TestingUser_Storekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Storekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementFloat_QuestionStorekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_QuestionStorekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_TestingUser_Storekeeper', 'Количество вопросов для теста кладовщику' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Storekeeper');
+  SELECT 'zc_MovementFloat_QuestionStorekeeper', 'Количество вопросов для теста кладовщику' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_QuestionStorekeeper');
   
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TimeStorekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TimeStorekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
@@ -602,7 +602,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
- 07.09.21                                                                                     * zc_MovementFloat_TestingUser_Storekeeper, zc_MovementFloat_TimeStorekeeper
+ 07.09.21                                                                                     * zc_MovementFloat_QuestionStorekeeper, zc_MovementFloat_TimeStorekeeper
  06.09.21                                                                                     * zc_MovementFloat_TotalSummSaleNP
  01.09.21                                                                                     * zc_MovementFloat_ZReport
  30.07.21                                                                                     * zc_MovementFloat_SummaReceivedFact

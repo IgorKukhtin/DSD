@@ -1,12 +1,13 @@
 -- Function: lpInsertUpdate_Movement_TestingTuning()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TestingTuning(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inTimeTest            Integer   , -- Время на тест (сек)
+    IN inTimeTestStorekeeper Integer   , -- Время на тест Кладовщик (сек) 
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -36,6 +37,8 @@ BEGIN
 
      -- сохранили <Комментарий маркетинга>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Time(), ioId, inTimeTest);
+     -- сохранили <Комментарий маркетинга>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TimeStorekeeper(), ioId, inTimeTestStorekeeper);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummTestingTuning (ioId);

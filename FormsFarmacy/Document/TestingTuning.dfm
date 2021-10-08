@@ -8,20 +8,20 @@ inherited TestingTuningForm: TTestingTuningForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 155
+    Top = 175
     Width = 1026
-    Height = 531
+    Height = 511
     ExplicitTop = 155
     ExplicitWidth = 1026
     ExplicitHeight = 531
-    ClientRectBottom = 531
+    ClientRectBottom = 511
     ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1026
       ExplicitHeight = 507
       inherited cxGrid: TcxGrid
         Width = 576
-        Height = 507
+        Height = 487
         ExplicitWidth = 576
         ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -115,10 +115,11 @@ inherited TestingTuningForm: TTestingTuningForm
         Left = 584
         Top = 0
         Width = 442
-        Height = 507
+        Height = 487
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitHeight = 507
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SecondDS
@@ -208,19 +209,20 @@ inherited TestingTuningForm: TTestingTuningForm
         Left = 576
         Top = 0
         Width = 8
-        Height = 507
+        Height = 487
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salRight
         Control = cxGridSecond
+        ExplicitHeight = 507
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1026
-    Height = 129
+    Height = 149
     TabOrder = 3
     ExplicitWidth = 1026
-    ExplicitHeight = 129
+    ExplicitHeight = 149
     inherited edInvNumber: TcxTextEdit
       Left = 831
       Anchors = [akTop, akRight]
@@ -279,13 +281,14 @@ inherited TestingTuningForm: TTestingTuningForm
       Left = 0
       Top = 0
       Width = 638
-      Height = 129
+      Height = 149
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 8
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 129
       object cxGridDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = MasterDS
@@ -305,6 +308,7 @@ inherited TestingTuningForm: TTestingTuningForm
         OptionsSelection.InvertSelect = False
         OptionsView.ColumnAutoWidth = True
         OptionsView.GroupByBox = False
+        OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object maTopicsTestingTuningName: TcxGridDBColumn
@@ -313,7 +317,7 @@ inherited TestingTuningForm: TTestingTuningForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 261
+          Width = 206
         end
         object maQuestion: TcxGridDBColumn
           Caption = #1042#1086#1087#1088#1086#1089#1086#1074
@@ -321,23 +325,30 @@ inherited TestingTuningForm: TTestingTuningForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 122
+          Width = 100
         end
         object maTestQuestions: TcxGridDBColumn
-          Caption = #1044#1083#1103' '#1090#1077#1089#1090#1072
+          Caption = #1044#1083#1103' '#1090#1077#1089#1090#1072' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091
           DataBinding.FieldName = 'TestQuestions'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 122
+          Width = 100
         end
         object maMandatoryQuestion: TcxGridDBColumn
-          Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089
+          Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089#1086#1074' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091
           DataBinding.FieldName = 'MandatoryQuestion'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1093' '#1074#1086#1087#1088#1086#1089
           Options.Editing = False
-          Width = 122
+          Width = 100
+        end
+        object meTestQuestionsStorekeeper: TcxGridDBColumn
+          Caption = #1044#1083#1103' '#1090#1077#1089#1090#1072' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091
+          DataBinding.FieldName = 'TestQuestionsStorekeeper'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -345,45 +356,72 @@ inherited TestingTuningForm: TTestingTuningForm
       end
     end
     object edTotalCount: TcxTextEdit
-      Left = 797
-      Top = 105
+      Left = 657
+      Top = 103
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 74
     end
     object cxLabel3: TcxLabel
-      Left = 797
-      Top = 87
+      Left = 657
+      Top = 85
       Anchors = [akTop, akRight]
       Caption = #1042#1086#1087#1088#1086#1089#1086#1074
     end
     object edQuestion: TcxTextEdit
-      Left = 927
-      Top = 105
+      Left = 846
+      Top = 127
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 74
     end
     object cxLabel4: TcxLabel
-      Left = 926
-      Top = 87
+      Left = 737
+      Top = 127
       Anchors = [akTop, akRight]
-      Caption = #1076#1083#1103' '#1090#1077#1089#1090#1072
+      Caption = #1042#1086#1087#1088#1086#1089#1086#1074' '#1076#1083#1103' '#1090#1077#1089#1090#1072
     end
     object edTimeTest: TcxTextEdit
-      Left = 657
-      Top = 105
+      Left = 846
+      Top = 103
       Anchors = [akTop, akRight]
       TabOrder = 13
       Width = 74
     end
     object cxLabel5: TcxLabel
-      Left = 657
-      Top = 86
+      Left = 737
+      Top = 104
       Anchors = [akTop, akRight]
       Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' ('#1089#1077#1082')'
+    end
+    object edTimeTestStorekeeper: TcxTextEdit
+      Left = 927
+      Top = 103
+      Anchors = [akTop, akRight]
+      TabOrder = 15
+      Width = 74
+    end
+    object edQuestionStorekeeper: TcxTextEdit
+      Left = 927
+      Top = 126
+      Anchors = [akTop, akRight]
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 74
+    end
+    object cxLabel6: TcxLabel
+      Left = 846
+      Top = 85
+      Anchors = [akTop, akRight]
+      Caption = #1060#1072#1088#1084#1072#1094#1077#1074#1090
+    end
+    object cxLabel8: TcxLabel
+      Left = 927
+      Top = 85
+      Anchors = [akTop, akRight]
+      Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1441,6 +1479,18 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'QuestionStorekeeper'
+        Value = Null
+        Component = edQuestionStorekeeper
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimeTestStorekeeper'
+        Value = Null
+        Component = edTimeTestStorekeeper
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = ''
         Component = edComment
@@ -1485,6 +1535,13 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTimeTestStorekeeper'
+        Value = Null
+        Component = edTimeTestStorekeeper
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = edComment
@@ -1521,6 +1578,9 @@ inherited TestingTuningForm: TTestingTuningForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = edTimeTestStorekeeper
       end
       item
       end
@@ -1576,6 +1636,14 @@ inherited TestingTuningForm: TTestingTuningForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TestQuestions'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTestQuestionsStorekeeper'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TestQuestionsStorekeeper'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
