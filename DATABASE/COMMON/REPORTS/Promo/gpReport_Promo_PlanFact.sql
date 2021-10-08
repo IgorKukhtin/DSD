@@ -26,10 +26,10 @@ RETURNS TABLE(
     ,InvNumber            TVarChar   --№ документа акции
     ,StatusCode Integer, StatusName TVarChar
     ,UnitName             TVarChar  --Склад
-    , StartSale   TDateTime       --Дата начала отгрузки по акционной цене
-    , EndSale     TDateTime       --Дата окончания отгрузки по акционной цене
-    , StartPromo  TDateTime       --Дата начала акции
-    , EndPromo    TDateTime       --Дата окончания акции
+    , DateStartSale   TDateTime       --Дата начала отгрузки по акционной цене
+    , DateFinalSale     TDateTime       --Дата окончания отгрузки по акционной цене
+    , DateStartPromo  TDateTime       --Дата начала акции
+    , DateFinalPromo    TDateTime       --Дата окончания акции
     , MonthPromo  TDateTime       --месяц акции
 
     ,RetailName           TBlob     --Сеть, в которой проходит акция
@@ -162,7 +162,8 @@ BEGIN
                               , Movement_Promo.EndSale                      AS EndSale            --Дата окончания отгрузки по акционной цене
                               , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
-                              , DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
+                              --, DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
+                              , DATE_PART ('DAY', AGE (MovementDate_EndPromo.ValueData, MovementDate_StartPromo.ValueData) ) AS CountDaySale
                               , Object_Status.ObjectCode                    AS StatusCode         --
                               , Object_Status.ValueData                     AS StatusName         --
                               , Movement_Promo.CountDay
@@ -380,7 +381,7 @@ BEGIN
 
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.StartSale    AS DateStartSale      --Дата начала отгрузки по акционной цене
-          , Movement_Promo.EndSale      AS DeteFinalSale      --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.EndSale      AS DateFinalSale      --Дата окончания отгрузки по акционной цене
           , Movement_Promo.StartPromo   AS DateStartPromo      --Дата начала акции
           , Movement_Promo.EndPromo     AS DateFinalPromo      --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции

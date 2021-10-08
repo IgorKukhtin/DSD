@@ -221,7 +221,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
           end
           object DeteFinalSale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
-            DataBinding.FieldName = 'DeteFinalSale'
+            DataBinding.FieldName = 'DateFinalSale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
