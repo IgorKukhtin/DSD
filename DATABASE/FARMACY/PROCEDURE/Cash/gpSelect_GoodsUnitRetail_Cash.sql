@@ -1,10 +1,11 @@
  -- Function: gpSelect_GoodsUnitRetail_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsUnitRetail_Cash (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsUnitRetail_Cash (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsUnitRetail_Cash(
-    IN inGoodsId     Integer,       -- Товар
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inGoodsId             Integer,       -- Товар
+    IN inMedicalProgramSPId  Integer ,
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (UnitId       Integer
              , UnitCode     Integer
@@ -38,7 +39,60 @@ BEGIN
 
 
     RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.ObjectId
+    WITH   tmpMedicalProgramSPUnit AS (SELECT ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                            , ObjectLink_Unit.ChildObjectId                     AS UnitId
+                                       FROM Object AS Object_MedicalProgramSPLink
+                                            INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                                  ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                            INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                  ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                        WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                          AND Object_MedicalProgramSPLink.isErased = False),
+           tmpMovement AS (SELECT Movement.Id
+                                , Movement.OperDate
+                                , MLO_MedicalProgramSP.ObjectId    AS MedicalProgramSPID
+                           FROM Movement
+
+                                INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                       AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                                INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                               INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                             ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                            AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+
+                           WHERE Movement.DescId = zc_Movement_GoodsSP()
+                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                             AND (COALESCE (MLO_MedicalProgramSP.ObjectId, 0) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
+                          ),
+           tmpMovementItem AS (SELECT MovementItem.Id
+                                    , Movement.MedicalProgramSPID
+                                    , Object_Goods_Retail.Id       AS GoodsId
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               FROM tmpMovement AS Movement
+
+                                   INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                                          AND MovementItem.MovementId = Movement.ID
+                                                          AND MovementItem.isErased = FALSE
+                                                          
+                                   LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
+                                                                                       AND Object_Goods_Retail.RetailId = vbRetailId
+                               WHERE Object_Goods_Retail.Id = inGoodsId
+                               ),
+           tmpMovementItemGroup AS (SELECT DISTINCT tmpMovementItem.GoodsId
+                                         , tmpMedicalProgramSPUnit.UnitId
+                                    FROM tmpMovementItem
+                                         INNER JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPID = tmpMovementItem.MedicalProgramSPID
+                                   ),
+           tmpContainer AS (SELECT Container.ObjectId
                                , Container.WhereObjectId
                                , SUM(Container.Amount)                                           AS Amount
                           FROM Container
@@ -46,6 +100,7 @@ BEGIN
                           WHERE Container.DescId = zc_Container_Count()
                             AND Container.Amount <> 0
                             AND Container.ObjectId = inGoodsId
+                            AND Container.WhereObjectId IN (SELECT DISTINCT tmpMovementItemGroup.UnitId FROM tmpMovementItemGroup)
                           GROUP BY Container.ObjectId, Container.WhereObjectId
                           HAVING SUM(Container.Amount) > 0
                          ),
@@ -105,4 +160,5 @@ $BODY$
 */
 
 --ТЕСТ
--- SELECT * FROM gpSelect_GoodsUnitRetail_Cash (inGoodsId := 13303, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_GoodsUnitRetail_Cash (inGoodsId := 1267403, inMedicalProgramSPId := 18078228, inSession:= '3')

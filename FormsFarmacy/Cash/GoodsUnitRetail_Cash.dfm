@@ -1,5 +1,5 @@
 inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
-  Caption = #1053#1072#1083#1080#1095#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1077#1090#1080
+  Caption = #1053#1072#1083#1080#1095#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1077#1090#1080' '#1087#1086' '#1089#1086#1094'. '#1087#1088#1086#1075#1088#1072#1084#1084#1077
   ClientHeight = 418
   ClientWidth = 637
   AddOnFormData.isSingle = False
@@ -9,21 +9,22 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 67
+    Top = 80
     Width = 637
-    Height = 351
-    ExplicitWidth = 746
-    ExplicitHeight = 419
-    ClientRectBottom = 351
+    Height = 338
+    ExplicitTop = 67
+    ExplicitWidth = 637
+    ExplicitHeight = 351
+    ClientRectBottom = 338
     ClientRectRight = 637
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 746
-      ExplicitHeight = 419
+      ExplicitWidth = 637
+      ExplicitHeight = 351
       inherited cxGrid: TcxGrid
         Width = 637
-        Height = 351
-        ExplicitWidth = 746
-        ExplicitHeight = 419
+        Height = 338
+        ExplicitWidth = 637
+        ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,15 +88,14 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
     Left = 0
     Top = 0
     Width = 637
-    Height = 41
+    Height = 54
     Align = alTop
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 5
-    ExplicitWidth = 746
     object edGoodsCode: TcxTextEdit
       Left = 76
-      Top = 11
+      Top = 3
       TabStop = False
       Properties.ReadOnly = True
       TabOrder = 0
@@ -103,12 +103,12 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
     end
     object cxLabel1: TcxLabel
       Left = 7
-      Top = 12
+      Top = 4
       Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
     end
     object edGoodsName: TcxTextEdit
       Left = 250
-      Top = 11
+      Top = 3
       TabStop = False
       Properties.ReadOnly = True
       TabOrder = 2
@@ -116,8 +116,25 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
     end
     object cxLabel2: TcxLabel
       Left = 167
-      Top = 12
+      Top = 4
       Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    end
+    object edMedicalProgramSP: TcxButtonEdit
+      Left = 250
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 359
+    end
+    object cxLabel5: TcxLabel
+      Left = 116
+      Top = 28
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -147,6 +164,14 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
         Value = Null
         Component = FormParams
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -202,8 +227,64 @@ inherited GoodsUnitRetail_CashForm: TGoodsUnitRetail_CashForm
         Component = edGoodsName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPId'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicalProgramSPName'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 256
     Top = 104
+  end
+  object GuidesMedicalProgramSP: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicalProgramSP
+    FormNameParam.Value = 'TMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 497
+    Top = 17
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesMedicalProgramSP
+      end>
+    Left = 368
+    Top = 120
   end
 end

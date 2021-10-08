@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxCurrencyEdit, cxButtonEdit;
+  cxCurrencyEdit, cxButtonEdit, dsdGuides;
 
 type
   TGoodsSP_CashForm = class(TAncestorDBGridForm)
@@ -25,6 +25,12 @@ type
     PricePay: TcxGridDBColumn;
     actGoodsUnitRetail: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    edMedicalProgramSP: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    GuidesMedicalProgramSP: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

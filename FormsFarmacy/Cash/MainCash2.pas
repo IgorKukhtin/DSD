@@ -292,7 +292,6 @@ type
     cxButton2: TcxButton;
     cxButton3: TcxButton;
     MainFixPercent: TcxGridDBColumn;
-    actOpenMovementSP: TMultiAction;
     actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc;
     gpGet_Movement_GoodsSP_ID: TdsdStoredProc;
     actEmployeeScheduleUser: TdsdOpenForm;

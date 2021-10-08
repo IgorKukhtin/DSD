@@ -1,5 +1,5 @@
 inherited GoodsSP_CashForm: TGoodsSP_CashForm
-  Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'  "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1051#1110#1082#1080'"'
+  Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
   ClientHeight = 445
   ClientWidth = 746
   AddOnFormData.isSingle = False
@@ -311,6 +311,23 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
           end
         end
       end
+      object edMedicalProgramSP: TcxButtonEdit
+        Left = 402
+        Top = 119
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Width = 296
+      end
+      object cxLabel5: TcxLabel
+        Left = 402
+        Top = 101
+        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -356,6 +373,21 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicalProgramSPId'
+          Value = Null
+          Component = GuidesMedicalProgramSP
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicalProgramSPName'
+          Value = Null
+          Component = GuidesMedicalProgramSP
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -370,6 +402,15 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_GoodsSP_Cash'
+    Params = <
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 88
     Top = 104
   end
@@ -406,6 +447,18 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end>
     end
     inherited bbRefresh: TdxBarButton
@@ -429,6 +482,20 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
       Action = actGoodsUnitRetail
       Category = 0
     end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel5
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edMedicalProgramSP
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -442,5 +509,46 @@ inherited GoodsSP_CashForm: TGoodsSP_CashForm
     Params = <>
     Left = 256
     Top = 104
+  end
+  object GuidesMedicalProgramSP: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicalProgramSP
+    FormNameParam.Value = 'TMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMedicalProgramSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 601
+    Top = 123
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesMedicalProgramSP
+      end>
+    Left = 496
+    Top = 208
   end
 end
