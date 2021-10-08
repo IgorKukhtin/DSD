@@ -26,10 +26,10 @@ RETURNS TABLE(
     ,InvNumber            TVarChar   --№ документа акции
     ,StatusCode Integer, StatusName TVarChar
     ,UnitName             TVarChar  --Склад
-    , StartSale   TDateTime       --Дата начала отгрузки по акционной цене
-    , EndSale     TDateTime       --Дата окончания отгрузки по акционной цене
-    , StartPromo  TDateTime       --Дата начала акции
-    , EndPromo    TDateTime       --Дата окончания акции
+    , DateStartSale   TDateTime       --Дата начала отгрузки по акционной цене
+    , DateFinalSale     TDateTime       --Дата окончания отгрузки по акционной цене
+    , DateStartPromo  TDateTime       --Дата начала акции
+    , DateFinalPromo    TDateTime       --Дата окончания акции
     , MonthPromo  TDateTime       --месяц акции
 
     ,RetailName           TBlob     --Сеть, в которой проходит акция
@@ -163,6 +163,7 @@ BEGIN
                               , DATE_TRUNC ('MONTH', MovementDate_Month.ValueData) :: TDateTime AS MonthPromo         -- месяц акции
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
                               , DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) ) AS CountDaySale
+                              --, DATE_PART ('DAY', AGE (MovementDate_EndPromo.ValueData, MovementDate_StartPromo.ValueData) ) AS CountDaySale
                               , Object_Status.ObjectCode                    AS StatusCode         --
                               , Object_Status.ValueData                     AS StatusName         --
                               , Movement_Promo.CountDay
@@ -379,10 +380,10 @@ BEGIN
           , Movement_Promo.StatusName         --
 
           , Movement_Promo.UnitName           --Склад
-          , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
-          , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
-          , Movement_Promo.StartPromo         --Дата начала акции
-          , Movement_Promo.EndPromo           --Дата окончания акции
+          , Movement_Promo.StartSale    AS DateStartSale      --Дата начала отгрузки по акционной цене
+          , Movement_Promo.EndSale      AS DateFinalSale      --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.StartPromo   AS DateStartPromo      --Дата начала акции
+          , Movement_Promo.EndPromo     AS DateFinalPromo      --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции
           ------------------------
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
@@ -485,12 +486,12 @@ BEGIN
             */
 
           , CASE WHEN CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2)) <> 0
-                 THEN CAST( (100 - (tmpDataFact.AmountOutWeight * 100/ CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2))) ) AS NUMERIC (16,2))
+                 THEN CAST( ( (tmpDataFact.AmountOutWeight * 100/ CAST (CASE WHEN COALESCE (Movement_Promo.CountDaySale,0) <> 0 THEN MI_PromoGoods.AmountPlanAvgWeight/Movement_Promo.CountDaySale * Movement_Promo.CountDay ELSE 0 END AS NUMERIC (16,2))) - 100) AS NUMERIC (16,2))
                  ELSE 0
             END ::TFloat AS PersentWeight
 
           , CASE WHEN MI_PromoGoods.AmountPlanAvgWeight <> 0
-                 THEN CAST( (100 - (MI_PromoGoods.AmountOutWeight * 100/ MI_PromoGoods.AmountPlanAvgWeight)) AS NUMERIC (16,2))
+                 THEN CAST( ( (MI_PromoGoods.AmountOutWeight * 100/ MI_PromoGoods.AmountPlanAvgWeight) - 100) AS NUMERIC (16,2))
                  ELSE 0
             END ::TFloat AS PersentWeight_2        
 

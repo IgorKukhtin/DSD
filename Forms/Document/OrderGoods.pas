@@ -136,6 +136,10 @@ type
     PeriodChoice: TPeriodChoice;
     dsdGridToExceDetailMaster: TdsdGridToExcel;
     bbGridToExceDetailMaster: TdxBarButton;
+    ReceiptName_ch2: TcxGridDBColumn;
+    ReceiptBasisName_ch2: TcxGridDBColumn;
+    isMain_ch2: TcxGridDBColumn;
+    isMain_Basis_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public
