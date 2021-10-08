@@ -379,10 +379,10 @@ BEGIN
           , Movement_Promo.StatusName         --
 
           , Movement_Promo.UnitName           --Склад
-          , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
-          , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
-          , Movement_Promo.StartPromo         --Дата начала акции
-          , Movement_Promo.EndPromo           --Дата окончания акции
+          , Movement_Promo.StartSale    AS DateStartSale      --Дата начала отгрузки по акционной цене
+          , Movement_Promo.EndSale      AS DeteFinalSale      --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.StartPromo   AS DateStartPromo      --Дата начала акции
+          , Movement_Promo.EndPromo     AS DateFinalPromo      --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции
           ------------------------
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')

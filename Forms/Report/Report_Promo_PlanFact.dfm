@@ -1109,6 +1109,10 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
         end
         item
           Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
