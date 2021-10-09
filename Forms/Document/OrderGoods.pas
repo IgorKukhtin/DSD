@@ -140,6 +140,10 @@ type
     ReceiptBasisName_ch2: TcxGridDBColumn;
     isMain_ch2: TcxGridDBColumn;
     isMain_Basis_ch2: TcxGridDBColumn;
+    ReceiptCode_ch2: TcxGridDBColumn;
+    ReceiptCode_str_ch2: TcxGridDBColumn;
+    ReceiptBasisCode_ch2: TcxGridDBColumn;
+    ReceiptBasisCode_str_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

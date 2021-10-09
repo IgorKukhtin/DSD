@@ -238,74 +238,19 @@ BEGIN
 
 
    -- Элементы - План по видам упаковки (детализация)
-   CREATE TEMP TABLE tmpMI_Master (Id Integer, GoodsId Integer, GoodsKindId Integer, ReceiptId Integer, ReceiptBasisId Integer) ON COMMIT DROP;
-    INSERT INTO tmpMI_Master (Id, GoodsId, GoodsKindId, ReceiptId, ReceiptBasisId)
+   CREATE TEMP TABLE tmpMI_Master (Id Integer, GoodsId Integer, GoodsKindId Integer) ON COMMIT DROP;
+    INSERT INTO tmpMI_Master (Id, GoodsId, GoodsKindId)
        SELECT MovementItem.Id
-            , MovementItem.ObjectId                   AS GoodsId
-            , COALESCE (MILO_GoodsKind.ObjectId, 0)   AS GoodsKindId
-            , COALESCE (MILO_Receipt.ObjectId,0)      AS ReceiptId
-            , COALESCE (MILO_ReceiptBasis.ObjectId,0) AS ReceiptBasisId
+            , MovementItem.ObjectId                 AS GoodsId
+            , COALESCE (MILO_GoodsKind.ObjectId, 0) AS GoodsKindId
        FROM MovementItem
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-            LEFT JOIN MovementItemLinkObject AS MILO_Receipt
-                                             ON MILO_Receipt.MovementItemId = MovementItem.Id
-                                            AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
-            LEFT JOIN MovementItemLinkObject AS MILO_ReceiptBasis
-                                             ON MILO_ReceiptBasis.MovementItemId = MovementItem.Id
-                                            AND MILO_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
        WHERE MovementItem.MovementId = vbMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
       ;
-
-   CREATE TEMP TABLE tmpReceipt (Id Integer, GoodsId Integer, GoodsKindId Integer, ReceiptId Integer, ReceiptBasisId Integer) ON COMMIT DROP;
-    INSERT INTO tmpReceipt (Id, GoodsId, GoodsKindId, ReceiptId, ReceiptBasisId)
-       WITH
-       tmpReceipt AS (SELECT tmpGoods.GoodsId
-                           , tmpGoods.GoodsKindId
-                           , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
-                      FROM (SELECT DISTINCT tmpAll.GoodsId, tmpAll.GoodsKindId FROM tmpAll) AS tmpGoods
-                           INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                 ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                               AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                           INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
-                                                              AND Object_Receipt.isErased = FALSE
-                           INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                    ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
-                                                   AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
-                                                   AND ObjectBoolean_Main.ValueData = TRUE
-                      WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
-                      GROUP BY tmpGoods.GoodsId
-                             , tmpGoods.GoodsKindId
-                     )
-       SELECT tmpPartion.PartionGoodsId
-            , tmpPartion.GoodsId
-            , tmpPartion.GoodsKindId
-            , tmpPartion.InfoMoneyDestinationId
-            , ObjectLink_Receipt_Goods_parent.ChildObjectId     AS GoodsId_parent
-            , ObjectLink_Receipt_GoodsKind_parent.ChildObjectId AS GoodsKindId_parent
-       FROM tmpReceipt
-            INNER JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpPartion.GoodsId
-                                 AND tmpReceipt.GoodsKindId = tmpPartion.GoodsKindId
-            INNER JOIN ObjectLink AS ObjectLink_Receipt_Parent
-                                  ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
-                                 AND ObjectLink_Receipt_Parent.DescId   = zc_ObjectLink_Receipt_Parent()
-            INNER JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
-                                                      AND Object_Receipt_parent.isErased = FALSE
-            INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
-                                  ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                 AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
-            LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_parent
-                                 ON ObjectLink_Receipt_GoodsKind_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                AND ObjectLink_Receipt_GoodsKind_parent.DescId   = zc_ObjectLink_Receipt_GoodsKind()
-       ;
-
-
 
    -- удаляем строки которых нет в выборке, остальные обновим
    PERFORM gpMovementItem_OrderGoodsDetail_SetErased_Master (inMovementItemId := tmpMI_Master.Id
@@ -314,30 +259,6 @@ BEGIN
         LEFT JOIN tmpAll ON tmpAll.GoodsId = tmpMI_Master.GoodsId
                         AND tmpAll.GoodsKindId = tmpMI_Master.GoodsKindId
    WHERE tmpAll.GoodsId IS NULL;
-
-
-     , tmpReceipt_parent AS (-- поиск из чего делается товар + в разрезе нужных партий
-                             SELECT tmpPartion.PartionGoodsId
-                                  , tmpPartion.GoodsId
-                                  , tmpPartion.GoodsKindId
-                                  , tmpPartion.InfoMoneyDestinationId
-                                  , ObjectLink_Receipt_Goods_parent.ChildObjectId     AS GoodsId_parent
-                                  , ObjectLink_Receipt_GoodsKind_parent.ChildObjectId AS GoodsKindId_parent
-                             FROM tmpPartion
-                                  INNER JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpPartion.GoodsId
-                                                       AND tmpReceipt.GoodsKindId = tmpPartion.GoodsKindId
-                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Parent
-                                                        ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
-                                                       AND ObjectLink_Receipt_Parent.DescId   = zc_ObjectLink_Receipt_Parent()
-                                  INNER JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
-                                                                            AND Object_Receipt_parent.isErased = FALSE
-                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
-                                                        ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                                       AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_parent
-                                                       ON ObjectLink_Receipt_GoodsKind_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                                      AND ObjectLink_Receipt_GoodsKind_parent.DescId   = zc_ObjectLink_Receipt_GoodsKind()
-                            )
 
    -- MI_Master - распределяем - План по видам упаковки (детализация)
    PERFORM lpInsert_MI_OrderGoodsDetail_Master(inId                       := tmpMI_Master.Id

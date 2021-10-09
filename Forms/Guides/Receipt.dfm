@@ -46,7 +46,7 @@ object ReceiptForm: TReceiptForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090' ('#1087#1086#1083#1100#1079'.)'
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090
         DataBinding.FieldName = 'Code'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -55,7 +55,7 @@ object ReceiptForm: TReceiptForm
         Width = 39
       end
       object ReceiptCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'ReceiptCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -886,7 +886,7 @@ object ReceiptForm: TReceiptForm
     Width = 1065
     Height = 35
     Align = alTop
-    TabOrder = 6
+    TabOrder = 5
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9
