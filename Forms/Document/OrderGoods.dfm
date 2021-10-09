@@ -1,25 +1,25 @@
 inherited OrderGoodsForm: TOrderGoodsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 638
-  ClientWidth = 1119
-  ExplicitWidth = 1135
-  ExplicitHeight = 673
+  ClientWidth = 1100
+  ExplicitWidth = 1116
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1119
+    Width = 1100
     Height = 512
     ExplicitTop = 126
     ExplicitWidth = 1119
     ExplicitHeight = 512
     ClientRectBottom = 512
-    ClientRectRight = 1119
+    ClientRectRight = 1100
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1119
       ExplicitHeight = 488
       inherited cxGrid: TcxGrid
-        Width = 1119
+        Width = 1100
         Height = 300
         ExplicitWidth = 1119
         ExplicitHeight = 300
@@ -249,10 +249,11 @@ inherited OrderGoodsForm: TOrderGoodsForm
       object cxGridChild: TcxGrid
         Left = 0
         Top = 308
-        Width = 1119
+        Width = 1100
         Height = 180
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 1119
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -352,24 +353,27 @@ inherited OrderGoodsForm: TOrderGoodsForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 300
-        Width = 1119
+        Width = 1100
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitWidth = 1119
       end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
       ImageIndex = 1
+      ExplicitWidth = 1119
       object cxGridDetailMaster: TcxGrid
         Left = 0
         Top = 0
-        Width = 1119
+        Width = 1100
         Height = 488
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1119
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetailMaster
@@ -408,6 +412,26 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.##'
               Kind = skSum
               Column = Amount_kg_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecast_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrder_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastPromo_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrderPromo_sh_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -448,6 +472,26 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.##'
               Kind = skSum
               Column = Amount_kg_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecast_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrder_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastPromo_sh_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrderPromo_sh_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -592,6 +636,90 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 103
           end
+          object AmountForecast_sh_ch2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090'. , '#1096#1090' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'AmountForecast_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072', '#1096#1090' ('#1055#1088#1086#1076#1072#1078#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1040#1082#1094#1080#1081')'
+            Options.Editing = False
+            Width = 103
+          end
+          object AmountForecastOrder_sh_ch2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090'. , '#1096#1090' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'AmountForecastOrder_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072', '#1096#1090' ('#1047#1072#1103#1074#1082#1072'  '#1089' '#1091#1095#1077#1090#1086#1084' '#1040#1082#1094#1080#1081')'
+            Options.Editing = False
+            Width = 108
+          end
+          object AmountForecastPromo_sh_ch2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090'. , '#1096#1090' ('#1087#1088#1086#1076#1072#1078#1072' '#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastPromo_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072', '#1096#1090' ('#1055#1088#1086#1076#1072#1078#1072' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080')'
+            Options.Editing = False
+            Width = 108
+          end
+          object AmountForecastOrderPromo_sh_ch2: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090'., '#1096#1090' ('#1079#1072#1103#1074#1082#1072' '#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastOrderPromo_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072', '#1096#1090' ('#1047#1072#1103#1074#1082#1072' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080')'
+            Options.Editing = False
+            Width = 103
+          end
+          object ReceiptName_ch2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+            DataBinding.FieldName = 'ReceiptName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptBasisName_ch2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
+            DataBinding.FieldName = 'ReceiptBasisName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isMain_ch2: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085'. ('#1088#1077#1094#1077#1087#1090#1091#1088#1072')'
+            DataBinding.FieldName = 'isMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isMain_Basis_ch2: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085'. ('#1088#1077#1094#1077#1087#1090#1091#1088#1072' '#1043#1055')'
+            DataBinding.FieldName = 'isMain_Basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object isErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -610,17 +738,16 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1119
       object cxGridDetailChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1119
+        Width = 1100
         Height = 488
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1119
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetailChild
@@ -749,7 +876,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1119
+    Width = 1100
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1119
