@@ -503,6 +503,9 @@ object UtilPrintForm: TUtilPrintForm
           Action = actDialog_TTN
         end
         item
+          Action = actSPPrintTTNProcName
+        end
+        item
           Action = actPrint_TTN
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
@@ -1112,6 +1115,17 @@ object UtilPrintForm: TUtilPrintForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
     object actPrint_TTN: TdsdPrintAction
       Category = 'Print_TTN'
       MoveParams = <>
@@ -1142,6 +1156,8 @@ object UtilPrintForm: TUtilPrintForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3626,5 +3642,30 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 687
     Top = 160
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 64
   end
 end

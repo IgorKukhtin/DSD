@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS lpInsert_MI_OrderGoodsDetail_Master (Integer, Integer, I
 CREATE OR REPLACE FUNCTION lpInsert_MI_OrderGoodsDetail_Master(
     IN inId                        Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                Integer   , -- Ключ объекта
-    IN inObjectId                  Integer   , -- Товары
+    IN inGoodsId                   Integer   , -- Товары
     IN inGoodsKindId               Integer   , -- 
     IN inAmount                    TFloat    , -- Количество ПЛАН
     IN inAmountForecast            TFloat    , -- Статистика(продажа) - БЕЗ акций
@@ -25,7 +25,7 @@ BEGIN
      vbIsInsert:= COALESCE (inId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inObjectId, inMovementId, inAmount, NULL);
+     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inId, inGoodsKindId);

@@ -22,9 +22,8 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
   END IF;
 
-  -- 1.0.
+  -- 1.0.1.
   vbStatusId_old:= (SELECT StatusId FROM Movement WHERE Id = inMovementId);
-  vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
 
   -- 1.1. Проверки на "распроведение" / "удаление"
   IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
@@ -32,6 +31,14 @@ BEGIN
   -- 1.2. Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+
+  -- 1.0.2.
+  vbOperDatePartner:= (SELECT MovementDate.ValueData
+                       FROM MovementDate
+                       WHERE MovementDate.MovementId = inMovementId
+                         AND MovementDate.DescId     = zc_MovementDate_OperDatePartner()
+                         AND vbDescId                <> zc_Movement_Service()
+                      );
 
   -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
   IF vbStatusId_old = zc_Enum_Status_Complete()
