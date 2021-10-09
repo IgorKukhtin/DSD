@@ -38,18 +38,19 @@ RETURNS TABLE (Id Integer, ParentId Integer
              )
 AS
 $BODY$
-  DECLARE vbUserId          Integer;
-  DECLARE vbMovement        Integer;
+  DECLARE vbUserId       Integer;
+  DECLARE vbMovementId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
-     vbMovement := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail());
 
-     -- Результат другой
+     -- Нашли документ
+     vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail());
+
+     -- Результат
      RETURN QUERY
-
        WITH
            tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                           , MovementItem.ParentId                         AS ParentId
@@ -57,11 +58,11 @@ BEGIN
                           , MovementItem.ObjectId                         AS GoodsId
                           , MovementItem.isErased                         AS isErased
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                          INNER JOIN MovementItem ON MovementItem.MovementId = vbMovement-- MovementItem.ParentId = inParentId
+                          INNER JOIN MovementItem ON MovementItem.MovementId = vbMovementId-- MovementItem.ParentId = inParentId
                                                  AND MovementItem.DescId     = zc_MI_Master()
                                                  AND MovementItem.isErased   = tmpIsErased.isErased
-                     )
-
+                    )
+        -- Результат
         SELECT
              tmpMI.MovementItemId    :: Integer          AS Id
            , tmpMI.ParentId                              AS ParentId
@@ -203,4 +204,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MI_OrderGoodsDetail_Master(inParentId := 18298048 , inIsErased := 'False' ,  inSession := '5')
+-- SELECT * FROM gpSelect_MI_OrderGoodsDetail_Master(inParentId := 18298048 , inIsErased := 'False' ,  inSession := '5')

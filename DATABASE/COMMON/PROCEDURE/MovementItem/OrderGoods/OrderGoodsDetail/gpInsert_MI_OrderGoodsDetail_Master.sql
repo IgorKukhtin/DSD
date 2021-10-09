@@ -336,7 +336,7 @@ BEGIN
          ;
          
      -- сохранили связь с Receipt
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptId(),    MovementItem.Id, tmpChildReceiptTable.ReceiptId)
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      MovementItem.Id, tmpChildReceiptTable.ReceiptId)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), MovementItem.Id, tmpChildReceiptTable.ReceiptId_parent)
      FROM MovementItem
           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind

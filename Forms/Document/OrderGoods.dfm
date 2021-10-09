@@ -2,7 +2,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 638
   ClientWidth = 1100
-  ExplicitLeft = -327
   ExplicitWidth = 1116
   ExplicitHeight = 673
   PixelsPerInch = 96
@@ -11,7 +10,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Top = 126
     Width = 1100
     Height = 512
-    Properties.ActivePage = cxTabSheet1
     ExplicitTop = 126
     ExplicitWidth = 1100
     ExplicitHeight = 512
@@ -501,7 +499,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
           OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
-          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -784,9 +781,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1119
-      ExplicitHeight = 0
       object cxGridDetailChild: TcxGrid
         Left = 0
         Top = 0
@@ -795,7 +789,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1119
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetailChild
@@ -814,7 +807,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PartionGoods_ch3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -837,10 +829,47 @@ inherited OrderGoodsForm: TOrderGoodsForm
           OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
-          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object GoodsGroupNameFull_parent: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1043#1055' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsCode_parent_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1043#1055
+            DataBinding.FieldName = 'GoodsCode_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object GoodsName_parent_ch3: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1043#1055
+            DataBinding.FieldName = 'GoodsName_parent'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 182
+          end
+          object MeasureName_parent_ch3: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'. '#1043#1055
+            DataBinding.FieldName = 'MeasureName_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object GoodsGroupNameFull_ch3: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -855,7 +884,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 55
           end
           object GoodsName_ch3: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -882,7 +911,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Width = 45
           end
           object Amount_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -891,17 +920,74 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PartionGoods_ch3: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
           object GoodsKindName_ch3: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptCode_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
+            DataBinding.FieldName = 'ReceiptCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ReceiptCode_str_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'ReceiptCode_str'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptName_ch3: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+            DataBinding.FieldName = 'ReceiptName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptBasisCode_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1055#1060
+            DataBinding.FieldName = 'ReceiptBasisCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Enabled = False
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ReceiptBasisCode_str_ch3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1055#1060' ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'ReceiptBasisCode_str'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptBasisName_ch3: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1055#1060
+            DataBinding.FieldName = 'ReceiptBasisName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1160,14 +1246,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       Grid = cxGridDetailMaster
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
       ImageIndex = 6
       ShortCut = 16472
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
