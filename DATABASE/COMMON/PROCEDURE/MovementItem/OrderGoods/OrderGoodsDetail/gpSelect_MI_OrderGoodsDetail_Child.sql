@@ -84,7 +84,7 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN MovementItem AS MI_parent ON MI_parent.Id = MovementItem.ParentId
-          LEFT JOIN Object AS Object_Goods_parent ON Object_Goods.Id = MI_parent.ObjectId
+          LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MI_parent.ObjectId
 
           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind_parent
                                            ON MILO_GoodsKind_parent.MovementItemId = MI_parent.Id

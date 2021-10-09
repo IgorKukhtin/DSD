@@ -396,10 +396,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Column = AmountForecastOrderPromo_ch2
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = ',0.##'
               Kind = skSum
               Column = Amount_sh_ch2
@@ -454,10 +450,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastOrderPromo_ch2
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.##'
@@ -803,10 +795,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = GoodsKindName_ch3
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
