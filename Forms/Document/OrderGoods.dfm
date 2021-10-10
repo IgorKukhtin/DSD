@@ -850,6 +850,13 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 182
           end
+          object GoodsKindName_parent_ch3: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
+            DataBinding.FieldName = 'GoodsKindName_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object MeasureName_parent_ch3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'. '#1043#1055
             DataBinding.FieldName = 'MeasureName_parent'
@@ -890,6 +897,15 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 182
           end
+          object GoodsKindName_ch3: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object MeasureName_ch3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -906,15 +922,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object GoodsKindName_ch3: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object ReceiptCode_ch3: TcxGridDBColumn

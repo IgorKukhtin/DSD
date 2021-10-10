@@ -145,6 +145,7 @@ type
     ReceiptBasisCode_str_ch2: TcxGridDBColumn;
     GoodsGroupNameFull_parent: TcxGridDBColumn;
     MeasureName_parent_ch3: TcxGridDBColumn;
+    GoodsKindName_parent_ch3: TcxGridDBColumn;
   private
     { Private declarations }
   public
