@@ -117,7 +117,6 @@ type
     GoodsName_ch3: TcxGridDBColumn;
     MeasureName_ch3: TcxGridDBColumn;
     Amount_ch3: TcxGridDBColumn;
-    PartionGoods_ch3: TcxGridDBColumn;
     GoodsKindName_ch3: TcxGridDBColumn;
     isErased_ch3: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
@@ -140,6 +139,13 @@ type
     ReceiptBasisName_ch2: TcxGridDBColumn;
     isMain_ch2: TcxGridDBColumn;
     isMain_Basis_ch2: TcxGridDBColumn;
+    ReceiptCode_ch2: TcxGridDBColumn;
+    ReceiptCode_str_ch2: TcxGridDBColumn;
+    ReceiptBasisCode_ch2: TcxGridDBColumn;
+    ReceiptBasisCode_str_ch2: TcxGridDBColumn;
+    GoodsGroupNameFull_parent: TcxGridDBColumn;
+    MeasureName_parent_ch3: TcxGridDBColumn;
+    GoodsKindName_parent_ch3: TcxGridDBColumn;
   private
     { Private declarations }
   public

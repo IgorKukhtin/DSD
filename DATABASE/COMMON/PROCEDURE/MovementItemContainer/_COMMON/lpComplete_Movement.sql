@@ -36,7 +36,12 @@ BEGIN
 
 
   -- 1.0.
-  vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
+  vbOperDatePartner:= (SELECT MovementDate.ValueData
+                       FROM MovementDate
+                       WHERE MovementDate.MovementId = inMovementId
+                         AND MovementDate.DescId     = zc_MovementDate_OperDatePartner()
+                         AND vbDescId                <> zc_Movement_Service()
+                      );
 
   -- 1.1. Проверка
   IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)

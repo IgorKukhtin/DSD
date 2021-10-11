@@ -827,7 +827,7 @@ AS
              zc_Movement_TransportGoods()
            , CAST ('TransportGoods' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
-           , CAST ('06.10.2021' AS TDateTime)
+           , CAST ('30.09.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
@@ -836,7 +836,7 @@ AS
       SELECT
              zc_Movement_TransportGoods()
            , CAST ('TransportGoods' AS TVarChar)
-           , CAST ('07.10.2021' AS TDateTime)
+           , CAST ('01.10.2021' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)

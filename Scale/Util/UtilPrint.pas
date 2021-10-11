@@ -146,6 +146,8 @@ type
     actPrint_QualityDoc_list: TdsdPrintAction;
     mactPrint_QualityDoc_list: TMultiAction;
     actPrintStikerKVK: TdsdPrintAction;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
   end;
 

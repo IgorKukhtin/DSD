@@ -12,9 +12,14 @@ RETURNS TABLE (NextId    Bigint
               )
 AS
 $BODY$
-    DECLARE vbId_End    BigInt;
+    DECLARE vbId_start_save BigInt;
+    DECLARE vbId_End        BigInt;
     DECLARE vbLast_modified TDateTime;
 BEGIN
+
+    -- !!!
+    vbId_start_save:= inId_start;
+    
 
     -- IF inRec_count >= 200000 OR 1=1
     /*IF inId_start < 6981958236
@@ -115,30 +120,33 @@ BEGIN
     -- нашли время начала этой транзакции - здесь значение без timezone
     vbLast_modified:= (SELECT MAX (last_modified) FROM _replica.table_update_data WHERE Id BETWEEN vbId_End AND vbId_End);
 
-    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmp_pg_stat_activity')
+
+    IF 1=0
     THEN
-        DELETE FROM _tmp_pg_stat_activity;
-
-        INSERT INTO _tmp_pg_stat_activity SELECT * FROM pg_stat_activity
-                                          WHERE state ILIKE 'active'
-                                            AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
-                                            AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
-                                            AND query NOT ILIKE '% VACUUM%'
-                                            AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
-                                           ;
-
-    ELSE
-
-       -- Активные процессы
-       CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity
-                                                                 WHERE state ILIKE 'active'
-                                                                   AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
-                                                                   AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
-                                                                   AND query NOT ILIKE '% VACUUM%'
-                                                                   AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
-                                                                  ;
-    END IF;
---    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
+       IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmp_pg_stat_activity')
+       THEN
+           DELETE FROM _tmp_pg_stat_activity;
+   
+           INSERT INTO _tmp_pg_stat_activity SELECT * FROM pg_stat_activity
+                                             WHERE state ILIKE 'active'
+                                               AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
+                                               AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
+                                               AND query NOT ILIKE '% VACUUM%'
+                                               AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
+                                              ;
+   
+       ELSE
+   
+          -- Активные процессы
+          CREATE TEMP TABLE _tmp_pg_stat_activity ON COMMIT DROP AS SELECT * FROM pg_stat_activity
+                                                                    WHERE state ILIKE 'active'
+                                                                      AND query NOT ILIKE '%_replica.gpSelect_Replica_LastId(%'
+                                                                      AND query NOT ILIKE '% _replica.gpSelect_Replica_commands(%'
+                                                                      AND query NOT ILIKE '% VACUUM%'
+                                                                      AND query NOT ILIKE 'SELECT ' || CHR (39) || '(' || CHR (39) ||' || CASE WHEN CAST (movementitemcontainer.id AS Text) IS NULL THEN ' || CHR (39) || 'NULL' || CHR (39) || ' ELSE CAST (movementitemcontainer.id AS Text) END||%'
+                                                                     ;
+       END IF;
+   --    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmp_pg_stat_activity);
 
        -- если найдена активная транзакция - для значения без timezone
        IF EXISTS (SELECT 1 FROM _tmp_pg_stat_activity
@@ -200,6 +208,7 @@ BEGIN
           FROM _tmp_pg_stat_activity AS tmp;
 
     END IF;
+    END IF;
 
     -- если кол-во записей слишком много
     IF inRec_count * 2 < (SELECT COUNT(Id) FROM _replica.table_update_data WHERE Id BETWEEN inId_start AND vbId_End)
@@ -234,13 +243,13 @@ BEGIN
          vbId_End:=5602489721;
     END IF;*/
 
-  /*vbId_End:= COALESCE ((SELECT max(id) FROM _replica.table_update_data WHERE Id between vbId_start_save  and  vbId_End
+    vbId_End:= COALESCE ((SELECT max(id) FROM _replica.table_update_data WHERE Id between vbId_start_save  and  vbId_End
                                  AND last_modified < timezone('utc'::text, CURRENT_TIMESTAMP) - CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
                                                                                                      THEN INTERVAL '25 MINUTES'
                                                                                                      ELSE INTERVAL '75 MINUTES'
                                                                                                    --ELSE INTERVAL '55 MINUTES'
                                                                                                 END -- :: INTERVAL
-                         ), vbId_start_save - 1);*/
+                         ), vbId_start_save - 1);
 
 
     RETURN QUERY
@@ -260,7 +269,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM ResourseItemProtocol ORDER BY Id DESC LIMIT 100
--- SELECT NextId, NextId -6708805066, * FROM _replica.gpSelect_Replica_LastId (6708805066, 100000)
+-- SELECT NextId, NextId -6708805066, * FROM _replica.gpSelect_Replica_LastId (5206850940, 100000)
 /*
  WITH tmpParams2 AS (SELECT 789863512 AS Id_start, 200000 AS Rec_count, 0 AS Rec_count_diff)
 -- WITH tmpParams2 AS (SELECT 651426894 AS Id_start, 200000 AS Rec_count, 80000 AS Rec_count_diff)
