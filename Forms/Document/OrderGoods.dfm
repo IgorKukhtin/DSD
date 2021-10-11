@@ -1662,6 +1662,9 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end>
       isShowModal = False
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2128,10 +2131,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
