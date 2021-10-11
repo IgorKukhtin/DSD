@@ -1,9 +1,11 @@
 -- Function: gpSelect_MI_OrderGoodsDetail_Child()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_OrderGoodsDetail_Child (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_OrderGoodsDetail_Child (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_OrderGoodsDetail_Child(
     IN inParentId    Integer      , -- ключ Документа
+    IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -40,31 +42,31 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     SELECT MovementItem.Id
-          , MovementItem.ParentId
+     SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END AS Id
+          , CASE WHEN inShowAll = TRUE THEN MovementItem.ParentId ELSE 0 END AS ParentId
           , Object_Goods.Id          		AS GoodsId
           , Object_Goods.ObjectCode  		AS GoodsCode
           , Object_Goods.ValueData   		AS GoodsName
           , Object_GoodsKind.ValueData          AS GoodsKindName
           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
           , Object_Measure.ValueData            AS MeasureName
-          , MovementItem.Amount :: TFloat       AS Amount
+          , SUM (COALESCE (MovementItem.Amount,0)) :: TFloat AS Amount
 
-          , ObjectString_Goods_GoodsGroupFull_parent.ValueData AS GoodsGroupNameFull_parent
-          , Object_Goods_parent.ObjectCode  	        AS GoodsCode_parent
-          , Object_Goods_parent.ValueData   	        AS GoodsName_parent
-          , Object_GoodsKind_parent.ValueData           AS GoodsKindName_parent
-          , Object_Measure_parent.ValueData             AS MeasureName_parent
+          , CASE WHEN inShowAll = TRUE THEN ObjectString_Goods_GoodsGroupFull_parent.ValueData ELSE '' END ::TVarChar AS GoodsGroupNameFull_parent
+          , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ObjectCode  	         ELSE 0  END AS GoodsCode_parent
+          , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ValueData   	         ELSE '' END ::TVarChar AS GoodsName_parent
+          , CASE WHEN inShowAll = TRUE THEN Object_GoodsKind_parent.ValueData            ELSE '' END ::TVarChar AS GoodsKindName_parent
+          , CASE WHEN inShowAll = TRUE THEN Object_Measure_parent.ValueData              ELSE '' END ::TVarChar AS MeasureName_parent
 
-          , Object_Receipt.ObjectCode                   AS ReceiptCode
-          , ObjectString_Receipt_Code.ValueData         AS ReceiptCode_str
-          , Object_Receipt.ValueData                    AS ReceiptName
+          , CASE WHEN inShowAll = TRUE THEN Object_Receipt.ObjectCode                    ELSE 0  END AS ReceiptCode
+          , CASE WHEN inShowAll = TRUE THEN ObjectString_Receipt_Code.ValueData          ELSE '' END ::TVarChar AS ReceiptCode_str
+          , CASE WHEN inShowAll = TRUE THEN Object_Receipt.ValueData                     ELSE '' END ::TVarChar AS ReceiptName
 
-          , Object_ReceiptBasis.ObjectCode              AS ReceiptBasisCode
-          , ObjectString_ReceiptBasis_Code.ValueData    AS ReceiptBasisCode_str
-          , Object_ReceiptBasis.ValueData               AS ReceiptBasisName
+          , CASE WHEN inShowAll = TRUE THEN Object_ReceiptBasis.ObjectCode               ELSE 0 END AS ReceiptBasisCode
+          , CASE WHEN inShowAll = TRUE THEN ObjectString_ReceiptBasis_Code.ValueData     ELSE '' END ::TVarChar AS ReceiptBasisCode_str
+          , CASE WHEN inShowAll = TRUE THEN Object_ReceiptBasis.ValueData                ELSE '' END ::TVarChar AS ReceiptBasisName
 
-          , MovementItem.isErased               AS isErased
+          , CASE WHEN inShowAll = TRUE THEN MovementItem.isErased ELSE FALSE END ::Boolean AS isErased
 
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -83,7 +85,9 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-          LEFT JOIN MovementItem AS MI_parent ON MI_parent.Id = MovementItem.ParentId
+          LEFT JOIN MovementItem AS MI_parent
+                                 ON MI_parent.Id = MovementItem.ParentId
+                                AND inShowAll = TRUE   -- показываем данные мастер по галке "показать детально"
           LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MI_parent.ObjectId
 
           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind_parent
@@ -118,7 +122,28 @@ BEGIN
 
      WHERE MovementItem.MovementId = vbMovementId
        AND MovementItem.DescId     = zc_MI_Child()
-       AND (MovementItem.isErased  = FALSE OR inisErased = TRUE);
+       AND (MovementItem.isErased  = FALSE OR inisErased = TRUE)
+     GROUP BY CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END 
+            , CASE WHEN inShowAll = TRUE THEN MovementItem.ParentId ELSE 0 END
+            , Object_Goods.Id
+            , Object_Goods.ObjectCode
+            , Object_Goods.ValueData
+            , Object_GoodsKind.ValueData
+            , ObjectString_Goods_GoodsGroupFull.ValueData
+            , Object_Measure.ValueData  
+            , CASE WHEN inShowAll = TRUE THEN ObjectString_Goods_GoodsGroupFull_parent.ValueData ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ObjectCode  	 ELSE 0  END
+            , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ValueData   	 ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_GoodsKind_parent.ValueData  ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_Measure_parent.ValueData    ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_Receipt.ObjectCode          ELSE 0  END
+            , CASE WHEN inShowAll = TRUE THEN ObjectString_Receipt_Code.ValueData      ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_Receipt.ValueData                 ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_ReceiptBasis.ObjectCode           ELSE 0 END
+            , CASE WHEN inShowAll = TRUE THEN ObjectString_ReceiptBasis_Code.ValueData ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN Object_ReceiptBasis.ValueData            ELSE '' END
+            , CASE WHEN inShowAll = TRUE THEN MovementItem.isErased ELSE FALSE END
+       ;
 
 END;
 $BODY$
@@ -127,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.10.21         *
  15.09.21         *
 */
 
