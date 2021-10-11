@@ -3,7 +3,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
   ClientHeight = 638
   ClientWidth = 1100
   ExplicitWidth = 1116
-  ExplicitHeight = 673
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1268,6 +1268,27 @@ inherited OrderGoodsForm: TOrderGoodsForm
           StoredProc = spSelectDetailChild
         end>
     end
+    object actShowAll_DetailChild: TBooleanStoredProcAction [8]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelectDetailChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectDetailChild
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
@@ -1280,7 +1301,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           StoredProc = spSelect_Child
         end>
     end
-    object actPrintNoGroup: TdsdPrintAction [10]
+    object actPrintNoGroup: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -1358,7 +1379,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1780,6 +1801,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
           ItemName = 'bbShowAll'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll_DetailChild'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1886,6 +1915,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
     object bbGridToExceDetailMaster: TdxBarButton
       Action = dsdGridToExceDetailMaster
+      Category = 0
+    end
+    object bbShowAll_DetailChild: TdxBarButton
+      Action = actShowAll_DetailChild
       Category = 0
     end
   end
@@ -2662,6 +2695,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll_DetailChild
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
