@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
+             , PercentMarkup TFloat
               )
 
 AS
@@ -40,6 +41,7 @@ BEGIN
             , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
             , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
             , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
+            , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
 
        FROM tmpStatus
             LEFT JOIN Movement ON Movement.DescId = zc_Movement_GoodsSP()
@@ -58,6 +60,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                    ON MovementFloat_PercentMarkup.MovementId = Movement.Id
+                                   AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+
        WHERE MovementDate_OperDateStart.ValueData <=inEndDate
          AND MovementDate_OperDateEnd.ValueData >= inStartDate 
             

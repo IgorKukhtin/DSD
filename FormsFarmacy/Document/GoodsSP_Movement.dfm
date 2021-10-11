@@ -355,6 +355,19 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       Top = 5
       Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
     end
+    object cxLabel6: TcxLabel
+      Left = 901
+      Top = 5
+      Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+    end
+    object ctPercentMarkup: TcxCurrencyEdit
+      Left = 901
+      Top = 23
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      TabOrder = 11
+      Width = 60
+    end
   end
   object edOperDateStart: TcxDateEdit [2]
     Left = 373
@@ -1139,6 +1152,13 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentMarkup'
+        Value = Null
+        Component = ctPercentMarkup
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1193,6 +1213,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentMarkup'
+        Value = Null
+        Component = ctPercentMarkup
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1227,6 +1255,9 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       end
       item
         Control = edMedicalProgramSP
+      end
+      item
+        Control = ctPercentMarkup
       end>
     Left = 232
     Top = 193

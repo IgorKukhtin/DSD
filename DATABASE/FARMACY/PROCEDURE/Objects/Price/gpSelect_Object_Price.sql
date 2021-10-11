@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSValueOld TFloat, MCSValue_min TFloat, isMCSValue_dif Boolean
              , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
              , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
-             , isSP Boolean
+             , isSP Boolean, PercentMarkupSP TFloat
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
@@ -133,6 +133,7 @@ BEGIN
                ,NULL::Boolean                    AS isMCSNotRecalcOld
 
                ,NULL::Boolean                    AS isSP
+               ,NULL::TFloat                     AS PercentMarkupSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
                ,NULL::Boolean                    AS isFirst 
@@ -488,35 +489,41 @@ BEGIN
                     )
 
      -- Товары соц-проект (документ)
-   , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
+   , tmpMI_GoodsSP AS (SELECT tmp.*
+                            , TRUE AS isSP
                        FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := inUnitId) AS tmp
                        )
      -- параметры из документа GoodsSP
-   , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
-                         , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
-                         , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
-                         , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
-                         , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
-                         , MIFloat_PriceSP.ValueData                             AS PriceSP
-                         , MIFloat_PaymentSP.ValueData                           AS PaymentSP
-                         , tmpMI_GoodsSP.isSP
-                    FROM tmpMI_GoodsSP
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
-                                                     ON MIFloat_PriceRetSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
-                                                    AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()                         
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
-                                                     ON MIFloat_PriceOptSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
-                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
-                         LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
-                                                     ON MIFloat_PriceSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
-                                                    AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
-                         LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
-                                                     ON MIFloat_PaymentSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
-                                                    AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
-                         LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
-                                                          ON MI_IntenalSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
-                                                         AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
-                         LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId
+   , tmpGoodsSP AS (SELECT tmpMI_GoodsSP.GoodsId
+                        , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
+                        , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
+                        , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                        , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
+                        , MIFloat_PriceSP.ValueData                             AS PriceSP
+                        , MIFloat_PaymentSP.ValueData                           AS PaymentSP
+                        , tmpMI_GoodsSP.isSP
+                        , MovementFloat_PercentMarkup.ValueData                 AS PercentMarkupSP
+                        , ROW_NUMBER() OVER (PARTITION BY tmpMI_GoodsSP.GoodsId ORDER BY MovementFloat_PercentMarkup.ValueData DESC) AS Ord
+                   FROM tmpMI_GoodsSP
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                    ON MIFloat_PriceRetSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()                         
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                    ON MIFloat_PriceOptSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                    ON MIFloat_PriceSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                        LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                    ON MIFloat_PaymentSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+                        LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                         ON MI_IntenalSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                        AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                        LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                                ON MovementFloat_PercentMarkup.MovementId = tmpMI_GoodsSP.MovementId
+                                               AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+                        LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId
                     )   -- все товары сети
    , tmpGoodsAll AS (SELECT *
                      FROM Object_Goods_View
@@ -731,6 +738,7 @@ BEGIN
                , tmpPrice_View.isMCSNotRecalcOld
 
                , COALESCE (tmpGoodsSP.isSP, False)     ::Boolean AS isSP
+               , COALESCE (NULLIF(tmpGoodsSP.PercentMarkupSP, 0), Null)::TFloat AS PercentMarkupSP
                , Object_Goods_View.isErased                      AS isErased 
 
                , Object_Goods_View.isClose
@@ -807,6 +815,7 @@ BEGIN
                LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = Object_Goods_View.Id
 
                LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = tmpGoodsMain.GoodsMainId
+                                   AND tmpGoodsSP.Ord = 1
                
                LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                     ON ObjectDate_LastPrice.ObjectId = tmpGoodsMain.GoodsMainId
@@ -1276,11 +1285,11 @@ BEGIN
                           )
 
     -- Товары соц-проект (документ)
-  , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
+  , tmpMI_GoodsSP AS (SELECT tmp.*, TRUE AS isSP
                       FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId := inUnitId) AS tmp
-                   )
+                     )
     -- параметры из документа GoodsSP
-  , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
+  , tmpGoodsSP AS (SELECT tmpMI_GoodsSP.GoodsId
                         , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
                         , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
                         , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
@@ -1288,6 +1297,8 @@ BEGIN
                         , MIFloat_PriceSP.ValueData                             AS PriceSP
                         , MIFloat_PaymentSP.ValueData                           AS PaymentSP
                         , tmpMI_GoodsSP.isSP
+                        , MovementFloat_PercentMarkup.ValueData                 AS PercentMarkupSP
+                        , ROW_NUMBER() OVER (PARTITION BY tmpMI_GoodsSP.GoodsId ORDER BY MovementFloat_PercentMarkup.ValueData DESC) AS Ord
                    FROM tmpMI_GoodsSP
                         LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
                                                     ON MIFloat_PriceRetSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
@@ -1304,6 +1315,9 @@ BEGIN
                         LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                          ON MI_IntenalSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
                                                         AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                        LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                                ON MovementFloat_PercentMarkup.MovementId = tmpMI_GoodsSP.MovementId
+                                               AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
                         LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId
                    )
 
@@ -1313,6 +1327,7 @@ BEGIN
                                , COALESCE (tmpGoodsSP.PriceOptSP,0)     ::TFloat  AS PriceOptS
                                , COALESCE (tmpGoodsSP.PriceSP,0)        ::TFloat  AS PriceSP
                                , COALESCE (tmpGoodsSP.PaymentSP,0)      ::TFloat  AS PaymentSP
+                               , COALESCE (NULLIF(tmpGoodsSP.PercentMarkupSP, 0),Null) ::TFloat  AS PercentMarkupSP
                                , tmpGoodsSP.IntenalSPName                         AS IntenalSPName
                                , ObjectDate_LastPrice.ValueData                   AS Date_LastPrice
                                , COALESCE (tmpGoodsBarCode.BarCode, '') :: TVarChar AS BarCode
@@ -1324,6 +1339,8 @@ BEGIN
                                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
                                LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                                                   AND tmpGoodsSP.Ord = 1
+                                                   
                                /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
@@ -1592,6 +1609,7 @@ BEGIN
                , tmpPrice_All.isMCSNotRecalcOld
 
                , tmpGoodsMainParam.isSP :: Boolean  AS isSP
+               , tmpGoodsMainParam.PercentMarkupSP :: TFloat                   AS PercentMarkupSP
                , Object_Goods_View.isErased                                    AS isErased 
 
                , Object_Goods_View.isClose
@@ -1732,4 +1750,4 @@ where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
 
 --select * from gpSelect_Object_Price(inUnitId := 0 , inGoodsId := 6346632 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
 
-select * from gpSelect_Object_Price(inUnitId := 13338606 , inGoodsId := 0 , inisShowAll := 'True' , inisShowDel := 'False' ,  inSession := '3');
+select * from gpSelect_Object_Price(inUnitId := 13338606 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

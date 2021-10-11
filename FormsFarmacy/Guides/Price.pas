@@ -110,6 +110,7 @@ type
     isError_MarginPercent: TcxGridDBColumn;
     isMCSValue_dif: TcxGridDBColumn;
     MCSValueSun: TcxGridDBColumn;
+    PercentMarkupSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

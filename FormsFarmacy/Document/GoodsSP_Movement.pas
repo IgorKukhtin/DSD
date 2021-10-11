@@ -77,6 +77,8 @@ type
     edMedicalProgramSP: TcxButtonEdit;
     cxLabel5: TcxLabel;
     CountSPMin: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    ctPercentMarkup: TcxCurrencyEdit;
   private
     { Private declarations }
   public

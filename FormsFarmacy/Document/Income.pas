@@ -190,6 +190,7 @@ type
     spInsert_ReturnOut: TdsdStoredProc;
     actOpenReturnOut: TdsdOpenForm;
     bbOpenReturnOut: TdxBarButton;
+    PercentMarkupSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

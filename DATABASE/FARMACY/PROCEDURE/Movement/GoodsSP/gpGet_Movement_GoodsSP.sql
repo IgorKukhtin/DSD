@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
+             , PercentMarkup TFloat
               )
 AS
 $BODY$
@@ -43,6 +44,7 @@ BEGIN
               , 0                            AS MedicalProgramSPId
               , 0                            AS MedicalProgramSPCode
               , ''::TVarChar                 AS MedicalProgramSPName
+              , 0::TFloat                    AS PercentMarkup
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      
@@ -57,7 +59,8 @@ BEGIN
               , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
               , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
               , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
-
+              , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
+  
          FROM Movement
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
    
@@ -74,6 +77,10 @@ BEGIN
                                            AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MLO_MedicalProgramSP.ObjectId  
 
+               LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                       ON MovementFloat_PercentMarkup.MovementId = Movement.Id
+                                      AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+                                      
          WHERE Movement.Id = inMovementId
            AND Movement.DescId = zc_Movement_GoodsSP();
 
