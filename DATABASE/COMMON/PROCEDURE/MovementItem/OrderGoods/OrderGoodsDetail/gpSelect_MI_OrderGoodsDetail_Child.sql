@@ -28,7 +28,11 @@ RETURNS TABLE (Id Integer
              , GroupNumber Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , Color_calc Integer
 
-
+             , TradeMarkName         TVarChar
+             , GoodsTagName          TVarChar
+             , GoodsPlatformName     TVarChar
+             , GoodsGroupAnalystName TVarChar
+             , isTop Boolean
               )
 AS
 $BODY$
@@ -52,6 +56,44 @@ BEGIN
                  AND MovementItem.DescId     = zc_MI_Child()
                  AND (MovementItem.isErased  = FALSE OR inisErased = TRUE)
                )
+
+     , tmpGoodsParam AS (SELECT tmp.GoodsId
+                              , Object_TradeMark.ValueData      AS TradeMarkName
+                              , Object_GoodsTag.ValueData       AS GoodsTagName
+                              , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
+                              , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+                         FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+                             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+                             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                                  ON ObjectLink_Goods_GoodsTag.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+                             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+                        )
+             
+     -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+     , tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                       , Object_GoodsByGoodsKind_View.GoodsKindId
+                  FROM ObjectBoolean
+                       LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+                  WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+                    AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                   )
+
    , tmpData AS (SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END AS Id
                       , CASE WHEN inShowAll = TRUE THEN MovementItem.ParentId ELSE 0 END AS ParentId
                       , MovementItem.ObjectId
@@ -139,8 +181,7 @@ BEGIN
                                              AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
 
                  )
-
-                   
+       
                                                   
      SELECT MovementItem.Id
           , MovementItem.ParentId
@@ -185,6 +226,12 @@ BEGIN
                    ELSE 0 -- clBlack
             END :: Integer AS Color_calc
 
+           , tmpGoodsParam.TradeMarkName         :: TVarChar
+           , tmpGoodsParam.GoodsTagName          :: TVarChar
+           , tmpGoodsParam.GoodsPlatformName     :: TVarChar
+           , tmpGoodsParam.GoodsGroupAnalystName :: TVarChar
+           , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
+
      FROM tmpData AS MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
@@ -197,6 +244,10 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId =  Object_Goods.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem.ObjectId
+          LEFT JOIN tmpTOP ON tmpTOP.GoodsId = MovementItem.ObjectId
+                          AND COALESCE (tmpTOP.GoodsKindId,0) = COALESCE (MovementItem.GoodsKindId,0)
 
      GROUP BY MovementItem.Id
             , MovementItem.ParentId
@@ -232,8 +283,13 @@ BEGIN
                    WHEN 8 THEN 10965163 -- _colorRecord_KindPackage_Composition_Y     - inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
                    ELSE 0 -- clBlack
               END
-           , MovementItem.isErased 
-          , MovementItem.GroupNumber
+            , MovementItem.isErased 
+            , MovementItem.GroupNumber
+            , tmpGoodsParam.TradeMarkName
+            , tmpGoodsParam.GoodsTagName
+            , tmpGoodsParam.GoodsPlatformName
+            , tmpGoodsParam.GoodsGroupAnalystName
+            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
 
        ;
 
@@ -250,4 +306,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_OrderGoodsDetail_Child (inParentId := 21114328, inisErased:= FALSE, inSession:= '5')
--- select * from gpSelect_MI_OrderGoodsDetail_Child (inParentId := 20242962 , inShowAll := 'true'::Boolean , inIsErased := 'False'::Boolean , inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- select * from gpSelect_MI_OrderGoodsDetail_Child (inParentId := 20228197  , inShowAll := 'true'::Boolean , inIsErased := 'False'::Boolean , inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

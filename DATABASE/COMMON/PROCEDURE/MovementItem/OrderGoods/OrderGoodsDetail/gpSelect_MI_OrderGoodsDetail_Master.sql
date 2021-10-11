@@ -34,6 +34,13 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , AmountForecastOrder_sh      TFloat
              , AmountForecastPromo_sh      TFloat
              , AmountForecastOrderPromo_sh TFloat
+
+             , TradeMarkName         TVarChar
+             , GoodsTagName          TVarChar
+             , GoodsPlatformName     TVarChar
+             , GoodsGroupAnalystName TVarChar
+             , isTop Boolean
+
              , isErased Boolean
              )
 AS
@@ -62,6 +69,44 @@ BEGIN
                                                  AND MovementItem.DescId     = zc_MI_Master()
                                                  AND MovementItem.isErased   = tmpIsErased.isErased
                     )
+
+     , tmpGoodsParam AS (SELECT tmp.GoodsId
+                              , Object_TradeMark.ValueData      AS TradeMarkName
+                              , Object_GoodsTag.ValueData       AS GoodsTagName
+                              , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
+                              , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+                         FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+                             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+                             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                                  ON ObjectLink_Goods_GoodsTag.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+                             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+                        )
+             
+     -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+     , tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                       , Object_GoodsByGoodsKind_View.GoodsKindId
+                  FROM ObjectBoolean
+                       LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+                  WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+                    AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                   )
+
         -- Результат
         SELECT
              tmpMI.MovementItemId    :: Integer          AS Id
@@ -132,6 +177,12 @@ BEGIN
                   ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
              END AS NUMERIC (16,0)) ::TFloat AS AmountForecastOrderPromo_sh
 
+           , tmpGoodsParam.TradeMarkName         :: TVarChar
+           , tmpGoodsParam.GoodsTagName          :: TVarChar
+           , tmpGoodsParam.GoodsPlatformName     :: TVarChar
+           , tmpGoodsParam.GoodsGroupAnalystName :: TVarChar
+           , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
+
            , tmpMI.isErased             AS isErased
 
        FROM tmpMI
@@ -190,6 +241,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+            LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpMI.GoodsId
+            LEFT JOIN tmpTOP ON tmpTOP.GoodsId = tmpMI.GoodsId
+                            AND COALESCE (tmpTOP.GoodsKindId,0) = COALESCE (MILO_GoodsKind.ObjectId,0)
            ;
 
 END;

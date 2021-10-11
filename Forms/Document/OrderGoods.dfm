@@ -244,6 +244,47 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Options.Editing = False
+            Width = 39
+          end
+          object GoodsPlatformName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+            DataBinding.FieldName = 'GoodsPlatformName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object TradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupAnalystName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
       object cxGridChild: TcxGrid
@@ -505,9 +546,56 @@ inherited OrderGoodsForm: TOrderGoodsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object IsTop_ch2: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Options.Editing = False
+            Width = 39
+          end
+          object GoodsPlatformName_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+            DataBinding.FieldName = 'GoodsPlatformName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object TradeMarkName_ch2: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupAnalystName_ch2: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsTagName_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTagName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object GoodsGroupNameFull_ch2: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -829,6 +917,52 @@ inherited OrderGoodsForm: TOrderGoodsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object IsTop_ch3: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Options.Editing = False
+            Width = 39
+          end
+          object GoodsPlatformName_ch3: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+            DataBinding.FieldName = 'GoodsPlatformName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object TradeMarkName_ch3: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupAnalystName_ch3: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsTagName_ch3: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTagName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object GoodsGroupNameFull_parent: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1043#1055' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull_parent'
@@ -1464,6 +1598,70 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end>
       isShowModal = True
     end
+    object DetailMasterProtocolOpenForm: TdsdOpenForm [18]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1043#1055'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSDetailMaster
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = CDSDetailMaster
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object DetailChildProtocolOpenForm: TdsdOpenForm [19]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSDetailChild
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = CDSDetailChild
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1937,6 +2135,18 @@ inherited OrderGoodsForm: TOrderGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbDetailMasterProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDetailChildProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1977,6 +2187,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
     end
     object bbShowAll_DetailChild: TdxBarButton
       Action = actShowAll_DetailChild
+      Category = 0
+    end
+    object bbDetailMasterProtocolOpen: TdxBarButton
+      Action = DetailMasterProtocolOpenForm
+      Category = 0
+    end
+    object bbDetailChildProtocolOpen: TdxBarButton
+      Action = DetailChildProtocolOpenForm
       Category = 0
     end
   end
@@ -2300,8 +2518,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 528
-    Top = 89
+    Left = 568
+    Top = 169
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderGoods_SetErased'
