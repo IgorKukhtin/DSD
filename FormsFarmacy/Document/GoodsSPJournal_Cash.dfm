@@ -1,29 +1,28 @@
-inherited GoodsSPJournalForm: TGoodsSPJournalForm
+inherited GoodsSPJournal_CashForm: TGoodsSPJournal_CashForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'>'
   ClientHeight = 535
-  ClientWidth = 910
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ClientWidth = 821
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  ExplicitWidth = 926
+  ExplicitWidth = 837
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 910
+    Width = 821
     Height = 478
     TabOrder = 3
     ExplicitWidth = 821
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 910
+    ClientRectRight = 821
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 821
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 910
+        Width = 821
         Height = 478
         ExplicitWidth = 821
         ExplicitHeight = 478
@@ -85,23 +84,13 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 153
           end
-          object PercentMarkup: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'PercentMarkup'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 910
+    Width = 821
+    Visible = False
     ExplicitWidth = 821
     inherited deStart: TcxDateEdit
       EditValue = 43101d
@@ -194,6 +183,8 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       ImageIndex = 54
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
+      ShortCut = 0
       FormName = 'TGoodsSP_MovementForm'
       FormNameParam.Value = 'TGoodsSP_MovementForm'
       GuiParams = <
@@ -249,8 +240,9 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TGoodsSP_MovementForm'
-      FormNameParam.Value = 'TGoodsSP_MovementForm'
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      FormName = 'TGoodsSP_Movement_CashForm'
+      FormNameParam.Value = 'TGoodsSP_Movement_CashForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -279,6 +271,28 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+      CheckIDRecords = True
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -333,6 +347,7 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
@@ -370,36 +385,14 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsSP'
+    StoredProcName = 'gpSelect_Movement_GoodsSP_Cash'
     Params = <
-      item
-        Name = 'instartdate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inenddate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 136
@@ -417,28 +410,12 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
           ItemName = 'bbEdit'
         end
         item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
         end
         item
           BeginGroup = True
@@ -473,6 +450,9 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Enabled = False
     end
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
@@ -568,41 +548,6 @@ inherited GoodsSPJournalForm: TGoodsSPJournalForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameLoss'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameLossTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 400
     Top = 200
   end

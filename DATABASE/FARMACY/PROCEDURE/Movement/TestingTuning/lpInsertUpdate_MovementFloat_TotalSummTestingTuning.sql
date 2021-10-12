@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSummTestingTuning(
 )
   RETURNS VOID AS
 $BODY$
-  DECLARE vbTotalCount     TFloat;
-  DECLARE vbQuestion       TFloat;
+  DECLARE vbTotalCount          TFloat;
+  DECLARE vbQuestion            TFloat;
+  DECLARE vbQuestionStorekeeper TFloat;
 BEGIN
     IF COALESCE (inMovementId, 0) = 0
     THEN
@@ -17,8 +18,14 @@ BEGIN
 
 
     SELECT SUM(MovementItem.Amount)
-    INTO vbQuestion
+         , SUM(MIFloat_TestQuestionsStorekeeper.ValueData)
+    INTO vbQuestion, vbQuestionStorekeeper
     FROM MovementItem
+  
+         LEFT JOIN MovementItemFloat AS MIFloat_TestQuestionsStorekeeper
+                                     ON MIFloat_TestQuestionsStorekeeper.MovementItemId = MovementItem.Id
+                                    AND MIFloat_TestQuestionsStorekeeper.DescId = zc_MIFloat_AmountStorekeeper()
+                                    
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.isErased = FALSE;                         
@@ -41,6 +48,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
     -- Сохранили свойство <Итого количество>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TestingUser_Question(), inMovementId, vbQuestion);
+    -- Сохранили свойство <Итого количество>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_QuestionStorekeeper(), inMovementId, vbQuestionStorekeeper);
 
 END;
 $BODY$

@@ -2717,6 +2717,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
+    Left = 79
     object actChoiceGoodsInRemainsGrid: TAction [0]
       Caption = 'actChoiceGoodsInRemainsGrid'
       OnExecute = actChoiceGoodsInRemainsGridExecute
@@ -3335,26 +3336,11 @@ inherited MainCashForm2: TMainCashForm2
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
-      FormName = 'TGoodsSP_MovementForm'
-      FormNameParam.Value = 'TGoodsSP_MovementForm'
+      FormName = 'TGoodsSPJournal_CashForm'
+      FormNameParam.Value = 'TGoodsSPJournal_CashForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementSPId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
+      GuiParams = <>
       isShowModal = False
     end
     object actGetJuridicalList: TAction
@@ -3754,18 +3740,6 @@ inherited MainCashForm2: TMainCashForm2
     object actSetSiteDiscount: TAction
       Caption = #1057#1082#1080#1076#1082#1072' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090
       OnExecute = actSetSiteDiscountExecute
-    end
-    object actOpenMovementSP: TMultiAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecGet_Movement_GoodsSP_ID
-        end
-        item
-          Action = actOpenGoodsSP_UserForm
-        end>
-      Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
     end
     object actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
@@ -5479,8 +5453,8 @@ inherited MainCashForm2: TMainCashForm2
     object actGoodsSP_Cash: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'  "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1051#1110#1082#1080'"'
-      Hint = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'  "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1051#1110#1082#1080'"'
+      Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
+      Hint = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
       FormName = 'TGoodsSP_CashForm'
       FormNameParam.Value = 'TGoodsSP_CashForm'
       FormNameParam.DataType = ftString
@@ -6486,7 +6460,7 @@ inherited MainCashForm2: TMainCashForm2
       Action = actOpenCheckVIP_Error
     end
     object miOpenGoodsSP_UserForm: TMenuItem
-      Action = actOpenMovementSP
+      Action = actOpenGoodsSP_UserForm
     end
     object miSetPromo: TMenuItem
       Action = actSetPromoCode

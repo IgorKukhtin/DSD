@@ -1,4 +1,4 @@
-unit GoodsSP_Movement;
+unit GoodsSP_Movement_Cash;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   ExternalLoad;
 
 type
-  TGoodsSP_MovementForm = class(TAncestorDocumentForm)
+  TGoodsSP_Movement_CashForm = class(TAncestorDocumentForm)
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
@@ -46,20 +46,11 @@ type
     cxLabel3: TcxLabel;
     edOperDateEnd: TcxDateEdit;
     cxLabel4: TcxLabel;
-    actIntenalSPChoice: TOpenChoiceForm;
-    actKindOutSPChoice: TOpenChoiceForm;
-    actBrandSPChoice: TOpenChoiceForm;
-    actChoiceMovGoodsSP: TOpenChoiceForm;
     spInsertMI: TdsdStoredProc;
-    macInsertMI: TMultiAction;
     actInsertMI: TdsdExecStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
     bbInsertMI: TdxBarButton;
-    actDoLoad: TExecuteImportSettingsAction;
-    actGetImportSetting: TdsdExecStoredProc;
     spUpdate_isSp_SetErased: TdsdStoredProc;
-    actSetErasedGoodsSp: TdsdExecStoredProc;
-    macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
     IdSP: TcxGridDBColumn;
@@ -69,16 +60,11 @@ type
     macStartLoadDop: TMultiAction;
     bbStartLoadDop: TdxBarButton;
     spGetImportSettingHelsiId: TdsdStoredProc;
-    macStartLoadHelsi: TMultiAction;
-    actGetImportSettingHelsi: TdsdExecStoredProc;
-    actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
     GuidesMedicalProgramSP: TdsdGuides;
     edMedicalProgramSP: TcxButtonEdit;
     cxLabel5: TcxLabel;
     CountSPMin: TcxGridDBColumn;
-    cxLabel6: TcxLabel;
-    ctPercentMarkup: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -90,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsSP_MovementForm);
+  RegisterClass(TGoodsSP_Movement_CashForm);
 
 end.

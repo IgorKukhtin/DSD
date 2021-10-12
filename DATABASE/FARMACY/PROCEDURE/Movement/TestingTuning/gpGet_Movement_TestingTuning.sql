@@ -10,6 +10,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount Integer
              , Question Integer
              , TimeTest Integer
+             , QuestionStorekeeper Integer
+             , TimeTestStorekeeper Integer
              , Comment TVarChar
               )
 AS
@@ -33,6 +35,8 @@ BEGIN
              , 0                                                AS TotalCount
              , 0                                                AS Question
              , 0                     				            AS TimeTest
+             , 0                                                AS QuestionStorekeeper
+             , 0                     				            AS TimeTestStorekeeper
              , CAST ('' AS TVarChar) 		                    AS Comment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -46,6 +50,8 @@ BEGIN
            , MovementFloat_TotalCount.ValueData::Integer        AS TotalCount
            , MovementFloat_Question.ValueData::Integer          AS Question
            , MovementFloat_Time.ValueData::Integer              AS TimeTest
+           , MovementFloat_QuestionStorekeeper.ValueData::Integer     AS QuestionStorekeeper
+           , MovementFloat_TimeStorekeeper.ValueData::Integer         AS TimeTestStorekeeper
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -59,6 +65,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Time
                                     ON MovementFloat_Time.MovementId = Movement.Id
                                    AND MovementFloat_Time.DescId = zc_MovementFloat_Time()
+
+            LEFT JOIN MovementFloat AS MovementFloat_QuestionStorekeeper
+                                    ON MovementFloat_QuestionStorekeeper.MovementId = Movement.Id
+                                   AND MovementFloat_QuestionStorekeeper.DescId = zc_MovementFloat_QuestionStorekeeper()
+            LEFT JOIN MovementFloat AS MovementFloat_TimeStorekeeper
+                                    ON MovementFloat_TimeStorekeeper.MovementId = Movement.Id
+                                   AND MovementFloat_TimeStorekeeper.DescId = zc_MovementFloat_TimeStorekeeper()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

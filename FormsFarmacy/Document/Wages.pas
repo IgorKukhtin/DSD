@@ -122,6 +122,7 @@ type
     MarketingRepayment: TcxGridDBBandedColumn;
     IlliquidAssetsRepayment: TcxGridDBBandedColumn;
     TestingAttempts: TcxGridDBBandedColumn;
+    PenaltyExam: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

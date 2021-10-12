@@ -136,6 +136,11 @@ type
     spUpdate_MandatoryQuestion: TdsdStoredProc;
     dxBarButton18: TdxBarButton;
     maMandatoryQuestion: TcxGridDBColumn;
+    meTestQuestionsStorekeeper: TcxGridDBColumn;
+    edTimeTestStorekeeper: TcxTextEdit;
+    edQuestionStorekeeper: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

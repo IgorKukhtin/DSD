@@ -3976,6 +3976,14 @@
 				<Form>BanCommentSendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSP_Movement_Cash.pas">
+				<Form>GoodsSP_Movement_CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSPJournal_Cash.pas">
+				<Form>GoodsSPJournal_CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

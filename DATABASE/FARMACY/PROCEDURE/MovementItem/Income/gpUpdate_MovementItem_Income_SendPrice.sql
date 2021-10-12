@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice_Ol (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice(
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice_Ol(
     IN inMovementId          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -22,7 +22,13 @@ $BODY$
    DECLARE vbUpperLimitPromoBonus TFloat;
    DECLARE vbLowerLimitPromoBonus TFloat;
    DECLARE vbMinPercentPromoBonus TFloat;
+   DECLARE vbOperDate         TDateTime;
 BEGIN
+
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
+    vbUserId := inSession;
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
@@ -74,7 +80,7 @@ BEGIN
      END IF;
 
      -- определяем Категорию расчета
-     SELECT Object_MarginCategoryLink.MarginCategoryId  INTO vbMarginCategoryId
+     SELECT Object_MarginCategoryLink.MarginCategoryId INTO vbMarginCategoryId
        FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink
             INNER JOIN Movement ON Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Income()
             INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -118,7 +124,7 @@ BEGIN
 
 
      -- Параметры из Документа
-     SELECT ToId, InvNumberBranch INTO vbToId, vbInvNumberPoint FROM Movement_Income_View WHERE Id = inMovementId;
+     SELECT ToId, InvNumberBranch, OperDate INTO vbToId, vbInvNumberPoint, vbOperDate FROM Movement_Income_View WHERE Id = inMovementId;
 
      --свойство Аптеки isTopNo
      vbisTopNo_Unit := COALESCE ( (SELECT COALESCE (ObjectBoolean_TopNo.ValueData, FALSE) :: Boolean AS isTopNo
@@ -143,6 +149,18 @@ BEGIN
                                  GROUP BY MovementItem_Income_View.GoodsId
                                  HAVING SUM (Amount) <> 0
                                 ),
+         -- Товары соц-проект (документ)
+         tmpGoodsSP AS (SELECT Object_Goods_Retail.ID  AS GoodsId
+                             , TRUE AS isSP
+                             , MIN(MovementFloat_PercentMarkup.ValueData) AS PercentMarkupSP
+                        FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate, inUnitId:= vbToId) AS tmp
+                             LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                                     ON MovementFloat_PercentMarkup.MovementId = tmp.MovementId
+                                                    AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+                             LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = tmp.GoodsId
+                                                          AND Object_Goods_Retail.RetailId = vbObjectId
+                        GROUP BY Object_Goods_Retail.ID
+                        ),
 
          tmpPrice_View AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                                 , Price_Goods.ChildObjectId               AS GoodsId
@@ -200,10 +218,14 @@ BEGIN
                                         , zfCalc_MarginPercent_PromoBonus (MarginCondition.MarginPercent,                               -- % наценки в КАТЕГОРИИ
                                                                            PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
 
-                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN FALSE ELSE COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_Retail.isTOP) END             -- ТОП позиция
-                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0     ELSE COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_Retail.PercentMarkup) END -- % наценки у товара
+                                        , CASE WHEN COALESCE (tmpGoodsSP.PercentMarkupSP, 0) > 0 THEN TRUE
+                                               WHEN vbisTopNo_Unit = TRUE THEN FALSE 
+                                               ELSE COALESCE (NULLIF (View_Price.isTop, FALSE), Object_Goods_Retail.isTOP) END             -- ТОП позиция
+                                        , CASE WHEN COALESCE (tmpGoodsSP.PercentMarkupSP, 0) > 0 THEN tmpGoodsSP.PercentMarkupSP 
+                                               WHEN vbisTopNo_Unit = TRUE THEN 0     
+                                               ELSE COALESCE (NULLIF (View_Price.PercentMarkup, 0), Object_Goods_Retail.PercentMarkup) END -- % наценки у товара
                                         , vbJuridicalPercent                                          -- % корректировки у Юр Лица для ТОПа
-                                        , CASE WHEN vbisTopNo_Unit = TRUE THEN 0
+                                        , CASE WHEN vbisTopNo_Unit = TRUE AND COALESCE (tmpGoodsSP.PercentMarkupSP, 0) <> 0 THEN 0
                                                ELSE CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0
                                                          THEN View_Price.Price ELSE Object_Goods_Retail.Price
                                                     END
@@ -220,6 +242,8 @@ BEGIN
               LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem_Income.GoodsId
 
               LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = MovementItem_Income.GoodsId
+
+              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = MovementItem_Income.GoodsId
 
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId
@@ -260,7 +284,13 @@ BEGIN
         END IF;
      END IF;
 
-
+     -- !!!ВРЕМЕННО для ТЕСТА!!!
+     IF inSession = zfCalc_UserAdmin()
+     THEN
+         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, vbObjectId
+                                                          , (SELECT MovementItemFloat.valuedata FROM MovementItemFloat WHERE MovementItemFloat.descid = zc_MIFloat_PriceSale() and  MovementItemFloat.movementitemid = 462778849);
+     END IF;
+    
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
 
      -- сохранили протокол
@@ -281,5 +311,4 @@ $BODY$
  13.05.15                        *
  26.01.15                        *
 */
--- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 11459485  ,  inSession := '3');
--- vbJuridicalId = 183312
+-- select * from gpUpdate_MovementItem_Income_SendPrice_Ol (inMovementId := 25179754 ,  inSession := '3');

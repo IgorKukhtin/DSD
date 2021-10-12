@@ -1,10 +1,8 @@
--- Function: gpSelect_Movement_GoodsSP()
+-- Function: gpSelect_Movement_GoodsSP_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsSP (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsSP_Cash (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsSP(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
+CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsSP_Cash(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -13,23 +11,41 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
-             , PercentMarkup TFloat
               )
 
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
-BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_GoodsSP());
-     vbUserId:= lpGetUserBySession (inSession);
 
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+    
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
+                       ),
+          tmpMedicalProgramSP AS (SELECT DISTINCT ObjectLink_MedicalProgramSP.ChildObjectId AS MedicalProgramSPId
+                                  FROM Object AS Object_MedicalProgramSPLink
+                                       LEFT JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                            ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                           AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                       LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                            ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                           AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                  WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()   
+                                    AND Object_MedicalProgramSPLink.isErased = False        
+                                    AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                                 )                        
  
        SELECT Movement.Id                           AS Id
             , Movement.InvNumber                    AS InvNumber
@@ -41,7 +57,6 @@ BEGIN
             , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
             , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
             , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
-            , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
 
        FROM tmpStatus
             LEFT JOIN Movement ON Movement.DescId = zc_Movement_GoodsSP()
@@ -60,13 +75,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
-
-            LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
-                                    ON MovementFloat_PercentMarkup.MovementId = Movement.Id
-                                   AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
-
-       WHERE MovementDate_OperDateStart.ValueData <=inEndDate
-         AND MovementDate_OperDateEnd.ValueData >= inStartDate 
+            INNER JOIN tmpMedicalProgramSP ON tmpMedicalProgramSP.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+            
+       WHERE MovementDate_OperDateStart.ValueData <= CURRENT_DATE
+         AND MovementDate_OperDateEnd.ValueData >= CURRENT_DATE 
             
             ;
 END;
@@ -81,4 +93,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_GoodsSP (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '3')
+--
+ SELECT * FROM gpSelect_Movement_GoodsSP_Cash (inIsErased := FALSE, inSession:= '3')

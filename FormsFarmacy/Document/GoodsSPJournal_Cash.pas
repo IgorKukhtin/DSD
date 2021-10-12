@@ -1,4 +1,4 @@
-unit GoodsSPJournal;
+unit GoodsSPJournal_Cash;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TGoodsSPJournalForm = class(TAncestorJournalForm)
+  TGoodsSPJournal_CashForm = class(TAncestorJournalForm)
     OperDateStart: TcxGridDBColumn;
     OperDateEnd: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
@@ -42,7 +42,6 @@ type
     actInsertMaskMulti: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
     MedicalProgramSPName: TcxGridDBColumn;
-    PercentMarkup: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -53,5 +52,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TGoodsSPJournalForm);
+  RegisterClass(TGoodsSPJournal_CashForm);
 end.

@@ -621,6 +621,16 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 60
           end
+          object PercentMarkupSP: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1057#1055
+            DataBinding.FieldName = 'PercentMarkupSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object isErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
             Caption = #1061
@@ -1710,14 +1720,14 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'inMCSPeriod'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inMCSDay'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1809,7 +1819,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DateChange'
         DataType = ftDateTime
@@ -1817,7 +1827,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outMCSDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSDateChange'
         DataType = ftDateTime
@@ -1825,7 +1835,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outMCSIsCloseDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSIsCloseDateChange'
         DataType = ftDateTime
@@ -1833,7 +1843,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outMCSNotRecalcDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalcDateChange'
         DataType = ftDateTime
@@ -1841,7 +1851,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outFixDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'FixDateChange'
         DataType = ftDateTime
@@ -1849,7 +1859,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1857,7 +1867,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outTOPDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'TOPDateChange'
         DataType = ftDateTime
@@ -1865,7 +1875,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outPercentMarkupDateChange'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PercentMarkupDateChange'
         DataType = ftDateTime
@@ -1881,7 +1891,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outStartDateMCSAuto'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartDateMCSAuto'
         DataType = ftDateTime
@@ -1889,7 +1899,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'outEndDateMCSAuto'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndDateMCSAuto'
         DataType = ftDateTime
@@ -2106,7 +2116,7 @@ inherited PriceForm: TPriceForm
       end
       item
         Name = 'ioCheckPriceDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CheckPriceDate'
         DataType = ftDateTime

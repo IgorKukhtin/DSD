@@ -23,6 +23,8 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
       inherited cxGrid: TcxGrid
         Width = 1098
         Height = 351
+        ExplicitLeft = -72
+        ExplicitTop = 3
         ExplicitWidth = 1098
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -36,10 +38,6 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPlanMaxWeight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -111,10 +109,6 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -1174,6 +1168,8 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
       item
         ColorValueList = <>
       end>
+    Left = 456
+    Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 176
@@ -1220,7 +1216,7 @@ inherited Report_Promo_PlanFactForm: TReport_Promo_PlanFactForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 420
+    Left = 508
     Top = 8
   end
   object PrintHead: TClientDataSet

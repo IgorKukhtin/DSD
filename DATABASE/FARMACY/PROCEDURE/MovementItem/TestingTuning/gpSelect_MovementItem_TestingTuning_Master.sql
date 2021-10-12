@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Master(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, TopicsTestingTuningId Integer, TopicsTestingTuningCode Integer, TopicsTestingTuningName TVarChar
-             , Question Integer, TestQuestions Integer, MandatoryQuestion Integer
+             , Question Integer, TestQuestions Integer, MandatoryQuestion Integer, TestQuestionsStorekeeper Integer
              , isErased Boolean
               )
 AS
@@ -55,13 +55,20 @@ BEGIN
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
                  , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
+                 , MIFloat_TestQuestionsStorekeeper.ValueData::Integer AS TestQuestionsStorekeeper
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM tmpTopicsTestingTuning
                 LEFT JOIN MovementItem ON tmpTopicsTestingTuning.Id = MovementItem.ObjectId 
                                       AND MovementItem.MovementId = inMovementId
                                       AND MovementItem.DescId = zc_MI_Master()
                                       AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
+
                 LEFT JOIN tmpQuestions ON tmpQuestions.Id = MovementItem.Id
+
+                LEFT JOIN MovementItemFloat AS MIFloat_TestQuestionsStorekeeper
+                                            ON MIFloat_TestQuestionsStorekeeper.MovementItemId = MovementItem.Id
+                                           AND MIFloat_TestQuestionsStorekeeper.DescId = zc_MIFloat_AmountStorekeeper()
+                                           
             WHERE (tmpTopicsTestingTuning.isErased = FALSE OR MovementItem.Id IS NOT NULL)
             ORDER BY tmpTopicsTestingTuning.Name;
     ELSE
@@ -93,6 +100,7 @@ BEGIN
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
                  , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
+                 , MIFloat_TestQuestionsStorekeeper.ValueData::Integer AS TestQuestionsStorekeeper
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM MovementItem 
             
@@ -101,6 +109,14 @@ BEGIN
                                  
                 LEFT JOIN tmpQuestions ON tmpQuestions.Id = MovementItem.Id
                 
+                LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
+                                              ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_MandatoryQuestion.DescId = zc_MIFloat_AmountStorekeeper()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_TestQuestionsStorekeeper
+                                            ON MIFloat_TestQuestionsStorekeeper.MovementItemId = MovementItem.Id
+                                           AND MIFloat_TestQuestionsStorekeeper.DescId = zc_MIFloat_AmountStorekeeper()
+                                           
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
@@ -121,4 +137,4 @@ ALTER FUNCTION gpSelect_MovementItem_TestingTuning_Master (Integer, Boolean, Boo
 
 -- тест
 -- 
-select * from gpSelect_MovementItem_TestingTuning_Master(inMovementId := 23977600  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_TestingTuning_Master(inMovementId := 23977600 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

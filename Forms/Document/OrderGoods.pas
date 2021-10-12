@@ -146,6 +146,12 @@ type
     GoodsGroupNameFull_parent: TcxGridDBColumn;
     MeasureName_parent_ch3: TcxGridDBColumn;
     GoodsKindName_parent_ch3: TcxGridDBColumn;
+    actShowAll_DetailChild: TBooleanStoredProcAction;
+    bbShowAll_DetailChild: TdxBarButton;
+    DetailChildProtocolOpenForm: TdsdOpenForm;
+    DetailMasterProtocolOpenForm: TdsdOpenForm;
+    bbDetailMasterProtocolOpen: TdxBarButton;
+    bbDetailChildProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

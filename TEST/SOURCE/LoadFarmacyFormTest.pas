@@ -397,12 +397,12 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCustomerThresho_RemainsGoodsCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCustomerThresho_RemainsGoodsCashForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitRetail_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsUnitRetail_CashForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationLincGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccommodationLincGoodsForm');
 
@@ -2494,6 +2494,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_MovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_MovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_Movement_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_Movement_CashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPJournal_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPJournal_CashForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

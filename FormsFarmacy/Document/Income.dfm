@@ -635,6 +635,16 @@
             Options.Editing = False
             Width = 60
           end
+          object PercentMarkupSP: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1057#1055
+            DataBinding.FieldName = 'PercentMarkupSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
             DataBinding.FieldName = 'RetailName'

@@ -1,9 +1,11 @@
  -- Function: gpSelect_GoodsSP_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsSP_Cash (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_GoodsSP_Cash (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSP_Cash (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSP_Cash(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMedicalProgramSPId  Integer ,
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id            Integer
              , GoodsId       Integer
@@ -68,8 +70,9 @@ BEGIN
 
 
     RETURN QUERY
-WITH -- Товары соц-проект
-           tmpMedicalProgramSPUnit AS (SELECT  ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+    WITH -- Товары соц-проект
+           tmpMedicalProgramSPUnit AS (SELECT ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                            , ObjectLink_Unit.ChildObjectId                     AS UnitId
                                        FROM Object AS Object_MedicalProgramSPLink
                                             INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
                                                                   ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
@@ -77,11 +80,11 @@ WITH -- Товары соц-проект
                                             INNER JOIN ObjectLink AS ObjectLink_Unit
                                                                   ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
                                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
-                                                                 AND ObjectLink_Unit.ChildObjectId = vbUnitId 
                                         WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
                                           AND Object_MedicalProgramSPLink.isErased = False),
            tmpMovement AS (SELECT Movement.Id
                                 , Movement.OperDate
+                                , MLO_MedicalProgramSP.ObjectId    AS MedicalProgramSPID
                            FROM Movement
 
                                 INNER JOIN MovementDate AS MovementDate_OperDateStart
@@ -97,25 +100,29 @@ WITH -- Товары соц-проект
                                INNER JOIN MovementLinkObject AS MLO_MedicalProgramSP
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
-                               LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
 
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
-                             AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
+                             AND (COALESCE (MLO_MedicalProgramSP.ObjectId, 0) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
                           ),
            tmpMovementItem AS (SELECT MovementItem.Id
-                                    , Object_Goods_Retail.Id       AS ObjectId
-                                    , MovementItem.isErased
+                                    , Movement.MedicalProgramSPID
+                                    , Object_Goods_Retail.Id       AS GoodsId
                                     , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                                FROM tmpMovement AS Movement
 
                                    INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.MovementId = Movement.ID
                                                           AND MovementItem.isErased = FALSE
+                                                          
                                    LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
                                                                                        AND Object_Goods_Retail.RetailId = vbRetailId
-
                                ),
+           tmpMovementItemGroup AS (SELECT DISTINCT tmpMovementItem.GoodsId
+                                         , tmpMedicalProgramSPUnit.UnitId
+                                    FROM tmpMovementItem
+                                         INNER JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPID = tmpMovementItem.MedicalProgramSPID
+                                   ),
            tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
                                     THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
@@ -143,29 +150,32 @@ WITH -- Товары соц-проект
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         ),
-           tmpContainer AS (SELECT  Container.ObjectId
-                                  , SUM(Container.Amount)                                              AS Amount
-                             FROM Container
-
-                             WHERE Container.DescId = zc_Container_Count()
-                               AND Container.Amount <> 0
-                               AND Container.WhereObjectId = vbUnitId
-                               AND Container.ObjectId IN (SELECT tmpMovementItem.ObjectId FROM tmpMovementItem)
-                             GROUP BY Container.ObjectId
-                            ),
-           tmpContainerAll AS (SELECT  Container.ObjectId
-                                     , SUM(Container.Amount)                                           AS Amount
+           tmpContainerAll AS (SELECT  Container.ObjectId                                   AS GoodsId
+                                     , Container.WhereObjectId                              AS UnitId
+                                     , SUM(Container.Amount)                                AS Amount
                                 FROM Container
 
                                 WHERE Container.DescId = zc_Container_Count()
                                   AND Container.Amount <> 0
-                                  AND Container.ObjectId IN (SELECT tmpMovementItem.ObjectId FROM tmpMovementItem)
+                                  AND Container.ObjectId IN (SELECT tmpMovementItem.GoodsId FROM tmpMovementItem)
                                 GROUP BY Container.ObjectId
-                               )
-
+                                       , Container.WhereObjectId
+                               ),
+           tmpContainerSP AS (SELECT Container.GoodsId                                   AS GoodsId
+                                   , Container.UnitId                                    AS UnitId
+                                   , Container.Amount                                    AS Amount
+                                FROM tmpContainerAll AS Container
+                                     INNER JOIN tmpMovementItemGroup ON tmpMovementItemGroup.GoodsId = Container.GoodsId
+                                                                    AND tmpMovementItemGroup.UnitId = Container.UnitId
+                               ),
+           tmpContainerRateil AS (SELECT Container.GoodsId
+                                       , SUM(Container.Amount)                              AS Amount
+                                  FROM tmpContainerSP AS Container
+                                  GROUP BY Container.GoodsId
+                                  )
 
         SELECT MovementItem.Id                                       AS Id
-             , MovementItem.ObjectId                                 AS GoodsId
+             , MovementItem.GoodsId                                  AS GoodsId
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
 
@@ -173,8 +183,8 @@ WITH -- Товары соц-проект
              , CASE WHEN COALESCE(tmpObject_Price.Price - MIFloat_PriceSP.ValueData, 0) > 0
                THEN COALESCE(tmpObject_Price.Price - MIFloat_PriceSP.ValueData,0)
                ELSE 0 END::TFloat                                    AS PricePay
-             , tmpContainer.Amount::TFloat                           AS Amount
-             , tmpContainerAll.Amount::TFloat                        AS AmountRetail
+             , tmpContainerUnit.Amount::TFloat                       AS Amount
+             , tmpContainerRateil.Amount::TFloat                     AS AmountRetail
 
              , MIFloat_ColSP.ValueData                               AS ColSP
              , MIFloat_CountSP.ValueData                             AS CountSP
@@ -208,11 +218,11 @@ WITH -- Товары соц-проект
              , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
              , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
 
-             , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
+             , FALSE    ::Boolean                                    AS isErased
 
         FROM tmpMovementItem AS MovementItem
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
 
             LEFT JOIN MovementItemFloat AS MIFloat_ColSP
                                         ON MIFloat_ColSP.MovementItemId = MovementItem.Id
@@ -295,10 +305,13 @@ WITH -- Товары соц-проект
                                             AND MI_KindOutSP.DescId = zc_MILinkObject_KindOutSP()
             LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = MI_KindOutSP.ObjectId
 
-            LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MovementItem.ObjectId
+            LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = MovementItem.GoodsId
 
-            LEFT JOIN tmpContainer ON tmpContainer.ObjectId = MovementItem.ObjectId
-            LEFT JOIN tmpContainerAll ON tmpContainerAll.ObjectId = MovementItem.ObjectId
+            LEFT JOIN tmpContainerSP AS tmpContainerUnit 
+                                     ON tmpContainerUnit.GoodsId = MovementItem.GoodsId
+                                    AND tmpContainerUnit.UnitId = vbUnitId
+                                     
+            LEFT JOIN tmpContainerRateil ON tmpContainerRateil.GoodsId = MovementItem.GoodsId
 
          WHERE MovementItem.Ord = 1
          ;
@@ -316,4 +329,4 @@ $BODY$
 --ТЕСТ
 --
 
-SELECT * FROM gpSelect_GoodsSP_Cash (inSession:= '3')
+SELECT * FROM gpSelect_GoodsSP_Cash (inMedicalProgramSPId := 18078228  , inSession:= '3')

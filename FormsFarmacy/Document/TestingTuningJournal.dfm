@@ -86,20 +86,44 @@ inherited TestingTuningJournalForm: TTestingTuningJournalForm
             Width = 88
           end
           object Question: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1087#1088#1086#1089#1086#1074' '#1076#1083#1103' '#1090#1077#1089#1090#1072#9
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1087#1088#1086#1089#1086#1074' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091#9
             DataBinding.FieldName = 'Question'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
           object TimeTest: TcxGridDBColumn
-            Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' ('#1089#1077#1082')'
+            Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091' ('#1089#1077#1082')'
             DataBinding.FieldName = 'TimeTest'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object QuestionStorekeeper: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1087#1088#1086#1089#1086#1074' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091
+            DataBinding.FieldName = 'QuestionStorekeeper'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object TimeTestStorekeeper: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091' ('#1089#1077#1082')'
+            DataBinding.FieldName = 'TimeTestStorekeeper'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
