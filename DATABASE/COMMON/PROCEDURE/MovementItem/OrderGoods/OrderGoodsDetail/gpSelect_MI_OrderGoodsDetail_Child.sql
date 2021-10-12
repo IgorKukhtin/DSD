@@ -57,43 +57,6 @@ BEGIN
                  AND (MovementItem.isErased  = FALSE OR inisErased = TRUE)
                )
 
-     , tmpGoodsParam AS (SELECT tmp.GoodsId
-                              , Object_TradeMark.ValueData      AS TradeMarkName
-                              , Object_GoodsTag.ValueData       AS GoodsTagName
-                              , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
-                              , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
-                         FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
-
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmp.GoodsId
-                                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-                             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-                
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
-                                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmp.GoodsId
-                                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
-                             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
-                
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
-                                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmp.GoodsId
-                                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
-                             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
-                
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                                  ON ObjectLink_Goods_GoodsTag.ObjectId = tmp.GoodsId
-                                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-                             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
-                        )
-             
-     -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
-     , tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                       , Object_GoodsByGoodsKind_View.GoodsKindId
-                  FROM ObjectBoolean
-                       LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
-                  WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
-                    AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
-                   )
-
    , tmpData AS (SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END AS Id
                       , CASE WHEN inShowAll = TRUE THEN MovementItem.ParentId ELSE 0 END AS ParentId
                       , MovementItem.ObjectId
@@ -107,8 +70,10 @@ BEGIN
                       , (COALESCE (MovementItem.Amount,0)) :: TFloat AS Amount
             
                       , CASE WHEN inShowAll = TRUE THEN ObjectString_Goods_GoodsGroupFull_parent.ValueData ELSE '' END ::TVarChar AS GoodsGroupNameFull_parent
-                      , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ObjectCode  	         ELSE 0  END AS GoodsCode_parent
-                      , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ValueData   	         ELSE '' END ::TVarChar AS GoodsName_parent
+                      , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.Id                       ELSE 0  END            AS GoodsId_parent
+                      , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ObjectCode  	     ELSE 0  END            AS GoodsCode_parent
+                      , CASE WHEN inShowAll = TRUE THEN Object_Goods_parent.ValueData   	     ELSE '' END ::TVarChar AS GoodsName_parent
+                      , CASE WHEN inShowAll = TRUE THEN Object_GoodsKind_parent.Id                   ELSE 0  END            AS GoodsKindId_parent
                       , CASE WHEN inShowAll = TRUE THEN Object_GoodsKind_parent.ValueData            ELSE '' END ::TVarChar AS GoodsKindName_parent
                       , CASE WHEN inShowAll = TRUE THEN Object_Measure_parent.ValueData              ELSE '' END ::TVarChar AS MeasureName_parent
             
@@ -179,10 +144,46 @@ BEGIN
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                               ON ObjectBoolean_TaxExit.ObjectId = MILO_Receipt.ObjectId
                                              AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
-
                  )
        
-                                                  
+     , tmpGoodsParam AS (SELECT tmp.GoodsId
+                              , Object_TradeMark.ValueData      AS TradeMarkName
+                              , Object_GoodsTag.ValueData       AS GoodsTagName
+                              , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
+                              , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+                         FROM (SELECT DISTINCT tmpData.GoodsId_parent AS GoodsId FROM tmpData) AS tmp
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+                             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+                             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+                
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                                  ON ObjectLink_Goods_GoodsTag.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+                             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+                        )
+             
+     -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+     , tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                       , Object_GoodsByGoodsKind_View.GoodsKindId
+                  FROM ObjectBoolean
+                       LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
+                  WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
+                    AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                   )                               
+
+
      SELECT MovementItem.Id
           , MovementItem.ParentId
           , Object_Goods.Id          		AS GoodsId
@@ -245,9 +246,9 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-          LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem.ObjectId
-          LEFT JOIN tmpTOP ON tmpTOP.GoodsId = MovementItem.ObjectId
-                          AND COALESCE (tmpTOP.GoodsKindId,0) = COALESCE (MovementItem.GoodsKindId,0)
+          LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem.GoodsId_parent
+          LEFT JOIN tmpTOP ON tmpTOP.GoodsId = MovementItem.GoodsId_parent
+                          AND COALESCE (tmpTOP.GoodsKindId,0) = COALESCE (MovementItem.GoodsKindId_parent,0)
 
      GROUP BY MovementItem.Id
             , MovementItem.ParentId
