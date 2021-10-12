@@ -21,6 +21,13 @@ BEGIN
      PERFORM lpComplete_Movement_PersonalService (inMovementId := inMovementId
                                                 , inUserId     := vbUserId);
 
+     -- Админу только отладка
+     IF vbUserId = zfCalc_UserAdmin() :: Integer AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.test = ok';
+     END IF;
+
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

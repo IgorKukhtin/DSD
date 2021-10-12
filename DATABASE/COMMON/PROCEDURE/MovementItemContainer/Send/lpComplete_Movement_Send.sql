@@ -354,8 +354,13 @@ BEGIN
                                         WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                             , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                             , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                             , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                             , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                             , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                                               )
-                                          -- только не ОС
+                                          -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
 
                                        UNION ALL
@@ -381,8 +386,13 @@ BEGIN
                                         WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                             , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                             , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                             , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                             , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                             , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                                               )
-                                          -- только не ОС
+                                          -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
                                        ) AS tmp ON tmp.MovementItemId = tmpMI.MovementItemId
                       )
@@ -510,6 +520,11 @@ BEGIN
                 WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                        , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                        , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                        , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                        , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                        , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                          )
                 GROUP BY _tmpItem.GoodsId
                 HAVING COUNT(*) > 1)
@@ -522,6 +537,11 @@ BEGIN
                                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                                       , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                                       , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                                       , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                                       , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                                                         )
                                                GROUP BY _tmpItem.GoodsId
                                                HAVING COUNT(*) > 1
@@ -550,6 +570,10 @@ BEGIN
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                          )
                                                       AND (_tmpItem.PartionGoodsId_Item   > 0
                                                         OR _tmpItem.ContainerId_GoodsFrom > 0
@@ -563,6 +587,10 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                           )
                                                          AND (_tmpItem.MemberId_From > 0
                                                            OR _tmpItem.CarId_From    > 0
@@ -671,6 +699,10 @@ BEGIN
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                          )
                                                         THEN _tmpItem.PartionGoodsId_Item
 
@@ -683,6 +715,10 @@ BEGIN
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                          )
                                                       AND _tmpItem.PartionGoodsId_Item > 0
                                                       AND _tmpItem.MemberId_From       > 0
@@ -695,6 +731,10 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                           )
                                                          AND (_tmpItem.MemberId_From > 0
                                                            OR _tmpItem.CarId_From    > 0
@@ -758,6 +798,10 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                           )
                                                       AND _tmpItem.UnitId_To > 0
                                                       AND EXISTS (SELECT CLO_PartionGoods.ObjectId
@@ -822,6 +866,10 @@ BEGIN
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                         THEN CASE WHEN _tmpItem.UnitId_From <> 0 AND _tmpItem.MemberId_To <> 0
                                                                        THEN -- !!!Партия создается, потом надо будет залить цену
                                                                             lpInsertFind_Object_PartionGoods (inUnitId_Partion:= _tmpItem.UnitId_From
@@ -856,6 +904,10 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
         OR _tmpItem.ObjectDescId           = zc_Object_Asset()
     ;
 /*
@@ -1498,6 +1550,10 @@ BEGIN
                                                     , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                     , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                     , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                    , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                    , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                    , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                    , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                      )
                   )
            GROUP BY _tmpItem.PartionGoodsId_To

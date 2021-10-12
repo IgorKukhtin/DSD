@@ -16,8 +16,16 @@ $BODY$
    DECLARE vbCloseDate       TDateTime;
    DECLARE vbAccessKeyId     Integer;
    DECLARE vbStatusId        Integer;
+   DECLARE vbUserId_save     Integer;
  --DECLARE vbRoleName TVarChar;
 BEGIN
+
+  -- сохранили
+  vbUserId_save:= inUserId;
+  -- заменили
+  inUserId:= ABS (inUserId);
+  
+  
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
   THEN
@@ -117,23 +125,28 @@ BEGIN
   END IF;
 
 
-  -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
-  PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
-                            , inMovementId    := inMovementId
-                            , inMovementDescId:= inDescId
-                            , inAccessKeyId   := vbAccessKeyId
-                            , inUserId        := inUserId
-                             );
-
-  IF vbOperDatePartner IS NOT NULL
+  IF vbUserId_save > 0 OR COALESCE (vbDescId, 0) <> zc_Movement_PersonalService()
   THEN
       -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
-      PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+      PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                 , inMovementId    := inMovementId
                                 , inMovementDescId:= inDescId
                                 , inAccessKeyId   := vbAccessKeyId
                                 , inUserId        := inUserId
                                  );
+    
+      -- если есть эта дата, тогда еще раз
+      IF vbOperDatePartner IS NOT NULL
+      THEN
+          -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+          PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+                                    , inMovementId    := inMovementId
+                                    , inMovementDescId:= inDescId
+                                    , inAccessKeyId   := vbAccessKeyId
+                                    , inUserId        := inUserId
+                                     );
+      END IF;
+
   END IF;
 
   -- есть !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!, поэтому все что дальше - не надо

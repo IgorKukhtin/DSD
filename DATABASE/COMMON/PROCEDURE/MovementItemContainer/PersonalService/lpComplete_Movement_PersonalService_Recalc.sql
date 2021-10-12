@@ -284,7 +284,8 @@ BEGIN
 
      -- распроводятся документы
      PERFORM lpUnComplete_Movement (inMovementId := tmp.MovementId_to
-                                  , inUserId     := inUserId)
+                                  , inUserId     := -1 * inUserId
+                                   )
      FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE
           UNION
            SELECT DISTINCT _tmpMovement_Recalc.MovementId AS MovementId_to FROM _tmpMovement_Recalc WHERE _tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete() AND _tmpMovement_Recalc.isRecalc = TRUE

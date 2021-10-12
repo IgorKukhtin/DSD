@@ -30,6 +30,12 @@ BEGIN
       THEN
           RAISE EXCEPTION 'Ошибка.Нет Прав.';
       END IF;
+      
+      -- Замена
+      IF COALESCE (inInsertDate, zc_DateStart()) <= zc_DateStart()
+      THEN
+          inInsertDate:= CURRENT_DATE;
+      END IF;
 
 -- Хаджиева В.С.
 -- IF inGUID = '?13' AND vbUserId = 1156045 THEN RETURN 0; END IF;

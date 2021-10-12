@@ -310,12 +310,14 @@ end if;
                                                          OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- НМА
                                                          OR _tmpItem.OperDate < zc_DateStart_Asset()
                                                            )
-                                                           THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+                                                         --THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+                                                           THEN zc_Enum_ProfitLossDirection_75100() -- Финансовая деятельность + Финансовая деятельность
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- Финансовая деятельность + проценты по кредитам
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Финансовая деятельность + Лиол
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() -- Финансовая деятельность + Финансовая помощь
-                                                           THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+                                                         --THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+                                                           THEN zc_Enum_ProfitLossDirection_75100() -- Финансовая деятельность + Финансовая деятельность
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                            THEN zc_Enum_ProfitLossDirection_70400() -- Дополнительная прибыль + Списание кредиторской задолженности
@@ -323,12 +325,12 @@ end if;
                                                     --WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
                                                     --     THEN zc_Enum_ProfitLossDirection_80300() -- Расходы с прибыли + Списание дебиторской задолженности
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
-                                                           THEN zc_Enum_ProfitLossDirection_70600() -- Дополнительная прибыль + Списание дебиторской задолженности
+                                                           THEN zc_Enum_ProfitLossDirection_75300() -- Финансовая деятельность + Списание дебиторской задолженности
 
                                                       WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                        AND _tmpItem.MovementDescId = zc_Movement_LossDebt()
                                                          --THEN zc_Enum_ProfitLossDirection_80300() -- Расходы с прибыли + Списание дебиторской задолженности
-                                                           THEN zc_Enum_ProfitLossDirection_70600() -- Дополнительная прибыль + Списание дебиторской задолженности
+                                                           THEN zc_Enum_ProfitLossDirection_75300() -- Финансовая деятельность + Списание дебиторской задолженности
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
                                                            THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
@@ -361,7 +363,7 @@ end if;
 
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
                                               THEN zc_Enum_ProfitLoss_50101() -- Налоги + Налог на прибыль + Налог на прибыль
-
+                                              
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
                                               THEN zc_Enum_ProfitLoss_50201() -- Налоги + НДС + НДС
 

@@ -14,7 +14,14 @@ $BODY$
   DECLARE vbDescId          Integer;
   DECLARE vbAccessKeyId     Integer;
   DECLARE vbStatusId_old    Integer;
+  DECLARE vbUserId_save     Integer;
 BEGIN
+
+  -- сохранили
+  vbUserId_save:= inUserId;
+  -- заменили
+  inUserId:= ABS (inUserId);
+
 
   -- 0. Проверка
   IF COALESCE (inMovementId, 0) = 0
@@ -40,24 +47,29 @@ BEGIN
                          AND vbDescId                <> zc_Movement_Service()
                       );
 
-  -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
-  IF vbStatusId_old = zc_Enum_Status_Complete()
-  THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
-                                 , inMovementId    := inMovementId
-                                 , inMovementDescId:= vbDescId
-                                 , inAccessKeyId   := vbAccessKeyId
-                                 , inUserId        := inUserId
-                                  );
-       IF vbOperDatePartner IS NOT NULL
-       THEN
-           -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
-           PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+  IF vbUserId_save > 0 OR COALESCE (vbDescId, 0) <> zc_Movement_PersonalService()
+  THEN
+      -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+      IF vbStatusId_old = zc_Enum_Status_Complete()
+      THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                      , inMovementId    := inMovementId
                                      , inMovementDescId:= vbDescId
                                      , inAccessKeyId   := vbAccessKeyId
                                      , inUserId        := inUserId
                                       );
-       END IF;
+           -- если есть эта дата, тогда еще раз
+           IF vbOperDatePartner IS NOT NULL
+           THEN
+               -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
+               PERFORM lpCheckPeriodClose (inOperDate      := vbOperDatePartner
+                                         , inMovementId    := inMovementId
+                                         , inMovementDescId:= vbDescId
+                                         , inAccessKeyId   := vbAccessKeyId
+                                         , inUserId        := inUserId
+                                          );
+           END IF;
+      END IF;
+
   END IF;
 
 

@@ -216,7 +216,7 @@ BEGIN
                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
-            
+
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
             LEFT JOIN Object AS Object_Storage      ON Object_Storage.Id      = tmpMIContainer.StorageId
@@ -245,7 +245,26 @@ BEGIN
                                  , MIDate_PartionGoods.ValueData                 AS PartionGoodsDate
                                  , MIFloat_CountPack.ValueData                   AS Count
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
-                                 , MIString_PartionGoods.ValueData               AS PartionGoods
+                                 , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
+                                             THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          --
+                                                                               , inInvNumber       := Object_PartionGoods.ValueData           -- Инвентарный номер
+                                                                               , inOperDate        := ObjectDate_PartionGoods_Value.ValueData -- Дата ввода в эксплуатацию
+                                                                               , inUnitName        := Object_Unit.ValueData                   -- Подразделение использования
+                                                                               , inStorageName     := Object_Storage.ValueData                -- Место хранения
+                                                                               , inGoodsName       := ''                                      -- Основные средства или Товар
+                                                                                )
+                                        WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
+                                             THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData             -- Инвентарный номер
+                                                                                   , inOperDate        := ObjectDate_PartionGoods_Value.ValueData   -- Дата перемещения
+                                                                                   , inPrice           := ObjectFloat_PartionGoods_Price.ValueData  -- Цена
+                                                                                   , inUnitName_Partion:= Object_Unit.ValueData                     -- Подразделение(для цены)
+                                                                                   , inStorageName     := Object_Storage.ValueData                  -- Место хранения
+                                                                                   , inGoodsName       := ''                                        -- Товар
+                                                                                    )
+                                        WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData
+
+                                        ELSE MIString_PartionGoods.ValueData
+                                   END AS PartionGoods
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
                                  , COALESCE (MILinkObject_PartionGoods.ObjectId,0) AS PartionGoodsId
@@ -278,6 +297,29 @@ BEGIN
                                  LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                               ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                              AND MIString_PartionGoods.DescId         = zc_MIString_PartionGoods()
+                                 -- партия
+                                 LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                      ON ObjectLink_Goods.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                                     AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                 -- подразделение
+                                 LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                      ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                                     AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+                                 -- место хранения
+                                 LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                                      ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                                     AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                 LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+                                 -- дата
+                                 LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                      ON ObjectDate_PartionGoods_Value.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                                     AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                 -- цена
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
+                                                       ON ObjectFloat_PartionGoods_Price.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                                      AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
                                    )
       , tmpRemains AS (SELECT 0 AS MovementItemId
                             , 0 :: TFloat AS Amount
@@ -289,6 +331,7 @@ BEGIN
                                 , 0 AS UnitId
                                 , 0 AS StorageId
                                 , 0 :: TFloat AS Price
+                           WHERE 1=0
                           )
        -- Результат
        SELECT
@@ -329,7 +372,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI_Goods.GoodsKindId_Complete
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI_Goods.PartionGoodsId
-             
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
