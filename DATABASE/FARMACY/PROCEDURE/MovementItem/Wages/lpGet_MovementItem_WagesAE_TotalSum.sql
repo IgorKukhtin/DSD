@@ -61,31 +61,35 @@ BEGIN
     IF vbOperDate >= '01.03.2020'
     THEN
 
-      -- Полное списание остаток сумм на текущий месяц
-      vbSummaTMP := COALESCE((SELECT SUM(COALESCE(MIF_SummaFullChargeMonth.ValueData, 0) - COALESCE(MIF_SummaFullChargeFact.ValueData, 0))
-                              FROM Movement
-                                   INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
-                                                          AND MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.ObjectId = vbUnitID
-                                   INNER JOIN MovementItemFloat AS MIF_SummaFullChargeMonth
-                                                                ON MIF_SummaFullChargeMonth.MovementItemId = MovementItem.Id
-                                                               AND MIF_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
-                                   INNER JOIN MovementItemFloat AS MIF_SummaFullCharge
-                                                                ON MIF_SummaFullCharge.MovementItemId = MovementItem.Id
-                                                               AND MIF_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
-                                   LEFT JOIN MovementItemFloat AS MIF_SummaFullChargeFact
-                                                               ON MIF_SummaFullChargeFact.MovementItemId = MovementItem.Id
-                                                              AND MIF_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
-                              WHERE Movement.DescId = zc_Movement_Wages()
-                                AND Movement.OperDate < vbOperDate), 0);
-
-      -- Заполняем переходящую сумму если надо
-      IF vbSummaTMP <> COALESCE((SELECT SUM(MIFloat_SummaFullCharge.ValueData)
-                                 FROM MovementItemFloat AS MIFloat_SummaFullCharge
-                                 WHERE MIFloat_SummaFullCharge.MovementItemId = inMovementItemId
-                                   AND MIFloat_SummaFullCharge.DescId in (zc_MIFloat_SummaFullCharge())), 0)
+      IF vbOperDate = '01.10.2021'
       THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullCharge(), inMovementItemId, COALESCE (vbSummaTMP, 0)::TFloat);
+        -- Полное списание остаток сумм на текущий месяц
+        vbSummaTMP := COALESCE((SELECT SUM(COALESCE(MIF_SummaFullChargeMonth.ValueData, 0) - COALESCE(MIF_SummaFullChargeFact.ValueData, 0))
+                                FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
+                                                            AND MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.ObjectId = vbUnitID
+                                     LEFT JOIN MovementItemFloat AS MIF_SummaFullChargeMonth
+                                                                 ON MIF_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                                                AND MIF_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+                                     LEFT JOIN MovementItemFloat AS MIF_SummaFullCharge
+                                                                 ON MIF_SummaFullCharge.MovementItemId = MovementItem.Id
+                                                                AND MIF_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+                                     LEFT JOIN MovementItemFloat AS MIF_SummaFullChargeFact
+                                                                 ON MIF_SummaFullChargeFact.MovementItemId = MovementItem.Id
+                                                                AND MIF_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
+                                WHERE Movement.DescId = zc_Movement_Wages()
+                                  AND Movement.OperDate >= '01.09.2021'
+                                  AND Movement.OperDate < vbOperDate), 0);
+
+        -- Заполняем переходящую сумму если надо
+        IF vbSummaTMP <> COALESCE((SELECT SUM(MIFloat_SummaFullCharge.ValueData)
+                                   FROM MovementItemFloat AS MIFloat_SummaFullCharge
+                                   WHERE MIFloat_SummaFullCharge.MovementItemId = inMovementItemId
+                                     AND MIFloat_SummaFullCharge.DescId in (zc_MIFloat_SummaFullCharge())), 0)
+        THEN
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullCharge(), inMovementItemId, COALESCE (vbSummaTMP, 0)::TFloat);
+        END IF;
       END IF;
 
 

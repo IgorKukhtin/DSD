@@ -417,7 +417,12 @@ begin
     if FileExists(ListDiff_lcl) then
     begin
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
+      if not ListDiffCDS.Active then
+      begin
+        DeleteLocalData(ListDiff_lcl);
+        CheckListDiffCDS;
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      end;
     end;
     FillingListlDiffNoSendCDS;
   finally
@@ -478,7 +483,12 @@ begin
     if FileExists(ListDiff_lcl) then
     begin
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
+      if not ListDiffCDS.Active then
+      begin
+        DeleteLocalData(ListDiff_lcl);
+        CheckListDiffCDS;
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      end;
     end;
   finally
     ReleaseMutex(MutexDiffCDS);

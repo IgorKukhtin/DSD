@@ -136,7 +136,7 @@ BEGIN
      -- 2.5. "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_PairSun_SUA'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_PairSun_SUA (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_PairSun_SUA (GoodsId Integer, GoodsId_PairSun Integer, PairSunAmount TFloat) ON COMMIT DROP;
      END IF;
 
      -- 3.1. все остатки, СРОК
@@ -999,6 +999,10 @@ BEGIN
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
+             -- если товар среди парных
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpObject_Price.GoodsId
+
              -- НЕ отбросили !!холод!!
              /*LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                     ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
@@ -1007,16 +1011,22 @@ BEGIN
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
-          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN_SUA.isLock_CloseGd = FALSE)
+          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN_SUA.isLock_CloseGd = FALSE OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0)
           -- Исключения по техническим переучетам
           AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        ;
 
      -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
-     INSERT INTO _tmpGoods_SUN_PairSun_SUA (GoodsId, GoodsId_PairSun)
+     INSERT INTO _tmpGoods_SUN_PairSun_SUA (GoodsId, GoodsId_PairSun, PairSunAmount)
         SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
-             , OL_GoodsPairSun.ChildObjectId AS GoodsId_PairSun
+             , OL_GoodsPairSun.ChildObjectId            AS GoodsId_PairSun
+             , COALESCE (OF_PairSunAmount.ValueData, 1) AS PairSunAmount
         FROM ObjectLink AS OL_GoodsPairSun
+
+             LEFT JOIN ObjectFloat AS OF_PairSunAmount
+                                   ON OF_PairSunAmount.ObjectId  = OL_GoodsPairSun.ObjectId 
+                                  AND OF_PairSunAmount.DescId    = zc_ObjectFloat_Goods_PairSunAmount()
+
         WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
        ;
 

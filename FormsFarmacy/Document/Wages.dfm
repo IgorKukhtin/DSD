@@ -92,6 +92,11 @@ inherited WagesForm: TWagesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = IlliquidAssetsRepayment
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = PenaltyExam
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -1749,6 +1754,15 @@ inherited WagesForm: TWagesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PenaltySUN'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenaltyExam'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PenaltyExam'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -972,20 +972,22 @@ begin  //+
       try
 
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then ListDiffCDS.Open;
-
-        ListDiffCDS.First;
-        while not ListDiffCDS.Eof do
+        if ListDiffCDS.Active then
         begin
-          if ListDiffCDS.FieldByName('IsSend').AsBoolean and
-            (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) < IncDay(Date, - 1)) then
+
+          ListDiffCDS.First;
+          while not ListDiffCDS.Eof do
           begin
-            ListDiffCDS.Delete;
-            Continue;
+            if ListDiffCDS.FieldByName('IsSend').AsBoolean and
+              (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) < IncDay(Date, - 1)) then
+            begin
+              ListDiffCDS.Delete;
+              Continue;
+            end;
+            ListDiffCDS.Next;
           end;
-          ListDiffCDS.Next;
+          SaveLocalData(ListDiffCDS, ListDiff_lcl);
         end;
-        SaveLocalData(ListDiffCDS, ListDiff_lcl);
 
       Except ON E:Exception do
         Add_Log('Ошибка отправки листа отказов:' + E.Message);
@@ -2022,8 +2024,8 @@ begin
     try
       try
 
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then ListDiffCDS.Open;
+        LoadLocalData(ListDiffCDS, ListDiff_lcl, False);
+        if not ListDiffCDS.Active then Exit;
 
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
@@ -2271,8 +2273,8 @@ begin
     try
       try
 
-        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
-        if not ZReportLogCDS.Active then ZReportLogCDS.Open;
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
+        if not ZReportLogCDS.Active then Exit;
 
         ZReportLogCDS.First;
         while not ZReportLogCDS.Eof do

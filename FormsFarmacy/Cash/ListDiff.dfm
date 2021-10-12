@@ -10,11 +10,13 @@ inherited ListDiffForm: TListDiffForm
   TextHeight = 13
   object ListDiffGrid: TcxGrid [0]
     Left = 0
-    Top = 26
+    Top = 28
     Width = 619
-    Height = 335
+    Height = 333
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 26
+    ExplicitHeight = 335
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
@@ -48,14 +50,12 @@ inherited ListDiffForm: TListDiffForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object colName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 250
       end
@@ -66,7 +66,6 @@ inherited ListDiffForm: TListDiffForm
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.000'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 77
       end
@@ -76,7 +75,6 @@ inherited ListDiffForm: TListDiffForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 86
       end
@@ -87,7 +85,6 @@ inherited ListDiffForm: TListDiffForm
         Properties.Alignment.Horz = taLeftJustify
         OnGetDisplayText = colDiffKindIdGetDisplayText
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 126
       end
@@ -99,7 +96,6 @@ inherited ListDiffForm: TListDiffForm
         Properties.BlobPaintStyle = bpsText
         Properties.PictureGraphicClassName = 'TIcon'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 154
       end
@@ -107,7 +103,6 @@ inherited ListDiffForm: TListDiffForm
         Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
         DataBinding.FieldName = 'DateInput'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 136
       end
@@ -115,7 +110,6 @@ inherited ListDiffForm: TListDiffForm
         Caption = #1050#1090#1086' '#1074#1074#1077#1083
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
       end
@@ -178,10 +172,11 @@ inherited ListDiffForm: TListDiffForm
     UseSystemFont = True
     Left = 64
     Top = 64
+    PixelsPerInch = 96
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'Custom 1'
@@ -303,7 +298,7 @@ inherited ListDiffForm: TListDiffForm
       end
       item
         Name = 'inDateInput'
-        Value = 'NULL'
+        Value = Null
         Component = ListDiffCDS
         ComponentItem = 'DateInput'
         DataType = ftDateTime

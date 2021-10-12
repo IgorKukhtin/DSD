@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN inDirector            TFloat    , -- Директор. премии / штрафы
     IN inIlliquidAssets      TFloat    , -- Неликвиды
     IN inPenaltySUN          TFloat    , -- Персональный штраф по СУН
+    IN inPenaltyExam         TFloat    , -- Штраф по сдаче экзамена
     IN inAmountCard          TFloat    , -- На карту
     IN inisIssuedBy          Boolean   , -- Выдана
    OUT outAmountHand         TFloat    , -- На руки
@@ -28,6 +29,7 @@ $BODY$
    DECLARE vbDirector TFloat;
    DECLARE vbIlliquidAssets TFloat;
    DECLARE vbPenaltySUN TFloat;
+   DECLARE vbPenaltyExam TFloat;
    DECLARE vbAmountCard TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -62,6 +64,7 @@ BEGIN
          COALESCE(inDirector, 0) <> 0  OR
          COALESCE(inIlliquidAssets, 0) <> 0 OR
          COALESCE(inPenaltySUN, 0) <> 0 OR
+         COALESCE(inPenaltyExam, 0) <> 0 OR
          COALESCE(inAmountCard, 0) <> 0
       THEN
         RAISE EXCEPTION 'Ошибка. Для дополнительных расходов можно изменять только признак "Выдано".';      
@@ -92,6 +95,7 @@ BEGIN
            , COALESCE (MIFloat_Director.ValueData, 0)
            , COALESCE (MIFloat_IlliquidAssets.ValueData, 0)
            , COALESCE (MIFloat_PenaltySUN.ValueData, 0)
+           , COALESCE (MIFloat_PenaltyExam.ValueData, 0)
            , COALESCE (MIF_AmountCard.ValueData, 0)
       INTO vbisIssuedBy
          , vbHolidaysHospital
@@ -99,6 +103,7 @@ BEGIN
          , vbDirector
          , vbIlliquidAssets
          , vbPenaltySUN
+         , vbPenaltyExam
          , vbAmountCard   
       FROM  MovementItem
 
@@ -122,6 +127,10 @@ BEGIN
                                         ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                        AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
+                                        ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
+
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                        AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -138,6 +147,7 @@ BEGIN
           vbDirector <>  COALESCE (inDirector, 0) OR
           vbIlliquidAssets <>  COALESCE (inIlliquidAssets, 0) OR
           vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
+          vbPenaltyExam <>  COALESCE (inPenaltyExam, 0) OR
           vbAmountCard <>  COALESCE (inAmountCard, 0))
       THEN
         RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
@@ -147,6 +157,7 @@ BEGIN
          vbHolidaysHospital <> COALESCE (inHolidaysHospital, 0) OR
          vbDirector <>  COALESCE (inDirector, 0) OR
          vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
+         vbPenaltyExam <>  COALESCE (inPenaltyExam, 0) OR
          vbAmountCard <>  COALESCE (inAmountCard, 0)
       THEN
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
@@ -167,6 +178,8 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIlliquidAssets(), ioId, inIlliquidAssets);
        -- сохранили свойство <Персональный штраф по СУН>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltySUN(), ioId, inPenaltySUN);
+       -- сохранили свойство <Штраф по сдаче экзамена>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltyExam(), ioId, inPenaltyExam);
 
        -- сохранили свойство <На карту>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
@@ -230,7 +243,8 @@ BEGIN
               CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0)
                    WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
                    THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
-              COALESCE (MIFloat_PenaltySUN.ValueData, 0) - 
+              COALESCE (MIFloat_PenaltySUN.ValueData, 0) +
+              COALESCE (MIFloat_PenaltyExam.ValueData, 0) - 
               COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
       INTO outAmountHand
       FROM  MovementItem
@@ -262,6 +276,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
                                         ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                        AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
+                                        ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
 
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id

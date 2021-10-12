@@ -24,9 +24,9 @@ inherited WagesUserForm: TWagesUserForm
       ExplicitHeight = 295
       inherited cxGrid: TcxGrid
         Width = 654
-        Height = 150
+        Height = 128
         ExplicitWidth = 654
-        ExplicitHeight = 150
+        ExplicitHeight = 129
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,9 +79,9 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 150
+        Top = 128
         Width = 654
-        Height = 145
+        Height = 167
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
@@ -115,7 +115,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceCard: TcxCurrencyEdit
           Left = 144
-          Top = 110
+          Top = 137
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -131,7 +131,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object cxLabel1: TcxLabel
           Left = 8
-          Top = 110
+          Top = 137
           Caption = #1047'/'#1055' '#1085#1072' '#1082#1072#1088#1090#1091' :'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -143,7 +143,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceOnHand: TcxCurrencyEdit
           Left = 478
-          Top = 110
+          Top = 137
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -159,7 +159,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object cxLabel3: TcxLabel
           Left = 298
-          Top = 111
+          Top = 138
           Caption = #1048#1090#1086#1075#1086' '#1085#1072' '#1088#1091#1082#1080':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -357,6 +357,34 @@ inherited WagesUserForm: TWagesUserForm
           Left = 298
           Top = 85
           Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099'  '#1087#1086#1075'. '#1095#1077#1082#1086#1084':'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
+        object cePenaltyExam: TcxCurrencyEdit
+          Left = 144
+          Top = 111
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          Properties.ReadOnly = True
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 20
+          Width = 148
+        end
+        object cxLabel31: TcxLabel
+          Left = 8
+          Top = 111
+          Caption = #1057#1076#1072#1095#1072' '#1101#1082#1079#1072#1084#1077#1085#1072':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText

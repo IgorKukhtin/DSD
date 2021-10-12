@@ -136,7 +136,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
-   
+
+/*   IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
+      AND TRIM(COALESCE(inNameUkr, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Не заполнено украинское название...';     
+   END IF;
+*/   
     -- Сохранили в плоскую таблицй
    BEGIN
    PERFORM lpInsertUpdate_Object_Goods_Flat (ioId             :=  ioId

@@ -80,8 +80,11 @@ var
 begin
   if not FileExists(AFilename) then exit;
   Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
-  Result := GetFileSize(Handle, nil);
-  CloseHandle(Handle);
+  try
+    Result := GetFileSize(Handle, nil);
+  finally
+    CloseHandle(Handle);
+  end;
 end;
 
 function Remains_lcl: String;
@@ -390,12 +393,12 @@ Begin
   end;
 End;
 
-procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True); overload;
+procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
   var I : integer;
 Begin
   if not FileExists(AFileName) then
   begin
-    ShowMessage('Файл '+ AFileName + ' не найден!');
+    if AShowError then ShowMessage('Файл '+ AFileName + ' не найден!');
     Exit;
   end;
   if GetFileSizeByName(AFileName) = 0 then
