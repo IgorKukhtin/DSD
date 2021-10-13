@@ -38,10 +38,24 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_MovementId() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_MovementId', 'Ссылка на документ' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MovementId');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_OperPrice_orig() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OperPrice_orig'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_OperPrice_orig', 'Цена вх.' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OperPrice_orig');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DiscountTax');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummIn', 'Сумма вх. с учетом скидки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummIn');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.21         * zc_MIFloat_OperPrice_orig
  12.04.21         * zc_MIFloat_MovementId
  06.04.21         * zc_MIFloat_BasisPrice
  05.04.21         * zc_MIFloat_OperPriceList

@@ -205,6 +205,11 @@ type
     bbReport_Goods: TdxBarButton;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
+    actUpdateAction: TdsdInsertUpdateAction;
+    bb: TdxBarButton;
+    SummIn: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
+    OperPrice_orig: TcxGridDBColumn;
   private
   public
   end;

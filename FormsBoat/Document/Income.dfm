@@ -707,6 +707,39 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 70
           end
+          object SummIn: TcxGridDBColumn
+            Caption = 'Gesamt EK'
+            DataBinding.FieldName = 'SummIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object DiscountTax: TcxGridDBColumn
+            Caption = 'zus.Rabbat in %'
+            DataBinding.FieldName = 'DiscountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object OperPrice_orig: TcxGridDBColumn
+            Caption = 'EK Netto'
+            DataBinding.FieldName = 'OperPrice_orig'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Options.Editing = False
+            Width = 70
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1314,6 +1347,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1571,6 +1608,10 @@ object IncomeForm: TIncomeForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdateAction
       Category = 0
     end
   end
@@ -2417,6 +2458,60 @@ object IncomeForm: TIncomeForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdateAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      ImageIndex = 1
+      FormName = 'TIncomeItemEditForm'
+      FormNameParam.Value = 'TIncomeItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = 0.000000000000000000
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      IdFieldName = 'Id'
     end
   end
   object MasterDS: TDataSource

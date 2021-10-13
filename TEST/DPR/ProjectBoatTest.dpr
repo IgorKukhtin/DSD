@@ -284,7 +284,8 @@ uses
   Report_ProductionPersonal in '..\..\FormsBoat\Report\Report_ProductionPersonal.pas' {Report_ProductionPersonalForm: TParentForm},
   Sale in '..\..\FormsBoat\Document\Sale.pas' {SaleForm: TParentForm},
   SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  FormsUnit in '..\..\FormsBoat\System\FormsUnit.pas' {FormsForm: TParentForm};
+  FormsUnit in '..\..\FormsBoat\System\FormsUnit.pas' {FormsForm: TParentForm},
+  IncomeItemEdit in '..\..\FormsBoat\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
