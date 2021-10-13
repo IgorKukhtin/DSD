@@ -287,11 +287,17 @@ begin
     if not TryStrToInt(gc_User.Session, nUserId) then nUserId := 0;
 
     ZReportLogCDS :=  TClientDataSet.Create(Nil);
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    WaitForSingleObject(MutexZReportLog, INFINITE);
     try
       try
-        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
-        if not ZReportLogCDS.Active then ZReportLogCDS.Open;
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
+        if not ZReportLogCDS.Active then
+        begin
+          DeleteLocalData(ZReportLog_lcl);
+          CheckZReportLogCDS;
+          LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
+        end;
+
         ZReportLogCDS.Append;
         ZReportLogCDS.FieldByName('ZReport').AsInteger := AZReport;
         ZReportLogCDS.FieldByName('FiscalNumber').AsString := AFiscalNumber;
@@ -307,7 +313,7 @@ begin
         ShowMessage('Ошибка сохранения данных по Z отчетам:'#13#10 + E.Message);
       end;
     finally
-      ReleaseMutex(MutexDiffCDS);
+      ReleaseMutex(MutexZReportLog);
       ZReportLogCDS.Free;
         // отправка сообщения о необходимости отправки
       PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 6);

@@ -96,6 +96,8 @@ type
     actListGoodsIlliquidMarketing: TdsdOpenStaticForm;
     ceIlliquidAssetsRepayment: TcxCurrencyEdit;
     cxLabel30: TcxLabel;
+    cePenaltyExam: TcxCurrencyEdit;
+    cxLabel31: TcxLabel;
   private
     { Private declarations }
   public

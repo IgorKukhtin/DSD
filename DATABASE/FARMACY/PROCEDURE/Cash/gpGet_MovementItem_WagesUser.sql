@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesUser(
     IN inSession     TVarChar         -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat, IlliquidAssetsRepayment TFloat, PenaltySUN TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, MarketingRepayment TFloat, Director TFloat, IlliquidAssets TFloat
+             , IlliquidAssetsRepayment TFloat, PenaltySUN TFloat, PenaltyExam TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
@@ -250,6 +251,7 @@ BEGIN
                         WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
                         THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat                             AS IlliquidAssetsRepayment
                  , MIFloat_PenaltySUN.ValueData                 AS PenaltySUN
+                 , MIFloat_PenaltyExam.ValueData                AS PenaltyExam
                  , MIF_AmountCard.ValueData                     AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
@@ -260,7 +262,8 @@ BEGIN
                     CASE WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) > 0 THEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0)
                          WHEN COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0) > 0
                          THEN 0 ELSE COALESCE(MIFloat_IlliquidAssets.ValueData, 0) + COALESCE(MIFloat_IlliquidAssetsRepayment.ValueData, 0)  END +
-                    COALESCE (MIFloat_PenaltySUN.ValueData, 0) -
+                    COALESCE (MIFloat_PenaltySUN.ValueData, 0) +
+                    COALESCE (MIFloat_PenaltyExam.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
 
@@ -343,6 +346,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_PenaltySUN
                                               ON MIFloat_PenaltySUN.MovementItemId = MovementItem.Id
                                              AND MIFloat_PenaltySUN.DescId = zc_MIFloat_PenaltySUN()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_PenaltyExam
+                                              ON MIFloat_PenaltyExam.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PenaltyExam.DescId = zc_MIFloat_PenaltyExam()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id

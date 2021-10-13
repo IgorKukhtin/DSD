@@ -379,13 +379,18 @@ BEGIN
                        );
 
      -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
-     INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun)
+     INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun, PairSunAmount)
         SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
-             , OL_GoodsPairSun.ChildObjectId AS GoodsId_PairSun
+             , OL_GoodsPairSun.ChildObjectId            AS GoodsId_PairSun
+             , COALESCE (OF_PairSunAmount.ValueData, 1) AS PairSunAmount
         FROM ObjectLink AS OL_GoodsPairSun
+
+             LEFT JOIN ObjectFloat AS OF_PairSunAmount
+                                   ON OF_PairSunAmount.ObjectId  = OL_GoodsPairSun.ObjectId 
+                                  AND OF_PairSunAmount.DescId    = zc_ObjectFloat_Goods_PairSunAmount()
+
         WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
        ;
-
 
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      WITH
@@ -1038,6 +1043,10 @@ BEGIN
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
+             -- если товар среди парных
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpObject_Price.GoodsId
+
              -- НЕ отбросили !!холод!!
              /*LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                     ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
@@ -1046,7 +1055,7 @@ BEGIN
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
-          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
+          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0)
           -- Исключения по техническим переучетам
           AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
        ;
@@ -1939,31 +1948,30 @@ BEGIN
 
     -- !!! Добавили парные, после распределения ...
      WITH -- Товар к которому нужна пара
-          tmpResult_Partion AS (SELECT _tmpResult_Partion.*, _tmpGoods_SUN_PairSun.GoodsId_PairSun
+          tmpResult_Partion AS (SELECT _tmpResult_Partion.*, _tmpGoods_SUN_PairSun.GoodsId_PairSun, _tmpGoods_SUN_PairSun.PairSunAmount
                                 FROM _tmpResult_Partion
 
                                      INNER JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
                                 ),
           -- Наличие парных
-          tmpRemains_Pair  AS (SELECT _tmpGoods_SUN_PairSun.GoodsId
+          tmpRemains_Pair  AS (SELECT _tmpRemains.GoodsId
                                     , _tmpRemains.UnitId
                                     , _tmpRemains.Price
                                     , _tmpRemains.AmountRemains
                                FROM _tmpRemains
-
-                                    INNER JOIN  _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId_PairSun = _tmpRemains.GoodsId
+                               WHERE _tmpRemains.GoodsId IN (SELECT DISTINCT  _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM  _tmpGoods_SUN_PairSun)
                                ),
           -- Распределение
           tmpResult AS (SELECT Result_Partion.*
+                             , Result_Partion.Amount * Result_Partion.PairSunAmount AS AmountPair
                              , Remains_Pair.AmountRemains                AS AmountRemains
                              , Remains_Pair.Price                        AS PricePair
-                             , SUM (Result_Partion.Amount) OVER (PARTITION BY Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
+                             , SUM (Result_Partion.Amount * Result_Partion.PairSunAmount) 
+                               OVER (PARTITION BY Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
                                                            ORDER BY Result_Partion.UnitId_to) AS AmountSUM
-                         --    , ROW_NUMBER() OVER (PARTITION BY  Result_Partion.UnitId_from, Result_Partion.GoodsId_PairSun
-                         --                         ORDER BY Result_Partion.UnitId_to DESC) AS DOrd
                        FROM tmpResult_Partion AS Result_Partion
                             INNER JOIN tmpRemains_Pair AS Remains_Pair
-                                                         ON Remains_Pair.GoodsId = Result_Partion.GoodsId
+                                                         ON Remains_Pair.GoodsId = Result_Partion.GoodsId_PairSun
                                                         AND Remains_Pair.UnitId  = Result_Partion.UnitId_from
                           )
 
@@ -1980,11 +1988,11 @@ BEGIN
           , 0 as MovementItemId
         FROM (SELECT DD.*
                    , CASE WHEN DD.AmountRemains - DD.AmountSUM > 0 --AND DD.DOrd <> 1
-                               THEN DD.Amount
-                          ELSE DD.AmountRemains - DD.AmountSUM + DD.Amount
+                               THEN DD.AmountPair
+                          ELSE DD.AmountRemains - DD.AmountSUM + DD.AmountPair
                      END AS AmountAdd
               FROM tmpResult AS DD
-              WHERE DD.AmountRemains - (DD.AmountSUM - DD.Amount) > 0
+              WHERE DD.AmountRemains - (DD.AmountSUM - DD.AmountPair) > 0
              ) AS tmpItem;
 
 /*     -- !!!Удаляем НЕ получившиеся пары!!!

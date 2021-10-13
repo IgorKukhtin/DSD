@@ -1040,9 +1040,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_MedicalProgramSP_Free() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_MedicalProgramSP(), 'zc_ObjectBoolean_MedicalProgramSP_Free', 'Безплатно' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_MedicalProgramSP_Free');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_RequireUkrName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_RequireUkrName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_RequireUkrName', 'Требовать заполнение Украинского названия' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_RequireUkrName');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 12.10.21                                                                                                          * zc_ObjectBoolean_CashSettings_RequireUkrName
  05.10.21                                                                                                          * zc_ObjectBoolean_MedicalProgramSP_Free
  29.09.21                                                                                                          * zc_ObjectBoolean_Goods_Recipe
  24.09.21                                                                                                          * zc_ObjectBoolean_CorrectWagesPercentage_...

@@ -137,4 +137,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_WagesFullCharge (, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_WagesFullCharge (inUnitID := 183289, inOperDate := '01.10.2021', inSession := '3')
+
+ 

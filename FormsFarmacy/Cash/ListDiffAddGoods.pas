@@ -177,10 +177,15 @@ begin
       WaitForSingleObject(MutexDiffCDS, INFINITE);
       try
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then
+        begin
+          DeleteLocalData(ListDiff_lcl);
+          CheckListDiffCDS;
+          LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        end;
       finally
         ReleaseMutex(MutexDiffCDS);
       end;
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
 
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
@@ -256,7 +261,13 @@ begin
     try
       CheckListDiffCDS;
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
+      if not ListDiffCDS.Active then
+      begin
+        DeleteLocalData(ListDiff_lcl);
+        CheckListDiffCDS;
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      end;
+
       ListDiffCDS.Append;
       ListDiffCDS.FieldByName('ID').AsInteger := GoodsCDS.FieldByName('ID').AsInteger;
       ListDiffCDS.FieldByName('Amount').AsCurrency := nAmount;
@@ -360,13 +371,13 @@ begin
 
       if FileExists(ListDiff_lcl) then
       begin
-        WaitForSingleObject(MutexDiffCDS, INFINITE);
-        try
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then
+        begin
+          DeleteLocalData(ListDiff_lcl);
+          CheckListDiffCDS;
           LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        finally
-          ReleaseMutex(MutexDiffCDS);
         end;
-        if not ListDiffCDS.Active then ListDiffCDS.Open;
 
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
@@ -509,10 +520,15 @@ begin
     WaitForSingleObject(MutexDiffCDS, INFINITE);
     try
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then
+      begin
+        DeleteLocalData(ListDiff_lcl);
+        CheckListDiffCDS;
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      end;
     finally
       ReleaseMutex(MutexDiffCDS);
     end;
-    if not ListDiffCDS.Active then ListDiffCDS.Open;
 
     ListDiffCDS.First;
     while not ListDiffCDS.Eof do

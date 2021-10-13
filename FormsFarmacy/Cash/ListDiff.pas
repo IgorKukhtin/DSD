@@ -13,7 +13,7 @@ uses
   cxDBData, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   dxSkinsdxBarPainter, dxBar, cxSpinEdit, dxBarExtItems, cxBarEditItem,
-  cxBlobEdit, cxCheckBox;
+  cxBlobEdit, cxCheckBox, cxNavigator, dxDateRanges, System.Actions;
 
 type
   TListDiffForm = class(TAncestorBaseForm)
@@ -65,10 +65,9 @@ begin
   try
     ListDiffCDS :=  TClientDataSet.Create(Nil);
     ListDiffNewCDS :=  TClientDataSet.Create(Nil);
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
     try
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
+      if not ListDiffCDS.Active then Exit;
 
       if not Assigned(ListDiffCDS.FindField('DiffKindId')) then
       begin
@@ -109,7 +108,6 @@ begin
       end;
       Result := True;
     finally
-      ReleaseMutex(MutexDiffCDS);
       if ListDiffCDS.Active then ListDiffCDS.Close;
       ListDiffCDS.Free;
       if ListDiffNewCDS.Active then ListDiffNewCDS.Close;
@@ -124,11 +122,11 @@ function CheckListDiffCDS : boolean;
   var ListDiffCDS : TClientDataSet;
 begin
   Result := FileExists(ListDiff_lcl);
-  if Result then
-  begin
-    Result := CheckListDiffStrucnureCDS;
-    Exit;
-  end;
+  if Result then Exit;
+//  begin
+//    Result := CheckListDiffStrucnureCDS;
+//    Exit;
+//  end;
   ListDiffCDS :=  TClientDataSet.Create(Nil);
   try
     try
@@ -168,7 +166,7 @@ begin
     try
 
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then ListDiffCDS.Open;
+      if not ListDiffCDS.Active then Exit;
 
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
@@ -219,7 +217,12 @@ begin
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
     if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
-    if not ListDiffCDS.Active then ListDiffCDS.Open;
+    if not ListDiffCDS.Active then
+    begin
+      DeleteLocalData(ListDiff_lcl);
+      CheckListDiffCDS;
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    end;
   finally
     ReleaseMutex(MutexDiffCDS);
   end;
