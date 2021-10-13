@@ -1,25 +1,25 @@
- -- Function: gpUpdate_MI_Income_Price()
-
-DROP FUNCTION IF EXISTS gpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_MI_Income_Price (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+-- Function: gpGet_MI_Income_OperPriceList()
 
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_Income_Price(
-    IN inId                    Integer   , -- Ключ объекта <Элемент документа>
+DROP FUNCTION IF EXISTS gpGet_MI_Income_Price (TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_MI_Income_Price(
     IN inAmount                TFloat    , -- 
     IN ioOperPrice_orig        TFloat    , -- Цена вх.
- INOUT ioDiscountTax           TFloat    , -- % скидки
- INOUT ioOperPrice             TFloat    , -- Цена вх. с учетом скидки в элементе
- INOUT ioSummIn                TFloat    , -- Сумма вх. с учетом скидки
- INOUT inSummIn_inf              TFloat    , -- сумма вспомогательная
-    IN inOperPriceList            TFloat    , -- Цена продажи
+    IN ioDiscountTax           TFloat    , -- % скидки
+    IN ioOperPrice             TFloat    , -- Цена вх. с учетом скидки в элементе
+    IN ioSummIn                TFloat    , -- Сумма вх. с учетом скидки
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS TABLE (Amount      TFloat
+             , OperPrice_orig  TFloat
+             , DiscountTax TFloat
+             , OperPrice   TFloat
+             , SummIn      TFloat
+              )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
    DECLARE vbOperPrice_orig TFloat;
    DECLARE vbDiscountTax TFloat;
    DECLARE vbOperPrice TFloat;
@@ -28,17 +28,7 @@ $BODY$
    DECLARE vbPravilo TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Income_Price());
-     vbUserId := lpGetUserBySession (inSession);
-
-
-     -- проверка - документ должен быть сохранен
-     IF COALESCE (inId, 0) = 0 THEN 
-
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не сохранен.' :: TVarChar
-                                              , inProcedureName := 'gpUpdate_MI_Income_Price'   :: TVarChar
-                                              , inUserId        := vbUserId);
-     END IF;
+     -- vbUserId:= lpGetUserBySession (inSession);
 
      -- Получаем сохраненные параметры
      vbOperPrice_orig:= (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_OperPrice_orig());
@@ -73,36 +63,10 @@ BEGIN
      THEN
          vbPravilo := 'OperPrice';
      END IF;
-     IF COALESCE (vbSummIn,0) <> COALESCE (ioSummIn,0) AND (vbAmount = inAmount AND vbOperPrice_orig = ioOperPrice_orig AND vbDiscountTax = ioDiscountTax AND vbOperPrice = ioOperPrice)
-       AND COALESCE (ioSummIn,0) <> (vbAmount * (vbOperPrice_orig * (1 - vbDiscountTax / 100)))  
+     IF COALESCE (vbSummIn,0) <> COALESCE (ioSummIn,0)
      THEN
          vbPravilo := 'SummIn';
      END IF;
-
-RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
-
-----RAISE EXCEPTION '0. vbOperPrice_orig <%>  vbDiscountTax <%>  vbOperPrice <%>  vbSummIn <%>  vbAmount <%>' , vbOperPrice_orig, vbDiscountTax, vbOperPrice, vbSummIn , vbAmount;
-
-
-/*
-Нов св-ва zc_MI_Master - c_Movement_Income - для них все вводится в эдит форме - 
-1) кол-во 
-2)OperPrice_orig 
-3)DiscountTax  
-4)OperPrice 
-5)SummIn 
-6)OperPriceList
-
- - с авто пересчетом, 
- 1) если заполнили контрол DiscountTax  - пересчитали 4и5 
- 2) если заполнили контрол OperPrice  - пересчитали 3и5 
- 3) если заполнили контрол SummIn  - пересчитали 4 и в 3 поставили 0 
- 4) если заполнили контрол кол-во или OperPrice_orig - 4 и 5 пересчитали и они будуи другими если в DiscountTax <> 0 
- 
- ДЛЯ определения какой именно контрол меняется - каждый раз вызваем проц в которой делается селект и определяется какой параметр изменился,
-  в конце все значения сохраняем, при следующем вызове - опять выз проц  и можно сразу определить какой контрол меняется
-*/
-
 
      IF vbPravilo = 'Amount'
      THEN
@@ -110,16 +74,6 @@ RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
          ioOperPrice := (ioOperPrice_orig * (1 - ioDiscountTax / 100)) ::TFloat;
          ioSummIn    := (inAmount * ioOperPrice) ::TFloat;
 
-         -- пересохранили <Элемент документа>
-         PERFORM lpInsertUpdate_MovementItem (inId
-                                             , zc_MI_Master()
-                                             , (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inId AND MovementItem.DescId = zc_MI_Master()) --inGoodsId
-                                             , inId
-                                             , (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inId AND MovementItem.DescId = zc_MI_Master())--inMovementId
-                                             , inAmount
-                                             , NULL
-                                             , vbUserId
-                                             );
      END IF;
 
      IF vbPravilo = 'DiscountTax'
@@ -150,17 +104,30 @@ RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DiscountTax(), inId, ioDiscountTax);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummIn(), inId, ioSummIn);
+     
+     RETURN QUERY
+     SELECT inAmount      ::TFloat
+          , ioOperPrice_orig :: TFloat
+          , ioDiscountTax ::TFloat
+          , ioOperPrice   ::TFloat
+          , ioSummIn      ::TFloat
+     ;
 
 
+
+                
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.10.21         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.02.19         * inMovementItemId
+ 24.04.18         *
+ 24.03.18         *
+ 06.06.17         *
 */
 
 -- тест
--- 
+-- SELECT * FROM gpGet_MI_Income_OperPriceList (inMovementId := 248647 , inGoodsName := '961 * М5 *  *' ,inOperPrice:= 156, inCountForPrice:= 1, ioOperPriceList:= 256, inSession:= zfCalc_UserAdmin());

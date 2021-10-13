@@ -1,4 +1,4 @@
-unit IncomeItemEdit;
+unit IncomeEdit;
 
 interface
 
@@ -22,8 +22,7 @@ uses
   dxSkinXmas2008Blue, cxCheckBox;
 
 type
-  TIncomeItemEditForm = class(TParentForm)
-    cxLabel1: TcxLabel;
+  TIncomeEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -35,36 +34,42 @@ type
     actFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    edGoodsName: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
     cxLabel18: TcxLabel;
     ceAmount: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
-    ceOperPrice_orig: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
-    ceOperPriceList: TcxCurrencyEdit;
-    cxLabel10: TcxLabel;
-    ceCountForPrice: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
     edFrom: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
     spGet_OperPriceList: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefresh_Price: TdsdDataSetRefresh;
+    actRefreshOperPriceList: TdsdDataSetRefresh;
     spUpdate_Price: TdsdStoredProc;
     actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
     cxLabel14: TcxLabel;
     edInvNumber: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    cxCurrencyEdit1: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    edArticle: TcxTextEdit;
-    ceDiscountTax: TcxCurrencyEdit;
-    cxLabel4: TcxLabel;
-    cxLabel5: TcxLabel;
-    ceOperPrice: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
-    ceSummIn: TcxCurrencyEdit;
-    HeaderChanger: THeaderChanger;
-    dsdDataSetRefresh1: TdsdDataSetRefresh;
+    ceSummTaxMVAT: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceSummTaxPVAT: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxLabel13: TcxLabel;
+    cxLabel15: TcxLabel;
+    cxCurrencyEdit2: TcxCurrencyEdit;
+    cxCurrencyEdit3: TcxCurrencyEdit;
+    cxCurrencyEdit4: TcxCurrencyEdit;
+    cxCurrencyEdit5: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    cxCurrencyEdit6: TcxCurrencyEdit;
+    cxCurrencyEdit7: TcxCurrencyEdit;
+    cxCurrencyEdit8: TcxCurrencyEdit;
+    cxCurrencyEdit9: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxCurrencyEdit10: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -76,6 +81,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeItemEditForm);
+  RegisterClass(TIncomeEditForm);
 
 end.
