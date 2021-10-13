@@ -411,6 +411,8 @@ type
     actUnit_isRequestDistribListDiff: TdsdExecStoredProc;
     dxBarButton22: TdxBarButton;
     isBlockCommentSendTP: TcxGridDBColumn;
+    PharmacyManager: TcxGridDBColumn;
+    PharmacyManagerPhone: TcxGridDBColumn;
   private
     { Private declarations }
   public

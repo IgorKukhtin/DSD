@@ -1370,9 +1370,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MedicalProgramSP_ProgramId() RETURNS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MedicalProgramSP_ProgramId', zc_Object_MedicalProgramSP(), 'Идентификатор медицинской программы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MedicalProgramSP_ProgramId');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_PharmacyManager() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PharmacyManager'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_PharmacyManager', zc_object_Unit(), 'ФИО Зав. аптекой' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PharmacyManager');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_PharmacyManagerPhone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PharmacyManagerPhone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_PharmacyManagerPhone', zc_object_Unit(), 'Телефон Зав. аптекой' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PharmacyManagerPhone');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 13.10.21                                                                                                         * zc_ObjectString_Unit_PharmacyManager, zc_ObjectString_Unit_PharmacyManagerPhone
  04.10.21         * zc_ObjectString_Unit_Comment
  01.10.21                                                                                                         * zc_ObjectString_MedicalProgramSP_ProgramId
  20.09.21                                                                                                         * zc_ObjectString_MemberIC_InsuranceCardNumber

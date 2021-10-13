@@ -15,15 +15,44 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbUnitId Integer;
+  DECLARE vbUnitKey TVarChar;
   DECLARE vbMovementId Integer;
+  DECLARE vbPositionCode Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
-
+     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+     IF vbUnitKey = '' THEN
+        vbUnitKey := '0';
+     END IF;
+     vbUnitId := vbUnitKey::Integer;
+   
      IF inSession <> '3'
      THEN
+     
+       SELECT COALESCE(Object_Position.ObjectCode, 1)
+       INTO vbPositionCode
+       FROM Object AS Object_User
 
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                 ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                                           
+       WHERE Object_User.Id = vbUserId
+         AND Object_User.DescId = zc_Object_User();
+             
+       IF vbPositionCode NOT IN (1, 2)
+       THEN
+         RAISE EXCEPTION 'Доступно только "Фармацевтам" и "Кладовщикам".';            
+       END IF;
+     
        IF EXISTS(SELECT 1 FROM Movement
                  WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
                  AND Movement.DescId = zc_Movement_EmployeeSchedule())
@@ -89,24 +118,37 @@ BEGIN
            RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
          END IF;
          
-         IF COALESCE((SELECT COUNT(*)
-                      FROM Movement
-
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
-                                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-
-                      WHERE Movement.OperDate >= CURRENT_DATE
-                        AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                        AND MovementLinkObject_Insert.ObjectId = vbUserId
-                        AND Movement.DescId = zc_Movement_Check()
-                        AND Movement.StatusId = zc_Enum_Status_Complete()), 0) < 5
+         IF vbPositionCode = 1
          THEN
-           RAISE EXCEPTION 'Не найдены продажи по вам (минимум 5 чеков)..';              
+         
+           IF EXISTS (SELECT 1 FROM ObjectDate WHERE  ObjectDate.ObjectID = vbUnitId AND ObjectDate.DescId = zc_ObjectDate_Unit_Exam()) AND
+              (SELECT ObjectDate.ValueData + INTERVAL '300 second' FROM ObjectDate 
+               WHERE  ObjectDate.ObjectID = vbUnitId AND ObjectDate.DescId = zc_ObjectDate_Unit_Exam()) > CURRENT_TIMESTAMP
+           THEN
+              RAISE EXCEPTION 'Возможно, кто-то уже сдает экзамен на аптеке попробуйте через 5 минут.';                
+           END IF;
+         
+           IF COALESCE((SELECT COUNT(*)
+                        FROM Movement
+
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                            ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+
+                        WHERE Movement.OperDate >= CURRENT_DATE
+                          AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                          AND MovementLinkObject_Insert.ObjectId = vbUserId
+                          AND Movement.DescId = zc_Movement_Check()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()), 0) < 5
+           THEN
+             RAISE EXCEPTION 'Не найдены продажи по вам (минимум 5 чеков)..';              
+           END IF;
          END IF;
        ELSE
          RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     
        END IF;
+     ELSE
+       vbPositionCode := 2;
      END IF;
 
 
@@ -136,8 +178,12 @@ BEGIN
            , vbUserId                                           AS UserId
            , Object_User.ValueData                              AS UserName
            , MovementFloat_TotalCount.ValueData::Integer        AS TotalCount
-           , MovementFloat_Question.ValueData::Integer          AS Question
-           , MovementFloat_Time.ValueData::Integer              AS TimeTest
+           , CASE WHEN vbPositionCode = 1
+                  THEN MovementFloat_Question.ValueData
+                  ELSE MovementFloat_QuestionStorekeeper.ValueData END::Integer  AS Question
+           , CASE WHEN vbPositionCode = 1
+                  THEN MovementFloat_Time.ValueData
+                  ELSE MovementFloat_TimeStorekeeper.ValueData END::Integer      AS TimeTest
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -153,6 +199,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Time
                                     ON MovementFloat_Time.MovementId = Movement.Id
                                    AND MovementFloat_Time.DescId = zc_MovementFloat_Time()
+
+            LEFT JOIN MovementFloat AS MovementFloat_QuestionStorekeeper
+                                    ON MovementFloat_QuestionStorekeeper.MovementId = Movement.Id
+                                   AND MovementFloat_QuestionStorekeeper.DescId = zc_MovementFloat_QuestionStorekeeper()
+            LEFT JOIN MovementFloat AS MovementFloat_TimeStorekeeper
+                                    ON MovementFloat_TimeStorekeeper.MovementId = Movement.Id
+                                   AND MovementFloat_TimeStorekeeper.DescId = zc_MovementFloat_TimeStorekeeper()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -173,5 +226,7 @@ ALTER FUNCTION gpGet_TestingUser_Title (TVarChar) OWNER TO postgres;
  */
 
 -- тест
--- 
-select * from gpGet_TestingUser_Title(inSession := '3353680');
+-- select * from gpGet_TestingUser_Title(inSession := '3353680');
+-- select * from gpGet_TestingUser_Title( inSession := '13100407');
+
+select * from gpGet_TestingUser_Title( inSession := '3');

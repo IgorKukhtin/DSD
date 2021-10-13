@@ -67,6 +67,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
              , isBlockCommentSendTP Boolean
+             , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -255,6 +256,9 @@ BEGIN
       , COALESCE (ObjectBoolean_PauseDistribListDiff.ValueData, FALSE)    :: Boolean     AS isPauseDistribListDiff
       , COALESCE (ObjectBoolean_RequestDistribListDiff.ValueData, FALSE)  :: Boolean     AS isRequestDistribListDiff
       , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE)      :: Boolean     AS isBlockCommentSendTP
+      
+      , ObjectString_PharmacyManager.ValueData                                           AS PharmacyManager
+      , ObjectString_PharmacyManagerPhone.ValueData                                      AS PharmacyManagerPhone
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -316,6 +320,14 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Phone
                                ON ObjectString_Phone.ObjectId = Object_Member.Id 
                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+
+        LEFT JOIN ObjectString AS ObjectString_PharmacyManager
+                               ON ObjectString_PharmacyManager.ObjectId = Object_Unit.Id 
+                              AND ObjectString_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
+
+        LEFT JOIN ObjectString AS ObjectString_PharmacyManagerPhone
+                               ON ObjectString_PharmacyManagerPhone.ObjectId = Object_Unit.Id 
+                              AND ObjectString_PharmacyManagerPhone.DescId = zc_ObjectString_Unit_PharmacyManagerPhone()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager2
                              ON ObjectLink_Unit_UserManager2.ObjectId = Object_Unit.Id

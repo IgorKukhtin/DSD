@@ -34,6 +34,7 @@ $BODY$
   DECLARE vbTopicsName    TVarChar; 
   DECLARE vbQuestions     Integer;
   DECLARE vbTestQuestions Integer;
+  DECLARE vbPositionCode Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TestingTuning());
@@ -54,6 +55,27 @@ BEGIN
        RAISE EXCEPTION 'Не найден активный документ настройки тестирования.';     
      END IF;                
 
+     IF inSession <> '3'
+     THEN
+       SELECT COALESCE(Object_Position.ObjectCode, 1)
+       INTO vbPositionCode
+       FROM Object AS Object_User
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                 ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                                             
+       WHERE Object_User.Id = vbUserId
+         AND Object_User.DescId = zc_Object_User();
+     ELSE
+       vbPositionCode := 2;
+     END IF;
+     
      -- таблица
      CREATE TEMP TABLE _tmpData (Id              Integer 
                                , TopicsId        Integer
@@ -80,7 +102,9 @@ BEGIN
      OPEN curTuning FOR SELECT Master.Id
                              , Master.TopicsTestingTuningName
                              , Master.Question
-                             , Master.TestQuestions 
+                             , CASE WHEN vbPositionCode = 1 
+                                    THEN Master.TestQuestions 
+                                    ELSE Master.TestQuestionsStorekeeper END
                         FROM gpSelect_MovementItem_TestingTuning_Master(inMovementId := vbMovementId 
                                                                       , inShowAll := 'False' 
                                                                       , inIsErased := 'False' 
@@ -160,7 +184,8 @@ BEGIN
                                   ON Second4.ParentId = Child.Id
                                  AND Second4.RandomID = 4
               
-         WHERE Child.RandomID <= vbTestQuestions
+         WHERE (Child.RandomID <= vbTestQuestions AND vbPositionCode = 1 
+             OR Child.RandomStorekeeperID <= vbTestQuestions AND vbPositionCode <> 1) 
            AND Child.ParentId = vbId;
 
      END LOOP; -- финиш цикла по курсору1

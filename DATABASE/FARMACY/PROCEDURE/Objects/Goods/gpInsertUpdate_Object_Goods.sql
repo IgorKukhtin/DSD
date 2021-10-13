@@ -137,12 +137,19 @@ BEGIN
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
 
-/*   IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
       AND TRIM(COALESCE(inNameUkr, '')) = ''
+      AND EXISTS (SELECT 1
+                  FROM Object AS Object_CashSettings
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RequireUkrName
+                                                ON ObjectBoolean_CashSettings_RequireUkrName.ObjectId = Object_CashSettings.Id 
+                                               AND ObjectBoolean_CashSettings_RequireUkrName.DescId = zc_ObjectBoolean_CashSettings_RequireUkrName()
+                                               AND ObjectBoolean_CashSettings_RequireUkrName.ValueData = TRUE
+                  WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
    THEN
        RAISE EXCEPTION 'Не заполнено украинское название...';     
    END IF;
-*/   
+   
     -- Сохранили в плоскую таблицй
    BEGIN
    PERFORM lpInsertUpdate_Object_Goods_Flat (ioId             :=  ioId

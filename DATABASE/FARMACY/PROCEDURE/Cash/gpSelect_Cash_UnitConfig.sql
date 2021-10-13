@@ -30,7 +30,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                GoodsDiscountId integer, GoodsDiscountCode integer, GoodsDiscountName TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
-               LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar
+               LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
+               isRemovingPrograms Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -182,6 +183,7 @@ BEGIN
                                     AND (vbRetailId = 4)                                                     AS isGetHardwareData
                                   , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
                                   , COALESCE(ObjectBoolean_CashSettings_CustomerThreshold.ValueData, 0)::TFLoat  AS CustomerThreshold
+                                  , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)   AS isRemovingPrograms
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -198,6 +200,9 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectBoolean_CashSettings_CustomerThreshold
                                                         ON ObjectBoolean_CashSettings_CustomerThreshold.ObjectId = Object_CashSettings.Id 
                                                        AND ObjectBoolean_CashSettings_CustomerThreshold.DescId = zc_ObjectFloat_CashSettings_CustomerThreshold()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RemovingPrograms
+                                                          ON ObjectBoolean_CashSettings_RemovingPrograms.ObjectId = Object_CashSettings.Id 
+                                                         AND ObjectBoolean_CashSettings_RemovingPrograms.DescId = zc_ObjectBoolean_CashSettings_RemovingPrograms()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -300,6 +305,7 @@ BEGIN
        , 'https://preprod.ciet-holding.com/login'::TVarChar                             AS LikiDneproeLocation
        , '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242'::TVarChar   AS LikiDneproeHealthToken
 
+       , tmpCashSettings.isRemovingPrograms                                        AS isRemovingPrograms
 
    FROM Object AS Object_Unit
 

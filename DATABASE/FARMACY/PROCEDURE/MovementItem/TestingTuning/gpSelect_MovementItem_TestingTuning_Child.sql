@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , Orders Integer, Replies Integer, CorrectAnswer Integer, isMandatoryQuestion Boolean
              , Question TBLOB
-             , RandomID Integer
+             , RandomID Integer, RandomStorekeeperID Integer
              , isErased Boolean
               )
 AS
@@ -45,6 +45,7 @@ BEGIN
              , COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) AS isMandatoryQuestion
              , MIBLOB_Question.ValueData                           AS Question
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) DESC, random())::Integer AS RandomID
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomStorekeeperID
              , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
         FROM MovementItem 
             

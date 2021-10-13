@@ -61,12 +61,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 15
-    Top = 54
+    Top = 50
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit
     Left = 15
-    Top = 72
+    Top = 68
     Properties.Buttons = <
       item
         Default = True
@@ -77,12 +77,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 255
-    Top = 53
+    Top = 50
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 255
-    Top = 71
+    Top = 68
     Properties.Buttons = <
       item
         Default = True
@@ -93,12 +93,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 15
-    Top = 101
+    Top = 93
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1076#1083#1103' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080
   end
   object edMarginCategory: TcxButtonEdit
     Left = 15
-    Top = 120
+    Top = 112
     Properties.Buttons = <
       item
         Default = True
@@ -109,7 +109,7 @@
   end
   object cbRepriceAuto: TcxCheckBox
     Left = 255
-    Top = 106
+    Top = 98
     Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
     TabOrder = 13
@@ -117,7 +117,7 @@
   end
   object ceUnitCategory: TcxButtonEdit
     Left = 367
-    Top = 120
+    Top = 112
     Properties.Buttons = <
       item
         Default = True
@@ -128,7 +128,7 @@
   end
   object cxLabel15: TcxLabel
     Left = 367
-    Top = 101
+    Top = 93
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '
   end
   object cbPharmacyItem: TcxCheckBox
@@ -149,7 +149,7 @@
   end
   object cbAutoMCS: TcxCheckBox
     Left = 255
-    Top = 125
+    Top = 117
     Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
     Caption = #1040#1074#1090#1086' '#1087#1077#1088'. '#1053#1058#1047
     TabOrder = 17
@@ -157,18 +157,19 @@
   end
   object cxPageControl: TcxPageControl
     Left = 15
-    Top = 168
+    Top = 144
     Width = 489
-    Height = 385
+    Height = 409
     TabOrder = 18
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 385
+    ClientRectBottom = 409
     ClientRectRight = 489
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitHeight = 361
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -186,16 +187,16 @@
         Width = 179
       end
       object ceNormOfManDays: TcxCurrencyEdit
-        Left = 8
-        Top = 245
+        Left = 7
+        Top = 227
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 2
         Width = 216
       end
       object ceProvinceCity: TcxButtonEdit
-        Left = 247
-        Top = 153
+        Left = 250
+        Top = 145
         Properties.Buttons = <
           item
             Default = True
@@ -221,50 +222,50 @@
         Width = 90
       end
       object cxLabel10: TcxLabel
-        Left = 247
-        Top = 137
+        Left = 250
+        Top = 129
         Caption = #1056#1072#1081#1086#1085
       end
       object cxLabel11: TcxLabel
         Left = 7
-        Top = 177
+        Top = 168
         Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
       end
       object cxLabel12: TcxLabel
         Left = 132
-        Top = 177
+        Top = 168
         Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
       end
       object cxLabel13: TcxLabel
-        Left = 247
-        Top = 177
+        Left = 250
+        Top = 168
         Caption = #1052#1077#1085#1077#1076#1078#1077#1088
       end
       object cxLabel14: TcxLabel
-        Left = 8
-        Top = 138
+        Left = 7
+        Top = 130
         Caption = #1056#1077#1075#1080#1086#1085
       end
       object cxLabel16: TcxLabel
-        Left = 8
-        Top = 226
+        Left = 7
+        Top = 208
         Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
       end
       object cxLabel17: TcxLabel
-        Left = 246
+        Left = 250
         Top = 91
         Caption = #1058#1077#1083#1077#1092#1086#1085
       end
       object cxLabel18: TcxLabel
-        Left = 8
-        Top = 274
+        Left = 7
+        Top = 251
         Hint = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
         Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
         ParentShowHint = False
         ShowHint = True
       end
       object cxLabel20: TcxLabel
-        Left = 247
+        Left = 250
         Top = 50
         Caption = #1053#1072#1095'. '#1085#1086#1095'. '#1094#1077#1085
       end
@@ -274,13 +275,13 @@
         Caption = #1054#1082#1086#1085'. '#1085#1086#1095'. '#1094#1077#1085
       end
       object cxLabel26: TcxLabel
-        Left = 247
-        Top = 226
+        Left = 250
+        Top = 208
         Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 2'
       end
       object cxLabel27: TcxLabel
         Left = 250
-        Top = 274
+        Top = 251
         Caption = #1052#1077#1085#1077#1076#1078#1077#1088' 3'
       end
       object cxLabel28: TcxLabel
@@ -306,7 +307,7 @@
         Caption = '% '#1074' '#1085#1086#1095#1085'. '#1089#1084'.'
       end
       object cxLabel7: TcxLabel
-        Left = 247
+        Left = 250
         Top = 4
         Caption = #1053#1072#1095'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
       end
@@ -321,14 +322,14 @@
         Caption = #1040#1076#1088#1077#1089
       end
       object edAddress: TcxTextEdit
-        Left = 8
+        Left = 7
         Top = 108
         TabOrder = 25
         Width = 216
       end
       object edArea: TcxButtonEdit
         Left = 7
-        Top = 154
+        Top = 146
         Properties.Buttons = <
           item
             Default = True
@@ -340,7 +341,7 @@
       end
       object edCloseDate: TcxDateEdit
         Left = 132
-        Top = 195
+        Top = 186
         EditValue = 42993d
         Properties.ReadOnly = False
         Properties.SaveTime = False
@@ -350,7 +351,7 @@
       end
       object edCreateDate: TcxDateEdit
         Left = 7
-        Top = 195
+        Top = 186
         EditValue = 42993d
         Properties.ReadOnly = False
         Properties.SaveTime = False
@@ -371,13 +372,13 @@
         Width = 100
       end
       object edPhone: TcxTextEdit
-        Left = 247
+        Left = 250
         Top = 108
         TabOrder = 30
         Width = 209
       end
       object edStartServiceNigth: TcxDateEdit
-        Left = 247
+        Left = 250
         Top = 23
         EditValue = 43225d
         Properties.ArrowsForYear = False
@@ -404,7 +405,7 @@
         Width = 100
       end
       object edTaxUnitStart: TcxDateEdit
-        Left = 247
+        Left = 250
         Top = 69
         EditValue = 43225d
         Properties.ArrowsForYear = False
@@ -419,8 +420,8 @@
         Width = 100
       end
       object edUnitRePrice: TcxButtonEdit
-        Left = 8
-        Top = 293
+        Left = 7
+        Top = 270
         Properties.Buttons = <
           item
             Default = True
@@ -431,8 +432,8 @@
         Width = 216
       end
       object edUserManager: TcxButtonEdit
-        Left = 247
-        Top = 195
+        Left = 250
+        Top = 186
         Properties.Buttons = <
           item
             Default = True
@@ -443,8 +444,8 @@
         Width = 209
       end
       object edUserManager2: TcxButtonEdit
-        Left = 247
-        Top = 244
+        Left = 250
+        Top = 226
         Properties.Buttons = <
           item
             Default = True
@@ -455,8 +456,8 @@
         Width = 209
       end
       object edUserManager3: TcxButtonEdit
-        Left = 247
-        Top = 293
+        Left = 250
+        Top = 270
         Properties.Buttons = <
           item
             Default = True
@@ -467,13 +468,13 @@
         Width = 209
       end
       object cxLabel47: TcxLabel
-        Left = 9
-        Top = 320
+        Left = 7
+        Top = 293
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1075#1088#1091#1079#1082#1080
       end
       object edLayout: TcxButtonEdit
-        Left = 8
-        Top = 336
+        Left = 7
+        Top = 309
         Properties.Buttons = <
           item
             Default = True
@@ -483,10 +484,33 @@
         TabOrder = 39
         Width = 217
       end
+      object edPharmacyManagerPhone: TcxTextEdit
+        Left = 250
+        Top = 348
+        TabOrder = 40
+        Width = 209
+      end
+      object cxLabel50: TcxLabel
+        Left = 250
+        Top = 331
+        Caption = #1058#1077#1083#1077#1092#1086#1085' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+      end
+      object edPharmacyManager: TcxTextEdit
+        Left = 7
+        Top = 348
+        TabOrder = 42
+        Width = 216
+      end
+      object cxLabel51: TcxLabel
+        Left = 7
+        Top = 331
+        Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+      end
     end
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ExplicitHeight = 361
       object edUnitOverdue: TcxButtonEdit
         Left = 0
         Top = 27
@@ -792,6 +816,7 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
+      ExplicitHeight = 361
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
@@ -1533,6 +1558,22 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPharmacyManager'
+        Value = Null
+        Component = edPharmacyManager
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPharmacyManagerPhone'
+        Value = Null
+        Component = edPharmacyManagerPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
@@ -1546,8 +1587,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 420
-    Top = 393
+    Left = 412
+    Top = 369
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -2122,6 +2163,20 @@
         Component = cbBlockCommentSendTP
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PharmacyManager'
+        Value = Null
+        Component = edPharmacyManager
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PharmacyManagerPhone'
+        Value = Null
+        Component = edPharmacyManagerPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 36
@@ -2182,8 +2237,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 63
+    Left = 384
+    Top = 55
   end
   object MarginCategoryGuides: TdsdGuides
     KeyField = 'Id'
@@ -2269,8 +2324,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 377
+    Left = 304
+    Top = 329
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'
@@ -2299,7 +2354,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 303
+    Top = 319
   end
   object GuidesUnitCategory: TdsdGuides
     KeyField = 'Id'
@@ -2385,8 +2440,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 225
-    Top = 479
+    Left = 313
+    Top = 399
   end
   object GuidesUnitOverdue: TdsdGuides
     KeyField = 'Id'
@@ -2530,7 +2585,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 479
+    Left = 160
+    Top = 343
   end
 end
