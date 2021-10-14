@@ -35,7 +35,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel18: TcxLabel;
-    ceAmount: TcxCurrencyEdit;
+    ceTotalSummMVAT: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
     edFrom: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
@@ -47,7 +47,7 @@ type
     cxLabel14: TcxLabel;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
-    cxCurrencyEdit1: TcxCurrencyEdit;
+    ceDiscountTax: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     ceSummTaxMVAT: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -56,20 +56,20 @@ type
     cxLabel11: TcxLabel;
     cxLabel13: TcxLabel;
     cxLabel15: TcxLabel;
-    cxCurrencyEdit2: TcxCurrencyEdit;
-    cxCurrencyEdit3: TcxCurrencyEdit;
-    cxCurrencyEdit4: TcxCurrencyEdit;
-    cxCurrencyEdit5: TcxCurrencyEdit;
+    ceSummInsur: TcxCurrencyEdit;
+    ceSummPack: TcxCurrencyEdit;
+    ceSummPost: TcxCurrencyEdit;
+    ceSumm2: TcxCurrencyEdit;
     cxLabel16: TcxLabel;
     cxLabel17: TcxLabel;
     cxLabel19: TcxLabel;
     cxLabel20: TcxLabel;
-    cxCurrencyEdit6: TcxCurrencyEdit;
-    cxCurrencyEdit7: TcxCurrencyEdit;
-    cxCurrencyEdit8: TcxCurrencyEdit;
-    cxCurrencyEdit9: TcxCurrencyEdit;
+    ceTotalSummTaxPVAT: TcxCurrencyEdit;
+    ceTotalSummTaxMVAT: TcxCurrencyEdit;
+    ceTotalDiscountTax: TcxCurrencyEdit;
+    ceSumm3: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
-    cxCurrencyEdit10: TcxCurrencyEdit;
+    ceTotalSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public
