@@ -35,40 +35,22 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountOutWeight_fact
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight_fact
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,40 +61,22 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountOutWeight_fact
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight_fact
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
