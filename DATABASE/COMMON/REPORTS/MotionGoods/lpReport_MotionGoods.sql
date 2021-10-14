@@ -500,15 +500,20 @@ end if;
     -- Результат
     RETURN QUERY
           WITH 
-             tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+             tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                         , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                          , ObjectHistory_PriceListItem.StartDate
                                          , ObjectHistory_PriceListItem.EndDate
                                          , (ObjectHistoryFloat_PriceListItem_Value.ValueData * 1.2) :: TFloat AS ValuePrice
+                                         , ObjectLink_PriceListItem_PriceList.ObjectId AS PriceListItemId
 
                                      FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
                                           LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                                ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                               AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                          LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                               ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                              AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
                                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -925,7 +930,7 @@ end if;
                                                   ELSE 0
                                              END) AS SummInventory
 
-                                       , SUM (tmpPriceList_Basis.ValuePrice *                              
+                                       , SUM (COALESCE (tmpPriceList_Basis_gk.ValuePrice, tmpPriceList_Basis.ValuePrice) *                              
                                               CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                                         THEN MIContainer.Amount
@@ -971,8 +976,13 @@ end if;
                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
+                                       LEFT JOIN tmpPriceList_Basis AS tmpPriceList_Basis_gk
+                                                                    ON tmpPriceList_Basis_gk.GoodsId = _tmpContainer.GoodsId
+                                                                   AND (tmpPriceList_Basis_gk.StartDate <= MIContainer.OperDate AND MIContainer.OperDate < tmpPriceList_Basis_gk.EndDate)
+                                                                   AND tmpPriceList_Basis_gk.GoodsKindId = _tmpContainer.GoodsKindId
                                        LEFT JOIN tmpPriceList_Basis ON tmpPriceList_Basis.GoodsId = _tmpContainer.GoodsId
                                                                    AND (tmpPriceList_Basis.StartDate <= MIContainer.OperDate AND MIContainer.OperDate < tmpPriceList_Basis.EndDate)
+                                                                   AND tmpPriceList_Basis.GoodsKindId = 0
 
                                   GROUP BY _tmpContainer.ContainerDescId
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END

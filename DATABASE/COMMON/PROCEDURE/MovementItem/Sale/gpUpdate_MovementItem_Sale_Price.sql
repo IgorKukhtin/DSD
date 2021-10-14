@@ -62,10 +62,12 @@ BEGIN
                                                                                THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                           ELSE NULL
                                                                      END
-                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0 AND vbOperDate + INTERVAL '1 DAY' >=  (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
+                                               , inOperDatePartner:= -- т.к. есть факт. дата
+                                                                     (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                   /*CASE WHEN vbMovementId_order <> 0 AND vbOperDate + INTERVAL '1 DAY' >=  (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                                THEN NULL
                                                                           ELSE vbOperDate
-                                                                     END
+                                                                     END*/
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
                                                , inOperDatePartner_order:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_order AND MD.DescId = zc_MovementDate_OperDatePartner())
@@ -97,6 +99,10 @@ BEGIN
        AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
      ;
 
+if vbUserId = 5
+then
+    RAISE EXCEPTION 'Ошибка.<%>', vbOperDate;
+end if;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
