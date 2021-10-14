@@ -27,6 +27,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AssortmentSales Integer
              , CustomerThreshold TFloat
              , PriceCorrectionDay Integer
+             , isRequireUkrName Boolean
+             , isRemovingPrograms Boolean
              ) AS
 $BODY$
 BEGIN
@@ -59,6 +61,8 @@ BEGIN
         , ObjectFloat_CashSettings_AssortmentSales.ValueData::Integer              AS AssortmentSales
         , ObjectFloat_CashSettings_CustomerThreshold.ValueData                     AS CustomerThreshold
         , ObjectFloat_CashSettings_PriceCorrectionDay.ValueData::Integer           AS PriceCorrectionDay
+        , COALESCE(ObjectBoolean_CashSettings_RequireUkrName.ValueData, FALSE)     AS isRequireUkrName
+        , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)   AS isRemovingPrograms
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -120,6 +124,13 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
                                 ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RequireUkrName
+                                ON ObjectBoolean_CashSettings_RequireUkrName.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_RequireUkrName.DescId = zc_ObjectBoolean_CashSettings_RequireUkrName()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RemovingPrograms
+                                ON ObjectBoolean_CashSettings_RemovingPrograms.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_RemovingPrograms.DescId = zc_ObjectBoolean_CashSettings_RemovingPrograms()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id

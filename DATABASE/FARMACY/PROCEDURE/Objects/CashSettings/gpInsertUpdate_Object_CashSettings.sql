@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
+                                                           TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
+                                                           Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -23,6 +25,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inAssortmentSales            Integer   ,     -- Аптек аналитиков по продажам
     IN inCustomerThreshold          TFloat    ,     -- Порог срабатывание при заказе под клиента
     IN inPriceCorrectionDay         Integer   ,     -- Период дней для системы коррекции цены по итогам роста/падения средних продаж
+    IN inisRequireUkrName           Boolean   ,     -- Требовать заполнение Украинского названия
+    IN inisRemovingPrograms	        Boolean   ,     -- Удаление сторонних программ
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -88,6 +92,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);
    -- сохранили Аптек аналитиков по продажам
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_PairedOnlyPromo(), vbID, inisPairedOnlyPromo);
+
+   -- сохранили Требовать заполнение Украинского названия
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RequireUkrName(), vbID, inisRequireUkrName);
+   -- сохранили Удаление сторонних программ
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RemovingPrograms(), vbID, inisRemovingPrograms);
 
    -- сохранили Методы выбора аптек ассортимента
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CashSettings_MethodsAssortment(), vbID, inMethodsAssortmentGuidesId);

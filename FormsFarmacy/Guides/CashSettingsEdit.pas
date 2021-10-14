@@ -64,6 +64,8 @@ type
     cxLabel16: TcxLabel;
     cePriceCorrectionDay: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
+    cbRequireUkrName: TcxCheckBox;
+    cbRemovingPrograms: TcxCheckBox;
   private
     { Private declarations }
   public

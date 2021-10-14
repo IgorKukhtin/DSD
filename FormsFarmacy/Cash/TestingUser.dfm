@@ -470,4 +470,13 @@ object TestingUserForm: TTestingUserForm
     Left = 361
     Top = 238
   end
+  object spStartTest: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_StartTest'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 257
+    Top = 238
+  end
 end

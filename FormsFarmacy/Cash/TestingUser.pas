@@ -47,6 +47,7 @@ type
     imPossibleAnswer2: TcxImage;
     imPossibleAnswer3: TcxImage;
     imPossibleAnswer4: TcxImage;
+    spStartTest: TdsdStoredProc;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
@@ -418,6 +419,18 @@ begin
   if not FStart then Exit;
   cbLastMonth.Checked := MessageDlg('Здача экзамена за:'#13#10#13#10'Yes - текущий месяц'#13#10'No - прошлый месяц', mtInformation, mbYesNo, 0) <> mrYes;
 
+  try
+    spStartTest.Execute;
+  except on E:Exception do
+    begin
+      if pos('context', AnsilowerCase(e.Message)) > 0 then
+         ShowMessage(trim (Copy(e.Message, 1, pos('context', AnsilowerCase(e.Message)) - 1)))
+      else ShowMessage(e.Message);
+      FStart := False;
+      Exit;
+    end;
+  end;
+
   TaskCDS.First;
   SetQuestion;
 end;
@@ -477,6 +490,7 @@ procedure TTestingUserForm.CommitTest;
 begin
   if bOk.Visible then bOkClick(bOk);
   if not TaskCDS.Active then Exit;
+  if not FStart then Exit;
 
   cbLastMonth.Enabled := False;
   FPassed := True;
@@ -490,25 +504,22 @@ begin
     TaskCDS.Next;
   end;
 
-  if (Date >= EncodeDate(2021, 8, 1)) and (gc_User.Session <> '3') then
-  begin
-    try
-      actInsertUpdate_TestingUser.Params.ParamByName('ioId').Value := 0;
-      actInsertUpdate_TestingUser.Params.ParamByName('inUserId').Value := TitleCDS.FieldByName('UserId').AsInteger;
-      actInsertUpdate_TestingUser.Params.ParamByName('inResult').Value := RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, - 2);
-      if cbLastMonth.Checked then
-        actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := IncDay(Now, - DayOf(Date))
-      else actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := Now;
-      actInsertUpdate_TestingUser.Params.ParamByName('inLastMonth').Value := cbLastMonth.Checked;
-      actInsertUpdate_TestingUser.Execute;
-    except on E:Exception do
-      begin
-       if pos('context', AnsilowerCase(e.Message)) > 0 then
-          ShowMessage(trim (Copy(e.Message, 1, pos('context', AnsilowerCase(e.Message)) - 1)))
-       else ShowMessage(e.Message);
-      end;
+  try
+    actInsertUpdate_TestingUser.Params.ParamByName('ioId').Value := 0;
+    actInsertUpdate_TestingUser.Params.ParamByName('inUserId').Value := TitleCDS.FieldByName('UserId').AsInteger;
+    actInsertUpdate_TestingUser.Params.ParamByName('inResult').Value := RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, - 2);
+    if cbLastMonth.Checked then
+      actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := IncDay(Now, - DayOf(Date))
+    else actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := Now;
+    actInsertUpdate_TestingUser.Params.ParamByName('inLastMonth').Value := cbLastMonth.Checked;
+    actInsertUpdate_TestingUser.Execute;
+  except on E:Exception do
+    begin
+     if pos('context', AnsilowerCase(e.Message)) > 0 then
+        ShowMessage(trim (Copy(e.Message, 1, pos('context', AnsilowerCase(e.Message)) - 1)))
+     else ShowMessage(e.Message);
     end;
-  end else ShowMessage('Данные будут сохраняться с 01.08.21');
+  end;
 
   cxLabel3.Caption := 'Вопросов ' + IntToStr(TitleCDS.FieldByName('Question').AsInteger) + ' правельных ответов ' + IntToStr(nCorrect) +
     ' процент выполнения ' + CurrToStr(RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, -2)) + ' тест ' +
@@ -519,7 +530,7 @@ begin
 
   sgViewingResults.Visible := True;
   sgViewingResults.ColCount := TitleCDS.FieldByName('Question').AsInteger;
-  sgViewingResults.DefaultColWidth := (Panel1.Width - 4 - TitleCDS.FieldByName('Question').AsInteger) div TitleCDS.FieldByName('Question').AsInteger;
+  sgViewingResults.DefaultColWidth := (Panel1.Width - 4 - TitleCDS.FieldByName('Question').AsInteger) div TitleCDS.FieldByName('Question').AsInteger - 1;
 
   mePossibleAnswer1.Style.BorderColor := meQuestion.Style.BorderColor;
   mePossibleAnswer1.Style.TextColor := meQuestion.Style.TextColor;

@@ -486,6 +486,7 @@ begin
         //Дата/время чека (дата продажи)
         aSaleRequest.CheckDate:= TXSDateTime.Create;
         aSaleRequest.CheckDate.AsDateTime:= now;
+        aSaleRequest.CheckDate.HourOffset := 2;
         //Код карточки
         aSaleRequest.MdmCode := lCardNumber;
         //Тип продажи (0 коммерческий\1 акционный)
@@ -557,6 +558,7 @@ begin
                  //Дата прихода
                  Item.OrderDate:= TXSDateTime.Create;
                  Item.OrderDate.AsDateTime:= FInvoiceDate;
+                 Item.OrderDate.HourOffset := 2;
 
                 // Подготовили список для отправки
                 SetLength(SendList, i);
@@ -1247,6 +1249,7 @@ begin
     //Дата/время накладной
     aOrderRequest.OrderDate:= TXSDateTime.Create;
     aOrderRequest.OrderDate.AsDateTime:= lOperDate;
+    aOrderRequest.OrderDate.HourOffset := 2;
     //Тип накладной(1-Поставка\2-Возврат Дистрибьютору\3-Возврат Покупателя)
     aOrderRequest.OrderType := '1';
     //Код Орг-ции отправителя
@@ -1456,6 +1459,7 @@ begin
             Item.OrderCode := FInvoiceNumber;
             Item.OrderDate := TXSDateTime.Create;
             Item.OrderDate.AsDateTime := FInvoiceDate;
+            Item.OrderDate.HourOffset := 2;
 
             // Подготовили список для отправки
             SetLength(SendList, i);

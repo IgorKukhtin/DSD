@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -969,6 +968,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 92
+          end
+          object PharmacyManager: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+            DataBinding.FieldName = 'PharmacyManager'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
+          object PharmacyManagerPhone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+            DataBinding.FieldName = 'PharmacyManagerPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
         end
       end

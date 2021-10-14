@@ -40,7 +40,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 65
     Caption = '1. Summe EK :'
   end
-  object ceAmount: TcxCurrencyEdit
+  object ceTotalSummMVAT: TcxCurrencyEdit
     Left = 158
     Top = 64
     Properties.DecimalPlaces = 4
@@ -84,7 +84,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 88
     Caption = '- Rabbat %'
   end
-  object cxCurrencyEdit1: TcxCurrencyEdit
+  object ceDiscountTax: TcxCurrencyEdit
     Left = 158
     Top = 87
     Hint = '% '#1089#1082#1080#1076#1082#1080
@@ -147,7 +147,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 136
     Caption = '+ Versicherung Netto'
   end
-  object cxCurrencyEdit2: TcxCurrencyEdit
+  object ceSummInsur: TcxCurrencyEdit
     Left = 409
     Top = 135
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
@@ -158,7 +158,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 18
     Width = 74
   end
-  object cxCurrencyEdit3: TcxCurrencyEdit
+  object ceSummPack: TcxCurrencyEdit
     Left = 409
     Top = 111
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
@@ -169,7 +169,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 19
     Width = 74
   end
-  object cxCurrencyEdit4: TcxCurrencyEdit
+  object ceSummPost: TcxCurrencyEdit
     Left = 409
     Top = 87
     Hint = '% '#1089#1082#1080#1076#1082#1080
@@ -180,7 +180,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 20
     Width = 74
   end
-  object cxCurrencyEdit5: TcxCurrencyEdit
+  object ceSumm2: TcxCurrencyEdit
     Left = 409
     Top = 64
     Properties.DecimalPlaces = 4
@@ -210,7 +210,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 248
     Caption = '- Scontobetr Netto'
   end
-  object cxCurrencyEdit6: TcxCurrencyEdit
+  object ceTotalSummTaxPVAT: TcxCurrencyEdit
     Left = 158
     Top = 247
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
@@ -221,7 +221,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 26
     Width = 74
   end
-  object cxCurrencyEdit7: TcxCurrencyEdit
+  object ceTotalSummTaxMVAT: TcxCurrencyEdit
     Left = 158
     Top = 223
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
@@ -232,7 +232,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 27
     Width = 74
   end
-  object cxCurrencyEdit8: TcxCurrencyEdit
+  object ceTotalDiscountTax: TcxCurrencyEdit
     Left = 158
     Top = 199
     Hint = '% '#1089#1082#1080#1076#1082#1080
@@ -243,7 +243,7 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 28
     Width = 74
   end
-  object cxCurrencyEdit9: TcxCurrencyEdit
+  object ceSumm3: TcxCurrencyEdit
     Left = 158
     Top = 176
     Properties.DecimalPlaces = 4
@@ -258,7 +258,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 177
     Caption = '4. Gesamt :'
   end
-  object cxCurrencyEdit10: TcxCurrencyEdit
+  object ceTotalSumm: TcxCurrencyEdit
     Left = 409
     Top = 176
     Properties.DecimalPlaces = 4
@@ -357,7 +357,7 @@ object IncomeEditForm: TIncomeEditForm
       item
         Name = 'inAmount'
         Value = 2.000000000000000000
-        Component = ceAmount
+        Component = ceTotalSummMVAT
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -398,8 +398,8 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 380
-    Top = 224
+    Left = 356
+    Top = 208
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -439,75 +439,106 @@ object IncomeEditForm: TIncomeEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MovementItem_Income'
+    StoredProcName = 'gpGet_Movement_IncomeEdit'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsId'
+        Name = 'TotalSummMVAT'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Article'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount'
-        Value = Null
-        Component = ceAmount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CountForPrice'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperPriceList'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperPrice_orig'
-        Value = Null
+        Component = ceTotalSummMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'DiscountTax'
-        Value = Null
+        Value = ''
+        Component = ceDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperPrice'
+        Name = 'SummTaxMVAT'
         Value = Null
+        Component = ceSummTaxMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummIn'
+        Name = 'SummTaxPVAT'
         Value = Null
+        Component = ceSummTaxPVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Summ2'
+        Value = Null
+        Component = ceSumm2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPost'
+        Value = Null
+        Component = ceSummPost
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPack'
+        Value = Null
+        Component = ceSummPack
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummInsur'
+        Value = Null
+        Component = ceSummInsur
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Summ3'
+        Value = Null
+        Component = ceSumm3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalDiscountTax'
+        Value = Null
+        Component = ceTotalDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummTaxMVAT'
+        Value = Null
+        Component = ceTotalSummTaxMVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummTaxPVAT'
+        Value = Null
+        Component = ceTotalSummTaxPVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = ceTotalSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -625,7 +656,7 @@ object IncomeEditForm: TIncomeEditForm
     RefreshAction = actRefreshOperPriceList
     ComponentList = <
       item
-        Component = ceAmount
+        Component = ceTotalSummMVAT
       end
       item
       end
@@ -654,7 +685,7 @@ object IncomeEditForm: TIncomeEditForm
       item
         Name = 'inAmount'
         Value = Null
-        Component = ceAmount
+        Component = ceTotalSummMVAT
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -704,7 +735,7 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 216
+    Left = 392
+    Top = 280
   end
 end

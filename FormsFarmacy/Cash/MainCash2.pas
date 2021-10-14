@@ -2784,6 +2784,15 @@ begin
       if FUpdatePUSH = 11 then FUpdatePUSH := 0;
     end;
     Load_PUSH(false);
+
+    // Удалим Скайп
+    if UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean and (gc_User.Session <> '3') then
+    begin
+      UnitConfigCDS.Edit;
+      UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean := False;
+      UnitConfigCDS.Post;
+      ShellExecute(0,'open','powershell.exe','Get-AppxPackage *skypeapp* | Remove-AppxPackage', nil, SW_HIDE);
+    end;
   finally
     FPUSHStart := false;
     TimerPUSH.Enabled := True;

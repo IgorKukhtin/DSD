@@ -18,6 +18,7 @@ $BODY$
   DECLARE vbMovement Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbDateTest TDateTime;
+  DECLARE vbPositionCode Integer;
 BEGIN
 
   -- приводим дату к первому числу месяца
@@ -27,6 +28,22 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserId, inResult, inDateTest;
   END IF;
+
+  SELECT COALESCE(Object_Position.ObjectCode, 1)
+  INTO vbPositionCode
+  FROM Object AS Object_User
+
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+       LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                            ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                           AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                                             
+  WHERE Object_User.Id = vbUserId
+    AND Object_User.DescId = zc_Object_User();
 
   IF NOT EXISTS(SELECT Id FROM Movement WHERE DescId = zc_Movement_TestingUser() AND OperDate = vbOperDate)
   THEN
@@ -95,6 +112,12 @@ BEGIN
     IF vbAttempts = 0 OR vbResult < 85
     THEN 
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TestingUser_Attempts(), ioId, vbAttempts + 1);
+    END IF;
+    
+     -- Начисляем 500 грн штрафа
+    IF vbPositionCode = 1 AND vbResult < 85 AND inResult < 85  AND COALESCE(inLastMonth, FALSE) = FALSE AND inDateTest >= '01.11.2021' AND vbAttempts = 10
+    THEN
+      PERFORM gpUpdate_MovementItem_Wages_PenaltyExam (inOperDate := inDateTest, inUserID := inUserId, inSession := zfCalc_UserAdmin());
     END IF;
       
   END IF;

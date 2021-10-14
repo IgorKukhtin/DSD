@@ -1,81 +1,11 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
                                                    TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
                                                    Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
-                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
-                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, TVarChar);
+                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -150,6 +80,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inSerialNumberMypharmacy  Integer   ,    -- Серийный номер на сайте моя аптека
     IN inisBlockCommentSendTP    Boolean   ,    -- Бликировать коменты с формированием ТП
     
+    IN inPharmacyManager         TVarChar  ,    -- ФИО Зав. аптекой
+    IN inPharmacyManagerPhone    TVarChar  ,    -- Телефон Зав. аптекой
+
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -473,6 +406,11 @@ BEGIN
 
    --сохранили <Бликировать коменты с формированием ТП>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_BlockCommentSendTP(), ioId, inisBlockCommentSendTP);   
+
+   -- ФИО Зав. аптекой
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_PharmacyManager(), ioId, TRIM(inPharmacyManager));
+   -- Телефон Зав. аптекой
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_PharmacyManagerPhone(), ioId, TRIM(inPharmacyManagerPhone));
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

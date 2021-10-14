@@ -97,8 +97,8 @@ BEGIN
   , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
                                , MIContainer.WhereObjectId_analyzer          AS UnitId
                                , MIContainer.ObjectId_analyzer AS GoodsId
-                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                               , SUM (zfCalc_SummaCheck(COALESCE (MovementItem.Amount, 0) * COALESCE (MIContainer.Price,0)
+                               , SUM (COALESCE (-1.0 * MIContainer.Amount, 0)) AS Amount
+                               , SUM (zfCalc_SummaCheck(COALESCE (-1.0 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)
                                                       , COALESCE (MB_RoundingDown.ValueData, False)
                                                       , COALESCE (MB_RoundingTo10.ValueData, False)
                                                       , COALESCE (MB_RoundingTo50.ValueData, False))) AS SummaSale
@@ -492,3 +492,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_Movement_Check(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 -- SELECT * FROM gpReport_Movement_Check (inUnitId:= 183292, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+
+select * from gpReport_Movement_Check(inUnitId := 1781716 , inRetailId := 0 , inDateStart := ('13.10.2021')::TDateTime , inDateFinal := ('13.10.2021')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'False' ,  inSession := '3');

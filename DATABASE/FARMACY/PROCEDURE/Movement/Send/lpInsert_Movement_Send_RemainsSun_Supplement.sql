@@ -332,6 +332,23 @@ BEGIN
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
 
+/*     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
+        SELECT Object_Goods_Retail.ID
+             , Object_Goods_Retail.KoeffSUN_Supplementv1
+             , Null
+             , Null
+        FROM Object_Goods_Retail
+             INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+             INNER JOIN Container ON Container.ObjectId = Object_Goods_Retail.ID
+                                 AND Container.Amount <> 0 
+                                 AND Container.WhereObjectId in (SELECT OB.ObjectId
+                                                                 FROM ObjectBoolean AS OB
+                                                                 WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN())
+        WHERE Object_Goods_Retail.RetailID = vbObjectId
+          AND Object_Goods_Retail.ID > 389398
+        GROUP BY Object_Goods_Retail.ID
+              , Object_Goods_Retail.KoeffSUN_Supplementv1;*/
+              
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
@@ -1049,5 +1066,4 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
--- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.08.2021')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.10.2021')::TDateTime ,  inSession := '3');

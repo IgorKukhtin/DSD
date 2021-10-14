@@ -165,6 +165,10 @@ type
     ceSerialNumberMypharmacy: TcxCurrencyEdit;
     cxLabel49: TcxLabel;
     cbBlockCommentSendTP: TcxCheckBox;
+    edPharmacyManagerPhone: TcxTextEdit;
+    cxLabel50: TcxLabel;
+    edPharmacyManager: TcxTextEdit;
+    cxLabel51: TcxLabel;
   private
     { Private declarations }
   public
