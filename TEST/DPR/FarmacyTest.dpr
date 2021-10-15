@@ -1110,7 +1110,9 @@ uses
   BanCommentSendEdit in '..\..\FormsFarmacy\Guides\BanCommentSendEdit.pas' {BanCommentSendEditForm: TParentForm},
   BanCommentSend in '..\..\FormsFarmacy\Guides\BanCommentSend.pas' {BanCommentSendForm: TParentForm},
   GoodsSP_Movement_Cash in '..\..\FormsFarmacy\Document\GoodsSP_Movement_Cash.pas' {GoodsSP_Movement_CashForm: TParentForm},
-  GoodsSPJournal_Cash in '..\..\FormsFarmacy\Document\GoodsSPJournal_Cash.pas' {GoodsSPJournal_CashForm: TParentForm};
+  GoodsSPJournal_Cash in '..\..\FormsFarmacy\Document\GoodsSPJournal_Cash.pas' {GoodsSPJournal_CashForm: TParentForm},
+  Report_TopListDiffGoodsDialog in '..\..\FormsFarmacy\Report\Report_TopListDiffGoodsDialog.pas' {Report_TopListDiffGoodsDialogForm: TParentForm},
+  Report_TopListDiffGoods in '..\..\FormsFarmacy\Report\Report_TopListDiffGoods.pas' {Report_TopListDiffGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

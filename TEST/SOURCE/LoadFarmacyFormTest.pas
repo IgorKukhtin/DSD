@@ -1045,10 +1045,15 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCorrectionSystemForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TopListDiffGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TopListDiffGoodsDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TopListDiffGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TopListDiffGoodsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceCorrectionSystemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceCorrectionSystemForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckZReportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckZReportDialogForm');

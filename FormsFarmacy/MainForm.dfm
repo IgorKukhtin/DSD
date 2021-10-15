@@ -4743,6 +4743,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_TopListDiffGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1058#1086#1087' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1083#1080#1089#1090#1072#1093' '#1086#1090#1082#1072#1079#1086#1074
+      FormName = 'TReport_TopListDiffGoodsForm'
+      FormNameParam.Value = 'TReport_TopListDiffGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5509,6 +5520,9 @@
       end
       object N311: TMenuItem
         Action = actReport_LayoutCheckRemains
+      end
+      object N323: TMenuItem
+        Action = actReport_TopListDiffGoods
       end
     end
     object N36: TMenuItem [5]

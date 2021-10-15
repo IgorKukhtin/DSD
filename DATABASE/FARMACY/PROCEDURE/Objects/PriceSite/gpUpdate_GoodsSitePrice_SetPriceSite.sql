@@ -44,6 +44,7 @@ BEGIN
     IF EXISTS(SELECT tmp.GoodsId
               FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
               WHERE tmp.GoodsId = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId AND Object_Goods_Retail.RetailId = 4))
+      AND COALESCE (inID, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Переоценивать товар соц проекта нельзя.';
     END IF;

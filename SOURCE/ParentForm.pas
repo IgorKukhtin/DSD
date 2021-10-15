@@ -708,6 +708,7 @@ initialization
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
   RegisterClass (THeaderChanger);
+  RegisterClass (THeaderExit);
   RegisterClass (TInsertRecord);
   RegisterClass (TInsertUpdateChoiceAction);
   RegisterClass (TMultiAction);

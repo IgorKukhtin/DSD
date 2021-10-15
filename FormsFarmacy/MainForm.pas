@@ -880,6 +880,8 @@ type
     N321: TMenuItem;
     actBanCommentSend: TdsdOpenForm;
     N322: TMenuItem;
+    actReport_TopListDiffGoods: TdsdOpenForm;
+    N323: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

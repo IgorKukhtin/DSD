@@ -817,6 +817,48 @@ type
     property Action: TCustomAction read FAction write FAction;
   end;
 
+  TExitListItem = class(TCollectionItem)
+  private
+    FControl: TWinControl;
+    FOnExit: TNotifyEvent;
+    FOnEnter: TNotifyEvent;
+    FValue: Variant;
+
+    procedure SetControl(const Value: TWinControl);
+    procedure OnExit(Sender: TObject);
+    procedure OnEnter(Sender: TObject);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Control: TWinControl read FControl write SetControl;
+  end;
+
+  TExitList = class(TOwnedCollection)
+  private
+    function GetExitListItem(Index: Integer): TExitListItem;
+    procedure SetExitListItem(Index: Integer; const Value: TExitListItem);
+  public
+    function Add: TExitListItem;
+    property Items[Index: Integer]: TExitListItem read GetExitListItem write SetExitListItem; default;
+  end;
+
+  // Âûçûâàåò Àêøèí ïðè óõîäå ñ êîìïîíåíòà åñëè èçìåíèëîñü çíà÷åíèå
+  THeaderExit = class(TComponent)
+  private
+    FExitList: TExitList;
+    FAction: TCustomAction;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property ExitList: TExitList read FExitList write FExitList;
+    property Action: TCustomAction read FAction write FAction;
+  end;
+
   TRefreshAddOn = class(TComponent)
   private
     FFormName: string;
@@ -1217,7 +1259,8 @@ begin
     TdsdEnterManager,
     TdsdFileToBase64,
     TdsdFieldFilter,
-    TdsdPropertiesÑhange
+    TdsdPropertiesÑhange,
+    THeaderExit
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -4593,6 +4636,222 @@ begin
       (Sender is TcxComboBox) or
       (Sender is TcxDateNavigator) then
       Action.Execute;
+end;
+
+{ TExitListItem }
+
+procedure TExitListItem.Assign(Source: TPersistent);
+begin
+  if Source is TExitListItem then
+    Self.Control := (Source as TExitListItem).Control
+  else
+    inherited Assign(Source);
+end;
+
+function TExitListItem.GetDisplayName: string;
+begin
+  if Control <> nil then
+    Result := Control.Name
+  else
+    Result := inherited GetDisplayName;
+end;
+
+procedure TExitListItem.SetControl(const Value: TWinControl);
+begin
+  if Value <> FControl then
+  begin
+
+    if Assigned(FControl) then
+    begin
+      if FControl is TcxTextEdit then
+      begin
+        TcxTextEdit(FControl).OnEnter := FOnEnter;
+        TcxTextEdit(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxMemo then
+      begin
+        TcxMemo(FControl).OnEnter := FOnEnter;
+        TcxMemo(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxMaskEdit then
+      begin
+        TcxMaskEdit(FControl).OnEnter := FOnEnter;
+        TcxMaskEdit(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxDateEdit then
+      begin
+        TcxDateEdit(FControl).OnEnter := FOnEnter;
+        TcxDateEdit(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxButtonEdit then
+      begin
+        TcxButtonEdit(FControl).OnEnter := FOnEnter;
+        TcxButtonEdit(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxCheckBox then
+      begin
+        TcxCheckBox(FControl).OnEnter := FOnEnter;
+        TcxCheckBox(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxCurrencyEdit then
+      begin
+        TcxCurrencyEdit(FControl).OnEnter := FOnEnter;
+        TcxCurrencyEdit(FControl).OnExit := FOnExit;
+      end;
+      if FControl is TcxComboBox then
+      begin
+        TcxComboBox(FControl).OnEnter := FOnEnter;
+        TcxComboBox(FControl).OnExit := FOnExit;
+      end;
+    end;
+
+    FControl := Value;
+
+    if Assigned(FControl) then
+    begin
+      if FControl is TcxTextEdit then
+      begin
+        FOnEnter := TcxTextEdit(FControl).OnEnter;
+        FOnExit := TcxTextEdit(FControl).OnExit;
+        TcxTextEdit(FControl).OnEnter := OnEnter;
+        TcxTextEdit(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxMemo then
+      begin
+        FOnEnter := TcxMemo(FControl).OnEnter;
+        FOnExit := TcxMemo(FControl).OnExit;
+        TcxMemo(FControl).OnEnter := OnEnter;
+        TcxMemo(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxMaskEdit then
+      begin
+        FOnEnter := TcxMaskEdit(FControl).OnEnter;
+        FOnExit := TcxMaskEdit(FControl).OnExit;
+        TcxMaskEdit(FControl).OnEnter := OnEnter;
+        TcxMaskEdit(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxDateEdit then
+      begin
+        FOnEnter := TcxDateEdit(FControl).OnEnter;
+        FOnExit := TcxDateEdit(FControl).OnExit;
+        TcxDateEdit(FControl).OnEnter := OnEnter;
+        TcxDateEdit(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxButtonEdit then
+      begin
+        FOnEnter := TcxButtonEdit(FControl).OnEnter;
+        FOnExit := TcxButtonEdit(FControl).OnExit;
+        TcxButtonEdit(FControl).OnEnter := OnEnter;
+        TcxButtonEdit(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxCheckBox then
+      begin
+        FOnEnter := TcxCheckBox(FControl).OnEnter;
+        FOnExit := TcxCheckBox(FControl).OnExit;
+        TcxCheckBox(FControl).OnEnter := OnEnter;
+        TcxCheckBox(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxCurrencyEdit then
+      begin
+        FOnEnter := TcxCurrencyEdit(FControl).OnEnter;
+        FOnExit := TcxCurrencyEdit(FControl).OnExit;
+        TcxCurrencyEdit(FControl).OnEnter := OnEnter;
+        TcxCurrencyEdit(FControl).OnExit := OnExit;
+      end;
+      if FControl is TcxComboBox then
+      begin
+        FOnEnter := TcxComboBox(FControl).OnEnter;
+        FOnExit := TcxComboBox(FControl).OnExit;
+        TcxComboBox(FControl).OnEnter := OnEnter;
+        TcxComboBox(FControl).OnExit := OnExit;
+      end;
+    end;
+  end;
+end;
+
+procedure TExitListItem.OnExit(Sender: TObject);
+  var isChanged : Boolean;
+begin
+  if Assigned(FOnExit) then FOnExit(Sender);
+
+  isChanged := False;
+  if (Sender is TcxTextEdit) and (FValue <> TcxTextEdit(Sender).Text) then isChanged := True;
+  if (Sender is TcxMemo) and (FValue <> TcxMemo(Sender).Text) then isChanged := True;
+  if (Sender is TcxMaskEdit) and (FValue <> TcxMaskEdit(Sender).Text) then isChanged := True;
+  if (Sender is TcxDateEdit) and (FValue <> TcxDateEdit(Sender).Date) then isChanged := True;
+  if (Sender is TcxButtonEdit) and (FValue <> TcxButtonEdit(Sender).Text) then isChanged := True;
+  if (Sender is TcxCheckBox) and (FValue <> TcxCheckBox(Sender).Checked) then isChanged := True;
+  if (Sender is TcxCurrencyEdit) and (FValue <> TcxCurrencyEdit(Sender).Value) then isChanged := True;
+  if (Sender is TcxComboBox) and (FValue <> TcxComboBox(Sender).Text) then isChanged := True;
+  if isChanged and Assigned(THeaderExit(Collection.Owner).Action) then THeaderExit(Collection.Owner).Action.Execute;
+end;
+
+procedure TExitListItem.OnEnter(Sender: TObject);
+begin
+  if Assigned(FOnEnter) then FOnEnter(Sender);
+
+  if Sender is TcxTextEdit then FValue := TcxTextEdit(Sender).Text;
+  if Sender is TcxMemo then FValue := TcxMemo(Sender).Text;
+  if Sender is TcxMaskEdit then FValue := TcxMaskEdit(Sender).Text;
+  if Sender is TcxDateEdit then FValue := TcxDateEdit(Sender).Date;
+  if Sender is TcxButtonEdit then FValue := TcxButtonEdit(Sender).Text;
+  if Sender is TcxCheckBox then FValue := TcxCheckBox(Sender).Checked;
+  if Sender is TcxCurrencyEdit then FValue := TcxCurrencyEdit(Sender).Value;
+  if Sender is TcxComboBox then FValue := TcxComboBox(Sender).Text;
+end;
+
+{ TExitList }
+
+function TExitList.Add: TExitListItem;
+begin
+  Result := inherited Add as TExitListItem;
+end;
+
+function TExitList.GetExitListItem(Index: Integer): TExitListItem;
+begin
+  Result := inherited GetItem(Index) as TExitListItem
+end;
+
+procedure TExitList.SetExitListItem(Index: Integer; const Value: TExitListItem);
+begin
+  inherited SetItem(Index, Value);
+end;
+
+{ THeaderExit }
+
+constructor THeaderExit.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FExitList := TExitList.Create(Self, TExitListItem);
+end;
+
+destructor THeaderExit.Destroy;
+begin
+  FExitList.Free;
+  inherited;
+end;
+
+procedure THeaderExit.Notification(AComponent: TComponent; Operation: TOperation);
+var
+  I: Integer;
+begin
+  inherited Notification(AComponent, Operation);
+
+  if csDesigning in ComponentState then
+    if Operation = opRemove then
+    begin
+      if AComponent is TControl then
+      begin
+        for I := 0 to Pred(ExitList.Count) do
+          if ExitList[I].Control = AComponent then
+          begin
+            ExitList[I].Control := nil;
+          end;
+      end;
+
+      if AComponent = Action then
+        Action := nil;
+    end;
 end;
 
 { TGeoMarker }
