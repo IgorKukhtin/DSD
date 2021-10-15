@@ -650,25 +650,6 @@ object IncomeEditForm: TIncomeEditForm
     Left = 456
     Top = 272
   end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshOperPriceList
-    ComponentList = <
-      item
-        Component = ceTotalSummMVAT
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end>
-    Left = 320
-    Top = 288
-  end
   object spUpdate_Price: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Income_Price'
     DataSets = <>
@@ -737,5 +718,38 @@ object IncomeEditForm: TIncomeEditForm
     PackSize = 1
     Left = 392
     Top = 280
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end>
+    Action = actRefreshOperPriceList
+    Left = 328
+    Top = 160
   end
 end

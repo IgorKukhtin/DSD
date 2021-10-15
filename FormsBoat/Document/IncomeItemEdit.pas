@@ -49,7 +49,6 @@ type
     edFrom: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
     spGet_OperPriceList: TdsdStoredProc;
-    RefreshDispatcher: TRefreshDispatcher;
     actRefresh_Price: TdsdDataSetRefresh;
     spUpdate_Price: TdsdStoredProc;
     actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
@@ -65,6 +64,7 @@ type
     ceSummIn: TcxCurrencyEdit;
     HeaderChanger: THeaderChanger;
     dsdDataSetRefresh1: TdsdDataSetRefresh;
+    HeaderExit: THeaderExit;
   private
     { Private declarations }
   public

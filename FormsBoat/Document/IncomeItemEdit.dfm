@@ -249,6 +249,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actFormClose: TdsdFormClose
@@ -742,29 +743,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Left = 416
     Top = 8
   end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh_Price
-    ComponentList = <
-      item
-        Component = ceAmount
-      end
-      item
-        Component = ceOperPrice_orig
-      end
-      item
-        Component = ceDiscountTax
-      end
-      item
-        Component = ceOperPrice
-      end
-      item
-        Component = ceSummIn
-      end>
-    Left = 224
-    Top = 128
-  end
   object spUpdate_Price: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Income_Price'
     DataSets = <>
@@ -860,5 +838,26 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     Left = 264
     Top = 61
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = ceAmount
+      end
+      item
+        Control = ceOperPrice_orig
+      end
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceOperPrice
+      end
+      item
+        Control = ceSummIn
+      end>
+    Action = actRefresh_Price
+    Left = 352
+    Top = 232
   end
 end
