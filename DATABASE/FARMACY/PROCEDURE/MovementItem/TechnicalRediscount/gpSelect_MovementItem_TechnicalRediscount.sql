@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TechnicalRediscount(
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, DiffSumm TFloat
+             , Amount TFloat, DiffSumm TFloat, isDeferred Boolean
              , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar, Explanation TVarChar
              , Price TFloat
              , isErased Boolean
@@ -129,6 +129,7 @@ BEGIN
                                              , MovementItem.Amount                                                 AS Amount
                                              , MovementItem.isErased                                               AS isErased
                                              , REMAINS.minExpirationDate 
+                                             , COALESCE (MIBoolean_Deferred.ValueData, FALSE)                      AS isDeferred
                                              , MIString_Comment.ValueData                                          AS Comment
                                              , MovementSend.ID                                                     AS IDSend
                                              , MovementSend.InvNumber                                              AS InvNumberSend
@@ -140,6 +141,11 @@ BEGIN
                                              LEFT JOIN MovementItemString AS MIString_Comment
                                                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                                             LEFT JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                                           ON MIBoolean_Deferred.MovementItemId = MovementItem.Id
+                                                                          AND MIBoolean_Deferred.DescId = zc_MIBoolean_Deferred()
+
                                              LEFT JOIN tmpMIFloat AS MIFloat_MISendId
                                                                   ON MIFloat_MISendId.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
@@ -158,6 +164,7 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm
+              , MovementItem.isDeferred                                             AS isDeferred
 
               , Object_CommentTR.Id                                                 AS CommentTRId
               , Object_CommentTR.ObjectCode                                         AS CommentTRCode
@@ -312,6 +319,7 @@ BEGIN
                                              , MovementItem.GoodsId                                                AS GoodsId
                                              , MovementItem.Amount                                                 AS Amount
                                              , MovementItem.isErased                                               AS isErased
+                                             , COALESCE (MIBoolean_Deferred.ValueData, FALSE)                      AS isDeferred
                                              , MIString_Comment.ValueData                                          AS Comment
 
                                              , MovementSend.ID                                                     AS IDSend
@@ -322,6 +330,10 @@ BEGIN
                                              LEFT JOIN MovementItemString AS MIString_Comment
                                                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                                             LEFT JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                                           ON MIBoolean_Deferred.MovementItemId = MovementItem.Id
+                                                                          AND MIBoolean_Deferred.DescId = zc_MIBoolean_Deferred()
 
                                              LEFT JOIN tmpMIFloat AS MIFloat_MISendId
                                                                   ON MIFloat_MISendId.MovementItemId = MovementItem.Id
@@ -347,6 +359,7 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS DiffSumm
+              , MovementItem.isDeferred                                             AS isDeferred
 
               , Object_CommentTR.Id                                                 AS CommentTRId
               , Object_CommentTR.ObjectCode                                         AS CommentTRCode
@@ -509,6 +522,7 @@ BEGIN
                                              , MovementItem.Amount                                                 AS Amount
                                              , MovementItem.isErased                                               AS isErased
                                              , COALESCE(REMAINS.Amount, 0)                                         AS Remains
+                                             , COALESCE (MIBoolean_Deferred.ValueData, FALSE)                      AS isDeferred
                                              , REMAINS.minExpirationDate 
                                              , MIString_Comment.ValueData                                          AS Comment
                                              , MovementSend.ID                                                     AS IDSend
@@ -521,10 +535,15 @@ BEGIN
                                              LEFT JOIN MovementItemString AS MIString_Comment
                                                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                                             LEFT JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                                           ON MIBoolean_Deferred.MovementItemId = MovementItem.Id
+                                                                          AND MIBoolean_Deferred.DescId = zc_MIBoolean_Deferred()
+
                                              LEFT JOIN tmpMIFloat AS MIFloat_MISendId
                                                                   ON MIFloat_MISendId.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
-                                                                         
+                                                                                                                                          
                                              LEFT JOIN MovementItem AS MISend ON MISend.ID = MIFloat_MISendId.ValueData::Integer
 
                                              LEFT JOIN Movement AS MovementSend ON MovementSend.ID = MISend.MovementId
@@ -539,6 +558,7 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (tmpPrice.Price, 0)) :: TFloat AS DiffSumm
+              , MovementItem.isDeferred                                             AS isDeferred
 
               , Object_CommentTR.Id                                                 AS CommentTRId
               , Object_CommentTR.ObjectCode                                         AS CommentTRCode

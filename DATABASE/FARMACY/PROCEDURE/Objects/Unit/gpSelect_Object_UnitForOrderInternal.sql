@@ -76,7 +76,8 @@ BEGIN
                              ON Object_Unit.id = ObjectLinkJuridical.objectid 
                             AND ObjectLinkJuridical.descid = zc_ObjectLink_Unit_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
-    -- WHERE Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitUnitId()
+    WHERE ObjectLinkJuridical.childobjectid <> 393053
+      AND Object_Unit.ValueData NOT ILIKE '%«¿ –€“¿%'
     ;
             
 END;
@@ -96,3 +97,5 @@ ALTER FUNCTION gpSelect_Object_UnitForOrderInternal(Boolean,TVarChar) OWNER TO p
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_UnitForReprice ('2')
+
+select * from gpSelect_Object_UnitForOrderInternal(inSelectAll := 'False' ,  inSession := '3');

@@ -169,10 +169,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_MandatoryQuestion() RETURNS Integer AS $
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_MandatoryQuestion', 'Обязательный вопрос' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_MandatoryQuestion'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_Deferred() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Deferred'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_Deferred', 'Отложено' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Deferred'); 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 15.10.21                                                                       * zc_MIBoolean_Deferred
  06.09.21                                                                       * zc_MIBoolean_MandatoryQuestion
  25.08.21         * zc_MIBoolean_BonusNo
  29.07.21                                                                       * zc_MIBoolean_OrderInternal

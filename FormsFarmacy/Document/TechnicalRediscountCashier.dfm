@@ -179,6 +179,13 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
             Styles.Footer = dmMain.cxRemainsCashContentStyle
             Width = 70
           end
+          object isDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
           object CommentTRName: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'CommentTRName'
@@ -546,6 +553,30 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         end>
       Caption = 'actPUSH'
     end
+    object msctUpdate_Deferred: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_Deferred
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1082#1072#1089#1089#1077'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 80
+    end
+    object actUpdate_Deferred: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Deferred
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Deferred
+        end>
+      Caption = 'actUpdate_Deferred'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -601,6 +632,10 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Deferred'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -639,6 +674,10 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     end
     object dxBarButton2: TdxBarButton
       Action = actAddMask
+      Category = 0
+    end
+    object bbUpdate_Deferred: TdxBarButton
+      Action = msctUpdate_Deferred
       Category = 0
     end
   end
@@ -903,43 +942,11 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 654
     Top = 248
   end
@@ -1020,6 +1027,15 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1111,7 +1127,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1290,5 +1306,50 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     PackSize = 1
     Left = 322
     Top = 344
+  end
+  object spUpdate_Deferred: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TechnicalRediscount_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 784
+    Top = 224
   end
 end

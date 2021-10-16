@@ -68,6 +68,11 @@ type
     actComplete: TdsdExecStoredProc;
     spMovementComplete: TdsdStoredProc;
     bbComplete: TdxBarButton;
+    isDeferred: TcxGridDBColumn;
+    spUpdate_Deferred: TdsdStoredProc;
+    msctUpdate_Deferred: TMultiAction;
+    actUpdate_Deferred: TdsdExecStoredProc;
+    bbUpdate_Deferred: TdxBarButton;
   private
     { Private declarations }
   public

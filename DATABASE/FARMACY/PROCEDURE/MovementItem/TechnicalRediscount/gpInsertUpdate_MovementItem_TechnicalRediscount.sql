@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
     IN inCommentTRID         Integer   , -- Комментарий
     IN isExplanation         TVarChar  , -- Количество
     IN isComment             TVarChar  , -- Комментарий 2
+    IN inisDeferred          Boolean   , -- Отложено в кассе
    OUT outDiffSumm           TFloat    , --
    OUT outRemains_FactAmount TFloat    , --
    OUT outRemains_FactSumm   TFloat    , --
@@ -40,6 +41,11 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
      END IF;
 
+     IF COALESCE(inAmount, 0) > 0 and COALESCE (inisDeferred, FALSE) = True
+     THEN
+       RAISE EXCEPTION 'Ошибка. Устанавливать признак <Отложено в кассе> можно только при недостаче.';
+     END IF;
+     
      IF EXISTS(SELECT 1 FROM MovementItemFloat
                WHERE MovementItemFloat.MovementItemId = ioId
                  AND MovementItemFloat.DescId = zc_MIFloat_MovementItemId())
@@ -118,7 +124,14 @@ BEGIN
          END IF;
      END IF;
 
-     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, isComment, vbUserId);
+     -- Сохранили <Отложено в кассе>
+     IF COALESCE (inisDeferred, False) = TRUE OR EXISTS (SELECT 1 FROM MovementItemBoolean 
+                                                         WHERE MovementItemBoolean.DescId = zc_MIBoolean_Deferred() AND MovementItemBoolean.MovementItemId = ioId)
+     THEN
+       PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Deferred(), ioId, inisDeferred);
+     END IF;
+
+     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, isComment, inisDeferred, vbUserId);
 
      outDiffSumm           := inAmount * inPrice;
      outRemains_FactAmount := inRemains_Amount + inAmount;
@@ -127,7 +140,6 @@ BEGIN
      outDeficitSumm        := CASE WHEN inAmount < 0 THEN - inAmount * inPrice ELSE 0 END;
      outProficit           := CASE WHEN inAmount > 0 THEN inAmount ELSE 0 END;
      outProficitSumm       := CASE WHEN inAmount > 0 THEN inAmount * inPrice ELSE 0 END;
-
 
 END;
 $BODY$

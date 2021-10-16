@@ -296,6 +296,7 @@ BEGIN
                            , inCommentTRID  := COALESCE (MISend.CommentTRId, MILinkObject_CommentTR.ObjectId)
                            , isExplanation  := COALESCE (MIString_Explanation.ValueData , '')
                            , isComment      := 'Коррекция СУН'
+                           , inisDeferred   := False
                            , inUserId       := vbUserId)                                  AS MITechnicalRediscountId
               FROM _tmpOccupancySUN AS MISend
 

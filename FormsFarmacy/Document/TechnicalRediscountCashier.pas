@@ -57,6 +57,11 @@ type
     InvNumberSend: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     cbCorrectionSUN: TcxCheckBox;
+    isDeferred: TcxGridDBColumn;
+    msctUpdate_Deferred: TMultiAction;
+    actUpdate_Deferred: TdsdExecStoredProc;
+    spUpdate_Deferred: TdsdStoredProc;
+    bbUpdate_Deferred: TdxBarButton;
   private
     { Private declarations }
   public

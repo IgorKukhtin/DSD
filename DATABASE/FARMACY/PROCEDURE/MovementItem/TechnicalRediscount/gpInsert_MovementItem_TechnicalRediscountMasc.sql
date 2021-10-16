@@ -22,7 +22,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Товар уже использован в техническом переучете.';     
      END IF;
 
-     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(0, inMovementId, inGoodsId, inAmount, 0, '', '', vbUserId);
+     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(0, inMovementId, inGoodsId, inAmount, 0, '', '', False, vbUserId);
 
 
 END;

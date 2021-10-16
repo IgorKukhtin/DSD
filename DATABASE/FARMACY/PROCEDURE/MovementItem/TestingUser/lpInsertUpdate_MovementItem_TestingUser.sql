@@ -24,11 +24,6 @@ BEGIN
   -- приводим дату к первому числу мес€ца
   vbOperDate := date_trunc('month', inDateTest);
   
-  IF inUserId = 3
-  THEN
-    RAISE EXCEPTION '“ест прошел успешно дл€ <%> <%> <%>', inUserId, inResult, inDateTest;
-  END IF;
-
   SELECT COALESCE(Object_Position.ObjectCode, 1)
   INTO vbPositionCode
   FROM Object AS Object_User
@@ -42,9 +37,9 @@ BEGIN
                            AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
                                              
-  WHERE Object_User.Id = vbUserId
+  WHERE Object_User.Id = inUserId
     AND Object_User.DescId = zc_Object_User();
-
+    
   IF NOT EXISTS(SELECT Id FROM Movement WHERE DescId = zc_Movement_TestingUser() AND OperDate = vbOperDate)
   THEN
     vbMovement := lpInsertUpdate_Movement_TestingUser(ioId          := 0,
@@ -123,7 +118,13 @@ BEGIN
   END IF;
 
    -- сохранили протокол
-  -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+  -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
+
+  IF inUserId = 3
+  THEN
+    RAISE EXCEPTION '“ест прошел успешно дл€ <%> <%> <%>', inUserId, inResult, inDateTest;
+  END IF;
+
 
 END;
 $BODY$

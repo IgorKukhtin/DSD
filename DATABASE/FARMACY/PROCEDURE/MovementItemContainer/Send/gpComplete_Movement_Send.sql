@@ -51,6 +51,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
     END IF;
      
+    -- проверка
+    IF NOT EXISTS (SELECT 1
+                   FROM MovementItem
+                   WHERE MovementItem.MovementId = inMovementId
+                     AND MovementItem.isErased = FALSE
+                     AND MovementItem.Amount > 0
+                     AND MovementItem.DescId = zc_MI_Master())
+    THEN
+        RAISE EXCEPTION 'Error. Нет данных для проведения.';
+    END IF;
+    
     -- параметры документа
     SELECT
         Movement.OperDate,

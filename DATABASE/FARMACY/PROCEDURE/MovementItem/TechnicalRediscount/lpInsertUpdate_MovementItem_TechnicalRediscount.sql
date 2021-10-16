@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TechnicalRediscount(
     IN inCommentTRID         Integer   , -- Комментарий
     IN isExplanation         TVarChar  , -- Пояснение
     IN isComment             TVarChar  , -- Комментарий 2
+    IN inisDeferred          Boolean   , -- Отложено в кассе
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -31,6 +32,13 @@ BEGIN
      -- Сохранили <Комментарий 2>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, isComment);
 
+     -- Сохранили <Отложено в кассе>
+     IF COALESCE (inisDeferred, False) = TRUE OR EXISTS (SELECT 1 FROM MovementItemBoolean 
+                                                         WHERE MovementItemBoolean.DescId = zc_MIBoolean_Deferred() AND MovementItemBoolean.MovementItemId = ioId)
+     THEN
+       PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Deferred(), ioId, inisDeferred);
+     END IF;
+
      PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff (inMovementId);
 
     -- сохранили протокол
@@ -47,4 +55,3 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
-
