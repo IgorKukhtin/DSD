@@ -93,6 +93,9 @@ type
     cbIsAllPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
     actInsertMaskMulti: TMultiAction;
+    CountDayPromo: TcxGridDBColumn;
+    CountDaySale: TcxGridDBColumn;
+    CountDayOperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

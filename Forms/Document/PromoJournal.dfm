@@ -190,6 +190,30 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1087#1086' '#1072#1082#1094#1080#1086#1085#1085#1086#1081' '#1094#1077#1085#1077
             Width = 70
           end
+          object CountDayPromo: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'CountDayPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountDaySale: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'CountDaySale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountDayOperDate: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1040#1085#1072#1083#1086#1075#1080#1095#1085'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'CountDayOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
           object CostPromo: TcxGridDBColumn
             Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
             DataBinding.FieldName = 'CostPromo'
@@ -437,36 +461,7 @@ inherited PromoJournalForm: TPromoJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TPromoForm'
-      FormNameParam.Value = 'TPromoForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMask'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actUpdate: TdsdInsertUpdateAction [4]
+    inherited actUpdate: TdsdInsertUpdateAction [1]
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
       GuiParams = <
@@ -498,41 +493,72 @@ inherited PromoJournalForm: TPromoJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [5]
+    inherited actUnComplete: TdsdChangeMovementStatus [2]
     end
-    inherited actComplete: TdsdChangeMovementStatus [6]
+    inherited actComplete: TdsdChangeMovementStatus [3]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [7]
+    inherited actSetErased: TdsdChangeMovementStatus [4]
     end
-    inherited actReCompleteList: TMultiAction [8]
+    inherited actRefresh: TdsdDataSetRefresh [5]
     end
-    inherited actCompleteList: TMultiAction [9]
+    inherited actGridToExcel: TdsdGridToExcel [6]
     end
-    inherited actUnCompleteList: TMultiAction [10]
+    inherited actInsert: TdsdInsertUpdateAction [7]
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
     end
-    inherited actSetErasedList: TMultiAction [11]
+    inherited mactReCompleteList: TMultiAction [8]
     end
-    inherited actMovementItemContainer: TdsdOpenForm [12]
+    inherited actMovementItemContainer: TdsdOpenForm [9]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [13]
+    inherited mactCompleteList: TMultiAction [10]
     end
-    inherited actShowErased: TBooleanStoredProcAction [14]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [11]
     end
-    inherited spReCompete: TdsdExecStoredProc [15]
+    inherited mactUnCompleteList: TMultiAction [12]
     end
-    inherited spCompete: TdsdExecStoredProc [16]
+    inherited actShowErased: TBooleanStoredProcAction [13]
     end
-    inherited spUncomplete: TdsdExecStoredProc [17]
+    inherited spReCompete: TdsdExecStoredProc [14]
     end
-    inherited spErased: TdsdExecStoredProc [18]
+    inherited spCompete: TdsdExecStoredProc [15]
     end
-    inherited actSimpleCompleteList: TMultiAction [19]
+    inherited spUncomplete: TdsdExecStoredProc [16]
     end
-    inherited actSimpleUncompleteList: TMultiAction [20]
+    inherited spErased: TdsdExecStoredProc [17]
     end
-    inherited actSimpleReCompleteList: TMultiAction [21]
+    inherited mactSetErasedList: TMultiAction [18]
     end
-    object actPrint: TdsdPrintAction [22]
+    inherited mactSimpleReCompleteList: TMultiAction [19]
+    end
+    inherited mactSimpleCompleteList: TMultiAction [20]
+    end
+    object actPrint: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect_Movement_Promo_Print
@@ -582,9 +608,9 @@ inherited PromoJournalForm: TPromoJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actSimpleErased: TMultiAction [23]
+    inherited mactSimpleUncompleteList: TMultiAction [22]
     end
-    object mactUpdate_Movement_Promo_Data: TMultiAction [24]
+    object mactUpdate_Movement_Promo_Data: TMultiAction [23]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       ActionList = <
@@ -598,7 +624,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
     end
-    object actUpdate_Movement_Promo_Data: TdsdExecStoredProc [25]
+    object actUpdate_Movement_Promo_Data: TdsdExecStoredProc [24]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -611,7 +637,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' -'#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 45
     end
-    object dsdDataSetRefresh1: TdsdDataSetRefresh [26]
+    object dsdDataSetRefresh1: TdsdDataSetRefresh [25]
       Category = 'Update_Promo_Data'
       MoveParams = <
         item
@@ -634,7 +660,7 @@ inherited PromoJournalForm: TPromoJournalForm
       RefreshOnTabSetChanges = False
       DataSet = MasterCDS
     end
-    object actUpdate_Promo_Data_before: TdsdExecStoredProc [27]
+    object actUpdate_Promo_Data_before: TdsdExecStoredProc [26]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -645,7 +671,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Caption = 'actUpdate_Promo_Data_before'
     end
-    object actUpdate_Promo_Data_after: TdsdExecStoredProc [28]
+    object actUpdate_Promo_Data_after: TdsdExecStoredProc [27]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -656,7 +682,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Caption = 'actUpdate_Promo_Data_before'
     end
-    object mactUpdate_Movement_Promo_Data_all: TMultiAction [29]
+    object mactUpdate_Movement_Promo_Data_all: TMultiAction [28]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       ActionList = <
@@ -675,7 +701,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
       ImageIndex = 45
     end
-    object ExecuteDialog: TExecuteDialog [30]
+    object ExecuteDialog: TExecuteDialog [29]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -722,7 +748,7 @@ inherited PromoJournalForm: TPromoJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actRefreshStart: TdsdDataSetRefresh [31]
+    object actRefreshStart: TdsdDataSetRefresh [30]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_UserJuridicalBasis
@@ -738,7 +764,7 @@ inherited PromoJournalForm: TPromoJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [32]
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [31]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -752,7 +778,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
     end
-    object mactInsertUpdateMISignYes: TMultiAction [33]
+    object mactInsertUpdateMISignYes: TMultiAction [32]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -763,7 +789,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
     end
-    object mactInsertUpdateMISignYesList: TMultiAction [34]
+    object mactInsertUpdateMISignYesList: TMultiAction [33]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -779,7 +805,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 58
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [35]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [34]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -793,7 +819,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
     end
-    object mactInsertUpdateMISignNo: TMultiAction [36]
+    object mactInsertUpdateMISignNo: TMultiAction [35]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -804,7 +830,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
     end
-    object mactInsertUpdateMISignNoList: TMultiAction [37]
+    object mactInsertUpdateMISignNoList: TMultiAction [36]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -820,7 +846,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 52
     end
-    object actAllPartner: TBooleanStoredProcAction [38]
+    object actAllPartner: TBooleanStoredProcAction [37]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -838,6 +864,8 @@ inherited PromoJournalForm: TPromoJournalForm
       CaptionFalse = #1053#1077' '#1088#1072#1079#1074#1086#1088#1072#1095#1080#1074#1072#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    inherited mactSimpleErasedList: TMultiAction [38]
     end
     inherited actInsertMask: TdsdInsertUpdateAction [39]
       ShortCut = 0
@@ -1037,9 +1065,6 @@ inherited PromoJournalForm: TPromoJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti

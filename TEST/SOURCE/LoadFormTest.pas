@@ -3242,9 +3242,10 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  {
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoice_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoice_byPromoForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePercentDialogForm');
 
@@ -3255,23 +3256,23 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoInvoiceForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoContractBonus_DetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoContractBonus_DetailForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadPromoKindFormTest;
