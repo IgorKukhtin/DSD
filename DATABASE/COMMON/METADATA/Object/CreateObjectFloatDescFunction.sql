@@ -2090,16 +2090,30 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_NumberPlates() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_NumberPlates', 'Кол-во пластин в упаковке' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_NumberPlates');
   
-  
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_QtyPackage() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_QtyPackage'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_QtyPackage', 'Кол-во в упаковке' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_QtyPackage');
   
-  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PriceSamples() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceSamples'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PriceSamples', 'Порог цены Сэмплов от' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PriceSamples');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Samples21() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples21'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Samples21', 'Скидка сэмплов кат 2.1 (от 90-200 дней)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples21');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Samples22() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples22'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Samples22', 'Скидка сэмплов кат 2.2 (от 50-90 дней)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples22');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Samples3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Samples3', 'Скидка сэмплов кат 3 (от 0 до 50 дней)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples3');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.10.21                                                                                      * zc_ObjectFloat_CashSettings_Samples...
  29.09.21                                                                                      * zc_ObjectFloat_Goods_NumberPlates, zc_ObjectFloat_Goods_QtyPackage
  24.09.21                                                                                      * zc_ObjectFloat_CorrectWagesPercentage_Percent
  16.09.21                                                                                      * zc_ObjectFloat_Goods_PromoBonus

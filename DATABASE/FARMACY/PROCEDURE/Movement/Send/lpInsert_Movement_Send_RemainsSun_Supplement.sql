@@ -690,22 +690,22 @@ BEGIN
 
        ;
        
-/*     IF CURRENT_DATE <= '17.08.2021'
+     IF CURRENT_DATE <= '20.10.2021'
      THEN
 
        ---------
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (27154250, 27476046))
-       WHERE _tmpRemains_all_Supplement.UnitId = 375626
-         AND _tmpRemains_all_Supplement.GoodsId = 9551850 ;
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (26661170, 26987077))
+       WHERE _tmpRemains_all_Supplement.UnitId = 9951517
+         AND _tmpRemains_all_Supplement.GoodsId = 880570 ;
        
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (27154250, 27476046, 27151945, 27478696)) / 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (26661170, 26987077)) / 
                                                                (SELECT count(*) FROM _tmpRemains_all_Supplement
-                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 375626
-                                                                  AND _tmpRemains_all_Supplement.GoodsId = 9551850 ))
-       WHERE _tmpRemains_all_Supplement.UnitId <> 375626
-         AND _tmpRemains_all_Supplement.GoodsId = 9551850 ;
+                                                                WHERE _tmpRemains_all_Supplement.UnitId <> 9951517
+                                                                  AND _tmpRemains_all_Supplement.GoodsId = 880570 ))
+       WHERE _tmpRemains_all_Supplement.UnitId <> 9951517
+         AND _tmpRemains_all_Supplement.GoodsId = 880570 ;
          
-*/        
+        
 /*       ---------
        UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (28561767))
        WHERE _tmpRemains_all_Supplement.UnitId = 11152911
@@ -730,7 +730,7 @@ BEGIN
        WHERE _tmpRemains_all_Supplement.UnitId <> 8156016
          AND _tmpRemains_all_Supplement.GoodsId = 25516 ;
 */
---     END IF;
+     END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      --
