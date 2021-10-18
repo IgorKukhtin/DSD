@@ -20,13 +20,13 @@ BEGIN
     -- Результат
     RETURN QUERY
       SELECT
-                MovementItem.Id             AS MovementItemId
-              , MovementItem.ObjectId       AS GoodsId
-              , Object_Goods.ObjectCode     AS GoodsCode
-              , Object_Goods.ValueData      AS GoodsName
-              , Object_BarCode.ValueData    AS BarCode
-              , MovementItem.Amount         AS Amount
-              , MIFloat_Price.ValueData     AS Price
+                Min(MovementItem.Id)                 AS MovementItemId
+              , MovementItem.ObjectId                AS GoodsId
+              , Object_Goods.ObjectCode              AS GoodsCode
+              , Object_Goods.ValueData               AS GoodsName
+              , Object_BarCode.ValueData             AS BarCode
+              , SUM(MovementItem.Amount)::TFloat     AS Amount
+              , MAX(MIFloat_Price.ValueData)::TFloat AS Price
               , COALESCE (MovementBoolean.ValueData, TRUE) AS isRegistered
           FROM MovementItem
                INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
@@ -53,6 +53,11 @@ BEGIN
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE
             AND MovementItem.Amount     <> 0
+          GROUP BY MovementItem.ObjectId
+                 , Object_Goods.ObjectCode
+                 , Object_Goods.ValueData
+                 , Object_BarCode.ValueData
+                 , MovementBoolean.ValueData
          ;
 
 
@@ -68,4 +73,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 19377024, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 25016495, inSession:= '3')

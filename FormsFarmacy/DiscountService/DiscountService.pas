@@ -63,7 +63,7 @@ type
     function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string; bFixPrice : Boolean = False) :Boolean;
     // Commit Дисконт из CDS - по всем
     function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                  lCardNumber : string; var AisDiscountCommit : Boolean) :Boolean;
+                                  lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 2) :Boolean;
     //
     // update DataSet - еще раз по всем "обновим" Дисконт
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
@@ -433,7 +433,7 @@ end;
 
 // Commit Дисконт из CDS - по всем
 function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                                   lCardNumber : string; var AisDiscountCommit : Boolean) :Boolean;
+                                                   lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 2) :Boolean;
 var
   aSaleRequest : CardSaleRequest;
   SendList : ArrayOfCardSaleRequestItem;
@@ -486,7 +486,7 @@ begin
         //Дата/время чека (дата продажи)
         aSaleRequest.CheckDate:= TXSDateTime.Create;
         aSaleRequest.CheckDate.AsDateTime:= now;
-        aSaleRequest.CheckDate.HourOffset := 2;
+        aSaleRequest.CheckDate.HourOffset := nHourOffset;
         //Код карточки
         aSaleRequest.MdmCode := lCardNumber;
         //Тип продажи (0 коммерческий\1 акционный)
@@ -558,7 +558,7 @@ begin
                  //Дата прихода
                  Item.OrderDate:= TXSDateTime.Create;
                  Item.OrderDate.AsDateTime:= FInvoiceDate;
-                 Item.OrderDate.HourOffset := 2;
+                 Item.OrderDate.HourOffset := nHourOffset;
 
                 // Подготовили список для отправки
                 SetLength(SendList, i);
@@ -616,8 +616,14 @@ begin
                 Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
                 AisDiscountCommit := Result;
                 //
-                if not Result
-                then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+                if not Result then
+                begin
+                  if nHourOffset = 2 then
+                  begin
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3);
+                    Exit;
+                  end else  ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+                end;
               end;
 
               // начало второго цикла - по результату каждого элемента

@@ -859,6 +859,43 @@ type
     property Action: TCustomAction read FAction write FAction;
   end;
 
+  TEnterMoveNextListItem = class(TCollectionItem)
+  private
+    FControl: TWinControl;
+
+    procedure SetControl(const Value: TWinControl);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Control: TWinControl read FControl write SetControl;
+  end;
+
+  TEnterMoveNextList = class(TOwnedCollection)
+  private
+    function GetEnterMoveNextListItem(Index: Integer): TEnterMoveNextListItem;
+    procedure SetEnterMoveNextListItem(Index: Integer; const Value: TEnterMoveNextListItem);
+  public
+    function Add: TEnterMoveNextListItem;
+    property Items[Index: Integer]: TEnterMoveNextListItem read GetEnterMoveNextListItem write SetEnterMoveNextListItem; default;
+  end;
+
+  // Реакция на Enter и переход на следующий контрол
+  TEnterMoveNext = class(TComponent)
+  private
+    FEnterMoveNextList: TEnterMoveNextList;
+    FOnFormKeyDown : TKeyEvent;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure OnFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property EnterMoveNextList: TEnterMoveNextList read FEnterMoveNextList write FEnterMoveNextList;
+  end;
+
   TRefreshAddOn = class(TComponent)
   private
     FFormName: string;
@@ -1260,7 +1297,8 @@ begin
     TdsdFileToBase64,
     TdsdFieldFilter,
     TdsdPropertiesСhange,
-    THeaderExit
+    THeaderExit,
+    TEnterMoveNext
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -4852,6 +4890,160 @@ begin
       if AComponent = Action then
         Action := nil;
     end;
+end;
+
+{ TEnterMoveNextListItem }
+
+procedure TEnterMoveNextListItem.Assign(Source: TPersistent);
+begin
+  if Source is TExitListItem then
+    Self.Control := (Source as TExitListItem).Control
+  else
+    inherited Assign(Source);
+end;
+
+function TEnterMoveNextListItem.GetDisplayName: string;
+begin
+  if Control <> nil then
+    Result := Control.Name
+  else
+    Result := inherited GetDisplayName;
+end;
+
+procedure TEnterMoveNextListItem.SetControl(const Value: TWinControl);
+begin
+  if Value <> FControl then FControl := Value;
+end;
+
+{ TEnterMoveNextList }
+
+function TEnterMoveNextList.Add: TEnterMoveNextListItem;
+begin
+  Result := inherited Add as TEnterMoveNextListItem;
+end;
+
+function TEnterMoveNextList.GetEnterMoveNextListItem(Index: Integer): TEnterMoveNextListItem;
+begin
+  Result := inherited GetItem(Index) as TEnterMoveNextListItem
+end;
+
+procedure TEnterMoveNextList.SetEnterMoveNextListItem(Index: Integer; const Value: TEnterMoveNextListItem);
+begin
+  inherited SetItem(Index, Value);
+end;
+
+{ TEnterMoveNext }
+
+constructor TEnterMoveNext.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FEnterMoveNextList := TEnterMoveNextList.Create(Self, TEnterMoveNextListItem);
+
+  if AOwner is TForm then
+  begin
+     FOnFormKeyDown := TForm(AOwner).OnKeyDown;
+     TForm(AOwner).OnKeyDown := Self.OnFormKeyDown;
+  end;
+end;
+
+destructor TEnterMoveNext.Destroy;
+begin
+  FEnterMoveNextList.Free;
+
+  if Owner is TForm then
+  begin
+     TForm(Owner).OnKeyDown := FOnFormKeyDown;
+  end;
+
+  inherited;
+end;
+
+procedure TEnterMoveNext.Notification(AComponent: TComponent; Operation: TOperation);
+var
+  I: Integer;
+begin
+  inherited Notification(AComponent, Operation);
+
+  if csDesigning in ComponentState then
+    if Operation = opRemove then
+    begin
+      if AComponent is TControl then
+      begin
+        for I := 0 to Pred(EnterMoveNextList.Count) do
+          if EnterMoveNextList[I].Control = AComponent then
+          begin
+            EnterMoveNextList[I].Control := nil;
+          end;
+      end;
+    end;
+end;
+
+procedure TEnterMoveNext.OnFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  var Control: TComponent; I, J : Integer;
+begin
+  if (Key = VK_RETURN) AND ((Shift = []) or (Shift = [ssCtrl]))  then
+  Begin
+    if Assigned(Screen.ActiveControl) then
+    begin
+      if Screen.ActiveControl is TcxCustomInnerTextEdit then Control := TcxCustomInnerTextEdit(Screen.ActiveControl).Owner
+      else if Screen.ActiveControl is TcxCustomInnerTextEdit then Control := TcxCustomComboBoxInnerEdit(Screen.ActiveControl).Owner
+      else if Screen.ActiveControl is TcxCustomInnerTextEdit then Control := TcxCustomDropDownInnerEdit(Screen.ActiveControl).Owner
+      else if Screen.ActiveControl is TcxCustomInnerTextEdit then Control := TcxCustomInnerMemo(Screen.ActiveControl).Owner
+      else Control := Screen.ActiveControl;
+    end else Control := Nil;
+
+    if Pos('Memo', Control.ClassName) > 0 then Exit;
+
+    try
+
+      if Shift = [] then
+      begin
+        if Assigned(Control) then
+        begin
+          for I := 0 to Pred(EnterMoveNextList.Count) do
+            if Assigned(EnterMoveNextList[I].Control) and (EnterMoveNextList[I].Control = Control) and (I < Pred(EnterMoveNextList.Count)) then
+               for J := I + 1 to Pred(EnterMoveNextList.Count) do
+                 if Assigned(EnterMoveNextList[J].Control) then
+                 begin
+                   TWinControl(EnterMoveNextList[J].Control).SetFocus;
+                   Exit;
+                 end;
+        end;
+
+        for I := 0 to Pred(EnterMoveNextList.Count) do
+          if Assigned(EnterMoveNextList[I].Control) then
+        begin
+          TWinControl(EnterMoveNextList[I].Control).SetFocus;
+          Exit;
+        end;
+      end else
+      begin
+
+        if Assigned(Control) then
+        begin
+          for I := 0 to Pred(EnterMoveNextList.Count) do
+            if Assigned(EnterMoveNextList[I].Control) and (EnterMoveNextList[I].Control = Control) and (I > 1) then
+               for J := I - 1 downto 0 do
+                 if Assigned(EnterMoveNextList[J].Control) then
+                 begin
+                   TWinControl(EnterMoveNextList[J].Control).SetFocus;
+                   Exit;
+                 end;
+        end;
+
+        for I := Pred(EnterMoveNextList.Count) downto 0 do
+          if Assigned(EnterMoveNextList[I].Control) then
+        begin
+          TWinControl(EnterMoveNextList[I].Control).SetFocus;
+          Exit;
+        end;
+      end;
+
+    finally
+      Key := 0;
+    end;
+  End;
+
 end;
 
 { TGeoMarker }
