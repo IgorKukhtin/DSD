@@ -39,7 +39,6 @@ type
     cxLabel12: TcxLabel;
     edFrom: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
-    spGet_OperPriceList: TdsdStoredProc;
     actRefreshOperPriceList: TdsdDataSetRefresh;
     spUpdate_Price: TdsdStoredProc;
     actUpdate_PriceWithoutPersent: TdsdExecStoredProc;

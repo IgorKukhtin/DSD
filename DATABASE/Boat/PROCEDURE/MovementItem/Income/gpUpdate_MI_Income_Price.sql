@@ -64,22 +64,36 @@ BEGIN
      IF COALESCE (vbAmount,0) <> COALESCE (inAmount,0) OR COALESCE (vbOperPrice_orig,0) <> COALESCE (ioOperPrice_orig,0)
      THEN
          vbPravilo := 'Amount';
-     END IF;
+     ELSE
+
      IF COALESCE (vbDiscountTax,0) <> COALESCE (ioDiscountTax,0)
      THEN
          vbPravilo := 'DiscountTax';
-     END IF;
-     IF COALESCE (vbOperPrice,0) <> COALESCE (ioOperPrice,0)
+     ELSE 
+
+    IF COALESCE (vbOperPrice,0) <> COALESCE (ioOperPrice,0)
      THEN
          vbPravilo := 'OperPrice';
-     END IF;
-     IF COALESCE (vbSummIn,0) <> COALESCE (ioSummIn,0) AND (vbAmount = inAmount AND vbOperPrice_orig = ioOperPrice_orig AND vbDiscountTax = ioDiscountTax AND vbOperPrice = ioOperPrice)
-       AND COALESCE (ioSummIn,0) <> (vbAmount * (vbOperPrice_orig * (1 - vbDiscountTax / 100)))  
+     ELSE 
+
+     IF COALESCE (vbSummIn,0) <> COALESCE (ioSummIn,0) --AND (vbAmount = inAmount AND vbOperPrice_orig = ioOperPrice_orig AND vbDiscountTax = ioDiscountTax AND vbOperPrice = ioOperPrice)
+      -- AND COALESCE (vbSummIn,0) <> (inAmount * (ioOperPrice_orig * (1 - ioDiscountTax / 100)))   
      THEN
          vbPravilo := 'SummIn';
      END IF;
 
-RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
+
+     END IF;
+
+
+     END IF;
+
+     END IF;
+
+ 
+
+
+--RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
 
 ----RAISE EXCEPTION '0. vbOperPrice_orig <%>  vbDiscountTax <%>  vbOperPrice <%>  vbSummIn <%>  vbAmount <%>' , vbOperPrice_orig, vbDiscountTax, vbOperPrice, vbSummIn , vbAmount;
 
@@ -140,6 +154,7 @@ RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
          ioOperPrice   := CASE WHEN COALESCE (inAmount,0) <> 0 THEN ioSummIn /inAmount ELSE 0 END ::TFloat;
          ioDiscountTax := 0 ::TFloat;
          ioOperPrice_orig := ioOperPrice ::TFloat;
+  --RAISE EXCEPTION '0. SummIn <%>  ioOperPrice <%>  ioDiscountTax <%> ioOperPrice_orig <%> ' , ioSummIn, ioOperPrice, ioDiscountTax, ioOperPrice_orig;
      END IF;
 
      -- сохранили свойство <>

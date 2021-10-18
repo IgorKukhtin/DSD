@@ -1344,6 +1344,10 @@ object IncomeForm: TIncomeForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbUpdateActionMovement'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1360,7 +1364,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateAction'
         end
         item
           Visible = True
@@ -1623,8 +1627,12 @@ object IncomeForm: TIncomeForm
       Action = actReport_Goods
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateAction: TdxBarButton
       Action = actUpdateAction
+      Category = 0
+    end
+    object bbUpdateActionMovement: TdxBarButton
+      Action = actUpdateActionMovement
       Category = 0
     end
   end
@@ -2438,6 +2446,60 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateActionMovement: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1082#1080#1076#1082#1080' '#1080' '#1044#1086#1087'.'#1088#1072#1089#1093#1086#1076#1099'>'
+      ImageIndex = 1
+      FormName = 'TIncomeEditForm'
+      FormNameParam.Value = 'TIncomeEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      IdFieldName = 'Id'
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'

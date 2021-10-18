@@ -285,7 +285,8 @@ uses
   Sale in '..\..\FormsBoat\Document\Sale.pas' {SaleForm: TParentForm},
   SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   FormsUnit in '..\..\FormsBoat\System\FormsUnit.pas' {FormsForm: TParentForm},
-  IncomeItemEdit in '..\..\FormsBoat\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
+  IncomeItemEdit in '..\..\FormsBoat\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
+  IncomeEdit in '..\..\FormsBoat\Document\IncomeEdit.pas' {IncomeEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

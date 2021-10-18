@@ -206,10 +206,12 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
     actUpdateAction: TdsdInsertUpdateAction;
-    bb: TdxBarButton;
+    bbUpdateAction: TdxBarButton;
     SummIn: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
     OperPrice_orig: TcxGridDBColumn;
+    actUpdateActionMovement: TdsdInsertUpdateAction;
+    bbUpdateActionMovement: TdxBarButton;
   private
   public
   end;
