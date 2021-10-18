@@ -350,6 +350,125 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 45
       end
+      object isOrderPr1: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1055#1053
+        DataBinding.FieldName = 'isOrderPr1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1087#1085
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr2: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1042#1058
+        DataBinding.FieldName = 'isOrderPr2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1074#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr3: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1057#1056
+        DataBinding.FieldName = 'isOrderPr3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1089#1088
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr4: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1063#1058
+        DataBinding.FieldName = 'isOrderPr4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1095#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr5: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1055#1058
+        DataBinding.FieldName = 'isOrderPr5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1087#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr6: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1057#1041
+        DataBinding.FieldName = 'isOrderPr6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1089#1073
+        Options.Editing = False
+        Width = 70
+      end
+      object isOrderPr7: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1042#1057
+        DataBinding.FieldName = 'isOrderPr7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'- '#1074#1089
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr1: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1055#1053
+        DataBinding.FieldName = 'isInPr1'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'-'#1087#1085
+        Options.Editing = False
+        Width = 66
+      end
+      object isInPr2: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1042#1058
+        DataBinding.FieldName = 'isInPr2'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1074#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr3: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1057#1056
+        DataBinding.FieldName = 'isInPr3'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1089#1088
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr4: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1063#1058
+        DataBinding.FieldName = 'isInPr4'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1095#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr5: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1055#1058
+        DataBinding.FieldName = 'isInPr5'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1087#1090
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr6: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1057#1041
+        DataBinding.FieldName = 'isInPr6'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1089#1073
+        Options.Editing = False
+        Width = 70
+      end
+      object isInPr7: TcxGridDBColumn
+        Caption = #1042#1099#1093#1086#1076' '#1042#1057
+        DataBinding.FieldName = 'isInPr7'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'- '#1074#1089
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -481,6 +600,22 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_isPrEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -543,6 +678,14 @@ object OrderTypeForm: TOrderTypeForm
     end
     object bbUpdate_Koeff: TdxBarButton
       Action = macUpdate_Koeff
+      Category = 0
+    end
+    object bbInsertUpdate_isPrEdit: TdxBarButton
+      Action = actInsertUpdate_isPrEdit
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -850,7 +993,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange1'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange1'
           DataType = ftBoolean
@@ -859,7 +1002,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange2'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange2'
           DataType = ftBoolean
@@ -868,7 +1011,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange3'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange3'
           DataType = ftBoolean
@@ -877,7 +1020,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange4'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange4'
           DataType = ftBoolean
@@ -886,7 +1029,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange5'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange5'
           DataType = ftBoolean
@@ -895,7 +1038,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange6'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange6'
           DataType = ftBoolean
@@ -904,7 +1047,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange7'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange7'
           DataType = ftBoolean
@@ -913,7 +1056,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange8'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange8'
           DataType = ftBoolean
@@ -922,7 +1065,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange9'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange9'
           DataType = ftBoolean
@@ -931,7 +1074,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange10'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange10'
           DataType = ftBoolean
@@ -940,7 +1083,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange11'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange11'
           DataType = ftBoolean
@@ -949,7 +1092,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange12'
-          Value = 'true'
+          Value = True
           Component = FormParams
           ComponentItem = 'inisChange12'
           DataType = ftBoolean
@@ -1001,6 +1144,80 @@ object OrderTypeForm: TOrderTypeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
       ImageIndex = 43
+    end
+    object actInsertUpdate_isPrEdit: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1072#1079' '#1085#1072' / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1072#1079' '#1085#1072' / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+      ImageIndex = 1
+      FormName = 'TOrderType_isPrEditForm'
+      FormNameParam.Value = 'TOrderType_isPrEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      IdFieldName = 'Id'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' <'#1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074'. / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074'.>'
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' <'#1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074'. / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074'.> '#1080#1079' '#1092#1072#1081#1083 +
+        #1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' <'#1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074'. / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074'.>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' <'#1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074'. / '#1042#1099#1093#1086#1076' '#1089' '#1087#1088#1086#1080#1079#1074'.>'
+      ImageIndex = 41
+      WithoutNext = True
     end
   end
   object spSelect: TdsdStoredProc
@@ -1056,10 +1273,12 @@ object OrderTypeForm: TOrderTypeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
@@ -1409,7 +1628,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange1'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange1'
         DataType = ftBoolean
@@ -1418,7 +1637,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange2'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange2'
         DataType = ftBoolean
@@ -1427,7 +1646,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange3'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange3'
         DataType = ftBoolean
@@ -1436,7 +1655,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange4'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange4'
         DataType = ftBoolean
@@ -1445,7 +1664,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange5'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange5'
         DataType = ftBoolean
@@ -1454,7 +1673,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange6'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange6'
         DataType = ftBoolean
@@ -1463,7 +1682,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange7'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange7'
         DataType = ftBoolean
@@ -1472,7 +1691,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange8'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange8'
         DataType = ftBoolean
@@ -1481,7 +1700,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange9'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange9'
         DataType = ftBoolean
@@ -1490,7 +1709,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange10'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange10'
         DataType = ftBoolean
@@ -1499,7 +1718,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange11'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange11'
         DataType = ftBoolean
@@ -1508,7 +1727,7 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inisChange12'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'inisChange12'
         DataType = ftBoolean
@@ -1604,8 +1823,45 @@ object OrderTypeForm: TOrderTypeForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 199
     Top = 306
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TOrderTypeForm;zc_Object_ImportSetting_OrderType'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 256
   end
 end

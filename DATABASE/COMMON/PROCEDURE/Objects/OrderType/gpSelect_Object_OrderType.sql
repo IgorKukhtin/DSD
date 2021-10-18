@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
              , GoodsTagName TVarChar
              , MeasureName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , isOrderPr1 Boolean, isOrderPr2 Boolean, isOrderPr3 Boolean, isOrderPr4 Boolean, isOrderPr5 Boolean, isOrderPr6 Boolean, isOrderPr7 Boolean
+             , isInPr1 Boolean, isInPr2 Boolean, isInPr3 Boolean, isInPr4 Boolean, isInPr5 Boolean, isInPr6 Boolean, isInPr7 Boolean
               )
 AS
 $BODY$
@@ -81,6 +83,21 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
+           , COALESCE (ObjectBoolean_OrderPr1.ValueData, FALSE) ::Boolean AS isOrderPr1
+           , COALESCE (ObjectBoolean_OrderPr2.ValueData, FALSE) ::Boolean AS isOrderPr2 
+           , COALESCE (ObjectBoolean_OrderPr3.ValueData, FALSE) ::Boolean AS isOrderPr3
+           , COALESCE (ObjectBoolean_OrderPr4.ValueData, FALSE) ::Boolean AS isOrderPr4
+           , COALESCE (ObjectBoolean_OrderPr5.ValueData, FALSE) ::Boolean AS isOrderPr5
+           , COALESCE (ObjectBoolean_OrderPr6.ValueData, FALSE) ::Boolean AS isOrderPr6
+           , COALESCE (ObjectBoolean_OrderPr7.ValueData, FALSE) ::Boolean AS isOrderPr7
+
+           , COALESCE (ObjectBoolean_InPr1.ValueData, FALSE) ::Boolean AS isInPr1
+           , COALESCE (ObjectBoolean_InPr2.ValueData, FALSE) ::Boolean AS isInPr2 
+           , COALESCE (ObjectBoolean_InPr3.ValueData, FALSE) ::Boolean AS isInPr3
+           , COALESCE (ObjectBoolean_InPr4.ValueData, FALSE) ::Boolean AS isInPr4
+           , COALESCE (ObjectBoolean_InPr5.ValueData, FALSE) ::Boolean AS isInPr5
+           , COALESCE (ObjectBoolean_InPr6.ValueData, FALSE) ::Boolean AS isInPr6
+           , COALESCE (ObjectBoolean_InPr7.ValueData, FALSE) ::Boolean AS isInPr7
        FROM Object AS Object_OrderType
            LEFT JOIN ObjectLink AS OrderType_Unit
                                 ON OrderType_Unit.ObjectId = Object_OrderType.Id
@@ -88,51 +105,51 @@ BEGIN
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = OrderType_Unit.ChildObjectId      
 
            LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
-                               ON ObjectFloat_TermProduction.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
+                                 ON ObjectFloat_TermProduction.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
            LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
-                               ON ObjectFloat_NormInDays.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_OrderType_NormInDays() 
+                                 ON ObjectFloat_NormInDays.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_OrderType_NormInDays() 
            LEFT JOIN ObjectFloat AS ObjectFloat_StartProductionInDays
-                               ON ObjectFloat_StartProductionInDays.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 
+                                 ON ObjectFloat_StartProductionInDays.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 
                                                                                                  
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff1
-                               ON ObjectFloat_Koeff1.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff1.DescId = zc_ObjectFloat_OrderType_Koeff1()
+                                 ON ObjectFloat_Koeff1.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff1.DescId = zc_ObjectFloat_OrderType_Koeff1()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff2
-                               ON ObjectFloat_Koeff2.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff2.DescId = zc_ObjectFloat_OrderType_Koeff2()
+                                 ON ObjectFloat_Koeff2.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff2.DescId = zc_ObjectFloat_OrderType_Koeff2()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff3
-                               ON ObjectFloat_Koeff3.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff3.DescId = zc_ObjectFloat_OrderType_Koeff3()                             
+                                 ON ObjectFloat_Koeff3.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff3.DescId = zc_ObjectFloat_OrderType_Koeff3()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff4
-                               ON ObjectFloat_Koeff4.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff4.DescId = zc_ObjectFloat_OrderType_Koeff4()
+                                 ON ObjectFloat_Koeff4.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff4.DescId = zc_ObjectFloat_OrderType_Koeff4()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff5
-                               ON ObjectFloat_Koeff5.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff5.DescId = zc_ObjectFloat_OrderType_Koeff5()                             
+                                 ON ObjectFloat_Koeff5.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff5.DescId = zc_ObjectFloat_OrderType_Koeff5()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff6
-                               ON ObjectFloat_Koeff6.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff6.DescId = zc_ObjectFloat_OrderType_Koeff6()
+                                 ON ObjectFloat_Koeff6.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff6.DescId = zc_ObjectFloat_OrderType_Koeff6()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff7
-                               ON ObjectFloat_Koeff7.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff7.DescId = zc_ObjectFloat_OrderType_Koeff7()
+                                 ON ObjectFloat_Koeff7.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff7.DescId = zc_ObjectFloat_OrderType_Koeff7()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff8
-                               ON ObjectFloat_Koeff8.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff8.DescId = zc_ObjectFloat_OrderType_Koeff8()                             
+                                 ON ObjectFloat_Koeff8.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff8.DescId = zc_ObjectFloat_OrderType_Koeff8()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff9
-                               ON ObjectFloat_Koeff9.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff9.DescId = zc_ObjectFloat_OrderType_Koeff9()  
+                                 ON ObjectFloat_Koeff9.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff9.DescId = zc_ObjectFloat_OrderType_Koeff9()  
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff10
-                               ON ObjectFloat_Koeff10.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff10.DescId = zc_ObjectFloat_OrderType_Koeff10()
+                                 ON ObjectFloat_Koeff10.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff10.DescId = zc_ObjectFloat_OrderType_Koeff10()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff11
-                               ON ObjectFloat_Koeff11.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff11.DescId = zc_ObjectFloat_OrderType_Koeff11()
+                                 ON ObjectFloat_Koeff11.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff11.DescId = zc_ObjectFloat_OrderType_Koeff11()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff12
-                               ON ObjectFloat_Koeff12.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff12.DescId = zc_ObjectFloat_OrderType_Koeff12()    
+                                 ON ObjectFloat_Koeff12.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff12.DescId = zc_ObjectFloat_OrderType_Koeff12()    
                                                                                                      
            LEFT JOIN ObjectLink AS OrderType_Goods
                                 ON OrderType_Goods.ObjectId = Object_OrderType.Id
@@ -170,6 +187,49 @@ BEGIN
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr1
+                                     ON ObjectBoolean_OrderPr1.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr1.DescId = zc_ObjectBoolean_OrderType_OrderPr1()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr2
+                                     ON ObjectBoolean_OrderPr2.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr2.DescId = zc_ObjectBoolean_OrderType_OrderPr2()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr3
+                                     ON ObjectBoolean_OrderPr3.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr3.DescId = zc_ObjectBoolean_OrderType_OrderPr3()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr4
+                                     ON ObjectBoolean_OrderPr4.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr4.DescId = zc_ObjectBoolean_OrderType_OrderPr4()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr5
+                                     ON ObjectBoolean_OrderPr5.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr5.DescId = zc_ObjectBoolean_OrderType_OrderPr5()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr6
+                                     ON ObjectBoolean_OrderPr6.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr6.DescId = zc_ObjectBoolean_OrderType_OrderPr6()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr7
+                                     ON ObjectBoolean_OrderPr7.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr7.DescId = zc_ObjectBoolean_OrderType_OrderPr7()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr1
+                                     ON ObjectBoolean_InPr1.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr1.DescId = zc_ObjectBoolean_OrderType_InPr1()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr2
+                                     ON ObjectBoolean_InPr2.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr2.DescId = zc_ObjectBoolean_OrderType_InPr2()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr3
+                                     ON ObjectBoolean_InPr3.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr3.DescId = zc_ObjectBoolean_OrderType_InPr3()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr4
+                                     ON ObjectBoolean_InPr4.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr4.DescId = zc_ObjectBoolean_OrderType_InPr4()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr5
+                                     ON ObjectBoolean_InPr5.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr5.DescId = zc_ObjectBoolean_OrderType_InPr5()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr6
+                                     ON ObjectBoolean_InPr6.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr6.DescId = zc_ObjectBoolean_OrderType_InPr6()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr7
+                                     ON ObjectBoolean_InPr7.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr7.DescId = zc_ObjectBoolean_OrderType_InPr7()
        WHERE Object_OrderType.DescId = zc_Object_OrderType()
          AND (OrderType_Unit.ChildObjectId = inUnitId OR inUnitId = 0);
 
@@ -236,6 +296,21 @@ BEGIN
            , Object_Goods.InfoMoneyDestinationName
            , Object_Goods.InfoMoneyName
 
+           , COALESCE (ObjectBoolean_OrderPr1.ValueData, FALSE) ::Boolean AS isOrderPr1
+           , COALESCE (ObjectBoolean_OrderPr2.ValueData, FALSE) ::Boolean AS isOrderPr2 
+           , COALESCE (ObjectBoolean_OrderPr3.ValueData, FALSE) ::Boolean AS isOrderPr3
+           , COALESCE (ObjectBoolean_OrderPr4.ValueData, FALSE) ::Boolean AS isOrderPr4
+           , COALESCE (ObjectBoolean_OrderPr5.ValueData, FALSE) ::Boolean AS isOrderPr5
+           , COALESCE (ObjectBoolean_OrderPr6.ValueData, FALSE) ::Boolean AS isOrderPr6
+           , COALESCE (ObjectBoolean_OrderPr7.ValueData, FALSE) ::Boolean AS isOrderPr7
+
+           , COALESCE (ObjectBoolean_InPr1.ValueData, FALSE) ::Boolean AS isInPr1
+           , COALESCE (ObjectBoolean_InPr2.ValueData, FALSE) ::Boolean AS isInPr2 
+           , COALESCE (ObjectBoolean_InPr3.ValueData, FALSE) ::Boolean AS isInPr3
+           , COALESCE (ObjectBoolean_InPr4.ValueData, FALSE) ::Boolean AS isInPr4
+           , COALESCE (ObjectBoolean_InPr5.ValueData, FALSE) ::Boolean AS isInPr5
+           , COALESCE (ObjectBoolean_InPr6.ValueData, FALSE) ::Boolean AS isInPr6
+           , COALESCE (ObjectBoolean_InPr7.ValueData, FALSE) ::Boolean AS isInPr7
          FROM tmpGoods AS Object_Goods
 
            LEFT JOIN ObjectLink AS OrderType_Goods
@@ -255,42 +330,42 @@ BEGIN
                               AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff1
-                               ON ObjectFloat_Koeff1.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff1.DescId = zc_ObjectFloat_OrderType_Koeff1()
+                                 ON ObjectFloat_Koeff1.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff1.DescId = zc_ObjectFloat_OrderType_Koeff1()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff2
-                               ON ObjectFloat_Koeff2.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff2.DescId = zc_ObjectFloat_OrderType_Koeff2()
+                                 ON ObjectFloat_Koeff2.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff2.DescId = zc_ObjectFloat_OrderType_Koeff2()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff3
-                               ON ObjectFloat_Koeff3.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff3.DescId = zc_ObjectFloat_OrderType_Koeff3()                             
+                                 ON ObjectFloat_Koeff3.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff3.DescId = zc_ObjectFloat_OrderType_Koeff3()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff4
-                               ON ObjectFloat_Koeff4.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff4.DescId = zc_ObjectFloat_OrderType_Koeff4()
+                                 ON ObjectFloat_Koeff4.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff4.DescId = zc_ObjectFloat_OrderType_Koeff4()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff5
-                               ON ObjectFloat_Koeff5.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff5.DescId = zc_ObjectFloat_OrderType_Koeff5()                             
+                                 ON ObjectFloat_Koeff5.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff5.DescId = zc_ObjectFloat_OrderType_Koeff5()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff6
-                               ON ObjectFloat_Koeff6.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff6.DescId = zc_ObjectFloat_OrderType_Koeff6()
+                                 ON ObjectFloat_Koeff6.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff6.DescId = zc_ObjectFloat_OrderType_Koeff6()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff7
-                               ON ObjectFloat_Koeff7.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff7.DescId = zc_ObjectFloat_OrderType_Koeff7()
+                                 ON ObjectFloat_Koeff7.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff7.DescId = zc_ObjectFloat_OrderType_Koeff7()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff8
-                               ON ObjectFloat_Koeff8.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff8.DescId = zc_ObjectFloat_OrderType_Koeff8()                             
+                                 ON ObjectFloat_Koeff8.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff8.DescId = zc_ObjectFloat_OrderType_Koeff8()                             
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff9
-                               ON ObjectFloat_Koeff9.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff9.DescId = zc_ObjectFloat_OrderType_Koeff9()  
+                                 ON ObjectFloat_Koeff9.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff9.DescId = zc_ObjectFloat_OrderType_Koeff9()  
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff10
-                               ON ObjectFloat_Koeff10.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff10.DescId = zc_ObjectFloat_OrderType_Koeff10()
+                                 ON ObjectFloat_Koeff10.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff10.DescId = zc_ObjectFloat_OrderType_Koeff10()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff11
-                               ON ObjectFloat_Koeff11.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff11.DescId = zc_ObjectFloat_OrderType_Koeff11()
+                                 ON ObjectFloat_Koeff11.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff11.DescId = zc_ObjectFloat_OrderType_Koeff11()
            LEFT JOIN ObjectFloat AS ObjectFloat_Koeff12
-                               ON ObjectFloat_Koeff12.ObjectId = Object_OrderType.Id 
-                              AND ObjectFloat_Koeff12.DescId = zc_ObjectFloat_OrderType_Koeff12()                              
-                              
+                                 ON ObjectFloat_Koeff12.ObjectId = Object_OrderType.Id 
+                                AND ObjectFloat_Koeff12.DescId = zc_ObjectFloat_OrderType_Koeff12()                              
+
            LEFT  JOIN ObjectLink AS OrderType_Unit
                                 ON OrderType_Unit.ObjectId = Object_OrderType.Id
                                AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
@@ -322,21 +397,65 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
              LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr1
+                                     ON ObjectBoolean_OrderPr1.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr1.DescId = zc_ObjectBoolean_OrderType_OrderPr1()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr2
+                                     ON ObjectBoolean_OrderPr2.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr2.DescId = zc_ObjectBoolean_OrderType_OrderPr2()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr3
+                                     ON ObjectBoolean_OrderPr3.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr3.DescId = zc_ObjectBoolean_OrderType_OrderPr3()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr4
+                                     ON ObjectBoolean_OrderPr4.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr4.DescId = zc_ObjectBoolean_OrderType_OrderPr4()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr5
+                                     ON ObjectBoolean_OrderPr5.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr5.DescId = zc_ObjectBoolean_OrderType_OrderPr5()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr6
+                                     ON ObjectBoolean_OrderPr6.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr6.DescId = zc_ObjectBoolean_OrderType_OrderPr6()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderPr7
+                                     ON ObjectBoolean_OrderPr7.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_OrderPr7.DescId = zc_ObjectBoolean_OrderType_OrderPr7()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr1
+                                     ON ObjectBoolean_InPr1.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr1.DescId = zc_ObjectBoolean_OrderType_InPr1()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr2
+                                     ON ObjectBoolean_InPr2.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr2.DescId = zc_ObjectBoolean_OrderType_InPr2()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr3
+                                     ON ObjectBoolean_InPr3.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr3.DescId = zc_ObjectBoolean_OrderType_InPr3()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr4
+                                     ON ObjectBoolean_InPr4.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr4.DescId = zc_ObjectBoolean_OrderType_InPr4()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr5
+                                     ON ObjectBoolean_InPr5.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr5.DescId = zc_ObjectBoolean_OrderType_InPr5()                             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr6
+                                     ON ObjectBoolean_InPr6.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr6.DescId = zc_ObjectBoolean_OrderType_InPr6()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_InPr7
+                                     ON ObjectBoolean_InPr7.ObjectId = Object_OrderType.Id 
+                                    AND ObjectBoolean_InPr7.DescId = zc_ObjectBoolean_OrderType_InPr7()
+
       WHERE (OrderType_Unit.ChildObjectId = inUnitId OR inUnitId = 0 OR OrderType_Goods.ObjectId IS NULL)
      ;
      END IF;
-
   
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_OrderType (Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_OrderType (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.10.21         *
  11.03.15         *
 
 

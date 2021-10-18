@@ -37,6 +37,10 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , CostPromo        TFloat      --Стоимость участия в акции
              , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
+             , CountDayPromo    Integer
+             , CountDaySale     Integer
+             , CountDayOperDate Integer
+
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           Integer     --Подразделение
@@ -190,6 +194,10 @@ BEGIN
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
+
+             , (DATE_PART ('DAY', AGE (MovementDate_EndPromo.ValueData, MovementDate_StartPromo.ValueData) )+1)      ::Integer AS CountDayPromo
+             , (DATE_PART ('DAY', AGE (Movement_Promo.EndSale, Movement_Promo.StartSale) )+1)                        ::Integer AS CountDaySale
+             , (DATE_PART ('DAY', AGE (MovementDate_OperDateEnd.ValueData, MovementDate_OperDateStart.ValueData) )+1)::Integer AS CountDayOperDate
 
              , MovementString_Comment.ValueData            AS Comment            --Примечание
              , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
