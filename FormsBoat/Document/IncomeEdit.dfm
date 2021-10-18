@@ -536,7 +536,7 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
+        Name = 'Summ4'
         Value = Null
         Component = ceTotalSumm
         DataType = ftFloat
@@ -604,7 +604,7 @@ object IncomeEditForm: TIncomeEditForm
         Name = 'inId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

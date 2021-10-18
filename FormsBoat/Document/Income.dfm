@@ -22,7 +22,7 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 0
     Width = 1027
-    Height = 97
+    Height = 169
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -93,7 +93,7 @@ object IncomeForm: TIncomeForm
       Left = 271
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 7
+      TabOrder = 6
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
@@ -103,7 +103,7 @@ object IncomeForm: TIncomeForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 8
+      TabOrder = 7
       Width = 40
     end
     object cxLabel5: TcxLabel
@@ -134,26 +134,10 @@ object IncomeForm: TIncomeForm
       TabOrder = 4
       Width = 81
     end
-    object edDiscountTax: TcxCurrencyEdit
-      Left = 451
-      Top = 63
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Width = 144
-    end
     object cxLabel7: TcxLabel
       Left = 404
       Top = 45
       Caption = '% '#1053#1044#1057
-    end
-    object cxLabel8: TcxLabel
-      Left = 451
-      Top = 45
-      Caption = '% '#1057#1082#1080#1076#1082#1080
     end
     object cxLabel11: TcxLabel
       Left = 9
@@ -179,19 +163,19 @@ object IncomeForm: TIncomeForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 18
+      TabOrder = 16
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 601
+      Left = 456
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 601
+      Left = 456
       Top = 63
-      TabOrder = 20
-      Width = 249
+      TabOrder = 18
+      Width = 394
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -207,7 +191,7 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 22
+      TabOrder = 20
       Width = 124
     end
     object cxLabel12: TcxLabel
@@ -223,8 +207,8 @@ object IncomeForm: TIncomeForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 24
-      Width = 146
+      TabOrder = 22
+      Width = 164
     end
     object cxLabel13: TcxLabel
       Left = 860
@@ -241,32 +225,189 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 164
+    end
+    object cxLabel9: TcxLabel
+      Left = 19
+      Top = 96
+      Caption = '- Rabbat %'
+    end
+    object ceDiscountTax: TcxCurrencyEdit
+      Left = 104
+      Top = 95
+      Hint = '% '#1089#1082#1080#1076#1082#1080
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 26
-      Width = 146
+      Width = 70
+    end
+    object cxLabel14: TcxLabel
+      Left = 17
+      Top = 119
+      Caption = '- Rabbat Brutto'
+    end
+    object ceSummTaxMVAT: TcxCurrencyEdit
+      Left = 104
+      Top = 118
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 28
+      Width = 70
+    end
+    object cxLabel15: TcxLabel
+      Left = 18
+      Top = 143
+      Caption = '- Rabbat Netto'
+    end
+    object ceSummTaxPVAT: TcxCurrencyEdit
+      Left = 104
+      Top = 142
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 30
+      Width = 70
+    end
+    object cxLabel17: TcxLabel
+      Left = 203
+      Top = 96
+      Caption = '+ Porto Netto'
+    end
+    object cxLabel18: TcxLabel
+      Left = 203
+      Top = 119
+      Caption = '+ Verpackung Netto'
+    end
+    object cxLabel19: TcxLabel
+      Left = 203
+      Top = 143
+      Caption = '+ Versicherung Netto'
+    end
+    object ceSummInsur: TcxCurrencyEdit
+      Left = 316
+      Top = 142
+      Hint = #1057#1090#1088#1072#1093#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 34
+      Width = 70
+    end
+    object ceSummPack: TcxCurrencyEdit
+      Left = 316
+      Top = 118
+      Hint = #1059#1087#1072#1082#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 35
+      Width = 70
+    end
+    object ceSummPost: TcxCurrencyEdit
+      Left = 316
+      Top = 95
+      Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 36
+      Width = 70
+    end
+    object cxLabel20: TcxLabel
+      Left = 430
+      Top = 96
+      Caption = '- Scontobetr%'
+    end
+    object ceTotalDiscountTax: TcxCurrencyEdit
+      Left = 533
+      Top = 95
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1075#1086
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 38
+      Width = 70
+    end
+    object cxLabel21: TcxLabel
+      Left = 430
+      Top = 119
+      Caption = '- Scontobetr Brutto'
+    end
+    object ceTotalSummTaxMVAT: TcxCurrencyEdit
+      Left = 533
+      Top = 118
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 40
+      Width = 70
+    end
+    object cxLabel22: TcxLabel
+      Left = 430
+      Top = 143
+      Caption = '- Scontobetr Netto'
+    end
+    object ceTotalSummTaxPVAT: TcxCurrencyEdit
+      Left = 533
+      Top = 142
+      Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+      ParentShowHint = False
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 42
+      Width = 70
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 123
+    Top = 195
     Width = 1027
-    Height = 438
+    Height = 366
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 438
+    ExplicitTop = 123
+    ExplicitHeight = 438
+    ClientRectBottom = 366
     ClientRectRight = 1027
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 414
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1027
-        Height = 261
+        Height = 189
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -760,7 +901,7 @@ object IncomeForm: TIncomeForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 269
+        Top = 197
         Width = 1027
         Height = 145
         Align = alBottom
@@ -768,6 +909,7 @@ object IncomeForm: TIncomeForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
+        ExplicitTop = 269
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -946,24 +1088,27 @@ object IncomeForm: TIncomeForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 261
+        Top = 189
         Width = 1027
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 261
       end
     end
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitHeight = 414
       object GridCost: TcxGrid
         Left = 0
         Top = 0
         Width = 1027
-        Height = 414
+        Height = 342
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 414
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -2627,8 +2772,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 624
-    Top = 16
+    Left = 664
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2879,7 +3024,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inDiscountTax'
         Value = 0.000000000000000000
-        Component = edDiscountTax
+        Component = ceDiscountTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2952,7 +3097,6 @@ object IncomeForm: TIncomeForm
         Control = edVATPercent
       end
       item
-        Control = edDiscountTax
       end
       item
         Control = edPaidKind
@@ -3071,7 +3215,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edDiscountTax
+        Component = ceDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3135,6 +3279,62 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = edInsertName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTaxMVAT'
+        Value = Null
+        Component = ceSummTaxMVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTaxPVAT'
+        Value = Null
+        Component = ceSummTaxPVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPost'
+        Value = Null
+        Component = ceSummPost
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPack'
+        Value = Null
+        Component = ceSummPack
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummInsur'
+        Value = Null
+        Component = ceSummInsur
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalDiscountTax'
+        Value = Null
+        Component = ceTotalDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummTaxMVAT'
+        Value = Null
+        Component = ceTotalSummTaxMVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummTaxPVAT'
+        Value = Null
+        Component = ceTotalSummTaxPVAT
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3281,7 +3481,6 @@ object IncomeForm: TIncomeForm
       item
         Name = 'DiscountTax'
         Value = 0.000000000000000000
-        Component = edDiscountTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3307,8 +3506,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 16
+    Left = 528
+    Top = 8
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -13,6 +13,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, DiscountTax TFloat
+             , SummTaxMVAT TFloat
+             , SummTaxPVAT TFloat
+             , SummPost TFloat
+             , SummPack TFloat
+             , SummInsur TFloat
+             , TotalDiscountTax TFloat
+             , TotalSummTaxMVAT TFloat
+             , TotalSummTaxPVAT TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -42,6 +50,16 @@ BEGIN
              , CAST (False as Boolean)   AS PriceWithVAT
              , CAST (0 as TFloat)        AS VATPercent
              , CAST (0 as TFloat)        AS DiscountTax
+
+             , CAST (0 as TFloat)        AS SummTaxMVAT
+             , CAST (0 as TFloat)        AS SummTaxPVAT
+             , CAST (0 as TFloat)        AS SummPost
+             , CAST (0 as TFloat)        AS SummPack
+             , CAST (0 as TFloat)        AS SummInsur
+             , CAST (0 as TFloat)        AS TotalDiscountTax
+             , CAST (0 as TFloat)        AS TotalSummTaxMVAT
+             , CAST (0 as TFloat)        AS TotalSummTaxPVAT
+             
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -73,7 +91,14 @@ BEGIN
           , MovementBoolean_PriceWithVAT.ValueData    AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_DiscountTax.ValueData       AS DiscountTax
-
+          , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
+          , MovementFloat_SummTaxPVAT.ValueData       :: TFloat AS SummTaxPVAT
+          , MovementFloat_SummPost.ValueData          :: TFloat AS SummPost
+          , MovementFloat_SummPack.ValueData          :: TFloat AS SummPack
+          , MovementFloat_SummInsur.ValueData         :: TFloat AS SummInsur
+          , MovementFloat_TotalDiscountTax.ValueData  :: TFloat AS TotalDiscountTax
+          , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
+          , MovementFloat_TotalSummTaxPVAT.ValueData  :: TFloat AS TotalSummTaxPVAT
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
           , Object_To.Id                              AS ToId      
@@ -118,7 +143,32 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                     ON MovementFloat_DiscountTax.MovementId = Movement_Income.Id
                                    AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
-    
+
+             LEFT JOIN MovementFloat AS MovementFloat_SummTaxMVAT
+                                     ON MovementFloat_SummTaxMVAT.MovementId = Movement_Income.Id
+                                    AND MovementFloat_SummTaxMVAT.DescId = zc_MovementFloat_SummTaxMVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_SummTaxPVAT
+                                     ON MovementFloat_SummTaxPVAT.MovementId = Movement_Income.Id
+                                    AND MovementFloat_SummTaxPVAT.DescId = zc_MovementFloat_SummTaxPVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_SummPost
+                                     ON MovementFloat_SummPost.MovementId = Movement_Income.Id
+                                    AND MovementFloat_SummPost.DescId = zc_MovementFloat_SummPost()
+             LEFT JOIN MovementFloat AS MovementFloat_SummPack
+                                     ON MovementFloat_SummPack.MovementId = Movement_Income.Id
+                                    AND MovementFloat_SummPack.DescId = zc_MovementFloat_SummPack()
+             LEFT JOIN MovementFloat AS MovementFloat_SummInsur
+                                     ON MovementFloat_SummInsur.MovementId = Movement_Income.Id
+                                    AND MovementFloat_SummInsur.DescId = zc_MovementFloat_SummInsur()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalDiscountTax
+                                     ON MovementFloat_TotalDiscountTax.MovementId = Movement_Income.Id
+                                    AND MovementFloat_TotalDiscountTax.DescId = zc_MovementFloat_TotalDiscountTax()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTaxMVAT
+                                     ON MovementFloat_TotalSummTaxMVAT.MovementId = Movement_Income.Id
+                                    AND MovementFloat_TotalSummTaxMVAT.DescId = zc_MovementFloat_TotalSummTaxMVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTaxPVAT
+                                     ON MovementFloat_TotalSummTaxPVAT.MovementId = Movement_Income.Id
+                                    AND MovementFloat_TotalSummTaxPVAT.DescId = zc_MovementFloat_TotalSummTaxPVAT()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_Income.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
