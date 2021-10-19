@@ -76,9 +76,7 @@ type
     edOperDatePartner: TcxDateEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
-    edDiscountTax: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
@@ -206,10 +204,30 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
     actUpdateAction: TdsdInsertUpdateAction;
-    bb: TdxBarButton;
+    bbUpdateAction: TdxBarButton;
     SummIn: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
     OperPrice_orig: TcxGridDBColumn;
+    actUpdateActionMovement: TdsdInsertUpdateAction;
+    bbUpdateActionMovement: TdxBarButton;
+    cxLabel9: TcxLabel;
+    ceDiscountTax: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceSummTaxMVAT: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    ceSummTaxPVAT: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    cxLabel19: TcxLabel;
+    ceSummInsur: TcxCurrencyEdit;
+    ceSummPack: TcxCurrencyEdit;
+    ceSummPost: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    ceTotalDiscountTax: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    ceTotalSummTaxMVAT: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    ceTotalSummTaxPVAT: TcxCurrencyEdit;
   private
   public
   end;

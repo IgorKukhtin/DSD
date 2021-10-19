@@ -1048,9 +1048,67 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_RemovingPrograms() RETU
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_RemovingPrograms', 'Удаление сторонних программ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_RemovingPrograms');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr1', 'Заказ на производство-пн' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr2', 'Заказ на производство-вт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr3', 'Заказ на производство-ср' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr4', 'Заказ на производство-чт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr5', 'Заказ на производство-пт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr5');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr6', 'Заказ на производство-сб' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr6');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_OrderPr7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_OrderPr7', 'Заказ на производство-вс' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_OrderPr7');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr1', 'Выход с производства-пн' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr2', 'Выход с производства-вт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr3', 'Выход с производства-ср' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr4', 'Выход с производства-чт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr5', 'Выход с производства-пт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr5');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr6', 'Выход с производства-сб' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr6');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr7', 'Выход с производства-вс' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr7');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 18.10.21         * zc_ObjectBoolean_OrderType_OrderPr...
+                    zc_ObjectBoolean_OrderType_InPr...
  12.10.21                                                                                                          * zc_ObjectBoolean_CashSettings_RequireUkrName, zc_ObjectBoolean_CashSettings_RemovingPrograms
  05.10.21                                                                                                          * zc_ObjectBoolean_MedicalProgramSP_Free
  29.09.21                                                                                                          * zc_ObjectBoolean_Goods_Recipe

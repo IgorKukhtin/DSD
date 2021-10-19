@@ -730,6 +730,7 @@ initialization
   RegisterClass (TdsdShowPUSHMessage);
   RegisterClass (TdsdFieldFilter);
   RegisterClass (TdsdTranslator);
+  RegisterClass (TEnterMoveNext);
 
 
 // дкъ реярю

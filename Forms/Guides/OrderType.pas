@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
-  cxMaskEdit, cxCurrencyEdit;
+  cxMaskEdit, cxCurrencyEdit, ExternalLoad;
 
 type
   TOrderTypeForm = class(TParentForm)
@@ -96,6 +96,13 @@ type
     macUpdate_Koeff: TMultiAction;
     FormParams: TdsdFormParams;
     bbUpdate_Koeff: TdxBarButton;
+    actInsertUpdate_isPrEdit: TdsdInsertUpdateAction;
+    bbInsertUpdate_isPrEdit: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
 
   private
     { Private declarations }

@@ -325,6 +325,9 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeItemForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemEditForm');
 

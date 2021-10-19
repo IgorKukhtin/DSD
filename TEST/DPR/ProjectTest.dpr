@@ -1319,7 +1319,8 @@ uses
   ContractChoice_byPromo in '..\..\Forms\Guides\ContractChoice_byPromo.pas' {ContractChoice_byPromoForm: TParentForm},
   NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm},
   Report_Promo_Market in '..\..\Forms\Report\Report_Promo_Market.pas' {Report_Promo_MarketForm: TParentForm},
-  Report_Promo_MarketDialog in '..\..\Forms\Report\Report_Promo_MarketDialog.pas' {Report_Promo_MarketDialogForm: TParentForm};
+  Report_Promo_MarketDialog in '..\..\Forms\Report\Report_Promo_MarketDialog.pas' {Report_Promo_MarketDialogForm: TParentForm},
+  OrderType_isPrEdit in '..\..\Forms\Guides\OrderType_isPrEdit.pas' {OrderType_isPrEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

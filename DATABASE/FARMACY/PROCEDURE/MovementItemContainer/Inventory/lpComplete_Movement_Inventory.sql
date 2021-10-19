@@ -410,6 +410,7 @@ BEGIN
      -- !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
      vbTmp:= (WITH tmpMIContainer AS
                      (SELECT MIContainer.MovementItemId
+                           , MIContainer.ContainerId
                            , Container.ObjectId AS GoodsId
                       FROM MovementItemContainer AS MIContainer
                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
@@ -429,6 +430,7 @@ BEGIN
                                             INNER JOIN Container ON Container.ObjectId = tmpMIContainer.GoodsId
                                                                 AND Container.DescId = zc_Container_Count()
                                                                 AND Container.WhereObjectId = vbUnitId
+                                                                AND Container.ID NOT IN (SELECT DISTINCT tmpMIContainer.ContainerID FROM tmpMIContainer)
 
                                         )
                  , tmpContainerAll AS (SELECT Container.MovementItemId
