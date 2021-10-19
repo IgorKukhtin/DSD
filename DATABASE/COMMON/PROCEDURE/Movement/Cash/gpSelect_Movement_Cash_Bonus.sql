@@ -333,8 +333,8 @@ BEGIN
                                    AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0)
                                    AND (CLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                    --AND CLO_Juridical.ObjectId = 3834632  --мидас
-                                   AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR (COALESCE (inInfoMoneyId, 0) = 0 AND CLO_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502())) )
-                                                                                                              --  AND CLO_InfoMoney.ObjectId IN (8950, 8951)   --Бонусы за продукцию, Бонусы за мясное сырье
+                                   AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR (COALESCE (inInfoMoneyId, 0) = 0 AND CLO_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), zc_Enum_InfoMoney_21512(), zc_Enum_InfoMoney_21512())) )
+                                                                                                              --  AND CLO_InfoMoney.ObjectId IN (8950, 8951)   --Бонусы за продукцию, Бонусы за мясное сырье, Маркетинговый бюджет, Маркетинговый бюджет
                                    AND COALESCE (Container.Amount,0) <> 0
                                  GROUP BY CLO_Juridical.ObjectId
                                         , CLO_InfoMoney.ObjectId
@@ -631,7 +631,7 @@ BEGIN
                                               ON ObjectLink_Partner_Personal.ObjectId = Object_MoneyPlace.Id
                                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
                          LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
-                    WHERE (View_InfoMoney.InfoMoneyId = inInfoMoneyId OR (inInfoMoneyId = 0 AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) ))
+                    WHERE (View_InfoMoney.InfoMoneyId = inInfoMoneyId OR (inInfoMoneyId = 0 AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), zc_Enum_InfoMoney_21512(), zc_Enum_InfoMoney_21512()) ))
                        AND (OL_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                        AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalId OR inPersonalId = 0)
                    )

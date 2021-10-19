@@ -58,6 +58,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCount Integer;
+   DECLARE vbUser_all Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
@@ -81,6 +82,10 @@ BEGIN
          IF inEndDate   < zc_DateStart_Role_CashReplace() OR inEndDate   > zc_DateEnd_Role_CashReplace() THEN inEndDate  := zc_DateEnd_Role_CashReplace();   END IF;
 
      END IF;
+     
+     vbUser_all:= EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId      = zc_Enum_Role_Admin()
+                    UNION SELECT 1 AS Id FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_CashAll()
+                         );
 
 
 if vbUserId <> 14599 or 1=1
@@ -182,7 +187,9 @@ then
                      FROM tmpMovement
                           INNER JOIN tmpMI2 AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND MovementItem.ObjectId = inCashId
+                                                 AND (MovementItem.ObjectId = inCashId
+                                                   OR (inCashId = 0 AND vbUser_all = TRUE)
+                                                     )
                      )
            -- проводки
          , tmpMIС AS (SELECT MovementItemContainer.MovementId, MAX (MovementItemContainer.ContainerId) AS ContainerId, SUM (MovementItemContainer.Amount) AS Amount
@@ -613,6 +620,7 @@ then
        FROM tmpRes
        WHERE (tmpRes.CurrencyId_x = inCurrencyId
            OR (inCurrencyId = zc_Enum_Currency_Basis() AND tmpRes.AmountSumm_x <> 0)
+           OR (inCurrencyId = 0 AND vbUser_all = TRUE)
              )
           AND tmpRes.MovementId_x > 0
        ;
@@ -753,7 +761,9 @@ ELSE
                      FROM tmpMovement
                           INNER JOIN tmpMI2 AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND MovementItem.ObjectId = inCashId
+                                                 AND (MovementItem.ObjectId = inCashId
+                                                   OR (inCashId = 0 AND vbUser_all = TRUE)
+                                                     )
                      )
            -- проводки
          , tmpMIС AS (SELECT MovementItemContainer.MovementId, SUM (MovementItemContainer.Amount) AS Amount
