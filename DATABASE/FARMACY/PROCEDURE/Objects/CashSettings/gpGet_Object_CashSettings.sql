@@ -29,6 +29,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PriceCorrectionDay Integer
              , isRequireUkrName Boolean
              , isRemovingPrograms Boolean
+             , PriceSamples TFloat
+             , Samples21 TFloat
+             , Samples22 TFloat
+             , Samples3 TFloat
              ) AS
 $BODY$
 BEGIN
@@ -63,6 +67,10 @@ BEGIN
         , ObjectFloat_CashSettings_PriceCorrectionDay.ValueData::Integer           AS PriceCorrectionDay
         , COALESCE(ObjectBoolean_CashSettings_RequireUkrName.ValueData, FALSE)     AS isRequireUkrName
         , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)   AS isRemovingPrograms
+        , ObjectFloat_CashSettings_PriceSamples.ValueData                          AS PriceSamples
+        , ObjectFloat_CashSettings_Samples21.ValueData                             AS Samples21
+        , ObjectFloat_CashSettings_Samples22.ValueData                             AS Samples22
+        , ObjectFloat_CashSettings_Samples3.ValueData                              AS Samples3
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -136,6 +144,19 @@ BEGIN
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
               AND ObjectLink_CashSettings_MethodsAssortment.DescId = zc_ObjectLink_CashSettings_MethodsAssortment()
         LEFT JOIN Object AS Object_MethodsAssortment ON Object_MethodsAssortment.Id = ObjectLink_CashSettings_MethodsAssortment.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
+                              ON ObjectFloat_CashSettings_PriceSamples.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_PriceSamples.DescId = zc_ObjectFloat_CashSettings_PriceSamples()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples21
+                              ON ObjectFloat_CashSettings_Samples21.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_Samples21.DescId = zc_ObjectFloat_CashSettings_Samples21()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples22
+                              ON ObjectFloat_CashSettings_Samples22.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_Samples22.DescId = zc_ObjectFloat_CashSettings_Samples22()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
+                              ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

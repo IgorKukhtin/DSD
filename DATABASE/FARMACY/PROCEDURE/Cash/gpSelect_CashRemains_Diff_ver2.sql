@@ -36,7 +36,8 @@ RETURNS TABLE (
     GoodsDiscountMaxPrice TFloat, 
     isGoodsPairSun Boolean, 
     GoodsPairSunAmount TFloat,
-    GoodsDiscountProcentSite TFloat
+    GoodsDiscountProcentSite TFloat,
+    DeferredTR TFloat
 )
 AS
 $BODY$
@@ -55,6 +56,11 @@ $BODY$
    DECLARE vbDate_0 TDateTime;
 
    DECLARE vbDividePartionDate Boolean;
+
+   DECLARE vbPriceSamples TFloat;
+   DECLARE vbSamples21 TFloat;
+   DECLARE vbSamples22 TFloat;
+   DECLARE vbSamples3 TFloat;
 
    DECLARE vbAreaId   Integer;
    DECLARE vbObjectId Integer;
@@ -98,8 +104,30 @@ BEGIN
     SELECT Day_6, Date_6, Date_3, Date_1, Date_0
     INTO vbDay_6, vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
+   
+    SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
+         , COALESCE(ObjectFloat_CashSettings_Samples21.ValueData, 0)                             AS Samples21
+         , COALESCE(ObjectFloat_CashSettings_Samples22.ValueData, 0)                             AS Samples22
+         , COALESCE(ObjectFloat_CashSettings_Samples3.ValueData, 0)                              AS Samples3
+    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3
+    FROM Object AS Object_CashSettings
 
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
+                               ON ObjectFloat_CashSettings_PriceSamples.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_PriceSamples.DescId = zc_ObjectFloat_CashSettings_PriceSamples()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples21
+                               ON ObjectFloat_CashSettings_Samples21.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples21.DescId = zc_ObjectFloat_CashSettings_Samples21()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples22
+                               ON ObjectFloat_CashSettings_Samples22.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples22.DescId = zc_ObjectFloat_CashSettings_Samples22()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
+                               ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
 
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;    
+    
     IF EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DividePartionDate
               WHERE ObjectBoolean_DividePartionDate.ObjectId = vbUnitId
                 AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate())
@@ -133,6 +161,7 @@ BEGIN
                            , MCSValue  TFloat
                            , Reserved  TFloat
                            , DeferredSend TFloat
+                           , DeferredTR TFloat
                            , NewRow    Boolean
                            , AccommodationId Integer
                            , PartionDateDiscount TFloat
@@ -150,6 +179,7 @@ BEGIN
                                 , CashRemains.MCSValue
                                 , CashRemains.Reserved
                                 , CashRemains.DeferredSend
+                                , CashRemains.DeferredTR
                                 , CashRemains.MinExpirationDate
                                 , CashRemains.AccommodationId
                                 , CashRemains.PartionDateDiscount
@@ -164,6 +194,7 @@ BEGIN
                               , CashSessionSnapShot.MCSValue
                               , CashSessionSnapShot.Reserved
                               , CashSessionSnapShot.DeferredSend
+                              , CashSessionSnapShot.DeferredTR
                               , CashSessionSnapShot.MinExpirationDate
                               , CashSessionSnapShot.DiscountExternalID
                               , CashSessionSnapShot.PartionDateKindId
@@ -174,13 +205,14 @@ BEGIN
                          FROM CashSessionSnapShot
                          WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                         )
-       , tmpDiff AS (SELECT GoodsRemains.ObjectId                                            AS ObjectId
+       , tmpDiff AS (SELECT GoodsRemains.ObjectId                                             AS ObjectId
                            , GoodsRemains.Price                                               AS Price
                            , GoodsRemains.NDSKindId                                           AS NDSKindId
                            , GoodsRemains.MCSValue                                            AS MCSValue
                            , GoodsRemains.Remains                                             AS Remains
                            , GoodsRemains.Reserved                                            AS Reserved
                            , GoodsRemains.DeferredSend                                        AS DeferredSend
+                           , GoodsRemains.DeferredTR                                          AS DeferredTR
                            , CASE WHEN SESSIONDATA.ObjectId IS NULL
                                        THEN TRUE
                                    ELSE FALSE
@@ -211,6 +243,7 @@ BEGIN
                          OR COALESCE (GoodsRemains.PartionDateDiscount,0) <> COALESCE (SESSIONDATA.PartionDateDiscount, 0)
                          OR COALESCE (GoodsRemains.PriceWithVAT,0) <> COALESCE (SESSIONDATA.PriceWithVAT, 0)
                          OR COALESCE (GoodsRemains.DeferredSend,0) <> COALESCE (SESSIONDATA.DeferredSend, 0)
+                         OR COALESCE (GoodsRemains.DeferredTR,0) <> COALESCE (SESSIONDATA.DeferredTR, 0)
                       UNION ALL
                       SELECT SESSIONDATA.ObjectId                                                AS ObjectId
                            , SESSIONDATA.Price                                                   AS Price
@@ -219,6 +252,7 @@ BEGIN
                            , 0                                                                   AS Remains
                            , NULL                                                                AS Reserved
                            , NULL                                                                AS DeferredSend
+                           , NULL                                                                AS DeferredTR
                            , FALSE                                                               AS NewRow
                            , SESSIONDATA.AccommodationId                                         AS AccommodationID
                            , SESSIONDATA.MinExpirationDate                                       AS MinExpirationDate
@@ -238,12 +272,14 @@ BEGIN
                              OR
                              COALESCE(SESSIONDATA.Reserved, 0) <> 0
                              OR
-                             COALESCE(SESSIONDATA.DeferredSend, 0) <> 0)
+                             COALESCE(SESSIONDATA.DeferredSend, 0) <> 0
+                             OR
+                             COALESCE(SESSIONDATA.DeferredTR, 0) <> 0)
                      )
 
     -- –≈«”Ћ№“ј“ - заливаем разницу
     INSERT INTO _DIFF (ObjectId, Price, NDSKindId, Remains, MinExpirationDate, DiscountExternalID, PartionDateKindId, DivisionPartiesId,
-                       MCSValue, Reserved, DeferredSend, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT)
+                       MCSValue, Reserved, DeferredSend, DeferredTR, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT)
        -- –≈«”Ћ№“ј“
        SELECT tmpDiff.ObjectId
             , tmpDiff.Price
@@ -256,6 +292,7 @@ BEGIN
             , tmpDiff.MCSValue
             , tmpDiff.Reserved
             , tmpDiff.DeferredSend
+            , tmpDiff.DeferredTR
             , tmpDiff.NewRow
             , tmpDiff.AccommodationID
             , tmpDiff.PartionDateDiscount
@@ -269,6 +306,7 @@ BEGIN
       , MCSValue            = _DIFF.MCSValue
       , Reserved            = _DIFF.Reserved
       , DeferredSend        = _DIFF.DeferredSend
+      , DeferredTR          = _DIFF.DeferredTR
       , AccommodationId     = _DIFF.AccommodationId
       , MinExpirationDate   = _DIFF.MinExpirationDate
       , DiscountExternalID  = COALESCE (_DIFF.DiscountExternalID, 0)
@@ -288,7 +326,7 @@ BEGIN
 
     --доливаем те, что по€вились
     Insert Into CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesId,Price,Remains,MCSValue,Reserved,
-                                    DeferredSend,MinExpirationDate, AccommodationId,PartionDateDiscount,PriceWithVAT)
+                                    DeferredSend,DeferredTR,MinExpirationDate, AccommodationId,PartionDateDiscount,PriceWithVAT)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
@@ -301,6 +339,7 @@ BEGIN
        ,_DIFF.MCSValue
        ,_DIFF.Reserved
        ,_DIFF.DeferredSend
+       ,_DIFF.DeferredTR
        ,_DIFF.MinExpirationDate
        ,_DIFF.AccommodationId
        ,_DIFF.PartionDateDiscount
@@ -532,7 +571,20 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) 
             ELSE
-            CASE WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0 AND COALESCE(_DIFF.PartionDateDiscount, 0) <> 0 THEN
+            CASE WHEN zfCalc_PriceCash(_DIFF.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > _DIFF.PriceWithVAT
+                         AND _DIFF.PriceWithVAT <= vbPriceSamples 
+                         AND vbPriceSamples > 0
+                         AND _DIFF.PriceWithVAT > 0
+                         AND _DIFF.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6())
+                      THEN ROUND(zfCalc_PriceCash(_DIFF.Price *
+                                 CASE WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_6() THEN 100.0 - vbSamples21
+                                      WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
+                                      WHEN _DIFF.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
+                                      ELSE 100 END  / 100, 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
+                 WHEN COALESCE(_DIFF.PartionDateKindId, 0) <> 0 AND COALESCE(_DIFF.PartionDateDiscount, 0) <> 0 THEN
                      CASE WHEN zfCalc_PriceCash(_DIFF.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > _DIFF.PriceWithVAT
@@ -577,7 +629,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
             CASE WHEN COALESCE(Object_Goods_PairSun.GoodsPairSunAmount, 0) > 1 AND vbObjectId <> 4 
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat     AS GoodsPairSunAmount,
-            tmpGoodsDiscount.DiscountProcent                                  AS GoodsDiscountProcentSite
+            tmpGoodsDiscount.DiscountProcent                                  AS GoodsDiscountProcentSite,
+            _DIFF.DeferredTR
         FROM _DIFF
 
             -- “ип срок/не срок

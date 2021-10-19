@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
-               DeferredSend TFloat,
+               DeferredSend TFloat, DeferredTR TFloat,
                RemainsSUN TFloat,
                GoodsDiscountID  Integer, GoodsDiscountName  TVarChar, isGoodsForProject boolean, GoodsDiscountMaxPrice TFloat, GoodsDiscountProcentSite TFloat,
                UKTZED TVarChar,
@@ -75,6 +75,11 @@ $BODY$
    DECLARE vbDividePartionDate   boolean;
    DECLARE vbPromoForSale TVarChar;
 
+   DECLARE vbPriceSamples TFloat;
+   DECLARE vbSamples21 TFloat;
+   DECLARE vbSamples22 TFloat;
+   DECLARE vbSamples3 TFloat;
+
    DECLARE vbAreaId   Integer;
 BEGIN
 -- if inSession = '3' then return; end if;
@@ -110,6 +115,29 @@ BEGIN
     SELECT Day_6, Date_6, Date_3, Date_1, Date_0
     INTO vbDay_6, vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate (); 
+    
+    SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
+         , COALESCE(ObjectFloat_CashSettings_Samples21.ValueData, 0)                             AS Samples21
+         , COALESCE(ObjectFloat_CashSettings_Samples22.ValueData, 0)                             AS Samples22
+         , COALESCE(ObjectFloat_CashSettings_Samples3.ValueData, 0)                              AS Samples3
+    INTO vbPriceSamples, vbSamples21, vbSamples22, vbSamples3
+    FROM Object AS Object_CashSettings
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PriceSamples
+                               ON ObjectFloat_CashSettings_PriceSamples.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_PriceSamples.DescId = zc_ObjectFloat_CashSettings_PriceSamples()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples21
+                               ON ObjectFloat_CashSettings_Samples21.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples21.DescId = zc_ObjectFloat_CashSettings_Samples21()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples22
+                               ON ObjectFloat_CashSettings_Samples22.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples22.DescId = zc_ObjectFloat_CashSettings_Samples22()
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
+                               ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
+
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;    
     
     SELECT 
         ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
@@ -147,7 +175,7 @@ BEGIN
 
     -- Данные
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesID,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,DiscountExternalID,PartionDateKindId,DivisionPartiesID,Price,Remains,MCSValue,Reserved,DeferredSend,DeferredTR,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
     )
     SELECT inCashSessionId                                                  AS CashSession
           , CashRemains.GoodsId
@@ -160,6 +188,7 @@ BEGIN
           , CashRemains.MCSValue
           , CashRemains.Reserved
           , CashRemains.DeferredSend
+          , CashRemains.DeferredTR
           , CashRemains.MinExpirationDate
           , CashRemains.AccommodationId
           , CashRemains.PartionDateDiscount
@@ -1041,25 +1070,40 @@ BEGIN
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
             ELSE
             CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
-                     CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
-                          THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - CashSessionSnapShot.PriceWithVAT) *
-                                     CashSessionSnapShot.PartionDateDiscount / 100, 2)
-                          ELSE zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                     END
+                 CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
+                         AND CashSessionSnapShot.PriceWithVAT <= vbPriceSamples 
+                         AND vbPriceSamples > 0
+                         AND CashSessionSnapShot.PriceWithVAT > 0
+                         AND CashSessionSnapShot.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6())
+                      THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price *
+                                 CASE WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_6() THEN 100.0 - vbSamples21
+                                      WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
+                                      WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
+                                      ELSE 100 END  / 100, 
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
+                      WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
+                         AND CashSessionSnapShot.PriceWithVAT > 0
+                      THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - CashSessionSnapShot.PriceWithVAT) *
+                                 CashSessionSnapShot.PartionDateDiscount / 100, 2)
+                      ELSE zfCalc_PriceCash(CashSessionSnapShot.Price, 
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                 END
                  ELSE NULL
             END END                                      :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
           , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
           , COALESCE(tmpIlliquidUnit.GoodsID, 0) <> 0              AS NotSold60
           , CashSessionSnapShot.DeferredSend::TFloat               AS DeferredSend
+          , CashSessionSnapShot.DeferredTR::TFloat                 AS DeferredTR
           , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
           , tmpGoodsDiscount.GoodsDiscountId                       AS GoodsDiscountID
           , tmpGoodsDiscount.GoodsDiscountName                     AS GoodsDiscountName
@@ -1245,5 +1289,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
-SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
-where COALESCE(CountSP, 0) <> 0
+SELECT DeferredTR, PriceWithVAT_check, PricePartionDate, PartionDateKindName,  * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')  -- where COALESCE(CountSP, 0) <> 0

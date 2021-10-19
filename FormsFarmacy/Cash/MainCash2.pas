@@ -590,6 +590,8 @@ type
     spMedicalProgramSP_Goods: TdsdStoredProc;
     MedicalProgramSPGoodsCDS: TClientDataSet;
     spGet_Goods_CodeRazom: TdsdStoredProc;
+    MainDeferredTR: TcxGridDBColumn;
+    MemDataDEFERENDT: TCurrencyField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1325,6 +1327,8 @@ begin
         FLocalDataBaseDiff.FieldByName('COLORCALC').AsVariant;
       MemData.FieldByName('DEFERENDS').AsVariant :=
         FLocalDataBaseDiff.FieldByName('DEFERENDS').AsVariant;
+      MemData.FieldByName('DEFERENDT').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('DEFERENDT').AsVariant;
       MemData.FieldByName('REMAINSSUN').AsVariant :=
         FLocalDataBaseDiff.FieldByName('REMAINSSUN').AsVariant;
       MemData.FieldByName('DISCEXTID').AsVariant :=
@@ -1958,7 +1962,7 @@ begin
     try
       RemainsCDS.DisableControls;
       RemainsCDS.Filtered := false;
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
     finally
       RemainsCDS.Filtered := true;
       RemainsCDS.EnableControls;
@@ -2240,7 +2244,7 @@ var
   PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID: Variant;
 begin
   if RemainsCDS.Active and
-    ((RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0')
+    ((RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0')
     or Assigned(RemainsCDS.OnFilterRecord) or pnlAnalogFilter.Visible) then
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
@@ -2252,7 +2256,7 @@ begin
     RemainsCDS.Filtered := false;
     try
       RemainsCDS.OnFilterRecord := Nil;
-      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
       pnlExpirationDateFilter.Visible := false;
       pnlAnalogFilter.Visible := false;
     finally
@@ -2302,7 +2306,7 @@ begin
   try
     try
       RemainsCDS.Filter :=
-        '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and MinExpirationDate <= '
+        '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and MinExpirationDate <= '
         + QuotedStr(FormatDateTime(FormatSettings.ShortDateFormat,
         IncMonth(Date, I)));
       RemainsCDS.Filtered := True;
@@ -2310,7 +2314,7 @@ begin
         FormatDateTime(FormatSettings.ShortDateFormat, IncMonth(Date, I));
       pnlExpirationDateFilter.Visible := True;
     except
-      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
       pnlExpirationDateFilter.Visible := false;
       edlExpirationDateFilter.Text := '';
     end;
@@ -5278,6 +5282,8 @@ begin
           MemData.FieldByName('PRICEPD').AsVariant;
         RemainsCDS.FieldByName('DeferredSend').AsVariant :=
           MemData.FieldByName('DEFERENDS').AsVariant;
+        RemainsCDS.FieldByName('DeferredTR').AsVariant :=
+          MemData.FieldByName('DEFERENDT').AsVariant;
         RemainsCDS.FieldByName('RemainsSun').AsVariant :=
           MemData.FieldByName('REMAINSSUN').AsVariant;
         RemainsCDS.FieldByName('Color_calc').AsVariant :=
@@ -5352,6 +5358,8 @@ begin
             MemData.FieldByName('PRICEPD').AsVariant;
           RemainsCDS.FieldByName('DeferredSend').AsVariant :=
             MemData.FieldByName('DEFERENDS').AsVariant;
+          RemainsCDS.FieldByName('DeferredTR').AsVariant :=
+            MemData.FieldByName('DEFERENDT').AsVariant;
           RemainsCDS.FieldByName('RemainsSun').AsVariant :=
             MemData.FieldByName('REMAINSSUN').AsVariant;
           RemainsCDS.FieldByName('Color_calc').AsVariant :=
@@ -5940,7 +5948,7 @@ begin
     try
       RemainsCDS.DisableControls;
       RemainsCDS.Filtered := false;
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
     finally
       RemainsCDS.Filtered := true;
       RemainsCDS.EnableControls;
@@ -6304,7 +6312,7 @@ begin
           Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
 
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and (';
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
           for I := 0 to High(Res) do
           begin
             if I = 0 then
@@ -6318,7 +6326,7 @@ begin
         end
         else
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and DosageIdSP = '
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
 
          RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
@@ -6356,7 +6364,7 @@ begin
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
-          'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+          'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
       end;
     finally
       RemainsCDS.Filtered := True;
@@ -6545,7 +6553,7 @@ begin
         begin
           Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and (';
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
           for I := 0 to High(Res) do
           begin
             if I = 0 then
@@ -6559,7 +6567,7 @@ begin
         end
         else
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0) and DosageIdSP = '
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
 
         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
@@ -6597,7 +6605,7 @@ begin
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
-          'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+          'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
       end;
     finally
       RemainsCDS.Filtered := True;
@@ -7030,7 +7038,7 @@ begin
   if cbMorionFilter.Checked = False then
   begin
     RemainsCDS.Filtered := False;
-    RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+    RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
     RemainsCDS.Filtered := True;
   end else SetMorionCodeFilter;
 end;
@@ -7417,7 +7425,7 @@ begin
         if RemainsCDS.RecordCount = 0 then
         begin
           RemainsCDS.Filtered := False;
-          RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0';
+          RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
           RemainsCDS.Filtered := True;
           cbMorionFilter.Enabled := False;
           cbMorionFilter.Checked := False;

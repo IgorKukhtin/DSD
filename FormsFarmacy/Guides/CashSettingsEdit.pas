@@ -66,6 +66,14 @@ type
     cxLabel17: TcxLabel;
     cbRequireUkrName: TcxCheckBox;
     cbRemovingPrograms: TcxCheckBox;
+    cePriceSamples: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    ceSamples21: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    ceSamples22: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    ceSamples3: TcxCurrencyEdit;
   private
     { Private declarations }
   public

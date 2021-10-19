@@ -3,7 +3,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
   ClientHeight = 569
-  ClientWidth = 533
+  ClientWidth = 892
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -30,8 +30,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1077#1085#1086#1081
   end
   object cxButton1: TcxButton
-    Left = 156
-    Top = 538
+    Left = 230
+    Top = 532
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -40,8 +40,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 306
-    Top = 538
+    Left = 604
+    Top = 536
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -318,6 +318,58 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 40
     Width = 215
   end
+  object cePriceSamples: TcxCurrencyEdit
+    Left = 759
+    Top = 193
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 41
+    Width = 121
+  end
+  object cxLabel18: TcxLabel
+    Left = 540
+    Top = 194
+    Caption = #1055#1086#1088#1086#1075' '#1094#1077#1085#1099' '#1057#1101#1084#1087#1083#1086#1074' '#1086#1090
+  end
+  object ceSamples21: TcxCurrencyEdit
+    Left = 759
+    Top = 213
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 43
+    Width = 121
+  end
+  object cxLabel19: TcxLabel
+    Left = 540
+    Top = 214
+    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.1 ('#1086#1090' 90-200 '#1076#1085#1077#1081')'
+  end
+  object cxLabel20: TcxLabel
+    Left = 540
+    Top = 235
+    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.2 ('#1086#1090' 50-90 '#1076#1085#1077#1081')'
+  end
+  object ceSamples22: TcxCurrencyEdit
+    Left = 759
+    Top = 234
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 46
+    Width = 121
+  end
+  object cxLabel21: TcxLabel
+    Left = 540
+    Top = 256
+    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 3 ('#1086#1090' 0 '#1076#1086' 50 '#1076#1085#1077#1081')'
+  end
+  object ceSamples3: TcxCurrencyEdit
+    Left = 759
+    Top = 255
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 48
+    Width = 121
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -524,6 +576,38 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSamples'
+        Value = Null
+        Component = cePriceSamples
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSamples21'
+        Value = Null
+        Component = ceSamples21
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSamples22'
+        Value = Null
+        Component = ceSamples22
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSamples3'
+        Value = Null
+        Component = ceSamples3
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -687,6 +771,34 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = cbRemovingPrograms
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSamples'
+        Value = Null
+        Component = cePriceSamples
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples21'
+        Value = Null
+        Component = ceSamples21
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples22'
+        Value = Null
+        Component = ceSamples22
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples3'
+        Value = Null
+        Component = ceSamples3
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

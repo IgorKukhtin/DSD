@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsId             Integer,    -- Товар
                MCSValue            TFloat,     -- неснижаемый товарный остаток
                Reserved            TFloat,     -- в резерве
                DeferredSend        TFloat,     -- в отложенных перемещениях
+               DeferredTR          TFloat,     -- в отложенных технических переучетах
                MinExpirationDate   TDateTime,  -- Срок годн. ост.
                AccommodationId     Integer,    -- Размещение товара
                PartionDateDiscount TFloat,     -- Скидка на партионный товар
@@ -121,7 +122,7 @@ BEGIN
                                   Movement.Id
                                 , Movement.DescId
                            FROM Movement
-                           WHERE Movement.DescId IN (zc_Movement_Send(), zc_Movement_Check())
+                           WHERE Movement.DescId IN (zc_Movement_Send(), zc_Movement_Check(), zc_Movement_TechnicalRediscount())
                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
                          )
          , tmpMovementSend AS (SELECT
@@ -200,6 +201,31 @@ BEGIN
                                                                            ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                                                           AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                                           )
+         -- Отложенные технические переучеты
+         , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
+                                  , SUM(-MovementItemMaster.Amount)   AS Amount
+                             FROM tmpMovementID AS Movement
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                               AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                                                               
+                                  INNER JOIN MovementItem AS MovementItemMaster
+                                                          ON MovementItemMaster.MovementId = Movement.Id
+                                                         AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                         AND MovementItemMaster.isErased   = FALSE
+                                                         AND MovementItemMaster.Amount     < 0
+                                                         
+                                  INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                                 ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                                AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                                AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                             WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                               AND (inSession = '3' OR vbUnitId = 8156016)
+                             GROUP BY MovementItemMaster.ObjectId
+                             )
          -- Отложенные чеки
        , tmpMovementCheck AS (SELECT Movement.Id
                               FROM tmpMovementID AS Movement
@@ -668,6 +694,28 @@ BEGIN
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
+       , tmpMovementItemTP AS (SELECT GoodsRemains.ObjectId                                             AS GoodsId
+                                    , COALESCE (GoodsRemains.PartionDateKindId, 0)                      AS PartionDateKindId
+                                    , GoodsRemains.NDSKindId                                            AS NDSKindId
+                                    , COALESCE (GoodsRemains.DiscountExternalID, 0)                     AS DiscountExternalID
+                                    , COALESCE (GoodsRemains.DivisionPartiesId, 0)                      AS DivisionPartiesId
+                                    , tmpMovementTP.Amount                                              AS Amount
+                                    , GoodsRemains.Remains                                              AS Remains
+                                    , SUM (GoodsRemains.Remains) OVER (PARTITION BY GoodsRemains.ObjectId ORDER BY GoodsRemains.MinExpirationDate)
+                               FROM tmpMovementTP
+                                    INNER JOIN GoodsRemains ON GoodsRemains.ObjectId = tmpMovementTP.GoodsId
+                               )
+       , tmpMovementItemTPRemains AS (SELECT tmpMovementItemTP.GoodsId                           AS GoodsId
+                                           , tmpMovementItemTP.PartionDateKindId                 AS PartionDateKindId
+                                           , tmpMovementItemTP.NDSKindId                         AS NDSKindId
+                                           , tmpMovementItemTP.DiscountExternalID                AS DiscountExternalID
+                                           , tmpMovementItemTP.DivisionPartiesId                 AS DivisionPartiesId
+                                           , CASE WHEN tmpMovementItemTP.Amount - tmpMovementItemTP.SUM > 0 THEN tmpMovementItemTP.Remains
+                                                  ELSE tmpMovementItemTP.Amount - tmpMovementItemTP.SUM + tmpMovementItemTP.Remains
+                                                  END                                                   AS Amount
+                                      FROM tmpMovementItemTP
+                                      WHERE (tmpMovementItemTP.Amount - (tmpMovementItemTP.SUM - tmpMovementItemTP.Remains) > 0)
+                                      )
 
     SELECT GoodsRemains.ObjectId                                             AS GoodsId
          , COALESCE (GoodsRemains.PartionDateKindId, 0)                      AS PartionDateKindId
@@ -675,10 +723,12 @@ BEGIN
          , COALESCE (GoodsRemains.DiscountExternalID, 0)                     AS DiscountExternalID
          , COALESCE (GoodsRemains.DivisionPartiesId, 0)                      AS DivisionPartiesId
          , COALESCE(tmpObject_Price.Price,0)::TFloat                         AS Price
-         , GoodsRemains.Remains::TFloat                                      AS Remains
+         , (GoodsRemains.Remains - 
+           COALESCE (tmpMovementItemTPRemains.Amount, 0))::TFloat            AS Remains
          , tmpObject_Price.MCSValue                                          AS MCSValue
          , NULLIF (GoodsRemains.Reserve, 0)::TFloat                          AS Reserved
          , NULLIF (GoodsRemains.DeferredSend, 0)::TFloat                     AS DeferredSend
+         , NULLIF (tmpMovementItemTPRemains.Amount, 0)::TFloat               AS DeferredTR
          , GoodsRemains.MinExpirationDate::TDateTime                         AS MinExpirationDate
          , Accommodation.AccommodationId                                     AS AccommodationId
          , CASE WHEN COALESCE (GoodsRemains.PartionDateKindId, 0) <> 0
@@ -687,6 +737,12 @@ BEGIN
     FROM
         GoodsRemains
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
+        
+        LEFT OUTER JOIN tmpMovementItemTPRemains ON tmpMovementItemTPRemains.GoodsId            = GoodsRemains.ObjectId
+                                                AND tmpMovementItemTPRemains.PartionDateKindId  = COALESCE (GoodsRemains.PartionDateKindId, 0) 
+                                                AND tmpMovementItemTPRemains.NDSKindId          = GoodsRemains.NDSKindId 
+                                                AND tmpMovementItemTPRemains.DiscountExternalID = COALESCE (GoodsRemains.DivisionPartiesId, 0)  
+                                                AND tmpMovementItemTPRemains.DivisionPartiesId  = COALESCE (GoodsRemains.DivisionPartiesId, 0)
 
         LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                ON Accommodation.UnitId = vbUnitId
@@ -700,6 +756,7 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 19.10.21                                                                                                    * В отложенных технических переучетах
  23.09.20                                                                                                    * Оптимизация
  14.08.20                                                                                                    * DivisionPartiesID
  19.06.20                                                                                                    * DiscountExternalID

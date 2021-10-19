@@ -200,6 +200,11 @@ type
     dxBarButton15: TdxBarButton;
     spSetUnitSupplementSUN2Out: TdsdStoredProc;
     spClearUnitSupplementSUN2Out: TdsdStoredProc;
+    isSupplementSmudge: TcxGridDBColumn;
+    spUpdate_inSupplementSmudge: TdsdStoredProc;
+    mactUpdate_inSupplementSmudge: TMultiAction;
+    execUpdate_inSupplementSmudge: TdsdExecStoredProc;
+    dxBarButton16: TdxBarButton;
   private
     { Private declarations }
   public

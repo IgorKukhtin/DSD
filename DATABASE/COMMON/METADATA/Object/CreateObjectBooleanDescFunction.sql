@@ -1104,9 +1104,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderType_InPr7() RETURNS Integer AS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_OrderType(), 'zc_ObjectBoolean_OrderType_InPr7', 'Выход с производства-вс' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderType_InPr7');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_SupplementSUN1Smudge() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementSUN1Smudge'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementSUN1Smudge', 'Дополнение СУН1 размазать товар' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementSUN1Smudge');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 19.10.21                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN1Smudge
  18.10.21         * zc_ObjectBoolean_OrderType_OrderPr...
                     zc_ObjectBoolean_OrderType_InPr...
  12.10.21                                                                                                          * zc_ObjectBoolean_CashSettings_RequireUkrName, zc_ObjectBoolean_CashSettings_RemovingPrograms

@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -27,6 +27,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inPriceCorrectionDay         Integer   ,     -- Период дней для системы коррекции цены по итогам роста/падения средних продаж
     IN inisRequireUkrName           Boolean   ,     -- Требовать заполнение Украинского названия
     IN inisRemovingPrograms	        Boolean   ,     -- Удаление сторонних программ
+    IN inPriceSamples               TFloat    ,     -- Порог цены Сэмплов от
+    IN inSamples21                  TFloat    ,     -- Скидка сэмплов кат 2.1 (от 90-200 дней)
+    IN inSamples22                  TFloat    ,     -- Скидка сэмплов кат 2.2 (от 50-90 дней)
+    IN inSamples3                   TFloat    ,     -- Скидка сэмплов кат 3 (от 0 до 50 дней)
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -98,8 +102,17 @@ BEGIN
    -- сохранили Удаление сторонних программ
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RemovingPrograms(), vbID, inisRemovingPrograms);
 
-   -- сохранили Методы выбора аптек ассортимента
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CashSettings_MethodsAssortment(), vbID, inMethodsAssortmentGuidesId);
+   -- сохранили Порог цены Сэмплов от
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_PriceSamples(), vbID, inPriceSamples);
+   -- сохранили Скидка сэмплов кат 2.1 (от 90-200 дней)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_Samples21(), vbID, inSamples21);
+   -- сохранили Скидка сэмплов кат 2.2 (от 50-90 дней)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_Samples22(), vbID, inSamples22);
+   -- сохранили Скидка сэмплов кат 3 (от 0 до 50 дней)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_Samples3(), vbID, inSamples3);
+
+      -- сохранили Дней до компенсации по дисконтным проектам
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentSales(), vbID, inAssortmentSales);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

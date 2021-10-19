@@ -46,6 +46,7 @@ CREATE TABLE CashSessionSnapShot
   MCSValue            TFloat      NULL,     -- неснижаемый товарный остаток
   Reserved            TFloat      NULL,     -- в резерве
   DeferredSend        TFloat      NULL,     -- в отложенных перемещениях
+  DeferredTR          TFloat      NULL,     -- в отложенных технических переучетах
   MinExpirationDate   TDateTime   NULL,     -- Срок годн. ост.
   MCSValueOld         TFloat      NULL,     -- НТЗ - значение которое вернется по окончании периода
   StartDateMCSAuto    TDateTime   NULL,     -- дата нач. периода
@@ -66,7 +67,7 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
 
 -- CREATE INDEX idx_CashSessionSnapShot_ObjectId_CashSessionId ON CashSessionSnapShot(ObjectId, CashSessionId);
 -- CREATE INDEX idx_CashSessionSnapShot_CashSessionId_ObjectId ON CashSessionSnapShot(CashSessionId, ObjectId);
--- ALTER TABLE CashSessionSnapShot ADD DivisionPartiesID   Integer
+-- ALTER TABLE CashSessionSnapShot ADD DeferredTR          TFloat      NULL
 
 /*-------------------------------------------------------------------------------*/
 

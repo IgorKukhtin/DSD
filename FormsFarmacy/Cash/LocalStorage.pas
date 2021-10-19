@@ -449,6 +449,7 @@ begin
       AddBoolField(LocalDataBaseDiff,  'ISGOODSPS'); //Парный товар
       AddFloatField(LocalDataBaseDiff, 'GOODSPSAM'); //Количество парного
       AddFloatField(LocalDataBaseDiff, 'GOODSDIPR'); //Процент скидки для сайта по дисконтной программе
+      AddFloatField(LocalDataBaseDiff, 'DEFERENDT'); //В отложенных технических переучетах
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -489,7 +490,8 @@ begin
         (FindField('GOODSDIMP') = nil) or
         (FindField('ISGOODSPS') = nil) or
         (FindField('GOODSPSAM') = nil) or
-        (FindField('GOODSDIPR') = nil));
+        (FindField('GOODSDIPR') = nil) or
+        (FindField('DEFERENDT') = nil));
 
       Close;
 

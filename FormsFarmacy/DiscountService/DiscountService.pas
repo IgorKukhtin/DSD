@@ -622,7 +622,7 @@ begin
                   begin
                     Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3);
                     Exit;
-                  end else  ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+                  end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
                 end;
               end;
 
@@ -638,8 +638,14 @@ begin
                 lMsg:= lMsg + llMsg;
                 Result:= LowerCase(llMsg) = LowerCase('Продажа осуществлена');
 
-                if not Result
-                then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+                if not Result then
+                begin
+                  if nHourOffset = 2 then
+                  begin
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3);
+                    Exit;
+                  end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
+                end;
 
               end;
 

@@ -685,10 +685,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormDispensingForm'));
     TdsdFormStorageFactory.GetStorage.Load('TFormDispensingForm');
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSUNForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSUNForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_GoodsPairSun_EditForm'));

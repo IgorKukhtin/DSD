@@ -413,6 +413,13 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 129
           end
+          object isSupplementSmudge: TcxGridDBColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'isSupplementSmudge'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object SummaWages: TcxGridDBColumn
             Caption = #1047#1072' 1 '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
             DataBinding.FieldName = 'SummaWages'
@@ -1641,6 +1648,32 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'actExecClearUnitSupplementSUN1Out'
     end
+    object mactUpdate_inSupplementSmudge: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = execUpdate_inSupplementSmudge
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088'"'
+      ImageIndex = 79
+    end
+    object execUpdate_inSupplementSmudge: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inSupplementSmudge
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inSupplementSmudge
+        end>
+      Caption = 'execUpdate_inSupplementSmudge'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1950,6 +1983,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -2129,6 +2166,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton15: TdxBarButton
       Action = actClearUnitSupplementSUN2Out
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = mactUpdate_inSupplementSmudge
       Category = 0
     end
   end
@@ -2757,8 +2798,8 @@ inherited GoodsSUNForm: TGoodsSUNForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 320
+    Left = 664
+    Top = 296
   end
   object spUpdate_Goods_LimitSun_T: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_LimitSUN_T'
@@ -3086,5 +3127,31 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 328
     Top = 312
+  end
+  object spUpdate_inSupplementSmudge: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inSupplementSUN1Smudge'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplementSmudge'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplementSmudge'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 344
   end
 end

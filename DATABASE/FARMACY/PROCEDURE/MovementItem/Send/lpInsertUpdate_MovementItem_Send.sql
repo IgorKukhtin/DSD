@@ -174,7 +174,7 @@ BEGIN
      THEN
          -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
          -- для ObjectId
-          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage / COALESCE (ObjectFloat_PairSunAmount.ValueData, 1))
           FROM MovementItem
                INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
                                      ON ObjectLink_GoodsPairSun.ObjectId = MovementItem.ObjectId
@@ -187,6 +187,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
                                            ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+               LEFT JOIN ObjectFloat AS ObjectFloat_PairSunAmount
+                                     ON ObjectFloat_PairSunAmount.ObjectId = ObjectLink_GoodsPairSun.ObjectId
+                                    AND ObjectFloat_PairSunAmount.DescId = zc_ObjectFloat_Goods_PairSunAmount()
                                    
           WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
@@ -194,7 +197,7 @@ BEGIN
              AND MovementItem.Id <> ioId
              AND COALESCE (MIFloat_AmountStorage.ValueData, 0) < inAmountStorage;
           -- для ChildObjectId
-          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage * COALESCE (ObjectFloat_PairSunAmount.ValueData, 1))
           FROM MovementItem
                INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
                                      ON ObjectLink_GoodsPairSun.ChildObjectId = MovementItem.ObjectId
@@ -207,6 +210,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
                                            ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+               LEFT JOIN ObjectFloat AS ObjectFloat_PairSunAmount
+                                     ON ObjectFloat_PairSunAmount.ObjectId = ObjectLink_GoodsPairSun.ObjectId
+                                    AND ObjectFloat_PairSunAmount.DescId = zc_ObjectFloat_Goods_PairSunAmount()
           WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
              AND MovementItem.isErased = FALSE
