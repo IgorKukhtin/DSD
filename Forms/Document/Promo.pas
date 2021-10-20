@@ -283,7 +283,6 @@ type
     spSelectPlan: TdsdStoredProc;
     actUpdatePlanDS: TdsdUpdateDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
-    plGoodsKindName_List: TcxGridDBColumn;
     actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     PriceTender: TcxGridDBColumn;
     MessageDS: TDataSource;
@@ -496,6 +495,42 @@ type
     bbUnCompleteInvoice: TdxBarButton;
     bbSetErasedInvoice: TdxBarButton;
     actRefreshInvoice: TdsdDataSetRefresh;
+    StartDate_stat: TcxGridDBColumn;
+    EndDate_stat: TcxGridDBColumn;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxGridPlanMaster: TcxGrid;
+    cxGridDBTableViewPlanMaster: TcxGridDBTableView;
+    OperDate_plan1: TcxGridDBColumn;
+    TradeMarkName_plan1: TcxGridDBColumn;
+    GoodsCode_plan1: TcxGridDBColumn;
+    GoodsName_plan1: TcxGridDBColumn;
+    GoodsKindName_plan1: TcxGridDBColumn;
+    MeasureName_plan1: TcxGridDBColumn;
+    Amount_plan1: TcxGridDBColumn;
+    AmountPartner_plan1: TcxGridDBColumn;
+    isErased_plan1: TcxGridDBColumn;
+    cxGridLevel7: TcxGridLevel;
+    spSelect_MI_PromoPlan_Master: TdsdStoredProc;
+    spSelect_MI_PromoPlan_Child: TdsdStoredProc;
+    PlanMasterCDS: TClientDataSet;
+    PlanMasterDS: TDataSource;
+    DBViewAddOnPlanSale: TdsdDBViewAddOn;
+    cxGridPlanChild: TcxGrid;
+    cxGridDBTableViewPlanChild: TcxGridDBTableView;
+    OperDate_plan2: TcxGridDBColumn;
+    TradeMarkName_plan2: TcxGridDBColumn;
+    GoodsCode_plan2: TcxGridDBColumn;
+    GoodsName_plan2: TcxGridDBColumn;
+    GoodsKindName_plan2: TcxGridDBColumn;
+    MeasureName_plan2: TcxGridDBColumn;
+    Amount_plan2: TcxGridDBColumn;
+    AmountPartner_plan2: TcxGridDBColumn;
+    isErased_plan2: TcxGridDBColumn;
+    cxGridLevel8: TcxGridLevel;
+    PlanChildDS: TDataSource;
+    PlanChildCDS: TClientDataSet;
+    DBViewAddOnPlanProd: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

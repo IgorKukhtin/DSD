@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DayTaxSummary TFloat,
                SummOrderFinance TFloat,
+               SummOrderMin TFloat,
                GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
                isDiscountPrice Boolean, isPriceWithVAT Boolean,
                isLongUKTZED Boolean,
@@ -124,6 +125,7 @@ BEGIN
                       WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
                         AND ObjectFloat.DescId IN (zc_ObjectFloat_Juridical_DayTaxSummary()
                                                  , zc_ObjectFloat_Juridical_SummOrderFinance()
+                                                 , zc_ObjectFloat_Juridical_SummOrderMin()
                                                    )
                        )
  , tmpObjectDate AS (SELECT ObjectDate.*
@@ -140,6 +142,7 @@ BEGIN
 
        , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat))    AS DayTaxSummary
        , COALESCE (ObjectFloat_SummOrderFinance.ValueData, CAST(0 as TFloat)) AS SummOrderFinance
+       , COALESCE (ObjectFloat_SummOrderMin.ValueData, CAST(0 as TFloat))     AS SummOrderMin
 
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
@@ -249,8 +252,12 @@ BEGIN
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
                              AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
         LEFT JOIN tmpObjectFloat AS ObjectFloat_SummOrderFinance
-                              ON ObjectFloat_SummOrderFinance.ObjectId = Object_Juridical.Id
-                             AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_Juridical_SummOrderFinance()
+                                 ON ObjectFloat_SummOrderFinance.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_Juridical_SummOrderFinance()
+
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_SummOrderMin
+                                 ON ObjectFloat_SummOrderMin.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_SummOrderMin.DescId = zc_ObjectFloat_Juridical_SummOrderMin()
 
         LEFT JOIN tmpObjectString AS ObjectString_GUID
                                   ON ObjectString_GUID.ObjectId = Object_Juridical.Id
@@ -342,6 +349,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.10.21         * SummOrderMin
  24.10.19         * isBranchAll
  24.10.19         * isOrderMin
  30.07.19         * SummOrderFinance
