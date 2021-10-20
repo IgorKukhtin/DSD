@@ -269,7 +269,7 @@ BEGIN
                                 AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
            LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = COALESCE (GoodsQuality_Quality.ChildObjectId, inQualityId)
 
-           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = GoodsQuality_Goods.ChildObjectId
+           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.GoodsId
            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoodsByGoodsKind.GoodsKindId
 
            LEFT JOIN ObjectString AS ObjectString_GK_Value1

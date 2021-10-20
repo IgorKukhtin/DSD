@@ -33,7 +33,7 @@ BEGIN
      END IF;
 
      -- проверка - 
-     IF inInfoMoneyId NOT IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- статьи бонусы
+     IF inInfoMoneyId NOT IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), zc_Enum_InfoMoney_21512()) -- статьи бонусы
      THEN
         RAISE EXCEPTION 'Ошибка.Выбранная статья <%> не является начислением бонусов.', lfGet_Object_ValueData_sh (inInfoMoneyId);
      END IF;

@@ -104,6 +104,7 @@ BEGIN
                                            , View_InfoMoney.InfoMoneyId AS InfoMoneyId_master
                                              -- статья по которой будет поиск Базы
                                            , CASE WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                                    OR View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинг + Маркетинговый бюджет
                                                        THEN zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                   WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
                                                        THEN zc_Enum_InfoMoney_30201() -- Мясное сырье
@@ -122,6 +123,7 @@ BEGIN
                                                                                                            )
                                                    AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
                                                                                     , zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
+                                                                                    , zc_Enum_InfoMoney_21512() -- Маркетинг + Маркетинговый бюджет
                                                                                      )
                                                   THEN ObjectLink_ContractCondition_ContractSend.ChildObjectId
                                                   ELSE 0

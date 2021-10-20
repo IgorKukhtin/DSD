@@ -197,7 +197,7 @@ BEGIN
              , COALESCE (View_Account.AccountGroupId, 0)     AS AccountGroupId      -- сформируем позже, или ...
              , COALESCE (View_Account.AccountDirectionId, 0) AS AccountDirectionId  -- сформируем позже, или ...
              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
-                         -- MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                         -- MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), zc_Enum_InfoMoney_21512()) -- Бонусы за продукцию + Бонусы за мясное сырье + Маркетинговый бюджет
                          THEN vbAccountId
                     ELSE vbAccountId -- 0
                END AS AccountId
@@ -650,6 +650,7 @@ BEGIN
                              , 0 AS AccountGroupId, 0 AS AccountDirectionId -- сформируем позже, или ...
                              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                                          -- tmpContainerSumm.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                                         -- tmpContainerSumm.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), zc_Enum_InfoMoney_21512()) -- Бонусы за продукцию + Бонусы за мясное сырье + Маркетинговый бюджет
                                          THEN vbAccountId
                                     ELSE vbAccountId -- 0
                                END AS AccountId

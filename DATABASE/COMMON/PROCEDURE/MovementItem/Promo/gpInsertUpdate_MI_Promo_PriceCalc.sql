@@ -97,6 +97,7 @@ BEGIN
                                            , View_InfoMoney.InfoMoneyId AS InfoMoneyId_master
                                              -- статья по которой будет поиск Базы
                                            , CASE WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                                    OR View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинг + Маркетинговый бюджет
                                                        THEN zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                   WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
                                                        THEN zc_Enum_InfoMoney_30201() -- Мясное сырье
@@ -115,6 +116,7 @@ BEGIN
                                                                                                            )
                                                    AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
                                                                                     , zc_Enum_InfoMoney_21502() -- Маркетинг + Бонусы за мясное сырье
+                                                                                    , zc_Enum_InfoMoney_21512() -- Маркетинг + Маркетинговый бюджет
                                                                                      )
                                                   THEN ObjectLink_ContractCondition_ContractSend.ChildObjectId
                                                   ELSE 0
@@ -252,9 +254,9 @@ BEGIN
                  INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = tmpContract_res.ContractId_master
                                                           AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                           AND Object_Contract_InvNumber_View.isErased            = FALSE
-                                                          -- Готовая продукция OR  Маркетинг + Бонусы за продукцию
-                                                          --AND Object_Contract_InvNumber_View.InfoMoneyId       IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501())
-
+                                                          -- Готовая продукция OR  Маркетинг + Бонусы за продукцию + Маркетинговый бюджет
+                                                          --AND Object_Contract_InvNumber_View.InfoMoneyId       IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21512())
+                                                          
                  LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpContract_res.ContractId_master
 
                  LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
@@ -312,9 +314,9 @@ BEGIN
                                            INNER JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId          = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                                                                     AND Object_Contract_InvNumber_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                                                     AND Object_Contract_InvNumber_View.isErased            = FALSE
-                                                                                    -- Готовая продукция OR  Маркетинг + Бонусы за продукцию
-                                                                                  AND Object_Contract_InvNumber_View.InfoMoneyId         IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501())
-
+                                                                                    -- Готовая продукция OR  Маркетинг + Бонусы за продукцию + Маркетинговый бюджет
+                                                                                  AND Object_Contract_InvNumber_View.InfoMoneyId         IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21512())
+                                                                                  
                                            INNER JOIN tmpContractCondition ON tmpContractCondition.ContractId = COALESCE (MovementLinkObject_Contract.ObjectId, ObjectLink_Contract_Juridical.ObjectId)
                                                                         --AND tmpContractCondition.isErased = FALSE
                                                                         /*AND tmpContractCondition.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()

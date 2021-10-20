@@ -47,7 +47,7 @@ BEGIN
            , Object_Branch.ValueData                     AS BranchName_Personal
            , Object_Position.ValueData                   AS PositionName_Personal
                    
-           , ObjectString_Comment.ValueData              AS Comment
+           , (COALESCE (ObjectString_Comment.ValueData, '') || CASE WHEN Object_MemberPersonalServiceList.Id = 4153674 THEN '*' ELSE '' END) :: TVarChar AS Comment
            , ObjectBoolean_All.ValueData                 AS isAll
            , Object_MemberPersonalServiceList.isErased   AS isErased
 
