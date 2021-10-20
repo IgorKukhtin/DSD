@@ -69,6 +69,7 @@ type
     cxLabel10: TcxLabel;
     ceTotalSumm: TcxCurrencyEdit;
     HeaderExit: THeaderExit;
+    EnterMoveNext: TEnterMoveNext;
   private
     { Private declarations }
   public

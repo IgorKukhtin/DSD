@@ -228,6 +228,7 @@ type
     ceTotalSummTaxMVAT: TcxCurrencyEdit;
     cxLabel22: TcxLabel;
     ceTotalSummTaxPVAT: TcxCurrencyEdit;
+    EnterMoveNext: TEnterMoveNext;
   private
   public
   end;

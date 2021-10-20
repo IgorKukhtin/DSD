@@ -22,8 +22,7 @@ object IncomeEditForm: TIncomeEditForm
     Width = 75
     Height = 25
     Action = actInsertUpdate
-    Default = True
-    TabOrder = 2
+    TabOrder = 9
   end
   object cxButton2: TcxButton
     Left = 293
@@ -33,7 +32,7 @@ object IncomeEditForm: TIncomeEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 10
   end
   object cxLabel18: TcxLabel
     Left = 16
@@ -47,7 +46,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
-    TabOrder = 1
+    TabOrder = 12
     Width = 74
   end
   object cxLabel12: TcxLabel
@@ -64,7 +63,7 @@ object IncomeEditForm: TIncomeEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 0
+    TabOrder = 11
     Width = 347
   end
   object cxLabel14: TcxLabel
@@ -76,7 +75,7 @@ object IncomeEditForm: TIncomeEditForm
     Left = 8
     Top = 26
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 16
     Width = 129
   end
   object cxLabel1: TcxLabel
@@ -92,7 +91,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 9
+    TabOrder = 0
     Width = 74
   end
   object cxLabel3: TcxLabel
@@ -108,7 +107,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 11
+    TabOrder = 1
     Width = 74
   end
   object cxLabel7: TcxLabel
@@ -124,7 +123,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 13
+    TabOrder = 2
     Width = 74
   end
   object cxLabel9: TcxLabel
@@ -155,7 +154,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 18
+    TabOrder = 5
     Width = 74
   end
   object ceSummPack: TcxCurrencyEdit
@@ -166,7 +165,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 19
+    TabOrder = 4
     Width = 74
   end
   object ceSummPost: TcxCurrencyEdit
@@ -177,7 +176,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 20
+    TabOrder = 3
     Width = 74
   end
   object ceSumm2: TcxCurrencyEdit
@@ -187,7 +186,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
-    TabOrder = 21
+    TabOrder = 24
     Width = 74
   end
   object cxLabel16: TcxLabel
@@ -218,7 +217,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 26
+    TabOrder = 8
     Width = 74
   end
   object ceTotalSummTaxMVAT: TcxCurrencyEdit
@@ -229,7 +228,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 27
+    TabOrder = 7
     Width = 74
   end
   object ceTotalDiscountTax: TcxCurrencyEdit
@@ -240,7 +239,7 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
-    TabOrder = 28
+    TabOrder = 6
     Width = 74
   end
   object ceSumm3: TcxCurrencyEdit
@@ -745,5 +744,40 @@ object IncomeEditForm: TIncomeEditForm
     Action = actRefreshOperPriceList
     Left = 328
     Top = 208
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end
+      item
+        Control = cxButton1
+      end>
+    Left = 352
+    Top = 264
   end
 end

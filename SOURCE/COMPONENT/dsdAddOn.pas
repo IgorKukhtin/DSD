@@ -4979,9 +4979,10 @@ begin
 end;
 
 procedure TEnterMoveNext.OnFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-  var Control: TComponent; I, J : Integer;
+  var Control: TComponent; I, J : Integer; fFind : Boolean;
 begin
-  if (Key = VK_RETURN) AND ((Shift = []) or (Shift = [ssCtrl]))  then
+  if (Key = VK_RETURN) AND ((Shift = []) or (Shift = [ssCtrl]))
+  then
   Begin
     if Assigned(Screen.ActiveControl) then
     begin
@@ -4993,6 +4994,15 @@ begin
     end else Control := Nil;
 
     if Pos('Memo', Control.ClassName) > 0 then Exit;
+
+    //еще выход, т.к. наш контрол не из списка
+    fFind:=false;
+    for I := 0 to Pred(EnterMoveNextList.Count) do
+     if Assigned(EnterMoveNextList[I].Control) and (EnterMoveNextList[I].Control = Control)
+    then fFind:= true;
+    // выход
+    if not fFind then exit;
+
 
     try
 

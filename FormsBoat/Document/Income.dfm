@@ -391,15 +391,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 123
-    ExplicitHeight = 438
     ClientRectBottom = 366
     ClientRectRight = 1027
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 414
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -407,7 +404,6 @@ object IncomeForm: TIncomeForm
         Height = 189
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 261
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -909,7 +905,6 @@ object IncomeForm: TIncomeForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitTop = 269
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1094,13 +1089,11 @@ object IncomeForm: TIncomeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 261
       end
     end
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitHeight = 414
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1108,7 +1101,6 @@ object IncomeForm: TIncomeForm
         Height = 342
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 414
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -4138,5 +4130,37 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 735
     Top = 264
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceSummTaxMVAT
+      end
+      item
+        Control = ceSummTaxPVAT
+      end
+      item
+        Control = ceSummPost
+      end
+      item
+        Control = ceSummPack
+      end
+      item
+        Control = ceSummInsur
+      end
+      item
+        Control = ceTotalDiscountTax
+      end
+      item
+        Control = ceTotalSummTaxMVAT
+      end
+      item
+        Control = ceTotalSummTaxPVAT
+      end>
+    Left = 296
+    Top = 104
   end
 end
