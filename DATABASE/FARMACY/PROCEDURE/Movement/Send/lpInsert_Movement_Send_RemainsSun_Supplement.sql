@@ -75,7 +75,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean) ON COMMIT DROP;
      END IF;
 
      -- все Подразделения для схемы SUN Supplement
@@ -320,11 +320,12 @@ BEGIN
      END IF;*/
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id, isSmudge)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
              , Object_Goods_Main.UnitSupplementSUN1OutId
              , Object_Goods_Main.UnitSupplementSUN2OutId
+             , Object_Goods_Main.isSupplementSmudge
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -690,7 +691,57 @@ BEGIN
 
        ;
        
-     IF CURRENT_DATE <= '20.10.2021'
+       
+     
+     IF EXISTS (SELECT 1
+                FROM _tmpGoods_SUN_Supplement 
+                WHERE _tmpGoods_SUN_Supplement.isSmudge = True
+                  AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> 0 OR
+                       COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
+     THEN
+
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
+                                                         FROM Container 
+                                                         WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
+                                                           AND Container.Amount <> 0
+                                                           AND Container.WhereObjectId = _tmpRemains_all_Supplement.UnitId)
+       FROM (SELECT _tmpGoods_SUN_Supplement.GoodsId
+                  , _tmpGoods_SUN_Supplement.UnitOutId
+                  , _tmpGoods_SUN_Supplement.UnitOut2Id
+             FROM _tmpGoods_SUN_Supplement 
+             WHERE _tmpGoods_SUN_Supplement.isSmudge = True
+               AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> 0 OR
+                    COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0)) AS _tmpGoods_SUN_Supplement 
+       WHERE _tmpGoods_SUN_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+         AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0)  = _tmpRemains_all_Supplement.UnitId OR
+              COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) = _tmpRemains_all_Supplement.UnitId);
+                                                             
+       
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT FLOOR(SUM(Container.Amount)) 
+                                                                FROM Container 
+                                                                WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
+                                                                  AND Container.Amount <> 0
+                                                                  AND (Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
+                                                                       Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))) / 
+                                                               (SELECT count(*) 
+                                                                FROM _tmpRemains_all_Supplement AS Remains_all
+                                                                WHERE Remains_all.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                                  AND Remains_all.UnitId <> COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0)
+                                                                  AND Remains_all.UnitId <> COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0)))
+       FROM (SELECT _tmpGoods_SUN_Supplement.GoodsId
+                  , _tmpGoods_SUN_Supplement.UnitOutId
+                  , _tmpGoods_SUN_Supplement.UnitOut2Id
+             FROM _tmpGoods_SUN_Supplement 
+             WHERE _tmpGoods_SUN_Supplement.isSmudge = True
+               AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> 0 OR
+                    COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0)) AS _tmpGoods_SUN_Supplement 
+       WHERE _tmpGoods_SUN_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+         AND COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0)  <> _tmpRemains_all_Supplement.UnitId 
+         AND COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> _tmpRemains_all_Supplement.UnitId;
+     
+     END IF;
+       
+/*     IF CURRENT_DATE <= '20.10.2021'
      THEN
 
        ---------
@@ -706,7 +757,7 @@ BEGIN
          AND _tmpRemains_all_Supplement.GoodsId = 880570 ;
          
         
-/*       ---------
+       ---------
        UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) FROM Container WHERE Container.ID in (28561767))
        WHERE _tmpRemains_all_Supplement.UnitId = 11152911
          AND _tmpRemains_all_Supplement.GoodsId = 2485 ;
@@ -729,8 +780,8 @@ BEGIN
                                                                   AND _tmpRemains_all_Supplement.GoodsId = 25516 ))
        WHERE _tmpRemains_all_Supplement.UnitId <> 8156016
          AND _tmpRemains_all_Supplement.GoodsId = 25516 ;
-*/
-     END IF;
+
+     END IF;*/
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      --
