@@ -223,7 +223,7 @@ BEGIN
                                                                 AND MIBoolean_Deferred.ValueData      = TRUE
                                                                
                              WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
-                               AND (inSession = '3' OR vbUnitId = 8156016)
+                               AND vbRetailId = 4
                              GROUP BY MovementItemMaster.ObjectId
                              )
          -- Отложенные чеки

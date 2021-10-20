@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice_Ol (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice_Ol(
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice(
     IN inMovementId          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -311,4 +311,4 @@ $BODY$
  13.05.15                        *
  26.01.15                        *
 */
--- select * from gpUpdate_MovementItem_Income_SendPrice_Ol (inMovementId := 25179754 ,  inSession := '3');
+-- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 25179754 ,  inSession := '3');

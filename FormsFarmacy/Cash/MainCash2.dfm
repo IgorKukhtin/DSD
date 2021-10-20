@@ -6303,7 +6303,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
-    Filter = 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0'
+    Filter = 
+      'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR' +
+      ' <> 0'
     Filtered = True
     FieldDefs = <>
     IndexDefs = <>
