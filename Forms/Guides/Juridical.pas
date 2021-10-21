@@ -112,6 +112,7 @@ type
     macInsert_VatPrice: TMultiAction;
     bbInsert_VatPrice: TdxBarButton;
     FormParams: TdsdFormParams;
+    SummOrderMin: TcxGridDBColumn;
   private
     { Private declarations }
   public

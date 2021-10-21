@@ -1962,7 +1962,7 @@ begin
     try
       RemainsCDS.DisableControls;
       RemainsCDS.Filtered := false;
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
     finally
       RemainsCDS.Filtered := true;
       RemainsCDS.EnableControls;
@@ -7746,7 +7746,10 @@ begin
   SoldParallel := iniSoldParallel;
   CheckCDS.CreateDataSet;
   ChangeStatus('Подготовка нового чека');
-  NewCheck;
+  try
+    NewCheck;
+  except
+  end;
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
 

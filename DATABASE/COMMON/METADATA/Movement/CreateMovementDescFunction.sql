@@ -503,9 +503,21 @@ CREATE OR REPLACE FUNCTION zc_Movement_WagesVIP() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_WagesVIP', 'З/П VIP менеджеров' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WagesVIP');
 
+
+CREATE OR REPLACE FUNCTION zc_Movement_PromoStat() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoStat'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoStat', 'Статистика продаж для акций' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoStat');
+
+CREATE OR REPLACE FUNCTION zc_Movement_PromoPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoPlan', 'Планирование акций' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoPlan');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 20.10.21         * zc_Movement_PromoStat
+                    zc_Movement_PromoPlan
  17.09.21                                                                                     * zc_Movement_WagesVIP
  15.09.21                                                                                     * zc_Movement_EmployeeScheduleVIP
  03.09.21         * zc_Movement_PromoInvoice

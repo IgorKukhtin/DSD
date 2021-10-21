@@ -1616,22 +1616,24 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_DialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalVatPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalVatPriceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalTreeForm');
 
@@ -3256,13 +3258,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-   {
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoInvoiceForm');
   exit;

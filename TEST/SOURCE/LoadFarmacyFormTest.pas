@@ -2194,6 +2194,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWagesVIPJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesVIPForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesVIP_UserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesVIP_UserForm');
 end;
 
 procedure TLoadFormTest.LoadWriteOffHouseholdInventoryFormTest;

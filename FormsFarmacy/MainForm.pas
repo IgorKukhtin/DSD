@@ -882,6 +882,8 @@ type
     N322: TMenuItem;
     actReport_TopListDiffGoods: TdsdOpenForm;
     N323: TMenuItem;
+    actWagesVIP_User: TdsdOpenForm;
+    N324: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

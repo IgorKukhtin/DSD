@@ -265,6 +265,16 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
+      object SummOrderMin: TcxGridDBColumn
+        Caption = #1052#1080#1085'. '#1079#1072#1082#1072#1079' '#1089' '#1089#1091#1084#1084#1086#1081' >= '
+        DataBinding.FieldName = 'SummOrderMin'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1079#1072#1082#1072#1079' '#1089' '#1089#1091#1084#1084#1086#1081' >= '
+        Width = 91
+      end
       object SummOrderFinance: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1087#1086' '#1089#1091#1084#1084#1077' '#1086#1090#1089#1088#1086#1095#1082#1080
         DataBinding.FieldName = 'SummOrderFinance'
@@ -1117,7 +1127,7 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'inisVatPrice'
-          Value = 'false'
+          Value = False
           Component = MasterCDS
           ComponentItem = 'isVatPrice'
           DataType = ftBoolean
@@ -1224,10 +1234,13 @@ object JuridicalForm: TJuridicalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 272
   end
@@ -1265,6 +1278,15 @@ object JuridicalForm: TJuridicalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RetailReportId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummOrderMin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummOrderMin'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1355,7 +1377,7 @@ object JuridicalForm: TJuridicalForm
       end
       item
         Name = 'inVatPriceDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inVatPriceDate'
         DataType = ftDateTime
