@@ -402,7 +402,7 @@ END IF;*/
 
 
      -- !!!
-     vbIsPriceList_begin_recalc:= inUserId IN (6131893, 2030723, 5) AND vbOperDate >= '01.04.2021';
+     vbIsPriceList_begin_recalc:= inUserId IN (zfCalc_UserMain()) AND vbOperDate >= '01.04.2021';
 
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE

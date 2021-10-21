@@ -60,7 +60,7 @@ BEGIN
                        )
         , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View
                          WHERE UserId = vbUserId   -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
-                         --AND vbUserId <> 6131893 -- Черняєва О.А.
+                         --AND vbUserId <> zfCalc_UserMain()
                         )
         , tmpMemberPersonalServiceList
                      AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
@@ -103,7 +103,7 @@ BEGIN
                          FROM Object AS Object_PersonalServiceList
                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
                            AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
-                         --AND vbUserId <> 6131893 -- Черняєва О.А.
+                         --AND vbUserId <> zfCalc_UserMain()
                         /*UNION
                          -- "ЗП филиалов" видят "Галат Е.Н."
                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId

@@ -434,8 +434,8 @@ END IF;*/
      -- Эти параметры СПЕЦ. прайс-листа нужны для ...
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
-     -- !!!
-     vbIsPriceList_begin_recalc:= inUserId IN (6131893, 7015095, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021'
+     -- !!! Коротких О.Л. - Касян С.А.
+     vbIsPriceList_begin_recalc:= inUserId IN (zfCalc_UserMain(), 7015095, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021'
                             --AND EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
                                  ;
 
@@ -3517,7 +3517,7 @@ END IF;*/
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> 343013 -- Нагорная Я.Г.
         -- AND inUserId <> 9459   -- Малахова Т.Н.
-        -- AND inUserId <> 6131893   -- Черняєва О.А.
+        -- AND inUserId <> zfCalc_UserMain()
         -- AND inUserId <> 5
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
