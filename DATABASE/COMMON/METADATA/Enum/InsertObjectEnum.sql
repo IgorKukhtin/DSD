@@ -879,6 +879,9 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70501, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70501');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 75103, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_75103');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 75105, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_75105');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80103, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80103');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ProfitLoss_80105(),  inDescId:= zc_Object_ProfitLoss(), inCode:= 80105, inName:= 'Разница при покупке/продаже валюты', inEnumName:= 'zc_Enum_ProfitLoss_80105');

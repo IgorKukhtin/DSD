@@ -1163,6 +1163,11 @@ CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_70215() RETURNS Integer AS $BODY$B
 -- 70000; Дополнительная прибыль 70500; Списание задолженности по ЗП 70501; Списание задолженности по ЗП
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_70501() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_70501' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- 75000; Финансовая деятельность  75100; Финансовая деятельность 75103; Курсовая разница
+CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_75103() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_75103' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 75000; Финансовая деятельность  75100; Финансовая деятельность 75105; Разница при покупке/продаже валюты
+CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_75105() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_75105' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- 80000; Расходы с прибыли  80100; Финансовая деятельность 80103; Курсовая разница
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_80103() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_80103' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 80000; Расходы с прибыли  80100; Финансовая деятельность 80105; Разница при покупке/продаже валюты
