@@ -24,7 +24,7 @@ inherited CheckJournalForm: TCheckJournalForm
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
-        ExplicitLeft = 64
+        ExplicitLeft = 3
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -112,7 +112,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00; -,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -122,7 +122,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'TotalSummPayAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00; -,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -131,6 +131,8 @@ inherited CheckJournalForm: TCheckJournalForm
           object clTotalSummChangePercent: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'TotalSummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00; -,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

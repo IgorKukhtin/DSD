@@ -17,6 +17,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMovementId Integer;
+  DECLARE vbPositionCode Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TestingTuning());
@@ -37,6 +38,22 @@ BEGIN
        RAISE EXCEPTION 'Не найден активный документ настройки тестирования.';     
      END IF;                
 
+     SELECT COALESCE(Object_Position.ObjectCode, 1)
+     INTO vbPositionCode
+     FROM Object AS Object_User
+
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                               ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                              AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                                           
+     WHERE Object_User.Id = vbUserId
+       AND Object_User.DescId = zc_Object_User();
+       
      RETURN QUERY
      WITH tmpMaster AS (SELECT * 
                         FROM gpSelect_MovementItem_TestingTuning_Master(inMovementId := vbMovementId 
@@ -53,6 +70,23 @@ BEGIN
                                                                       , inShowAll := 'False' 
                                                                       , inIsErased := 'False' 
                                                                       , inSession := inSession))
+        , tmpTopicsTesting AS (SELECT DISTINCT Object_TopicsTestingTuning.Id                           AS TopicsTestingTuningId
+                               FROM Object AS Object_TopicsTestingTuning
+                                
+                                    INNER JOIN MovementItem ON MovementItem.ObjectId = Object_TopicsTestingTuning.Id
+                                                           AND MovementItem.MovementId = vbMovementId
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.isErased = FALSE
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_TestQuestionsStorekeeper
+                                                                ON MIFloat_TestQuestionsStorekeeper.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_TestQuestionsStorekeeper.DescId = zc_MIFloat_AmountStorekeeper()
+                                                               
+                                WHERE Object_TopicsTestingTuning.DescId = zc_Object_TopicsTestingTuning()
+                                  AND Object_TopicsTestingTuning.isErased = False
+                                  AND (vbPositionCode = 1 AND MovementItem.Amount > 0 OR
+                                       vbPositionCode = 2 AND COALESCE (MIFloat_TestQuestionsStorekeeper.ValueData, 0) > 0 ) OR
+                                       COALESCE (vbPositionCode, 0) NOT IN (1, 2))
                                                                       
      SELECT tmpMaster.TopicsTestingTuningId
           , tmpMaster.TopicsTestingTuningName
@@ -63,6 +97,8 @@ BEGIN
           , tmpSecond.PropertiesId
      FROM tmpMaster
      
+          INNER JOIN tmpTopicsTesting ON tmpTopicsTesting.TopicsTestingTuningId = tmpMaster.TopicsTestingTuningId
+          
           INNER JOIN tmpChild ON tmpChild.ParentId = tmpMaster.Id
 
           INNER JOIN tmpSecond ON tmpSecond.ParentId = tmpChild.Id

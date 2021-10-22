@@ -169,7 +169,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 361
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -510,7 +509,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ExplicitHeight = 361
       object edUnitOverdue: TcxButtonEdit
         Left = 0
         Top = 27
@@ -816,7 +814,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
-      ExplicitHeight = 361
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12
@@ -965,7 +962,7 @@
       end
       object ceSerialNumberTabletki: TcxCurrencyEdit
         Left = 15
-        Top = 255
+        Top = 246
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 18
@@ -973,7 +970,7 @@
       end
       object cxLabel46: TcxLabel
         Left = 15
-        Top = 236
+        Top = 227
         Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' '#1090#1072#1073#1083#1077#1090#1086#1082
       end
       object cxLabel48: TcxLabel
@@ -989,7 +986,7 @@
       end
       object ceSerialNumberMypharmacy: TcxCurrencyEdit
         Left = 15
-        Top = 303
+        Top = 292
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 22
@@ -997,8 +994,21 @@
       end
       object cxLabel49: TcxLabel
         Left = 15
-        Top = 284
+        Top = 273
         Caption = #1057#1077#1088'. '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' "'#1052#1086#1103' '#1072#1087#1090#1077#1082#1072'"'
+      end
+      object edTokenKashtan: TcxTextEdit
+        Left = 15
+        Top = 338
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 24
+        Width = 450
+      end
+      object cxLabel52: TcxLabel
+        Left = 15
+        Top = 316
+        Caption = #9#1058#1086#1082#1077#1085' '#1072#1087#1090#1077#1095#1085#1086#1081' '#1089#1077#1090#1080' '#1074' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
       end
     end
   end
@@ -1571,6 +1581,14 @@
         Name = 'inPharmacyManagerPhone'
         Value = Null
         Component = edPharmacyManagerPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTokenKashtan'
+        Value = Null
+        Component = edTokenKashtan
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2175,6 +2193,13 @@
         Name = 'PharmacyManagerPhone'
         Value = Null
         Component = edPharmacyManagerPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TokenKashtan'
+        Value = Null
+        Component = edTokenKashtan
         DataType = ftString
         MultiSelectSeparator = ','
       end>

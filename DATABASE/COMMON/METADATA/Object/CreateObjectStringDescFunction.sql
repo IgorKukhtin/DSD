@@ -1378,10 +1378,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_PharmacyManagerPhone() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_PharmacyManagerPhone', zc_object_Unit(), 'Телефон Зав. аптекой' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_PharmacyManagerPhone');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_TokenKashtan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_TokenKashtan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_TokenKashtan', zc_object_Unit(), 'Токен аптечной сети в МИС «Каштан»' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_TokenKashtan');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 22.10.21                                                                                                         * zc_ObjectString_Unit_TokenKashtan
  13.10.21                                                                                                         * zc_ObjectString_Unit_PharmacyManager, zc_ObjectString_Unit_PharmacyManagerPhone
  04.10.21         * zc_ObjectString_Unit_Comment
  01.10.21                                                                                                         * zc_ObjectString_MedicalProgramSP_ProgramId

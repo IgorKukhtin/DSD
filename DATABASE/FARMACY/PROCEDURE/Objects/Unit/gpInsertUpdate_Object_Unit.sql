@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                    Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
-                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+                                                   Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Integer, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -82,6 +82,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     
     IN inPharmacyManager         TVarChar  ,    -- ФИО Зав. аптекой
     IN inPharmacyManagerPhone    TVarChar  ,    -- Телефон Зав. аптекой
+    IN inTokenKashtan            TVarChar  ,    -- Токен аптечной сети в МИС «Каштан»
 
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -411,6 +412,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_PharmacyManager(), ioId, TRIM(inPharmacyManager));
    -- Телефон Зав. аптекой
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_PharmacyManagerPhone(), ioId, TRIM(inPharmacyManagerPhone));
+
+   -- Телефон Зав. аптекой
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_TokenKashtan(), ioId, TRIM(inTokenKashtan));
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

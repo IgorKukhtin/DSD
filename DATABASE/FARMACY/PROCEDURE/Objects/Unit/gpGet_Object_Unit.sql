@@ -54,7 +54,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PromoForSale TVarChar,
                isMinPercentMarkup Boolean,
                SerialNumberMypharmacy Integer,
-               isBlockCommentSendTP Boolean
+               isBlockCommentSendTP Boolean,
+               PharmacyManager TVarChar,
+               PharmacyManagerPhone TVarChar,
+               TokenKashtan TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -171,6 +174,10 @@ BEGIN
            , FALSE                 AS isMinPercentMarkup
            , CAST (0 as Integer)   AS SerialNumberMypharmacy
            , FALSE                 AS isBlockCommentSendTP
+           , CAST ('' as TVarChar) AS PharmacyManager
+           , CAST ('' as TVarChar) AS PharmacyManagerPhone
+           , CAST ('' as TVarChar) AS TokenKashtan
+
 ;
    ELSE
        RETURN QUERY 
@@ -287,6 +294,10 @@ BEGIN
       , COALESCE (ObjectBoolean_MinPercentMarkup.ValueData, FALSE):: Boolean      AS isMinPercentMarkup
       , ObjectFloat_SerialNumberMypharmacy.ValueData::Integer           AS  SerialNumberMypharmacy
       , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE):: Boolean    AS isBlockCommentSendTP
+
+      , ObjectString_PharmacyManager.ValueData                AS PharmacyManager
+      , ObjectString_PharmacyManagerPhone.ValueData           AS PharmacyManagerPhone
+      , ObjectString_TokenKashtan.ValueData                   AS TokenKashtan
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -516,6 +527,16 @@ BEGIN
                                ON ObjectString_Longitude.ObjectId = Object_Unit.Id
                               AND ObjectString_Longitude.DescId = zc_ObjectString_Unit_Longitude()
 
+        LEFT JOIN ObjectString AS ObjectString_PharmacyManager
+                               ON ObjectString_PharmacyManager.ObjectId = Object_Unit.Id
+                              AND ObjectString_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
+        LEFT JOIN ObjectString AS ObjectString_PharmacyManagerPhone
+                               ON ObjectString_PharmacyManagerPhone.ObjectId = Object_Unit.Id
+                              AND ObjectString_PharmacyManagerPhone.DescId = zc_ObjectString_Unit_PharmacyManagerPhone()
+        LEFT JOIN ObjectString AS ObjectString_TokenKashtan
+                               ON ObjectString_TokenKashtan.ObjectId = Object_Unit.Id
+                              AND ObjectString_TokenKashtan.DescId = zc_ObjectString_Unit_TokenKashtan()
+
         LEFT JOIN ObjectDate AS ObjectDate_MondayStart
                              ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
@@ -623,4 +644,4 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 
 -- select * from gpGet_Object_Unit(inId := 377613 ,  inSession := '3'::TVarChar);
 
- select * from gpGet_Object_Unit(inId := 183289 ,  inSession := '3');
+ select * from gpGet_Object_Unit(inId := 377605 ,  inSession := '3');

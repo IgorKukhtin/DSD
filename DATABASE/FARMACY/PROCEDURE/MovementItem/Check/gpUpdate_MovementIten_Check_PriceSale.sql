@@ -1,17 +1,18 @@
-   -- Function: gpUpdate_MovementIten_Check_Price()
+   -- Function: gpUpdate_MovementIten_Check_PriceSale()
 
-DROP FUNCTION IF EXISTS gpUpdate_MovementIten_Check_Price (Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementIten_Check_PriceSale (Integer, Integer, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MovementIten_Check_Price(
+CREATE OR REPLACE FUNCTION gpUpdate_MovementIten_Check_PriceSale(
     IN inMovementId          Integer   , -- Ключ объекта <строка документа>
     IN inMovementItemID      Integer   , -- Ключ объекта <Документ>
-    IN inPrice               TFloat    , -- Цена отпускная
+    IN inPriceSale           TFloat    , -- Цена отпускная без скидки
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbPrice TFloat;
    DECLARE vbPriceSale TFloat;
    DECLARE vbChangePercent TFloat;
    DECLARE vbAmount TFloat;
@@ -57,12 +58,17 @@ BEGIN
         RAISE EXCEPTION 'Не задан документ или неправельная связь';
     END IF;
 
-    SELECT MovementItem.Amount, MovementItemFloat.ValueData AS PriceSale, MIFloat_ChangePercent.ValueData AS ChangePercent
-    INTO vbAmount, vbPriceSale, vbChangePercent
+    SELECT MovementItem.Amount, MIFloat_Price.ValueData AS Price, MIFloat_PriceSale.ValueData AS PriceSale, MIFloat_ChangePercent.ValueData AS ChangePercent
+    INTO vbAmount, vbPrice, vbPriceSale, vbChangePercent
     FROM MovementItem
 
-         LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemID = MovementItem.ID
-                                    AND MovementItemFloat.DescId = zc_MIFloat_PriceSale()
+         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemID = MovementItem.ID
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+         LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                     ON MIFloat_PriceSale.MovementItemID = MovementItem.ID
+                                    AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                      ON MIFloat_ChangePercent.MovementItemID = MovementItem.ID
@@ -72,7 +78,7 @@ BEGIN
 
 
     -- сохранили свойство <Цена>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemID, inPrice);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), inMovementItemID, inPriceSale);
 
     -- сохранили свойство <% Скидки>
     IF vbChangePercent NOT IN (50, 100)
@@ -81,12 +87,12 @@ BEGIN
     END IF;
 
     -- сохранили свойство <>
-    IF COALESCE(inPrice, 0) = COALESCE(vbPriceSale, 0)
+    IF COALESCE(vbPrice, 0) = COALESCE(inPriceSale, 0)
     THEN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inMovementItemID, 0);
     ELSE
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inMovementItemID, CASE WHEN vbAmount = 0 THEN 0.0
-          ELSE ROUND(ROUND(vbAmount, 3) * COALESCE(vbPriceSale, 0), 2) - ROUND(ROUND(vbAmount, 3) * inPrice, 2) END);
+          ELSE ROUND(ROUND(vbAmount, 3) * COALESCE(inPriceSale, 0), 2) - ROUND(ROUND(vbAmount, 3) * vbPrice, 2) END);
     END IF;
 
     -- пересчитали Итоговые суммы
@@ -98,7 +104,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpUpdate_MovementIten_Check_Price (Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_MovementIten_Check_PriceSale (Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -107,4 +113,4 @@ ALTER FUNCTION gpUpdate_MovementIten_Check_Price (Integer, Integer, TFloat, TVar
 */
 
 
--- select * from gpUpdate_MovementIten_Check_Price(inMovementId := 21296096 , inMovementItemID := 394839117 , inPrice := 500 ,  inSession := '3');
+-- select * from gpUpdate_MovementIten_Check_PriceSale(inMovementId := 21296096 , inMovementItemID := 394839117 , inPrice := 500 ,  inSession := '3');

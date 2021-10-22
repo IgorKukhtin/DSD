@@ -134,7 +134,7 @@ BEGIN
            , MovementDate_OperDateSP.ValueData                  AS OperDateSP
            , Object_PartnerMedical.ValueData                    AS PartnerMedicalName
            , Movement_Check.InvNumberSP                         AS InvNumberSP
-           , MovementString_MedicSP.ValueData                   AS MedicSPName
+           , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData):: TVarChar AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
            , Object_MedicalProgramSP.ValueData                  AS MedicalProgramSPName
@@ -145,7 +145,9 @@ BEGIN
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
 
            , Object_MemberSP.Id                                           AS MemberSPId
-           , Object_MemberSP.ValueData                                    AS MemberSPName
+           , COALESCE(Object_MemberSP.ValueData, Object_MemberKashtan.ValueData):: TVarChar AS MemberSPName
+
+           
            , Object_GroupMemberSP.Id                                      AS GroupMemberSPId
            , Object_GroupMemberSP.ValueData                               AS GroupMemberSPName
            , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
@@ -383,6 +385,12 @@ BEGIN
                                  ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
                                 AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberKashtan
+                                         ON MovementLinkObject_MemberKashtan.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_MemberKashtan.DescId = zc_MovementLinkObject_MemberKashtan()
+            LEFT JOIN Object AS Object_MemberKashtan ON Object_MemberKashtan.Id = MovementLinkObject_MemberKashtan.ObjectId
+            
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankPOSTerminal
                                          ON MovementLinkObject_BankPOSTerminal.MovementId =  Movement_Check.Id
@@ -419,6 +427,11 @@ BEGIN
                                          ON MovementLinkObject_MedicForSale.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_MedicForSale.DescId = zc_MovementLinkObject_MedicForSale()
             LEFT JOIN Object AS Object_MedicForSale ON Object_MedicForSale.Id = MovementLinkObject_MedicForSale.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicKashtan
+                                         ON MovementLinkObject_MedicKashtan.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_MedicKashtan.DescId = zc_MovementLinkObject_MedicKashtan()
+            LEFT JOIN Object AS Object_MedicKashtan ON Object_MedicKashtan.Id = MovementLinkObject_MedicKashtan.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerForSale
                                          ON MovementLinkObject_BuyerForSale.MovementId =  Movement_Check.Id
@@ -471,4 +484,5 @@ $BODY$
 -- тест
 -- select * from gpSelect_Movement_Check(inStartDate := ('20.04.2021')::TDateTime , inEndDate := ('20.04.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 377605 ,  inSession := '3');
 
-select * from gpSelect_Movement_Check(inStartDate := ('01.09.2021')::TDateTime , inEndDate := ('01.09.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 183292 ,  inSession := '3');
+select * from gpSelect_Movement_Check(inStartDate := ('22.10.2021')::TDateTime , inEndDate := ('22.10.2021')::TDateTime , inIsErased := 'False' , inIsSP := 'False' , inIsVip := 'False' , inUnitId := 377605 ,  inSession := '3')
+where spkindname = 'Постановление 1303';

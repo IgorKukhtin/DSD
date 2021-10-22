@@ -3,7 +3,7 @@ object EnterRecipeNumber1303Form: TEnterRecipeNumber1303Form
   Top = 0
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
-  Caption = #1042#1074#1086#1076' '#1085#1086#1084#1077#1088#1072' '#1088#1077#1094#1077#1087#1090#1072' '#1087#1088#1086#1075#1088#1072#1084#1084#1099'1303'
+  Caption = #1042#1074#1086#1076' '#1085#1086#1084#1077#1088#1072' '#1088#1077#1094#1077#1087#1090#1072' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' 1303'
   ClientHeight = 177
   ClientWidth = 381
   Color = clBtnFace

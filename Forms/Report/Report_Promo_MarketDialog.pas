@@ -37,6 +37,7 @@ type
     cxLabel6: TcxLabel;
     ceJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    cbIsDetail: TcxCheckBox;
   private
     { Private declarations }
   public
