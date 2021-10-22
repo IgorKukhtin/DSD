@@ -452,7 +452,7 @@ BEGIN
 
         FROM
             lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
-                                    , inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
+                                    , inObjectId := vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
                                     , inUserId   := vbUserId
                                     ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
@@ -785,3 +785,6 @@ $BODY$
 --
 
 select * from gpSelect_AllGoodsPrice(inUnitId := 183292 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
+
+
+select * from gpSelect_AllGoodsPrice(inUnitId := 4135547 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');

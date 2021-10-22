@@ -46,7 +46,7 @@ BEGIN
              , COALESCE (MIBoolean_Storekeeper.ValueData, FALSE)   AS isStorekeeper
              , MIBLOB_Question.ValueData                           AS Question
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) DESC, random())::Integer AS RandomID
-             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomStorekeeperID
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_Storekeeper.ValueData, FALSE) DESC, random())::Integer AS RandomStorekeeperID
              , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
         FROM MovementItem 
             

@@ -147,6 +147,12 @@ type
     actUpdate_Storekeeper: TdsdExecStoredProc;
     dxBarButton19: TdxBarButton;
     actRefreshSmall: TdsdDataSetRefresh;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    edWrong¿nswersStorekeeper: TcxTextEdit;
+    edWrong¿nswers: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public

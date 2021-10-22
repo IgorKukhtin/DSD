@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TimeTest Integer
              , QuestionStorekeeper Integer
              , TimeTestStorekeeper Integer
+             , Wrong¿nswers Integer
+             , Wrong¿nswersStorekeeper Integer
              , Comment TVarChar
               )
 AS
@@ -37,6 +39,8 @@ BEGIN
              , 0                     				            AS TimeTest
              , 0                                                AS QuestionStorekeeper
              , 0                     				            AS TimeTestStorekeeper
+             , 0                     				            AS WrongAnswers
+             , 0                     				            AS WrongAnswersStorekeeper
              , CAST ('' AS TVarChar) 		                    AS Comment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -52,6 +56,8 @@ BEGIN
            , MovementFloat_Time.ValueData::Integer              AS TimeTest
            , MovementFloat_QuestionStorekeeper.ValueData::Integer     AS QuestionStorekeeper
            , MovementFloat_TimeStorekeeper.ValueData::Integer         AS TimeTestStorekeeper
+           , MovementFloat_WrongAnswers.ValueData::Integer            AS WrongAnswers
+           , MovementFloat_WrongAnswersStorekeeper.ValueData::Integer AS WrongAnswersStorekeeper
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -65,6 +71,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Time
                                     ON MovementFloat_Time.MovementId = Movement.Id
                                    AND MovementFloat_Time.DescId = zc_MovementFloat_Time()
+            LEFT JOIN MovementFloat AS MovementFloat_WrongAnswers
+                                    ON MovementFloat_WrongAnswers.MovementId = Movement.Id
+                                   AND MovementFloat_WrongAnswers.DescId = zc_MovementFloat_WrongAnswers()
+            LEFT JOIN MovementFloat AS MovementFloat_WrongAnswersStorekeeper
+                                    ON MovementFloat_WrongAnswersStorekeeper.MovementId = Movement.Id
+                                   AND MovementFloat_WrongAnswersStorekeeper.DescId = zc_MovementFloat_WrongAnswersStorekeeper()
 
             LEFT JOIN MovementFloat AS MovementFloat_QuestionStorekeeper
                                     ON MovementFloat_QuestionStorekeeper.MovementId = Movement.Id

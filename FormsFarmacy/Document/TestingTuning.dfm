@@ -1,4 +1,4 @@
-inherited TestingTuningForm: TTestingTuningForm
+﻿inherited TestingTuningForm: TTestingTuningForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1089#1090#1088#1086#1082#1072' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1060#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074'>'
   ClientHeight = 686
   ClientWidth = 1026
@@ -232,55 +232,67 @@ inherited TestingTuningForm: TTestingTuningForm
     ExplicitHeight = 149
     inherited edInvNumber: TcxTextEdit
       Left = 831
+      Top = 18
       Anchors = [akTop, akRight]
       ExplicitLeft = 831
+      ExplicitTop = 18
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
       Left = 831
+      Top = 0
       Anchors = [akTop, akRight]
       ExplicitLeft = 831
+      ExplicitTop = 0
     end
     inherited edOperDate: TcxDateEdit
       Left = 915
+      Top = 18
       Anchors = [akTop, akRight]
       EditValue = 42951d
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 915
+      ExplicitTop = 18
       ExplicitWidth = 86
       Width = 86
     end
     inherited cxLabel2: TcxLabel
       Left = 915
+      Top = 0
       Anchors = [akTop, akRight]
       ExplicitLeft = 915
+      ExplicitTop = 0
     end
     inherited cxLabel15: TcxLabel
       Left = 657
+      Top = 0
       Anchors = [akTop, akRight]
       ExplicitLeft = 657
+      ExplicitTop = 0
     end
     inherited ceStatus: TcxButtonEdit
       Left = 657
+      Top = 18
       Anchors = [akTop, akRight]
       ExplicitLeft = 657
+      ExplicitTop = 18
       ExplicitWidth = 166
       ExplicitHeight = 22
       Width = 166
     end
     object edComment: TcxTextEdit
       Left = 657
-      Top = 64
+      Top = 56
       Anchors = [akTop, akRight]
       Properties.ReadOnly = False
       TabOrder = 6
-      Width = 344
+      Width = 249
     end
     object cxLabel7: TcxLabel
       Left = 657
-      Top = 45
+      Top = 38
       Anchors = [akTop, akRight]
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
@@ -370,72 +382,110 @@ inherited TestingTuningForm: TTestingTuningForm
       end
     end
     object edTotalCount: TcxTextEdit
-      Left = 657
-      Top = 103
+      Left = 915
+      Top = 56
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 74
+      Width = 86
     end
     object cxLabel3: TcxLabel
-      Left = 657
-      Top = 85
+      Left = 915
+      Top = 38
       Anchors = [akTop, akRight]
       Caption = #1042#1086#1087#1088#1086#1089#1086#1074
     end
     object edQuestion: TcxTextEdit
-      Left = 846
-      Top = 127
+      Left = 816
+      Top = 107
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 74
     end
     object cxLabel4: TcxLabel
-      Left = 737
-      Top = 127
+      Left = 816
+      Top = 76
       Anchors = [akTop, akRight]
-      Caption = #1042#1086#1087#1088#1086#1089#1086#1074' '#1076#1083#1103' '#1090#1077#1089#1090#1072
+      Caption = #1042#1086#1087#1088#1086#1089#1086#1074
     end
     object edTimeTest: TcxTextEdit
-      Left = 846
-      Top = 103
+      Left = 726
+      Top = 107
       Anchors = [akTop, akRight]
       TabOrder = 13
       Width = 74
     end
     object cxLabel5: TcxLabel
-      Left = 737
-      Top = 104
+      Left = 726
+      Top = 76
       Anchors = [akTop, akRight]
-      Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1090#1077#1089#1090' ('#1089#1077#1082')'
+      Caption = #1042#1088#1077#1084#1103' '#1085#1072
     end
     object edTimeTestStorekeeper: TcxTextEdit
-      Left = 927
-      Top = 103
+      Left = 726
+      Top = 127
       Anchors = [akTop, akRight]
       TabOrder = 15
       Width = 74
     end
     object edQuestionStorekeeper: TcxTextEdit
-      Left = 927
-      Top = 126
+      Left = 816
+      Top = 127
       Anchors = [akTop, akRight]
       Properties.ReadOnly = True
       TabOrder = 16
       Width = 74
     end
     object cxLabel6: TcxLabel
-      Left = 846
-      Top = 85
+      Left = 657
+      Top = 108
       Anchors = [akTop, akRight]
       Caption = #1060#1072#1088#1084#1072#1094#1077#1074#1090
     end
     object cxLabel8: TcxLabel
-      Left = 927
-      Top = 85
+      Left = 657
+      Top = 127
       Anchors = [akTop, akRight]
       Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082
+    end
+    object cxLabel9: TcxLabel
+      Left = 726
+      Top = 90
+      Anchors = [akTop, akRight]
+      Caption = #1090#1077#1089#1090' ('#1089#1077#1082')'
+    end
+    object cxLabel10: TcxLabel
+      Left = 816
+      Top = 90
+      Anchors = [akTop, akRight]
+      Caption = #1076#1083#1103' '#1090#1077#1089#1090#1072
+    end
+    object edWrongАnswersStorekeeper: TcxTextEdit
+      Left = 904
+      Top = 127
+      Anchors = [akTop, akRight]
+      TabOrder = 21
+      Width = 74
+    end
+    object edWrongАnswers: TcxTextEdit
+      Left = 904
+      Top = 107
+      Anchors = [akTop, akRight]
+      TabOrder = 22
+      Width = 74
+    end
+    object cxLabel11: TcxLabel
+      Left = 904
+      Top = 90
+      Anchors = [akTop, akRight]
+      Caption = #1086#1090#1074#1077#1090#1086#1074
+    end
+    object cxLabel12: TcxLabel
+      Left = 904
+      Top = 76
+      Anchors = [akTop, akRight]
+      Caption = #1053#1077#1087#1088#1072#1074#1077#1083#1100#1085#1099#1093
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1469,15 +1519,15 @@ inherited TestingTuningForm: TTestingTuningForm
     Top = 352
   end
   inherited StatusGuides: TdsdGuides
-    Left = 560
-    Top = 16
+    Left = 736
+    Top = 0
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_TestingTuning'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 640
-    Top = 24
+    Left = 768
+    Top = 0
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TestingTuning'
@@ -1550,6 +1600,18 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Wrong'#1040'nswers'
+        Value = Null
+        Component = edWrongАnswers
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Wrong'#1040'nswersStorekeeper'
+        Value = Null
+        Component = edWrongАnswersStorekeeper
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = ''
         Component = edComment
@@ -1601,6 +1663,20 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inWrong'#1040'nswers'
+        Value = Null
+        Component = edWrongАnswers
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWrong'#1040'nswersStorekeeper'
+        Value = Null
+        Component = edWrongАnswersStorekeeper
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = edComment
@@ -1642,8 +1718,10 @@ inherited TestingTuningForm: TTestingTuningForm
         Control = edTimeTestStorekeeper
       end
       item
+        Control = edWrongАnswers
       end
       item
+        Control = edWrongАnswersStorekeeper
       end>
     Left = 368
     Top = 249

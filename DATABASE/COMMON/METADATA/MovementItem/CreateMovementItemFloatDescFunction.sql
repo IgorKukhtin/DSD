@@ -1501,9 +1501,18 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PenaltyExam() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_PenaltyExam', 'Штраф по сдаче экзамена'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PenaltyExam');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_WrongAnswers() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MovementFloat_WrongAnswers'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_WrongAnswers', 'Количество неправильных ответов'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementFloat_WrongAnswers');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_WrongAnswersStorekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MovementFloat_WrongAnswersStorekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MovementFloat_WrongAnswersStorekeeper', 'Количество неправильных ответов кладовщику'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementFloat_WrongAnswersStorekeeper');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 22.10.21                                                                                                     * zc_MovementFloat_WrongAnswers, zc_MovementFloat_WrongAnswersStorekeeper
  11.10.21                                                                                                     * zc_MIFloat_PenaltyExam
  07.10.21                                                                                                     * zc_MIFloat_AmountStorekeeper
  04.10.21                                                                                                     * zc_MIFloat_CountSPMin
