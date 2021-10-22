@@ -49,6 +49,11 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountOrderWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summ_diff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -75,6 +80,11 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountOrderWeight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Summ_diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -254,6 +264,39 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object Summ_diff: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1094#1077#1085')'
+        DataBinding.FieldName = 'Summ_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1094#1077#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1080' '#1087#1088#1086#1084#1086') * '#1082#1075')'
+        Width = 99
+      end
+      object Price_pl: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'Price_pl'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
+        Width = 99
+      end
+      object Price: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' ('#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078')'
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' ('#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078')'
+        Width = 99
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -665,10 +708,12 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 296
@@ -780,7 +825,7 @@ object Report_SaleReturn_byPromoForm: TReport_SaleReturn_byPromoForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDatePromo
         DataType = ftDateTime
         ParamType = ptInput

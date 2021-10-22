@@ -62,14 +62,14 @@ inherited Report_Promo_MarketDialogForm: TReport_Promo_MarketDialogForm
     Width = 301
   end
   object cbPromo: TcxCheckBox [8]
-    Left = 69
+    Left = 8
     Top = 35
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
     TabOrder = 8
     Width = 144
   end
   object cbTender: TcxCheckBox [9]
-    Left = 215
+    Left = 172
     Top = 35
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
     TabOrder = 9
@@ -91,6 +91,13 @@ inherited Report_Promo_MarketDialogForm: TReport_Promo_MarketDialogForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 301
+  end
+  object cbIsDetail: TcxCheckBox [12]
+    Left = 359
+    Top = 35
+    Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+    TabOrder = 12
+    Width = 81
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
@@ -156,10 +163,11 @@ inherited Report_Promo_MarketDialogForm: TReport_Promo_MarketDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isGoodsKind'
+        Name = 'IsDetail'
         Value = Null
+        Component = cbIsDetail
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

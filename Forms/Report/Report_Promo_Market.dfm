@@ -211,6 +211,9 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             HeaderAlignmentVert = vaCenter
             Width = 154
           end
+          object JuridicalName_str_fact: TcxGridDBColumn
+            DataBinding.FieldName = 'JuridicalName_str_fact'
+          end
           object strSign: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
             DataBinding.FieldName = 'strSign'
@@ -352,6 +355,28 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1094#1077#1085' ('#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1080' '#1087#1088#1086#1084#1086') * '#1082#1075')'
             Width = 99
           end
+          object Price_pl: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'Price_pl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
+            Width = 99
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078')'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' ('#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078')'
+            Width = 99
+          end
         end
       end
     end
@@ -431,6 +456,13 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 252
+    end
+    object cbIsDetail: TcxCheckBox
+      Left = 560
+      Top = 32
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      TabOrder = 10
+      Width = 81
     end
   end
   inherited ActionList: TActionList
@@ -616,6 +648,14 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDetail'
+          Value = Null
+          Component = cbIsDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -747,6 +787,14 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsDetail'
+        Value = Null
+        Component = cbIsDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = UnitGuides
@@ -760,12 +808,6 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 104
@@ -921,7 +963,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 508
+    Left = 708
     Top = 8
   end
   object PrintHead: TClientDataSet

@@ -1,5 +1,3 @@
-
-
 DROP FUNCTION IF EXISTS gpReport_Promo_Market(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
@@ -9,15 +7,28 @@ DROP FUNCTION IF EXISTS gpReport_Promo_Market(
     Integer,   --юр.лицо
     TVarChar   --сессия пользователя
 );
+
+DROP FUNCTION IF EXISTS gpReport_Promo_Market(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
+    Boolean,   -- разворачиваем 
+    Integer,   --подразделение
+    Integer,   --юр.лицо
+    TVarChar   --сессия пользователя
+);
 CREATE OR REPLACE FUNCTION gpReport_Promo_Market(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
+    IN inIsDetail       Boolean,   -- разворачиваем по товарам + ценам, иначе группируем по док акции + юр лицо из документа прод/возврат
     IN inUnitId         Integer,   --подразделение
     IN inJuridicalId    Integer,   --юр.лицо
     IN inSession        TVarChar   --сессия пользователя
 )
+
 RETURNS TABLE(
       MovementId           Integer   --ИД документа акции
     , OperDate             TDateTime -- * Статус внесения в базу
@@ -31,23 +42,24 @@ RETURNS TABLE(
     , MonthPromo          TDateTime       --месяц акции
     , PromoKindName        TVarChar    --Условия участия в акции
     , PromoStateKindName   TVarChar    --Состояние акции
-    ,RetailName           TBlob     --Сеть, в которой проходит акция
-    ,JuridicalName_str    TBlob     --юр.лица
-    ,GoodsName            TVarChar  --Позиция
-    ,GoodsCode            Integer   --Код позиции
-    ,MeasureName          TVarChar  --единица измерения
-    ,TradeMarkName        TVarChar  --Торговая марка
-    ,GoodsKindName             TVarChar  --Вид упаковки
-    ,AmountOut_fact            TFloat    --Кол-во реализация (факт)
-    ,AmountOutWeight_fact      TFloat    --Кол-во реализация (факт) Вес
-    ,AmountIn_fact             TFloat    --Кол-во возврат (факт)
-    ,AmountInWeight_fact       TFloat    --Кол-во возврат (факт) Вес
+    , RetailName           TBlob     --Сеть, в которой проходит акция
+    , JuridicalName_str    TBlob     --юр.лица
+    , GoodsName            TVarChar  --Позиция
+    , GoodsCode            Integer   --Код позиции
+    , MeasureName          TVarChar  --единица измерения
+    , TradeMarkName        TVarChar  --Торговая марка
+    , GoodsKindName             TVarChar  --Вид упаковки
+    , AmountOut_fact            TFloat    --Кол-во реализация (факт)
+    , AmountOutWeight_fact      TFloat    --Кол-во реализация (факт) Вес
+    , AmountIn_fact             TFloat    --Кол-во возврат (факт)
+    , AmountInWeight_fact       TFloat    --Кол-во возврат (факт) Вес
 
     , SummOut_diff TFloat  -- summa разницы цен (по прайсу и промо) * кг продажи
     , SummIn_diff TFloat   -- summa разницы цен (по прайсу и промо) * кг возврат
     , Summ_diff TFloat     -- summa разницы цен (по прайсу и промо) * кг (продажи-возврат)
---, Price_pl TFloat
---, Price    TFloat
+    , Price_pl TFloat      -- цена прайс
+    , Price    TFloat      -- цена из документа 
+    , JuridicalName_str_fact TVarChar -- Юр.лица из док. продаж/возврата
     )
 AS
 $BODY$
@@ -62,6 +74,7 @@ BEGIN
      + условие не все акции а только у которых zc_MovementLinkObject_PromoKind = В счет маркетингового бюджета,
 дальше только для продаж и возвратов с такой акцией по OperDatePartner считаем кол-во кг *(цена по прайсу на дату накл - цена в накл)
 */
+
     -- Результат
     RETURN QUERY
      WITH 
@@ -231,7 +244,6 @@ BEGIN
                            WHERE ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
                            )
 
-
         , tmpMI_GoodsKind AS (SELECT *
                               FROM MovementItemLinkObject 
                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMovementSale.MovementItemId FROM tmpMovementSale)
@@ -245,10 +257,23 @@ BEGIN
                                                                     , zc_MIFloat_Price())
                                    )
 
+        , tmpMLO_Juridical AS (SELECT tmp.Id AS MovementId
+                                    , Object_Juridical.Id             AS JuridicalId
+                                    , Object_Juridical.ValueData      AS JuridicalName
+                               FROM (SELECT DISTINCT tmpMovementSale.Id, tmpMovementSale.DescId FROM tmpMovementSale) AS tmp
+                                    LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = tmp.Id
+                                                                AND MovementLinkObject.DescId = CASE WHEN tmp.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                               )
+
         , tmpDataFact AS (SELECT Movement.MovementId_promo
-                               , Movement.GoodsId
-                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                               , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
+                               , STRING_AGG (DISTINCT tmpMLO_Juridical.JuridicalName,'; ') AS JuridicalName
+                               , CASE WHEN inIsDetail = TRUE THEN Movement.GoodsId ELSE 0 END AS GoodsId
+                               , CASE WHEN inIsDetail = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
+                               , CASE WHEN inIsDetail = TRUE THEN ObjectLink_Goods_Measure.ChildObjectId ELSE 0 END AS MeasureId
                           
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale()  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END)          :: TFloat AS AmountOut
                                , SUM ( CASE WHEN Movement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
@@ -262,8 +287,9 @@ BEGIN
                                       * (COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) - COALESCE (MIFloat_Price.ValueData,0) ) )          :: TFloat AS SummOut
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                                       * (COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) - COALESCE (MIFloat_Price.ValueData,0) ) )          :: TFloat AS SummIn
---, COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) AS Price_pl
---, COALESCE (MIFloat_Price.ValueData,0) AS Price
+
+                               , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) ELSE 0 END AS Price_pl
+                               , CASE WHEN inIsDetail = TRUE THEN COALESCE (MIFloat_Price.ValueData,0) ELSE 0 END                            AS Price
                           FROM tmpMovementSale AS Movement
                   
                                LEFT JOIN tmpMI_GoodsKind AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
@@ -292,12 +318,15 @@ BEGIN
                                                      AND tmpPriceListAll.OperDate = Movement.OperDate
                                                      AND tmpPriceListAll.GoodsId = Movement.GoodsId
                                                      AND COALESCE (tmpPriceListAll.GoodsKindId,0) = 0
+      
+                               LEFT JOIN tmpMLO_Juridical ON tmpMLO_Juridical.MovementId = Movement.Id 
                           GROUP BY Movement.MovementId_promo
-                                 , Movement.GoodsId
-                                 , MILinkObject_GoodsKind.ObjectId
-                                 , ObjectLink_Goods_Measure.ChildObjectId
---, COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0)
---, COALESCE (MIFloat_Price.ValueData,0)                         
+                                 , CASE WHEN inIsDetail = TRUE THEN Movement.GoodsId ELSE 0 END
+                                 , CASE WHEN inIsDetail = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
+                                 , CASE WHEN inIsDetail = TRUE THEN ObjectLink_Goods_Measure.ChildObjectId ELSE 0 END
+                                 , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) ELSE 0 END
+                                 , CASE WHEN inIsDetail = TRUE THEN COALESCE (MIFloat_Price.ValueData,0) ELSE 0 END
+                                 , CASE WHEN inIsDetail = TRUE THEN tmpMLO_Juridical.JuridicalName ELSE '' END                        
                           )
                         
         --
@@ -393,8 +422,9 @@ BEGIN
           , tmpDataFact.SummIn  ::TFloat AS SummIn_diff
           , (COALESCE (tmpDataFact.SummOut,0) - COALESCE (tmpDataFact.SummIn,0)) ::TFloat AS Summ_diff
 
---, tmpDataFact.Price_pl ::TFloat
---, tmpDataFact.Price    ::TFloat
+          , tmpDataFact.Price_pl ::TFloat
+          , tmpDataFact.Price    ::TFloat
+          , tmpDataFact.JuridicalName ::TVarChar AS JuridicalName_str_fact
         FROM tmpDataFact 
             LEFT JOIN tmpMovement_Promo AS Movement_Promo
                                         ON Movement_Promo.Id = tmpDataFact.MovementId_promo
@@ -422,4 +452,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpReport_Promo_Market(inStartDate := ('01.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inIsPromo := 'False'::Boolean , inIsTender := 'False' ::Boolean, inUnitId := 0 ,  inJuridicalId:=0, inSession := '5'::TVarchar) -- where invnumber = 6862
+--  SELECT * FROM gpReport_Promo_Market(inStartDate := ('01.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inIsPromo := 'False'::Boolean , inIsTender := 'False' ::Boolean, inIsDetail:=true, inUnitId := 0 ,  inJuridicalId:=0, inSession := '5'::TVarchar) -- where invnumber = 6862
