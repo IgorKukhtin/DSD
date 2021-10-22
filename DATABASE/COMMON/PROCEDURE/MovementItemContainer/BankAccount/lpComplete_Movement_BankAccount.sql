@@ -319,8 +319,8 @@ BEGIN
 
              , CASE WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
-                         THEN zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
-                    ELSE zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                         THEN zc_Enum_ProfitLoss_75105() -- zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
+                    ELSE zc_Enum_ProfitLoss_75103() -- zc_Enum_ProfitLoss_80103() -- Курсовая разница
                END AS ProfitLossId_Diff
 
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
@@ -533,8 +533,8 @@ BEGIN
 
                     WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
-                         THEN zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
-                    ELSE zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                         THEN zc_Enum_ProfitLoss_75105() -- zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
+                    ELSE zc_Enum_ProfitLoss_75103() -- zc_Enum_ProfitLoss_80103() -- Курсовая разница
                END AS ProfitLossId_Diff
 
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже

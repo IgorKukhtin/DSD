@@ -391,7 +391,7 @@ end if;
                                            OR ((_tmpItem.OperSumm_Diff  <> 0 OR _tmpItem.OperSumm_Diff_Asset  <> 0)
                                            AND _tmpItem.MovementDescId = zc_Movement_Cash()
                                               )
-                                              THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                                              THEN zc_Enum_ProfitLoss_75103() -- zc_Enum_ProfitLoss_80103() -- Курсовая разница
 
                                          WHEN _tmpItem.MovementDescId = zc_Movement_LossPersonal()
                                               THEN zc_Enum_ProfitLoss_70501() -- Списание задолженности по ЗП

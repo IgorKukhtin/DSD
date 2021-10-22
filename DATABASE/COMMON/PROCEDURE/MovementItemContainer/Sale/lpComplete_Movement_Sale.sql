@@ -3208,7 +3208,7 @@ END IF;*/
                                                        , inObjectCostDescId  := NULL
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
-                                                       , inObjectId_1        := zc_Enum_ProfitLoss_80103() -- Расходы с прибыли + Финансовая деятельность + Курсовая разница
+                                                       , inObjectId_1        := zc_Enum_ProfitLoss_75103() -- zc_Enum_ProfitLoss_80103() -- Курсовая разница
                                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                        , inObjectId_2        := vbBranchId_From
                                                         )

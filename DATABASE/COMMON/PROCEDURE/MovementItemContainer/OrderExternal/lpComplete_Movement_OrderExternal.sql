@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbContractId       Integer;
 
   DECLARE vbCriticalWeight   TFloat;
+  DECLARE vbSummOrderMin     TFloat;
   DECLARE vbIsLessWeigth     Boolean;
 BEGIN
      outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := FALSE,  inSession := lfGet_User_Session (inUserId));
@@ -58,12 +59,15 @@ BEGIN
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
                    OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
                    OR COALESCE (vbCriticalWeight, 0) = 0
+                   OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) = 0
                       THEN TRUE
                  ELSE FALSE
             END AS isLessWeigth
 
+          , ObjectFloat_SummOrderMin.ValueData AS SummOrderMin
+
             INTO vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbJuridicalId, vbIsLessWeigth
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId, vbJuridicalId, vbIsLessWeigth, vbSummOrderMin
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -95,6 +99,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                   ON ObjectBoolean_isOrderMin.ObjectId = OL_Juridical.ChildObjectId
                                  AND ObjectBoolean_isOrderMin.DescId   = zc_ObjectBoolean_Juridical_isOrderMin()
+          -- Разрешен Минимальный заказ с суммой >= 
+          LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderMin
+                                ON ObjectFloat_SummOrderMin.ObjectId = OL_Juridical.ChildObjectId
+                               AND ObjectFloat_SummOrderMin.DescId   = zc_ObjectFloat_Juridical_SummOrderMin()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                        ON MovementLinkObject_Route.MovementId = Movement.Id
@@ -334,6 +342,18 @@ order by Movement.OperDate*/
                 ) AS _tmpItem
           ) AS _tmpItem
      ;
+
+     -- проверка - если не разрешен Минимальный заказ с суммой < 
+     IF vbSummOrderMin > 0 AND vbSummOrderMin > vbOperSumm_Partner
+     THEN
+         outMessageText:= 'Сообщение.Разрешены заявки с суммой >= ' || zfConvert_FloatToString (vbSummOrderMin) || ' грн.'
+          --|| CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.'
+            || CHR(13) || 'В текущей заявке сумма = ' || zfConvert_FloatToString (vbOperSumm_Partner)  || ' грн.'
+
+         -- !!! выход !!!
+         RETURN;
+      END IF;
+
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
      SELECT SUM (_tmpItem.OperSumm_Partner) INTO vbOperSumm_Partner_byItem FROM _tmpItem;

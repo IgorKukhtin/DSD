@@ -4,16 +4,16 @@
 DROP FUNCTION IF EXISTS gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ReceiptProductionOutAnalyze (
-    IN inStartDate        TDateTime ,  
+    IN inStartDate        TDateTime ,
     IN inEndDate          TDateTime ,
-    IN inFromId           Integer   , 
-    IN inToId             Integer   , 
+    IN inFromId           Integer   ,
+    IN inToId             Integer   ,
     IN inGoodsGroupId     Integer   ,
-    IN inPriceListId_1    Integer, 
-    IN inPriceListId_2    Integer, 
-    IN inPriceListId_3    Integer, 
-    IN inPriceListId_sale Integer, 
-    IN inIsPartionGoods   Boolean, 
+    IN inPriceListId_1    Integer,
+    IN inPriceListId_2    Integer,
+    IN inPriceListId_3    Integer,
+    IN inPriceListId_sale Integer,
+    IN inIsPartionGoods   Boolean,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -31,16 +31,16 @@ BEGIN
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
                                             ) ON COMMIT DROP;
-     CREATE TEMP TABLE tmpResult_in  (ReceiptId Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCount TFloat, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpResult_in  (ReceiptId Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCount TFloat, OperSumm TFloat, CuterCount TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
 
 
      -- Ограничения по товару
      WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
        AS (SELECT Object.Id, NULL :: Integer
-           FROM Object 
+           FROM Object
            WHERE Object.Id = inGoodsGroupId
-          UNION 
+          UNION
            SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
            FROM tmpGroup
                 INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -63,7 +63,7 @@ BEGIN
         SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
        ;
 
-                               
+
      -- ВСЕ рецептуры
      INSERT INTO tmpChildReceiptTable (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, isStart, isCost
@@ -75,9 +75,8 @@ BEGIN
 
 
      -- Приходы - Факт
-     -- INSERT INTO tmpResult_in  (ReceiptId, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCount, OperSumm)
-       -- WITH tmpMIContainer AS 
-       CREATE TEMP TABLE tmpMIContainer ON COMMIT DROP AS
+     INSERT INTO tmpResult_in  (ReceiptId, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCount, OperSumm, CuterCount)
+       WITH tmpMIContainer AS
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
                  , COALESCE (MIContainer.ObjectId_Analyzer, 0)     AS GoodsId
                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
@@ -85,10 +84,15 @@ BEGIN
                  , MIDate_PartionGoods.ValueData                   AS PartionGoodsDate
                  , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS OperCount
                  , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS OperSumm
+                 , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))                                               AS CuterCount
             FROM MovementItemContainer AS MIContainer
-                 LEFT JOIN MovementItemLinkObject AS MIReceipt 
+                 LEFT JOIN MovementItemLinkObject AS MIReceipt
                                                   ON MIReceipt.MovementItemId = MIContainer.MovementItemId
                                                  AND MIReceipt.DescId = zc_MILinkObject_Receipt()
+                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                             ON MIFloat_CuterCount.MovementItemId = MIContainer.MovementItemId
+                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                            AND MIContainer.DescId = zc_MIContainer_Count()
                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                             ON MIDate_PartionGoods.MovementItemId = MIContainer.MovementItemId
                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -99,7 +103,7 @@ BEGIN
                                            ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                           AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                                           AND MovementBoolean_Peresort.ValueData = TRUE
-            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
               AND MIContainer.IsActive = TRUE
               AND MIContainer.Amount <> 0
@@ -110,9 +114,8 @@ BEGIN
                    , MIContainer.ObjectIntId_Analyzer
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
-           );
+           )
         -- Результат
-      INSERT INTO tmpResult_in  (ReceiptId, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCount, OperSumm)
         SELECT tmpMIContainer.ReceiptId                                           AS ReceiptId
              , CASE WHEN inIsPartionGoods = TRUE THEN COALESCE (ObjectDate_PartionGoods_Value.ValueData, COALESCE (tmpMIContainer.PartionGoodsDate, zc_DateStart())) ELSE zc_DateStart() END AS PartionGoodsDate
              , tmpMIContainer.GoodsId                                             AS GoodsId
@@ -120,6 +123,7 @@ BEGIN
              , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
              , SUM (tmpMIContainer.OperCount)                                     AS OperCount
              , SUM (tmpMIContainer.OperSumm)                                      AS OperSumm
+             , SUM (tmpMIContainer.CuterCount)                                    AS CuterCount
         FROM tmpMIContainer
              LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                            ON CLO_PartionGoods.ContainerId = tmpMIContainer.ContainerId
@@ -138,18 +142,12 @@ BEGIN
 
 
      -- Расходы
---     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
-
-       CREATE TEMP TABLE tmpPrice1 ON COMMIT DROP AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate);
-       CREATE TEMP TABLE tmpPrice2 ON COMMIT DROP AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate);
-       CREATE TEMP TABLE tmpPrice3 ON COMMIT DROP AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate);
---       WITH tmpPrice1 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
-  --        , tmpPrice2 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
-    --      , tmpPrice3 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
-
---          , -- Расходы - Факт
-  --          tmpMIContainer AS 
-       CREATE TEMP TABLE tmpMIContainer22 ON COMMIT DROP AS
+     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
+       WITH tmpPrice1 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , tmpPrice2 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , tmpPrice3 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , -- Расходы - Факт
+            tmpMIContainer AS
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
                  , COALESCE (MIContainer.ObjectId_Analyzer, 0)     AS GoodsId
                  , COALESCE (MIContainer.ObjectIntId_Analyzer, MIGoodsKind.ObjectId, 0)  AS GoodsKindId
@@ -179,7 +177,7 @@ BEGIN
                                           AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                                           AND MovementBoolean_Peresort.ValueData = TRUE
 
-            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
               AND MIContainer.IsActive = FALSE
               AND MIContainer.Amount <> 0
@@ -191,15 +189,12 @@ BEGIN
                    , MIContainer.ContainerId_Analyzer
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
-           );
+           )
 
-  --        , -- товары "переработка"
---            tmpGoods_ReWork AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney())
-       CREATE TEMP TABLE tmpGoods_ReWork ON COMMIT DROP AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney());
-
---          , -- расход переработки
-  --          tmpMIContainer_ReWork AS 
-       CREATE TEMP TABLE tmpMIContainer_ReWork ON COMMIT DROP AS
+          , -- товары "переработка"
+            tmpGoods_ReWork AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney())
+          , -- расход переработки
+            tmpMIContainer_ReWork AS
            (SELECT MIContainer_parent.ContainerId, -1 * SUM (MIContainer.Amount) AS Amount
             FROM _tmpUnit_from
                  INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -210,22 +205,37 @@ BEGIN
                  INNER JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = MIContainer.ObjectId_Analyzer
                  INNER JOIN MovementItemContainer AS MIContainer_parent ON MIContainer_parent.Id = MIContainer.ParentId
             GROUP BY MIContainer_parent.ContainerId
-           );
+           )
 
-
---          , -- Приход с пр-ва пф/гп - кутеров
-  --          tmpCuterCount_find AS 
-       CREATE TEMP TABLE tmpCuterCount_find ON COMMIT DROP AS
+          , -- для оптимизации - 1
+            tmpCuterCount_find_1 AS (SELECT DISTINCT tmpMIContainer.ContainerId FROM tmpMIContainer)
+          , -- для оптимизации - 2
+            tmpCuterCount_find_2 AS (SELECT MIContainer.*
+                                     FROM MovementItemContainer AS MIContainer
+                                     WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpCuterCount_find_1.ContainerId FROM tmpCuterCount_find_1)
+                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                                       AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                       AND MIContainer.isActive = TRUE
+                                    )
+/*          , -- для оптимизации - 3
+            tmpCuterCount_find_3 AS (SELECT MIContainer.*
+                                     FROM tmpCuterCount_find_2 AS MIContainer
+                                     WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                       AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                       AND MIContainer.isActive = TRUE
+                                    )*/
+          , -- Приход с пр-ва пф/гп - кутеров
+            tmpCuterCount_find AS
            (SELECT tmpMI_WorkProgress_in.ContainerId                AS ContainerId
                  , SUM (tmpMI_WorkProgress_in.Amount)               AS Amount
                  , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0)) AS CuterCount
                  -- , MAX (COALESCE (MILO_Receipt.ObjectId, 0))        AS ReceiptId
             FROM (SELECT tmpMIContainer.ContainerId, MIContainer.MovementItemId , SUM (MIContainer.Amount) AS Amount
-                  FROM tmpMIContainer22 AS tmpMIContainer
-                       INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpMIContainer.ContainerId
-                                                                      AND MIContainer.DescId = zc_MIContainer_Count()
-                                                                      AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                                                                      AND MIContainer.isActive = TRUE
+                  FROM tmpMIContainer
+                       INNER JOIN tmpCuterCount_find_2 AS MIContainer ON MIContainer.ContainerId = tmpMIContainer.ContainerId
+                                                                   --AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                   --AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                   --AND MIContainer.isActive = TRUE
                   GROUP BY tmpMIContainer.ContainerId, MIContainer.MovementItemId
                  ) AS tmpMI_WorkProgress_in
                  LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
@@ -235,11 +245,9 @@ BEGIN
                                                   ON MILO_Receipt.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                  AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()*/
             GROUP BY tmpMI_WorkProgress_in.ContainerId
-           );
-
---          , -- Приход - кутеров
-  --          tmpCuterCount AS 
-       CREATE TEMP TABLE tmpCuterCount ON COMMIT DROP AS
+           )
+          , -- Приход - кутеров
+            tmpCuterCount AS
            (-- факт
             SELECT tmpCuterCount_find.ContainerId
                  , tmpCuterCount_find.Amount
@@ -250,7 +258,7 @@ BEGIN
             SELECT tmpMIContainer.ContainerId
                  , MAX (ObjectFloat_Value.ValueData) AS Amount
                  , 1 AS CuterCount
-            FROM tmpMIContainer22 AS tmpMIContainer
+            FROM tmpMIContainer
                  LEFT JOIN tmpCuterCount_find ON tmpCuterCount_find.ContainerId = tmpMIContainer.ContainerId
                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMIContainer.GoodsId
@@ -271,11 +279,9 @@ BEGIN
                                        AND ObjectFloat_Value.ValueData <> 0
             WHERE tmpCuterCount_find.ContainerId IS NULL
             GROUP BY tmpMIContainer.ContainerId
-           );
-
+           )
             -- Пасчет с/с для ПФ !!!без isCost!!!
---          , tmpMIReceipt_from AS 
-       CREATE TEMP TABLE tmpMIReceipt_from ON COMMIT DROP AS
+          , tmpMIReceipt_from AS
            (SELECT Object_Receipt.Id AS ReceiptId
                  , tmp.GoodsId
                  , tmp.GoodsKindId
@@ -283,7 +289,7 @@ BEGIN
                  , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice1.Price, 0)) / ObjectFloat_Value.ValueData AS Price1
                  , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice2.Price, 0)) / ObjectFloat_Value.ValueData AS Price2
                  , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice3.Price, 0)) / ObjectFloat_Value.ValueData AS Price3
-            FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer22 AS tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
+            FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
                  ) AS tmp
                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmp.GoodsId
@@ -317,12 +323,9 @@ BEGIN
                    , tmp.GoodsKindId
                    , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
                    , ObjectFloat_Value.ValueData
-            );
-
-
+            )
             -- Расходы - План
---          , tmpMIReceipt AS 
-       CREATE TEMP TABLE tmpMIReceipt ON COMMIT DROP AS
+          , tmpMIReceipt AS
            (SELECT tmpResult_in.ReceiptId                AS ReceiptId
                  , tmpResult_in.PartionGoodsDate         AS PartionGoodsDate_in
                  , tmpResult_in.GoodsId                  AS GoodsId_in
@@ -334,12 +337,12 @@ BEGIN
                  , tmpChildReceiptTable.GoodsKindId_out  AS GoodsKindId
                  , CASE WHEN tmpChildReceiptTable.GoodsKindId_out = zc_GoodsKind_WorkProgress() THEN tmpResult_in.GoodsKindId ELSE 0 END AS GoodsKindId_complete
 
-                 , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
-                 , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price1, COALESCE (tmpPrice1.Price, 0)) AS OperSummPlan1
-                 , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price2, COALESCE (tmpPrice2.Price, 0)) AS OperSummPlan2
-                 , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
+                 , CASE WHEN tmpResult_in.CuterCount > 0 AND 1=0 THEN tmpResult_in.CuterCount * tmpChildReceiptTable.Amount_out WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
                    * COALESCE (tmpMIReceipt_from.Price3, COALESCE (tmpPrice3.Price, 0)) AS OperSummPlan3
             FROM tmpResult_in
                  LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpResult_in.ReceiptId
@@ -355,11 +358,9 @@ BEGIN
                  LEFT JOIN tmpPrice2 ON tmpPrice2.GoodsId = tmpChildReceiptTable.GoodsId_out
                  LEFT JOIN tmpPrice3 ON tmpPrice3.GoodsId = tmpChildReceiptTable.GoodsId_out
             WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
-           );
-
+           )
 
         -- Результат - все Расходы
-     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
         SELECT tmp.ReceiptId
              , tmp.PartionGoodsDate_in
              , tmp.GoodsId_in
@@ -400,7 +401,7 @@ BEGIN
                    , SUM (CASE WHEN tmpCuterCount.Amount <> 0 THEN tmpCuterCount.CuterCount * tmpMIContainer.OperCount / tmpCuterCount.Amount ELSE 0 END) AS CuterCount
                    , SUM (CASE WHEN tmpCuterCount.Amount <> 0 THEN COALESCE (tmpMIContainer_ReWork.Amount, 0) * tmpMIContainer.OperCount / tmpCuterCount.Amount ELSE 0 END) AS OperCount_ReWork
 
-              FROM tmpMIContainer22 AS tmpMIContainer
+              FROM tmpMIContainer
                    LEFT JOIN tmpCuterCount ON tmpCuterCount.ContainerId = tmpMIContainer.ContainerId
                    LEFT JOIN tmpMIContainer_ReWork ON tmpMIContainer_ReWork.ContainerId = tmpMIContainer.ContainerId
 
@@ -474,18 +475,9 @@ BEGIN
                , tmpPrice2.Price
                , tmpPrice3.Price
                 ;
-/*
-    RAISE EXCEPTION 'Ошибка.<%>  %       <%>  %'
-     , (select count (*) from tmpResult_out
-    where tmpResult_out.ReceiptId = 5206601 and tmpResult_out.GoodsId = 926407 )
-    , (select sum (tmpResult_out.OperCount) from tmpResult_out
-    where tmpResult_out.ReceiptId = 5206601 and tmpResult_out.GoodsId = 926407 )
-     , (select count (*) from tmpResult_out
-    where tmpResult_out.ReceiptId = 5604119 and tmpResult_out.GoodsId = 2830 )
-    , (select sum (tmpResult_out.OperCount) from tmpResult_out
-    where tmpResult_out.ReceiptId = 5604119 and tmpResult_out.GoodsId = 2830 );
 
-  */    -- Результат
+
+      -- Результат
       OPEN Cursor1 FOR
       WITH tmpTaxSumm AS (SELECT tmpResult.GoodsId
                                , tmpResult.GoodsKindId
@@ -526,7 +518,7 @@ BEGIN
            , Object_GoodsKind.ValueData                  AS GoodsKindName
            , Object_GoodsKind_complete.ValueData         AS GoodsKindName_complete
            , Object_Measure.ValueData                    AS MeasureName
-           
+
            , tmpResult.OperCount
            , tmpResult.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_Weight
            , tmpResult.OperSumm
@@ -571,7 +563,8 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 1)) AS TaxGP_plan
 
-           , PriceListSale.Price * 1.2 / CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData <> 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END AS Price_sale -- !!!захардкодил временно!!!
+             -- !!!захардкодил временно!!!
+           , (COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 / CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData <> 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Price_sale
 
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -605,22 +598,28 @@ BEGIN
                                 AND tmpTaxSumm.PartionGoodsDate     = tmpResult.PartionGoodsDate
                                 AND tmpTaxSumm.GoodsKindId_complete = tmpResult.GoodsKindId_complete
 
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale_gk ON PriceListSale_gk.PriceListId = inPriceListId_sale
+                                                                          AND PriceListSale_gk.GoodsId = tmpResult.GoodsId
+                                                                          AND PriceListSale_gk.GoodsKindId = tmpResult.GoodsKindId
+                                                                          AND inEndDate >= PriceListSale_gk.StartDate AND inEndDate < PriceListSale_gk.EndDate
             LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale ON PriceListSale.PriceListId = inPriceListId_sale
                                                                        AND PriceListSale.GoodsId = tmpResult.GoodsId
+                                                                       AND PriceListSale.GoodsKindId = 0
                                                                        AND inEndDate >= PriceListSale.StartDate AND inEndDate < PriceListSale.EndDate
+                                                                       AND PriceListSale_gk.GoodsId IS NULL
 
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = COALESCE (tmpResult.GoodsKindId_complete, 0 /*zc_GoodsKind_Basis()*/)
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -629,7 +628,7 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        WHERE tmpResult.OperCount        <> 0
@@ -737,13 +736,13 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = COALESCE (tmpResult.GoodsKindId_complete_in, 0 /*zc_GoodsKind_Basis()*/)
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -770,7 +769,7 @@ BEGIN
                                    ON ObjectString_Comment.ObjectId = Object_Receipt.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Receipt_Comment()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        WHERE tmpResult.OperCount     <> 0
@@ -781,9 +780,8 @@ BEGIN
 
 
 END;
-$BODY$
+ $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -793,5 +791,4 @@ ALTER FUNCTION gpReport_ReceiptProductionOutAnalyze (TDateTime, TDateTime, Integ
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsPartionGoods:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('01.09.2020')::TDateTime , inEndDate := ('01.09.2020')::TDateTime , inUnitFromId := 8447 , inUnitToId := 8447 , inGoodsGroupId := 1918 , inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 18885 , inPriceListId_sale := 18840 , inIsPartionGoods := 'False' ,  inSession := '5');
--- select * from gpReport_ReceiptProductionOutAnalyze( ('01.09.2020')::TDateTime ,  ('01.09.2020')::TDateTime ,  8447 , 8447 ,  1918 ,  18887 ,  18886 ,  18885 , 18840 , 'False' ,   '5');
+-- SELECT * FROM gpReport_ReceiptProductionOutAnalyze( ('01.09.2020')::TDateTime ,  ('01.09.2020')::TDateTime ,  8447 , 8447 ,  1918 ,  18887 ,  18886 ,  18885 , 18840 , 'False' ,   '5');

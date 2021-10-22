@@ -187,7 +187,7 @@ BEGIN
                       WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
                         AND MovementItemContainer.AccountId         = zc_Enum_Account_100301()   -- прибыль текущего периода
-                        AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                        AND MovementItemContainer.ObjectId_Analyzer IN (zc_Enum_ProfitLoss_75103(), zc_Enum_ProfitLoss_80103()) -- Курсовая разница
                         AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                       GROUP BY MovementItemContainer.MovementId
                      )

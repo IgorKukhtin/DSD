@@ -5,6 +5,7 @@
 CREATE OR REPLACE VIEW ObjectHistory_PriceListItem_View AS
    SELECT ObjectLink_PriceListItem_PriceList.ChildObjectId AS PriceListId
         , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+        , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
         , ObjectHistory_PriceListItem.StartDate
         , ObjectHistory_PriceListItem.EndDate
         , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
@@ -12,6 +13,9 @@ CREATE OR REPLACE VIEW ObjectHistory_PriceListItem_View AS
         LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                              ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                             AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+        LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                             ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                            AND ObjectLink_PriceListItem_GoodsKind.DescId = zc_ObjectLink_PriceListItem_GoodsKind()
         LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                 ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()

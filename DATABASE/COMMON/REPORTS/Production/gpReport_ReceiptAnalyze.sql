@@ -6,10 +6,10 @@ DROP FUNCTION IF EXISTS gpReport_ReceiptAnalyze (Integer, Integer, Integer, Inte
 CREATE OR REPLACE FUNCTION gpReport_ReceiptAnalyze (
     IN inGoodsGroupId     Integer   ,
     IN inGoodsId          Integer   ,
-    IN inPriceListId_1    Integer, 
-    IN inPriceListId_2    Integer, 
-    IN inPriceListId_3    Integer, 
-    IN inPriceListId_sale Integer, 
+    IN inPriceListId_1    Integer,
+    IN inPriceListId_2    Integer,
+    IN inPriceListId_3    Integer,
+    IN inPriceListId_sale Integer,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -31,41 +31,41 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat) ON COMMIT DROP;
    -- Ограничения по товару
-   IF COALESCE( inGoodsId,0) <> 0 
+   IF COALESCE( inGoodsId,0) <> 0
     THEN
         -- заполнение
         INSERT INTO _tmpGoods (GoodsId)
            SELECT inGoodsId;
-    ELSE 
+    ELSE
      IF COALESCE( inGoodsGroupId,0) <> 0 and COALESCE( inGoodsId,0) = 0
      THEN
          WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
            AS (SELECT Object.Id, NULL :: Integer
-               FROM Object 
+               FROM Object
                WHERE Object.Id = inGoodsGroupId
-              UNION 
+              UNION
                SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
                FROM tmpGroup
                    INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
                                          ON ObjectLink_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                         AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
               )
-    
+
          INSERT INTO _tmpGoods (GoodsId)
             SELECT ObjectLink_Goods_GoodsGroup.ObjectId
             FROM tmpGroup
                  INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                        ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                       AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup();
-      ELSE  
+      ELSE
             INSERT INTO _tmpGoods (GoodsId)
                  SELECT Object_Goods.Id AS GoodsId
                  FROM Object AS Object_Goods
                  WHERE Object_Goods.DescId = zc_Object_Goods();
-       
+
       END IF;
    END IF;
-                               
+
      -- ВСЕ рецептуры
      INSERT INTO tmpChildReceiptTable (ReceiptId_parent, ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, Amount_out_start, isStart, isCost
@@ -76,28 +76,50 @@ BEGIN
                , SUM (CASE WHEN lpSelect.isStart = TRUE THEN lpSelect.Amount_out ELSE 0 END) AS Amount_out_start
                , MAX (CASE WHEN lpSelect.isStart = TRUE THEN 1 ELSE 0 END) AS isStart
                , lpSelect.isCost
-               , COALESCE (PriceList1.Price, 0),  COALESCE (PriceList2.Price, 0), COALESCE(PriceList3.Price, 0)
+               , COALESCE (PriceList1_gk.Price, PriceList1.Price, 0)
+               , COALESCE (PriceList2_gk.Price, PriceList2.Price, 0)
+               , COALESCE (PriceList3_gk.Price, PriceList3.Price, 0)
           FROM lpSelect_Object_ReceiptChildDetail (TRUE) AS lpSelect
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gk ON PriceList1_gk.PriceListId = inPriceListId_1
+                                                                          AND PriceList1_gk.GoodsId = lpSelect.GoodsId_out
+                                                                          AND PriceList1_gk.GoodsKindId = lpSelect.GoodsKindId_out
+                                                                          AND CURRENT_DATE >= PriceList1_gk.StartDate AND CURRENT_DATE < PriceList1_gk.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
                                                                        AND PriceList1.GoodsId = lpSelect.GoodsId_out
+                                                                       AND PriceList1.GoodsKindId = 0
                                                                        AND CURRENT_DATE >= PriceList1.StartDate AND CURRENT_DATE < PriceList1.EndDate
+                                                                       AND PriceList1_gk.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_gk ON PriceList2_gk.PriceListId = inPriceListId_2
+                                                                          AND PriceList2_gk.GoodsId = lpSelect.GoodsId_out
+                                                                          AND PriceList2_gk.GoodsKindId = lpSelect.GoodsKindId_out
+                                                                          AND CURRENT_DATE >= PriceList2_gk.StartDate AND CURRENT_DATE < PriceList2_gk.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = inPriceListId_2
                                                                        AND PriceList2.GoodsId = lpSelect.GoodsId_out
+                                                                       AND PriceList2.GoodsKindId = 0
                                                                        AND CURRENT_DATE >= PriceList2.StartDate AND CURRENT_DATE < PriceList2.EndDate
+                                                                       AND PriceList2_gk.GoodsId IS NULL
+               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_gk ON PriceList3_gk.PriceListId = inPriceListId_3
+                                                                          AND PriceList3_gk.GoodsId = lpSelect.GoodsId_out
+                                                                          AND PriceList3_gk.GoodsKindId = lpSelect.GoodsKindId_out
+                                                                          AND CURRENT_DATE >= PriceList3_gk.StartDate AND CURRENT_DATE < PriceList3_gk.EndDate
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = inPriceListId_3
                                                                        AND PriceList3.GoodsId = lpSelect.GoodsId_out
+                                                                       AND PriceList3.GoodsKindId = 0
                                                                        AND CURRENT_DATE >= PriceList3.StartDate AND CURRENT_DATE < PriceList3.EndDate
+                                                                       AND PriceList3_gk.GoodsId IS NULL
           GROUP BY lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.Amount_in
                  , lpSelect.GoodsId_out, lpSelect.GoodsKindId_out
                  -- , lpSelect.isStart
                  , lpSelect.isCost
-                 , COALESCE (PriceList1.Price, 0),  COALESCE (PriceList2.Price, 0), COALESCE(PriceList3.Price, 0)
+                 , COALESCE (PriceList1_gk.Price, PriceList1.Price, 0)
+                 , COALESCE (PriceList2_gk.Price, PriceList2.Price, 0)
+                 , COALESCE (PriceList3_gk.Price, PriceList3.Price, 0)
          ;
 
 
      -- Результат
      OPEN Cursor1 FOR
-     WITH  tmpAll AS 
+     WITH  tmpAll AS
            (SELECT tmp.ReceiptId_parent
                  , tmp.ReceiptId
                  , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)               AS GoodsId
@@ -147,7 +169,7 @@ BEGIN
                      END
             )
 
-        , tmpResult AS 
+        , tmpResult AS
            (SELECT tmpAll.ReceiptId_parent
                  , tmpAll.ReceiptId
                  , tmpAll.GoodsId
@@ -167,7 +189,8 @@ BEGIN
                    , tmpAll.GoodsKindId_complete
            )
       -- Результат
-      SELECT (tmpResult.ReceiptId_parent :: TVarChar || '_' || tmpResult.ReceiptId :: TVarChar) :: TVarChar AS ReceiptId_link
+      SELECT (CURRENT_DATE + INTERVAL '0 DAY') :: TDateTime      AS OperDate
+           , (tmpResult.ReceiptId_parent :: TVarChar || '_' || tmpResult.ReceiptId :: TVarChar) :: TVarChar AS ReceiptId_link
            , tmpResult.ReceiptId_parent
            , tmpResult.ReceiptId
            , Object_Receipt.ObjectCode      AS Code
@@ -207,27 +230,33 @@ BEGIN
            , CAST (tmpResult.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1_cost
            , CAST (tmpResult.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2_cost
            , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3_cost
-           , PriceListSale.Price * 1.2 AS Price_sale -- !!!захардкодил временно!!!
-             
+           , (COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2) :: TFloat AS Price_sale -- !!!захардкодил временно!!!
+
            , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
 
        FROM tmpResult
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale_gk ON PriceListSale_gk.PriceListId = inPriceListId_sale
+                                                                          AND PriceListSale_gk.GoodsId = tmpResult.GoodsId
+                                                                          AND PriceListSale_gk.GoodsKindId = tmpResult.GoodsKindId
+                                                                          AND CURRENT_DATE >= PriceListSale_gk.StartDate AND CURRENT_DATE < PriceListSale_gk.EndDate
             LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale ON PriceListSale.PriceListId = inPriceListId_sale
                                                                        AND PriceListSale.GoodsId = tmpResult.GoodsId
+                                                                       AND PriceListSale.GoodsKindId = 0
                                                                        AND CURRENT_DATE >= PriceListSale.StartDate AND CURRENT_DATE < PriceListSale.EndDate
+                                                                       AND PriceListSale_gk.GoodsId IS NULL
             LEFT JOIN Object AS Object_Receipt   ON Object_Receipt.Id   = tmpResult.ReceiptId
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_complete
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -276,7 +305,7 @@ BEGIN
           LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = ObjectLink_Receipt_Goods_Parent.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_Parent
-                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id 
+                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id
                               AND ObjectLink_Goods_Measure_Parent.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure_Parent ON Object_Measure_Parent.Id = ObjectLink_Goods_Measure_Parent.ChildObjectId
 
@@ -293,7 +322,7 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
                                  AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
-                                 
+
           LEFT JOIN (SELECT tmpChildReceiptTable.ReceiptId_parent
                           , tmpChildReceiptTable.ReceiptId
                           , SUM (tmpChildReceiptTable.Amount_out ) AS Amount_out
@@ -424,10 +453,10 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-     
+
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpReceiptChild.ReceiptId_from
             LEFT JOIN ObjectString AS ObjectString_Code
                                    ON ObjectString_Code.ObjectId = tmpReceiptChild.ReceiptId_from
@@ -440,6 +469,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
+
 /*-------------------------------------------------------------------------------
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -449,4 +479,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptAnalyze (inGoodsGroupId:= 0, inGoodsId:=6694178, inPriceListId_1:= 18886, inPriceListId_2:= 18887, inPriceListId_3:= 18873, inPriceListId_sale:= 18840, inSession:= zfCalc_UserAdmin()) -- FETCH ALL "<unnamed portal 1>";
-

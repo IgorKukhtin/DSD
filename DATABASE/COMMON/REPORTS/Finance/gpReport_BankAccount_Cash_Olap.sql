@@ -710,7 +710,8 @@ BEGIN
                                  , tmpContainer.CurrencyId
                                  , tmpContainer.BranchId
                                  , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
-                                 , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
+                               --, COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
+                                 , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN zc_Enum_ProfitLoss_75103() ELSE 0 END)  AS MoneyPlaceId
                                  , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
                                  , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
                                  , 0                                       AS StartAmount

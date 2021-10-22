@@ -4,7 +4,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1229
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1145,39 +1145,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     end
     object actPrint3: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1089' '#1091#1087#1072#1082'. '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
       Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1089' '#1091#1087#1072#1082'. '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
@@ -1199,7 +1167,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'StartDate'
           Value = 42216d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1207,7 +1176,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'EndDate'
           Value = 42216d
-          Component = deEnd
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1247,39 +1217,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     end
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2'
       Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2'
@@ -1301,7 +1239,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'StartDate'
           Value = 42216d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1309,7 +1248,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'EndDate'
           Value = 42216d
-          Component = deEnd
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1348,39 +1288,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
       Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
@@ -1402,7 +1310,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'StartDate'
           Value = 42216d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1410,7 +1319,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'EndDate'
           Value = 42216d
-          Component = deEnd
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1426,7 +1336,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
@@ -1450,39 +1360,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     end
     object actPrint4: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42216d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1073#1077#1079' '#1101#1084#1091#1083#1100#1089#1080#1081
       Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080'  '#1073#1077#1079' '#1101#1084#1091#1083#1100#1089#1080#1081
@@ -1504,7 +1382,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'StartDate'
           Value = 42216d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1512,7 +1391,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
         item
           Name = 'EndDate'
           Value = 42216d
-          Component = deEnd
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1821,7 +1701,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1880,7 +1760,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1939,7 +1819,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1998,7 +1878,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2048,6 +1928,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = GroupNumber
@@ -2137,6 +2018,8 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 544
     Top = 320
   end

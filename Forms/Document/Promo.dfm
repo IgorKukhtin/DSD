@@ -4,7 +4,7 @@
   ClientHeight = 707
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 745
+  ExplicitHeight = 742
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1995,8 +1995,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 168
-        ExplicitHeight = 281
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -2659,8 +2657,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 168
-        ExplicitHeight = 281
         object cxGridDBTableViewPlanMaster: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanMasterDS
@@ -2854,8 +2850,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 168
-        ExplicitHeight = 281
         object cxGridDBTableViewPlanChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanChildDS
@@ -3139,12 +3133,12 @@
       Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 278
+      Left = 285
       Top = 4
       Caption = #1040#1082#1094#1080#1103' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
-      Left = 278
+      Left = 285
       Top = 18
       EditValue = 42132d
       Properties.SaveTime = False
@@ -3167,12 +3161,12 @@
       Width = 81
     end
     object cxLabel8: TcxLabel
-      Left = 278
+      Left = 285
       Top = 38
       Caption = #1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086
     end
     object deEndSale: TcxDateEdit
-      Left = 278
+      Left = 285
       Top = 54
       EditValue = 42132d
       Properties.SaveTime = False
@@ -3302,8 +3296,8 @@
       Width = 225
     end
     object deEndReturn: TcxDateEdit
-      Left = 282
-      Top = 81
+      Left = 285
+      Top = 90
       Hint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1087#1086' '#1072#1082#1094#1080#1086#1085#1085#1086#1081' '#1094#1077#1085#1077
       EditValue = 42132d
       Properties.SaveTime = False
@@ -3312,7 +3306,7 @@
       Width = 83
     end
     object cxLabel3: TcxLabel
-      Left = 278
+      Left = 285
       Top = 74
       Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086
     end

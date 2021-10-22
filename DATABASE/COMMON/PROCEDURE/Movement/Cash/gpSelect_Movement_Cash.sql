@@ -771,7 +771,7 @@ ELSE
                       WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
                         AND MovementItemContainer.AccountId         = zc_Enum_Account_100301()   -- прибыль текущего периода
-                        AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                        AND MovementItemContainer.ObjectId_Analyzer IN (zc_Enum_ProfitLoss_75103(), zc_Enum_ProfitLoss_80103()) -- Курсовая разница
                         AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                       GROUP BY MovementItemContainer.MovementId
                      )
@@ -1022,7 +1022,7 @@ ELSE
 
            -- факт. курс на дату - для курс разн.
          , CASE WHEN MovementFloat_AmountCurrency.ValueData <> 0
-                 AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
+                 AND MovementItemContainer.ObjectId_Analyzer IN (zc_Enum_ProfitLoss_75103(), zc_Enum_ProfitLoss_80103()) -- Курсовая разница
                  AND inCurrencyId                            <> zc_Enum_Currency_Basis()
                      THEN (ABS (MovementItem.Amount) + tmpMIС.Amount) / ABS (MovementFloat_AmountCurrency.ValueData)
                 ELSE 0
