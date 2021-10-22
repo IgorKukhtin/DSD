@@ -11,19 +11,19 @@ inherited TestingTuningForm: TTestingTuningForm
     Top = 175
     Width = 1026
     Height = 511
-    ExplicitTop = 155
+    ExplicitTop = 175
     ExplicitWidth = 1026
-    ExplicitHeight = 531
+    ExplicitHeight = 511
     ClientRectBottom = 511
     ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1026
-      ExplicitHeight = 507
+      ExplicitHeight = 487
       inherited cxGrid: TcxGrid
         Width = 576
         Height = 487
         ExplicitWidth = 576
-        ExplicitHeight = 507
+        ExplicitHeight = 487
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = ChildDS
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -88,7 +88,7 @@ inherited TestingTuningForm: TTestingTuningForm
             Options.Editing = False
             Width = 55
           end
-          object isMandatoryQuestion: TcxGridDBColumn [3]
+          object chisMandatoryQuestion: TcxGridDBColumn [3]
             Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'isMandatoryQuestion'
             HeaderAlignmentHorz = taCenter
@@ -97,7 +97,16 @@ inherited TestingTuningForm: TTestingTuningForm
             Options.Editing = False
             Width = 49
           end
-          object chQuestion: TcxGridDBColumn [4]
+          object chisStorekeeper: TcxGridDBColumn [4]
+            Caption = #1050#1083#1072#1076'- '#1082#1091
+            DataBinding.FieldName = 'isStorekeeper'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1087#1088#1086#1089' '#1080' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091
+            Options.Editing = False
+            Width = 46
+          end
+          object chQuestion: TcxGridDBColumn [5]
             Caption = #1042#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'Question'
             GroupSummaryAlignment = taCenter
@@ -119,7 +128,6 @@ inherited TestingTuningForm: TTestingTuningForm
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitHeight = 507
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SecondDS
@@ -213,7 +221,6 @@ inherited TestingTuningForm: TTestingTuningForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salRight
         Control = cxGridSecond
-        ExplicitHeight = 507
       end
     end
   end
@@ -288,7 +295,6 @@ inherited TestingTuningForm: TTestingTuningForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 129
       object cxGridDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = MasterDS
@@ -335,11 +341,19 @@ inherited TestingTuningForm: TTestingTuningForm
           Width = 100
         end
         object maMandatoryQuestion: TcxGridDBColumn
-          Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088#1086#1089#1086#1074' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091
+          Caption = #1054#1073#1103#1079'. '#1074#1086#1087#1088'. '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091
           DataBinding.FieldName = 'MandatoryQuestion'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1093' '#1074#1086#1087#1088#1086#1089
+          Options.Editing = False
+          Width = 100
+        end
+        object maQuestionStorekeeper: TcxGridDBColumn
+          Caption = #1042#1086#1087#1088#1086#1089#1086#1074' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091
+          DataBinding.FieldName = 'QuestionStorekeeper'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 100
         end
@@ -447,8 +461,8 @@ inherited TestingTuningForm: TTestingTuningForm
     Top = 448
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 295
+    Left = 39
+    Top = 311
     inherited actRefresh: TdsdDataSetRefresh
       AfterAction = actPreparePictures
       StoredProcList = <
@@ -1028,7 +1042,7 @@ inherited TestingTuningForm: TTestingTuningForm
     object actUpdate_MandatoryQuestion: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actRefresh
+      AfterAction = actRefreshSmall
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MandatoryQuestion
       StoredProcList = <
@@ -1042,6 +1056,42 @@ inherited TestingTuningForm: TTestingTuningForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089'"'
       ImageIndex = 80
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1099#1081' '#1074#1086#1087#1088#1086#1089'"?'
+    end
+    object actUpdate_Storekeeper: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshSmall
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Storekeeper
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Storekeeper
+        end
+        item
+          StoredProc = spSelectSecond
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042#1086#1087#1088#1086#1089' '#1080' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042#1086#1087#1088#1086#1089' '#1080' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042#1086#1087#1088#1086#1089' '#1080' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1091'"?'
+    end
+    object actRefreshSmall: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actPreparePictures
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1078,12 +1128,13 @@ inherited TestingTuningForm: TTestingTuningForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 248
+    ParamKeyField = 'Id'
+    Left = 192
+    Top = 256
   end
   inherited BarManager: TdxBarManager
-    Left = 80
-    Top = 207
+    Left = 40
+    Top = 255
     DockControlHeights = (
       0
       0
@@ -1136,6 +1187,10 @@ inherited TestingTuningForm: TTestingTuningForm
         item
           Visible = True
           ItemName = 'dxBarButton18'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton19'
         end
         item
           Visible = True
@@ -1313,6 +1368,10 @@ inherited TestingTuningForm: TTestingTuningForm
       Action = actUpdate_MandatoryQuestion
       Category = 0
     end
+    object dxBarButton19: TdxBarButton
+      Action = actUpdate_Storekeeper
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView1
@@ -1406,8 +1465,8 @@ inherited TestingTuningForm: TTestingTuningForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 208
+    Left = 440
+    Top = 352
   end
   inherited StatusGuides: TdsdGuides
     Left = 560
@@ -1497,8 +1556,8 @@ inherited TestingTuningForm: TTestingTuningForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 248
+    Left = 240
+    Top = 256
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TestingTuning'
@@ -1562,8 +1621,8 @@ inherited TestingTuningForm: TTestingTuningForm
       end
       item
       end>
-    Left = 160
-    Top = 192
+    Left = 112
+    Top = 256
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1586,8 +1645,8 @@ inherited TestingTuningForm: TTestingTuningForm
       end
       item
       end>
-    Left = 232
-    Top = 193
+    Left = 368
+    Top = 249
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1846,6 +1905,7 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    ParamKeyField = 'Id'
     Left = 48
     Top = 512
   end
@@ -1910,6 +1970,11 @@ inherited TestingTuningForm: TTestingTuningForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = ChildCDS
         MultiSelectSeparator = ','
       end
       item
@@ -2062,6 +2127,7 @@ inherited TestingTuningForm: TTestingTuningForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    ParamKeyField = 'Id'
     Left = 48
     Top = 576
   end
@@ -2634,5 +2700,47 @@ inherited TestingTuningForm: TTestingTuningForm
     PackSize = 1
     Left = 432
     Top = 464
+  end
+  object spUpdate_Storekeeper: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_TestingTuning_Storekeeper'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisStorekeeper'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isStorekeeper'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 440
   end
 end

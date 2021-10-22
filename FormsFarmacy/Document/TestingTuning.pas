@@ -131,7 +131,7 @@ type
     actInsertMISecondPhotoFalse: TdsdExecStoredProc;
     dxBarButton16: TdxBarButton;
     dxBarButton17: TdxBarButton;
-    isMandatoryQuestion: TcxGridDBColumn;
+    chisMandatoryQuestion: TcxGridDBColumn;
     actUpdate_MandatoryQuestion: TdsdExecStoredProc;
     spUpdate_MandatoryQuestion: TdsdStoredProc;
     dxBarButton18: TdxBarButton;
@@ -141,6 +141,12 @@ type
     edQuestionStorekeeper: TcxTextEdit;
     cxLabel6: TcxLabel;
     cxLabel8: TcxLabel;
+    chisStorekeeper: TcxGridDBColumn;
+    maQuestionStorekeeper: TcxGridDBColumn;
+    spUpdate_Storekeeper: TdsdStoredProc;
+    actUpdate_Storekeeper: TdsdExecStoredProc;
+    dxBarButton19: TdxBarButton;
+    actRefreshSmall: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
