@@ -185,7 +185,7 @@ BEGIN
                      WHERE MovementItem.MovementId = inMovementId 
                        AND MovementItem.DescId = zc_MI_Master()
                        AND MovementItem.isErased = FALSE
-                     )
+                     ) 
  
   , tmpData AS (SELECT tmpData_Full.Id                     --идентификатор
                      , tmpData_Full.GoodsId                --ИД объекта <товар>
