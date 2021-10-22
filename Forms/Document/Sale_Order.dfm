@@ -2,8 +2,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 456
   ClientWidth = 1291
+  ExplicitLeft = -248
   ExplicitWidth = 1307
-  ExplicitHeight = 491
+  ExplicitHeight = 494
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1942,6 +1943,9 @@ inherited Sale_OrderForm: TSale_OrderForm
           Action = actDialog_TTN
         end
         item
+          Action = actSPPrintTTNProcName
+        end
+        item
           Action = actPrint_TTN
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
@@ -2025,6 +2029,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2418,6 +2424,17 @@ inherited Sale_OrderForm: TSale_OrderForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1082#1083#1072#1076#1089#1082#1086#1081' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 43
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameTransport
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTransport
+        end>
+      Caption = 'actPrint_Transport_ReportName'
     end
   end
   inherited MasterDS: TDataSource
@@ -2949,6 +2966,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -5527,5 +5551,30 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 1208
     Top = 251
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1024
+    Top = 312
   end
 end

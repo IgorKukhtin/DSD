@@ -235,6 +235,8 @@ type
     macUpdate_Invnumber: TMultiAction;
     bbUpdate_Invnumber: TdxBarButton;
     cbReCalcPrice: TcxCheckBox;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public
