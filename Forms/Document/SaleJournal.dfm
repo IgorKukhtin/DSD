@@ -2821,6 +2821,7 @@ inherited SaleJournalForm: TSaleJournalForm
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
@@ -4188,6 +4189,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'ReportNameTTN'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4213,8 +4215,8 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 216
+    Left = 440
+    Top = 80
   end
   inherited spMovementReComplete: TdsdStoredProc
     Params = <
