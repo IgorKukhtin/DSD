@@ -228,10 +228,10 @@ BEGIN
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , COALESCE (MovementString_MedicSP.ValueData, '')    :: TVarChar  AS MedicSP
+                              , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData, ''):: TVarChar  AS MedicSP
                               , ''                                                 :: TVarChar  AS AmbulantClinicSP
                               , Object_MemberSP.Id                                                                     AS MemberSPId
-                              , COALESCE (Object_MemberSP.ValueData, Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
+                              , COALESCE (Object_MemberSP.ValueData, Object_MemberKashtan.ValueData, Object_BuyerForSite.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , ObjectLink_MemberSP_GroupMemberSP.ChildObjectId   AS GroupMemberSPId
                               , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
@@ -288,6 +288,16 @@ BEGIN
                                                    ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
                                                   AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
                               LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicKashtan
+                                                           ON MovementLinkObject_MedicKashtan.MovementId =  Movement_Check.Id
+                                                          AND MovementLinkObject_MedicKashtan.DescId = zc_MovementLinkObject_MedicKashtan()
+                              LEFT JOIN Object AS Object_MedicKashtan ON Object_MedicKashtan.Id = MovementLinkObject_MedicKashtan.ObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberKashtan
+                                                           ON MovementLinkObject_MemberKashtan.MovementId =  Movement_Check.Id
+                                                          AND MovementLinkObject_MemberKashtan.DescId = zc_MovementLinkObject_MemberKashtan()
+                              LEFT JOIN Object AS Object_MemberKashtan ON Object_MemberKashtan.Id = MovementLinkObject_MemberKashtan.ObjectId
 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -847,4 +857,4 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpReport_Sale_SP(inStartDate := ('08.01.2021')::TDateTime , inEndDate := ('31.01.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+select * from gpReport_Sale_SP(inStartDate := ('22.10.2021')::TDateTime , inEndDate := ('22.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 377605 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

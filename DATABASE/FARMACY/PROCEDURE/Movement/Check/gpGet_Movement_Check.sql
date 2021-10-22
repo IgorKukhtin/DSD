@@ -138,7 +138,7 @@ BEGIN
 
                                      , MovementDate_OperDateSP.ValueData               AS OperDateSP
                                      , MovementString_InvNumberSP.ValueData            AS InvNumberSP
-                                     , MovementString_MedicSP.ValueData                AS MedicSPName
+                                     , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData, ''):: TVarChar   AS MedicSPName
                                      , Object_PartnerMedical.Id                        AS PartnerMedicalId
                                      , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
                                      , MovementString_Ambulance.ValueData              AS Ambulance
@@ -147,7 +147,7 @@ BEGIN
                                      , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
 
                                      , Object_MemberSP.Id                              AS MemberSPId
-                                     , Object_MemberSP.ValueData                       AS MemberSPName
+                                     , COALESCE (Object_MemberSP.ValueData, Object_MemberKashtan.ValueData):: TVarChar    AS MemberSPName
                                  FROM Movement 
                                       LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -273,6 +273,16 @@ BEGIN
                                                                       ON MovementLinkObject_MemberSP.MovementId = Movement.Id
                                                                      AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
                                       LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicKashtan
+                                                                   ON MovementLinkObject_MedicKashtan.MovementId =  Movement.Id
+                                                                  AND MovementLinkObject_MedicKashtan.DescId = zc_MovementLinkObject_MedicKashtan()
+                                      LEFT JOIN Object AS Object_MedicKashtan ON Object_MedicKashtan.Id = MovementLinkObject_MedicKashtan.ObjectId
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberKashtan
+                                                                   ON MovementLinkObject_MemberKashtan.MovementId =  Movement.Id
+                                                                  AND MovementLinkObject_MemberKashtan.DescId = zc_MovementLinkObject_MemberKashtan()
+                                      LEFT JOIN Object AS Object_MemberKashtan ON Object_MemberKashtan.Id = MovementLinkObject_MemberKashtan.ObjectId
 
                              WHERE Movement.Id = inMovementId)
 
@@ -448,4 +458,4 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- 
-select * from gpGet_Movement_Check(inMovementId := 23093853  ,  inSession := '3');
+select * from gpGet_Movement_Check(inMovementId := 25372100  ,  inSession := '3');

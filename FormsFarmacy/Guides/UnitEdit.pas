@@ -169,6 +169,8 @@ type
     cxLabel50: TcxLabel;
     edPharmacyManager: TcxTextEdit;
     cxLabel51: TcxLabel;
+    edTokenKashtan: TcxTextEdit;
+    cxLabel52: TcxLabel;
   private
     { Private declarations }
   public

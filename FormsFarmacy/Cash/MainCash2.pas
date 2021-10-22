@@ -1724,6 +1724,8 @@ begin
   UpdateRemainsFromVIPCheck(False, False);
   // Если грузили СП
   MedicalProgramSPGoodsCDS.Close;
+  // очистить рецепт
+  ClearReceipt1303
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -3616,6 +3618,9 @@ begin
     FormParams.ParamByName('isDiscountCommit').Value := True;
   end;
 
+  if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
+  if not OrdersСreate1303(CheckNumber, CheckCDS) then Exit;
+
   Add_Log('PutCheckToCash');
   PaidType := ptMoney;
   // спросили сумму и тип оплаты
@@ -3901,8 +3906,13 @@ end;
 procedure TMainCashForm2.actRecipeNumber1303Execute(Sender: TObject);
   var S : string;
 begin
-  if not CheckSP then
-    exit;
+  if not CheckSP then Exit;
+
+  if UnitConfigCDS.FieldByName('LikiDneproToken').AsString = '' then
+  Begin
+    ShowMessage('Подразделение не подключено для погашение рецептов в МИС «Каштан»!');
+    Exit;
+  End;
 
   if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
   begin
@@ -3934,7 +3944,7 @@ begin
   cbMorionFilter.Enabled := True;
   cbMorionFilter.Checked := False;
 
-  S := '1046-1238-P2-0643';
+  S := '';
   if not InputEnterRecipeNumber1303(S) then Exit;
 
   if GetReceipt1303(S) then
@@ -7178,6 +7188,12 @@ begin
     exit;
   End;
 
+  if (DiscountServiceForm.gCode <> 0) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Открытие отложенных чеков запрещено.'#13#10'Если надо применить дисконт сначало загрузите чек потом примените дисконтную программу.');
+    exit;
+  end;
+
   spisCheckCombine.ParamByName('inVIPOrder').Value := ceVIPLoad.Text;
   spisCheckCombine.ParamByName('outIsCheckCombine').Value := False;
   spisCheckCombine.ParamByName('outText').Value := '';
@@ -7403,18 +7419,22 @@ begin
 end;
 
 function TMainCashForm2.SetMorionCodeFilter : boolean;
-  var S : string; I : Integer; Res: TArray<string>;
+  var S, S1, cResult : string; I : Integer; Res, ResQ: TArray<string>;
 begin
   cbMorionFilter.Properties.OnChange := Nil;
   try
     if LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString <> '' then
     begin
       Res := TRegEx.Split(LikiDniproReceiptApi.PositionCDS.FieldByName('id_morion').AsString, ',');
-      S := '';
+      ResQ := TRegEx.Split(LikiDniproReceiptApi.PositionCDS.FieldByName('qpack_int').AsString, ',');
+      S := ''; S1 := '';
       for I := 0 to High(Res) do
+      begin
         if I = 0 then
           S := S + 'MorionCode = ' + Res[I]
         else S := S + ' or MorionCode = ' + Res[I];
+        S1 := #13'Код мориона: ' + Res[I] + ' в упаковке ' +  ResQ[I];
+      end;
 
       RemainsCDS.DisableControls;
       try
@@ -7422,17 +7442,29 @@ begin
         RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
         RemainsCDS.Filtered := True;
       finally
-        if RemainsCDS.RecordCount = 0 then
+        if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
         begin
-          RemainsCDS.Filtered := False;
-          RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
-          RemainsCDS.Filtered := True;
-          cbMorionFilter.Enabled := False;
-          cbMorionFilter.Checked := False;
-        end else
+          if RemainsCDS.RecordCount = 0 then
+          begin
+            ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для работы с кодом Мориона.'#13#13 +
+              'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
+              'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString + #13 + S1, cResult);
+            NewCheck;
+          end;
+        end else if LikiDniproReceiptApi.Recipe.FRecipe_Type = 3 then
         begin
-          cbMorionFilter.Enabled := True;
-          cbMorionFilter.Checked := True;
+          if RemainsCDS.RecordCount = 0 then
+          begin
+            RemainsCDS.Filtered := False;
+            RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
+            RemainsCDS.Filtered := True;
+            cbMorionFilter.Enabled := False;
+            cbMorionFilter.Checked := False;
+          end else
+          begin
+            cbMorionFilter.Enabled := True;
+            cbMorionFilter.Checked := True;
+          end;
         end;
         RemainsCDS.EnableControls;
       end;
@@ -7449,8 +7481,21 @@ end;
 procedure TMainCashForm2.bbPositionNextClick(Sender: TObject);
 begin
   inherited;
-  cbMorionFilter.Enabled := True;
-  if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
+  cbMorionFilter.Properties.OnChange := Nil;
+  try
+    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+    begin
+      cbMorionFilter.Enabled := True;
+      cbMorionFilter.Checked := True;
+      cbMorionFilter.Enabled := False;
+    end else
+    begin
+      cbMorionFilter.Enabled := True;
+      if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
+    end;
+  finally
+    cbMorionFilter.Properties.OnChange := cbMorionFilterPropertiesChange;
+  end;
 
   if not pnlPosition.Visible then
   begin
@@ -10082,6 +10127,8 @@ begin
   ClearFilterAll;
   // Если грузили СП
   MedicalProgramSPGoodsCDS.Close;
+  // очистить рецепт
+  ClearReceipt1303
 end;
 
 procedure TMainCashForm2.ParentFormCloseQuery(Sender: TObject;
@@ -12758,13 +12805,31 @@ end;
 procedure TMainCashForm2.LoadUnitConfig;
 var
   nPos: Integer;
+  bOverload, bGetHardwareData, bRemovingPrograms : Boolean;
 begin
   if not fileExists(UnitConfig_lcl) then
     exit;
 
   WaitForSingleObject(MutexUnitConfig, INFINITE);
   try
+
+    if UnitConfigCDS.Active then
+    begin
+      bOverload := True;
+      bGetHardwareData := UnitConfigCDS.FindField('isGetHardwareData').AsBoolean;
+      bRemovingPrograms := UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean;
+    end else bOverload := False;
+
     LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+
+    if bOverload then
+    begin
+      UnitConfigCDS.Edit;
+      UnitConfigCDS.FindField('isGetHardwareData').AsBoolean := bGetHardwareData;
+      UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean := bRemovingPrograms;
+      UnitConfigCDS.Post;
+    end;
+
     if UnitConfigCDS.Active and Assigned(UnitConfigCDS.FindField('isSpotter'))
     then
     begin

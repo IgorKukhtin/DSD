@@ -297,9 +297,13 @@ BEGIN
        , COALESCE (ObjectBoolean_MessageByTime.ValueData, FALSE)                   AS isMessageByTime
        , COALESCE (ObjectBoolean_MessageByTimePD.ValueData, FALSE)                 AS isMessageByTimePD
 
-       , 'https://liki-dnepr.nzt.su/api'::TVarChar                                      AS LikiDneproURL
+/*       , 'https://liki-dnepr.nzt.su/api'::TVarChar                                      AS LikiDneproURL
        , '3bc48397885c039ee40586f4781d10006e3c01b0ba4776f4df5ec1f64af38f2a'::TVarChar   AS LikiDneproToken
-       , 92                                                                             AS LikiDneproId
+       , 92                                                                             AS LikiDneproId*/
+
+       , 'https://mis-kashtan.dp.ua/api/pharmacy/api'::TVarChar                         AS LikiDneproURL
+       , TRIM(ObjectString_TokenKashtan.ValueData)::TVarChar                            AS LikiDneproToken
+       , Object_Unit.ObjectCode                                                         AS LikiDneproId
 
        , 'https://api.preprod.ciet-holding.com/api/v1'::TVarChar                        AS LikiDneproeHealthURL
        , 'https://preprod.ciet-holding.com/login'::TVarChar                             AS LikiDneproeLocation
@@ -337,6 +341,9 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
                               AND ObjectString_PromoForSale.DescId = zc_ObjectString_Unit_PromoForSale()
+        LEFT JOIN ObjectString AS ObjectString_TokenKashtan
+                               ON ObjectString_TokenKashtan.ObjectId = Object_Unit.Id
+                              AND ObjectString_TokenKashtan.DescId = zc_ObjectString_Unit_TokenKashtan()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id

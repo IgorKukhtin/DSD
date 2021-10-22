@@ -202,6 +202,10 @@ type
     actUpdate_ClearFiscal: TdsdExecStoredProc;
     dxBarButton17: TdxBarButton;
     colJuridicalName: TcxGridDBColumn;
+    actUpdatePriceSale: TdsdExecStoredProc;
+    spUpdatePriceSale: TdsdStoredProc;
+    actPriceSaleDialog: TExecuteDialog;
+    dxBarButton18: TdxBarButton;
   private
     { Private declarations }
   public

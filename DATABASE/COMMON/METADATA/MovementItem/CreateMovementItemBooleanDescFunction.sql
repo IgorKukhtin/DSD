@@ -173,9 +173,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_Deferred() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Deferred', 'Отложено' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Deferred'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_Storekeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Storekeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_Storekeeper', 'Кладовщик' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Storekeeper'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 22.10.21                                                                       * zc_MIBoolean_Storekeeper
  15.10.21                                                                       * zc_MIBoolean_Deferred
  06.09.21                                                                       * zc_MIBoolean_MandatoryQuestion
  25.08.21         * zc_MIBoolean_BonusNo
