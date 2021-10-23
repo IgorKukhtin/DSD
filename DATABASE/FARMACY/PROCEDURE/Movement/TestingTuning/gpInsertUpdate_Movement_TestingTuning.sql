@@ -1,15 +1,17 @@
 -- Function: gpInsertUpdate_Movement_TestingTuning()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TestingTuning(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Списания>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inTimeTest            Integer   , -- Время на тест (сек)
-    IN inTimeTestStorekeeper Integer   , -- Время на тест Кладовщик (сек) 
-    IN inComment             TVarChar  , -- Примечание
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                       Integer   , -- Ключ объекта <Документ Списания>
+    IN inInvNumber                TVarChar  , -- Номер документа
+    IN inOperDate                 TDateTime , -- Дата документа
+    IN inTimeTest                 Integer   , -- Время на тест (сек)
+    IN inTimeTestStorekeeper      Integer   , -- Время на тест Кладовщик (сек) 
+    IN inWrongAnswers             Integer   , -- Количество неправильных ответов
+    IN inWrongAnswersStorekeeper  Integer   , -- Количество неправильных ответов кладовщику
+    IN inComment                  TVarChar  , -- Примечание
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -27,19 +29,21 @@ BEGIN
     END IF;
     
     
-    ioId := lpInsertUpdate_Movement_TestingTuning (ioId                   := ioId
-                                                 , inInvNumber            := inInvNumber
-                                                 , inOperDate             := inOperDate
-                                                 , inTimeTest             := inTimeTest
-                                                 , inTimeTestStorekeeper  := inTimeTestStorekeeper
-                                                 , inComment              := inComment
-                                                 , inUserId               := vbUserId
+    ioId := lpInsertUpdate_Movement_TestingTuning (ioId                      := ioId
+                                                 , inInvNumber               := inInvNumber
+                                                 , inOperDate                := inOperDate
+                                                 , inTimeTest                := inTimeTest
+                                                 , inTimeTestStorekeeper     := inTimeTestStorekeeper
+                                                 , inWrongAnswers            := inWrongAnswers
+                                                 , inWrongAnswersStorekeeper := inWrongAnswersStorekeeper
+                                                 , inComment                 := inComment
+                                                 , inUserId                  := vbUserId
                                                   );
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Movement_TestingTuning (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.

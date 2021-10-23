@@ -74,7 +74,7 @@ BEGIN
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null THEN MovementDate_Delay.ValueData
                WHEN MovementDate_UserConfirmedKind.ValueData is not Null THEN MovementDate_UserConfirmedKind.ValueData
                WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() THEN Movement.OperDate
-               ELSE Movement.OperDate + INTERVAL '3 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY') AS Movement;
+               ELSE Movement.OperDate + INTERVAL '5 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY') AS Movement;
                
 END;
 $BODY$

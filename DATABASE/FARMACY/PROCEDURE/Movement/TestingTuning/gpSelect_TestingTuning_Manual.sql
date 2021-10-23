@@ -54,6 +54,7 @@ BEGIN
      WHERE Object_User.Id = vbUserId
        AND Object_User.DescId = zc_Object_User();
        
+       
      RETURN QUERY
      WITH tmpMaster AS (SELECT * 
                         FROM gpSelect_MovementItem_TestingTuning_Master(inMovementId := vbMovementId 
@@ -100,6 +101,8 @@ BEGIN
           INNER JOIN tmpTopicsTesting ON tmpTopicsTesting.TopicsTestingTuningId = tmpMaster.TopicsTestingTuningId
           
           INNER JOIN tmpChild ON tmpChild.ParentId = tmpMaster.Id
+                             AND (vbPositionCode = 2 AND COALESCE (tmpChild.isStorekeeper, False) = True 
+                                  OR vbPositionCode <> 2)  
 
           INNER JOIN tmpSecond ON tmpSecond.ParentId = tmpChild.Id
                               AND tmpSecond.isCorrectAnswer = True

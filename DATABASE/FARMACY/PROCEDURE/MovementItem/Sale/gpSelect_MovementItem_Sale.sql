@@ -153,7 +153,7 @@ BEGIN
                                             AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
                                  WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
                                    AND vbRetailId = 4 
-                                   AND vbisNP = TRUE
+                                   AND (vbisNP = TRUE OR vbSPKindId = zc_Enum_SPKind_InsuranceCompanies())
                                  )
 
               , tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Master(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, TopicsTestingTuningId Integer, TopicsTestingTuningCode Integer, TopicsTestingTuningName TVarChar
-             , Question Integer, TestQuestions Integer, MandatoryQuestion Integer, TestQuestionsStorekeeper Integer
+             , Question Integer, TestQuestions Integer, MandatoryQuestion Integer, QuestionStorekeeper Integer, TestQuestionsStorekeeper Integer
              , isErased Boolean
               )
 AS
@@ -34,11 +34,16 @@ BEGIN
         tmpQuestions AS (SELECT MovementItem.ParentId         AS Id
                               , count(*)                      AS Questions
                               , SUM(CASE WHEN COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS MandatoryQuestion
+                              , SUM(CASE WHEN COALESCE (MIBoolean_Storekeeper.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS QuestionStorekeeper
                          FROM MovementItem
                          
                               LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
                                                             ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
                                                            AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
+
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_Storekeeper
+                                                            ON MIBoolean_Storekeeper.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_Storekeeper.DescId = zc_MIBoolean_Storekeeper()
                                                            
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Child()
@@ -55,6 +60,7 @@ BEGIN
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
                  , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
+                 , tmpQuestions.QuestionStorekeeper::Integer           AS QuestionStorekeeper
                  , MIFloat_TestQuestionsStorekeeper.ValueData::Integer AS TestQuestionsStorekeeper
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM tmpTopicsTestingTuning
@@ -79,11 +85,16 @@ BEGIN
         tmpQuestions AS (SELECT MovementItem.ParentId         AS Id
                               , count(*)                      AS Questions
                               , SUM(CASE WHEN COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS MandatoryQuestion
+                              , SUM(CASE WHEN COALESCE (MIBoolean_Storekeeper.ValueData, FALSE) = True THEN 1 ELSE 0 END) AS QuestionStorekeeper
                          FROM MovementItem
-
+                         
                               LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
                                                             ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
                                                            AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
+
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_Storekeeper
+                                                            ON MIBoolean_Storekeeper.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_Storekeeper.DescId = zc_MIBoolean_Storekeeper()
 
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId = zc_MI_Child()
@@ -100,6 +111,7 @@ BEGIN
                  , tmpQuestions.Questions::Integer                     AS Questions 
                  , MovementItem.Amount::Integer                        AS TestQuestions
                  , tmpQuestions.MandatoryQuestion::Integer             AS MandatoryQuestion
+                 , tmpQuestions.QuestionStorekeeper::Integer           AS QuestionStorekeeper
                  , MIFloat_TestQuestionsStorekeeper.ValueData::Integer AS TestQuestionsStorekeeper
                  , COALESCE(MovementItem.IsErased, FALSE)                                       AS isErased
             FROM MovementItem 
@@ -109,10 +121,6 @@ BEGIN
                                  
                 LEFT JOIN tmpQuestions ON tmpQuestions.Id = MovementItem.Id
                 
-                LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
-                                              ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
-                                             AND MIBoolean_MandatoryQuestion.DescId = zc_MIFloat_AmountStorekeeper()
-
                 LEFT JOIN MovementItemFloat AS MIFloat_TestQuestionsStorekeeper
                                             ON MIFloat_TestQuestionsStorekeeper.MovementItemId = MovementItem.Id
                                            AND MIFloat_TestQuestionsStorekeeper.DescId = zc_MIFloat_AmountStorekeeper()

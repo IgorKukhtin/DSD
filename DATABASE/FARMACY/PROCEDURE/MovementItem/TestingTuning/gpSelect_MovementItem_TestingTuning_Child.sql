@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TestingTuning_Child(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , Orders Integer, Replies Integer, CorrectAnswer Integer, isMandatoryQuestion Boolean
+             , Orders Integer, Replies Integer, CorrectAnswer Integer, isMandatoryQuestion Boolean, isStorekeeper Boolean
              , Question TBLOB
              , RandomID Integer, RandomStorekeeperID Integer
              , isErased Boolean
@@ -43,9 +43,10 @@ BEGIN
              , tmpReplies.Replies::Integer                         AS Replies 
              , tmpReplies.CorrectAnswer::Integer                   AS CorrectAnswer 
              , COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) AS isMandatoryQuestion
+             , COALESCE (MIBoolean_Storekeeper.ValueData, FALSE)   AS isStorekeeper
              , MIBLOB_Question.ValueData                           AS Question
              , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_MandatoryQuestion.ValueData, FALSE) DESC, random())::Integer AS RandomID
-             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY random())::Integer AS RandomStorekeeperID
+             , ROW_NUMBER()OVER(PARTITION BY MovementItem.ParentId ORDER BY COALESCE (MIBoolean_Storekeeper.ValueData, FALSE) DESC, random())::Integer AS RandomStorekeeperID
              , COALESCE(MovementItem.IsErased, FALSE)              AS isErased
         FROM MovementItem 
             
@@ -59,6 +60,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_MandatoryQuestion
                                           ON MIBoolean_MandatoryQuestion.MovementItemId = MovementItem.Id
                                          AND MIBoolean_MandatoryQuestion.DescId = zc_MIBoolean_MandatoryQuestion()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Storekeeper
+                                          ON MIBoolean_Storekeeper.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Storekeeper.DescId = zc_MIBoolean_Storekeeper()
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Child()
