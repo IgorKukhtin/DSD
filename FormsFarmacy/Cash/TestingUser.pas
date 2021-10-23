@@ -507,6 +507,7 @@ begin
   try
     actInsertUpdate_TestingUser.Params.ParamByName('ioId').Value := 0;
     actInsertUpdate_TestingUser.Params.ParamByName('inUserId').Value := TitleCDS.FieldByName('UserId').AsInteger;
+    actInsertUpdate_TestingUser.Params.ParamByName('inPassed').Value := (TitleCDS.FieldByName('Question').AsInteger - nCorrect) <= TitleCDS.FieldByName('WrongAnswers').AsInteger;
     actInsertUpdate_TestingUser.Params.ParamByName('inResult').Value := RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, - 2);
     if cbLastMonth.Checked then
       actInsertUpdate_TestingUser.Params.ParamByName('inDateTest').Value := IncDay(Now, - DayOf(Date))
@@ -523,9 +524,9 @@ begin
 
   cxLabel3.Caption := '¬опросов ' + IntToStr(TitleCDS.FieldByName('Question').AsInteger) + ' правельных ответов ' + IntToStr(nCorrect) +
     ' процент выполнени€ ' + CurrToStr(RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, -2)) + ' тест ' +
-    IfThen(RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, -2) < 85, 'не сдан', 'сдан');
+    IfThen((TitleCDS.FieldByName('Question').AsInteger - nCorrect) <= TitleCDS.FieldByName('WrongAnswers').AsInteger, 'не сдан', 'сдан');
 
-  if RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, -2) < 80 then cxLabel3.Style.Font.Color := clRed;
+  if (TitleCDS.FieldByName('Question').AsInteger - nCorrect) <= TitleCDS.FieldByName('WrongAnswers').AsInteger then cxLabel3.Style.Font.Color := clRed;
 
 
   sgViewingResults.Visible := True;

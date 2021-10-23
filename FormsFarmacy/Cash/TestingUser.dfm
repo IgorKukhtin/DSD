@@ -446,6 +446,13 @@ object TestingUserForm: TTestingUserForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPassed'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inResult'
         Value = Null
         DataType = ftFloat

@@ -9,6 +9,7 @@ RETURNS TABLE (
          Id                  Integer
        , Code                Integer
        , MemberName          TVarChar
+       , PositionName        TVarChar
        , UnitName            TVarChar
        , Result              TFloat
        , Attempts            Integer
@@ -23,6 +24,7 @@ BEGIN
    RETURN QUERY
    WITH tmpResult AS (SELECT
                              MovementItem.ObjectId                                          AS UserID
+                           , COALESCE(MIBoolean_Passed.ValueData, False)                    AS isPassed  
                            , MovementItem.Amount                                            AS Result
                            , MovementItemFloat.ValueData::Integer                           AS Attempts
                            , MovementItemDate.ValueData                                     AS DateTimeTest
@@ -33,6 +35,10 @@ BEGIN
 
                            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                   AND MovementItem.DescId = zc_MI_Master()
+
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_Passed
+                                                         ON MIBoolean_Passed.DescId = zc_MIBoolean_Passed()
+                                                        AND MIBoolean_Passed.MovementItemId = MovementItem.Id
 
                            LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                                       AND MovementItemDate.DescId = zc_MIDate_TestingUser()
@@ -70,12 +76,13 @@ BEGIN
          Object_User.Id                               AS Id
        , Object_User.ObjectCode                       AS Code
        , Object_Member.ValueData                      AS MemberName
+       , Object_Position.ValueData                    AS PositionName
        , Object_Unit.ValueData                        AS UnitName
        , tmpResult.Result                             AS Result
        , tmpResult.Attempts                           AS Attempts
        , CASE WHEN COALESCE (tmpResult.Attempts, 0) = 0
          THEN NULL ELSE
-         CASE WHEN tmpResult.Result >= 85
+         CASE WHEN tmpResult.isPassed = True
          THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS Status
        , tmpSubstitution.CountSubstitution::Integer   AS CountSubstitution
    FROM tmpResult

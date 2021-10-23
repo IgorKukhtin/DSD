@@ -27,6 +27,7 @@ type
     CountSubstitution: TcxGridDBColumn;
     Attempts: TcxGridDBColumn;
     Status: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
   private
     { Private declarations }
   public
