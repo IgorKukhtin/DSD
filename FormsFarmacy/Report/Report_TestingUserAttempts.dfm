@@ -1,25 +1,25 @@
 inherited Report_TestingUserAttemptsForm: TReport_TestingUserAttemptsForm
   Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086#1087#1099#1090#1086#1082' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085#1086#1074' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
   ClientHeight = 504
-  ClientWidth = 709
-  ExplicitWidth = 725
+  ClientWidth = 814
+  ExplicitWidth = 830
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 709
+    Width = 814
     Height = 445
     ExplicitTop = 59
     ExplicitWidth = 709
     ExplicitHeight = 445
     ClientRectBottom = 445
-    ClientRectRight = 709
+    ClientRectRight = 814
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 709
       ExplicitHeight = 445
       inherited cxGrid: TcxGrid
-        Width = 709
+        Width = 814
         Height = 445
         ExplicitWidth = 709
         ExplicitHeight = 445
@@ -65,6 +65,14 @@ inherited Report_TestingUserAttemptsForm: TReport_TestingUserAttemptsForm
             Options.Editing = False
             Width = 208
           end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
@@ -107,7 +115,7 @@ inherited Report_TestingUserAttemptsForm: TReport_TestingUserAttemptsForm
     end
   end
   inherited Panel: TPanel
-    Width = 709
+    Width = 814
     Height = 33
     Visible = False
     ExplicitWidth = 709
@@ -180,7 +188,7 @@ inherited Report_TestingUserAttemptsForm: TReport_TestingUserAttemptsForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_MovementItem_TestingUser()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, TFloat, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TestingUser (Integer, Integer, Boolean, TFloat, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TestingUser(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inUserId              Integer   , -- Сотрудник
+    IN inPassed              Boolean    , -- Результат теста
     IN inResult              TFloat    , -- Результат теста
     IN inDateTest            TDateTime , -- Дата теста
     IN inLastMonth           Boolean   , -- Сдача за предыдущий месяц
@@ -19,6 +21,7 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbDateTest TDateTime;
   DECLARE vbPositionCode Integer;
+  DECLARE vbPassed Boolean;
 BEGIN
 
   -- приводим дату к первому числу месяца
@@ -60,42 +63,66 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Ошибка. Не создан документ за месяц';
   END IF;
+  
+  IF inUserId = 3
+  THEN
+    vbPositionCode := 2;
+  END IF;
 
    -- Проверяем если уже есть по такому сотруднику
   IF COALESCE (ioId, 0) = 0 AND EXISTS(SELECT Id FROM MovementItem WHERE MovementId = vbMovement AND ObjectId = inUserId)
   THEN
-    SELECT Id, Amount, COALESCE(MovementItemFloat.ValueData, 0), COALESCE(MovementItemDate.ValueData, vbOperDate)
-    INTO ioId, vbResult, vbAttempts, vbDateTest
+    SELECT Id, Amount, COALESCE(MovementItemBoolean.ValueData, False), COALESCE(MovementItemFloat.ValueData, 0), COALESCE(MovementItemDate.ValueData, vbOperDate)
+    INTO ioId, vbResult, vbPassed, vbAttempts, vbDateTest
     FROM MovementItem
-         LEFT OUTER JOIN MovementItemFloat ON MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
-                                          AND MovementItemFloat.MovementItemId = MovementItem.Id
+
+         LEFT JOIN MovementItemBoolean ON MovementItemBoolean.DescId = zc_MIBoolean_Passed()
+                                      AND MovementItemBoolean.MovementItemId = MovementItem.Id
+
+         LEFT JOIN MovementItemFloat ON MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
+                                    AND MovementItemFloat.MovementItemId = MovementItem.Id
+
          LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                     AND MovementItemDate.DescId = zc_MIDate_TestingUser()
+
     WHERE MovementItem.MovementId = vbMovement
       AND MovementItem.ObjectId = inUserId;
   ELSE
     IF COALESCE (ioId, 0) <> 0
     THEN
-      SELECT Amount, COALESCE(MovementItemFloat.ValueData, 0), COALESCE(MovementItemDate.ValueData, vbOperDate)
-      INTO vbResult, vbAttempts, vbDateTest
+      SELECT Amount, COALESCE(MovementItemBoolean.ValueData, False), COALESCE(MovementItemFloat.ValueData, 0), COALESCE(MovementItemDate.ValueData, vbOperDate)
+      INTO vbResult, vbPassed, vbAttempts, vbDateTest
       FROM MovementItem
-           LEFT OUTER JOIN MovementItemFloat ON MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
-                                            AND MovementItemFloat.MovementItemId = MovementItem.Id
+
+           LEFT JOIN MovementItemBoolean ON MovementItemBoolean.DescId = zc_MIBoolean_Passed()
+                                        AND MovementItemBoolean.MovementItemId = MovementItem.Id
+
+           LEFT JOIN MovementItemFloat ON MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
+                                      AND MovementItemFloat.MovementItemId = MovementItem.Id
+
            LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                      AND MovementItemDate.DescId = zc_MIDate_TestingUser()
+
       WHERE MovementItem.Id = ioId;
     ELSE
       vbResult := 0;
+      vbPassed := False;
       vbAttempts := 0;
       vbDateTest := vbOperDate;
     END IF;
   END IF;
 
-  if COALESCE (ioId, 0) = 0 OR (inResult >= 85 OR vbResult < 85) AND (vbDateTest < inDateTest OR COALESCE(inLastMonth, FALSE) = TRUE)
+  if COALESCE (ioId, 0) = 0 OR (inPassed = True OR vbPassed = False) AND (vbDateTest < inDateTest OR COALESCE(inLastMonth, FALSE) = TRUE)
   THEN
 
      -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inUserId, vbMovement, CASE WHEN inResult > vbResult THEN inResult ELSE vbResult END, NULL);
+
+     -- сохранили свойство <Тест сдан>
+    IF inPassed = True AND vbPassed = False
+    THEN
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Passed(), ioId, inPassed);
+    END IF;
 
      -- сохранили свойство <Дата теста>
     IF vbDateTest < inDateTest
@@ -104,13 +131,13 @@ BEGIN
     END IF;
 
      -- сохранили свойство <Количество попыток>
-    IF vbAttempts = 0 OR vbResult < 85
+    IF vbAttempts = 0 OR vbPassed = False
     THEN 
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TestingUser_Attempts(), ioId, vbAttempts + 1);
     END IF;
     
      -- Начисляем 500 грн штрафа
-    IF vbPositionCode = 1 AND vbResult < 85 AND inResult < 85  AND COALESCE(inLastMonth, FALSE) = FALSE AND inDateTest >= '01.11.2021' AND vbAttempts = 10
+    IF vbPositionCode = 1 AND vbPassed = False AND inPassed = False  AND COALESCE(inLastMonth, FALSE) = FALSE AND inDateTest >= '01.11.2021' AND vbAttempts = 10
     THEN
       PERFORM gpUpdate_MovementItem_Wages_PenaltyExam (inOperDate := inDateTest, inUserID := inUserId, inSession := zfCalc_UserAdmin());
     END IF;
@@ -122,7 +149,7 @@ BEGIN
 
   IF inUserId = 3
   THEN
-    RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserId, inResult, inDateTest;
+    RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', inUserId, inResult, inDateTest, inPassed, vbPassed;
   END IF;
 
 
@@ -141,4 +168,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_TestingUser (ioId:= 0, inUserId:= 6002014, inResult:= 102, inDateTest:= '20180901', inSession:= '3')
+-- SELECT * FROM lpInsertUpdate_MovementItem_TestingUser (ioId:= 0, inUserId:= 3, inPassed := TRUE, inResult:= 80.0, inDateTest:= '20211001', inLastMonth := False, inSession:= '3')

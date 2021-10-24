@@ -34,6 +34,7 @@ type
     edMaxAttempts: TcxTextEdit;
     cxLabel4: TcxLabel;
     spGet_Movement: TdsdStoredProc;
+    PositionName: TcxGridDBColumn;
   private
     { Private declarations }
   public
