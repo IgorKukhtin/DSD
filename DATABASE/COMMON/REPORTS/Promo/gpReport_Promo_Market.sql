@@ -59,9 +59,11 @@ RETURNS TABLE(
     , Summ_diff TFloat     -- summa разницы цен (по прайсу и промо) * кг (продажи-возврат)
     , Price_pl TFloat      -- цена прайс
     , Price    TFloat      -- цена из документа
+    , JuridicalId_fact       Integer  -- Юр.лица из док. продаж/возврата
     , JuridicalName_str_fact TVarChar -- Юр.лица из док. продаж/возврата
     , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
-    )
+    , ContractId_21512 Integer, ContractCode_21512 Integer, ContractNumber_21512 TVarChar, ContractTagName_21512 TVarChar
+     )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -335,8 +337,39 @@ BEGIN
                                  , CASE WHEN inIsDetail = TRUE THEN tmpMLO_Juridical.JuridicalName ELSE '' END
                           )
 
-         , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View)
-      --
+         , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT DISTINCT tmpDataFact.ContractId FROM tmpDataFact))
+           --
+         , tmpContractCondition AS (SELECT *
+                                    FROM Object_ContractCondition_View
+                                    WHERE Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpDataFact.ContractId FROM tmpDataFact)
+                                      AND Object_ContractCondition_View.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
+                                   )
+         , tmpContract_21512_all AS (SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId, tmpContract.ContractId
+                                     FROM tmpContract
+                                          JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                          ON ObjectLink_Contract_Juridical.ObjectId = tmpContract.ContractId
+                                                         AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                          JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                          ON ObjectLink_Contract_PaidKind.ObjectId      = tmpContract.ContractId
+                                                         AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                                                         AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                     WHERE tmpContract.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
+                                    UNION 
+                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId, tmpContractCondition.ContractId
+                                     FROM tmpContractCondition
+                                          JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                          ON ObjectLink_Contract_Juridical.ObjectId = tmpContractCondition.ContractId
+                                                         AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                     WHERE tmpContractCondition.PaidKindId_Condition = zc_Enum_PaidKind_FirstForm()
+                                        OR (tmpContractCondition.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                                        AND COALESCE (tmpContractCondition.PaidKindId_Condition, 0) = 0
+                                           )
+                                    )
+         , tmpContract_21512 AS (SELECT tmpContract_21512_all.JuridicalId, MAX (tmpContract_21512_all.ContractId) AS ContractId
+                                 FROM tmpContract_21512_all
+                                 GROUP BY tmpContract_21512_all.JuridicalId
+                                )
+        --
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.OperDate :: TDateTime AS OperDate
@@ -431,11 +464,17 @@ BEGIN
 
           , tmpDataFact.Price_pl ::TFloat
           , tmpDataFact.Price    ::TFloat
+          , tmpDataFact.JuridicalId    :: Integer AS JuridicalId_fact
           , tmpDataFact.JuridicalName  ::TVarChar AS JuridicalName_str_fact
           , tmpDataFact.ContractId                AS ContractId
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber     AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
+          
+          , tmpContract_21512.ContractId       :: Integer AS ContractId_21512
+          , View_Contract_InvNumber_21512.ContractCode    AS ContractCode_21512
+          , View_Contract_InvNumber_21512.InvNumber       AS ContractNumber_21512
+          , View_Contract_InvNumber_21512.ContractTagName AS ContractTagName_21512
 
         FROM tmpDataFact
             LEFT JOIN tmpMovement_Promo AS Movement_Promo
@@ -449,7 +488,10 @@ BEGIN
                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmpDataFact.GoodsId
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+            
+            LEFT JOIN tmpContract_21512 ON tmpContract_21512.JuridicalId = tmpDataFact.JuridicalId
 
+            LEFT JOIN tmpContract AS View_Contract_InvNumber_21512 ON View_Contract_InvNumber_21512.ContractId = tmpContract_21512.ContractId
             LEFT JOIN tmpContract AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpDataFact.ContractId
 
         ;

@@ -74,6 +74,9 @@ type
     ContractCode: TcxGridDBColumn;
     ContractNumber: TcxGridDBColumn;
     ContractTagName: TcxGridDBColumn;
+    ContractCode_21512: TcxGridDBColumn;
+    ContractNumber_21512: TcxGridDBColumn;
+    ContractTagName_21512: TcxGridDBColumn;
   private
     { Private declarations }
   public

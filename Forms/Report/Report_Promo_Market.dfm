@@ -111,13 +111,35 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object ContractCode_21512: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1084#1072#1088#1082#1077#1090')'
+            DataBinding.FieldName = 'ContractCode_21512'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ContractNumber_21512: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.  ('#1084#1072#1088#1082#1077#1090')'
+            DataBinding.FieldName = 'ContractNumber_21512'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ContractTagName_21512: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.  ('#1084#1072#1088#1082#1077#1090')'
+            DataBinding.FieldName = 'ContractTagName_21512'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object JuridicalName_str_fact: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_str_fact'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1086#1076#1072#1078#1072'/'#1042#1086#1079#1074#1088#1072#1090
-            Width = 80
+            Width = 100
           end
           object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
