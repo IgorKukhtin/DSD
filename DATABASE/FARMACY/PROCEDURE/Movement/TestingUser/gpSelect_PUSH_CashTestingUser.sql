@@ -29,7 +29,7 @@ BEGIN
    RETURN QUERY
    WITH tmpResult AS (SELECT
                              MovementItem.ObjectId                                          AS UserID
-                           , Max(MovementItem.Amount)::TFloat                               AS Result
+                           , COALESCE(MIBoolean_Passed.ValueData, False)                    AS isPassed
                       FROM Movement
 
                            LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
@@ -41,10 +41,12 @@ BEGIN
                            LEFT JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                                       AND MovementItemDate.DescId = zc_MIDate_TestingUser()
 
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_Passed
+                                                         ON MIBoolean_Passed.DescId = zc_MIBoolean_Passed()
+                                                        AND MIBoolean_Passed.MovementItemId = MovementItem.Id
 
                       WHERE Movement.DescId = zc_Movement_TestingUser()
-                        AND Movement.OperDate = vbDateStart
-                      GROUP BY MovementItem.ObjectId),
+                        AND Movement.OperDate = vbDateStart),
         tmpWages AS (SELECT DISTINCT MovementItem.ObjectId                   AS UserID
                       FROM Movement
 
@@ -88,7 +90,7 @@ BEGIN
                                               AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
 
                      WHERE Object_User.DescId = zc_Object_User()
-                       AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                       AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbDateStart >= '01.12.2021')
                        AND COALESCE (Object_Unit.ValueData ) <> ''
                        AND Object_User.isErased = False
                      GROUP BY Object_User.Id
@@ -124,7 +126,7 @@ BEGIN
 
         LEFT JOIN tmpWages ON tmpWages.UserID = tmpUser.UserId
 
-   WHERE COALESCE(tmpResult.Result, 0) < 85
+   WHERE tmpResult.isPassed = False
      AND COALESCE(tmpUser.DateIn, tmpProtocolArc.DateInsert, tmpProtocol.DateInsert, '01.01.2021') < vbDateStart
      AND COALESCE(tmpWages.UserId, 0) = 0
      AND tmpUser.UserId = inUserId
@@ -142,4 +144,5 @@ ALTER FUNCTION gpSelect_PUSH_CashTestingUser (Integer, Integer, Integer) OWNER T
 */
 
 -- тест
--- select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId := 6025400);
+--
+ select * from gpSelect_PUSH_CashTestingUser(inMovementID := 0, inUnitID := 0, inUserId :=  11973669 );

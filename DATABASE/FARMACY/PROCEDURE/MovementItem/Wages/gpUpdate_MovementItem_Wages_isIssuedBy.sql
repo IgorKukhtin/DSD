@@ -44,13 +44,18 @@ BEGIN
                        INNER JOIN ObjectLink AS ObjectLink_Member_Position
                                              ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
                                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
-                                            AND ObjectLink_Member_Position.ChildObjectId = 1672498 
-                  WHERE MovementItem.ID = inId) AND
+                       INNER JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                  WHERE MovementItem.ID = ioId
+                    AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbOperDate >= '01.12.2021')) AND
        NOT EXISTS(SELECT 1
                   FROM Movement
 
                        LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                               AND MovementItem.DescId = zc_MI_Master()
+
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_Passed
+                                                     ON MIBoolean_Passed.DescId = zc_MIBoolean_Passed()
+                                                    AND MIBoolean_Passed.MovementItemId = MovementItem.Id
 
                   WHERE Movement.DescId = zc_Movement_TestingUser()
                     AND Movement.OperDate = (SELECT Movement.OperDate 
@@ -58,7 +63,7 @@ BEGIN
                                                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
                                              WHERE MovementItem.ID = inId)
                     AND MovementItem.ObjectId = (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.ID = inId)
-                    AND MovementItem.Amount >= 85) AND
+                    AND COALESCE(MIBoolean_Passed.ValueData, False) = True) AND
        (COALESCE((SELECT MovementItemBoolean.ValueData FROM MovementItemBoolean WHERE MovementItemBoolean.MovementItemID = inId AND 
                  MovementItemBoolean.DescId = zc_MIBoolean_isTestingUser()), TRUE) = FALSE))
                     

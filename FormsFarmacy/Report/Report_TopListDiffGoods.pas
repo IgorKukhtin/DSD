@@ -39,6 +39,10 @@ type
     ce“op: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
     Ord: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
+    HeaderCDS: TClientDataSet;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
+    RemainsAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

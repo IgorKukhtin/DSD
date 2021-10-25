@@ -15,12 +15,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inNDSKindId           Integer   ,    -- НДС
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
     IN inUserId              Integer   ,    -- 
-    IN inMakerId             Integer   ,    -- Производитель
-    IN inMakerName           TVarChar  ,    -- Производитель
+    IN inMakerId             Integer  DEFAULT 0,      -- Производитель
+    IN inMakerName           TVarChar DEFAULT '',     -- Производитель
     IN inCheckName           Boolean  DEFAULT true ,
     IN inAreaId              Integer  DEFAULT 0,      -- 
     IN inNameUkr             TVarChar DEFAULT '',     -- Название украинское
-    IN inCodeUKTZED          TVarChar DEFAULT '',    -- Код УКТЗЭД
+    IN inCodeUKTZED          TVarChar DEFAULT '',     -- Код УКТЗЭД
     IN inExchangeId          Integer  DEFAULT 0       -- Од:
 )
 RETURNS Integer
@@ -121,10 +121,14 @@ BEGIN
    -- сохранили свойство <НДС>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
 
-   -- сохранили свойство <Производитель>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Maker(), ioId, inMakerId);
-   -- сохранили свойство <Производитель>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName);
+   -- Только товарам поставщиков
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Juridical())
+   THEN
+     -- сохранили свойство <Производитель>
+     -- PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Maker(), ioId, inMakerId); Заремил не используеться
+     -- сохранили свойство <Производитель>
+     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName);
+   END IF;
 
    -- сохранили свойство <Название украинское>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_NameUkr(), ioId, inNameUkr);
@@ -132,6 +136,19 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
    -- сохранили свойство <Од>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
+
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
+      AND TRIM(COALESCE(inNameUkr, '')) = ''
+      AND EXISTS (SELECT 1
+                  FROM Object AS Object_CashSettings
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RequireUkrName
+                                                ON ObjectBoolean_CashSettings_RequireUkrName.ObjectId = Object_CashSettings.Id 
+                                               AND ObjectBoolean_CashSettings_RequireUkrName.DescId = zc_ObjectBoolean_CashSettings_RequireUkrName()
+                                               AND ObjectBoolean_CashSettings_RequireUkrName.ValueData = TRUE
+                  WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
+   THEN
+       RAISE EXCEPTION 'Не заполнено украинское название...';     
+   END IF;
    
     -- Сохранили в плоскую таблицй
    BEGIN

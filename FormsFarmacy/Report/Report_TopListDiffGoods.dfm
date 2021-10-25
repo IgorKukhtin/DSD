@@ -1,27 +1,28 @@
 ﻿inherited Report_TopListDiffGoodsForm: TReport_TopListDiffGoodsForm
   Caption = #1058#1086#1087' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1083#1080#1089#1090#1072#1093' '#1086#1090#1082#1072#1079#1086#1074
   ClientHeight = 501
-  ClientWidth = 712
+  ClientWidth = 1085
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 728
+  ExplicitWidth = 1101
   ExplicitHeight = 540
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 712
+    Width = 1085
     Height = 424
     ExplicitTop = 77
     ExplicitWidth = 712
     ExplicitHeight = 424
     ClientRectBottom = 424
-    ClientRectRight = 712
+    ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 712
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
-        Width = 712
+        Width = 1085
         Height = 416
+        ExplicitTop = 3
         ExplicitWidth = 712
         ExplicitHeight = 416
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -67,6 +68,16 @@
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Remains
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = RemainsAll
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -94,7 +105,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 307
+            Width = 234
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -105,15 +116,15 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 85
+            Width = 79
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'ZeroingDate'
+            DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 85
+            Width = 68
           end
           object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -121,21 +132,44 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 85
+            Width = 66
+          end
+          object RemainsAll: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RemainsAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Remains: TcxGridDBColumn
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 90
           end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 416
-        Width = 712
+        Width = 1085
         Height = 8
         AlignSplitter = salBottom
+        ExplicitWidth = 712
       end
     end
   end
   inherited Panel: TPanel
-    Width = 712
+    Width = 1085
     Height = 51
     ExplicitWidth = 712
     ExplicitHeight = 51
@@ -369,6 +403,15 @@
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_TopListDiffGoods'
+    DataSet = HeaderCDS
+    DataSets = <
+      item
+        DataSet = HeaderCDS
+      end
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -501,6 +544,7 @@
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = nil
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -571,5 +615,31 @@
       end>
     Left = 360
     Top = 24
+  end
+  object HeaderCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 208
+    Top = 144
+  end
+  object CrossDBViewAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'UnitName'
+    TemplateColumn = Remains
+    Left = 368
+    Top = 272
   end
 end
