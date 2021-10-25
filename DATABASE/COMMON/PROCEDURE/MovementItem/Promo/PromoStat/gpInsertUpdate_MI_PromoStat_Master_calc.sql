@@ -116,20 +116,29 @@ BEGIN
         , tmpPromo AS(SELECT DISTINCT
                              tmpMovPromo.StartSale
                            , tmpMovPromo.EndSale
+                           , tmpPromoMI.ObjectId AS GoodsId
                       FROM tmpMovPromo
                           INNER JOIN tmpPromoMI ON tmpPromoMI.MovementId = tmpMovPromo.Id
                       )
 
         --список дат для выбора продаж
         , tmpDateSale AS (SELECT tmp.OperDate
-                               , ROW_NUMBER() OVER (ORDER BY tmp.OperDate) AS Ord
+                               , tmp.GoodsId
+                               , tmp.isSale
+                               , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.isSale ORDER BY tmp.OperDate) AS Ord
                           FROM (SELECT tmpListDate.*
-                                     , ROW_NUMBER() OVER (ORDER BY tmpListDate.OperDate Desc) AS Ord
+                                     , tmpGoods.GoodsId
+                                     , CASE WHEN tmpPromo.StartSale IS NULL THEN TRUE ELSE FALSE END AS isSale  ---определяем даты, которые брать для продаж
+                                     , ROW_NUMBER() OVER (PARTITION BY tmpPromo.GoodsId
+                                                                     , CASE WHEN tmpPromo.StartSale IS NULL THEN TRUE ELSE FALSE END                                                                    
+                                                          ORDER BY tmpListDate.OperDate Desc) AS Ord1
                                 FROM tmpListDate
+                                     LEFT JOIN tmpGoods ON 1 = 1
                                      LEFT JOIN tmpPromo ON tmpListDate.OperDate BETWEEN tmpPromo.StartSale AND tmpPromo.EndSale
-                                WHERE tmpPromo.StartSale IS NULL
+                                                       AND tmpGoods.GoodsId = tmpPromo.GoodsId
+                                --WHERE tmpPromo.StartSale IS NULL
                                 ) AS tmp
-                          WHERE tmp.Ord <=35
+                          WHERE tmp.Ord1 <=35
                           )
 
           -- нам нужны не акционные продажы за 35 дней 
@@ -197,6 +206,10 @@ BEGIN
                            INNER JOIN tmpMISale_all AS MovementItem
                                                     ON MovementItem.MovementId = tmpMovSale.Id
 
+                           INNER JOIN tmpDateSale ON tmpDateSale.OperDate = tmpMovSale.OperDatePartner
+                                                 AND tmpDateSale.GoodsId = MovementItem.ObjectId
+                                                 AND tmpDateSale.isSale = TRUE
+
                            LEFT JOIN tmpMIFloat_PromoMovementId AS MIFloat_PromoMovementId
                                                                 ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
                                                                AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
@@ -216,16 +229,21 @@ BEGIN
         --таблица групп дат (групп периодов)
                  -- группу получаем как разница даты с конкретной , например vbStartDate  минус номер по порядку (удаленность от даты) получаем один.значение для дат по периодам
                  --Это и будут группы,  далее по ним сгруппируем и получим мин и макс
-        , tmpGroupPeriod AS (SELECT MIN(t.OperDate) AS StartDate, MAX(t.OperDate) AS EndDate
+        , tmpGroupPeriod AS (SELECT MIN(t.OperDate) AS StartDate, MAX(t.OperDate) AS EndDate, t.GoodsId
                              FROM (SELECT t1.OperDate
+                                        , t1.GoodsId
                                        --, (DATE_PART ('DAY',(t2.OperDate - t1.OperDate ) )) ::TFloat as Days
-                                       , (DATE_PART ('DAY',(t1.OperDate - vbStartDate::TDateTime)) - t2.ord) AS grp  
-                                   FROM tmpDateSale AS t1
-                                        LEFT JOIN tmpDateSale AS t2 ON t2.ord = t1.ord +1
+                                       , (DATE_PART ('DAY',(t1.OperDate - '01.02.2021'::TDateTime)) - t1.ord) AS grp  
+                                   FROM (SELECT tmpDateSale.* FROM tmpDateSale WHERE tmpDateSale.isSale = TRUE) AS t1
+                                        LEFT JOIN (SELECT tmpDateSale.* FROM tmpDateSale WHERE tmpDateSale.isSale = TRUE) AS t2
+                                                                                                                          ON t2.ord = t1.ord +1
+                                                                                                                         AND t2.GoodsId = t1.GoodsId
+                                  -- WHERE t1.isSale = TRUE AND t2.isSale = TRUE
                                    ORDER BY t1.ord
                                    ) AS t
-                             GROUP BY grp
+                             GROUP BY t.grp, t.GoodsId
                              )
+
         --Результат
         SELECT tmpSale.GoodsId
              , tmpSale.GoodsKindId
@@ -242,7 +260,9 @@ BEGIN
         FROM  tmpSale
              LEFT JOIN tmpDateSale ON tmpDateSale.OperDate = tmpSale.OperDatePartner
              LEFT JOIN zfCalc_DayOfWeekName (tmpSale.OperDatePartner) AS tmpWeekDay ON 1=1
-             LEFT JOIN tmpGroupPeriod ON tmpDateSale.OperDate >= tmpGroupPeriod.StartDate AND tmpDateSale.OperDate <= tmpGroupPeriod.EndDate
+             LEFT JOIN tmpGroupPeriod ON tmpDateSale.OperDate >= tmpGroupPeriod.StartDate 
+                                     AND tmpDateSale.OperDate <= tmpGroupPeriod.EndDate
+                                     AND tmpGroupPeriod.GoodsId = tmpSale.GoodsId
         GROUP BY tmpSale.GoodsId
                , tmpSale.GoodsKindId
                , tmpGroupPeriod.StartDate
