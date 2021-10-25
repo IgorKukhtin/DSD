@@ -280,7 +280,7 @@ type
     spUpdate_Plan: TdsdStoredProc;
     PlanCDS: TClientDataSet;
     PlanDS: TDataSource;
-    spSelectPlan: TdsdStoredProc;
+    spSelectPromoStat_Master: TdsdStoredProc;
     actUpdatePlanDS: TdsdUpdateDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
@@ -531,6 +531,10 @@ type
     PlanChildDS: TDataSource;
     PlanChildCDS: TClientDataSet;
     DBViewAddOnPlanProd: TdsdDBViewAddOn;
+    spInsUpPromoStat_Master_calc: TdsdStoredProc;
+    actInsUpPromoStat_Master_calc: TdsdExecStoredProc;
+    macInsUpPromoStat_Master_calc: TMultiAction;
+    bbInsUpPromoStat_Master_calc: TdxBarButton;
   private
     { Private declarations }
   public

@@ -4,7 +4,7 @@
   ClientHeight = 707
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 742
+  ExplicitHeight = 745
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -842,9 +842,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1255,9 +1252,6 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1586,9 +1580,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1903,9 +1894,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1999,9 +1987,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2322,9 +2307,6 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2474,9 +2456,6 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = #1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2670,9 +2649,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 7
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -2866,9 +2842,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1087#1088'-'#1074#1072
       ImageIndex = 8
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -2877,6 +2850,7 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = -127
         object cxGridDBTableViewPlanChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanChildDS
@@ -3500,8 +3474,8 @@
     Top = 288
   end
   inherited ActionList: TActionList
-    Left = 231
-    Top = 231
+    Left = 239
+    Top = 191
     object actErasedInvoice: TdsdUpdateErased [0]
       Category = 'Invoice'
       MoveParams = <>
@@ -3785,7 +3759,7 @@
           StoredProc = spSelectCalc2
         end
         item
-          StoredProc = spSelectPlan
+          StoredProc = spSelectPromoStat_Master
         end
         item
           StoredProc = spSelectMIMessage
@@ -4080,6 +4054,9 @@
         end
         item
           StoredProc = spSelectPromoInvoice
+        end
+        item
+          StoredProc = spSelectPromoStat_Master
         end>
     end
     object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [30]
@@ -5541,6 +5518,39 @@
       Status = mtComplete
       DataSource = PromoInvoiceDS
     end
+    object actInsUpPromoStat_Master_calc: TdsdExecStoredProc
+      Category = 'Stat'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsUpPromoStat_Master_calc
+      StoredProcList = <
+        item
+          StoredProc = spInsUpPromoStat_Master_calc
+        end
+        item
+          StoredProc = spSelectPromoStat_Master
+        end>
+      Caption = 'actInsUpPromoStat_Master_calc'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ImageIndex = 40
+    end
+    object macInsUpPromoStat_Master_calc: TMultiAction
+      Category = 'Stat'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsUpPromoStat_Master_calc
+        end
+        item
+        end>
+      QuestionBeforeExecute = 
+        #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080'? '#1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1088#1072#1085#1077#1077' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083 +
+        #1077#1085#1099'.'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072#1083#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ImageIndex = 40
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -5702,6 +5712,14 @@
         item
           Visible = True
           ItemName = 'bbUpdate_Movement_isTaxPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsUpPromoStat_Master_calc'
         end
         item
           Visible = True
@@ -6136,6 +6154,10 @@
     end
     object bbSetErasedInvoice: TdxBarButton
       Action = actSetErasedInvoice
+      Category = 0
+    end
+    object bbInsUpPromoStat_Master_calc: TdxBarButton
+      Action = macInsUpPromoStat_Master_calc
       Category = 0
     end
   end
@@ -8319,7 +8341,7 @@
     Left = 1084
     Top = 478
   end
-  object spSelectPlan: TdsdStoredProc
+  object spSelectPromoStat_Master: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoStat_Master'
     DataSet = PlanCDS
     DataSets = <
@@ -8344,8 +8366,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 988
-    Top = 464
+    Left = 964
+    Top = 440
   end
   object dsdDBViewAddOnPlan: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -9175,8 +9197,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 648
+    Left = 368
+    Top = 656
   end
   object dsdDBViewAddOnAdvertising: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -9216,8 +9238,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 640
+    Left = 360
+    Top = 616
   end
   object spUpdate_MI_ContractCondition: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Promo_ContractCondition'
@@ -9903,5 +9925,22 @@
       end>
     Left = 896
     Top = 175
+  end
+  object spInsUpPromoStat_Master_calc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PromoStat_Master_calc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 656
   end
 end
