@@ -41,10 +41,10 @@ BEGIN
     END IF;
 
     --таблица статистики продаж
-    CREATE TEMP TABLE _tmpData (GoodsId Integer, GoodsKindId Integer, StartDate TDateTime, EndDate TDateTime
+    CREATE TEMP TABLE _tmpData (BranchId Integer, GoodsId Integer, GoodsKindId Integer, StartDate TDateTime, EndDate TDateTime, isDnepr Boolean
                               , Amount1 TFloat, Amount2 TFloat, Amount3 TFloat, Amount4 TFloat, Amount5 TFloat, Amount6 TFloat, Amount7 TFloat) ON COMMIT DROP;
 
-    INSERT INTO _tmpData (GoodsId, GoodsKindId, StartDate, EndDate, Amount1, Amount2, Amount3, Amount4, Amount5, Amount6, Amount7)
+    INSERT INTO _tmpData (GoodsId, GoodsKindId, StartDate, EndDate, isDnepr, Amount1, Amount2, Amount3, Amount4, Amount5, Amount6, Amount7)
      WITH -- Список товара
           tmpGoods AS (SELECT DISTINCT MovementItem.ObjectId  AS GoodsId                --ИД объекта <товар>
                             , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -123,7 +123,7 @@ BEGIN
         --список дат для выбора продаж
         , tmpDateSale AS (SELECT tmp.OperDate
                                , ROW_NUMBER() OVER (ORDER BY tmp.OperDate) AS Ord
-                          FROM (SELECT tmpListDate.* 
+                          FROM (SELECT tmpListDate.*
                                      , ROW_NUMBER() OVER (ORDER BY tmpListDate.OperDate Desc) AS Ord
                                 FROM tmpListDate
                                      LEFT JOIN tmpPromo ON tmpListDate.OperDate BETWEEN tmpPromo.StartSale AND tmpPromo.EndSale
@@ -151,6 +151,17 @@ BEGIN
                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovSale.Id FROM tmpMovSale)
                           AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                         )
+        -- по складу определяем филиал или днепр
+        , tmpMLO_From AS (SELECT MovementLinkObject.*
+                               , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
+                          FROM MovementLinkObject
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                    ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject.ObjectId
+                                                   AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovSale.Id FROM tmpMovSale)
+                            AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                          )
+
         -- по товарам
         , tmpMISale_all AS (SELECT MovementItem.*
                             FROM tmpMovSale
@@ -175,11 +186,14 @@ BEGIN
                                 )
         --продажи по датам
         , tmpSale AS (SELECT tmpMovSale.OperDatePartner
+                           , CASE WHEN COALESCE (tmpMLO_From.BranchId, zc_Branch_Basis()) = zc_Branch_Basis() THEN TRUE ELSE FALSE END isDnepr
                            , MovementItem.ObjectId    AS GoodsId
                            , MILO_GoodsKind.ObjectId  AS GoodsKindId
                            , SUM (CASE WHEN MIFloat_PromoMovementId.ValueData IS NULL THEN COALESCE (MIFloat_AmountPartner.ValueData,0) ELSE 0 END) AS AmountPartner
                            --, SUM (COALESCE (MIFloat_AmountPartner.ValueData,0)) AS AmountPartner
                       FROM tmpMovSale
+                           LEFT JOIN tmpMLO_From ON tmpMLO_From.MovementId = tmpMovSale.Id
+
                            INNER JOIN tmpMISale_all AS MovementItem
                                                     ON MovementItem.MovementId = tmpMovSale.Id
 
@@ -197,6 +211,7 @@ BEGIN
                       GROUP BY tmpMovSale.OperDatePartner
                              , MovementItem.ObjectId
                              , MILO_GoodsKind.ObjectId
+                             , CASE WHEN COALESCE (tmpMLO_From.BranchId, zc_Branch_Basis()) = zc_Branch_Basis() THEN TRUE ELSE FALSE END
                       )
         --таблица групп дат (групп периодов)
                  -- группу получаем как разница даты с конкретной , например vbStartDate  минус номер по порядку (удаленность от даты) получаем один.значение для дат по периодам
@@ -216,6 +231,7 @@ BEGIN
              , tmpSale.GoodsKindId
              , tmpGroupPeriod.StartDate
              , tmpGroupPeriod.EndDate
+             , tmpSale.isDnepr
              , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmpSale.AmountPartner ELSE 0 END) Amount1
              , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmpSale.AmountPartner ELSE 0 END) Amount2
              , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmpSale.AmountPartner ELSE 0 END) Amount3
@@ -231,6 +247,7 @@ BEGIN
                , tmpSale.GoodsKindId
                , tmpGroupPeriod.StartDate
                , tmpGroupPeriod.EndDate
+               , tmpSale.isDnepr
         HAVING SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmpSale.AmountPartner ELSE 0 END) <> 0
             OR SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmpSale.AmountPartner ELSE 0 END) <> 0
             OR SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmpSale.AmountPartner ELSE 0 END) <> 0
@@ -254,20 +271,20 @@ BEGIN
                                                           , inGoodsKindId := _tmpData.GoodsKindId ::Integer   --ИД обьекта <Вид товара>
                                                           , inStartDate   := _tmpData.StartDate   ::TDateTime --
                                                           , inEndDate     := _tmpData.EndDate     ::TDateTime --
-                                                          , inPlan1       := _tmpData.Amount1     ::TFloat    -- 
-                                                          , inPlan2       := _tmpData.Amount2     ::TFloat    -- 
-                                                          , inPlan3       := _tmpData.Amount3     ::TFloat    -- 
-                                                          , inPlan4       := _tmpData.Amount4     ::TFloat    -- 
-                                                          , inPlan5       := _tmpData.Amount5     ::TFloat    -- 
-                                                          , inPlan6       := _tmpData.Amount6     ::TFloat    -- 
-                                                          , inPlan7       := _tmpData.Amount7     ::TFloat    -- 
-                                                          , inPlanBranch1 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch2 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch3 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch4 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch5 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch6 := 0                    ::TFloat    -- 
-                                                          , inPlanBranch7 := 0                    ::TFloat    -- 
+                                                          , inPlan1       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount1 ELSE 0 END ::TFloat    --   zc_Branch_Basis()
+                                                          , inPlan2       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount2 ELSE 0 END ::TFloat    -- 
+                                                          , inPlan3       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount3 ELSE 0 END ::TFloat    -- 
+                                                          , inPlan4       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount4 ELSE 0 END ::TFloat    -- 
+                                                          , inPlan5       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount5 ELSE 0 END ::TFloat    -- 
+                                                          , inPlan6       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount6 ELSE 0 END ::TFloat    -- 
+                                                          , inPlan7       := CASE WHEN _tmpData.isDnepr = TRUE  THEN _tmpData.Amount7 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch1 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount1 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch2 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount2 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch3 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount3 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch4 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount4 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch5 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount5 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch6 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount6 ELSE 0 END ::TFloat    -- 
+                                                          , inPlanBranch7 := CASE WHEN _tmpData.isDnepr = FALSE THEN _tmpData.Amount7 ELSE 0 END ::TFloat    -- 
                                                           , inUserId      := vbUserId             ::Integer)
        FROM _tmpData;  
 END;
