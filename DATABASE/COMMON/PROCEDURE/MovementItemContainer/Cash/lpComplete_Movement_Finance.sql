@@ -510,7 +510,7 @@ end if;
                                                                                                      ELSE _tmpItem.ProfitLossDirectionId
                                                                                                 END
                                                                   , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                  , inInfoMoneyId            := NULL
+                                                                  , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                   , inInsert                 := FALSE
                                                                   , inUserId                 := inUserId
                                                                    )

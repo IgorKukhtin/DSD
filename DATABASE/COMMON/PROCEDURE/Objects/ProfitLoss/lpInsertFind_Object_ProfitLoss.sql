@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_ProfitLoss(
     IN inProfitLossDirectionId  Integer  , -- Аналитика ОПиУ - направление
     IN inInfoMoneyDestinationId Integer  , -- Управленческие назначения
     IN inInfoMoneyId            Integer  , -- Статьи назначения
-    IN inInsert                 Boolean  DEFAULT FALSE , -- 
+    IN inInsert                 Boolean  DEFAULT FALSE , --
     IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
   RETURNS Integer AS
@@ -19,6 +19,17 @@ $BODY$
    DECLARE vbProfitLossCode Integer;
    DECLARE vbProfitLossName TVarChar;
 BEGIN
+
+   -- Сразу - Возвращаем значение
+   IF (COALESCE (inProfitLossGroupId, 0) = 0 OR COALESCE (inProfitLossDirectionId, 0) = 0)
+      AND 1 = (SELECT  COUNT(*) FROM ObjectLink AS OL_InfoMoney WHERE OL_InfoMoney.ChildObjectId = inInfoMoneyId AND OL_InfoMoney.DescId = zc_ObjectLink_ProfitLoss_InfoMoney())
+   THEN
+       RETURN (SELECT OL_InfoMoney.ObjectId
+               FROM ObjectLink AS OL_InfoMoney
+               WHERE OL_InfoMoney.ChildObjectId = inInfoMoneyId
+                 AND OL_InfoMoney.DescId        = zc_ObjectLink_ProfitLoss_InfoMoney()
+              );
+   END IF;
 
    -- Проверки
    IF COALESCE (inUserId, 0) = 0
@@ -50,7 +61,7 @@ BEGIN
    IF COALESCE (vbProfitLossId, 0) = 0 AND inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()
    THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, inProfitLossDirectionId, zc_Enum_InfoMoneyDestination_20600());
    END IF;
-  
+
 
    -- проверка - статья не должна быть удалена
    IF EXISTS (SELECT Id FROM Object WHERE Id = vbProfitLossId AND isErased = TRUE)
@@ -60,7 +71,7 @@ BEGIN
 
 
    -- Создаем новую статью ОПиУ
-   IF COALESCE (vbProfitLossId, 0) = 0 
+   IF COALESCE (vbProfitLossId, 0) = 0
    THEN
        -- для некоторых случаев блокируем создание новой статьи ОПиУ
        IF inInsert = FALSE
@@ -94,13 +105,13 @@ BEGIN
 
 
        -- Еще раз находим статью ОПиУ по <Управленческие назначения> или <Статьи назначения> (но здесь другой vbProfitLossDirectionId)
-       IF inInfoMoneyDestinationId <> 0 
+       IF inInfoMoneyDestinationId <> 0
           THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, vbProfitLossDirectionId, inInfoMoneyDestinationId);
           ELSE vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoney (inProfitLossGroupId, vbProfitLossDirectionId, inInfoMoneyId);
        END IF;
 
        -- Создаем новую статью ОПиУ
-       IF COALESCE (vbProfitLossId, 0) = 0 
+       IF COALESCE (vbProfitLossId, 0) = 0
        THEN
            -- Определяем название 3-ий уровень по <Управленческие назначения> или <Статьи назначения>
            IF inInfoMoneyDestinationId <> 0 THEN SELECT InfoMoneyDestinationName INTO vbProfitLossName FROM lfSelect_Object_InfoMoneyDestination() WHERE InfoMoneyDestinationId = inInfoMoneyDestinationId;
@@ -123,7 +134,7 @@ BEGIN
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProfitLoss_ProfitLossDirection(), vbProfitLossId, vbProfitLossDirectionId);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProfitLoss_InfoMoneyDestination(), vbProfitLossId, inInfoMoneyDestinationId);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProfitLoss_InfoMoney(), vbProfitLossId, inInfoMoneyId);
-       
+
            -- сохранили протокол
            PERFORM lpInsert_ObjectProtocol (vbProfitLossId, inUserId);
        END IF;
@@ -140,7 +151,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Boolean, Integer)  OWNER TO postgres;
 
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
