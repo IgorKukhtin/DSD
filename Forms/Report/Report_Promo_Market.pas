@@ -71,6 +71,9 @@ type
     ceJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     cbIsDetail: TcxCheckBox;
+    ContractCode: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
   private
     { Private declarations }
   public

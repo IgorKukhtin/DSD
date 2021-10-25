@@ -4,7 +4,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 1114
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,14 +205,19 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             Width = 89
           end
           object JuridicalName_str: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1040#1082#1094#1080#1103')'
             DataBinding.FieldName = 'JuridicalName_str'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 154
           end
           object JuridicalName_str_fact: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_str_fact'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1086#1076#1072#1078#1072'/'#1042#1086#1079#1074#1088#1072#1090
+            Width = 80
           end
           object strSign: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
@@ -377,6 +382,28 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             HeaderHint = #1062#1077#1085#1072' ('#1092#1072#1082#1090' '#1087#1088#1086#1076#1072#1078')'
             Width = 99
           end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Width = 55
+          end
+          object ContractNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -388,13 +415,13 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 43831d
+      EditValue = 44197d
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
-      EditValue = 43831d
+      EditValue = 44197d
       ExplicitLeft = 114
       ExplicitTop = 32
     end
@@ -460,9 +487,9 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
     object cbIsDetail: TcxCheckBox
       Left = 560
       Top = 32
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088#1099'+'#1062#1077#1085#1099
       TabOrder = 10
-      Width = 81
+      Width = 161
     end
   end
   inherited ActionList: TActionList
@@ -963,8 +990,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 708
-    Top = 8
+    Left = 348
   end
   object PrintHead: TClientDataSet
     Aggregates = <>

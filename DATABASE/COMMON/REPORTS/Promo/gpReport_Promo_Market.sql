@@ -13,7 +13,7 @@ DROP FUNCTION IF EXISTS gpReport_Promo_Market(
     TDateTime, --дата окончания периода
     Boolean,   --показать только Акции
     Boolean,   --показать только Тендеры
-    Boolean,   -- разворачиваем 
+    Boolean,   -- разворачиваем
     Integer,   --подразделение
     Integer,   --юр.лицо
     TVarChar   --сессия пользователя
@@ -58,8 +58,9 @@ RETURNS TABLE(
     , SummIn_diff TFloat   -- summa разницы цен (по прайсу и промо) * кг возврат
     , Summ_diff TFloat     -- summa разницы цен (по прайсу и промо) * кг (продажи-возврат)
     , Price_pl TFloat      -- цена прайс
-    , Price    TFloat      -- цена из документа 
+    , Price    TFloat      -- цена из документа
     , JuridicalName_str_fact TVarChar -- Юр.лица из док. продаж/возврата
+    , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
     )
 AS
 $BODY$
@@ -70,14 +71,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 /*
-берем акциии которые попадают по StartSale + EndSale 
+берем акциии которые попадают по StartSale + EndSale
      + условие не все акции а только у которых zc_MovementLinkObject_PromoKind = В счет маркетингового бюджета,
 дальше только для продаж и возвратов с такой акцией по OperDatePartner считаем кол-во кг *(цена по прайсу на дату накл - цена в накл)
 */
 
     -- Результат
     RETURN QUERY
-     WITH 
+     WITH
         -- 1) берем док акция у которой период отгрузки с .. по ...  который попадает в период отчет
           tmpMovement AS (SELECT Movement_Promo.*
                                , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
@@ -104,7 +105,7 @@ BEGIN
                              LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                                        ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                                       AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
-                             
+
                           WHERE Movement_Promo.DescId = zc_Movement_Promo()
                            AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
                            OR
@@ -178,7 +179,7 @@ BEGIN
                                 WHERE MIFloat_PromoMovement.ValueData IN (SELECT DISTINCT tmpMovement_Promo.Id FROM tmpMovement_Promo)
                                   AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                               )
-        
+
         , tmpMovementSale_2 AS (SELECT Movement.*
                                      , MovementLinkObject_Contract.ObjectId AS ContractId
                                      , MovementLinkObject_Partner.ObjectId  AS PartnerId
@@ -188,7 +189,7 @@ BEGIN
                                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                                   ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                                                 AND MovementLinkObject_Partner.DescId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END          
+                                                                 AND MovementLinkObject_Partner.DescId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
                                 )
 
         , tmpPriceListAll AS (SELECT Movement.ContractId
@@ -226,14 +227,14 @@ BEGIN
                                 LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                      ON ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                                                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = tmp.PriceListId
-                                                    
+
                                 LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                      ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                     AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                                 LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
                                                      ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                     AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
-                    
+
                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                        AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -245,13 +246,13 @@ BEGIN
                            )
 
         , tmpMI_GoodsKind AS (SELECT *
-                              FROM MovementItemLinkObject 
+                              FROM MovementItemLinkObject
                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMovementSale.MovementItemId FROM tmpMovementSale)
                                 AND MovementItemLinkObject.DescId         = zc_MILinkObject_GoodsKind()
                               )
 
         , tmpMovementItemFloat AS (SELECT *
-                                   FROM MovementItemFloat 
+                                   FROM MovementItemFloat
                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovementSale.MovementItemId FROM tmpMovementSale)
                                      AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner()
                                                                     , zc_MIFloat_Price())
@@ -270,20 +271,22 @@ BEGIN
                                )
 
         , tmpDataFact AS (SELECT Movement.MovementId_promo
-                               , STRING_AGG (DISTINCT tmpMLO_Juridical.JuridicalName,'; ') AS JuridicalName
+                               , Movement.ContractId
+                               , tmpMLO_Juridical.JuridicalId
+                               , tmpMLO_Juridical.JuridicalName
                                , CASE WHEN inIsDetail = TRUE THEN Movement.GoodsId ELSE 0 END AS GoodsId
                                , CASE WHEN inIsDetail = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
                                , CASE WHEN inIsDetail = TRUE THEN ObjectLink_Goods_Measure.ChildObjectId ELSE 0 END AS MeasureId
-                          
+
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale()  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END)          :: TFloat AS AmountOut
                                , SUM ( CASE WHEN Movement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END ) :: TFloat AS AmountOutWeight
-                  
+
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END)       :: TFloat AS AmountIn
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                                       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END )  :: TFloat AS AmountInWeight
-                                      
-                               , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale()  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END 
+
+                               , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale()  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                                       * (COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) - COALESCE (MIFloat_Price.ValueData,0) ) )          :: TFloat AS SummOut
                                , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
                                       * (COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) - COALESCE (MIFloat_Price.ValueData,0) ) )          :: TFloat AS SummIn
@@ -291,20 +294,20 @@ BEGIN
                                , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) ELSE 0 END AS Price_pl
                                , CASE WHEN inIsDetail = TRUE THEN COALESCE (MIFloat_Price.ValueData,0) ELSE 0 END                            AS Price
                           FROM tmpMovementSale AS Movement
-                  
+
                                LEFT JOIN tmpMI_GoodsKind AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
-                   
+
                                LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
                                                               ON MIFloat_AmountPartner.MovementItemId = Movement.MovementItemId
                                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                                LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
                                                               ON MIFloat_Price.MovementItemId = Movement.MovementItemId
                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                  
+
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                     ON ObjectLink_Goods_Measure.ObjectId = Movement.GoodsId
                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                   
+
                                LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                                            ON ObjectFloat_Goods_Weight.ObjectId = Movement.GoodsId
                                                           AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -318,18 +321,22 @@ BEGIN
                                                      AND tmpPriceListAll.OperDate = Movement.OperDate
                                                      AND tmpPriceListAll.GoodsId = Movement.GoodsId
                                                      AND COALESCE (tmpPriceListAll.GoodsKindId,0) = 0
-      
-                               LEFT JOIN tmpMLO_Juridical ON tmpMLO_Juridical.MovementId = Movement.Id 
+
+                               LEFT JOIN tmpMLO_Juridical ON tmpMLO_Juridical.MovementId = Movement.Id
                           GROUP BY Movement.MovementId_promo
+                                 , Movement.ContractId
+                                 , tmpMLO_Juridical.JuridicalId
+                                 , tmpMLO_Juridical.JuridicalName
                                  , CASE WHEN inIsDetail = TRUE THEN Movement.GoodsId ELSE 0 END
                                  , CASE WHEN inIsDetail = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
                                  , CASE WHEN inIsDetail = TRUE THEN ObjectLink_Goods_Measure.ChildObjectId ELSE 0 END
                                  , CASE WHEN inIsDetail = TRUE THEN COALESCE (tmpPriceList.ValuePrice,tmpPriceListAll.ValuePrice,0) ELSE 0 END
                                  , CASE WHEN inIsDetail = TRUE THEN COALESCE (MIFloat_Price.ValueData,0) ELSE 0 END
-                                 , CASE WHEN inIsDetail = TRUE THEN tmpMLO_Juridical.JuridicalName ELSE '' END                        
+                                 , CASE WHEN inIsDetail = TRUE THEN tmpMLO_Juridical.JuridicalName ELSE '' END
                           )
-                        
-        --
+
+         , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View)
+      --
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.OperDate :: TDateTime AS OperDate
@@ -403,7 +410,7 @@ BEGIN
                    WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
                      AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                      AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                   ORDER BY CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END 
+                   ORDER BY CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END
                    ) AS tmp
             ) ::TBlob AS JuridicalName_str
 
@@ -417,18 +424,23 @@ BEGIN
           , tmpDataFact.AmountOutWeight    ::TFloat AS AmountOutWeight_fact--Кол-во реализация (факт) Вес
           , tmpDataFact.AmountIn           ::TFloat AS AmountIn_fact       --Кол-во возврат (факт)
           , tmpDataFact.AmountInWeight     ::TFloat AS AmountInWeight_fact --Кол-во возврат (факт) Вес
-          
+
           , tmpDataFact.SummOut ::TFloat AS SummOut_diff
           , tmpDataFact.SummIn  ::TFloat AS SummIn_diff
           , (COALESCE (tmpDataFact.SummOut,0) - COALESCE (tmpDataFact.SummIn,0)) ::TFloat AS Summ_diff
 
           , tmpDataFact.Price_pl ::TFloat
           , tmpDataFact.Price    ::TFloat
-          , tmpDataFact.JuridicalName ::TVarChar AS JuridicalName_str_fact
-        FROM tmpDataFact 
+          , tmpDataFact.JuridicalName  ::TVarChar AS JuridicalName_str_fact
+          , tmpDataFact.ContractId                AS ContractId
+          , View_Contract_InvNumber.ContractCode
+          , View_Contract_InvNumber.InvNumber     AS ContractNumber
+          , View_Contract_InvNumber.ContractTagName
+
+        FROM tmpDataFact
             LEFT JOIN tmpMovement_Promo AS Movement_Promo
                                         ON Movement_Promo.Id = tmpDataFact.MovementId_promo
-            
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDataFact.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpDataFact.GoodsKindId
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpDataFact.MeasureId
@@ -438,12 +450,13 @@ BEGIN
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
+            LEFT JOIN tmpContract AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpDataFact.ContractId
+
         ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -452,4 +465,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpReport_Promo_Market(inStartDate := ('01.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inIsPromo := 'False'::Boolean , inIsTender := 'False' ::Boolean, inIsDetail:=true, inUnitId := 0 ,  inJuridicalId:=0, inSession := '5'::TVarchar) -- where invnumber = 6862
+-- SELECT * FROM gpReport_Promo_Market(inStartDate := ('01.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inIsPromo := 'False'::Boolean , inIsTender := 'False' ::Boolean, inIsDetail:=true, inUnitId := 0 ,  inJuridicalId:=0, inSession := '5'::TVarchar) -- where invnumber = 6862
