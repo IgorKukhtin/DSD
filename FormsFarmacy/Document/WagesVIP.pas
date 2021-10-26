@@ -38,6 +38,10 @@ type
     spCalculationAll: TdsdStoredProc;
     ceTotalSummSaleNP: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    spCalculationAllDay: TdsdStoredProc;
+    actCalculationAllDay: TMultiAction;
+    actExecCalculationAllDay: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

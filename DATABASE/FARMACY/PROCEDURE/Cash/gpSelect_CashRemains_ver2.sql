@@ -1028,10 +1028,9 @@ BEGIN
             COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName,
 
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
-            CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
-            COALESCE (tmpGoodsMorion.MorionCode, 0) :: Integer  AS MorionCode,
-            COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
-
+            CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
+          , COALESCE (Object_Goods_Main.MorionCode, 0) :: Integer  AS MorionCode
+          , COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
           , tmpMCSAuto.MCSValueOld
           , tmpMCSAuto.StartDateMCSAuto
           , tmpMCSAuto.EndDateMCSAuto

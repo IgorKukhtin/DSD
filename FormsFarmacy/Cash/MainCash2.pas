@@ -7442,21 +7442,21 @@ begin
         RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
         RemainsCDS.Filtered := True;
       finally
-        if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
-        begin
-          if RemainsCDS.RecordCount = 0 then
-          begin
-            ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для работы с кодом Мориона.'#13#13 +
-              'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
-              'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString + #13 + S1, cResult);
-            NewCheck;
-          end;
-        end else if LikiDniproReceiptApi.Recipe.FRecipe_Type = 3 then
-        begin
+//        if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+//        begin
+//          if RemainsCDS.RecordCount = 0 then
+//          begin
+//            ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для работы с кодом Мориона.'#13#13 +
+//              'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
+//              'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString + #13 + S1, cResult);
+//            NewCheck;
+//          end;
+//        end else if LikiDniproReceiptApi.Recipe.FRecipe_Type = 3 then
+//        begin
           if RemainsCDS.RecordCount = 0 then
           begin
             RemainsCDS.Filtered := False;
-            RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
+            RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and MorionCode <> 0';
             RemainsCDS.Filtered := True;
             cbMorionFilter.Enabled := False;
             cbMorionFilter.Checked := False;
@@ -7465,7 +7465,7 @@ begin
             cbMorionFilter.Enabled := True;
             cbMorionFilter.Checked := True;
           end;
-        end;
+//        end;
         RemainsCDS.EnableControls;
       end;
     end else
@@ -7483,16 +7483,16 @@ begin
   inherited;
   cbMorionFilter.Properties.OnChange := Nil;
   try
-    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
-    begin
-      cbMorionFilter.Enabled := True;
-      cbMorionFilter.Checked := True;
-      cbMorionFilter.Enabled := False;
-    end else
-    begin
+//    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+//    begin
+//      cbMorionFilter.Enabled := True;
+//      cbMorionFilter.Checked := True;
+//      cbMorionFilter.Enabled := False;
+//    end else
+//    begin
       cbMorionFilter.Enabled := True;
       if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
-    end;
+//    end;
   finally
     cbMorionFilter.Properties.OnChange := cbMorionFilterPropertiesChange;
   end;

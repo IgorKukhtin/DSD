@@ -153,7 +153,7 @@ BEGIN
                   , Object_Goods_View.isFirst        AS isFirst
                   , Object_Goods_View.isSecond       AS isSecond
                   
-                  , tmpGoodsMorion.MorionCode
+                  , Object_Goods_Main.MorionCode
                   , tmpGoodsBarCode.BarCode    ::TVarChar
 
                   , ObjectString_Goods_NameUkr.ValueData     AS NameUkr

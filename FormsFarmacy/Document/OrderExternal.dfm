@@ -1,28 +1,28 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1091'>'
   ClientHeight = 611
-  ClientWidth = 821
+  ClientWidth = 1222
   AddOnFormData.PUSHMessage = actPUSHInfo
-  ExplicitWidth = 837
+  ExplicitWidth = 1238
   ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 189
-    Width = 821
+    Width = 1222
     Height = 422
     ExplicitTop = 189
-    ExplicitWidth = 821
+    ExplicitWidth = 1222
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 821
+    ClientRectRight = 1222
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 821
+      ExplicitWidth = 1222
       ExplicitHeight = 398
       inherited cxGrid: TcxGrid
-        Width = 821
+        Width = 1222
         Height = 398
-        ExplicitWidth = 821
+        ExplicitWidth = 1222
         ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -312,10 +312,10 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 821
+    Width = 1222
     Height = 163
     TabOrder = 3
-    ExplicitWidth = 821
+    ExplicitWidth = 1222
     ExplicitHeight = 163
     inherited edInvNumber: TcxTextEdit
       Left = 12
@@ -442,6 +442,42 @@ inherited OrderExternalForm: TOrderExternalForm
       Left = 12
       Top = 122
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object cxLabel16: TcxLabel
+      Left = 818
+      Top = 5
+      Caption = #1040#1076#1088#1077#1089' '#1072#1087#1090#1077#1082#1080
+    end
+    object edPhone: TcxTextEdit
+      Left = 818
+      Top = 60
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 391
+    end
+    object edAddress: TcxTextEdit
+      Left = 818
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 391
+    end
+    object edTimeWork: TcxTextEdit
+      Left = 818
+      Top = 101
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 391
+    end
+    object cxLabel17: TcxLabel
+      Left = 818
+      Top = 45
+      Caption = #1058#1077#1083#1077#1092#1086#1085#1099' '#1072#1087#1090#1077#1082#1080
+    end
+    object cxLabel18: TcxLabel
+      Left = 818
+      Top = 85
+      Caption = #1042#1088#1077#1084#1103' '#1056#1072#1073#1086#1090#1099
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -721,6 +757,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Body.Value = Null
       Body.Component = FormParams
       Body.ComponentItem = 'Body'
+      Body.DataType = ftWideString
       Body.MultiSelectSeparator = ','
       Subject.Value = Null
       Subject.Component = FormParams
@@ -1044,7 +1081,7 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Name = 'Body'
         Value = Null
-        DataType = ftString
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
@@ -1277,6 +1314,27 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'LetterSubject'
         Value = Null
         Component = edLetterSubject
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimeWork'
+        Value = Null
+        Component = edTimeWork
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1658,6 +1716,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Body'
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item

@@ -22,6 +22,7 @@ inherited WagesVIPForm: TWagesVIPForm
       inherited cxGrid: TcxGrid
         Width = 799
         Height = 338
+        ExplicitTop = 5
         ExplicitWidth = 799
         ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -313,7 +314,7 @@ inherited WagesVIPForm: TWagesVIPForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' ?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
       Caption = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
       Hint = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
@@ -329,6 +330,36 @@ inherited WagesVIPForm: TWagesVIPForm
           StoredProc = spCalculationAll
         end>
       Caption = 'actExecCalculationAll'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+    end
+    object actCalculationAllDay: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecCalculationAllDay
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' ('#1088#1072#1089#1095#1077#1090' '#1087#1086 +
+        ' '#1076#1085#1103#1084') ?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' ('#1088#1072#1089#1095#1077#1090' '#1087#1086' '#1076#1085#1103#1084')'
+      Hint = #1056#1072#1089#1095#1080#1090#1072#1090#1100' '#1079#1072#1088#1072#1073#1086#1090#1085#1091#1102' '#1087#1083#1072#1090#1091' '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' ('#1088#1072#1089#1095#1077#1090' '#1087#1086' '#1076#1085#1103#1084')'
+      ImageIndex = 38
+    end
+    object actExecCalculationAllDay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCalculationAllDay
+      StoredProcList = <
+        item
+          StoredProc = spCalculationAllDay
+        end>
+      Caption = 'actExecCalculationAllDay'
       Hint = #1056#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
     end
   end
@@ -382,11 +413,15 @@ inherited WagesVIPForm: TWagesVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -421,6 +456,10 @@ inherited WagesVIPForm: TWagesVIPForm
     end
     object dxBarButton1: TdxBarButton
       Action = actCalculationAll
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actCalculationAllDay
       Category = 0
     end
   end
@@ -750,5 +789,23 @@ inherited WagesVIPForm: TWagesVIPForm
     NeedResetData = True
     Left = 552
     Top = 192
+  end
+  object spCalculationAllDay: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_WagesVIP_CalculationAllDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 552
+    Top = 256
   end
 end

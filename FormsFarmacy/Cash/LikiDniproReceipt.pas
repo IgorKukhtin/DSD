@@ -408,7 +408,7 @@ begin
     while not FDrugsCDS.Eof do
     begin
       jsonTemp := TJSONObject.Create;
-      jsonTemp.AddPair('count', FDrugsCDS.FieldByName('count').AsString);
+      jsonTemp.AddPair('count', StringReplace(FDrugsCDS.FieldByName('count').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('retail_price_without_vat', StringReplace(FDrugsCDS.FieldByName('retail_price_without_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('retail_price_with_vat', StringReplace(FDrugsCDS.FieldByName('retail_price_with_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('price_without_vat', StringReplace(FDrugsCDS.FieldByName('price_without_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
@@ -429,10 +429,10 @@ begin
     jsonBody.Destroy;
   end;
 
-  try
-    FRESTRequest.Execute;
-  except
-  end;
+//  try
+//    FRESTRequest.Execute;
+//  except
+//  end;
 
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin

@@ -12,18 +12,17 @@
     Width = 1085
     Height = 424
     ExplicitTop = 77
-    ExplicitWidth = 712
+    ExplicitWidth = 1085
     ExplicitHeight = 424
     ClientRectBottom = 424
     ClientRectRight = 1085
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 712
+      ExplicitWidth = 1085
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
         Width = 1085
         Height = 416
-        ExplicitTop = 3
-        ExplicitWidth = 712
+        ExplicitWidth = 1085
         ExplicitHeight = 416
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -156,6 +155,11 @@
             VisibleForCustomization = False
             Width = 90
           end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -164,14 +168,13 @@
         Width = 1085
         Height = 8
         AlignSplitter = salBottom
-        ExplicitWidth = 712
       end
     end
   end
   inherited Panel: TPanel
     Width = 1085
     Height = 51
-    ExplicitWidth = 712
+    ExplicitWidth = 1085
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42491d
@@ -630,7 +633,12 @@
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Remains
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
