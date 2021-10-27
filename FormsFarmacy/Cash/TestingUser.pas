@@ -524,9 +524,9 @@ begin
 
   cxLabel3.Caption := '¬опросов ' + IntToStr(TitleCDS.FieldByName('Question').AsInteger) + ' правельных ответов ' + IntToStr(nCorrect) +
     ' процент выполнени€ ' + CurrToStr(RoundTo(nCorrect / TitleCDS.FieldByName('Question').AsInteger * 100, -2)) + ' тест ' +
-    IfThen((TitleCDS.FieldByName('Question').AsInteger - nCorrect) <= TitleCDS.FieldByName('WrongAnswers').AsInteger, 'не сдан', 'сдан');
+    IfThen((TitleCDS.FieldByName('Question').AsInteger - nCorrect) > TitleCDS.FieldByName('WrongAnswers').AsInteger, 'не сдан', 'сдан');
 
-  if (TitleCDS.FieldByName('Question').AsInteger - nCorrect) <= TitleCDS.FieldByName('WrongAnswers').AsInteger then cxLabel3.Style.Font.Color := clRed;
+  if (TitleCDS.FieldByName('Question').AsInteger - nCorrect) > TitleCDS.FieldByName('WrongAnswers').AsInteger then cxLabel3.Style.Font.Color := clRed;
 
 
   sgViewingResults.Visible := True;

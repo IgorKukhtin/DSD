@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Goods_LikiDnipro1303(
 )
 RETURNS TABLE (Id Integer
              , MorionCode Integer
-             , count Integer
+             , isManual boolean
+             , count TFloat
              , retail_price_without_vat TFloat
              , retail_price_with_vat TFloat
              , price_without_vat TFloat
@@ -33,7 +34,8 @@ $BODY$
 
    DECLARE vbIndex Integer;
    DECLARE vbMorion Integer;   
-   DECLARE vbQpack Integer;   
+   DECLARE vbisManual Boolean;   
+--   DECLARE vbQpack Integer;   
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -56,20 +58,24 @@ BEGIN
       RAISE EXCEPTION 'Не найден код мориона товара.';
     END IF;
 
+    vbisManual := True;
+    
     -- парсим коды мориона
     vbIndex := 1;
     WHILE SPLIT_PART (inMorion, ',', vbIndex) <> '' LOOP
         -- Сравниваем
         IF SPLIT_PART (inMorion, ',', vbIndex)::Integer = vbMorion
         THEN
-          vbQpack := SPLIT_PART (inqpack_int, ',', vbIndex)::Integer;
+          --vbQpack := SPLIT_PART (inqpack_int, ',', vbIndex)::Integer;
+          vbisManual := False;
           EXIT;
         END IF;
           
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
     END LOOP;    
-        
+ 
+/*       
     IF COALESCE (vbQpack, 0) = 0
     THEN
       RAISE EXCEPTION 'Не найдено количество в упакоаке товара.';
@@ -79,7 +85,7 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Проверьте количество выписанного товара.%Выписано: %.%В чеке: %', CHR (13), inBught_Int, CHR (13), ROUND(inAmount * vbQpack::TFloat);
     END IF;
-
+*/
     -- RAISE EXCEPTION 'Получили: % % ', vbMorion, vbQpack;
 
     RETURN QUERY
@@ -150,6 +156,20 @@ BEGIN
     -- Результат
     SELECT Min(tmpItem.Id)                                                                                     AS ID
          , vbMorion                                                                                            AS MorionCode
+         , vbisManual                                                                                          AS isManual
+         , Sum(tmpItem.Amount)::TFloat                                                                         AS count
+         , Round(inPriceSale * 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat       AS retail_price_without_vat
+         , inPriceSale::TFloat                                                                                 AS retail_price_with_vat
+         , Round(inPrice * 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat           AS price_without_vat
+         , inPrice::TFloat                                                                                     AS price_with_vat
+         , Round(inSumm * Sum(tmpItem.Amount) / inAmount * 
+                 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat                     AS amount_without_vat
+         , Round(inSumm * Sum(tmpItem.Amount) / inAmount, 2) ::TFloat                                          AS amount_with_vat
+         , COALESCE(MIString_PartionGoods.ValueData, '') ::TVarChar                                            AS drug_series
+         , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())::TDateTime  AS series_expiration_date
+         
+/*         Min(tmpItem.Id)                                                                                     AS ID
+         , vbMorion                                                                                            AS MorionCode
          , ROUND(Sum(tmpItem.Amount) * vbQpack::TFloat)::Integer                                               AS count
          , Round(inPriceSale * 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat       AS retail_price_without_vat
          , inPriceSale::TFloat                                                                                 AS retail_price_with_vat
@@ -159,7 +179,7 @@ BEGIN
                  100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat                     AS amount_without_vat
          , Round(inSumm * ROUND(Sum(tmpItem.Amount) * vbQpack::TFloat)::Integer / inBught_Int, 2) ::TFloat     AS amount_with_vat
          , COALESCE(MIString_PartionGoods.ValueData, '') ::TVarChar                                            AS drug_series
-         , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())::TDateTime  AS series_expiration_date
+         , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())::TDateTime  AS series_expiration_date         */
        FROM (SELECT DD.Id
                   , DD.MIIncomeId
                   , DD.MIncomeId

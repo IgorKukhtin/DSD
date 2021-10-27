@@ -911,7 +911,7 @@ type
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-      AMedicalProgramSPId: Integer;
+      AMedicalProgramSPId: Integer; AisManual : Boolean;
       ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
@@ -1568,6 +1568,7 @@ begin
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
+        FormParams.ParamByName('isManual').Value,
 
         False, // NeedComplete
         0,     // ZReport
@@ -1669,6 +1670,7 @@ begin
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
+  FormParams.ParamByName('isManual').Value := False;
 
   ClearFilterAll;
 
@@ -3791,6 +3793,7 @@ begin
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
+        FormParams.ParamByName('isManual').Value,
 
         True, // NeedComplete
         ZReport,     // Номер Z отчета
@@ -5538,6 +5541,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -5653,6 +5657,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -6721,6 +6726,7 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
 
     , false // NeedComplete
     , 0 // ZReport
@@ -7456,7 +7462,7 @@ begin
           if RemainsCDS.RecordCount = 0 then
           begin
             RemainsCDS.Filtered := False;
-            RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and MorionCode <> 0';
+            RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
             RemainsCDS.Filtered := True;
             cbMorionFilter.Enabled := False;
             cbMorionFilter.Checked := False;
@@ -7901,7 +7907,7 @@ var
   nMultiplicity: Currency;
   nFixEndDate: Variant;
   Bookmark : TBookmark;
-  cFilterOld, cJuridicalName, cJuridicalPSName : String;
+  cFilterOld, cJuridicalName, cJuridicalPSName, cResult : String;
   ChoosingPairSunForm : TChoosingPairSunForm;
 begin
 
@@ -8353,6 +8359,15 @@ begin
         (SourceClientDataSet.FieldByName('isSP').AsBoolean = false) then
       begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
+        exit;
+      end;
+
+      // проверка ЗАПРЕТ на отпуск препаратов без кода мориона, для пост. 1303
+      if (Self.FormParams.ParamByName('SPKindId').Value = 4823010) and
+        (SourceClientDataSet.FieldByName('MorionCode').AsInteger = 0) and
+        Assigned(LikiDniproReceiptApi) and (LikiDniproReceiptApi.Recipe.FRecipe_Type = 2) then
+      begin
+        ShowPUSHMessageCash('Рецепт погасить невозможно, на товар отсутствует в нашей базе код Мориона - обратитесь к Ирине Колеуш', cResult);
         exit;
       end;
 
@@ -10053,6 +10068,7 @@ begin
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
+  FormParams.ParamByName('isManual').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -11645,7 +11661,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-  AMedicalProgramSPId: Integer;
+  AMedicalProgramSPId: Integer; AisManual : Boolean;
   ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
@@ -11737,6 +11753,7 @@ begin
     myVIPCDS.FieldByName('PartionDateKindId').Value := APartionDateKindId;
     // ***25.08.21
     myVIPCDS.FieldByName('isDiscountCommit').Value := AisDiscountCommit;
+    myVIPCDS.FieldByName('isManual').Value := AisManual;
     myVIPCDS.Post;
     AID := myVIPCDS.FieldByName('Id').AsInteger;
 
@@ -11920,7 +11937,8 @@ begin
           AisDoctors,                // Врачи
           AisDiscountCommit,         // Дисконт проведен на сайте
           AZReport,                   // Номер Z отчета
-          AMedicalProgramSPId       // Медицинская программа соц. проектов
+          AMedicalProgramSPId,       // Медицинская программа соц. проектов
+          AisManual                  // ручной выбор медикаментов
           ]));
       End
       else
@@ -12038,6 +12056,8 @@ begin
         FLocalDataBaseHead.FieldByName('ZREPORT').Value := AZReport;
         //Медицинская программа соц. проектов
         FLocalDataBaseHead.FieldByName('MEDPRSPID').Value := AMedicalProgramSPId;
+        //Ручной выбор медикамента
+        FLocalDataBaseHead.FieldByName('ISMANUAL').Value := AisManual;
         FLocalDataBaseHead.Post;
       End;
     except

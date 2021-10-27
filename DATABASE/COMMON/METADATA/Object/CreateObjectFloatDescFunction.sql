@@ -2115,9 +2115,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_Samples3() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_Samples3', 'Скидка сэмплов кат 3 (от 0 до 50 дней)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_Samples3');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCode_DiscountWithVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_BarCode(), 'zc_ObjectFloat_BarCode_DiscountWithVAT', 'Фиксированная скидка с НДС' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithVAT');
+    
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_BarCode_DiscountWithoutVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithoutVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_BarCode(), 'zc_ObjectFloat_BarCode_DiscountWithoutVAT', 'Фиксированная скидка без НДС' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_BarCode_DiscountWithoutVAT');
+    
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.10.21                                                                                      * zc_ObjectFloat_BarCode_DiscountWithVAT, zc_ObjectFloat_BarCode_DiscountWithoutVAT
  18.10.21                                                                                      * zc_ObjectFloat_CashSettings_Samples...
  29.09.21                                                                                      * zc_ObjectFloat_Goods_NumberPlates, zc_ObjectFloat_Goods_QtyPackage
  24.09.21                                                                                      * zc_ObjectFloat_CorrectWagesPercentage_Percent
