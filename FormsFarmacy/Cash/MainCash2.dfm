@@ -7012,6 +7012,17 @@ inherited MainCashForm2: TMainCashForm2
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Category1303Id'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Category1303Name'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 24

@@ -911,7 +911,7 @@ type
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-      AMedicalProgramSPId: Integer; AisManual : Boolean;
+      AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
       ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
@@ -1569,6 +1569,7 @@ begin
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
         FormParams.ParamByName('isManual').Value,
+        FormParams.ParamByName('Category1303Id').Value,
 
         False, // NeedComplete
         0,     // ZReport
@@ -1671,6 +1672,8 @@ begin
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
   FormParams.ParamByName('isManual').Value := False;
+  FormParams.ParamByName('Category1303Id').Value := 0;
+  FormParams.ParamByName('Category1303Name').Value := '';
 
   ClearFilterAll;
 
@@ -3794,6 +3797,7 @@ begin
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
         FormParams.ParamByName('isManual').Value,
+        FormParams.ParamByName('Category1303Id').Value,
 
         True, // NeedComplete
         ZReport,     // Номер Z отчета
@@ -5542,6 +5546,7 @@ begin
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
     , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -5658,6 +5663,7 @@ begin
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
     , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -6727,6 +6733,7 @@ begin
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
     , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0 // ZReport
@@ -10069,6 +10076,8 @@ begin
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
   FormParams.ParamByName('isManual').Value := False;
+  FormParams.ParamByName('Category1303Id').Value := 0;
+  FormParams.ParamByName('Category1303Name').Value := '';
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -11661,7 +11670,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-  AMedicalProgramSPId: Integer; AisManual : Boolean;
+  AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
   ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
@@ -11753,7 +11762,6 @@ begin
     myVIPCDS.FieldByName('PartionDateKindId').Value := APartionDateKindId;
     // ***25.08.21
     myVIPCDS.FieldByName('isDiscountCommit').Value := AisDiscountCommit;
-    myVIPCDS.FieldByName('isManual').Value := AisManual;
     myVIPCDS.Post;
     AID := myVIPCDS.FieldByName('Id').AsInteger;
 
@@ -11938,7 +11946,8 @@ begin
           AisDiscountCommit,         // Дисконт проведен на сайте
           AZReport,                   // Номер Z отчета
           AMedicalProgramSPId,       // Медицинская программа соц. проектов
-          AisManual                  // ручной выбор медикаментов
+          AisManual,                  // ручной выбор медикаментов
+          ACategory1303Id            // Категория 1303
           ]));
       End
       else
@@ -12058,6 +12067,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEDPRSPID').Value := AMedicalProgramSPId;
         //Ручной выбор медикамента
         FLocalDataBaseHead.FieldByName('ISMANUAL').Value := AisManual;
+        //Категория 1303
+        FLocalDataBaseHead.FieldByName('CAT1303ID').Value := ACategory1303Id;
         FLocalDataBaseHead.Post;
       End;
     except

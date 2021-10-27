@@ -27,7 +27,6 @@ object BarCodeForm: TBarCodeForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 795
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -46,7 +45,6 @@ object BarCodeForm: TBarCodeForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -128,7 +126,29 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
         Options.Editing = False
-        Width = 130
+        Width = 100
+      end
+      object DiscountWithVAT: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'DiscountWithVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object DiscountWithoutVAT: TcxGridDBColumn
+        Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'DiscountWithoutVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -2112,6 +2112,8 @@ begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
              ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
+             ParamByName('outDiscountProcent').Value := 0;
+             ParamByName('outDiscountSum').Value := 0;
              Execute;
              FSupplier := Trunc(ParamByName('outCodeRazom').AsFloat);
           end;
@@ -2124,13 +2126,34 @@ begin
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
                then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
                else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
-               lChangePercent := 10;
-               //ѕредполагаемое кол-во товара
-               lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
-               // тоже типа как дл€ кол-ва = 1, может так правильно округлит?
-               lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
-               // а еще досчитаем сумму скидки
-               lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               if spGet_Goods_CodeRazom.ParamByName('outDiscountProcent').Value > 0 then
+               begin
+                 lChangePercent := 10;
+                 //ѕредполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как дл€ кол-ва = 1, может так правильно округлит?
+                 lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               end else if spGet_Goods_CodeRazom.ParamByName('outDiscountSum').Value > 0 then
+               begin
+                 lChangePercent := 0;
+                 //ѕредполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как дл€ кол-ва = 1, может так правильно округлит?
+                 lPrice:= GetSumm(1, lPriceSale - spGet_Goods_CodeRazom.ParamByName('outDiscountSum').Value, False);
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               end else
+               begin
+                 lChangePercent := 0;
+                 //ѕредполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как дл€ кол-ва = 1, может так правильно округлит?
+                 lPrice:= lPriceSale;
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := 0;
+               end;
                //Update
                CheckCDS.Edit;
                CheckCDS.FieldByName('Price').asCurrency             :=lPrice;

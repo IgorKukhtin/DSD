@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -101,6 +102,7 @@ RETURNS TABLE (MovementId     Integer
              , PriceWithOutVAT_in TFloat
              , SummWithOutVAT_in TFloat
              , ChargePersent_in TFloat
+             , isManual Boolean
              )
 AS
 $BODY$
@@ -713,7 +715,7 @@ BEGIN
              , tmpData.AmbulantClinicSP
              , tmpData.MemberSP
              , Object_GroupMemberSP.Id             AS GroupMemberSPId
-             , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
+             , COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData)  :: TVarChar  AS GroupMemberSPName
              , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS AddressSP
              , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INNSP
              , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS PassportSP
@@ -782,6 +784,7 @@ BEGIN
            , tmpPartionParam.PriceWithOutVAT  ::TFloat    AS PriceWithOutVAT_in
            , (tmpPartionParam.PriceWithOutVAT * tmpData.Amount) ::TFloat AS SummWithOutVAT_in
            , tmpPartionParam.ChargePersent    ::TFloat    AS ChargePersent_in
+           , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
                                   --  AND tmpData.ChangePercent = tmpMovDetails.PercentSP
@@ -829,6 +832,16 @@ BEGIN
                                       AND tmpPartionParam.GoodsId = tmpData.GoodsId
              
              LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpData.GoodsId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                      ON MovementBoolean_Manual.MovementId = tmpData.MovementId
+                                     AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Category1303
+                                         ON MovementLinkObject_Category1303.MovementId =  tmpData.MovementId
+                                        AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
+            LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
+
         WHERE COALESCE(inNDSKindId, 0) = 0 OR COALESCE(tmpPartionParam.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) = inNDSKindId
          ORDER BY Object_Unit.ValueData 
                 , Object_PartnerMedical.ValueData

@@ -95,6 +95,8 @@ type
     MEDPRSPID  : integer;         //Медицинская программа соц. проектов
     //***26.10.21
     ISMANUAL  : boolean;       //Ручной выбор медикамента
+    //***27.10.21
+    CAT1303ID  : integer;         //Категория 1303
 
   end;
   TBodyRecord = record
@@ -1434,6 +1436,8 @@ begin
                 MEDPRSPID := FieldByName('MEDPRSPID').AsInteger;
                 //***26.10.21
                 ISMANUAL := FieldByName('ISMANUAL').AsBoolean;
+                //***27.10.21
+                CAT1303ID := FieldByName('CAT1303ID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1613,8 +1617,10 @@ begin
                   dsdSave.Params.AddParam('inZReport', ftInteger, ptInput, Head.ZREPORT);
                   //***04.10.21
                   dsdSave.Params.AddParam('inMedicalProgramSP', ftInteger, ptInput, Head.MEDPRSPID);
-                  //***15.08.21
+                  //***26.10.21
                   dsdSave.Params.AddParam('isManual', ftBoolean, ptInput, Head.ISMANUAL);
+                  //***27.10.21
+                  dsdSave.Params.AddParam('isCategory1303Id', ftInteger, ptInput, Head.CAT1303ID);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

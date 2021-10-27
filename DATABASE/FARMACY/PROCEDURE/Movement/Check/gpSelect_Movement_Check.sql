@@ -4,8 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
-    IN inStartDate     TDateTime , --
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
     IN inIsSP          Boolean ,   -- Показать только СПчеки
@@ -56,6 +55,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDoctors Boolean
              , isDiscountCommit Boolean
              , CommentCustomer TVarChar
+             , isManual Boolean
               )
 AS
 $BODY$
@@ -149,7 +149,7 @@ BEGIN
 
            
            , Object_GroupMemberSP.Id                                      AS GroupMemberSPId
-           , Object_GroupMemberSP.ValueData                               AS GroupMemberSPName
+           , COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData) :: TVarChar  AS GroupMemberSPName
            , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
            , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
@@ -171,6 +171,8 @@ BEGIN
            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
 
            , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
+           , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
+           
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementString_CommentError.ValueData               AS CommentError
@@ -453,6 +455,15 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
                                       ON MovementBoolean_DiscountCommit.MovementId = Movement_Check.Id
                                      AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                      ON MovementBoolean_Manual.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Category1303
+                                         ON MovementLinkObject_Category1303.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
+            LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
       ;
 
 END;

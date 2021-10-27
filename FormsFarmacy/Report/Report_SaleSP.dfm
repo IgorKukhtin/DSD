@@ -788,6 +788,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 70
           end
+          object isManual: TcxGridDBColumn
+            Caption = #1042#1099#1073#1086#1088' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072' '#1087#1086' 1303'
+            DataBinding.FieldName = 'isManual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
         end
       end
       object cbisInsert: TcxCheckBox

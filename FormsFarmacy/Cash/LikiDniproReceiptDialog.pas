@@ -56,6 +56,9 @@ type
     actFormClose: TdsdFormClose;
     edDiscount_Percent: TcxTextEdit;
     Label4: TLabel;
+    Label5: TLabel;
+    edCategory1303: TcxButtonEdit;
+    GuidesCategory1303: TdsdGuides;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
@@ -172,6 +175,8 @@ begin
     LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inDoctor_Name').Value := LikiDniproReceiptApi.Recipe.FDoctor_Name;
     LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inPatient_Id').Value := LikiDniproReceiptApi.Recipe.FPatient_Id;
     LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inPatient_Name').Value := LikiDniproReceiptApi.Recipe.FPatient_Name;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inCategory1303_Id').Value := LikiDniproReceiptApi.Recipe.FCategory_1303_Id;
+    LikiDniproReceiptDialog.spSelect_SearchData.ParamByName('inCategory1303_Name').Value := LikiDniproReceiptApi.Recipe.FCategory_1303_Name;
     LikiDniproReceiptDialog.spSelect_SearchData.Execute;
 
     if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
@@ -205,6 +210,8 @@ begin
       MainCashForm.FormParams.ParamByName('MedicKashtanName').Value := LikiDniproReceiptDialog.GuidesMedicKashtan.Params.ParamByName('TextValue').Value;
       MainCashForm.FormParams.ParamByName('MemberKashtanId').Value := LikiDniproReceiptDialog.GuidesMemberKashtan.Params.ParamByName('Key').Value;
       MainCashForm.FormParams.ParamByName('MemberKashtanName').Value := LikiDniproReceiptDialog.GuidesMemberKashtan.Params.ParamByName('TextValue').Value;
+      MainCashForm.FormParams.ParamByName('Category1303Id').Value := LikiDniproReceiptDialog.GuidesCategory1303.Params.ParamByName('Key').Value;
+      MainCashForm.FormParams.ParamByName('Category1303Name').Value := LikiDniproReceiptDialog.GuidesCategory1303.Params.ParamByName('TextValue').Value;
 
       MainCashForm.lblSPKindName.Caption := '  ' + FloatToStr(MainCashForm.FormParams.ParamByName('SPTax')
         .Value) + '% : ' + MainCashForm.FormParams.ParamByName('SPKindName').Value;
@@ -217,6 +224,8 @@ begin
         '  /  № ' + MainCashForm.FormParams.ParamByName('InvNumberSP').Value + ' от ' +
         DateToStr(MainCashForm.FormParams.ParamByName('OperDateSP').Value);
       MainCashForm.lblMemberSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MemberKashtanName').Value;
+      if MainCashForm.FormParams.ParamByName('Category1303Name').Value <> '' then
+        MainCashForm.lblMemberSP.Caption := MainCashForm.lblMemberSP.Caption + ' / ' + MainCashForm.FormParams.ParamByName('Category1303Name').Value;
       MainCashForm.pnlSP.Visible := MainCashForm.FormParams.ParamByName('InvNumberSP').Value <> '';
       MainCashForm.pnlSP.Visible := True;
     end;

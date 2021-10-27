@@ -98,6 +98,7 @@ type
     actGetNDS: TdsdExecStoredProc;
     actPrintMemberSP: TdsdPrintAction;
     bbPrintMemberSP: TdxBarButton;
+    isManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

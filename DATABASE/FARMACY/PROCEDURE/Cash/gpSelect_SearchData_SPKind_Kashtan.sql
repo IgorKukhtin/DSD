@@ -1,6 +1,7 @@
 -- Function: gpSelect_SearchData_SPKind_Kashtan()
 
-DROP FUNCTION IF EXISTS gpSelect_SearchData_SPKind_Kashtan (Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_SearchData_SPKind_Kashtan (Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SearchData_SPKind_Kashtan (Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_SearchData_SPKind_Kashtan(
     IN inInstitution_Id      Integer   , -- Id мед. учереждения
@@ -9,12 +10,16 @@ CREATE OR REPLACE FUNCTION gpSelect_SearchData_SPKind_Kashtan(
     IN inDoctor_Name         TVarChar  , -- Имя врача
     IN inPatient_Id          Integer   , -- Id пациента
     IN inPatient_Name        TVarChar  , -- Имя пациента
+    IN inCategory1303_Id     Integer   , -- Id категории
+    IN inCategory1303_Name   TVarChar  , -- Имя категории
    OUT outPartnerMedicalId   Integer   , -- Медицинское учреждение
    OUT outPartnerMedicalName TVarChar  , -- Медицинское учреждение
    OUT outMedicKashtanId     Integer   , -- Id врача (МИС «Каштан»)
    OUT outMedicKashtanName   TVarChar  , -- ФИО врача (МИС «Каштан»)
    OUT outMemberKashtanId    Integer   , -- Id пациента (МИС «Каштан»)
    OUT outMemberKashtanName  TVarChar  , -- ФИО пациента (МИС «Каштан»)
+   OUT outCategory1303Id     Integer   , -- Id категории
+   OUT outCategory1303Name   TVarChar  , -- Название категории
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS record
@@ -39,6 +44,8 @@ BEGIN
     outMedicKashtanName := '';
     outMemberKashtanId := 0;
     outMemberKashtanName := '';
+    outCategory1303Id := 0;
+    outCategory1303Name := '';
 
     IF EXISTS(SELECT ObjectFloat.ObjectId FROM ObjectFloat
                     INNER JOIN Object ON Object.ID = ObjectFloat.ObjectId
@@ -148,6 +155,29 @@ BEGIN
       outMemberKashtanName := inPatient_Name;
       outMemberKashtanId := gpInsertUpdate_Object_MemberKashtan (outMemberKashtanId, inPatient_Id, inPatient_Name, inSession); 
     END IF;
+    
+    IF COALESCE (inCategory1303_Id, 0) <> 0
+    THEN
+      IF EXISTS(SELECT Object.Id FROM Object 
+                WHERE Object.ObjectCode = inCategory1303_Id
+                  AND Object.DescId = zc_Object_Category1303())
+      THEN
+
+        SELECT Object.ID, Object.ValueData
+        INTO outCategory1303Id, outCategory1303Name
+        FROM Object 
+        WHERE Object.ObjectCode = inCategory1303_Id
+          AND Object.DescId = zc_Object_Category1303();
+
+      END IF;
+      
+      IF COALESCE (outCategory1303Id, 0) = 0
+      THEN
+        outCategory1303Name := inCategory1303_Name;
+        outCategory1303Id := gpInsertUpdate_Object_Category1303 (outCategory1303Id, inCategory1303_Id, inCategory1303_Name, inSession); 
+      END IF;
+    END IF;
+    
 
 END;
 $BODY$
@@ -158,5 +188,4 @@ $BODY$
  01.03.21                                                       *
 */
 
--- 
-select * from gpSelect_SearchData_SPKind_Kashtan(inInstitution_Id := 10 , inInstitution_Edrpou := '37899872' , inDoctor_Id := 1238 , inDoctor_Name := 'Давидова Наталія Петрівна' , inPatient_Id := 53426 , inPatient_Name := 'Аістова Анастасія Петрівна' ,  inSession := '3');
+-- select * from gpSelect_SearchData_SPKind_Kashtan(inInstitution_Id := 10 , inInstitution_Edrpou := '37899872' , inDoctor_Id := 1238 , inDoctor_Name := 'Давидова Наталія Петрівна' , inPatient_Id := 53426 , inPatient_Name := 'Аістова Анастасія Петрівна' ,  inSession := '3');
