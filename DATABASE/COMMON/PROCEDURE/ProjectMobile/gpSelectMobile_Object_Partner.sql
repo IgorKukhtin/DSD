@@ -335,6 +335,7 @@ BEGIN
                   , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                            OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
                            OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
+                           OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) > 0
                               THEN TRUE
                          ELSE FALSE
                     END :: Boolean AS isOrderMin
@@ -413,6 +414,10 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                           ON ObjectBoolean_isOrderMin.ObjectId = tmpContract.JuridicalId
                                          AND ObjectBoolean_isOrderMin.DescId   = zc_ObjectBoolean_Juridical_isOrderMin()
+                  LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderMin
+                                        ON ObjectFloat_SummOrderMin.ObjectId = tmpContract.JuridicalId
+                                       AND ObjectFloat_SummOrderMin.DescId   = zc_ObjectFloat_Juridical_SummOrderMin()
+                                         
 
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
