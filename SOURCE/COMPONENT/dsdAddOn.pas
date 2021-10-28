@@ -1216,6 +1216,8 @@ type
 
     FCheckBoxList: TOwnedCollection;
 
+    FActionNumber1: TCustomAction;
+
     procedure OnEditChange(Sender: TObject);
     procedure OnEditExit(Sender: TObject);
     procedure OnCheckChange(Sender: TObject);
@@ -1236,6 +1238,8 @@ type
     property DataSet: TDataSet read FDataSet write SetDataSet;
     property Column: TcxGridColumn read FColumn write SetColumn;
     property CheckColumn: TcxGridColumn read FCheckColumn write FCheckColumn;
+    // Если под фильтром 1 запись
+    property ActionNumber1: TCustomAction read FActionNumber1 write FActionNumber1;
     // Массив CheckBox для установки фильта
     property CheckBoxList: TOwnedCollection read FCheckBoxList write FCheckBoxList;
   end;
@@ -5536,6 +5540,9 @@ begin
       FDataSet.Filtered:=True;
     end;
     FDataSet.First;
+
+    // Если под фильтром 1 запись
+    if Assigned(FActionNumber1) and (FDataSet.RecordCount = 1) then FActionNumber1.Execute;
   finally
     FDataSet.EnableControls
   end;
