@@ -110,7 +110,8 @@ BEGIN
                                  WHERE MovementItemContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                    AND MovementItemContainer.DescId     = zc_MIContainer_Summ()
                                    AND MovementItemContainer.AccountId  = zc_Enum_Account_100301()   -- прибыль текущего периода
-                                  --AND 1=0
+                                   -- !!! временно, т.к. долго!!!
+                                   AND 1=0
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
 
