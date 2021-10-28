@@ -2375,6 +2375,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSumIn'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue'
         Value = 42370d
         Component = MasterCDS

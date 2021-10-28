@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid 
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (
     IN inOperDate               TDateTime ,  
     IN inSum_Bonus              TFloat ,
+    IN inSumIn                  TFloat ,
     IN inValue                  TFloat ,
     IN inContractId_find        Integer ,
     IN inContractId_master      Integer ,
@@ -27,7 +29,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
        
-     IF COALESCE (inSum_Bonus,0) = 0
+     IF COALESCE (inSum_Bonus,0) = 0 AND COALESCE (inSumIn,0)= 0
      THEN
          RETURN;
      END IF;
@@ -39,8 +41,8 @@ BEGIN
      PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
                                                       , inOperDate          := inOperDate
-                                                      , inAmountIn          := 0                                 :: TFloat
-                                                      , inAmountOut         := inSum_Bonus                       :: TFloat
+                                                      , inAmountIn          := COALESCE (inSumIn,0)              :: TFloat
+                                                      , inAmountOut         := COALESCE (inSum_Bonus,0)          :: TFloat
                                                       , inBonusValue        := CAST (inValue AS NUMERIC (16, 2)) :: TFloat
                                                       , inComment           := inComment                         :: TVarChar
                                                       , inContractId        := inContractId_find
@@ -65,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.10.21         * inSumIn
  17.02.21         *
 */
 

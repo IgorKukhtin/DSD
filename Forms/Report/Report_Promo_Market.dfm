@@ -3,9 +3,8 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
   ClientHeight = 434
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
-  ExplicitTop = -12
   ExplicitWidth = 1114
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -366,7 +365,6 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
           object UnitName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
             DataBinding.FieldName = 'UnitName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
@@ -433,6 +431,12 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            Width = 70
           end
         end
       end
@@ -520,6 +524,20 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088#1099'+'#1062#1077#1085#1099
       TabOrder = 10
       Width = 161
+    end
+    object cxLabel7: TcxLabel
+      Left = 736
+      Top = 33
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 832
+      Top = 32
+      EditValue = 44197d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 12
+      Width = 85
     end
   end
   inherited ActionList: TActionList
@@ -801,6 +819,55 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertUpdate_ByGrid: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ByGrid
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ByGrid
+        end>
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1080#1079' '#1075#1088#1080#1076#1072
+      ImageIndex = 30
+    end
+    object macInsertUpdate_ByGrid_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_ByGrid
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsertUpdate_ByGrid_list'
+      ImageIndex = 30
+    end
+    object macInsertUpdate_ByGrid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_ByGrid_list
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089 +
+        #1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1085#1072' '#1101#1082#1088#1072#1085#1077'?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076 +
+        #1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1085#1072' '#1101#1082#1088#1072#1085#1077'.'
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1085#1072' '#1101#1082#1088#1072#1085#1077
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1085#1072' '#1101#1082#1088#1072#1085#1077
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 208
@@ -922,6 +989,14 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_ByGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -955,6 +1030,10 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
     end
     object bbPrint_Mov: TdxBarButton
       Action = actPrint_Mov
+      Category = 0
+    end
+    object bbInsertUpdate_ByGrid: TdxBarButton
+      Action = macInsertUpdate_ByGrid
       Category = 0
     end
   end
@@ -1020,7 +1099,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 348
+    Left = 452
   end
   object PrintHead: TClientDataSet
     Aggregates = <>
@@ -1073,7 +1152,126 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 793
-    Top = 9
+    Left = 953
+    Top = 1
+  end
+  object spInsertUpdate_ByGrid: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 44197d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSum_Bonus'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summ_diff'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_find'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_21512'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId_21512'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId_find'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId_fact'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inConditionKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusKindId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PromoKindName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 312
   end
 end
