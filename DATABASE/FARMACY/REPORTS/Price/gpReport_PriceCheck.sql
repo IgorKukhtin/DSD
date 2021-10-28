@@ -128,6 +128,7 @@ BEGIN
             PromoBonus            TFloat,
             isLearnWeek           Boolean Not Null Default False,
             PercentMarkup         TFloat,
+            PercentMarkupSP       TFloat,
             PriceTop              TFloat,
             isSP                  Boolean Not Null Default False,
             isPromo               Boolean Not Null Default False,
@@ -194,11 +195,22 @@ BEGIN
                                                               WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                                                 AND Object_BarCode.isErased = False
                                                                 AND Object_Object.isErased = False)
-                    )
-
-    
-                         
-    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PriceTop, isSP, isPromo,
+                    ),
+            -- Товары соц-проект (документ)
+    tmpGoodsSP AS (SELECT tmp.GoodsId
+                        , MIN(MIFloat_PriceOptSP.ValueData) AS PriceOptSP
+                        , MIN(MovementFloat_PercentMarkup.ValueData) AS PercentMarkupSP
+                   FROM lpSelect_MovementItem_GoodsSPUnit_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId:= 0) AS tmp
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                    ON MIFloat_PriceOptSP.MovementItemId = tmp.MovementItemId
+                                                   AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                        LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
+                                                ON MovementFloat_PercentMarkup.MovementId = tmp.MovementId
+                                               AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
+                   GROUP BY tmp.GoodsId
+                   )
+                                            
+    INSERT INTO tmpResult (GoodsId, GoodsCode, GoodsName, isResolution_224, isTop, isPromoBonus, PromoBonus, isLearnWeek, PercentMarkup, PercentMarkupSP, PriceTop, isSP, isPromo,
                            UnitCount, BadPriceCount, isBadPriceUser, BadPricePlus, BadPriceMinus, PriceAverage, PriceMin, PriceMax, PriceProc, PriceSite, PriceSiteProc)
     SELECT tmpUnitPrice.GoodsId
          , Object_Goods.ObjectCode       AS GoodsCode
@@ -209,6 +221,7 @@ BEGIN
          , Max(PromoBonus.Amount)                    AS PromoBonus
          , COALESCE(PromoBonus.isLearnWeek, False)   AS isLearnWeek
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
+         , tmpGoodsSP.PercentMarkupSP 
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
          , False
          , False
@@ -233,8 +246,9 @@ BEGIN
                                       AND Object_Goods_Retail.RetailId = 4
          LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
          LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpUnitPrice.GoodsId
+         LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods.Id
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
-           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, Object_Goods_Retail.Price, Price_Site.Price
+           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, tmpGoodsSP.PercentMarkupSP , Object_Goods_Retail.Price, Price_Site.Price
     ORDER BY tmpUnitPrice.GoodsId;
 
     -- Расчитываем среднюю цену

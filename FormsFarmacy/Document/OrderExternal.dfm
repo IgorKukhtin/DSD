@@ -479,6 +479,18 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 85
       Caption = #1042#1088#1077#1084#1103' '#1056#1072#1073#1086#1090#1099
     end
+    object edPharmacyManager: TcxTextEdit
+      Left = 818
+      Top = 137
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 391
+    end
+    object cxLabel19: TcxLabel
+      Left = 818
+      Top = 121
+      Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 656
@@ -1335,6 +1347,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'TimeWork'
         Value = Null
         Component = edTimeWork
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PharmacyManager'
+        Value = Null
+        Component = edPharmacyManager
         DataType = ftString
         MultiSelectSeparator = ','
       end>

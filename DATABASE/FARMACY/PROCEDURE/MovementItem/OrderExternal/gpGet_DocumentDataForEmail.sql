@@ -312,17 +312,20 @@ BEGIN
              CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
                   THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
                   ELSE ''
-             END), '')
+             END), '')||CHR (13)||
+             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN 'ФИО Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData||CHR (13) ELSE '' END
     INTO vbUnitData
     FROM Object AS Object_Unit
 
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
-
             LEFT JOIN ObjectString AS ObjectString_Unit_Phone
                                    ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
                                   AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Unit_PharmacyManager
+                                   ON ObjectString_Unit_PharmacyManager.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
 
             LEFT JOIN ObjectDate AS ObjectDate_MondayStart
                                  ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
@@ -400,4 +403,4 @@ $BODY$
 -- тест
 -- 
 --
-SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25026479    , inSession:= '377790');
+SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25026748 , inSession:= '377790');

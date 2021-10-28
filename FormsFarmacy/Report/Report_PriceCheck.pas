@@ -99,6 +99,7 @@ type
     Color_calcSite: TcxGridDBColumn;
     PriceProc: TcxGridDBColumn;
     PriceSiteProc: TcxGridDBColumn;
+    PercentMarkupSP: TcxGridDBColumn;
   private
   public
   end;

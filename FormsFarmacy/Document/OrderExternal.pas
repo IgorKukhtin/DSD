@@ -109,6 +109,8 @@ type
     edTimeWork: TcxTextEdit;
     cxLabel17: TcxLabel;
     cxLabel18: TcxLabel;
+    edPharmacyManager: TcxTextEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

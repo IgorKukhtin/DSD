@@ -77,6 +77,15 @@ object MainForm: TMainForm
         TabOrder = 0
         OnClick = btnAllLineClick
       end
+      object btnTestSendTelegram: TButton
+        Left = 911
+        Top = 0
+        Width = 106
+        Height = 25
+        Caption = #1058#1077#1089#1090'. '#1089#1086#1086#1073#1097#1077#1085#1080#1077
+        TabOrder = 5
+        OnClick = btnTestSendTelegramClick
+      end
     end
     object grChatId: TcxGrid
       Left = 496
@@ -521,7 +530,7 @@ object MainForm: TMainForm
   object ChatIdDS: TDataSource
     AutoEdit = False
     Left = 552
-    Top = 120
+    Top = 80
   end
   object dsReport: TDataSource
     DataSet = qryReport

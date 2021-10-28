@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred Boolean
              , isDifferent Boolean
              , LetterSubject      TVarChar
-             , Address TVarChar, Phone TVarChar, TimeWork TVarChar
+             , Address TVarChar, Phone TVarChar, TimeWork TVarChar, PharmacyManager TVarChar
               )
 AS
 $BODY$
@@ -61,6 +61,7 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS Address
              , CAST ('' AS TVarChar) 		                AS Phone
              , CAST ('' AS TVarChar) 		                AS TimeWork
+             , CAST ('' AS TVarChar) 		                AS PharmacyManager
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -157,6 +158,8 @@ BEGIN
                   THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
                   ELSE ''
              END) :: TVarChar AS TimeWork
+           , ObjectString_Unit_PharmacyManager.ValueData                    AS PharmacyManager
+             
            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -234,10 +237,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
-
             LEFT JOIN ObjectString AS ObjectString_Unit_Phone
                                    ON ObjectString_Unit_Phone.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Unit_PharmacyManager
+                                   ON ObjectString_Unit_PharmacyManager.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
 
             LEFT JOIN ObjectDate AS ObjectDate_MondayStart
                                  ON ObjectDate_MondayStart.ObjectId = MovementLinkObject_To.ObjectId
