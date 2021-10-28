@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpGet_Goods_Juridical_value(
    OUT outInvoiceNumber   TVarChar   , --
    OUT outInvoiceDate     TDateTime  , --
    OUT outContainerID     Integer    , --
+   OUT outDiscountProcent TFloat     , --
+   OUT outDiscountSum     TFloat     , --
     IN inSession          TVarChar     --
 )
 AS
@@ -32,6 +34,9 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Срок действия дисконтной программы завершен.';
     END IF;
+
+    outDiscountProcent := 0;
+    outDiscountSum     := 0;
 
     WITH
          tmpDiscountExternal AS (SELECT Object_DiscountExternal.ObjectCode
@@ -121,6 +126,46 @@ BEGIN
     WHERE tmpRemains.Remains >= inAmount
     ORDER BY Movement.OperDate
     LIMIT 1;
+    
+    SELECT COALESCE(ObjectFloat_DiscountProcent.ValueData, 0)
+        ,  CASE WHEN COALESCE(ObjectFloat_DiscountProcent.ValueData, 0) <> 0 
+                THEN 0
+                WHEN COALESCE(ObjectFloat_DiscountWithVAT.ValueData, 0) <> 0 
+                THEN COALESCE(ObjectFloat_DiscountWithVAT.ValueData, 0)
+                WHEN COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) <> 0 
+                THEN ROUND(COALESCE(ObjectFloat_DiscountWithoutVAT.ValueData, 0) * (100 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData)) / 100, 2) END
+    INTO outDiscountProcent, outDiscountSum
+    FROM Object AS Object_BarCode
+         INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                              ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                             AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                             AND ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
+             
+         INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
+                               ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                              AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                              AND ObjectLink_BarCode_Object.ChildObjectId = inDiscountExternal         
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                               ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                              AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DiscountWithVAT
+                               ON ObjectFloat_DiscountWithVAT.ObjectId = Object_BarCode.Id
+                              AND ObjectFloat_DiscountWithVAT.DescId = zc_ObjectFloat_BarCode_DiscountWithVAT()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DiscountWithoutVAT
+                               ON ObjectFloat_DiscountWithoutVAT.ObjectId = Object_BarCode.Id
+                              AND ObjectFloat_DiscountWithoutVAT.DescId = zc_ObjectFloat_BarCode_DiscountWithoutVAT()
+
+         LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = inGoodsId
+         LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                                    
+         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                               ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                              AND ObjectFloat_NDSKind_NDS.DescId   = zc_ObjectFloat_NDSKind_NDS()
+                              
+    WHERE Object_BarCode.DescId = zc_Object_BarCode()
+      AND Object_BarCode.isErased = False;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -137,4 +182,5 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) 
 --  select * from gpGet_Goods_Juridical_value(inDiscountExternal := 2807930 , inGoodsId := 12673 , inAmount := 1 ,  inSession := '3');
 
 --select * from gpGet_Goods_Juridical_value_Ol(inDiscountExternal := 15466976 , inGoodsId := 2431326 , inAmount := 2 ,  inSession := '3');
+
 select * from gpGet_Goods_Juridical_value(inDiscountExternal := 15682957 , inGoodsId := 14131833 , inAmount := 1 ,  inSession := '3');

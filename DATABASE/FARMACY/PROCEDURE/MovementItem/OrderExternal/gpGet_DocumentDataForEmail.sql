@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbUserMail TVarChar;
   DECLARE vbSubject TVarChar;
   DECLARE vbUserMailSign TBlob;
+  DECLARE vbUnitData TBlob;
   DECLARE vbUnitSign TBlob;
   DECLARE vbJuridicalId_unit Integer;
   DECLARE vbJuridicalName TVarChar;
@@ -296,6 +297,59 @@ BEGIN
 
     -- еще
     vbMail := (vbMail || vbUserMail) :: TVarChar;
+    
+    SELECT CASE WHEN COALESCE(ObjectString_Unit_Address.ValueData, '') <> '' THEN 'Адрес аптеки: '||ObjectString_Unit_Address.ValueData||CHR (13) ELSE '' END ||
+           CASE WHEN COALESCE(ObjectString_Unit_Phone.ValueData, '') <> '' THEN 'Телефоны аптеки: '||ObjectString_Unit_Phone.ValueData||CHR (13) ELSE '' END ||
+           COALESCE('Время работы: '||
+            (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Пн-Пт '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
+                  ELSE ''
+             END||'' ||
+             CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SaturdayEnd.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Сб '||LEFT ((ObjectDate_SaturdayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SaturdayEnd.ValueData::Time)::TVarChar,5)||'; '
+                  ELSE ''
+             END||''||
+             CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
+                  ELSE ''
+             END), '')||CHR (13)||
+             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN 'ФИО Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData||CHR (13) ELSE '' END
+    INTO vbUnitData
+    FROM Object AS Object_Unit
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                                   ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Unit_PharmacyManager
+                                   ON ObjectString_Unit_PharmacyManager.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
+
+            LEFT JOIN ObjectDate AS ObjectDate_MondayStart
+                                 ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
+                                AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_MondayEnd
+                                 ON ObjectDate_MondayEnd.ObjectId = Object_Unit.Id
+                                AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_SaturdayStart
+                                 ON ObjectDate_SaturdayStart.ObjectId = Object_Unit.Id
+                                AND ObjectDate_SaturdayStart.DescId = zc_ObjectDate_Unit_SaturdayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_SaturdayEnd
+                                 ON ObjectDate_SaturdayEnd.ObjectId = Object_Unit.Id
+                                AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_SundayStart
+                                 ON ObjectDate_SundayStart.ObjectId = Object_Unit.Id
+                                AND ObjectDate_SundayStart.DescId = zc_ObjectDate_Unit_SundayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
+                                 ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
+                                AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
+                                 ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
+                                AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
+                                
+    WHERE Object_Unit.Id = vbUnitId;
 
 
     -- Результат
@@ -308,8 +362,10 @@ BEGIN
          -- Тема
          REPLACE (vbSubject, '#1#', '#' || vbInvNumber || '#') :: TVarChar AS Subject
 
-         -- Body
-       , (CASE WHEN (SELECT Comment FROM tmpComment) <> ''
+         -- Body 
+       , (CASE WHEN COALESCE (vbUnitData, '') <> '' THEN '<b>'||vbUnitData||'</b>'|| CHR (13) || CHR (13) ELSE '' END||
+       
+         CASE WHEN (SELECT Comment FROM tmpComment) <> ''
                     THEN 'ПРИМЕЧАНИЕ ВАЖНО : ' || (SELECT Comment FROM tmpComment) || CHR (13) || CHR (13) || CHR (13) || CHR (13) || CHR (13)
                ELSE ''
          END
@@ -346,4 +402,5 @@ $BODY$
 
 -- тест
 -- 
---SELECT * FROM gpGet_DocumentDataForEmail (inId:= 19329018  , inSession:= '377790');
+--
+SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25026748 , inSession:= '377790');

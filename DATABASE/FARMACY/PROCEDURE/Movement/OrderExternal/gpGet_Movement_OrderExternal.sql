@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred Boolean
              , isDifferent Boolean
              , LetterSubject      TVarChar
+             , Address TVarChar, Phone TVarChar, TimeWork TVarChar, PharmacyManager TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,10 @@ BEGIN
              , FALSE                                            AS isDeferred
              , FALSE                                            AS isDifferent
              , CAST ('' AS TVarChar) 		                AS LetterSubject
+             , CAST ('' AS TVarChar) 		                AS Address
+             , CAST ('' AS TVarChar) 		                AS Phone
+             , CAST ('' AS TVarChar) 		                AS TimeWork
+             , CAST ('' AS TVarChar) 		                AS PharmacyManager
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -139,6 +144,23 @@ BEGIN
            
            , MovementString_LetterSubject.ValueData                            AS LetterSubject
 
+           , ObjectString_Unit_Address.ValueData                  AS Address
+           , ObjectString_Unit_Phone.ValueData                    AS Phone
+           , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Ïí-Ïò '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
+                  ELSE ''
+             END||'' ||
+             CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SaturdayEnd.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Ñá '||LEFT ((ObjectDate_SaturdayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SaturdayEnd.ValueData::Time)::TVarChar,5)||'; '
+                  ELSE ''
+             END||''||
+             CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
+                  THEN 'Âñ '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
+                  ELSE ''
+             END) :: TVarChar AS TimeWork
+           , ObjectString_Unit_PharmacyManager.ValueData                    AS PharmacyManager
+             
+           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -212,6 +234,38 @@ BEGIN
             LEFT JOIN tmpOrderShedule ON tmpOrderShedule.ContractId = Object_Contract.Id
                                      AND tmpOrderShedule.UnitId = Object_To.Id
            
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+            LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                                   ON ObjectString_Unit_Phone.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Unit_PharmacyManager
+                                   ON ObjectString_Unit_PharmacyManager.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
+
+            LEFT JOIN ObjectDate AS ObjectDate_MondayStart
+                                 ON ObjectDate_MondayStart.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_MondayEnd
+                                 ON ObjectDate_MondayEnd.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_SaturdayStart
+                                 ON ObjectDate_SaturdayStart.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_SaturdayStart.DescId = zc_ObjectDate_Unit_SaturdayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_SaturdayEnd
+                                 ON ObjectDate_SaturdayEnd.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_SundayStart
+                                 ON ObjectDate_SundayStart.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_SundayStart.DescId = zc_ObjectDate_Unit_SundayStart()
+            LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
+                                 ON ObjectDate_SundayEnd.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+            LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
+                                 ON ObjectDate_FirstCheck.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal()
  ;

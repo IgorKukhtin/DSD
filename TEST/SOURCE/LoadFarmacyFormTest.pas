@@ -3160,6 +3160,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SP_ForDPSSForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SP_ForDPSSForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCategory1303Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TCategory1303Form');
+
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicKashtanForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicKashtanForm');

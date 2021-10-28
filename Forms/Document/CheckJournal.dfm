@@ -24,7 +24,6 @@ inherited CheckJournalForm: TCheckJournalForm
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
-        ExplicitLeft = 3
         ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -553,6 +552,14 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
+          end
+          object isManual: TcxGridDBColumn
+            Caption = #1042#1099#1073#1086#1088' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072' '#1087#1086' 1303'
+            DataBinding.FieldName = 'isManual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

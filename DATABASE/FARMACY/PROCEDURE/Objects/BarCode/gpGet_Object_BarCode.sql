@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_BarCode(
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,  
                GoodsId Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
-               MaxPrice TFloat, DiscountProcent TFloat, isDiscountSite Boolean,
+               MaxPrice TFloat, DiscountProcent TFloat, DiscountWithVAT TFloat, DiscountWithoutVAT TFloat, 
+               isDiscountSite Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -33,6 +34,8 @@ BEGIN
        
            , CAST (0 as TFloat)     AS MaxPrice
            , CAST (0 as TFloat)     AS DiscountProcent
+           , CAST (0 as TFloat)     AS DiscountWithVAT
+           , CAST (0 as TFloat)     AS DiscountWithoutVAT
 
            , False                  AS isDiscountSite
 
@@ -52,7 +55,9 @@ BEGIN
            , Object_Object.ValueData     AS ObjectName 
 
            , ObjectFloat_MaxPrice.ValueData  AS MaxPrice 
-           , ObjectFloat_DiscountProcent.ValueData  AS DiscountProcent 
+           , ObjectFloat_DiscountProcent.ValueData     AS DiscountProcent 
+           , ObjectFloat_DiscountWithVAT.ValueData     AS DiscountWithVAT 
+           , ObjectFloat_DiscountWithoutVAT.ValueData  AS DiscountWithoutVAT 
            , COALESCE (ObjectBoolean_DiscountSite.ValueData, False)   AS isDiscountSite 
 
            , Object_BarCode.isErased     AS isErased
@@ -75,6 +80,12 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
                                  ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
                                 AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DiscountWithVAT
+                                 ON ObjectFloat_DiscountWithVAT.ObjectId = Object_BarCode.Id
+                                AND ObjectFloat_DiscountWithVAT.DescId = zc_ObjectFloat_BarCode_DiscountWithVAT()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DiscountWithoutVAT
+                                 ON ObjectFloat_DiscountWithoutVAT.ObjectId = Object_BarCode.Id
+                                AND ObjectFloat_DiscountWithoutVAT.DescId = zc_ObjectFloat_BarCode_DiscountWithoutVAT()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
                                    ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id

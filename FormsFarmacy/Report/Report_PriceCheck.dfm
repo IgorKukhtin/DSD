@@ -101,8 +101,6 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
     Height = 381
     Align = alClient
     TabOrder = 5
-    ExplicitLeft = 192
-    ExplicitTop = 75
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -174,6 +172,17 @@ object Report_PriceCheckForm: TReport_PriceCheckForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 53
+      end
+      object PercentMarkupSP: TcxGridDBColumn
+        Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1057#1055
+        DataBinding.FieldName = 'PercentMarkupSP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
       end
       object PriceTop: TcxGridDBColumn
         Caption = #1060#1080#1082#1089' '#1094#1077#1085#1072' '#1058#1054#1055' '#1089#1077#1090#1080

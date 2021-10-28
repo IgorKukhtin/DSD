@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1064#1090#1088#1080#1093'-'#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 355
-  ClientWidth = 388
+  ClientHeight = 378
+  ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@
     Left = 40
     Top = 71
     TabOrder = 0
-    Width = 296
+    Width = 316
   end
   object cxLabel1: TcxLabel
     Left = 40
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 95
-    Top = 311
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 311
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -71,7 +71,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 296
+    Width = 316
   end
   object cxLabel2: TcxLabel
     Left = 40
@@ -93,7 +93,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 296
+    Width = 316
   end
   object cxLabel3: TcxLabel
     Left = 40
@@ -109,8 +109,8 @@
     Width = 90
   end
   object ceDiscountProcent: TcxCurrencyEdit
-    Left = 40
-    Top = 268
+    Left = 266
+    Top = 248
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 12
@@ -122,14 +122,40 @@
     Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
   end
   object cbDiscountSite: TcxCheckBox
-    Left = 159
-    Top = 268
+    Left = 174
+    Top = 222
     Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1091' '#1085#1072' '#1089#1072#1081#1090#1077
     Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1091' '#1085#1072' '#1089#1072#1081#1090#1077
     ParentShowHint = False
     ShowHint = True
     TabOrder = 14
     Width = 162
+  end
+  object ceDiscountWithVAT: TcxCurrencyEdit
+    Left = 266
+    Top = 272
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 15
+    Width = 90
+  end
+  object cxLabel6: TcxLabel
+    Left = 40
+    Top = 273
+    Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1089' '#1053#1044#1057
+  end
+  object ceDiscountWithoutVAT: TcxCurrencyEdit
+    Left = 266
+    Top = 296
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 17
+    Width = 90
+  end
+  object cxLabel7: TcxLabel
+    Left = 40
+    Top = 297
+    Caption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1073#1077#1079' '#1053#1044#1057
   end
   object ActionList: TActionList
     Left = 272
@@ -225,6 +251,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDiscountWithVAT'
+        Value = Null
+        Component = ceDiscountWithVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountWithoutVAT'
+        Value = Null
+        Component = ceDiscountWithoutVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisDiscountSite'
         Value = Null
         Component = cbDiscountSite
@@ -314,6 +356,20 @@
         Name = 'DiscountProcent'
         Value = Null
         Component = ceDiscountProcent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountWithVAT'
+        Value = Null
+        Component = ceDiscountWithVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountWithoutVAT'
+        Value = Null
+        Component = ceDiscountWithoutVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

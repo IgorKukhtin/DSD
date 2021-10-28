@@ -322,8 +322,8 @@ begin
 
     FormSender := Sender;
     // Если диалог был открыт нормально
-    if result = true
-    then
+    if result = true then
+    begin
         // Если открыта первый раз и всегда перечитываем
         if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh or NeedRefreshOnExecute then
         begin
@@ -336,10 +336,12 @@ begin
            // Выводим PUSH сообщение
            if Assigned(AddOnFormData.PUSHMessage) then
               AddOnFormData.PUSHMessage.Execute;
-           // Устанавливаем фокус
-           if Assigned(AddOnFormData.SetFocusedAction) then
-              AddOnFormData.SetFocusedAction.Execute;
         end;
+
+        // Устанавливаем фокус
+        if Assigned(AddOnFormData.SetFocusedAction) then
+           AddOnFormData.SetFocusedAction.Execute;
+    end;
   finally
     FisAlreadyOpen := true;
     NeedRefreshOnExecute := false;

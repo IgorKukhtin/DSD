@@ -918,6 +918,9 @@ inherited MainCashForm2: TMainCashForm2
         object MorionCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
           DataBinding.FieldName = 'MorionCode'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0;-,0; ;'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 73
@@ -7002,6 +7005,23 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'isDiscountCommit'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isManual'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Category1303Id'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Category1303Name'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 32

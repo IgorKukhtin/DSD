@@ -80,6 +80,7 @@ type
     cxGridDBChartDataGroup3: TcxGridDBChartDataGroup;
     cxGridDBChartSeries2: TcxGridDBChartSeries;
     cxGridLevel5: TcxGridLevel;
+    btnTestSendTelegram: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -89,6 +90,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAllLineClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnTestSendTelegramClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -348,7 +350,7 @@ begin
 end;
 
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
-  var Res : TArray<string>; I, ChatId : Integer;
+  var Res : TArray<string>; I, ChatId : Int64;
 begin
   if FMessage.Count = 0 then Exit;
 
@@ -356,7 +358,7 @@ begin
 
   Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
 
-  for I := 0 to High(Res) do if TryStrToInt(Res[I], ChatId) then
+  for I := 0 to High(Res) do if TryStrToInt64(Res[I], ChatId) then
   try
 
     if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
@@ -385,6 +387,12 @@ begin
   end;
 
   if FileExists(SavePath + FileName) then DeleteFile(SavePath + FileName);
+end;
+
+procedure TMainForm.btnTestSendTelegramClick(Sender: TObject);
+begin
+  if not TelegramBot.ChatIdCDS.IsEmpty and (TelegramBot.ChatIdCDS.FieldByName('Id').AsLargeInt <> 0) then
+    TelegramBot.SendMessage(TelegramBot.ChatIdCDS.FieldByName('Id').AsLargeInt, 'Тестовое сообщение...');
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);

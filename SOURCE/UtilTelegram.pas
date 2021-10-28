@@ -32,7 +32,7 @@ type
     Fcan_read_all_group_messages : Boolean;
     Fsupports_inline_queries : Boolean;
 
-    Fupdate_id : Integer;
+    Fupdate_id : Int64;
     FError : String;
 
   protected
@@ -46,9 +46,9 @@ type
 
     procedure LoadChatId;
 
-    function SendMessage(AChatId : Integer; AMessage : string) : boolean;
-    function SendDocument(AChatId : Integer; ADocument, ACaption : string) : boolean;
-    function SendPhoto(AChatId : Integer; APhoto, ACaption : string) : boolean;
+    function SendMessage(AChatId : Int64; AMessage : string) : boolean;
+    function SendDocument(AChatId : Int64; ADocument, ACaption : string) : boolean;
+    function SendPhoto(AChatId : Int64; APhoto, ACaption : string) : boolean;
 
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
     property Id : Integer read FId;
@@ -144,7 +144,7 @@ begin
 
     jValue := jValue.FindValue('result');
 
-    FID := StrToInt(jValue.FindValue('id').ToString);
+    FID := StrToInt64(jValue.FindValue('id').ToString);
     Fid_bot := jValue.FindValue('is_bot').ClassNameIs('TJSONTrue');
     Ffirst_name := DelDoubleQuote(jValue.FindValue('first_name'));
     Fusername := DelDoubleQuote(jValue.FindValue('username'));
@@ -169,7 +169,7 @@ begin
       if FChatIdCDS.Active then FChatIdCDS.Close;
       FChatIdCDS.Close;
       FChatIdCDS.FieldDefs.Clear;
-      FChatIdCDS.FieldDefs.Add('ID', TFieldType.ftInteger);
+      FChatIdCDS.FieldDefs.Add('ID', TFieldType.ftLargeint);
       FChatIdCDS.FieldDefs.Add('FirstName', TFieldType.ftString, 250);
       FChatIdCDS.FieldDefs.Add('LastName', TFieldType.ftString, 250);
       FChatIdCDS.FieldDefs.Add('UserName', TFieldType.ftString, 250);
@@ -224,20 +224,20 @@ begin
     for I := 0 to JSONA.Count - 1 do
     begin
       jValue := JSONA.Items[I];
-      Fupdate_id := StrToInt(jValue.FindValue('update_id').ToString);
+      Fupdate_id := StrToInt64(jValue.FindValue('update_id').ToString);
       jValue := jValue.FindValue('message');
       if jValue = nil then Continue;
       jValue := jValue.FindValue('chat');
       if jValue = nil then Continue;
 
-      if FChatIdCDS.Locate('ID', StrToInt(jValue.FindValue('id').ToString), []) then
+      if FChatIdCDS.Locate('ID', StrToInt64(jValue.FindValue('id').ToString), []) then
       begin
         if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
            (FChatIdCDS.FieldByName('LastName').AsString <> DelDoubleQuote(jValue.FindValue('last_name'))) or
            (FChatIdCDS.FieldByName('UserName').AsString <> DelDoubleQuote(jValue.FindValue('username'))) then
         begin
           FChatIdCDS.Edit;
-          FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
+          FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
           FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
           FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
           FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
@@ -248,10 +248,10 @@ begin
          FChatIdCDS.Locate('UserName', DelDoubleQuote(jValue.FindValue('username')), [loCaseInsensitive]) then
       begin
         if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
-           (FChatIdCDS.FieldByName('ID').AsInteger <> StrToInt(jValue.FindValue('id').ToString)) then
+           (FChatIdCDS.FieldByName('ID').AsLargeInt <> StrToInt64(jValue.FindValue('id').ToString)) then
         begin
           FChatIdCDS.Edit;
-          FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
+          FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
           FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
           FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
           FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
@@ -261,7 +261,7 @@ begin
       begin
         FChatIdCDS.Last;
         FChatIdCDS.Append;
-        FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
+        FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
         FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
         FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
         FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
@@ -285,7 +285,7 @@ begin
 
 end;
 
-function TTelegramBot.SendMessage(AChatId : Integer; AMessage : string) : boolean;
+function TTelegramBot.SendMessage(AChatId : Int64; AMessage : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -322,7 +322,7 @@ begin
   end else FError := FRESTResponse.StatusText;;
 end;
 
-function TTelegramBot.SendDocument(AChatId : Integer; ADocument, ACaption : string) : boolean;
+function TTelegramBot.SendDocument(AChatId : Int64; ADocument, ACaption : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -362,7 +362,7 @@ begin
 
 end;
 
-function TTelegramBot.SendPhoto(AChatId : Integer; APhoto, ACaption : string) : boolean;
+function TTelegramBot.SendPhoto(AChatId : Int64; APhoto, ACaption : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;

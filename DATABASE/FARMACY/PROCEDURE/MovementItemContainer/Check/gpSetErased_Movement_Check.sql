@@ -67,19 +67,20 @@ BEGIN
                                     AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
       WHERE Id = inMovementId;
       
-      IF (NOT (vbCashRegisterId = 0 OR
-              vbFiscalCheckNumber = '-5' OR
-              vbJackdawsChecksId <> 0)
-         OR vbOperDate < '05.07.2021'
-         OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY') AND 
-            EXISTS(SELECT MovementProtocol.MovementId
-                   FROM  MovementProtocol 
-                   WHERE MovementProtocol.MovementId = inMovementID
-                     AND SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П')
-         OR vbInvNumberOrder <> '' 
-         OR vbCheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki() AND vbCancelReason = 0
-         OR vbCheckSourceKindId <> 0 AND vbCheckSourceKindId <> zc_Enum_CheckSourceKind_Tabletki()
-         OR vbisDiscountCommit = TRUE
+      IF COALESCE (vbCheckSourceKindId, 0) <> zc_Enum_CheckSourceKind_Liki24() AND 
+        ((NOT (vbCashRegisterId = 0 OR
+               vbFiscalCheckNumber = '-5' OR
+               vbJackdawsChecksId <> 0)
+          OR vbOperDate < '05.07.2021'
+          OR vbOperDate < CURRENT_DATE - INTERVAL '3 DAY') AND 
+             EXISTS(SELECT MovementProtocol.MovementId
+                    FROM  MovementProtocol 
+                    WHERE MovementProtocol.MovementId = inMovementID
+                      AND SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П')
+          OR vbInvNumberOrder <> '' 
+          OR vbCheckSourceKindId = zc_Enum_CheckSourceKind_Tabletki() AND vbCancelReason = 0
+          OR vbCheckSourceKindId <> 0 AND vbCheckSourceKindId <> zc_Enum_CheckSourceKind_Tabletki())
+          OR vbisDiscountCommit = TRUE
       THEN
         RAISE EXCEPTION 'Ошибка. Удаление чеков вам запрещено.';     
       END IF;

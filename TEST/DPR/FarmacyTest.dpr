@@ -1113,7 +1113,8 @@ uses
   GoodsSPJournal_Cash in '..\..\FormsFarmacy\Document\GoodsSPJournal_Cash.pas' {GoodsSPJournal_CashForm: TParentForm},
   Report_TopListDiffGoodsDialog in '..\..\FormsFarmacy\Report\Report_TopListDiffGoodsDialog.pas' {Report_TopListDiffGoodsDialogForm: TParentForm},
   Report_TopListDiffGoods in '..\..\FormsFarmacy\Report\Report_TopListDiffGoods.pas' {Report_TopListDiffGoodsForm: TParentForm},
-  WagesVIP_User in '..\..\FormsFarmacy\Document\WagesVIP_User.pas' {WagesVIP_UserForm: TParentForm};
+  WagesVIP_User in '..\..\FormsFarmacy\Document\WagesVIP_User.pas' {WagesVIP_UserForm: TParentForm},
+  Category1303 in '..\..\FormsFarmacy\Guides\Category1303.pas' {Category1303Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

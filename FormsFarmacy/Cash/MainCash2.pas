@@ -911,7 +911,7 @@ type
       ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-      AMedicalProgramSPId: Integer;
+      AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
       ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
@@ -1568,6 +1568,8 @@ begin
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
+        FormParams.ParamByName('isManual').Value,
+        FormParams.ParamByName('Category1303Id').Value,
 
         False, // NeedComplete
         0,     // ZReport
@@ -1669,6 +1671,9 @@ begin
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
+  FormParams.ParamByName('isManual').Value := False;
+  FormParams.ParamByName('Category1303Id').Value := 0;
+  FormParams.ParamByName('Category1303Name').Value := '';
 
   ClearFilterAll;
 
@@ -3791,6 +3796,8 @@ begin
         FormParams.ParamByName('isDoctors').Value,
         FormParams.ParamByName('isDiscountCommit').Value,
         FormParams.ParamByName('MedicalProgramSPId').Value,
+        FormParams.ParamByName('isManual').Value,
+        FormParams.ParamByName('Category1303Id').Value,
 
         True, // NeedComplete
         ZReport,     // Номер Z отчета
@@ -5538,6 +5545,8 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -5653,6 +5662,8 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0  // ZReport
@@ -6721,6 +6732,8 @@ begin
     , FormParams.ParamByName('isDiscountCommit').Value
     // ***04.10.21
     , FormParams.ParamByName('MedicalProgramSPId').Value
+    , FormParams.ParamByName('isManual').Value
+    , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
     , 0 // ZReport
@@ -7442,17 +7455,17 @@ begin
         RemainsCDS.Filter := 'Remains <> 0 and (' + S + ')';
         RemainsCDS.Filtered := True;
       finally
-        if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
-        begin
-          if RemainsCDS.RecordCount = 0 then
-          begin
-            ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для работы с кодом Мориона.'#13#13 +
-              'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
-              'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString + #13 + S1, cResult);
-            NewCheck;
-          end;
-        end else if LikiDniproReceiptApi.Recipe.FRecipe_Type = 3 then
-        begin
+//        if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+//        begin
+//          if RemainsCDS.RecordCount = 0 then
+//          begin
+//            ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для работы с кодом Мориона.'#13#13 +
+//              'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
+//              'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString + #13 + S1, cResult);
+//            NewCheck;
+//          end;
+//        end else if LikiDniproReceiptApi.Recipe.FRecipe_Type = 3 then
+//        begin
           if RemainsCDS.RecordCount = 0 then
           begin
             RemainsCDS.Filtered := False;
@@ -7465,7 +7478,7 @@ begin
             cbMorionFilter.Enabled := True;
             cbMorionFilter.Checked := True;
           end;
-        end;
+//        end;
         RemainsCDS.EnableControls;
       end;
     end else
@@ -7483,16 +7496,16 @@ begin
   inherited;
   cbMorionFilter.Properties.OnChange := Nil;
   try
-    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
-    begin
-      cbMorionFilter.Enabled := True;
-      cbMorionFilter.Checked := True;
-      cbMorionFilter.Enabled := False;
-    end else
-    begin
+//    if LikiDniproReceiptApi.Recipe.FRecipe_Type = 2 then
+//    begin
+//      cbMorionFilter.Enabled := True;
+//      cbMorionFilter.Checked := True;
+//      cbMorionFilter.Enabled := False;
+//    end else
+//    begin
       cbMorionFilter.Enabled := True;
       if cbMorionFilter.Checked then cbMorionFilter.Checked := False;
-    end;
+//    end;
   finally
     cbMorionFilter.Properties.OnChange := cbMorionFilterPropertiesChange;
   end;
@@ -7901,7 +7914,7 @@ var
   nMultiplicity: Currency;
   nFixEndDate: Variant;
   Bookmark : TBookmark;
-  cFilterOld, cJuridicalName, cJuridicalPSName : String;
+  cFilterOld, cJuridicalName, cJuridicalPSName, cResult : String;
   ChoosingPairSunForm : TChoosingPairSunForm;
 begin
 
@@ -8353,6 +8366,15 @@ begin
         (SourceClientDataSet.FieldByName('isSP').AsBoolean = false) then
       begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
+        exit;
+      end;
+
+      // проверка ЗАПРЕТ на отпуск препаратов без кода мориона, для пост. 1303
+      if (Self.FormParams.ParamByName('SPKindId').Value = 4823010) and
+        (SourceClientDataSet.FieldByName('MorionCode').AsInteger = 0) and
+        Assigned(LikiDniproReceiptApi) and (LikiDniproReceiptApi.Recipe.FRecipe_Type = 2) then
+      begin
+        ShowPUSHMessageCash('Рецепт погасить невозможно, на товар отсутствует в нашей базе код Мориона - обратитесь к Ирине Колеуш', cResult);
         exit;
       end;
 
@@ -10053,6 +10075,9 @@ begin
   FormParams.ParamByName('isCorrectIlliquidAssets').Value := False;
   FormParams.ParamByName('isDoctors').Value := False;
   FormParams.ParamByName('isDiscountCommit').Value := False;
+  FormParams.ParamByName('isManual').Value := False;
+  FormParams.ParamByName('Category1303Id').Value := 0;
+  FormParams.ParamByName('Category1303Name').Value := '';
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
@@ -11645,7 +11670,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADivisionPartiesID: Integer; ADivisionPartiesName, AMedicForSale, ABuyerForSale, ABuyerForSalePhone,
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
-  AMedicalProgramSPId: Integer;
+  AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
   ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
@@ -11920,7 +11945,9 @@ begin
           AisDoctors,                // Врачи
           AisDiscountCommit,         // Дисконт проведен на сайте
           AZReport,                   // Номер Z отчета
-          AMedicalProgramSPId       // Медицинская программа соц. проектов
+          AMedicalProgramSPId,       // Медицинская программа соц. проектов
+          AisManual,                  // ручной выбор медикаментов
+          ACategory1303Id            // Категория 1303
           ]));
       End
       else
@@ -12038,6 +12065,10 @@ begin
         FLocalDataBaseHead.FieldByName('ZREPORT').Value := AZReport;
         //Медицинская программа соц. проектов
         FLocalDataBaseHead.FieldByName('MEDPRSPID').Value := AMedicalProgramSPId;
+        //Ручной выбор медикамента
+        FLocalDataBaseHead.FieldByName('ISMANUAL').Value := AisManual;
+        //Категория 1303
+        FLocalDataBaseHead.FieldByName('CAT1303ID').Value := ACategory1303Id;
         FLocalDataBaseHead.Post;
       End;
     except

@@ -63,7 +63,7 @@ type
     function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string; bFixPrice : Boolean = False) :Boolean;
     // Commit Дисконт из CDS - по всем
     function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                  lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 2) :Boolean;
+                                  lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3) :Boolean;
     //
     // update DataSet - еще раз по всем "обновим" Дисконт
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
@@ -433,7 +433,7 @@ end;
 
 // Commit Дисконт из CDS - по всем
 function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                                   lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 2) :Boolean;
+                                                   lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3) :Boolean;
 var
   aSaleRequest : CardSaleRequest;
   SendList : ArrayOfCardSaleRequestItem;
@@ -618,9 +618,9 @@ begin
                 //
                 if not Result then
                 begin
-                  if nHourOffset = 2 then
+                  if nHourOffset = 3 then
                   begin
-                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3);
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2);
                     Exit;
                   end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
                 end;
@@ -640,9 +640,9 @@ begin
 
                 if not Result then
                 begin
-                  if nHourOffset = 2 then
+                  if nHourOffset = 3 then
                   begin
-                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3);
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2);
                     Exit;
                   end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
                 end;
@@ -1261,7 +1261,7 @@ begin
     //Дата/время накладной
     aOrderRequest.OrderDate:= TXSDateTime.Create;
     aOrderRequest.OrderDate.AsDateTime:= lOperDate;
-    aOrderRequest.OrderDate.HourOffset := 2;
+    aOrderRequest.OrderDate.HourOffset := 3;
     //Тип накладной(1-Поставка\2-Возврат Дистрибьютору\3-Возврат Покупателя)
     aOrderRequest.OrderType := '1';
     //Код Орг-ции отправителя
@@ -1471,7 +1471,7 @@ begin
             Item.OrderCode := FInvoiceNumber;
             Item.OrderDate := TXSDateTime.Create;
             Item.OrderDate.AsDateTime := FInvoiceDate;
-            Item.OrderDate.HourOffset := 2;
+            Item.OrderDate.HourOffset := 3;
 
             // Подготовили список для отправки
             SetLength(SendList, i);
@@ -2112,6 +2112,8 @@ begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
              ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
+             ParamByName('outDiscountProcent').Value := 0;
+             ParamByName('outDiscountSum').Value := 0;
              Execute;
              FSupplier := Trunc(ParamByName('outCodeRazom').AsFloat);
           end;
@@ -2124,13 +2126,34 @@ begin
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
                then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
                else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
-               lChangePercent := 10;
-               //Предполагаемое кол-во товара
-               lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
-               // тоже типа как для кол-ва = 1, может так правильно округлит?
-               lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
-               // а еще досчитаем сумму скидки
-               lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               if spGet_Goods_CodeRazom.ParamByName('outDiscountProcent').Value > 0 then
+               begin
+                 lChangePercent := 10;
+                 //Предполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как для кол-ва = 1, может так правильно округлит?
+                 lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               end else if spGet_Goods_CodeRazom.ParamByName('outDiscountSum').Value > 0 then
+               begin
+                 lChangePercent := 0;
+                 //Предполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как для кол-ва = 1, может так правильно округлит?
+                 lPrice:= GetSumm(1, lPriceSale - spGet_Goods_CodeRazom.ParamByName('outDiscountSum').Value, False);
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False);
+               end else
+               begin
+                 lChangePercent := 0;
+                 //Предполагаемое кол-во товара
+                 lQuantity          := CheckCDS.FieldByName('Amount').asFloat;
+                 // тоже типа как для кол-ва = 1, может так правильно округлит?
+                 lPrice:= lPriceSale;
+                 // а еще досчитаем сумму скидки
+                 lSummChangePercent := 0;
+               end;
                //Update
                CheckCDS.Edit;
                CheckCDS.FieldByName('Price').asCurrency             :=lPrice;

@@ -249,6 +249,18 @@ object DiscountServiceForm: TDiscountServiceForm
         Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiscountProcent'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiscountSum'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

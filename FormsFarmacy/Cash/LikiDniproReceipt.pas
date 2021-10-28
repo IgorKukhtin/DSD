@@ -407,8 +407,10 @@ begin
   try
     while not FDrugsCDS.Eof do
     begin
+      if FDrugsCDS.FieldByName('isManual').AsBoolean then   MainCashForm.FormParams.ParamByName('isManual').Value := True;
+
       jsonTemp := TJSONObject.Create;
-      jsonTemp.AddPair('count', FDrugsCDS.FieldByName('count').AsString);
+      jsonTemp.AddPair('count', StringReplace(FDrugsCDS.FieldByName('count').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('retail_price_without_vat', StringReplace(FDrugsCDS.FieldByName('retail_price_without_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('retail_price_with_vat', StringReplace(FDrugsCDS.FieldByName('retail_price_with_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
       jsonTemp.AddPair('price_without_vat', StringReplace(FDrugsCDS.FieldByName('price_without_vat').AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]));
@@ -503,15 +505,15 @@ begin
       Exit;
     end;
 
-    if LikiDniproReceiptApi.FPositionCDS.FieldByName('id_morion').AsString = '' then
-    begin
-      ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для внесения недостающих данных..'#13#13 +
-        'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
-        'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString, cResult);
-      ClearReceipt1303;
-      Result := False;
-      Exit;
-    end;
+//    if LikiDniproReceiptApi.FPositionCDS.FieldByName('id_morion').AsString = '' then
+//    begin
+//      ShowPUSHMessageCash('Рецепт не может быть отпущен! Обратитесь к Ирине Колеуш для внесения недостающих данных..'#13#13 +
+//        'Чеке номер: ' + LikiDniproReceiptApi.Recipe.FRecipe_Number + #13 +
+//        'В чеке товар: ' + LikiDniproReceiptApi.PositionCDS.FieldByName('position').AsString, cResult);
+//      ClearReceipt1303;
+//      Result := False;
+//      Exit;
+//    end;
 
   end;
 end;

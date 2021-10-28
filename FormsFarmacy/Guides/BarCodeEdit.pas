@@ -41,6 +41,10 @@ type
     ceDiscountProcent: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     cbDiscountSite: TcxCheckBox;
+    ceDiscountWithVAT: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceDiscountWithoutVAT: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

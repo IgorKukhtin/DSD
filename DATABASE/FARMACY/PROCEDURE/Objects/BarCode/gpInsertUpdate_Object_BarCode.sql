@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, Boolean, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCode (Integer, Integer, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCode(
     IN inObjectId                Integer   ,    -- Подключение к программе дисконтных карт
     IN inMaxPrice                TFloat    ,    -- Максимальная цена
     IN inDiscountProcent         TFloat    ,    -- Процент скидки по дисконтной программе
+    IN inDiscountWithVAT         TFloat    ,    -- Фиксированная скидка с НДС
+    IN inDiscountWithoutVAT      TFloat    ,    -- Фиксированная скидка без НДС
     IN inisDiscountSite          Boolean   ,    -- Показывать цену на сайте
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -44,6 +46,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_MaxPrice(), ioId, inMaxPrice);
    -- Процент скидки по дисконтной программе
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_DiscountProcent(), ioId, inDiscountProcent);
+   -- Фиксированная скидка с НДС
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_DiscountWithVAT(), ioId, inDiscountWithVAT);
+   -- Фиксированная скидка без НДС
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_BarCode_DiscountWithoutVAT(), ioId, inDiscountWithoutVAT);
 
    -- Показывать цену на сайте
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_BarCode_DiscountSite(), ioId, inisDiscountSite);

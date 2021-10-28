@@ -43,7 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Delay Boolean
              , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
              , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean, isDoctors Boolean
-             , isDiscountCommit Boolean
+             , isDiscountCommit Boolean, isManual Boolean
 )
 AS
 $BODY$
@@ -329,7 +329,7 @@ BEGIN
            , Movement_Check.MemberSPId
            , Movement_Check.MemberSPName
            , Object_GroupMemberSP.Id                                      AS GroupMemberSPId
-           , Object_GroupMemberSP.ValueData                               AS GroupMemberSPName
+           , COALESCE (Object_GroupMemberSP.ValueData, Object_Category1303.ValueData) :: TVarChar  AS GroupMemberSPName
            , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
            , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
@@ -352,6 +352,7 @@ BEGIN
            , COALESCE(MovementBoolean_CorrectIlliquidMarketing.ValueData, False)  AS isCorrectIlliquidMarketing
            , COALESCE(MovementBoolean_Doctors.ValueData, False)           AS isDoctors
            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
+           , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
 
         FROM tmpMovement AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -426,6 +427,15 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
                                        ON MovementBoolean_DiscountCommit.MovementId = Movement_Check.Id
                                       AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                       ON MovementBoolean_Manual.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
+             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Category1303
+                                             ON MovementLinkObject_Category1303.MovementId =  Movement_Check.Id
+                                            AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
+             LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
 
              -- Программа лояльности накопительная
              LEFT JOIN tmpLoyaltySM ON 1 = 1

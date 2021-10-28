@@ -103,6 +103,10 @@ begin
       AddIntField(LocalDataBaseHead,  'ZREPORT');     //Номер Z отчета
       //***04.10.21
       AddIntField(LocalDataBaseHead,  'MEDPRSPID');   //Медицинская программа соц. проектов
+      //***26.10.21
+      AddBoolField(LocalDataBaseHead, 'ISMANUAL');   //Ручной выбор медикамента
+      //***27.10.21
+      AddIntField(LocalDataBaseHead,  'CAT1303ID');   //Категория 1303
 
       LocalDataBaseHead.CreateTable;
     end
@@ -179,6 +183,10 @@ begin
         if FindField('ZREPORT') = nil then AddIntField(LFieldDefs,  'ZREPORT');     //Номер Z отчета
         //***04.10.21
         if FindField('MEDPRSPID') = nil then AddIntField(LFieldDefs,  'MEDPRSPID');     //Медицинская программа соц. проектов
+        //***26.0.21
+        if FindField('ISMANUAL') = nil then AddBoolField(LFieldDefs, 'ISMANUAL');   //Ручной выбор медикамента
+        //***27.10.21
+        if FindField('CAT1303ID') = nil then AddIntField(LFieldDefs,  'CAT1303ID');     //Категория 1303
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -265,7 +273,11 @@ begin
         //***01.09.21
         (FindField('ZREPORT') = nil) or
         //***04.10.21
-        (FindField('MEDPRSPID') = nil));
+        (FindField('MEDPRSPID') = nil) or
+        //***26.10.21
+        (FindField('ISMANUAL') = nil) or
+        //***27.10.21
+        (FindField('CAT1303ID') = nil));
 
       Close;
 

@@ -238,9 +238,9 @@ BEGIN
                                                  , inSession          := inSession
                                                   )
      FROM Object AS Object_Retail
-          INNER JOIN Object_Goods_Main ON Object_Goods_Main.ObjectCode = 1046
-          INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.ID
-                                       AND Object_Goods_Retail.RetailId = Object_Retail.Id
+--          INNER JOIN Object_Goods_Main ON Object_Goods_Main.ObjectCode = inCode
+--          INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_Main.ID
+--                                       AND Object_Goods_Retail.RetailId = Object_Retail.Id
      WHERE Object_Retail.DescId = zc_Object_Retail()
        -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
      ;

@@ -124,23 +124,22 @@ BEGIN
         -- если данные закончились, тогда выход
         IF NOT FOUND THEN EXIT; END IF;
 
-        vbQueryText := 'ALTER TABLE tmpListDiff ADD COLUMN Remains'||vbOrd::TVarChar || ' TFloat';
+        vbQueryText := 'ALTER TABLE tmpListDiff ADD COLUMN Remains'||vbOrd::TVarChar || ' TFloat, ADD COLUMN Color_calc'||vbOrd::TVarChar || ' Integer NOT NULL DEFAULT zc_Color_Yelow()';
         EXECUTE vbQueryText;
 
-        vbQueryText := 'UPDATE tmpListDiff SET RemainsAll = RemainsAll + (SELECT SUM (Container.Amount) AS Amount
-           FROM Container
-           WHERE Container.DescId = zc_Container_Count()
-             AND Container.ObjectId = tmpListDiff.GoodsID
-             AND Container.WhereObjectId = '||vbUnitId::Text||'), 
-           Remains'||vbOrd::Text||' = (SELECT SUM (Container.Amount) AS Amount
+        vbQueryText := 'UPDATE tmpListDiff SET Remains'||vbOrd::Text||' = (SELECT SUM (Container.Amount) AS Amount
            FROM Container
            WHERE Container.DescId = zc_Container_Count()
              AND Container.ObjectId = tmpListDiff.GoodsID
              AND Container.WhereObjectId = '||vbUnitId::Text||')';
         EXECUTE vbQueryText;
 
+        vbQueryText := 'UPDATE tmpListDiff SET RemainsAll = RemainsAll + COALESCE(Remains'||vbOrd::TVarChar || ', 0), 
+                        Color_calc'||vbOrd::TVarChar || ' = CASE WHEN COALESCE(Remains'||vbOrd::TVarChar || ', 0) > 0 THEN zc_Color_Lime() ELSE zc_Color_Yelow() END';
+        EXECUTE vbQueryText;
+
     END LOOP; -- финиш цикла по курсору1
-    CLOSE curUnit; -- закрыли курсор1
+    CLOSE curUnit; -- закрыли курсор1 
     
     -- Результаты
 

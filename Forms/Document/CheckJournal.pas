@@ -96,6 +96,7 @@ type
     colZReport: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
     MedicalProgramSPName: TcxGridDBColumn;
+    isManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

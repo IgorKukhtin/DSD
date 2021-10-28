@@ -60,6 +60,8 @@ type
     MaxPrice: TcxGridDBColumn;
     isDiscountSite: TcxGridDBColumn;
     DiscountProcent: TcxGridDBColumn;
+    DiscountWithVAT: TcxGridDBColumn;
+    DiscountWithoutVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

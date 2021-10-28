@@ -43,6 +43,7 @@ type
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     RemainsAll: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

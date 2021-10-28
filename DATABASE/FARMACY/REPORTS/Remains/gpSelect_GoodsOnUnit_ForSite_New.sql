@@ -36,7 +36,7 @@ RETURNS TABLE (Id                Integer
              , Price_unit_6      TFloat    -- цена аптеки
              , Price_unit_sale_6 TFloat    -- цена аптеки со скидкой
              
-             , Multiplicity      TFloat    -- цена аптеки со скидкой
+             , Multiplicity      TFloat    -- Минимальная кратность при отпуске
               )
 AS
 $BODY$
