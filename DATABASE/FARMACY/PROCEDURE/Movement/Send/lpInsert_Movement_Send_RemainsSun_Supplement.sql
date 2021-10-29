@@ -75,7 +75,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer) ON COMMIT DROP;
      END IF;
 
      -- все Подразделения для схемы SUN Supplement
@@ -320,12 +320,13 @@ BEGIN
      END IF;*/
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id, isSmudge)
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id, isSmudge, SupplementMin)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
              , Object_Goods_Main.UnitSupplementSUN1OutId
              , Object_Goods_Main.UnitSupplementSUN2OutId
              , Object_Goods_Main.isSupplementSmudge
+             , Object_Goods_Main.SupplementMin
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -829,14 +830,17 @@ BEGIN
                                          , Need = CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 THEN - _tmpRemains_all_Supplement.AmountRemains
                                                   ELSE (_tmpRemains_all_Supplement.AmountSalesMonth / extract('DAY' from CURRENT_DATE -
                                                        (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL))) *
-                                                       T1.StockRatio END
+                                                       T1.StockRatio END + T1.SupplementMin
                                          , AmountUse = 0
      FROM (SELECT _tmpStockRatio_all_Supplement.GoodsId
                 , _tmpUnit_SUN_Supplement.UnitId
                 , _tmpStockRatio_all_Supplement.StockRatio
                 , _tmpUnit_SUN_Supplement.MonthSupplSun1
+                , COALESCE (_tmpGoods_SUN_Supplement.SupplementMin, 0) AS SupplementMin
            FROM _tmpStockRatio_all_Supplement
-                LEFT JOIN _tmpUnit_SUN_Supplement ON 1 = 1) AS T1
+                LEFT JOIN _tmpUnit_SUN_Supplement ON 1 = 1
+                LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = _tmpStockRatio_all_Supplement.GoodsId
+                ) AS T1
      WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
 
@@ -1117,4 +1121,5 @@ $BODY$
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
--- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('19.10.2021')::TDateTime ,  inSession := '3');
+-- 
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('01.11.2021')::TDateTime ,  inSession := '3');

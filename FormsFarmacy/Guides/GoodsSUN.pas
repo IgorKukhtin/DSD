@@ -205,6 +205,12 @@ type
     mactUpdate_inSupplementSmudge: TMultiAction;
     execUpdate_inSupplementSmudge: TdsdExecStoredProc;
     dxBarButton16: TdxBarButton;
+    SupplementMin: TcxGridDBColumn;
+    actExecuteDialog_SupplementMin: TExecuteDialog;
+    mactUpdate_SupplementMin: TMultiAction;
+    actExec_Update_SupplementMin: TdsdExecStoredProc;
+    actUpdate_SupplementMin: TdsdStoredProc;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

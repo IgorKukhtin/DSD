@@ -3398,7 +3398,6 @@ begin
           else nGoodsNotUKTZED := FieldByName('GoodsId').AsInteger;
         end;
 
-
 //        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
 //           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
 //        begin
@@ -3458,6 +3457,21 @@ begin
           if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
           begin
             ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект Abbott card)');
+            exit;
+          end;
+        end;
+
+        if (FormParams.ParamByName('isDiscountCommit').Value = False) and
+           (FormParams.ParamByName('InvNumberOrder').Value <> '') and
+           (FormParams.ParamByName('isBanAdd').Value = False) then
+        begin
+          if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
+             (FieldByName('Amount').AsCurrency > 0) and
+             (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency > 0) and
+             (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency < 100) then
+          begin
+            ShowMessage('Со скидкой товар <' + FieldByName('GoodsName').AsString +
+              '> не кратный упаковки отпускать запрещено, обнулите количество и пробейте отдельным чеком (без скидки)');
             exit;
           end;
         end;
