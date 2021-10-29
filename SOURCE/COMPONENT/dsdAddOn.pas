@@ -1207,6 +1207,7 @@ type
     FProgressBar: TProgressBar;
     FOnEditChange: TNotifyEvent;
     FOnEditExit: TNotifyEvent;
+    FOnKeyDown: TKeyEvent;
 
 
     FOldStr : string;
@@ -1221,6 +1222,7 @@ type
     procedure OnEditChange(Sender: TObject);
     procedure OnEditExit(Sender: TObject);
     procedure OnCheckChange(Sender: TObject);
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
     procedure SetTextEdit(const Value: TcxTextEdit);
     procedure SetDataSet(const Value: TDataSet);
     procedure SetColumn(const Value: TcxGridColumn);
@@ -5426,6 +5428,7 @@ begin
   FOldStr := '';
   FOnEditChange := Nil;
   FOnEditExit := Nil;
+  FOnKeyDown := Nil;
   FFilterRecord := Nil;
   FFiltered := False;
 end;
@@ -5448,6 +5451,8 @@ begin
          FTextEdit := nil;
       if (AComponent = FDataSet) then
          FDataSet := nil;
+      if (AComponent = FActionNumber1) then
+         FActionNumber1 := nil;
   end;
 end;
 
@@ -5457,8 +5462,10 @@ begin
   begin
     FTextEdit.Properties.OnChange := FOnEditChange;
     FTextEdit.OnExit := FOnEditExit;
+    FTextEdit.OnKeyDown := FOnKeyDown;
     FOnEditChange := Nil;
     FOnEditExit := Nil;
+    FOnKeyDown := Nil;
     FProgressBar.Parent := Nil;
   end;
   FTextEdit := Value;
@@ -5466,8 +5473,10 @@ begin
   begin
     FOnEditChange := FTextEdit.Properties.OnChange;
     FOnEditExit := FTextEdit.OnExit;
+    FOnKeyDown := FTextEdit.OnKeyDown;
     FTextEdit.Properties.OnChange := OnEditChange;
     FTextEdit.OnExit := OnEditExit;
+    FTextEdit.OnKeyDown := OnKeyDown;
     FProgressBar.Parent := FTextEdit;
     FProgressBar.Top := FTextEdit.Height - FProgressBar.Height - 4;
     FProgressBar.Left := FTextEdit.Width - FProgressBar.Width - 4;
@@ -5541,8 +5550,6 @@ begin
     end;
     FDataSet.First;
 
-    // Если под фильтром 1 запись
-    if Assigned(FActionNumber1) and (FDataSet.RecordCount = 1) then FActionNumber1.Execute;
   finally
     FDataSet.EnableControls
   end;
@@ -5551,6 +5558,21 @@ end;
 procedure TdsdFieldFilter.OnCheckChange(Sender: TObject);
 begin
   OnEditExit(Sender);
+end;
+
+procedure TdsdFieldFilter.OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (Key = VK_RETURN) and (Shift = []) then
+  begin
+    OnEditExit(Sender);
+
+    // Если под фильтром 1 запись
+    if Assigned(FActionNumber1) and (FDataSet.RecordCount = 1) and FActionNumber1.Enabled and FActionNumber1.Visible then
+    begin
+      FActionNumber1.Execute;
+      Key := 0;
+    end;
+  end;
 end;
 
 procedure TdsdFieldFilter.FilterRecord(DataSet: TDataSet; var Accept: Boolean);

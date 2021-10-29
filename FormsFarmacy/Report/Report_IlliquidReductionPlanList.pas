@@ -57,7 +57,6 @@ type
     cbFilter3: TcxCheckBox;
     cbFilter2: TcxCheckBox;
     cbFilter1: TcxCheckBox;
-    dsdFieldFilter: TdsdFieldFilter;
     Check_Filter: TcxGridDBColumn;
     Summa: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
