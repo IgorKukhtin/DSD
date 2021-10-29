@@ -35,6 +35,7 @@ RETURNS TABLE(
     , InvNumber            TVarChar   --№ документа акции
     , StatusCode Integer, StatusName TVarChar
     , UnitName            TVarChar  --Склад
+    , BranchId Integer, BranchName TVarChar
     , DateStartSale       TDateTime       --Дата начала отгрузки по акционной цене
     , DateFinalSale       TDateTime       --Дата окончания отгрузки по акционной цене
     , DateStartPromo      TDateTime       --Дата начала акции
@@ -378,6 +379,8 @@ BEGIN
           , Movement_Promo.StatusName         --
 
           , Movement_Promo.UnitName           --Склад
+          , Object_Branch.Id            AS BranchId
+          , Object_Branch.ValueData     AS BranchName
           , Movement_Promo.StartSale    AS DateStartSale      --Дата начала отгрузки по акционной цене
           , Movement_Promo.EndSale      AS DateFinalSale      --Дата окончания отгрузки по акционной цене
           , Movement_Promo.StartPromo   AS DateStartPromo      --Дата начала акции
@@ -493,6 +496,11 @@ BEGIN
 
             LEFT JOIN tmpContract AS View_Contract_InvNumber_21512 ON View_Contract_InvNumber_21512.ContractId = tmpContract_21512.ContractId
             LEFT JOIN tmpContract AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpDataFact.ContractId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = Movement_Promo.UnitId
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
         ;
 

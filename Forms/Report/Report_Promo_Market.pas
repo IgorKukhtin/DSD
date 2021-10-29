@@ -77,6 +77,14 @@ type
     ContractCode_21512: TcxGridDBColumn;
     ContractNumber_21512: TcxGridDBColumn;
     ContractTagName_21512: TcxGridDBColumn;
+    spInsertUpdate_ByGrid: TdsdStoredProc;
+    cxLabel7: TcxLabel;
+    edOperDate: TcxDateEdit;
+    bbInsertUpdate_ByGrid: TdxBarButton;
+    actInsertUpdate_ByGrid: TdsdExecStoredProc;
+    macInsertUpdate_ByGrid_list: TMultiAction;
+    macInsertUpdate_ByGrid: TMultiAction;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public
