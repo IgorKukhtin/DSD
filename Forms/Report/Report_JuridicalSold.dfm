@@ -3,8 +3,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientHeight = 556
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -312
-  ExplicitTop = -134
   ExplicitWidth = 1134
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -1733,7 +1731,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     inherited deStart: TcxDateEdit
       Left = 60
       Top = 6
-      EditValue = 42005d
+      EditValue = 44197d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 6
@@ -1741,7 +1739,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 33
-      EditValue = 42005d
+      EditValue = 44197d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 33
@@ -6016,6 +6014,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoneyGroup
+    isShowModal = True
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6052,6 +6051,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoneyDestination
+    isShowModal = True
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6088,6 +6088,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
+    isShowModal = True
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6121,6 +6122,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
+    isShowModal = True
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6390,6 +6392,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
+    isShowModal = True
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6420,6 +6423,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesJuridicalGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalGroup
+    isShowModal = True
     FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6450,6 +6454,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
+    isShowModal = True
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
