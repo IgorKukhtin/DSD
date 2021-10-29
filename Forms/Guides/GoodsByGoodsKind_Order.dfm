@@ -251,6 +251,16 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Options.Editing = False
             Width = 70
           end
+          object NormPack: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1099' '#1091#1087'. ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            DataBinding.FieldName = 'NormPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1099' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1085#1080#1103' ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            Width = 70
+          end
           object IsNewQuality: TcxGridDBColumn
             Caption = #1053#1086#1074#1072#1103' '#1076#1077#1082#1083#1072#1088'.'
             DataBinding.FieldName = 'IsNewQuality'
@@ -729,6 +739,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         Component = MasterCDS
         ComponentItem = 'IsTop'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNormPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NormPack'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

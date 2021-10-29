@@ -139,6 +139,9 @@ RETURNS TABLE (Id                   Integer
                -- Разница - ФАКТ и ПЛАН
              , DiffPlus_PACK_from_Child   TFloat
              , DiffMinus_PACK_from_Child  TFloat
+             , NormPack  TFloat
+             , HourPack_calc TFloat    -- расчет сколько времени надо на весь план
+             , HourPack_calc_ch TFloat -- расчет сколько времени надо на весь план
               )
 AS
 $BODY$
@@ -183,43 +186,79 @@ BEGIN
 
       -- Результат
       RETURN QUERY
-           WITH tmpChild_total AS (SELECT _Result_Child.KeyId
-                                        , SUM (_Result_Child.AmountPack)       AS AmountPack
-                                        , SUM (_Result_Child.AmountPackSecond) AS AmountPackSecond
-                                        , SUM (_Result_Child.AmountPackTotal)  AS AmountPackTotal
-                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPack       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPack_sh
-                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackSecond_sh
+           WITH
+              tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
+                                           , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
+                                           , ObjectFloat_NormPack.ValueData                          AS NormPack
+                                      FROM Object AS Object_GoodsByGoodsKind
+                                           INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                                 ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
+                                                                AND ObjectLink_GoodsByGoodsKind_Goods.DescId            = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                                AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     > 0
+                                           INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                 ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = Object_GoodsByGoodsKind.Id
+                                                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
+       
+                                           INNER JOIN ObjectFloat AS ObjectFloat_NormPack
+                                                                  ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
+                                                                 AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+                                                                 AND COALESCE (ObjectFloat_NormPack.ValueData,0) <> 0
+                                      WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
+                                        AND Object_GoodsByGoodsKind.isErased = FALSE
+                                     ) 
+            , tmpChild_total AS (SELECT _Result_Child.KeyId
+                                      , SUM (_Result_Child.AmountPack)       AS AmountPack
+                                      , SUM (_Result_Child.AmountPackSecond) AS AmountPackSecond
+                                      , SUM (_Result_Child.AmountPackTotal)  AS AmountPackTotal
+                                      , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPack       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPack_sh
+                                      , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackSecond_sh
+ 
+                                      , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 THEN _Result_Child.Amount_result_pack ELSE 0 END) AS Amount_result_pack
+                                      , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 AND ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.Amount_result_pack  / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS Amount_result_pack_sh
+ 
+                                      , SUM (_Result_Child.AmountPackNext)       AS AmountPackNext
+                                      , SUM (_Result_Child.AmountPackNextSecond) AS AmountPackNextSecond
+                                      , SUM (_Result_Child.AmountPackNextTotal)  AS AmountPackNextTotal
+                                      , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNext       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNext_sh
+                                      , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNextSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNextSecond_sh
 
-                                        , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 THEN _Result_Child.Amount_result_pack ELSE 0 END) AS Amount_result_pack
-                                        , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 AND ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.Amount_result_pack  / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS Amount_result_pack_sh
+                                      , SUM (CASE WHEN COALESCE (tmpGoodsByGoodsKind.NormPack,0) <> 0 
+                                                  THEN (COALESCE (_Result_Child.AmountPack,0)
+                                                      + COALESCE (_Result_Child.AmountPackSecond,0)
+                                                      + COALESCE (_Result_Child.AmountPackNext,0)
+                                                      + COALESCE (_Result_Child.AmountPackNextSecond,0)) / tmpGoodsByGoodsKind.NormPack
+                                                  ELSE 0
+                                             END) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
 
-                                        , SUM (_Result_Child.AmountPackNext)       AS AmountPackNext
-                                        , SUM (_Result_Child.AmountPackNextSecond) AS AmountPackNextSecond
-                                        , SUM (_Result_Child.AmountPackNextTotal)  AS AmountPackNextTotal
-                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNext       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNext_sh
-                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNextSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNextSecond_sh
-                                   FROM _Result_Child
-                                        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                              ON ObjectFloat_Weight.ObjectId = _Result_Child.GoodsId
-                                                             AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
-                          
-                                        LEFT JOIN ObjectFloat AS ObjectFloat_Weight_Child
-                                                              ON ObjectFloat_Weight_Child.ObjectId = _Result_Child.GoodsId
-                                                             AND ObjectFloat_Weight_Child.DescId   = zc_ObjectFloat_Goods_Weight()
-                                   WHERE _Result_Child.AmountPack       <> 0
-                                      OR _Result_Child.AmountPackSecond <> 0
-                                      OR _Result_Child.Income_PACK_from <> 0
-                                      OR _Result_Child.AmountPackNext       <> 0
-                                      OR _Result_Child.AmountPackNextSecond <> 0
-                                      OR _Result_Child.Amount_result_pack   <> 0
-                                   GROUP BY _Result_Child.KeyId
-                                  )
+                                 FROM _Result_Child
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                            ON ObjectFloat_Weight.ObjectId = _Result_Child.GoodsId
+                                                           AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                        
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_Weight_Child
+                                                            ON ObjectFloat_Weight_Child.ObjectId = _Result_Child.GoodsId
+                                                           AND ObjectFloat_Weight_Child.DescId   = zc_ObjectFloat_Goods_Weight()
+
+                                      LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = _Result_Child.GoodsId
+                                                                   AND tmpGoodsByGoodsKind.GoodsKindId = _Result_Child.GoodsKindId
+                                 WHERE _Result_Child.AmountPack       <> 0
+                                    OR _Result_Child.AmountPackSecond <> 0
+                                    OR _Result_Child.Income_PACK_from <> 0
+                                    OR _Result_Child.AmountPackNext       <> 0
+                                    OR _Result_Child.AmountPackNextSecond <> 0
+                                    OR _Result_Child.Amount_result_pack   <> 0
+                                 GROUP BY _Result_Child.KeyId
+                                )
+
             , tmpMinus AS (SELECT DISTINCT _Result_Child.KeyId FROM _Result_Child WHERE _Result_Child.Amount_result_pack < 0)
             , tmpFind AS (SELECT DISTINCT _Result_Master.KeyId
                           FROM _Result_Master
                                LEFT JOIN _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
                           WHERE _Result_Master.GoodsKindId <> COALESCE (_Result_Child.GoodsKindId, 0)
-                         )
+                         )                        
+
+
            -- Результат
            SELECT _Result_Master.Id
                 , _Result_Master.KeyId
@@ -353,6 +392,16 @@ BEGIN
                        ELSE 0
                   END :: TFloat AS DiffMinus_PACK_from_Child
 
+                , tmpGoodsByGoodsKind_ch.NormPack  ::TFloat
+
+                , CAST (tmpChild_total.HourPack_calc AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
+                , CAST (CASE WHEN COALESCE (tmpGoodsByGoodsKind_ch.NormPack,0) <> 0 
+                             THEN (COALESCE (_Result_Child.AmountPack,0)
+                                 + COALESCE (_Result_Child.AmountPackSecond,0)
+                                 + COALESCE (_Result_Child.AmountPackNext,0)
+                                 + COALESCE (_Result_Child.AmountPackNextSecond,0)) / tmpGoodsByGoodsKind_ch.NormPack
+                             ELSE 0
+                        END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc_ch  -- расчет сколько врмени надо на весь план
            FROM _Result_Master
               LEFT JOIN tmpChild_total ON tmpChild_total.KeyId = _Result_Master.KeyId
               LEFT JOIN tmpFind        ON tmpFind.KeyId        = _Result_Master.KeyId
@@ -375,6 +424,11 @@ BEGIN
               LEFT JOIN ObjectFloat AS ObjectFloat_Weight_Child
                                     ON ObjectFloat_Weight_Child.ObjectId = _Result_Child.GoodsId
                                    AND ObjectFloat_Weight_Child.DescId = zc_ObjectFloat_Goods_Weight()
+
+            LEFT JOIN tmpGoodsByGoodsKind AS tmpGoodsByGoodsKind_ch
+                                          ON tmpGoodsByGoodsKind_ch.GoodsId     = _Result_Child.GoodsId
+                                         AND tmpGoodsByGoodsKind_ch.GoodsKindId = _Result_Child.GoodsKindId
+
            WHERE ((COALESCE (_Result_Master.AmountTotal, 0)      <> 0 -- План1 выдачи ИТОГО на УПАК (факт)
                 OR COALESCE (_Result_Master.AmountNextTotal, 0)  <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
   
@@ -414,3 +468,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderInternalPackRemains_Print (inMovementId:= 7463854, inIsMinus:= FALSE, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_OrderInternalPackRemains_Print(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');

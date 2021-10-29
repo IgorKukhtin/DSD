@@ -30,6 +30,32 @@ BEGIN
      -- получааем  _Result_Master, _Result_Child, _Result_ChildTotal
      PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
 
+
+     --
+     CREATE TEMP TABLE _tmpGoodsByGoodsKind_NormPack (GoodsId Integer, GoodsKindId Integer, NormPack TFloat ) ON COMMIT DROP;
+     INSERT INTO _tmpGoodsByGoodsKind_NormPack (GoodsId, GoodsKindId, NormPack)
+          SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
+               , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
+               , ObjectFloat_NormPack.ValueData                          AS NormPack
+          FROM Object AS Object_GoodsByGoodsKind
+               INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
+                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId            = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     > 0
+               INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = Object_GoodsByGoodsKind.Id
+                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
+
+               INNER JOIN ObjectFloat AS ObjectFloat_NormPack
+                                      ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
+                                     AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+                                     AND COALESCE (ObjectFloat_NormPack.ValueData,0) <> 0
+
+          WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
+            AND Object_GoodsByGoodsKind.isErased = FALSE
+         ;
+                              
      --
      CREATE TEMP TABLE _tmpResult_Child (Id                        Integer
                                        , ContainerId               Integer
@@ -110,6 +136,7 @@ BEGIN
                                        , GoodsName_packTo          TVarChar
                                        , GoodsKindName_packTo      TVarChar
                                        , GoodsId_complete Integer, GoodsKindId_complete Integer
+                                       , NormPack TFloat, HourPack_calc TFloat
                                         ) ON COMMIT DROP;
 
     INSERT INTO _tmpResult_Child (Id, ContainerId, KeyId
@@ -134,6 +161,7 @@ BEGIN
                                 , ReceiptId, ReceiptCode, ReceiptName, ReceiptId_basis, ReceiptCode_basis, ReceiptName_basis, isErased
                                 , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo
                                 , GoodsId_complete, GoodsKindId_complete
+                                , NormPack, HourPack_calc
                                  )
 
             WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
@@ -141,6 +169,7 @@ BEGIN
                                               , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
                                               , ObjectLink_GoodsByGoodsKind_GoodsPack.ChildObjectId     AS GoodsId_pack
                                               , ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId AS GoodsKindId_pack
+                                              , ObjectFloat_NormPack.ValueData                          AS NormPack
                                          FROM Object AS Object_GoodsByGoodsKind
                                               INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
@@ -159,6 +188,11 @@ BEGIN
                                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKindPack.ObjectId      = Object_GoodsByGoodsKind.Id
                                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKindPack.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindPack()
                                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId > 0
+
+                                              LEFT JOIN ObjectFloat AS ObjectFloat_NormPack
+                                                                    ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
+                                                                   AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+
                                          WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
                                            AND Object_GoodsByGoodsKind.isErased = FALSE
                                         )
@@ -317,6 +351,15 @@ BEGIN
             , _Result_Child.GoodsId_complete
             , _Result_Child.GoodsKindId_complete
 
+            , _tmpGoodsByGoodsKind_NormPack.NormPack  ::TFloat
+            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0 
+                         THEN (COALESCE (_Result_Child.AmountPack,0)
+                             + COALESCE (_Result_Child.AmountPackSecond,0)
+                             + COALESCE (_Result_Child.AmountPackNext,0)
+                             + COALESCE (_Result_Child.AmountPackNextSecond,0)) / _tmpGoodsByGoodsKind_NormPack.NormPack
+                         ELSE 0
+                    END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
+                    
        FROM (SELECT _Result_Child.Id
                   , _Result_Child.ContainerId
                   , _Result_Child.KeyId
@@ -822,6 +865,9 @@ BEGIN
                                          AND inShowAll = TRUE
             LEFT JOIN Object AS Object_Goods_packTo     ON Object_Goods_packTo.Id     = tmpGoodsByGoodsKind.GoodsId_pack
             LEFT JOIN Object AS Object_GoodsKind_packTo ON Object_GoodsKind_packTo.Id = tmpGoodsByGoodsKind.GoodsKindId_pack
+
+            LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_Child.GoodsId
+                                                   AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_Child.GoodsKindId
        WHERE _Result_Child.Ord = 1;
 
 
@@ -1070,7 +1116,9 @@ BEGIN
 
             , CASE WHEN _Result_Child.AmountPartnerTotal <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal
             , (COALESCE (_Result_Child.AmountPartnerTotal,0) - COALESCE (_Result_Child.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
-
+            
+            , _Result_Child.NormPack      ::TFloat
+            , _Result_Child.HourPack_calc ::TFloat
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
@@ -1232,7 +1280,19 @@ BEGIN
             , _Result_ChildTotal.TermProduction
             , _Result_ChildTotal.isErased
 
+            , _tmpGoodsByGoodsKind_NormPack.NormPack  ::TFloat
+
+            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0 
+                         THEN (COALESCE (_Result_ChildTotal.AmountPack,0)
+                             + COALESCE (_Result_ChildTotal.AmountPackSecond,0)
+                             + COALESCE (_Result_ChildTotal.AmountPackNext,0)
+                             + COALESCE (_Result_ChildTotal.AmountPackNextSecond,0)) / _tmpGoodsByGoodsKind_NormPack.NormPack
+                         ELSE 0
+                    END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
+
        FROM _Result_ChildTotal
+            LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_ChildTotal.GoodsId
+                                                   AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_ChildTotal.GoodsKindId
        ;
 
        RETURN NEXT Cursor3;

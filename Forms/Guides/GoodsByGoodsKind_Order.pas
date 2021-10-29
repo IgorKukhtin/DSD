@@ -48,6 +48,7 @@ type
     bbUpdate_Top_No: TdxBarButton;
     actUpdate_Top_No: TdsdExecStoredProc;
     actUpdate_Top_Yes: TdsdExecStoredProc;
+    NormPack: TcxGridDBColumn;
   private
     { Private declarations }
   public

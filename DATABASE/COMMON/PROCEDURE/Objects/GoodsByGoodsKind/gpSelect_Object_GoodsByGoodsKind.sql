@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , NormInDays TFloat
              , DaysQ TFloat
              , NormRem TFloat, NormOut TFloat
+             , NormPack TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , isNewQuality Boolean
              , isTop Boolean
@@ -180,6 +181,7 @@ BEGIN
            
            , COALESCE (ObjectFloat_NormRem.ValueData,0)         ::TFloat  AS NormRem
            , COALESCE (ObjectFloat_NormOut.ValueData,0)         ::TFloat  AS NormOut
+           , COALESCE (ObjectFloat_NormPack.ValueData,0)        ::TFloat  AS NormPack
 
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
@@ -316,6 +318,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NormOut
                                   ON ObjectFloat_NormOut.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_NormOut.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormOut()
+            LEFT JOIN ObjectFloat AS ObjectFloat_NormPack
+                                  ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
