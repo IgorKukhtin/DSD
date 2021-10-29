@@ -367,10 +367,10 @@ object Report_WageDialogForm: TReport_WageDialogForm
   object ModelServiceGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceModelService
-    FormNameParam.Value = 'TModelServiceForm'
+    FormNameParam.Value = 'TModelService_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TModelServiceForm'
+    FormName = 'TModelService_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
