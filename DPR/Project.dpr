@@ -116,7 +116,7 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
 
   if FindCmdLineSwitch('autosrcipt', true) then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw11', gc_User);
      i := 0;
      while ParamStr(i) <> '/autosrcipt' do
            inc(i);
@@ -127,7 +127,7 @@ begin
   TdsdApplication.Create;
   // Процесс аутентификации
   if FindCmdLineSwitch('autologin', true) then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Климентьев К.И.', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
