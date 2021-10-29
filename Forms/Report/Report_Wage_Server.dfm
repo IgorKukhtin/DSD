@@ -4,7 +4,7 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
   ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 436
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -540,14 +540,14 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       Params = <
         item
           Name = 'DateStart'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'dateEnd'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1030,10 +1030,10 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
   object ModelServiceGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceModelService
-    FormNameParam.Value = 'TModelServiceForm'
+    FormNameParam.Value = 'TModelService_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TModelServiceForm'
+    FormName = 'TModelService_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1147,7 +1147,7 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1317,7 +1317,7 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

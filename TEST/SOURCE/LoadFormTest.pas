@@ -3861,7 +3861,10 @@ begin
 end;
 procedure TLoadFormTest.LoadModelServiceFormTest;
 begin
-{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelService_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelService_ObjectForm');
+ exit;
+ {
  //Типы модели начисления
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
