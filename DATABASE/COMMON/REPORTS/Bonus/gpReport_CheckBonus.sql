@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Inte
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
@@ -13,8 +14,10 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
     IN inBranchId            Integer   ,
-    IN inMemberId          Integer   , 
+    IN inMemberId            Integer   , 
     IN inIsMovement          Boolean   , -- по документам
+    IN inisDetail            Boolean   , -- детализация  выводим группу тов, произ площадку, Goods_Business, GoodsTag, GoodsGroupAnalyst
+    IN inisGoods             Boolean   , -- выводим товар + вид товара
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
@@ -63,6 +66,16 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Comment TVarChar
              , ReportBonusId Integer, isSend Boolean
              , isSalePart Boolean
+
+            , GoodsCode Integer
+            , GoodsName TVarChar
+            , GoodsKindName TVarChar
+            , GoodsGroupName        TVarChar
+            , GoodsGroupNameFull    TVarChar
+            , BusinessName          TVarChar
+            , GoodsTagName          TVarChar
+            , GoodsPlatformName     TVarChar
+            , GoodsGroupAnalystName TVarChar  
               ) 
 AS
 $BODY$
@@ -237,6 +250,17 @@ BEGIN
            , tmp.ReportBonusId
            , tmp.isSend
            , tmp.isSalePart
+
+           , tmp.GoodsCode             ::Integer
+           , tmp.GoodsName             ::TVarChar
+           , tmp.GoodsKindName         ::TVarChar 
+           , tmp.GoodsGroupName        ::TVarChar
+           , tmp.GoodsGroupNameFull    ::TVarChar
+           , tmp.BusinessName          ::TVarChar
+           , tmp.GoodsTagName          ::TVarChar
+           , tmp.GoodsPlatformName     ::TVarChar
+           , tmp.GoodsGroupAnalystName ::TVarChar
+            
       FROM lpReport_CheckBonus (inStartDate    := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate      := inEndDate
                               , inPaidKindID   := zc_Enum_PaidKind_FirstForm()
@@ -244,6 +268,8 @@ BEGIN
                               , inBranchId     := inBranchId
                               , inMemberId     := inMemberId
                               , inIsMovement   := inIsMovement
+                              , inisDetail     := inisDetail
+                              , inisGoods      := inisGoods
                               , inSession      := inSession
                                ) AS tmp
           /* LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
@@ -308,6 +334,16 @@ BEGIN
            , tmp.ReportBonusId
            , tmp.isSend
            , tmp.isSalePart
+
+           , tmp.GoodsCode             ::Integer
+           , tmp.GoodsName             ::TVarChar
+           , tmp.GoodsKindName         ::TVarChar 
+           , tmp.GoodsGroupName        ::TVarChar
+           , tmp.GoodsGroupNameFull    ::TVarChar
+           , tmp.BusinessName          ::TVarChar
+           , tmp.GoodsTagName          ::TVarChar
+           , tmp.GoodsPlatformName     ::TVarChar
+           , tmp.GoodsGroupAnalystName ::TVarChar
       FROM lpReport_CheckBonus (inStartDate     := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate       := inEndDate
                               , inPaidKindID    := zc_Enum_PaidKind_SecondForm()
@@ -315,6 +351,8 @@ BEGIN
                               , inBranchId      := inBranchId
                               , inMemberId      := inMemberId
                               , inIsMovement    := inIsMovement
+                              , inisDetail     := inisDetail
+                              , inisGoods      := inisGoods
                               , inSession       := inSession
                                ) AS tmp
          /*  LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
@@ -366,3 +404,4 @@ $BODY$
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
 -- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE, inSession := '5');--
+select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE,inisDetail := TRUE, inisGoods:= false, inSession := '5');--

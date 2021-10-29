@@ -1174,7 +1174,6 @@ uses
   Goods_Param in '..\..\Forms\Guides\Goods_Param.pas' {Goods_ParamForm: TParentForm},
   ChangePercentDialog in '..\..\Forms\Document\ChangePercentDialog.pas' {ChangePercentDialogForm: TParentForm},
   PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
-  Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   Report_CheckBonus_SaleReturn in '..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas' {Report_CheckBonus_SaleReturnForm: TParentForm},
   Report_CheckBonus_Income in '..\..\Forms\Report\Report_CheckBonus_Income.pas' {Report_CheckBonus_IncomeForm: TParentForm},
   ProfitIncomeService in '..\..\Forms\Document\ProfitIncomeService.pas' {ProfitIncomeServiceForm: TParentForm},
@@ -1320,7 +1319,8 @@ uses
   NameBefore in '..\..\Forms\Guides\NameBefore.pas' {NameBeforeForm: TParentForm},
   Report_Promo_Market in '..\..\Forms\Report\Report_Promo_Market.pas' {Report_Promo_MarketForm: TParentForm},
   Report_Promo_MarketDialog in '..\..\Forms\Report\Report_Promo_MarketDialog.pas' {Report_Promo_MarketDialogForm: TParentForm},
-  OrderType_isPrEdit in '..\..\Forms\Guides\OrderType_isPrEdit.pas' {OrderType_isPrEditForm: TParentForm};
+  OrderType_isPrEdit in '..\..\Forms\Guides\OrderType_isPrEdit.pas' {OrderType_isPrEditForm: TParentForm},
+  Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

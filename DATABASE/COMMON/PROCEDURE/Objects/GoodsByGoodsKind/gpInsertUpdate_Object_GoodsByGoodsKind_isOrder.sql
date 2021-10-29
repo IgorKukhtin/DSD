@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbIsOrder Boolean;
    DECLARE vbIsNotMobile Boolean;
    DECLARE vbIsTop Boolean;
+   DECLARE vbNormPack TFloat;
 BEGIN
 
    vbUserId:= lpGetUserBySession (inSession);
@@ -79,7 +80,9 @@ BEGIN
    -- если менялись IsOrder и inIsNotMobile одни права
    vbIsOrder     :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()) :: Boolean;
    vbIsNotMobile :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()):: Boolean;
-   IF COALESCE (vbIsNotMobile,False) <> COALESCE (inIsNotMobile,False) OR COALESCE (vbIsOrder,False) <> COALESCE (inIsOrder,False)
+   vbNormPack    :=(SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()) ::TFloat;
+
+   IF COALESCE (vbIsNotMobile,False) <> COALESCE (inIsNotMobile,False) OR COALESCE (vbIsOrder,False) <> COALESCE (inIsOrder,False) OR COALESCE (vbNormPack,0) <> COALESCE (inNormPack,0)
    THEN
         -- проверка прав пользователя на вызов процедуры
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
@@ -89,6 +92,9 @@ BEGIN
 
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotMobile(), ioId, inIsNotMobile);
+
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormPack(), ioId, inNormPack);
 
    END IF;
    
@@ -105,10 +111,6 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Top(), ioId, outIsTop);
    END IF;
-
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormPack(), ioId, inNormPack);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -658,6 +658,80 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Visible = False
             Width = 60
           end
+          object GoodsPlatformName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+            DataBinding.FieldName = 'GoodsPlatformName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsGroupAnalystName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object BusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089
+            DataBinding.FieldName = 'BusinessName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
         end
       end
     end
@@ -709,7 +783,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Width = 190
     end
     object cbMovement: TcxCheckBox
-      Left = 841
+      Left = 1105
       Top = 32
       Action = actRefreshMovement
       TabOrder = 6
@@ -732,6 +806,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Properties.ReadOnly = True
       TabOrder = 8
       Width = 153
+    end
+    object cbDetail: TcxCheckBox
+      Left = 851
+      Top = 32
+      Hint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+      Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+      TabOrder = 9
+      Width = 104
+    end
+    object cbGoods: TcxCheckBox
+      Left = 961
+      Top = 32
+      Hint = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Caption = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+      TabOrder = 10
+      Width = 104
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -979,6 +1069,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = Null
+          Component = cbGoods
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1404,6 +1510,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGet_Check
+        end
+        item
           Action = macInsertUpdate_ByGrid_list
         end>
       QuestionBeforeExecute = 
@@ -1452,6 +1561,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGet_Check
+        end
         item
           Action = actInsertByReportGrid
         end>
@@ -1616,6 +1728,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         end>
       isShowModal = False
     end
+    object actGet_Check: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Check
+      StoredProcList = <
+        item
+          StoredProc = spGet_Check
+        end>
+      Caption = 'actGet_Check'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1679,6 +1802,22 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'inisMovement'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = Null
+        Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1928,7 +2067,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1064
+    Left = 1128
+    Top = 16
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport'
@@ -2512,5 +2652,42 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end>
     Left = 801
     Top = 65534
+  end
+  object spGet_Check: TdsdStoredProc
+    StoredProcName = 'gpGet_CheckBonus_check'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inisDetail'
+        Value = False
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = False
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroup'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupNameFull'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 176
   end
 end

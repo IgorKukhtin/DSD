@@ -3998,10 +3998,6 @@
 				<Form>PromoJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus.pas">
-				<Form>Report_CheckBonusForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus_SaleReturn.pas">
 				<Form>Report_CheckBonus_SaleReturnForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4562,6 +4558,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\OrderType_isPrEdit.pas">
 				<Form>OrderType_isPrEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus.pas">
+				<Form>Report_CheckBonusForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

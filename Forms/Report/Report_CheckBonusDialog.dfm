@@ -107,13 +107,12 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 10
     Width = 319
   end
-  object cbMovement: TcxCheckBox
+  object cbDetail: TcxCheckBox
     Left = 19
-    Top = 213
-    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-    Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    Top = 210
+    Hint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+    Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
     TabOrder = 11
-    Visible = False
     Width = 104
   end
   object cxLabel4: TcxLabel
@@ -158,11 +157,19 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 16
     Width = 90
   end
+  object cbGoods: TcxCheckBox
+    Left = 171
+    Top = 210
+    Hint = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+    Caption = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+    TabOrder = 17
+    Width = 104
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 6
-    Top = 216
+    Left = 14
+    Top = 240
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 310
@@ -259,7 +266,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'isMovement'
         Value = Null
-        Component = cbMovement
+        Component = cbDetail
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -304,9 +311,25 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 208
+    Left = 142
+    Top = 248
   end
   object GuidesBonusKind: TdsdGuides
     KeyField = 'Id'
