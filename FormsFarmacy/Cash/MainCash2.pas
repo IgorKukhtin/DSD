@@ -787,6 +787,8 @@ type
     FStepSecond : Boolean;
     FStyle: TcxStyle;
 
+    FError_Blink: Integer;
+
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
     aDistributionPromoSum : array of Currency;
@@ -7715,6 +7717,7 @@ begin
   FUpdatePUSH := 0;
   fPrint := False;
   FStepSecond := False;
+  FError_Blink := 0;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -8417,19 +8420,19 @@ begin
       begin
         if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
         begin
-          ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
+          ShowMessage('Ошибка.Товар <' + RemainsCDS.FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
           exit;
         end;
-      end else if SourceClientDataSet.FieldByName('isGoodsForProject').AsBoolean and (SourceClientDataSet.FieldByName('GoodsDiscountId').AsInteger <> 0) then
+      end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
       begin
-        ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + SourceClientDataSet.FindField('GoodsDiscountName').AsString + '!');
+        ShowMessage('Ошибка.Товар <' + RemainsCDS.FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
         exit;
       end;
     end;
 
     if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') then
     begin
-      ShowMessage('Ошибка.Товар <' + SourceClientDataSet.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
+      ShowMessage('Ошибка.Товар <' + RemainsCDS.FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
       exit;
     end;
 
@@ -12473,10 +12476,13 @@ begin
 
       end;
 
+      FError_Blink := 0;
     except
-      Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
-        ') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' +
-        ' - <' + IniUtils.gUserName + '>'
+      Inc(FError_Blink);
+      if FError_Blink > 3 then
+        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
+          ') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' +
+          ' - <' + IniUtils.gUserName + '>'
     end;
 end;
 
@@ -12511,10 +12517,13 @@ begin
         Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
           ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
+      FError_Blink := 0;
     except
-      Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
-        ') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName +
-        '>' + ' - <' + IniUtils.gUserName + '>'
+      Inc(FError_Blink);
+      if FError_Blink > 3 then
+        Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
+          ') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName +
+          '>' + ' - <' + IniUtils.gUserName + '>'
     end;
 end;
 

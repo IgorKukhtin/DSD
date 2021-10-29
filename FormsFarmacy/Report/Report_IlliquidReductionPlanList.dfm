@@ -11,21 +11,21 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     Top = 98
     Width = 1185
     Height = 406
-    ExplicitTop = 83
+    ExplicitTop = 98
     ExplicitWidth = 1185
-    ExplicitHeight = 421
+    ExplicitHeight = 406
     ClientRectBottom = 406
     ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1185
-      ExplicitHeight = 421
+      ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Top = 89
         Width = 1185
         Height = 317
         ExplicitTop = 89
         ExplicitWidth = 1185
-        ExplicitHeight = 332
+        ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -365,7 +365,6 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
   inherited Panel: TPanel
     Width = 1185
     Height = 72
-    ExplicitTop = 1
     ExplicitWidth = 1185
     ExplicitHeight = 72
     inherited deStart: TcxDateEdit
@@ -899,24 +898,5 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
     PropertiesCellList = <>
     Left = 520
     Top = 344
-  end
-  object dsdFieldFilter: TdsdFieldFilter
-    DataSet = MasterCDS
-    CheckColumn = Check_Filter
-    CheckBoxList = <
-      item
-        Value = '1'
-        CheckBox = cbFilter1
-      end
-      item
-        Value = '2'
-        CheckBox = cbFilter2
-      end
-      item
-        Value = '3'
-        CheckBox = cbFilter3
-      end>
-    Left = 512
-    Top = 176
   end
 end
