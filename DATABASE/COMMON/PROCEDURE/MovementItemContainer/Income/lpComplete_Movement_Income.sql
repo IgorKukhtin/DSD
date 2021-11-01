@@ -898,7 +898,12 @@ BEGIN
                      MovementItem.Id AS MovementItemId
                      -- если Вид топлива, иначе - Товар
                    , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId) AS GoodsId
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) -- Ирна + Готовая продукция
+                          WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                          ELSE 0
+                     END AS GoodsKindId 
                    , CASE WHEN MILinkObject_Asset.ObjectId > 0 THEN MILinkObject_Asset.ObjectId WHEN vbMovementDescId = zc_Movement_IncomeAsset() AND Object_Goods.DescId = zc_Object_Asset() THEN Object_Goods.Id ELSE 0 END AS AssetId
                    , COALESCE (MILinkObject_Unit.ObjectId, 0)  AS UnitId_Asset
                    , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData

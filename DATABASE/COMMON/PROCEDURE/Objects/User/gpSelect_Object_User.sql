@@ -59,7 +59,7 @@ END IF;
        , Object_Member.Id AS MemberId
        , Object_Member.ValueData AS MemberName
 
-       , ObjectString_User_.ValueData     AS User_
+       , CASE WHEN vbUserId = 5 THEN ObjectString_User_.ValueData ELSE '' END :: TVarChar AS User_
        , ObjectString_UserSign.ValueData  AS UserSign
        , ObjectString_UserSeal.ValueData  AS UserSeal
        , ObjectString_UserKey.ValueData   AS UserKey

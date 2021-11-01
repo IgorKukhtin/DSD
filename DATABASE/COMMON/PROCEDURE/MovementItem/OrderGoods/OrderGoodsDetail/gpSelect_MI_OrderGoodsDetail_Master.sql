@@ -143,38 +143,48 @@ BEGIN
 
            --, tmpMI.Amount ::TFloat AS Amount_kg --CASE WHEN  Object_Measure.Id <> zc_Measure_Sh() THEN tmpMI.Amount ELSE 0 END ::TFloat AS Amount_kg
 
+             -- Стат. вес (продажа)
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh()
-                  THEN (COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  THEN (COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData, 1)
                   ELSE  COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)
              END ::TFloat AS AmountForecast
+             -- Стат. вес  (заявка)
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh()
-                  THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)
+                  THEN (COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData, 1)
+                  ELSE  COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
              END ::TFloat AS AmountForecastOrder
+
+             -- Стат. вес (продажа Акции)
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh()
-                  THEN (COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData,1)
-                  ELSE  COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
+                  THEN COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData,1)
+                  ELSE COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)
              END ::TFloat AS AmountForecastPromo
+             -- Стат. вес (заявка Акции)
            , CASE WHEN Object_Measure.Id = zc_Measure_Sh()
                   THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData,1)
                   ELSE COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
              END ::TFloat AS AmountForecastOrderPromo
 
+             -- Стат. , шт (продажа)
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh()
                   THEN (COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0))
-                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecast.ValueData, 0) + COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                  ELSE 0
              END AS NUMERIC (16,0)) ::TFloat AS AmountForecast_sh
+             -- Стат. , шт (заявка)
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh()
-                  THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)
-                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                  THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
+                  ELSE 0
              END AS NUMERIC (16,0)) ::TFloat AS AmountForecastOrder_sh
+
+             -- Стат. , шт (продажа Акции)
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh()
-                  THEN (COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0))
-                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastPromo.ValueData, 0) + COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                  THEN COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)
+                  ELSE 0
              END AS NUMERIC (16,0)) ::TFloat AS AmountForecastPromo_sh
+             -- Стат., шт (заявка Акции)
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh()
                   THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)
-                  ELSE 0--CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0) / COALESCE (ObjectFloat_Weight.ValueData,1) ELSE 0 END
+                  ELSE 0
              END AS NUMERIC (16,0)) ::TFloat AS AmountForecastOrderPromo_sh
 
            , tmpGoodsParam.TradeMarkName         :: TVarChar

@@ -73,7 +73,7 @@ BEGIN
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
 
-          , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId OR (UserId = 5 AND vbUserId = 471654) -- ױמכמה ְ.ֲ.
+          , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId OR (UserId IN (5) AND vbUserId = 471654) -- ױמכמה ְ.ֲ.
                               --UNION
                               -- SELECT DISTINCT AccessKeyId FROM Object_RoleAccessKey_View WHERE vbUserId = 471654 -- ױמכמה ְ.ֲ.
                                 ) 
@@ -421,4 +421,4 @@ $BODY$
 */
 
 -- עוסע
---SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.09.2021' , inEndDate:= '30.09.2021' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= zfCalc_UserAdmin()::TVarChar)
+--SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.09.2021' , inEndDate:= '30.09.2021' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '9457')

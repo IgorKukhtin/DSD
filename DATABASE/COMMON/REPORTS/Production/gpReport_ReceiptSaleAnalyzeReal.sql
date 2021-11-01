@@ -19,9 +19,12 @@ RETURNS SETOF refcursor
 
 AS
 $BODY$
-  DECLARE Cursor1 refcursor;
-  DECLARE Cursor2 refcursor;
+  DECLARE vbUserId Integer;
+  DECLARE Cursor1  refcursor;
+  DECLARE Cursor2  refcursor;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- !!!пересчет Рецептур, временно захардкодил!!!
     PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
@@ -558,7 +561,7 @@ BEGIN
                              THEN COALESCE (tmpPrice_10100.Price3, 0)
                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                           OR tmpGoods_20900.GoodsId > 0
-                             THEN COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                              THEN COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                         WHEN tmpResult.newSumm3_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm3_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ3_cost / tmpResult.Value_receipt

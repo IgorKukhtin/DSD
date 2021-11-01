@@ -466,6 +466,7 @@ BEGIN
 
       , tmpMIContainer_group AS (SELECT tmpMIContainer_all.MovementId
                                       -- , 0 AS MovementItemId
+                                      , tmpMIContainer_all.MovementItemId
                                       , tmpMIContainer_all.ParentId
                                       , tmpMIContainer_all.LocationId
                                       , MIString_KVK.ValueData            AS KVK
@@ -524,7 +525,7 @@ BEGIN
                                        LEFT JOIN tmpMIString_KVK AS MIString_KVK
                                                                  ON MIString_KVK.MovementItemId = tmpMIContainer_all.MovementItemId
                                  GROUP BY tmpMIContainer_all.MovementId
-                                        -- , tmpMIContainer_all.MovementItemId
+                                        , tmpMIContainer_all.MovementItemId
                                         , tmpMIContainer_all.ParentId
                                         , tmpMIContainer_all.LocationId
                                         , tmpMIContainer_all.GoodsId
@@ -560,8 +561,13 @@ BEGIN
   , tmpMILO_GoodsKind_parent AS (SELECT MILinkObject_GoodsKind_parent.*
                                  FROM MovementItemLinkObject AS MILinkObject_GoodsKind_parent
                                  WHERE MILinkObject_GoodsKind_parent.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.ParentId FROM tmpMIContainer_group)  
-                                       AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
+                                   AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
                                 )
+  , tmpMILO_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                          FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                          WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group)  
+                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                         )
 
 
   , tmpMovementBoolean AS (SELECT MovementBoolean.*
@@ -772,8 +778,12 @@ BEGIN
                                                           --AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
                         LEFT JOIN Object AS Object_GoodsKind_parent ON Object_GoodsKind_parent.Id = MILinkObject_GoodsKind_parent.ObjectId
                 
+                        LEFT JOIN tmpMILO_GoodsKind AS tmpMILO_GoodsKind
+                                                           ON tmpMILO_GoodsKind.MovementItemId = tmpMIContainer_group.MovementItemId
+                                                          --AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
+
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
-                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMIContainer_group.GoodsKindId, tmpMILO_GoodsKind.ObjectId)
                 
                         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
                         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId

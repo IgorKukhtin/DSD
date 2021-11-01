@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbEndDate   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsReportSale());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderGoods());
 
      --пробуем найти сохраненный док.
      vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_OrderGoodsDetail());
@@ -69,7 +69,6 @@ BEGIN
        GROUP BY MovementItem.ObjectId
       ;
 
-
      -- Статистика Заявки + Продажи
      CREATE TEMP TABLE tmpMI_stat (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountSale TFloat, AmountSalePromo TFloat, Amount_calc TFloat, ReceiptId Integer) ON COMMIT DROP;
      --
@@ -91,19 +90,34 @@ BEGIN
                              )
                       )
          -- Заявки - информативно
-        , tmpMovOrder AS (SELECT Movement.Id AS MovementId
+      /*, tmpMovOrder AS (SELECT Movement.Id AS MovementId
                           FROM MovementDate AS MD_OperDatePartner
                                INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
                                                   AND Movement.DescId   = zc_Movement_OrderExternal()
                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId         = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From.DescId         = zc_MovementLinkObject_From()
                                -- если это Заявка с Филиала
                                LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
                                                               AND Object_From.DescId = zc_Object_Unit()
                           WHERE MD_OperDatePartner.ValueData BETWEEN inOperDateStart AND inOperDateEnd
                             AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                            -- без Заявок с Филиала
+                            AND Object_From.Id IS NULL
+                            --AND 1=0
+                         )*/
+        , tmpMovOrder AS (SELECT Movement.Id AS MovementId
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId         = zc_MovementLinkObject_From()
+                               -- если это Заявка с Филиала
+                               LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
+                                                              AND Object_From.DescId = zc_Object_Unit()
+                          WHERE Movement.OperDate BETWEEN inOperDateStart AND inOperDateEnd
+                            AND Movement.DescId   = zc_Movement_OrderExternal()
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
                             -- без Заявок с Филиала
                             AND Object_From.Id IS NULL
                             --AND 1=0
@@ -149,16 +163,16 @@ BEGIN
                             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
                             LEFT JOIN tmpMILO_o AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                                            AND tmpGoods.isGoodsKind                  = TRUE
+                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                               AND tmpGoods.isGoodsKind                  = TRUE
                             LEFT JOIN tmpMIFloat_o AS MIFloat_AmountSecond
-                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
+                                                   ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
 
                             LEFT JOIN tmpMIFloat_o AS MIFloat_PromoMovementId
-                                                        ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
+                                                   ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
                      --GROUP BY MovementItem.ObjectId
                      --       , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
                       )
@@ -212,16 +226,16 @@ BEGIN
                             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
                             LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                                            AND tmpGoods.isGoodsKind                  = TRUE
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                             AND tmpGoods.isGoodsKind                  = TRUE
                             LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
-                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
 
                             LEFT JOIN tmpMIFloat AS MIFloat_PromoMovementId
-                                                        ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
+                                                 ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
                      --GROUP BY MovementItem.ObjectId
                      --       , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
                       )
@@ -273,6 +287,8 @@ BEGIN
     ;
 
 -- RAISE EXCEPTION 'end ';
+-- RAISE EXCEPTION ' %', (select sum(AmountOrder +  AmountOrderPromo) from tmpMI_stat where tmpMI_stat.GoodsId = );
+
 
      -- нашли Receipt
      UPDATE tmpMI_stat SET ReceiptId = tmpReceipt.ReceiptId

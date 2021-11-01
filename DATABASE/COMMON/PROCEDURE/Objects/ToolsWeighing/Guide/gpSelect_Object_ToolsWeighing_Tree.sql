@@ -58,6 +58,9 @@ BEGIN
                   --
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_111'
                        THEN 'Производство - (111)Склад База ГП - Инвентаризация'
+                  --
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_111'
+                       THEN 'Производство - (112)Склад Реализации - Инвентаризация'
 
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_112'
                        THEN 'Производство - (112)ЦЕХ колбасный - Инвентаризация'

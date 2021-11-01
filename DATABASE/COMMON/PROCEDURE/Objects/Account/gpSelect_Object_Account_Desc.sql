@@ -51,18 +51,19 @@ BEGIN
                                                                   OR tmpDesc.DescId = 0)
                                   INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
                                                       AND Container.DescId = zc_Container_Summ()
+                             WHERE 1=0
                             )
-          , tmpLevel AS (SELECT AccountId FROM lfSelect_Object_Account_Level (vbUserId))
+          , tmpLevel AS (SELECT AccountId FROM lfSelect_Object_Account_Level (vbUserId) WHERE 1=0)
           , tmpAccount AS (SELECT * FROM gpSelect_Object_Account (inSession))
 
        -- Результат
-       SELECT tmpAccount.*
+       /*SELECT tmpAccount.*
        FROM tmpContainer
             INNER JOIN tmpLevel ON tmpLevel.AccountId = tmpContainer.AccountId
             INNER JOIN tmpAccount ON tmpAccount.Id = tmpContainer.AccountId
-      UNION
+      UNION*/
        SELECT tmpAccount.*
-       FROM tmpAccount WHERE inDescCode = ''
+       FROM tmpAccount --WHERE inDescCode = ''
        ;
 
 END;
