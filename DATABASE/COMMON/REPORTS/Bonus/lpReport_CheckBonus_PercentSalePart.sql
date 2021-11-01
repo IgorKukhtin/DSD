@@ -630,7 +630,7 @@ BEGIN
                                     -- когда % возврата факт превышает % возврата план, бонус не начисляется
                                   , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact_weight > tmpContract.PercentRetBonus) THEN 0
                                                ELSE tmpMovement.Sum_Bonus
-                                          END  AS NUMERIC (16, 2)) AS Sum_Bonus
+                                          END  AS NUMERIC (16, 0)) AS Sum_Bonus
                                   , 0 :: TFloat                    AS Sum_BonusFact
                                   , 0 :: TFloat                    AS Sum_CheckBonusFact
                                   , 0 :: TFloat                    AS Sum_SaleFact
