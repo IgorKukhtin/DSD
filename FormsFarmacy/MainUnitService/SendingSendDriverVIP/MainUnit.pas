@@ -18,7 +18,7 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UtilTelegram,
-  cxDataControllerConditionalFormattingRulesManagerDialog;
+  cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges;
 
 type
   TMainForm = class(TForm)
@@ -236,7 +236,7 @@ begin
   Add_Log('Начало отправки сообщения: ' + qryDriver.FieldByName('Name').AsString);
 
   try
-    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsInteger, FMessage.Text) then
+    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsString, FMessage.Text) then
     begin
       FError := True;
       Add_Log(TelegramBot.ErrorText);

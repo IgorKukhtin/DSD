@@ -41,7 +41,7 @@ type
     cxLabel1: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
-    cbMovement: TcxCheckBox;
+    cbDetail: TcxCheckBox;
     cxLabel4: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
@@ -49,6 +49,7 @@ type
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
     deEnd: TcxDateEdit;
+    cbGoods: TcxCheckBox;
   private
     { Private declarations }
   public

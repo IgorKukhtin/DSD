@@ -1940,6 +1940,34 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
+    object actListDiffFormVIPSend: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1083#1080#1089#1090#1072#1084' '#1086#1090#1082#1072#1079#1086#1074
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1083#1080#1089#1090#1072#1084' '#1086#1090#1082#1072#1079#1086#1074
+      ImageIndex = 29
+      FormName = 'TListDiffFormVIPSendForm'
+      FormNameParam.Value = 'TListDiffFormVIPSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -2111,6 +2139,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbListDiffFormVIPSend'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2252,6 +2284,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object dxBarButton1: TdxBarButton
       Action = actOrderInternalZeroingSUA
+      Category = 0
+    end
+    object bbListDiffFormVIPSend: TdxBarButton
+      Action = actListDiffFormVIPSend
       Category = 0
     end
   end

@@ -97,6 +97,7 @@ type
     CommentCustomer: TcxGridDBColumn;
     MedicalProgramSPName: TcxGridDBColumn;
     isManual: TcxGridDBColumn;
+    isOffsetVIP: TcxGridDBColumn;
   private
     { Private declarations }
   public

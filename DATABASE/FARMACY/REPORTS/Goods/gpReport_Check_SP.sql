@@ -112,6 +112,7 @@ RETURNS TABLE (MovementId     Integer
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
              , NDS TFloat
+             , MedicalProgramSPName TVarChar
 )
 AS
 $BODY$

@@ -33,7 +33,7 @@ object MainForm: TMainForm
       Align = alTop
       TabOrder = 0
       object btnSendTelegram: TButton
-        Left = 775
+        Left = 661
         Top = 0
         Width = 130
         Height = 25
@@ -42,7 +42,7 @@ object MainForm: TMainForm
         OnClick = btnSendTelegramClick
       end
       object btnExport: TButton
-        Left = 711
+        Left = 597
         Top = 0
         Width = 58
         Height = 25
@@ -51,7 +51,7 @@ object MainForm: TMainForm
         OnClick = btnExportClick
       end
       object btnExecute: TButton
-        Left = 615
+        Left = 501
         Top = 0
         Width = 90
         Height = 25
@@ -69,7 +69,7 @@ object MainForm: TMainForm
         OnClick = btnAllClick
       end
       object btnAllLine: TButton
-        Left = 480
+        Left = 366
         Top = 0
         Width = 129
         Height = 25
@@ -78,13 +78,22 @@ object MainForm: TMainForm
         OnClick = btnAllLineClick
       end
       object btnTestSendTelegram: TButton
-        Left = 911
+        Left = 797
         Top = 0
         Width = 106
         Height = 25
         Caption = #1058#1077#1089#1090'. '#1089#1086#1086#1073#1097#1077#1085#1080#1077
         TabOrder = 5
         OnClick = btnTestSendTelegramClick
+      end
+      object btnTestSendManualTelegram: TButton
+        Left = 909
+        Top = 0
+        Width = 106
+        Height = 25
+        Caption = #1058#1077#1089#1090'. '#1089#1086#1086#1073#1097#1077#1085#1080#1077
+        TabOrder = 6
+        OnClick = btnTestSendManualTelegramClick
       end
     end
     object grChatId: TcxGrid

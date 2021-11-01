@@ -206,6 +206,10 @@ type
     spUpdatePriceSale: TdsdStoredProc;
     actPriceSaleDialog: TExecuteDialog;
     dxBarButton18: TdxBarButton;
+    cbOffsetVIP: TcxCheckBox;
+    actUpdate_OffsetVIP: TdsdExecStoredProc;
+    spUpdate_OffsetVIP: TdsdStoredProc;
+    dxBarButton19: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,25 +1,25 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 600
-  ClientWidth = 804
-  ExplicitWidth = 820
+  ClientWidth = 809
+  ExplicitWidth = 825
   ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 261
-    Width = 804
+    Width = 809
     Height = 219
     ExplicitTop = 261
     ExplicitWidth = 804
     ExplicitHeight = 219
     ClientRectBottom = 219
-    ClientRectRight = 804
+    ClientRectRight = 809
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 804
       ExplicitHeight = 195
       inherited cxGrid: TcxGrid
-        Width = 804
+        Width = 809
         Height = 195
         ExplicitWidth = 804
         ExplicitHeight = 195
@@ -286,7 +286,7 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 804
+    Width = 809
     Height = 235
     ExplicitWidth = 804
     ExplicitHeight = 235
@@ -611,7 +611,7 @@ inherited CheckForm: TCheckForm
       Width = 208
     end
     object cbCorrectIlliquidMarketing: TcxCheckBox
-      Left = 238
+      Left = 214
       Top = 213
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1085#1077#1083#1080#1082#1074#1080#1076#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
@@ -619,10 +619,10 @@ inherited CheckForm: TCheckForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 45
-      Width = 286
+      Width = 263
     end
     object cbDoctors: TcxCheckBox
-      Left = 508
+      Left = 479
       Top = 213
       Hint = #1042#1088#1072#1095#1080
       Caption = #1042#1088#1072#1095#1080
@@ -633,7 +633,7 @@ inherited CheckForm: TCheckForm
       Width = 61
     end
     object cbDiscountCommit: TcxCheckBox
-      Left = 564
+      Left = 538
       Top = 213
       Hint = #1042#1088#1072#1095#1080
       Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1089#1072#1081#1090#1077
@@ -641,7 +641,7 @@ inherited CheckForm: TCheckForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 47
-      Width = 181
+      Width = 159
     end
     object edZReport: TcxTextEdit
       Left = 667
@@ -654,6 +654,17 @@ inherited CheckForm: TCheckForm
       Left = 667
       Top = -1
       Caption = 'Z '#1086#1090#1095#1077#1090
+    end
+    object cbOffsetVIP: TcxCheckBox
+      Left = 703
+      Top = 213
+      Hint = #1042#1088#1072#1095#1080
+      Caption = #1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 50
+      Width = 94
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -829,11 +840,12 @@ inherited CheckForm: TCheckForm
   object cxGrid1: TcxGrid [27]
     Left = 0
     Top = 488
-    Width = 804
+    Width = 809
     Height = 112
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
+    ExplicitWidth = 804
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -956,11 +968,12 @@ inherited CheckForm: TCheckForm
   object cxSplitter1: TcxSplitter [28]
     Left = 0
     Top = 480
-    Width = 804
+    Width = 809
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
+    ExplicitWidth = 804
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
@@ -2016,6 +2029,7 @@ inherited CheckForm: TCheckForm
           StoredProc = spUpdate_ClearFiscal
         end>
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
       ImageIndex = 77
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077'?'
     end
@@ -2059,6 +2073,21 @@ inherited CheckForm: TCheckForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       ImageIndex = 75
+    end
+    object actUpdate_OffsetVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_OffsetVIP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_OffsetVIP
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
     end
   end
   inherited MasterDS: TDataSource
@@ -2199,6 +2228,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2327,6 +2360,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton18: TdxBarButton
       Action = actUpdatePriceSale
+      Category = 0
+    end
+    object dxBarButton19: TdxBarButton
+      Action = actUpdate_OffsetVIP
       Category = 0
     end
   end
@@ -2840,6 +2877,13 @@ inherited CheckForm: TCheckForm
         Name = 'ZReport'
         Value = Null
         Component = edZReport
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'idOffsetVIP'
+        Value = Null
+        Component = cbOffsetVIP
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -3631,7 +3675,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 210
+    Left = 162
     Top = 464
   end
   object spUpdateNDSKindId: TdsdStoredProc
@@ -3814,7 +3858,39 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 170
-    Top = 456
+    Left = 50
+    Top = 472
+  end
+  object spUpdate_OffsetVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_OffsetVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffsetVIP'
+        Value = False
+        Component = cbOffsetVIP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOffsetVIP'
+        Value = False
+        Component = cbOffsetVIP
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 258
+    Top = 441
   end
 end

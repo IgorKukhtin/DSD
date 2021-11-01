@@ -8,20 +8,20 @@ inherited OrderExternalForm: TOrderExternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 189
+    Top = 221
     Width = 1222
-    Height = 422
+    Height = 390
     ExplicitTop = 189
     ExplicitWidth = 1222
     ExplicitHeight = 422
-    ClientRectBottom = 422
+    ClientRectBottom = 390
     ClientRectRight = 1222
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1222
       ExplicitHeight = 398
       inherited cxGrid: TcxGrid
         Width = 1222
-        Height = 398
+        Height = 366
         ExplicitWidth = 1222
         ExplicitHeight = 398
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -313,10 +313,10 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited DataPanel: TPanel
     Width = 1222
-    Height = 163
+    Height = 195
     TabOrder = 3
     ExplicitWidth = 1222
-    ExplicitHeight = 163
+    ExplicitHeight = 195
     inherited edInvNumber: TcxTextEdit
       Left = 12
       ExplicitLeft = 12
@@ -410,20 +410,20 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 70
     end
     object cxLabel13: TcxLabel
-      Left = 663
-      Top = 85
+      Left = 664
+      Top = 83
       Caption = #1055#1088#1080#1084#1077#1095'. '#1082' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
     end
     object edOrderSummComment: TcxTextEdit
       Left = 663
-      Top = 101
+      Top = 99
       Properties.ReadOnly = True
       TabOrder = 14
       Width = 149
     end
     object cbDifferent: TcxCheckBox
       Left = 665
-      Top = 137
+      Top = 135
       Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       ParentShowHint = False
@@ -432,15 +432,15 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 133
     end
     object edLetterSubject: TcxTextEdit
-      Left = 400
-      Top = 137
+      Left = 12
+      Top = 172
       Properties.ReadOnly = False
       TabOrder = 16
-      Width = 250
+      Width = 799
     end
     object cxLabel14: TcxLabel
       Left = 12
-      Top = 122
+      Top = 120
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object cxLabel16: TcxLabel
@@ -464,7 +464,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object edTimeWork: TcxTextEdit
       Left = 818
-      Top = 101
+      Top = 99
       Properties.ReadOnly = True
       TabOrder = 21
       Width = 391
@@ -476,19 +476,19 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object cxLabel18: TcxLabel
       Left = 818
-      Top = 85
+      Top = 83
       Caption = #1042#1088#1077#1084#1103' '#1056#1072#1073#1086#1090#1099
     end
     object edPharmacyManager: TcxTextEdit
       Left = 818
-      Top = 137
+      Top = 135
       Properties.ReadOnly = True
       TabOrder = 24
       Width = 391
     end
     object cxLabel19: TcxLabel
       Left = 818
-      Top = 121
+      Top = 119
       Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
     end
   end
@@ -510,14 +510,14 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   object edComment: TcxTextEdit [4]
     Left = 12
-    Top = 137
+    Top = 135
     Properties.ReadOnly = False
     TabOrder = 8
     Width = 380
   end
   object cxLabel7: TcxLabel [5]
-    Left = 400
-    Top = 122
+    Left = 12
+    Top = 156
     Caption = #1058#1077#1084#1072' '#1087#1080#1089#1100#1084#1072' '
   end
   object cxLabel8: TcxLabel [6]
@@ -540,48 +540,48 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   object cxLabel9: TcxLabel [8]
     Left = 12
-    Top = 85
+    Top = 83
     Caption = #1044#1085#1080' '#1079#1072#1082#1072#1079#1072
   end
   object edZakaz_Text: TcxTextEdit [9]
     Left = 12
-    Top = 101
+    Top = 99
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 181
   end
   object cxLabel10: TcxLabel [10]
     Left = 202
-    Top = 85
+    Top = 83
     Caption = #1044#1085#1080' '#1087#1086#1089#1090#1072#1074#1082#1080
   end
   object edDostavka_Text: TcxTextEdit [11]
     Left = 202
-    Top = 101
+    Top = 99
     Properties.ReadOnly = True
     TabOrder = 15
     Width = 190
   end
   object cxLabel11: TcxLabel [12]
     Left = 400
-    Top = 85
+    Top = 83
     Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
   end
   object edOrderSumm: TcxTextEdit [13]
     Left = 400
-    Top = 101
+    Top = 99
     Properties.ReadOnly = True
     TabOrder = 17
     Width = 119
   end
   object cxLabel12: TcxLabel [14]
     Left = 533
-    Top = 85
+    Top = 83
     Caption = #1052#1072#1082#1089'. '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
   end
   object edOrderTime: TcxTextEdit [15]
     Left = 533
-    Top = 101
+    Top = 99
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 117

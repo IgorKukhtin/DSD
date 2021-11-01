@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Goods_LikiDnipro1303(
 )
 RETURNS TABLE (Id Integer
              , MorionCode Integer
+             , GoodsName TVarChar
              , isManual boolean
              , count TFloat
              , retail_price_without_vat TFloat
@@ -156,6 +157,7 @@ BEGIN
     -- Результат
     SELECT Min(tmpItem.Id)                                                                                     AS ID
          , vbMorion                                                                                            AS MorionCode
+         , Object_Goods_Main.Name                                                                              AS GoodsName  
          , vbisManual                                                                                          AS isManual
          , Sum(tmpItem.Amount)::TFloat                                                                         AS count
          , Round(inPriceSale * 100 / (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)), 2)::TFloat       AS retail_price_without_vat
@@ -217,6 +219,7 @@ BEGIN
                                                                             THEN Object_Goods_Main.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END
        GROUP BY ObjectFloat_NDSKind_NDS.ValueData
               , MIString_PartionGoods.ValueData 
+              , Object_Goods_Main.Name 
               , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())
        ;
 

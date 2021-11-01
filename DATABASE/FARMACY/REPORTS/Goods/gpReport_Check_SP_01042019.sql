@@ -112,6 +112,7 @@ RETURNS TABLE (MovementId     Integer
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
              , NDS TFloat
+             , MedicalProgramSPName TVarChar
 )
 AS
 $BODY$
@@ -771,6 +772,7 @@ BEGIN
              , tmpData.InsertDate_Check
 
              , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+             , Object_MedicalProgramSP.ValueData                            AS MedicalProgramSPName
 
         FROM tmpMI AS tmpData
              LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpData.JuridicalId
@@ -803,6 +805,11 @@ BEGIN
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
              LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                          ON MovementLinkObject_MedicalProgramSP.MovementId = tmpData.MovementId
+                                         AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+             LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementLinkObject_MedicalProgramSP.ObjectId
 
         ORDER BY Object_Unit.ValueData 
                , Object_Juridical.ValueData

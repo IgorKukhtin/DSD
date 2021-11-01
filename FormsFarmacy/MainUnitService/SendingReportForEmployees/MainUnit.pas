@@ -81,6 +81,7 @@ type
     cxGridDBChartSeries2: TcxGridDBChartSeries;
     cxGridLevel5: TcxGridLevel;
     btnTestSendTelegram: TButton;
+    btnTestSendManualTelegram: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -91,6 +92,7 @@ type
     procedure btnAllLineClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnTestSendTelegramClick(Sender: TObject);
+    procedure btnTestSendManualTelegramClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -350,7 +352,7 @@ begin
 end;
 
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
-  var Res : TArray<string>; I, ChatId : Int64;
+  var Res : TArray<string>; I : Integer; ChatId : String;
 begin
   if FMessage.Count = 0 then Exit;
 
@@ -358,7 +360,7 @@ begin
 
   Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
 
-  for I := 0 to High(Res) do if TryStrToInt64(Res[I], ChatId) then
+  for I := 0 to High(Res) do if (ChatId <> '') then
   try
 
     if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
@@ -389,10 +391,19 @@ begin
   if FileExists(SavePath + FileName) then DeleteFile(SavePath + FileName);
 end;
 
+procedure TMainForm.btnTestSendManualTelegramClick(Sender: TObject);
+  var AValues: array[0..1] of string;
+begin
+  AValues[1] := 'Тестовое сообщение...';
+  if not InputQuery('Отправка сообщения', ['ID или имя','Текст сообщения'], AValues) then Exit;
+
+  if (AValues[0] <> '') and (AValues[1] <> '') then TelegramBot.SendMessage(AValues[0], AValues[1]);
+end;
+
 procedure TMainForm.btnTestSendTelegramClick(Sender: TObject);
 begin
   if not TelegramBot.ChatIdCDS.IsEmpty and (TelegramBot.ChatIdCDS.FieldByName('Id').AsLargeInt <> 0) then
-    TelegramBot.SendMessage(TelegramBot.ChatIdCDS.FieldByName('Id').AsLargeInt, 'Тестовое сообщение...');
+    TelegramBot.SendMessage(TelegramBot.ChatIdCDS.FieldByName('Id').AsString, 'Тестовое сообщение...');
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -481,6 +492,8 @@ begin
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
       btnSendTelegram.Enabled := false;
+      btnTestSendTelegram.Enabled := false;
+      btnTestSendManualTelegram.Enabled := false;
       Timer1.Enabled := true;
     end;
   end;

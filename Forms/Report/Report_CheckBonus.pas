@@ -109,6 +109,10 @@ type
     edMember: TcxButtonEdit;
     actPrintSingDetail: TdsdPrintAction;
     bbPrintSingDetail: TdxBarButton;
+    cbDetail: TcxCheckBox;
+    cbGoods: TcxCheckBox;
+    spGet_Check: TdsdStoredProc;
+    actGet_Check: TdsdExecStoredProc;
   private
     { Private declarations }
   public

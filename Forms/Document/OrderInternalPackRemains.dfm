@@ -2,10 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1140
-  ExplicitLeft = -367
-  ExplicitTop = -93
   ExplicitWidth = 1156
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2299,6 +2297,28 @@
             Options.Editing = False
             Width = 70
           end
+          object chNormPack: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1099' '#1091#1087'. ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            DataBinding.FieldName = 'NormPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1099' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1085#1080#1103' ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            Options.Editing = False
+            Width = 70
+          end
+          object chHourPack_calc: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1091#1087'. , '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'HourPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1085#1080#1103', '#1095#1072#1089#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
           object chAmountPartnerPriorTotal: TcxGridDBColumn
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'AmountPartnerPriorTotal'
@@ -2855,9 +2875,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -3968,6 +3985,28 @@
             Options.Editing = False
             Width = 70
           end
+          object chtNormPack: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1099' '#1091#1087'. ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            DataBinding.FieldName = 'NormPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1088#1084#1099' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1085#1080#1103' ('#1074' '#1082#1075'/'#1095#1072#1089')'
+            Options.Editing = False
+            Width = 70
+          end
+          object chtHourPack_calc: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1091#1087'. , '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'HourPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1085#1080#1103', '#1095#1072#1089#1086#1074
+            Options.Editing = False
+            Width = 70
+          end
           object chtAmountPartnerPriorTotal: TcxGridDBColumn
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'AmountPartnerPriorTotal'
@@ -4531,6 +4570,9 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0

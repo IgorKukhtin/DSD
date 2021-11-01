@@ -389,7 +389,7 @@ begin
 
   FRESTRequest.AddParameter('position_id', FPositionCDS.FieldByName('position_id').AsString, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('morion_id', FDrugsCDS.FieldByName('MorionCode').AsString, TRESTRequestParameterKind.pkGETorPOST);
-  FRESTRequest.AddParameter('tradename', FPositionCDS.FieldByName('name_inn_ua').AsString, TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('tradename', FDrugsCDS.FieldByName('GoodsName').AsString, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('release_form', '', TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('dosage', '', TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('unit', '', TRESTRequestParameterKind.pkGETorPOST);

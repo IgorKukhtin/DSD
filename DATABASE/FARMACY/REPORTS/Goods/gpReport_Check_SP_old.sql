@@ -111,6 +111,7 @@ RETURNS TABLE (MovementId     Integer
              , InsertName_Check TVarChar
              , InsertDate_Check TDateTime
              , NDS TFloat
+             , MedicalProgramSPName TVarChar
 )
 AS
 $BODY$
@@ -861,6 +862,7 @@ BEGIN
              , tmpData.InsertDate_Check
 
              , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+             , Object_MedicalProgramSP.ValueData                            AS MedicalProgramSPName
              
         FROM tmpMI AS tmpData
              LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpData.JuridicalId
@@ -902,6 +904,12 @@ BEGIN
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
              LEFT JOIN Movement ON Movement.Id = tmpData.MovementId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                          ON MovementLinkObject_MedicalProgramSP.MovementId = tmpData.MovementId
+                                         AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+             LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementLinkObject_MedicalProgramSP.ObjectId
+             
         ORDER BY Object_Unit.ValueData 
                , Object_Juridical.ValueData
                , tmpGoodsSP.IntenalSPName
@@ -928,4 +936,3 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('31.12.2017')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
 -- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
 -- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
-

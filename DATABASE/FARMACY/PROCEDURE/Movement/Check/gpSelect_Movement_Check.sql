@@ -56,6 +56,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDiscountCommit Boolean
              , CommentCustomer TVarChar
              , isManual Boolean
+             , isOffsetVIP Boolean
               )
 AS
 $BODY$
@@ -172,6 +173,8 @@ BEGIN
 
            , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
            , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
+           
+           , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
            
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -464,6 +467,10 @@ BEGIN
                                          ON MovementLinkObject_Category1303.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
             LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                      ON MovementBoolean_OffsetVIP.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
       ;
 
 END;
