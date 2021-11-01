@@ -719,7 +719,7 @@ BEGIN
                                                   WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()       THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
                                                   WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentIncomeReturnS() THEN COALESCE (tmpMovement.Sum_IncomeReturnOut,0) / 100 * tmpContract.Value 
                                              ELSE 0 END
-                                     END  AS NUMERIC (16, 2)) AS Sum_Bonus
+                                     END  AS NUMERIC (16, 0)) AS Sum_Bonus
       
                              , 0 :: TFloat                  AS Sum_BonusFact
                              , 0 :: TFloat                  AS Sum_CheckBonusFact
