@@ -46,9 +46,9 @@ type
 
     procedure LoadChatId;
 
-    function SendMessage(AChatId : Int64; AMessage : string) : boolean;
-    function SendDocument(AChatId : Int64; ADocument, ACaption : string) : boolean;
-    function SendPhoto(AChatId : Int64; APhoto, ACaption : string) : boolean;
+    function SendMessage(AChatId : string; AMessage : string) : boolean;
+    function SendDocument(AChatId : string; ADocument, ACaption : string) : boolean;
+    function SendPhoto(AChatId : string; APhoto, ACaption : string) : boolean;
 
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
     property Id : Integer read FId;
@@ -186,6 +186,51 @@ function TTelegramBot.GetUpdates : integer;
   var jValue : TJSONValue;
       JSONA: TJSONArray;
       I : integer;
+
+  procedure AddChatId (AValue : TJSONValue);
+  begin
+    if AValue = nil then Exit;
+
+    if FChatIdCDS.Locate('ID', StrToInt64(AValue.FindValue('id').ToString), []) then
+    begin
+      if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(AValue.FindValue('first_name'))) or
+         (FChatIdCDS.FieldByName('LastName').AsString <> DelDoubleQuote(AValue.FindValue('last_name'))) or
+         (FChatIdCDS.FieldByName('UserName').AsString <> DelDoubleQuote(AValue.FindValue('username'))) then
+      begin
+        FChatIdCDS.Edit;
+        FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(AValue.FindValue('id').ToString);
+        FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(AValue.FindValue('first_name'));
+        FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(AValue.FindValue('last_name'));
+        FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(AValue.FindValue('username'));
+        FChatIdCDS.Post;
+      end;
+    end else
+    if (DelDoubleQuote(AValue.FindValue('username')) <> '') and
+       FChatIdCDS.Locate('UserName', DelDoubleQuote(AValue.FindValue('username')), [loCaseInsensitive]) then
+    begin
+      if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(AValue.FindValue('first_name'))) or
+         (FChatIdCDS.FieldByName('ID').AsLargeInt <> StrToInt64(AValue.FindValue('id').ToString)) then
+      begin
+        FChatIdCDS.Edit;
+        FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(AValue.FindValue('id').ToString);
+        FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(AValue.FindValue('first_name'));
+        FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(AValue.FindValue('last_name'));
+        FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(AValue.FindValue('username'));
+        FChatIdCDS.Post;
+      end;
+    end else
+    begin
+      FChatIdCDS.Last;
+      FChatIdCDS.Append;
+      FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(AValue.FindValue('id').ToString);
+      FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(AValue.FindValue('first_name'));
+      FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(AValue.FindValue('last_name'));
+      FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(AValue.FindValue('username'));
+      FChatIdCDS.Post;
+    end;
+  end;
+
+
 begin
 
   Result := 0;
@@ -227,46 +272,8 @@ begin
       Fupdate_id := StrToInt64(jValue.FindValue('update_id').ToString);
       jValue := jValue.FindValue('message');
       if jValue = nil then Continue;
-      jValue := jValue.FindValue('chat');
-      if jValue = nil then Continue;
-
-      if FChatIdCDS.Locate('ID', StrToInt64(jValue.FindValue('id').ToString), []) then
-      begin
-        if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
-           (FChatIdCDS.FieldByName('LastName').AsString <> DelDoubleQuote(jValue.FindValue('last_name'))) or
-           (FChatIdCDS.FieldByName('UserName').AsString <> DelDoubleQuote(jValue.FindValue('username'))) then
-        begin
-          FChatIdCDS.Edit;
-          FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
-          FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
-          FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
-          FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
-          FChatIdCDS.Post;
-        end;
-      end else
-      if (DelDoubleQuote(jValue.FindValue('username')) <> '') and
-         FChatIdCDS.Locate('UserName', DelDoubleQuote(jValue.FindValue('username')), [loCaseInsensitive]) then
-      begin
-        if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
-           (FChatIdCDS.FieldByName('ID').AsLargeInt <> StrToInt64(jValue.FindValue('id').ToString)) then
-        begin
-          FChatIdCDS.Edit;
-          FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
-          FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
-          FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
-          FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
-          FChatIdCDS.Post;
-        end;
-      end else
-      begin
-        FChatIdCDS.Last;
-        FChatIdCDS.Append;
-        FChatIdCDS.FieldByName('ID').AsLargeInt := StrToInt64(jValue.FindValue('id').ToString);
-        FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
-        FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
-        FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
-        FChatIdCDS.Post;
-      end;
+      if jValue.FindValue('from') <> nil then AddChatId(jValue.FindValue('from'));
+      if jValue.FindValue('chat') <> nil then AddChatId(jValue.FindValue('chat'));
     end;
 
   end else FError := FRESTResponse.StatusText;;
@@ -285,7 +292,7 @@ begin
 
 end;
 
-function TTelegramBot.SendMessage(AChatId : Int64; AMessage : string) : boolean;
+function TTelegramBot.SendMessage(AChatId : string; AMessage : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -298,7 +305,7 @@ begin
   FRESTRequest.Resource := '/sendMessage';
   // required parameters
   FRESTRequest.Params.Clear;
-  FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('chat_id', AChatId, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('text', AMessage, TRESTRequestParameterKind.pkGETorPOST);
 
   try
@@ -322,7 +329,7 @@ begin
   end else FError := FRESTResponse.StatusText;;
 end;
 
-function TTelegramBot.SendDocument(AChatId : Int64; ADocument, ACaption : string) : boolean;
+function TTelegramBot.SendDocument(AChatId : string; ADocument, ACaption : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -336,7 +343,7 @@ begin
   FRESTRequest.Resource := '/sendDocument';
   // required parameters
   FRESTRequest.Params.Clear;
-  FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('chat_id', AChatId, TRESTRequestParameterKind.pkGETorPOST);
   if ACaption <> '' then
     FRESTRequest.AddParameter('caption', ACaption, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('document', ADocument, TRESTRequestParameterKind.pkFILE);
@@ -362,7 +369,7 @@ begin
 
 end;
 
-function TTelegramBot.SendPhoto(AChatId : Int64; APhoto, ACaption : string) : boolean;
+function TTelegramBot.SendPhoto(AChatId : string; APhoto, ACaption : string) : boolean;
   var jValue : TJSONValue;
 begin
   Result := False;
@@ -376,7 +383,7 @@ begin
   FRESTRequest.Resource := '/sendPhoto';
   // required parameters
   FRESTRequest.Params.Clear;
-  FRESTRequest.AddParameter('chat_id', IntToStr(AChatId), TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('chat_id', AChatId, TRESTRequestParameterKind.pkGETorPOST);
   if ACaption <> '' then
     FRESTRequest.AddParameter('caption', ACaption, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('photo', APhoto, TRESTRequestParameterKind.pkFILE);

@@ -691,8 +691,7 @@ BEGIN
                                               AND _tmpGoods_Sun_exception_Supplement.GoodsId = tmpObject_Price.GoodsId
 
        ;
-       
-       
+              
      
      IF EXISTS (SELECT 1
                 FROM _tmpGoods_SUN_Supplement 
@@ -701,11 +700,13 @@ BEGIN
                        COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
      THEN
 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
+--       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT (SUM(Container.Amount)) 
                                                          FROM Container 
                                                          WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
                                                            AND Container.Amount <> 0
-                                                           AND Container.WhereObjectId = _tmpRemains_all_Supplement.UnitId)
+                                                           AND Container.WhereObjectId = _tmpRemains_all_Supplement.UnitId
+                                                           AND Container.DescId = zc_Container_Count())
        FROM (SELECT _tmpGoods_SUN_Supplement.GoodsId
                   , _tmpGoods_SUN_Supplement.UnitOutId
                   , _tmpGoods_SUN_Supplement.UnitOut2Id
@@ -723,7 +724,8 @@ BEGIN
                                                                 WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
                                                                   AND Container.Amount <> 0
                                                                   AND (Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
-                                                                       Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))) / 
+                                                                       Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))
+                                                                  AND Container.DescId = zc_Container_Count()) / 
                                                                (SELECT count(*) 
                                                                 FROM _tmpRemains_all_Supplement AS Remains_all
                                                                 WHERE Remains_all.GoodsId = _tmpRemains_all_Supplement.GoodsId
@@ -848,6 +850,11 @@ BEGIN
      UPDATE _tmpRemains_all_Supplement SET Need = - floor(_tmpRemains_all_Supplement.AmountRemains)
      WHERE (_tmpRemains_all_Supplement.AmountRemains + _tmpRemains_all_Supplement.Need) < 0;
 
+     /*raise notice 'Value 05: %',
+                 (SELECT COALESCE(_tmpRemains_all_Supplement.AmountRemains, 0)::TVArChar||'  '||
+                         COALESCE(_tmpRemains_all_Supplement.Need, 0)::TVArChar||'  '||
+                         COALESCE(_tmpRemains_all_Supplement.GiveAway, 0)::TVArChar 
+                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = 13711869 AND _tmpRemains_all_Supplement.GoodsId = 51814);*/
 
      -- 3. распределяем
      --
@@ -859,24 +866,24 @@ BEGIN
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                      ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                        COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
                                                                        + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) 
                                                                    THEN _tmpRemains_all_Supplement.AmountNotSend
                                                                    ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
-                                                                      + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
+                                                                      + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                       END
                  ELSE
-                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 TRUNC (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                              THEN - _tmpRemains_all_Supplement.AmountRemains
-                             ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                             ELSE FLOOR(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                               COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
                                                                               + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) 
                                                                           THEN _tmpRemains_all_Supplement.AmountNotSend
                                                                           ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
-                                                                             + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
+                                                                             + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END END AS Need
              , COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
@@ -901,16 +908,16 @@ BEGIN
              CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                      ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
+                      ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                        COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
                                                                        + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) 
                                                                    THEN _tmpRemains_all_Supplement.AmountNotSend
                                                                    ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
-                                                                      + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)::Integer
+                                                                      + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                       END
                  ELSE
-                 FLOOR (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 TRUNC (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
                              THEN - _tmpRemains_all_Supplement.AmountRemains
                              ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -1001,13 +1008,30 @@ BEGIN
              -- данные по Автозаказ
              FETCH curResult_next INTO vbUnitId_to, vbNeed;
              -- если данные закончились, или все кол-во найдено тогда выход
+             IF NOT FOUND OR (vbSurplus) <= 0 THEN EXIT; END IF;
+
+             INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
+               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END);
+
+             UPDATE _tmpRemains_all_Supplement SET AmountUse = AmountUse + CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END
+             WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_to
+               AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
+
+             vbSurplus := vbSurplus - CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END;
+
+
+
+
+/*             -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
 
-/*             IF vbUnitId_to = 377610 AND vbGoodsId = 12918138
+             IF vbUnitId_to = 377610 AND vbGoodsId = 51814
              THEN
-               raise notice 'Value 05: % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END;
+               raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
+                 (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
+                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
              END IF;
-*/
+
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
 
@@ -1016,7 +1040,7 @@ BEGIN
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
 
              vbSurplus := vbSurplus - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
-
+*/
          END LOOP; -- финиш цикла по курсору2
          CLOSE curResult_next; -- закрыли курсор2.
 
@@ -1122,4 +1146,4 @@ $BODY$
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('01.11.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('02.11.2021')::TDateTime ,  inSession := '3');

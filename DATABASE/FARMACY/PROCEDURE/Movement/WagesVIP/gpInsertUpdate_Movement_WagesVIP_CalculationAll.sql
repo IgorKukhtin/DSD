@@ -73,6 +73,7 @@ BEGIN
                                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
                                                        AND MovementString_InvNumberOrder.ValueData <> ''
 
+
                               LEFT JOIN MovementBoolean AS MovementBoolean_CallOrder
                                                         ON MovementBoolean_CallOrder.MovementId = Movement.Id
                                                        AND MovementBoolean_CallOrder.DescId = zc_MovementBoolean_CallOrder()
@@ -85,7 +86,25 @@ BEGIN
                            AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
                            AND Movement.DescId = zc_Movement_Check()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                      )
+                         UNION ALL
+                         SELECT Movement.*
+                              , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+                              , False                                                          AS isCallOrder
+                         FROM Movement
+
+                              INNER JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                                        ON MovementBoolean_OffsetVIP.MovementId = Movement.Id
+                                                       AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
+                                                       AND MovementBoolean_OffsetVIP.ValueData = TRUE
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                         
+                         WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
+                           AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                           AND Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_Complete())
                       
     SELECT SUM(CASE WHEN Movement.isCallOrder = TRUE THEN Movement.TotalSumm END)
          , SUM(CASE WHEN Movement.isCallOrder = FALSE THEN Movement.TotalSumm END)

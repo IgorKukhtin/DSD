@@ -561,6 +561,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 70
           end
+          object isOffsetVIP: TcxGridDBColumn
+            Caption = #1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084
+            DataBinding.FieldName = 'isOffsetVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end

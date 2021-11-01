@@ -161,6 +161,8 @@ type
     actOrderInternalZeroingSUA: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     spPUSHZeroingSUA: TdsdStoredProc;
+    actListDiffFormVIPSend: TdsdOpenForm;
+    bbListDiffFormVIPSend: TdxBarButton;
   private
     { Private declarations }
   public

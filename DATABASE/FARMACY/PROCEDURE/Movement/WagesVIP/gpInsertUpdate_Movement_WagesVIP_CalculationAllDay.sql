@@ -80,7 +80,25 @@ BEGIN
                              AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                              AND Movement.DescId = zc_Movement_Check()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                        )
+                         UNION ALL
+                         SELECT Movement.*
+                              , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+                              , False                                                          AS isCallOrder
+                         FROM Movement
+
+                              INNER JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                                        ON MovementBoolean_OffsetVIP.MovementId = Movement.Id
+                                                       AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
+                                                       AND MovementBoolean_OffsetVIP.ValueData = TRUE
+
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                         
+                         WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
+                           AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                           AND Movement.DescId = zc_Movement_Check()
+                           AND Movement.StatusId = zc_Enum_Status_Complete())
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR'))    AS OperDate
                                    FROM tmpMovement AS Movement

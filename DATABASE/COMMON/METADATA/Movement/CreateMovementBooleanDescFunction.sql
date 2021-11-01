@@ -372,10 +372,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_OffsetVIP() RETURNS integer AS $BO
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_OffsetVIP', 'Зачет ВИПам'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_OffsetVIP');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_UseSubject() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_UseSubject'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_UseSubject', 'Использовать тему из документа'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_UseSubject');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 01.11.21                                                                                   * zc_MovementBoolean_UseSubject
  29.10.21                                                                                   * zc_MovementBoolean_OffsetVIP
  26.10.21                                                                                   * zc_MovementBoolean_Manual
  27.09.21         * zc_MovementBoolean_Export

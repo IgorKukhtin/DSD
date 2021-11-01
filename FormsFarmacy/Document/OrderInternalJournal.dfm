@@ -277,22 +277,31 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Category = 'Status'
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Category = 'Status'
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Category = 'Status'
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Category = 'Status'
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Category = 'Status'
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
+      Category = 'Status'
+    end
+    inherited mactSimpleCompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited mactSimpleUncompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited mactSimpleErasedList: TMultiAction
       Category = 'Status'
     end
     inherited spCompete: TdsdExecStoredProc
@@ -302,15 +311,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       Category = 'Status'
     end
     inherited spErased: TdsdExecStoredProc
-      Category = 'Status'
-    end
-    inherited actSimpleCompleteList: TMultiAction
-      Category = 'Status'
-    end
-    inherited actSimpleUncompleteList: TMultiAction
-      Category = 'Status'
-    end
-    inherited actSimpleErased: TMultiAction
       Category = 'Status'
     end
     object actPrint: TdsdPrintAction
