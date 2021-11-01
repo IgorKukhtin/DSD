@@ -535,6 +535,10 @@ type
     actInsUpPromoStat_Master_calc: TdsdExecStoredProc;
     macInsUpPromoStat_Master_calc: TMultiAction;
     bbInsUpPromoStat_Master_calc: TdxBarButton;
+    spInsUpPromoPlan_Master_calc: TdsdStoredProc;
+    actInsUpPromoPlan_Master_calc: TdsdExecStoredProc;
+    macInsUpPromoPlan_Master_calc: TMultiAction;
+    bbInsUpPromoPlan_Master_calc: TdxBarButton;
   private
     { Private declarations }
   public

@@ -75,11 +75,16 @@ BEGIN
     RETURN QUERY
     WITH
     tmpMI AS (SELECT MovementItem.*
-                   , ROW_NUMBER() OVER(ORDER BY MovementItem.Id) AS Ord
+                   , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                   , ROW_NUMBER() OVER(PARTITION BY MovementItem.ObjectId , MILinkObject_GoodsKind.ObjectId ORDER BY MovementItem.Id) AS Ord
               FROM Movement
                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                          AND MovementItem.DescId = zc_MI_Master()
                                          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
+                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  --LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
               WHERE Movement.DescId = zc_Movement_PromoStat()
                 AND Movement.ParentId = inMovementId
               )
@@ -90,7 +95,9 @@ BEGIN
                                                     , zc_MIFloat_PlanBranch1(), zc_MIFloat_PlanBranch2(), zc_MIFloat_PlanBranch3(), zc_MIFloat_PlanBranch4(), zc_MIFloat_PlanBranch5(), zc_MIFloat_PlanBranch6(), zc_MIFloat_PlanBranch7())
                   )
   -- выбираем данные план и находим среднее значение за 1 день, план выбирался за 5 недель, поэтому /5
-  , tmpMIFloat_avg AS (SELECT SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan1(), zc_MIFloat_PlanBranch1()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan1
+  , tmpMIFloat_avg AS (SELECT tmpMI.ObjectId
+                            , tmpMI.GoodsKindId
+                            , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan1(), zc_MIFloat_PlanBranch1()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan1
                             , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan2(), zc_MIFloat_PlanBranch2()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan2
                             , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan3(), zc_MIFloat_PlanBranch3()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan3
                             , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan4(), zc_MIFloat_PlanBranch4()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan4
@@ -98,18 +105,23 @@ BEGIN
                             , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan6(), zc_MIFloat_PlanBranch6()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan6
                             , SUM (CASE WHEN tmpMIFloat.DescId IN (zc_MIFloat_Plan7(), zc_MIFloat_PlanBranch7()) THEN COALESCE (tmpMIFloat.ValueData,0) ELSE 0 END)/5 AS Plan7
                        FROM tmpMIFloat
+                            LEFT JOIN tmpMI ON tmpMI.Id = tmpMIFloat.MovementItemId
+                       GROUP BY tmpMI.ObjectId
+                              , tmpMI.GoodsKindId
                        )
   --даты продаж
   , tmpListDateSale AS (SELECT generate_series(vbStartSale::TDateTime, vbEndSale::TDateTime, '1 DAY'::interval) AS OperDate)
   
   -- считаем план на даты продаж акции
-  , tmpCalc AS (SELECT SUM (CASE WHEN tmpWeekDay.Number = 1 THEN (SELECT tmp.Plan1 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount1
-                     , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN (SELECT tmp.Plan2 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount2
-                     , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN (SELECT tmp.Plan3 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount3
-                     , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN (SELECT tmp.Plan4 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount4
-                     , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN (SELECT tmp.Plan5 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount5
-                     , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN (SELECT tmp.Plan6 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount6
-                     , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN (SELECT tmp.Plan7 FROM tmpMIFloat_avg AS tmp) ELSE 0 END) Amount7
+  , tmpCalc AS (SELECT tmpGoods.ObjectId AS GoodsId
+                     , tmpGoods.GoodsKindId
+                     , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN COALESCE (tmpMIFloat_avg.Plan1,0) ELSE 0 END) Amount1
+                     , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN COALESCE (tmpMIFloat_avg.Plan2,0) ELSE 0 END) Amount2
+                     , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN COALESCE (tmpMIFloat_avg.Plan3,0) ELSE 0 END) Amount3
+                     , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN COALESCE (tmpMIFloat_avg.Plan4,0) ELSE 0 END) Amount4
+                     , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN COALESCE (tmpMIFloat_avg.Plan5,0) ELSE 0 END) Amount5
+                     , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0) ELSE 0 END) Amount6
+                     , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0) ELSE 0 END) Amount7
                      --кол-во дней ПН, ВТ, СР, ЧТ, ПТ, СБ, ВС
                      , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) WeekDay1
                      , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) WeekDay2
@@ -120,6 +132,10 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) WeekDay7
                 FROM tmpListDateSale
                     LEFT JOIN zfCalc_DayOfWeekName (tmpListDateSale.OperDate) AS tmpWeekDay ON 1=1
+                    LEFT JOIN (SELECT tmpMI.ObjectId, tmpMI.GoodsKindId FROM tmpMI WHERE tmpMI.Ord = 1) AS tmpGoods ON  1=1
+                    LEFT JOIN tmpMIFloat_avg ON tmpMIFloat_avg.ObjectId = tmpGoods.ObjectId
+                GROUP BY tmpGoods.ObjectId
+                       , tmpGoods.GoodsKindId
                 )
 
 
@@ -221,11 +237,7 @@ BEGIN
                                  AND MIFloat_PlanBranch7.DescId = zc_MIFloat_PlanBranch7() 
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-             
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
-                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MovementItem.GoodsKindId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -240,7 +252,9 @@ BEGIN
                                          ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-             LEFT JOIN tmpCalc ON MovementItem.Ord = 1 --привязываем к 1 строке
+             LEFT JOIN tmpCalc ON tmpCalc.GoodsId = MovementItem.ObjectId
+                              AND tmpCalc.GoodsKindId = MovementItem.GoodsKindId
+                              AND MovementItem.Ord = 1 --привязываем к 1 строке
             ;
 
 END;
