@@ -73,6 +73,7 @@ type
     PartnerMin: TcxGridDBColumn;
     spUpdate_Car_size: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public

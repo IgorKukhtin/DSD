@@ -242,7 +242,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 28
-    Width = 80
+    Width = 60
   end
   object cxLabel12: TcxLabel
     Left = 32
@@ -250,34 +250,49 @@
     Caption = #1044#1083#1080#1085#1072', '#1084#1084
   end
   object cxLabel13: TcxLabel
-    Left = 225
+    Left = 170
     Top = 402
     Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
   end
   object edWidth: TcxCurrencyEdit
-    Left = 129
+    Left = 101
     Top = 416
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 31
-    Width = 80
+    Width = 60
   end
   object cxLabel14: TcxLabel
-    Left = 129
+    Left = 101
     Top = 402
     Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
   end
   object edHeight: TcxCurrencyEdit
-    Left = 225
+    Left = 170
     Top = 416
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 33
-    Width = 80
+    Width = 60
+  end
+  object cxLabel15: TcxLabel
+    Left = 240
+    Top = 402
+    Caption = #1042#1077#1089', '#1082#1075
+  end
+  object edWeight: TcxCurrencyEdit
+    Left = 240
+    Top = 416
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 35
+    Width = 65
   end
   object ActionList: TActionList
     Left = 240
@@ -442,6 +457,14 @@
         Name = 'inHeight'
         Value = Null
         Component = edHeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = edWeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -638,6 +661,13 @@
         Name = 'Height'
         Value = Null
         Component = edHeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight'
+        Value = Null
+        Component = edWeight
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

@@ -194,13 +194,15 @@ object CarForm: TCarForm
         HeaderHint = #1042#1099#1089#1086#1090#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
         Width = 57
       end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
+      object Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089', '#1082#1075
+        DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
+        HeaderHint = #1054#1073#1097#1080#1081' '#1074#1077#1089' '#1072#1074#1090#1086', '#1082#1075
+        Width = 75
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -212,6 +214,14 @@ object CarForm: TCarForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 72
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -735,6 +745,15 @@ object CarForm: TCarForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Height'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Weight'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -1,12 +1,14 @@
  -- Function: gpUpdate_Object_Car_size()
 
-DROP FUNCTION IF EXISTS  gpUpdate_Object_Car_size (Integer, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpUpdate_Object_Car_size (Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpUpdate_Object_Car_size (Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Car_size(
       IN inId               Integer,     -- ид
       IN inLength           TFloat ,     -- 
       IN inWidth            TFloat ,     -- 
-      IN inHeight           TFloat ,     -- 
+      IN inHeight           TFloat ,     --
+      IN inWeight           TFloat ,     --
       IN inSession          TVarChar     -- Пользователь
       )
   RETURNS Void AS
@@ -28,6 +30,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Height(), inId, inHeight);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Width(), inId, inWidth);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Weight(), inId, inWeight);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -39,6 +43,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.11.21         * add inWeight
  05.10.21         *
 */
 

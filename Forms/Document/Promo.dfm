@@ -842,6 +842,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1252,6 +1255,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1580,6 +1586,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1894,6 +1903,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2184,7 +2196,7 @@
           end
           object AmountPlan6_ch5: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 6 ('#1044#1085#1077#1087#1088')'
-            DataBinding.FieldName = 'AmountPlan66'
+            DataBinding.FieldName = 'AmountPlan6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2289,6 +2301,182 @@
             Options.Editing = False
             Width = 70
           end
+          object Amount1_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 1'
+            DataBinding.FieldName = 'Amount1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1087#1085'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount2_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 2'
+            DataBinding.FieldName = 'Amount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1042#1090'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount3_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 3'
+            DataBinding.FieldName = 'Amount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1057#1088'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount4_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 4'
+            DataBinding.FieldName = 'Amount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1063#1090'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount5_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 5'
+            DataBinding.FieldName = 'Amount5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1055#1090'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount6_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 6'
+            DataBinding.FieldName = 'Amount6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1057#1073'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object Amount7_ch5: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1079#1072' 7'
+            DataBinding.FieldName = 'Amount7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1087#1086' '#1076#1085#1103#1084' '#1072#1082#1094#1080#1080' '#1079#1072' '#1042#1089'.'
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay1_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 1'
+            DataBinding.FieldName = 'WeekDay1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1085
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay2_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 2'
+            DataBinding.FieldName = 'WeekDay2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay3_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 3'
+            DataBinding.FieldName = 'WeekDay3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay4_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 4'
+            DataBinding.FieldName = 'WeekDay4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay5_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 5'
+            DataBinding.FieldName = 'WeekDay5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay6_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 6'
+            DataBinding.FieldName = 'WeekDay6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object WeekDay7_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' 7'
+            DataBinding.FieldName = 'WeekDay7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
           object plisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -2307,6 +2495,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2456,6 +2647,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = #1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2649,6 +2843,9 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -2842,6 +3039,9 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1087#1088'-'#1074#1072
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -2850,7 +3050,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -127
         object cxGridDBTableViewPlanChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanChildDS

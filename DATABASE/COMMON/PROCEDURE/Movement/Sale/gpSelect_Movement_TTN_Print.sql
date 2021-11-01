@@ -164,9 +164,10 @@ BEGIN
                                           AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
                      )
      , tmpCar_param AS (SELECT tmp.CarId
-                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE ObjectFloat_Length.ValueData ::TVarChar END :: TVarChar  AS Length
-                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE ObjectFloat_Width.ValueData   ::TVarChar END :: TVarChar  AS Width 
-                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE ObjectFloat_Height.ValueData ::TVarChar END :: TVarChar  AS Height
+                             , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
+                             , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
+                             , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
+                             , ObjectFloat_Weight.ValueData AS Weight
                         FROM (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT DISTINCT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods) AS tmp
                              ---
                              LEFT JOIN ObjectFloat AS ObjectFloat_Length
@@ -178,6 +179,9 @@ BEGIN
                              LEFT JOIN ObjectFloat AS ObjectFloat_Height
                                                    ON ObjectFloat_Height.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Height.DescId = zc_ObjectFloat_Car_Height()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                   ON ObjectFloat_Weight.ObjectId = tmp.CarId
+                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
                         )
 
        --          
@@ -254,7 +258,11 @@ BEGIN
           , tmpCar_param.Length :: TVarChar  AS Length
           , tmpCar_param.Width  :: TVarChar  AS Width 
           , tmpCar_param.Height :: TVarChar  AS Height
-
+          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN '' ELSE (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) ::TVarChar END :: TVarChar AS Weight_car
+          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN ''
+                 ELSE CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
+                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0))) AS NUMERIC (16,0))  ::TVarChar END ::TVarChar AS Weight_all
+ 
           , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
           , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
           , tmpCarTrailer_param.Height :: TVarChar  AS Height_tr

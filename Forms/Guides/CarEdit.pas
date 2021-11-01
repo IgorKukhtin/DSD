@@ -74,6 +74,8 @@ type
     edWidth: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edHeight: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edWeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -3850,10 +3850,6 @@
 				<Form>PromoStateKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Promo.pas">
-				<Form>PromoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Cash_Olap.pas">
 				<Form>Report_Cash_OlapForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4566,6 +4562,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ModelService_Object.pas">
 				<Form>ModelService_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

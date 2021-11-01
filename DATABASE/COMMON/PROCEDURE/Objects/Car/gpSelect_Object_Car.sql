@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
              , KoeffHoursWork TFloat, PartnerMin TFloat
              , Length TFloat, Width TFloat, Height TFloat
+             , Weight TFloat
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -43,9 +44,10 @@ BEGIN
            
            , COALESCE (ObjectFloat_KoeffHoursWork.ValueData,0) :: TFloat AS KoeffHoursWork
            , COALESCE (ObjectFloat_PartnerMin.ValueData,0)     :: TFloat AS PartnerMin
-           , COALESCE (ObjectFloat_Length.ValueData,0)         :: TFloat  AS Length
-           , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat  AS Width 
-           , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat  AS Height
+           , COALESCE (ObjectFloat_Length.ValueData,0)         :: TFloat AS Length
+           , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat AS Width 
+           , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat AS Height
+           , COALESCE (ObjectFloat_Weight.ValueData,0)         :: TFloat AS Weight
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData        AS Comment
@@ -112,7 +114,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Height
                                   ON ObjectFloat_Height.ObjectId = Object_Car.Id
                                  AND ObjectFloat_Height.DescId = zc_ObjectFloat_Car_Height()
-                                 
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
+
             LEFT JOIN ObjectLink AS Car_CarModel
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()

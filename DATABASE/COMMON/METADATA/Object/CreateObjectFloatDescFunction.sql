@@ -1109,6 +1109,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_Height() RETURNS Integer AS $BODY$
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Car_Height', zc_Object_Car(), 'высота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Height');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_Weight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Weight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Car_Weight', zc_Object_Car(), 'Вес авто' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Weight');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
