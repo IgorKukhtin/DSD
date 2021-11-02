@@ -497,8 +497,8 @@ type
     actRefreshInvoice: TdsdDataSetRefresh;
     StartDate_stat: TcxGridDBColumn;
     EndDate_stat: TcxGridDBColumn;
-    cxTabSheet1: TcxTabSheet;
-    cxTabSheet2: TcxTabSheet;
+    cxTabSheetPlanSale: TcxTabSheet;
+    cxTabSheetPlanProd: TcxTabSheet;
     cxGridPlanMaster: TcxGrid;
     cxGridDBTableViewPlanMaster: TcxGridDBTableView;
     OperDate_plan1: TcxGridDBColumn;
