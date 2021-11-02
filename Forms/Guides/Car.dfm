@@ -215,6 +215,22 @@ object CarForm: TCarForm
         Options.Editing = False
         Width = 72
       end
+      object Year: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
+        DataBinding.FieldName = 'Year'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object VIN: TcxGridDBColumn
+        Caption = 'VIN '#1082#1086#1076
+        DataBinding.FieldName = 'VIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 92
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -755,6 +771,24 @@ object CarForm: TCarForm
         Component = ClientDataSet
         ComponentItem = 'Weight'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYear'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Year'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'VIN'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -1187,11 +1187,14 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       DataSource = TaxDS
     end
     object mactPrint_TTN: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       ActionList = <
         item
           Action = actDialog_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
         end
         item
           Action = actPrint_TTN
@@ -1201,7 +1204,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       ImageIndex = 15
     end
     object actDialog_TTN: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       Caption = 'actDialog_TTN'
       Hint = 'actDialog_TTN'
@@ -1235,7 +1238,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       isShowModal = True
     end
     object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrintTTN
       StoredProcList = <
@@ -1264,12 +1267,25 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -1585,6 +1601,13 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       item
         Name = 'inMask'
         Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2698,7 +2721,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         MultiSelectSeparator = ','
       end>
     Left = 560
-    Top = 144
+    Top = 160
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2779,8 +2802,8 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 728
-    Top = 144
+    Left = 720
+    Top = 168
   end
   object PaidKindToGuides: TdsdGuides
     KeyField = 'Id'
@@ -2838,8 +2861,8 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 144
+    Left = 664
+    Top = 168
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -3302,5 +3325,30 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       end>
     Left = 352
     Top = 8
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 504
   end
 end

@@ -637,6 +637,30 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    object actUpdateAmountPartnerList: TMultiAction [11]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateAmountPartnerList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050 +
+        #1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')>?'
+      InfoAfterExecute = 
+        #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077 +
+        #1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
+      ImageIndex = 41
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPrice_BranchForm'
       FormNameParam.Value = 'TSendOnPrice_BranchForm'
@@ -671,30 +695,6 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-    end
-    object actUpdateAmountPartnerList: TMultiAction [11]
-      Category = 'UpdateAmount'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = spUpdateAmountPartnerList
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050 +
-        #1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')>?'
-      InfoAfterExecute = 
-        #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077 +
-        #1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
-      Caption = 
-        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
-        #1076')>'
-      Hint = 
-        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
-        #1076')>'
-      ImageIndex = 41
     end
     object spUpdateAmountPartner: TdsdExecStoredProc [21]
       Category = 'UpdateAmount'
@@ -765,7 +765,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Name = 'PrintParam'
-          Value = '3'
+          Value = 3.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -821,7 +821,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -928,7 +928,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Name = 'PrintParam'
-          Value = '2'
+          Value = 2.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -971,7 +971,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1026,6 +1026,8 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1071,7 +1073,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -1101,6 +1103,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Action = actGet_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
         end
         item
           Action = actPrint_TTN
@@ -1156,6 +1161,17 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1185,7 +1201,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1491,6 +1507,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1613,7 +1636,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1748,7 +1771,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1781,7 +1804,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -1853,7 +1876,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1861,5 +1884,30 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     PackSize = 1
     Left = 567
     Top = 176
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 144
   end
 end

@@ -76,6 +76,10 @@ type
     edHeight: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
     edWeight: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    edYear: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edVIN: TcxTextEdit;
   private
     { Private declarations }
   public

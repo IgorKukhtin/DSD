@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
-  ClientHeight = 528
+  ClientHeight = 572
   ClientWidth = 328
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 48
-    Top = 496
+    Top = 539
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 222
-    Top = 496
+    Top = 539
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -176,12 +176,12 @@
   end
   object cxLabel9: TcxLabel
     Left = 32
-    Top = 443
+    Top = 486
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 32
-    Top = 460
+    Top = 503
     TabOrder = 21
     Width = 273
   end
@@ -294,6 +294,32 @@
     TabOrder = 35
     Width = 65
   end
+  object cxLabel16: TcxLabel
+    Left = 240
+    Top = 442
+    Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
+  end
+  object edYear: TcxCurrencyEdit
+    Left = 240
+    Top = 459
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 37
+    Width = 65
+  end
+  object cxLabel17: TcxLabel
+    Left = 32
+    Top = 442
+    Caption = 'VIN '#1082#1086#1076
+  end
+  object edVIN: TcxTextEdit
+    Left = 32
+    Top = 459
+    TabOrder = 39
+    Width = 198
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
@@ -358,6 +384,14 @@
         Name = 'inRegistrationCertificate'
         Value = ''
         Component = ceRegistrationCertificate
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIN'
+        Value = Null
+        Component = edVIN
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -465,6 +499,14 @@
         Name = 'inWeight'
         Value = Null
         Component = edWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYear'
+        Value = Null
+        Component = edYear
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -670,6 +712,20 @@
         Component = edWeight
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VIN'
+        Value = Null
+        Component = edVIN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Year'
+        Value = Null
+        Component = edYear
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 40
@@ -686,8 +742,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 88
-    Top = 56
+    Left = 80
+    Top = 24
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Top = 120

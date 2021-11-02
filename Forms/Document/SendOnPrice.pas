@@ -146,6 +146,8 @@ type
     spInsertUpdateMI_Detail: TdsdStoredProc;
     actUpdateDetailDS_Reason: TdsdUpdateDataSet;
     actReasonOpenForm: TOpenChoiceForm;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

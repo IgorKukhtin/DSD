@@ -1448,6 +1448,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1461,6 +1463,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ActionList = <
         item
           Action = actDialog_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
         end
         item
           Action = actPrint_TTN
@@ -1591,6 +1596,17 @@ inherited SendOnPriceForm: TSendOnPriceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -1938,6 +1954,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'MovementId_TransportGoods'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -3610,5 +3633,30 @@ inherited SendOnPriceForm: TSendOnPriceForm
     PackSize = 1
     Left = 1304
     Top = 392
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1080
+    Top = 288
   end
 end

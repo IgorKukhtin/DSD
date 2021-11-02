@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
              , KoeffHoursWork TFloat, PartnerMin TFloat
              , Length TFloat, Width TFloat, Height TFloat
-             , Weight TFloat
+             , Weight TFloat, Year TFloat
+             , VIN TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -48,8 +49,10 @@ BEGIN
            , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat AS Width 
            , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat AS Height
            , COALESCE (ObjectFloat_Weight.ValueData,0)         :: TFloat AS Weight
-           
-           , RegistrationCertificate.ValueData  AS RegistrationCertificate
+           , COALESCE (ObjectFloat_Year.ValueData,0)           :: TFloat  AS Year
+
+           , ObjectString_VIN.ValueData    :: TVarChar AS VIN
+           , RegistrationCertificate.ValueData     AS RegistrationCertificate
            , ObjectString_Comment.ValueData        AS Comment
            
            , Object_CarModel.Id         AS CarModelId
@@ -97,6 +100,10 @@ BEGIN
                                    ON ObjectString_Comment.ObjectId = Object_Car.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
 
+            LEFT JOIN ObjectString AS ObjectString_VIN
+                                   ON ObjectString_VIN.ObjectId = Object_Car.Id
+                                  AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
                                   ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
                                  AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
@@ -118,6 +125,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Car.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                                  ON ObjectFloat_Year.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
 
             LEFT JOIN ObjectLink AS Car_CarModel
                                  ON Car_CarModel.ObjectId = Object_Car.Id
@@ -169,6 +180,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.11.21         *
  05.10.21         *
  27.04.21         * PartnerMin
  30.11.16         * add inShowAll
