@@ -1114,7 +1114,9 @@ uses
   Report_TopListDiffGoodsDialog in '..\..\FormsFarmacy\Report\Report_TopListDiffGoodsDialog.pas' {Report_TopListDiffGoodsDialogForm: TParentForm},
   Report_TopListDiffGoods in '..\..\FormsFarmacy\Report\Report_TopListDiffGoods.pas' {Report_TopListDiffGoodsForm: TParentForm},
   WagesVIP_User in '..\..\FormsFarmacy\Document\WagesVIP_User.pas' {WagesVIP_UserForm: TParentForm},
-  Category1303 in '..\..\FormsFarmacy\Guides\Category1303.pas' {Category1303Form: TParentForm};
+  Category1303 in '..\..\FormsFarmacy\Guides\Category1303.pas' {Category1303Form: TParentForm},
+  AccommodationUnitEdit in '..\..\FormsFarmacy\Guides\AccommodationUnitEdit.pas' {AccommodationUnitEditForm: TParentForm},
+  AccommodationUnit in '..\..\FormsFarmacy\Guides\AccommodationUnit.pas' {AccommodationUnitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

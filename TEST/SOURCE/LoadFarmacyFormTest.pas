@@ -397,12 +397,12 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCustomerThresho_RemainsGoodsCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCustomerThresho_RemainsGoodsCashForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsUnitRetail_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsUnitRetail_CashForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationLincGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccommodationLincGoodsForm');
 
@@ -2588,7 +2588,6 @@ begin
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
-  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
@@ -2602,6 +2601,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCheckDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCheckDialogForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccommodationUnitEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccommodationUnitForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeHouseholdInventoryFormTest;

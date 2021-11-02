@@ -117,6 +117,7 @@ type
     actExecuteDialogExpirationDate: TExecuteDialog;
     actUpdate_ExpirationDate: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
+    actAccommodationUnit: TOpenChoiceForm;
   private
     { Private declarations }
   public

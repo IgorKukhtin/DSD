@@ -82,6 +82,7 @@ type
     cxGridLevel5: TcxGridLevel;
     btnTestSendTelegram: TButton;
     btnTestSendManualTelegram: TButton;
+    btnUpdate: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -93,6 +94,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnTestSendTelegramClick(Sender: TObject);
     procedure btnTestSendManualTelegramClick(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -406,6 +408,11 @@ begin
     TelegramBot.SendMessage(TelegramBot.ChatIdCDS.FieldByName('Id').AsString, 'Тестовое сообщение...');
 end;
 
+procedure TMainForm.btnUpdateClick(Sender: TObject);
+begin
+  TelegramBot.LoadChatId;
+end;
+
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -494,6 +501,7 @@ begin
       btnSendTelegram.Enabled := false;
       btnTestSendTelegram.Enabled := false;
       btnTestSendManualTelegram.Enabled := false;
+      btnUpdate.Enabled := false;
       Timer1.Enabled := true;
     end;
   end;

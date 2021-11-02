@@ -11,19 +11,19 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 221
     Width = 1222
     Height = 390
-    ExplicitTop = 189
+    ExplicitTop = 221
     ExplicitWidth = 1222
-    ExplicitHeight = 422
+    ExplicitHeight = 390
     ClientRectBottom = 390
     ClientRectRight = 1222
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1222
-      ExplicitHeight = 398
+      ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 1222
         Height = 366
         ExplicitWidth = 1222
-        ExplicitHeight = 398
+        ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -492,8 +492,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
     end
     object cbUseSubject: TcxCheckBox
-      Left = 457
-      Top = 135
+      Left = 817
+      Top = 172
       Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1077#1084#1091' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1087#1080#1089#1100#1084#1072' '#1087#1086#1089#1090#1072#1097#1080#1082#1091
       Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1077#1084#1091' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ParentShowHint = False
