@@ -74,6 +74,15 @@ BEGIN
               , gpReport.Amount_40200, gpReport.Summ_40200_branch, gpReport.Summ_40200_zavod
               , gpReport.Amount_Loss, gpReport.Summ_Loss_branch, gpReport.Summ_Loss_zavod
               , gpReport.isPage3, gpReport.isExistsPage3
+              
+              --
+              , '' :: TVarChar AS KVK
+              , 0              AS PersonalKVKId
+              , '' :: TVarChar AS PersonalKVKName
+              , 0              AS PositionCode_KVK
+              , '' :: TVarChar AS PositionName_KVK
+              , 0              AS UnitCode_KVK
+              , '' :: TVarChar AS UnitName_KVK
          FROM gpReport_GoodsGroup (inStartDate   := inStartDate
                                  , inEndDate     := inEndDate
                                  , inUnitGroupId := inUnitGroupId

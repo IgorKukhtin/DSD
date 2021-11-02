@@ -122,7 +122,15 @@ BEGIN
                                 WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0)
                                 WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0)
                            ELSE 0 END) Amount
-                        , (SELECT tmp.TotalPlan FROM tmpMIFloat_avg AS tmp) AS TotalPlan
+                        --, (SELECT tmp.TotalPlan FROM tmpMIFloat_avg AS tmp) AS TotalPlan
+                        , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN COALESCE (tmpMIFloat_avg.Plan1,0)
+                                WHEN tmpWeekDay.Number = 2 THEN COALESCE (tmpMIFloat_avg.Plan2,0)
+                                WHEN tmpWeekDay.Number = 3 THEN COALESCE (tmpMIFloat_avg.Plan3,0)
+                                WHEN tmpWeekDay.Number = 4 THEN COALESCE (tmpMIFloat_avg.Plan4,0)
+                                WHEN tmpWeekDay.Number = 5 THEN COALESCE (tmpMIFloat_avg.Plan5,0)
+                                WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0)
+                                WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0)
+                           ELSE 0 END) OVER () AS TotalPlan
                         , CASE WHEN COALESCE (tmpMIFloat_avg.Plan_dn,0) <> 0 THEN TRUE ELSE FALSE END AS isDnepr
                    FROM tmpListDateSale
                     LEFT JOIN zfCalc_DayOfWeekName (tmpListDateSale.OperDate) AS tmpWeekDay ON 1=1
@@ -134,7 +142,7 @@ BEGIN
        SELECT tmpCalc.OperDate
             , tmpCalc.GoodsId
             , tmpCalc.GoodsKindId
-            , CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN (tmpCalc.Amount/ tmpCalc.TotalPlan) * tmpMI_Promo.AmountPlanMax ELSE 0 END AS Amount_calc
+            , CAST (CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN (tmpCalc.Amount/ tmpCalc.TotalPlan) * tmpMI_Promo.AmountPlanMax ELSE 0 END AS NUMERIC (16,3)) AS Amount_calc
             , tmpCalc.isDnepr
        FROM tmpMI_Promo
            LEFT JOIN tmpCalc ON tmpCalc.GoodsId = tmpMI_Promo.GoodsId

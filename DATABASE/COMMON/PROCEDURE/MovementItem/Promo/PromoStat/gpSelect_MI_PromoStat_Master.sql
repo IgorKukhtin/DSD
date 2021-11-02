@@ -123,13 +123,13 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0) ELSE 0 END) Amount6
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0) ELSE 0 END) Amount7
                      --êîë-âî äíåé ÏÍ, ÂÒ, ÑÐ, ×Ò, ÏÒ, ÑÁ, ÂÑ
-                     , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) WeekDay1
-                     , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) WeekDay2
-                     , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN 1 ELSE 0 END) WeekDay3
-                     , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN 1 ELSE 0 END) WeekDay4
-                     , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN 1 ELSE 0 END) WeekDay5
-                     , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN 1 ELSE 0 END) WeekDay6
-                     , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) WeekDay7
+                     , SUM (CASE WHEN tmpWeekDay.Number = 1 AND COALESCE (tmpMIFloat_avg.Plan1,0) <> 0 THEN 1 ELSE 0 END) WeekDay1
+                     , SUM (CASE WHEN tmpWeekDay.Number = 2 AND COALESCE (tmpMIFloat_avg.Plan2,0) <> 0 THEN 1 ELSE 0 END) WeekDay2
+                     , SUM (CASE WHEN tmpWeekDay.Number = 3 AND COALESCE (tmpMIFloat_avg.Plan3,0) <> 0 THEN 1 ELSE 0 END) WeekDay3
+                     , SUM (CASE WHEN tmpWeekDay.Number = 4 AND COALESCE (tmpMIFloat_avg.Plan4,0) <> 0 THEN 1 ELSE 0 END) WeekDay4
+                     , SUM (CASE WHEN tmpWeekDay.Number = 5 AND COALESCE (tmpMIFloat_avg.Plan5,0) <> 0 THEN 1 ELSE 0 END) WeekDay5
+                     , SUM (CASE WHEN tmpWeekDay.Number = 6 AND COALESCE (tmpMIFloat_avg.Plan6,0) <> 0 THEN 1 ELSE 0 END) WeekDay6
+                     , SUM (CASE WHEN tmpWeekDay.Number = 7 AND COALESCE (tmpMIFloat_avg.Plan7,0) <> 0 THEN 1 ELSE 0 END) WeekDay7
                 FROM tmpListDateSale
                     LEFT JOIN zfCalc_DayOfWeekName (tmpListDateSale.OperDate) AS tmpWeekDay ON 1=1
                     LEFT JOIN (SELECT tmpMI.ObjectId, tmpMI.GoodsKindId FROM tmpMI WHERE tmpMI.Ord = 1) AS tmpGoods ON  1=1
