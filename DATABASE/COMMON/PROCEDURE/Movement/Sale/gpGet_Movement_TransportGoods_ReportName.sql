@@ -69,7 +69,7 @@ BEGIN
 
             LEFT JOIN PrintForms_View
                    ON COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-                  AND PrintForms_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                  AND PrintForms_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                   AND PrintForms_View.ReportType = 'TransportGoods'
                   AND PrintForms_View.DescId = zc_Movement_TransportGoods()
        WHERE Movement.Id = inMovementId

@@ -4029,8 +4029,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 976
-    Top = 136
+    Left = 968
+    Top = 168
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'

@@ -485,7 +485,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited Panel: TPanel
     Width = 1070
-    ExplicitWidth = 1043
+    ExplicitWidth = 1070
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
