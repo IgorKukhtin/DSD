@@ -413,6 +413,11 @@ type
     isBlockCommentSendTP: TcxGridDBColumn;
     PharmacyManager: TcxGridDBColumn;
     PharmacyManagerPhone: TcxGridDBColumn;
+    TelegramId: TcxGridDBColumn;
+    actUpdate_TelegramId: TdsdExecStoredProc;
+    actTelegramIdDialog: TExecuteDialog;
+    spUpdate_TelegramId: TdsdStoredProc;
+    dxBarButton23: TdxBarButton;
   private
     { Private declarations }
   public

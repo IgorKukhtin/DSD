@@ -68,6 +68,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
              , isBlockCommentSendTP Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
+             , TelegramId TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -259,6 +260,8 @@ BEGIN
       
       , ObjectString_PharmacyManager.ValueData                                           AS PharmacyManager
       , ObjectString_PharmacyManagerPhone.ValueData                                      AS PharmacyManagerPhone
+      
+      , ObjectString_Unit_TelegramId.ValueData                                           AS TelegramId
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -478,6 +481,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Unit_Phone
                                ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
+        LEFT JOIN ObjectString AS ObjectString_Unit_TelegramId
+                               ON ObjectString_Unit_TelegramId.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_TelegramId.DescId = zc_ObjectString_Unit_TelegramId()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id

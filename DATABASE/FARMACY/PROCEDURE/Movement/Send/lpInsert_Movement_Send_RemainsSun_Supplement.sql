@@ -81,7 +81,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -156,13 +156,18 @@ BEGIN
      DELETE FROM _tmpResult_Supplement;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority)
+     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio)
         SELECT OB.ObjectId
              , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
              , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
              , COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_in
              , COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_out             
              , COALESCE (ObjectBoolean_SUN_Supplement_Priority.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_Priority             
+             , CASE WHEN ObjectDate_FirstCheck.ValueData IS NOT NULL AND
+                         (inOperDate::Date - ObjectDate_FirstCheck.ValueData::Date) <
+                         (inOperDate::Date - (inOperDate::Date - (COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer::TVarChar||' MONTH')::INTERVAL)::Date)
+                    THEN (inOperDate::Date - (inOperDate::Date - (COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer::TVarChar||' MONTH')::INTERVAL)::Date)::TFloat / (CURRENT_DATE - ObjectDate_FirstCheck.ValueData::Date)::TFloat
+                    ELSE 1 END     
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat   AS OF_DeySupplSun1  ON OF_DeySupplSun1.ObjectId  = OB.ObjectId AND OF_DeySupplSun1.DescId     = zc_ObjectFloat_Unit_DeySupplSun1()
              LEFT JOIN ObjectFloat   AS OF_MonthSupplSun1 ON OF_MonthSupplSun1.ObjectId = OB.ObjectId AND OF_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
@@ -176,6 +181,10 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_Priority
                                      ON ObjectBoolean_SUN_Supplement_Priority.ObjectId = OB.ObjectId
                                     AND ObjectBoolean_SUN_Supplement_Priority.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_Priority()
+             LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
+                                  ON ObjectDate_FirstCheck.ObjectId = OB.ObjectId
+                                 AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
+                                    
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -560,7 +569,7 @@ BEGIN
                       )
         , tmpSalesMonth AS (SELECT _tmpUnit_SUN_Supplement.UnitId
                                  , _tmpGoods_SUN_Supplement.GoodsId
-                                 , SUM (COALESCE (AnalysisContainerItem.AmountCheck, 0)) AS AmountSalesMonth
+                                 , SUM (COALESCE (AnalysisContainerItem.AmountCheck, 0)) * _tmpUnit_SUN_Supplement.SalesRatio AS AmountSalesMonth
                             FROM  _tmpGoods_SUN_Supplement
                                  INNER JOIN _tmpUnit_SUN_Supplement ON 1 = 1
 
@@ -570,6 +579,7 @@ BEGIN
                               AND AnalysisContainerItem.AmountCheck <> 0
                             GROUP BY _tmpUnit_SUN_Supplement.UnitId
                                    , _tmpGoods_SUN_Supplement.GoodsId
+                                   , _tmpUnit_SUN_Supplement.SalesRatio
                         )
           -- цены
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
@@ -700,8 +710,7 @@ BEGIN
                        COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
      THEN
 
---       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT (SUM(Container.Amount)) 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
                                                          FROM Container 
                                                          WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
                                                            AND Container.Amount <> 0
@@ -937,7 +946,7 @@ BEGIN
          AND (COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = 0 AND COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) = 0 
            OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId 
            OR COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) = _tmpRemains_all_Supplement.UnitId)
-        -- AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+         AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
        ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
               , CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
@@ -1021,34 +1030,15 @@ BEGIN
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR (vbSurplus) <= 0 THEN EXIT; END IF;
 
-            /* IF vbGoodsId = 35755
+             -- если данные закончились, или все кол-во найдено тогда выход
+             IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
+
+            /* IF vbUnitId_to = 377610 AND vbGoodsId = 51814
              THEN
                raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
                  (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
              END IF;*/
-             
-             INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
-               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END);
-
-             UPDATE _tmpRemains_all_Supplement SET AmountUse = AmountUse + CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END
-             WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_to
-               AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
-
-             vbSurplus := vbSurplus - CASE WHEN  (vbSurplus) > vbNeed THEN vbNeed ELSE  (vbSurplus) END;
-
-
-
-
-/*             -- если данные закончились, или все кол-во найдено тогда выход
-             IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
-
-             IF vbUnitId_to = 377610 AND vbGoodsId = 51814
-             THEN
-               raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
-                 (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
-             END IF;
 
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
@@ -1058,7 +1048,7 @@ BEGIN
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId;
 
              vbSurplus := vbSurplus - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
-*/
+
          END LOOP; -- финиш цикла по курсору2
          CLOSE curResult_next; -- закрыли курсор2.
 
@@ -1164,4 +1154,4 @@ $BODY$
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('01.11.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('02.11.2021')::TDateTime ,  inSession := '3');

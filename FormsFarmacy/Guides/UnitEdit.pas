@@ -171,6 +171,8 @@ type
     cxLabel51: TcxLabel;
     edTokenKashtan: TcxTextEdit;
     cxLabel52: TcxLabel;
+    edTelegramId: TcxTextEdit;
+    cxLabel53: TcxLabel;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
+  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -984,6 +985,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object TelegramId: TcxGridDBColumn
+            Caption = 'ID '#1072#1087#1090#1077#1082#1080' '#1074' Telegram'
+            DataBinding.FieldName = 'TelegramId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
           end
         end
       end
@@ -3657,6 +3666,59 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actExecUpdate_isMessageByTime'
     end
+    object actUpdate_TelegramId: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'TelegramId'
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'TelegramId'
+          ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
+        end>
+      AfterAction = actRefresh
+      BeforeAction = actTelegramIdDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_TelegramId
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_TelegramId
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' ID '#1072#1087#1090#1077#1082#1080' '#1074' Telegram'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' ID '#1072#1087#1090#1077#1082#1080' '#1074' Telegram'
+      ImageIndex = 43
+    end
+    object actTelegramIdDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteUpdatePercentSAUA'
+      FormName = 'TStringDialogForm'
+      FormNameParam.Value = 'TStringDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Text'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'TelegramId'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = 'ID '#1072#1087#1090#1077#1082#1080' '#1074' Telegram'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4356,6 +4418,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton23'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic2'
         end
         item
@@ -4487,6 +4553,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton22: TdxBarButton
       Action = macUnit_isRequestDistribListDiff
+      Category = 0
+    end
+    object dxBarButton23: TdxBarButton
+      Action = actUpdate_TelegramId
       Category = 0
     end
   end
@@ -5491,6 +5561,12 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       item
         Name = 'UnitFrom'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramId'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -7302,5 +7378,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 944
     Top = 299
+  end
+  object spUpdate_TelegramId: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_TelegramId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TelegramId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 384
+    Top = 99
   end
 end

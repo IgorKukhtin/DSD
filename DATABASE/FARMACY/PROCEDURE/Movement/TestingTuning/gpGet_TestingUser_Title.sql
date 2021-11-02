@@ -129,7 +129,7 @@ BEGIN
               RAISE EXCEPTION 'Возможно, кто-то уже сдает экзамен на аптеке попробуйте через 5 минут.';                
            END IF;
          
-           IF COALESCE((SELECT COUNT(*)
+          /* IF COALESCE((SELECT COUNT(*)
                         FROM Movement
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
@@ -143,7 +143,7 @@ BEGIN
                           AND Movement.StatusId = zc_Enum_Status_Complete()), 0) < 5
            THEN
              RAISE EXCEPTION 'Не найдены продажи по вам (минимум 5 чеков)..';              
-           END IF;
+           END IF;*/
          END IF;
        ELSE
          RAISE EXCEPTION 'Нет отметки времени прихода и ухода в графике.';     

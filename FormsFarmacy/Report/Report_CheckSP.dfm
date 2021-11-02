@@ -2091,6 +2091,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = MedicalProgramSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDateInvoice'
         Value = 42736d
         Component = edDateInvoice

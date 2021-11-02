@@ -1,6 +1,6 @@
 -- Function: gpSelect_GoodsPrice_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite(
     IN inCategoryId       Integer     ,  -- Группа
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite(
     IN inStart            Integer     ,  -- Смещение
     IN inLimit            Integer     ,  -- Количество строк
     IN inProductId        Integer     ,  -- Только указанный товар
+    IN inSearch           TVarChar    ,  -- Фильтр для ILIKE
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                Integer    -- Id товара
@@ -100,6 +101,9 @@ BEGIN
         FROM tmpPrice_Site AS Price_Site         
 
              INNER JOIN tmpContainerAll ON tmpContainerAll.GoodsId = Price_Site.GoodsId
+             
+        WHERE COALESCE (inSearch, '') = '' OR 
+              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
 
         ORDER BY CASE WHEN inSortType = 0 THEN Price_Site.Price END
                , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
@@ -121,4 +125,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 394964 , inSortType := 0, inSortLang := 'Ru', inStart := 0, inLimit := 100, inProductId := 0, inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 394964 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Мило', inSession:= zfCalc_UserSite());
