@@ -129,7 +129,7 @@ BEGIN
                           FROM (SELECT tmpListDate.*
                                      , tmpGoods.GoodsId
                                      , CASE WHEN tmpPromo.StartSale IS NULL THEN TRUE ELSE FALSE END AS isSale  ---определяем даты, которые брать для продаж
-                                     , ROW_NUMBER() OVER (PARTITION BY tmpPromo.GoodsId
+                                     , ROW_NUMBER() OVER (PARTITION BY tmpGoods.GoodsId
                                                                      , CASE WHEN tmpPromo.StartSale IS NULL THEN TRUE ELSE FALSE END                                                                    
                                                           ORDER BY tmpListDate.OperDate Desc) AS Ord1
                                 FROM tmpListDate
@@ -144,7 +144,7 @@ BEGIN
           -- нам нужны не акционные продажы за 35 дней 
         , tmpMovSale AS (SELECT Movement.*
                               , MD_OperDatePartner.ValueData AS OperDatePartner
-                         FROM tmpDateSale
+                         FROM (SELECT DISTINCT tmpDateSale.OperDate FROM tmpDateSale WHERE tmpDateSale.isSale = TRUE) AS tmpDateSale
                               INNER JOIN MovementDate AS MD_OperDatePartner 
                                                       ON MD_OperDatePartner.ValueData = tmpDateSale.OperDate
                                                      AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 

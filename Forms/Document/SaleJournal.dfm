@@ -3945,6 +3945,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbTTN: TdxBarButton
       Action = mactPrint_TTN
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053'_'
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
