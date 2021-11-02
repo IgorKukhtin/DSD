@@ -64,6 +64,7 @@ BEGIN
              inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
                   inisDeferred := FALSE :: Boolean , -- отложен
                inLetterSubject := '' :: TVarChar , -- Тема письма
+                isisUseSubject := FALSE :: Boolean , -- Использовать тему из документа
                       inUserId := inUserId);
     END IF;
  

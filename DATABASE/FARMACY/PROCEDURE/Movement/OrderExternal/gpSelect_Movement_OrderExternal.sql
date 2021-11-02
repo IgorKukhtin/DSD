@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Zakaz_Text         TVarChar
              , Dostavka_Text      TVarChar
              , LetterSubject      TVarChar
+             , isUseSubject       Boolean
               )
 
 AS
@@ -213,6 +214,7 @@ BEGIN
            , tmpOrderSheduleText.Zakaz_Text
            , tmpOrderSheduleText.Dostavka_Text
            , MovementString_LetterSubject.ValueData                            AS LetterSubject
+           , COALESCE (MovementBoolean_UseSubject.ValueData, FALSE) :: Boolean AS isUseSubject
      FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
                                                AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
@@ -247,6 +249,10 @@ BEGIN
           LEFT JOIN MovementString AS MovementString_LetterSubject
                                    ON MovementString_LetterSubject.MovementId = Movement_OrderExternal_View.Id
                                   AND MovementString_LetterSubject.DescId = zc_MovementString_LetterSubject()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_UseSubject
+                                    ON MovementBoolean_UseSubject.MovementId = Movement_OrderExternal_View.Id
+                                   AND MovementBoolean_UseSubject.DescId = zc_MovementBoolean_UseSubject()
     ;
 
 END;

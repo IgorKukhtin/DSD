@@ -111,6 +111,7 @@ type
     cxLabel18: TcxLabel;
     edPharmacyManager: TcxTextEdit;
     cxLabel19: TcxLabel;
+    cbUseSubject: TcxCheckBox;
   private
     { Private declarations }
   public

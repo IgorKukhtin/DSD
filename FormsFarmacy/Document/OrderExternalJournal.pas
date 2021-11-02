@@ -52,6 +52,7 @@ type
     bbDeferredYes: TdxBarButton;
     bbDeferredNo: TdxBarButton;
     LetterSubject: TcxGridDBColumn;
+    isUseSubject: TcxGridDBColumn;
   private
     { Private declarations }
   public

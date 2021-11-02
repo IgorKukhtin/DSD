@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDifferent Boolean
              , LetterSubject      TVarChar
              , Address TVarChar, Phone TVarChar, TimeWork TVarChar, PharmacyManager TVarChar
+             , isUseSubject       Boolean
               )
 AS
 $BODY$
@@ -62,6 +63,7 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS Phone
              , CAST ('' AS TVarChar) 		                AS TimeWork
              , CAST ('' AS TVarChar) 		                AS PharmacyManager
+             , FALSE                                            AS isUseSubject
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -159,6 +161,7 @@ BEGIN
                   ELSE ''
              END) :: TVarChar AS TimeWork
            , ObjectString_Unit_PharmacyManager.ValueData                    AS PharmacyManager
+           , COALESCE (MovementBoolean_UseSubject.ValueData, FALSE) :: Boolean AS isUseSubject
              
            
        FROM Movement
@@ -266,6 +269,10 @@ BEGIN
                                  ON ObjectDate_FirstCheck.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_UseSubject
+                                      ON MovementBoolean_UseSubject.MovementId = Movement.Id
+                                     AND MovementBoolean_UseSubject.DescId = zc_MovementBoolean_UseSubject()
+                                     
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal()
  ;

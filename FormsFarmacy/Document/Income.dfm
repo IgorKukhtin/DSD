@@ -3547,6 +3547,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAccommodationName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AccommodationName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountDiff'
         Value = Null
         Component = MasterCDS

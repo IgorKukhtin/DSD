@@ -491,6 +491,16 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 119
       Caption = #1060#1048#1054' '#1047#1072#1074'. '#1072#1087#1090#1077#1082#1086#1081
     end
+    object cbUseSubject: TcxCheckBox
+      Left = 457
+      Top = 135
+      Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1077#1084#1091' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1088#1080' '#1086#1090#1087#1088#1072#1074#1082#1077' '#1087#1080#1089#1100#1084#1072' '#1087#1086#1089#1090#1072#1097#1080#1082#1091
+      Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1090#1077#1084#1091' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 26
+      Width = 202
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 656
@@ -1356,6 +1366,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = edPharmacyManager
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUseSubject'
+        Value = Null
+        Component = cbUseSubject
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 296
@@ -1450,6 +1467,14 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUseSubject'
+        Value = Null
+        Component = cbUseSubject
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1487,6 +1512,9 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Control = edLetterSubject
+      end
+      item
+        Control = cbUseSubject
       end>
     Top = 305
   end

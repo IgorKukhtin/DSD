@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
     IN inisDeferred          Boolean   , -- отложен
     IN inLetterSubject       TVarChar  , -- Тема письма
+    IN isisUseSubject        Boolean   , -- Использовать тему из документа
     IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -74,6 +76,9 @@ BEGIN
 
      -- сохранили <Тема письма>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_LetterSubject(), ioId, inLetterSubject);
+
+     -- сохранили свойство <Использовать тему из документа>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_UseSubject(), ioId, isisUseSubject);
 
      -- пересчитали Итоговые суммы по накладной
 --     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

@@ -27,6 +27,8 @@ $BODY$
   DECLARE vbContractName TVarChar;
   DECLARE vbZakazName TVarChar;
   DECLARE vbFromId Integer;
+  DECLARE vbisUseSubject Boolean;
+  DECLARE vbLetterSubject TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -34,8 +36,8 @@ BEGIN
 
 
    -- еще
-   SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName, tmp.ContractId, tmp.FromId
-          INTO vbMail, vbJuridicalId_unit, vbJuridicalName, vbContractId, vbFromId
+   SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName, tmp.ContractId, tmp.FromId, tmp.isUseSubject, tmp.LetterSubject, tmp.InvNumber
+          INTO vbMail, vbJuridicalId_unit, vbJuridicalName, vbContractId, vbFromId, vbisUseSubject, vbLetterSubject, vbInvNumber
    FROM (WITH -- Документ Заявка Внешняя (т.е. Поставщику)
               tmpMovement AS (SELECT MLO_From.ObjectId                            AS FromId
                                    , MLO_To.ObjectId                              AS ToId
@@ -43,6 +45,9 @@ BEGIN
                                    , ObjectLink_Juridical_Retail.ChildObjectId    AS RetailId
                                    , ObjectLink_Unit_Juridical.ChildObjectId      AS JuridicalId_unit
                                    , ObjectLink_Unit_Area.ChildObjectId           AS AreaId
+                                   , COALESCE (MovementBoolean_UseSubject.ValueData, FALSE) AS isUseSubject
+                                   , MovementString_LetterSubject.ValueData                 AS LetterSubject
+                                   , Movement.InvNumber                                     AS InvNumber
                               FROM MovementLinkObject AS MLO_From
                                    LEFT JOIN MovementLinkObject AS MLO_Contract
                                                                 ON MLO_Contract.MovementId = MLO_From.MovementId
@@ -60,6 +65,14 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                         ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                   LEFT JOIN MovementString AS MovementString_LetterSubject
+                                                            ON MovementString_LetterSubject.MovementId = MLO_From.MovementId
+                                                           AND MovementString_LetterSubject.DescId = zc_MovementString_LetterSubject()
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_UseSubject
+                                                             ON MovementBoolean_UseSubject.MovementId = MLO_From.MovementId
+                                                            AND MovementBoolean_UseSubject.DescId = zc_MovementBoolean_UseSubject()
+                                   LEFT JOIN Movement AS Movement
+                                                      ON Movement.Id = MLO_From.MovementId
                               WHERE MLO_From.MovementId = inId
                                 AND MLO_From.DescId     = zc_MovementLinkObject_From()
                              )
@@ -67,6 +80,9 @@ BEGIN
          -- Результат
          SELECT tmpMovement.JuridicalId_unit
               , tmpMovement.FromId
+              , tmpMovement.isUseSubject
+              , tmpMovement.LetterSubject
+              , tmpMovement.InvNumber
               , COALESCE (View_ContactPerson_Contract_Unit_0.Mail, View_ContactPerson_Contract_Unit_1.Mail, View_ContactPerson_Contract_Unit_2.Mail, View_ContactPerson_Contract_Unit_3.Mail
                         , View_ContactPerson_Unit_0.Mail,          View_ContactPerson_Unit_1.Mail,          View_ContactPerson_Unit_2.Mail,          View_ContactPerson_Unit_3.Mail
                         , View_ContactPerson_Contract_0.Mail, View_ContactPerson_Contract_1.Mail, View_ContactPerson_Contract_2.Mail, View_ContactPerson_Contract_3.Mail
@@ -232,18 +248,12 @@ BEGIN
    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_To()
      AND MovementId = inId;
 
-   -- еще
-   SELECT Movement.InvNumber, Object_ImportExportLink_View.StringKey
-          INTO vbInvNumber, vbSubject
-   FROM MovementLinkObject
-        LEFT JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
-        LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
-                                              AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
-                                              AND Object_ImportExportLink_View.ValueId = ObjectId
-   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
-     AND MovementLinkObject.MovementId = inId;
-     
-   IF COALESCE(vbSubject, '') = '' THEN
+   IF COALESCE(vbisUseSubject, True) = TRUE AND COALESCE(vbLetterSubject, '') <> ''
+   THEN
+     vbSubject := vbLetterSubject;
+   ELSE
+
+     -- еще
      SELECT Movement.InvNumber, Object_ImportExportLink_View.StringKey
             INTO vbInvNumber, vbSubject
      FROM MovementLinkObject
@@ -251,11 +261,22 @@ BEGIN
           LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
                                                 AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
                                                 AND Object_ImportExportLink_View.ValueId = ObjectId
-     WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
+     WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
        AND MovementLinkObject.MovementId = inId;
+       
+     IF COALESCE(vbSubject, '') = '' THEN
+       SELECT Movement.InvNumber, Object_ImportExportLink_View.StringKey
+              INTO vbInvNumber, vbSubject
+       FROM MovementLinkObject
+            LEFT JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
+            LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
+                                                  AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                  AND Object_ImportExportLink_View.ValueId = ObjectId
+       WHERE MovementLinkObject.DescId = zc_MovementLinkObject_From()
+         AND MovementLinkObject.MovementId = inId;
+     END IF;
    END IF;
 
-   
     -- проверка
     IF COALESCE (vbMail, '') = '' THEN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
@@ -293,7 +314,6 @@ BEGIN
        vbSubject := vbContractName || ' ' || vbSubject;
 
     END IF;
-
 
     -- еще
     vbMail := (vbMail || vbUserMail) :: TVarChar;
@@ -351,7 +371,6 @@ BEGIN
                                 
     WHERE Object_Unit.Id = vbUnitId;
 
-
     -- Результат
     RETURN QUERY
        WITH tmpComment AS (SELECT MS_Comment.ValueData AS Comment FROM MovementString AS MS_Comment WHERE MS_Comment.MovementId = inId AND MS_Comment.DescId = zc_MovementString_Comment())
@@ -403,4 +422,4 @@ $BODY$
 -- тест
 -- 
 --
-SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25026748 , inSession:= '377790');
+SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25517982  , inSession:= '377790');
