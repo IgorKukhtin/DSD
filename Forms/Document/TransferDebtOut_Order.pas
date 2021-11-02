@@ -130,6 +130,8 @@ type
     cxLabel19: TcxLabel;
     edPartnerFrom: TcxButtonEdit;
     GuidesPartnerFrom: TdsdGuides;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

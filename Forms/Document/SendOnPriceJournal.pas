@@ -125,6 +125,8 @@ type
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
     isHistoryCost: TcxGridDBColumn;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

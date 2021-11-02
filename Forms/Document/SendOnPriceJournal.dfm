@@ -1,27 +1,27 @@
 inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 429
-  ClientWidth = 1020
+  ClientWidth = 980
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitWidth = 996
   ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 980
     Height = 372
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 372
     ClientRectBottom = 372
-    ClientRectRight = 1020
+    ClientRectRight = 980
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 372
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 980
         Height = 372
         ExplicitWidth = 1020
         ExplicitHeight = 372
@@ -591,7 +591,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 980
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 95
@@ -1379,7 +1379,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1434,6 +1434,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1479,7 +1481,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -1509,6 +1511,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Action = actGet_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
         end
         item
           Action = actPrint_TTN
@@ -1548,7 +1553,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = ''
         end>
       Params = <
         item
@@ -1677,6 +1681,17 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1706,7 +1721,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -2083,6 +2098,13 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -2310,7 +2332,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2411,7 +2433,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -2444,7 +2466,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -2540,7 +2562,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2573,7 +2595,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end
       item
         Name = 'outCheckedDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CheckedDate'
         DataType = ftDateTime
@@ -2590,5 +2612,30 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PackSize = 1
     Left = 400
     Top = 283
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 296
   end
 end

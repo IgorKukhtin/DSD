@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Car(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffHoursWork TFloat, PartnerMin TFloat
              , Length TFloat, Width TFloat, Height TFloat
-             , Weight TFloat
+             , Weight TFloat, Year TFloat
+             , VIN TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -42,6 +43,8 @@ BEGIN
            , CAST (0 AS TFloat)     AS Width 
            , CAST (0 AS TFloat)     AS Height
            , CAST (0 AS TFloat)     AS Weight
+           , CAST (0 AS TFloat)     AS Year
+           , CAST ('' as TVarChar)  AS VIN
 
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
@@ -93,9 +96,11 @@ BEGIN
            , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat  AS Width 
            , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat  AS Height
            , COALESCE (ObjectFloat_Weight.ValueData,0)         :: TFloat  AS Weight
+           , COALESCE (ObjectFloat_Year.ValueData,0)           :: TFloat  AS Year
 
-           , RegistrationCertificate.ValueData  AS RegistrationCertificate
-           , ObjectString_Comment.ValueData     AS Comment
+           , ObjectString_VIN.ValueData    :: TVarChar AS VIN
+           , RegistrationCertificate.ValueData         AS RegistrationCertificate
+           , ObjectString_Comment.ValueData            AS Comment
            
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
@@ -135,6 +140,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Car.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
+            LEFT JOIN ObjectString AS ObjectString_VIN
+                                   ON ObjectString_VIN.ObjectId = Object_Car.Id
+                                  AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
                                   ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
@@ -156,6 +164,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Car.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                                  ON ObjectFloat_Year.ObjectId = Object_Car.Id
+                                 AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
 
             LEFT JOIN ObjectLink AS Car_CarModel 
                                  ON Car_CarModel.ObjectId = Object_Car.Id
@@ -204,6 +215,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.11.21         *
  01.11.21         * Weight
  05.10.21         *
  27.04.21         * PartnerMin

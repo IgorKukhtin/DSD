@@ -147,6 +147,8 @@ type
     edPartnerFrom: TcxButtonEdit;
     GuidesPartnerFrom: TdsdGuides;
     actShowMessage: TShowMessageAction;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -223,6 +223,16 @@ object CarForm: TCarForm
         Options.Editing = False
         Width = 120
       end
+      object Year: TcxGridDBColumn
+        Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
+        DataBinding.FieldName = 'Year'
+        Width = 60
+      end
+      object VIN: TcxGridDBColumn
+        Caption = 'VIN '#1082#1086#1076
+        DataBinding.FieldName = 'VIN'
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -755,6 +765,24 @@ object CarForm: TCarForm
         Component = ClientDataSet
         ComponentItem = 'Weight'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYear'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Year'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'VIN'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

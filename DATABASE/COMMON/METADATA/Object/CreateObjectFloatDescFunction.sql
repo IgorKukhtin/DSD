@@ -1113,6 +1113,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_Weight() RETURNS Integer AS $BODY$
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Car_Weight', zc_Object_Car(), 'Вес авто' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Weight');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_Year() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Year'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Car_Year', zc_Object_Car(), 'Год выпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Year');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
@@ -2139,6 +2144,8 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.11.21         * zc_ObjectFloat_Car_Weight
+                    zc_ObjectFloat_Car_Year 
  29.10.21                                                                                      * zc_ObjectFloat_Goods_SupplementMin
  27.10.21                                                                                      * zc_ObjectFloat_BarCode_DiscountWithVAT, zc_ObjectFloat_BarCode_DiscountWithoutVAT
  18.10.21                                                                                      * zc_ObjectFloat_CashSettings_Samples...

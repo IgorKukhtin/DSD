@@ -1,26 +1,26 @@
 inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
-  ClientWidth = 1043
+  ClientWidth = 1070
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1059
+  ExplicitWidth = 1086
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1043
+    Width = 1070
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1043
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1043
+    ClientRectRight = 1070
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1043
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1043
+        Width = 1070
         Height = 478
         ExplicitWidth = 1043
         ExplicitHeight = 478
@@ -484,7 +484,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1043
+    Width = 1070
     ExplicitWidth = 1043
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -536,6 +536,19 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 194
+    object actInsertMaskMulti: TMultiAction [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransferDebtOutForm'
       FormNameParam.Value = 'TTransferDebtOutForm'
@@ -565,18 +578,29 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actInsertMaskMulti: TMultiAction [3]
+    object actChecked: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
-      ActionList = <
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
         item
-          Action = actInsertMask
+          StoredProc = spChecked
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc [8]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       ImageIndex = -1
@@ -635,19 +659,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-    end
-    object actChecked: TdsdExecStoredProc [7]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spChecked
-      StoredProcList = <
-        item
-          StoredProc = spChecked
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1026,7 +1037,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TTN: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1048,6 +1059,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           Action = actGet_TTN
         end
         item
+          Action = actSPPrintTTNProcName
+        end
+        item
           Action = actPrint_TTN
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
@@ -1055,7 +1069,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ImageIndex = 15
     end
     object actDialog_TTN: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       Caption = 'actDialog_TTN'
       Hint = 'actDialog_TTN'
@@ -1090,7 +1104,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       isShowModal = True
     end
     object actGet_TTN: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_TTN
@@ -1102,7 +1116,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       Hint = 'actGet_TTN'
     end
     object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrintTTN
       StoredProcList = <
@@ -1131,6 +1145,8 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1503,6 +1519,13 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'ReportNameSaleTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1980,5 +2003,30 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 344
   end
 end

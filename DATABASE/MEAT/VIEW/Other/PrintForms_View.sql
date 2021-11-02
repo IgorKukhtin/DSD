@@ -830,7 +830,7 @@ AS
            , CAST ('30.09.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_TTN_071021' AS TVarChar)
+           , CAST ('PrintMovement_TTN' AS TVarChar)
       UNION
       -- œÂ˜‡Ú¸ ““Õ Ò 07,10,2021
       SELECT
@@ -838,9 +838,27 @@ AS
            , CAST ('TransportGoods' AS TVarChar)
            , CAST ('01.10.2021' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
-           , CAST (0 AS INTEGER)
+           , CAST (Object_Juridical.Id AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+      -- œÂ˜‡Ú¸ ““Õ ‰Îˇ Œ œŒ
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('01.10.2021' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_43233918' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 --   ORDER BY 1,2,4
 

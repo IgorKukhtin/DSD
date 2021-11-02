@@ -168,6 +168,8 @@ BEGIN
                              , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
                              , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
                              , ObjectFloat_Weight.ValueData AS Weight
+                             , CASE WHEN COALESCE (ObjectFloat_Year.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Year.ValueData AS NUMERIC (16,0))     ::TVarChar END :: TVarChar  AS Year
+                             , ObjectString_VIN.ValueData    :: TVarChar AS VIN
                         FROM (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT DISTINCT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods) AS tmp
                              ---
                              LEFT JOIN ObjectFloat AS ObjectFloat_Length
@@ -182,6 +184,14 @@ BEGIN
                              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                    ON ObjectFloat_Weight.ObjectId = tmp.CarId
                                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
+
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                                                   ON ObjectFloat_Year.ObjectId = tmp.CarId
+                                                  AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
+
+                             LEFT JOIN ObjectString AS ObjectString_VIN
+                                                    ON ObjectString_VIN.ObjectId = tmp.CarId
+                                                   AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
                         )
 
        --          
@@ -262,6 +272,10 @@ BEGIN
           , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN ''
                  ELSE CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
                       + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0))) AS NUMERIC (16,0))  ::TVarChar END ::TVarChar AS Weight_all
+          , ( ( ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
+                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)))/1000)   AS Weight_all_t --в тоннах
+          , tmpCar_param.Year ::TVarChar
+          , tmpCar_param.VIN  ::TVarChar
  
           , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
           , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr

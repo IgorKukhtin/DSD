@@ -16,7 +16,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     ClientRectBottom = 502
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1268
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -187,9 +186,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -931,6 +927,17 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end>
       isShowModal = True
     end
+    object actSPPrintTTNProcName: TdsdExecStoredProc [10]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -967,7 +974,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [12]
+    object mactPrint_Sale: TMultiAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -981,7 +988,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' - '#1088#1072#1089#1093#1086#1076
       ImageIndex = 3
     end
-    object mactPrint_Tax_Us: TMultiAction [13]
+    object mactPrint_Tax_Us: TMultiAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -995,7 +1002,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Tax_Client: TMultiAction [14]
+    object mactPrint_Tax_Client: TMultiAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1009,7 +1016,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Bill: TMultiAction [15]
+    object mactPrint_Bill: TMultiAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1023,7 +1030,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Hint = #1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Us: TdsdPrintAction [16]
+    object actPrintTax_Us: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1067,7 +1074,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTax_Client: TdsdPrintAction [17]
+    object actPrintTax_Client: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1111,7 +1118,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_TransferDebtOut: TdsdPrintAction [18]
+    object actPrint_TransferDebtOut: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1157,7 +1164,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
         end>
     end
-    object actPrint_Bill: TdsdPrintAction [20]
+    object actPrint_Bill: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1206,7 +1213,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [24]
+    object actGoodsKindChoice: TOpenChoiceForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1356,11 +1363,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       DataSource = TaxDS
     end
     object mactPrint_TTN: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       ActionList = <
         item
           Action = actDialog_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
         end
         item
           Action = actPrint_TTN
@@ -1370,7 +1380,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ImageIndex = 15
     end
     object actDialog_TTN: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       Caption = 'actDialog_TTN'
       Hint = 'actDialog_TTN'
@@ -1404,7 +1414,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       isShowModal = True
     end
     object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrintTTN
       StoredProcList = <
@@ -1433,6 +1443,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1825,6 +1837,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Name = 'inMask'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameTTN'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3626,5 +3645,30 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     Left = 360
     Top = 40
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1128
+    Top = 288
   end
 end

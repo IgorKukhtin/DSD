@@ -74,6 +74,8 @@ type
     spUpdate_Car_size: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     Weight: TcxGridDBColumn;
+    Year: TcxGridDBColumn;
+    VIN: TcxGridDBColumn;
   private
     { Private declarations }
   public

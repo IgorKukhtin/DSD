@@ -212,6 +212,8 @@ type
     actUpdate_InvnumberDialog: TExecuteDialog;
     macUpdate_Invnumber: TMultiAction;
     bbUpdate_Invnumber: TdxBarButton;
+    spGetReporNameTTN: TdsdStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

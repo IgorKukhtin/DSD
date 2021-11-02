@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Car_size(
       IN inWidth            TFloat ,     -- 
       IN inHeight           TFloat ,     --
       IN inWeight           TFloat ,     --
+      IN inYear             TFloat ,     -- год  выпуска
+      IN inVIN              TVarChar,    -- VIN код
       IN inSession          TVarChar     -- Пользователь
       )
   RETURNS Void AS
@@ -32,7 +34,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Width(), inId, inWidth);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Weight(), inId, inWeight);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_Year(), ioId, inYear);
+
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_VIN(), ioId, inVIN);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    
