@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingProduction_KVK(
     IN inSession            TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , FromName TVarChar, ToName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
@@ -34,16 +35,25 @@ BEGIN
      -- inShowAll:= TRUE;
      RETURN QUERY 
      WITH 
-     tmpMovement AS ( SELECT Movement.Id as MovementId
-                           , Movement.InvNumber  AS InvNumber
-                           , Movement.OperDate
+     tmpMovement AS ( SELECT Movement.Id           AS MovementId
+                           , Movement.InvNumber    AS InvNumber
+                           , Movement.OperDate     AS OperDate
                            , MovementDesc.ItemName AS MovementDescName
+                           , MovementDate_StartWeighing.ValueData  AS StartWeighing  
+                           , MovementDate_EndWeighing.ValueData    AS EndWeighing
                        FROM Movement
                             INNER JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = Movement.Id
                                                          AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
                                                          AND MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight()
                             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+                            LEFT JOIN MovementDate AS MovementDate_StartWeighing
+                                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
+                                                  AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
+                            LEFT JOIN MovementDate AS MovementDate_EndWeighing
+                                                   ON MovementDate_EndWeighing.MovementId = Movement.Id
+                                                  AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                        WHERE Movement.DescId IN (zc_Movement_WeighingProduction())
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -95,6 +105,8 @@ BEGIN
                       , tmp.InvNumber
                       , tmp.OperDate
                       , tmp.MovementDescName
+                      , tmp.StartWeighing  
+                      , tmp.EndWeighing
                       , CASE WHEN inisDetail = TRUE THEN tmp.MI_Id ELSE 0 END AS MI_Id
                       , tmp.GoodsId
                       , tmp.GoodsKindId
@@ -117,6 +129,8 @@ BEGIN
                             , tmpMI.InvNumber
                             , tmpMI.OperDate
                             , tmpMI.MovementDescName
+                            , tmpMI.StartWeighing  
+                            , tmpMI.EndWeighing
                             , tmpMI.MI_Id
                             , tmpMI.GoodsId
                             , tmpMI.Amount
@@ -212,6 +226,8 @@ BEGIN
                       , tmp.PartionDate    --дата партии
                       , tmp.Amount_Partion
                       , tmp.CuterCount
+                      , tmp.StartWeighing  
+                      , tmp.EndWeighing
                  )
 
           --–≈«”Ћ№“ј“
@@ -219,6 +235,8 @@ BEGIN
                , tmpData.InvNumber
                , tmpData.OperDate
                , tmpData.MovementDescName
+               , tmpData.StartWeighing  ::TDateTime
+               , tmpData.EndWeighing    ::TDateTime
                , Object_From.ValueData    AS FromName
                , Object_To.ValueData      AS ToName
                , Object_Goods.ObjectCode ::Integer AS GoodsCode

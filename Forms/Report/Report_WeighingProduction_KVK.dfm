@@ -189,12 +189,28 @@ inherited Report_WeighingProduction_KVKForm: TReport_WeighingProduction_KVKForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
+          object StartWeighing: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
+            DataBinding.FieldName = 'StartWeighing'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 125
+          end
+          object EndWeighing: TcxGridDBColumn
+            Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
+            DataBinding.FieldName = 'EndWeighing'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 107
+            Width = 125
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -209,7 +225,7 @@ inherited Report_WeighingProduction_KVKForm: TReport_WeighingProduction_KVKForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 74
           end
           object KVK: TcxGridDBColumn
             Caption = #8470' '#1050#1042#1050
@@ -433,8 +449,8 @@ inherited Report_WeighingProduction_KVKForm: TReport_WeighingProduction_KVKForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsName;GoodsKindName;KVK;PersonalKVKName;U' +
-            'serName'
+            'FromName;ToName;GoodsGroupNameFull;GoodsName;GoodsKindName;KVK;P' +
+            'ersonalKVKName;UserName'
           GridView = cxGridDBTableView
         end>
       Params = <

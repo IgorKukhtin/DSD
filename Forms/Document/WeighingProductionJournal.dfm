@@ -344,6 +344,11 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 86
       end
+      object cxGridDBTableViewColumn1: TcxGridDBColumn
+        DataBinding.FieldName = 'StartWeighing'
+      end
+      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

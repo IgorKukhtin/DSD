@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, Code Integer
              
              , OKPO TVarChar
              , BankId Integer, BankName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isDefault Boolean, isDefaultOut Boolean
@@ -248,6 +249,9 @@ BEGIN
        , Object_Bank.Id          AS BankId
        , Object_Bank.ValueData   AS BankName
 
+       , Object_Branch.Id          AS BranchId
+       , Object_Branch.ValueData   AS BranchName
+
        , Object_Insert.ValueData   AS InsertName
        , Object_Update.ValueData   AS UpdateName
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
@@ -411,6 +415,11 @@ BEGIN
                             AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Contract_GoodsProperty.ChildObjectId 
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Branch
+                             ON ObjectLink_Contract_Branch.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_Branch.DescId = zc_ObjectLink_Contract_Branch()
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Contract_Branch.ChildObjectId 
+
         LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                              ON ObjectDate_Protocol_Insert.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
@@ -504,6 +513,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.11.21         * add BranchId
  21.05.20         * isWMS
  04.02.19         * BankAccountPartner
  18.01.19         * add isDefaultOut
