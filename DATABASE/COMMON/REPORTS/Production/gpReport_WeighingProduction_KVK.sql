@@ -238,12 +238,12 @@ BEGIN
 
                , Object_PersonalKVK.Id          AS PersonalKVKId
                , Object_PersonalKVK.ValueData   AS PersonalKVKName
-               , Object_User.Id                 AS UserId
-               , Object_User.ValueData          AS UserName
+               , tmpData.UserId                 AS UserId
+               , Object_Member.ValueData        AS UserName
           FROM tmpData
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
-               LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId
+               --LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId
                LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = tmpData.PersonalKVKId
                LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
                LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId
@@ -256,6 +256,12 @@ BEGIN
                                     ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                    ON ObjectLink_User_Member.ObjectId = tmpData.UserId
+                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+               LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
 ;
 
 END;

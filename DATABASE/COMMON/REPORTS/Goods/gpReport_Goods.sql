@@ -143,6 +143,12 @@ BEGIN
                                                    THEN MIContainer.MovementItemId
                                               ELSE 0
                                          END AS MovementItemId
+                                       --док акция если есть
+                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   THEN MIFloat_PromoMovement.ValueData 
+                                              ELSE 0
+                                         END :: Integer AS MovementId_Promo
+                                         
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -153,6 +159,9 @@ BEGIN
                                   FROM tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
+                                       LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                                   ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
+                                                                  AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                                   GROUP BY tmpContainer_Count.ContainerId
                                          , tmpContainer_Count.LocationId
                                          , tmpContainer_Count.GoodsId
@@ -170,6 +179,10 @@ BEGIN
                                            END
                                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                      THEN MIContainer.MovementItemId
+                                                ELSE 0
+                                           END
+                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                     THEN MIFloat_PromoMovement.ValueData 
                                                 ELSE 0
                                            END
                                          , MIContainer.MovementDescId
