@@ -259,6 +259,8 @@ BEGIN
              , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmpSale.AmountPartner ELSE 0 END) Amount7
         FROM  tmpSale
              LEFT JOIN tmpDateSale ON tmpDateSale.OperDate = tmpSale.OperDatePartner
+                                  AND tmpDateSale.GoodsId = tmpSale.GoodsId
+                                  AND tmpDateSale.isSale = TRUE
              LEFT JOIN zfCalc_DayOfWeekName (tmpSale.OperDatePartner) AS tmpWeekDay ON 1=1
              LEFT JOIN tmpGroupPeriod ON tmpDateSale.OperDate >= tmpGroupPeriod.StartDate 
                                      AND tmpDateSale.OperDate <= tmpGroupPeriod.EndDate

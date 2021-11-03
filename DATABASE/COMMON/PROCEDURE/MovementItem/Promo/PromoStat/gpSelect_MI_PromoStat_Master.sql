@@ -33,6 +33,7 @@ RETURNS TABLE (
       , AmountPlanBranch5   TFloat -- Кол-во план отгрузки за пт.
       , AmountPlanBranch6   TFloat -- Кол-во план отгрузки за сб.
       , AmountPlanBranch7   TFloat -- Кол-во план отгрузки за вс.
+      , AmountPlan          TFloat -- Итого Кол-во план отгрузки
 
       , Amount1   TFloat
       , Amount2   TFloat
@@ -166,7 +167,22 @@ BEGIN
              , MIFloat_PlanBranch4.ValueData          AS AmountPlanBranch4
              , MIFloat_PlanBranch5.ValueData          AS AmountPlanBranch5
              , MIFloat_PlanBranch6.ValueData          AS AmountPlanBranch6
-             , MIFloat_PlanBranch7.ValueData          AS AmountPlanBranch7 
+             , MIFloat_PlanBranch7.ValueData          AS AmountPlanBranch7
+
+             , (COALESCE (MIFloat_Plan1.ValueData,0)
+              + COALESCE (MIFloat_Plan2.ValueData,0)
+              + COALESCE (MIFloat_Plan3.ValueData,0)
+              + COALESCE (MIFloat_Plan4.ValueData,0)
+              + COALESCE (MIFloat_Plan5.ValueData,0)
+              + COALESCE (MIFloat_Plan6.ValueData,0)
+              + COALESCE (MIFloat_Plan7.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch1.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch2.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch3.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch4.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch5.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch6.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch7.ValueData,0)) ::TFloat AS AmountPlan
 
              , tmpCalc.Amount1   ::TFloat
              , tmpCalc.Amount2   ::TFloat

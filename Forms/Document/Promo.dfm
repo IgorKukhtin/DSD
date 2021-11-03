@@ -4,7 +4,7 @@
   ClientHeight = 707
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 742
+  ExplicitHeight = 745
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -842,6 +842,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1580,6 +1583,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1894,6 +1900,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1987,6 +1996,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2136,6 +2148,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2467,6 +2482,19 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 35
+          end
+          object AmountPlan_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'. ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100
+            Width = 58
           end
           object AmountPlan1_ch5: TcxGridDBColumn
             Caption = #1050#1086#1083'. 1.'#1087#1085'. ('#1089#1082#1083#1072#1076')'
@@ -2871,6 +2899,9 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3064,6 +3095,9 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -4309,6 +4343,12 @@
         end
         item
           StoredProc = spSelectPromoStat_Master
+        end
+        item
+          StoredProc = spSelect_MI_PromoPlan_Master
+        end
+        item
+          StoredProc = spSelect_MI_PromoPlan_Child
         end>
     end
     object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [32]
@@ -5798,7 +5838,7 @@
       QuestionBeforeExecute = 
         #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100'? '#1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1076#1072#1085#1085#1099#1077' '#1073#1091 +
         #1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'.'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1110
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080' '#1079#1072' 5 '#1085#1077#1076#1077#1083#1100
       ImageIndex = 40
@@ -10006,8 +10046,8 @@
   end
   object PlanMasterDS: TDataSource
     DataSet = PlanMasterCDS
-    Left = 964
-    Top = 150
+    Left = 940
+    Top = 126
   end
   object DBViewAddOnPlanSale: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
