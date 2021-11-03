@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_SP_old(
     IN inUnitId              Integer  ,  -- Аптека
     IN inHospitalId          Integer  ,  -- Больница
     IN inMedicalProgramSPId  Integer  ,  -- Медицинская программа соц. проектов
+    IN inGroupMedicalProgramSPId Integer  ,  -- Группа медицинских программ соц. проектов
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
@@ -156,7 +157,7 @@ BEGIN
                                    , tmp.OperDateEnd
                                    , tmp.OperDate
                                    , tmp.MedicalProgramSPId
-                              FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate, inMedicalProgramSPId:= inMedicalProgramSPId) AS tmp
+                              FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate, inMedicalProgramSPId:= inMedicalProgramSPId, inGroupMedicalProgramSPId := inGroupMedicalProgramSPId) AS tmp
                               )
 
           , tmpGoodsSP AS (SELECT DISTINCT MovementItem.GoodsId                         AS GoodsMainId
@@ -284,6 +285,10 @@ BEGIN
                                                                 ON MovementLinkObject_MedicalProgramSP.MovementId = Movement_Check.Id
                                                                AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
      
+                                   LEFT JOIN ObjectLink AS ObjectLink_GroupMedicalProgramSP
+                                                        ON ObjectLink_GroupMedicalProgramSP.ObjectId = COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882)
+                                                       AND ObjectLink_GroupMedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP()
+
                               WHERE Movement_Check.DescId = zc_Movement_Check()
                                 AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
@@ -291,6 +296,7 @@ BEGIN
                                -- AND MovementLinkObject_PartnerMedical.ObjectId <> 0
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
                                 AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
+                                AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
                               )
 
         --

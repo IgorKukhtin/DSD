@@ -1,4 +1,4 @@
-unit MedicalProgramSPEdit;
+unit GroupMedicalProgramSPEdit;
 
 interface
 
@@ -11,10 +11,10 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters;
 
 type
-  TMedicalProgramSPEditForm = class(TParentForm)
+  TGroupMedicalProgramSPEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -30,15 +30,6 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    cxLabel10: TcxLabel;
-    ceSPKind: TcxButtonEdit;
-    SPKindGuides: TdsdGuides;
-    cxLabel2: TcxLabel;
-    edProgramId: TcxTextEdit;
-    cbisFree: TcxCheckBox;
-    edGroupMedicalProgramSP: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GroupMedicalProgramSPGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -49,6 +40,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TMedicalProgramSPEditForm);
+  RegisterClass(TGroupMedicalProgramSPEditForm);
 
 end.

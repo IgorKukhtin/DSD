@@ -100,12 +100,13 @@ BEGIN
              
         FROM tmpPrice_Site AS Price_Site         
 
-             INNER JOIN tmpContainerAll ON tmpContainerAll.GoodsId = Price_Site.GoodsId
+             LEFT JOIN tmpContainerAll ON tmpContainerAll.GoodsId = Price_Site.GoodsId
              
         WHERE COALESCE (inSearch, '') = '' OR 
               CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
 
-        ORDER BY CASE WHEN inSortType = 0 THEN Price_Site.Price END
+        ORDER BY CASE WHEN COALESCE (tmpContainerAll.Remains, 0) = 0 THEN 1 ELSE 0 END 
+               , CASE WHEN inSortType = 0 THEN Price_Site.Price END
                , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
                , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
                , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC

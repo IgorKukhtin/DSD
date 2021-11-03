@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_SP(
     IN inHospitalId          Integer  ,  -- Больница
     IN inJuridicalMedicId    Integer  ,  -- Юр.лицо плательщик с 01,04,2019
     IN inMedicalProgramSPId  Integer  ,  -- Медицинская программа соц. проектов
+    IN inGroupMedicalProgramSPId Integer  ,  -- Группа медицинских программ соц. проектов
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
@@ -140,6 +141,7 @@ BEGIN
                                        , inHospitalId         := inHospitalId       
                                        , inJuridicalMedicId   := inJuridicalMedicId 
                                        , inMedicalProgramSPId := inMedicalProgramSPId
+                                       , inGroupMedicalProgramSPId := inGroupMedicalProgramSPId
                                        , inSession            := inSession          
                                          ) AS tmp;
     ELSE 
@@ -152,6 +154,7 @@ BEGIN
                                   , inUnitId             := inUnitId           
                                   , inHospitalId         := inHospitalId    
                                   , inMedicalProgramSPId := inMedicalProgramSPId
+                                  , inGroupMedicalProgramSPId := inGroupMedicalProgramSPId
                                   , inSession            := inSession          
                                     ) AS tmp;
     END IF;
@@ -174,4 +177,4 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.02.2011')::TDateTime , inEndDate := ('02.02.2011')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');
 
 
-select * from gpReport_Check_SP(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('05.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18076882 ,  inSession := '3');
+--select * from gpReport_Check_SP(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('05.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18076882 ,  inSession := '3');

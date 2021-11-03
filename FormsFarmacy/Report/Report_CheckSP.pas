@@ -96,6 +96,9 @@ type
     cxLabel9: TcxLabel;
     MedicalProgramSPGuides: TdsdGuides;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    edGroupMedicalProgramSP: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    GroupMedicalProgramSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

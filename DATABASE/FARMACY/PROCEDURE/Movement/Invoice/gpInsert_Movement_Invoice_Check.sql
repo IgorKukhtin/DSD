@@ -1,7 +1,7 @@
 -- Function: gpInsert_Movement_Invoice_Check()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice_Check (TDateTime, TDateTime, Integer, Integer, Integer, TDateTime, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice_Check (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice_Check (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice_Check(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice_Check(
     IN inPartnerMedicalId Integer  ,  -- Больница
     IN inJuridicalMedicId Integer  ,  -- юр.лицо плательщик с 01,04,2019
     IN inMedicalProgramSPId  Integer  ,  -- Медицинская программа соц. проектов
+    IN inGroupMedicalProgramSPId Integer  ,  -- Группа медицинских программ соц. проектов
     
     IN inDateInvoice      TDateTime  , -- дата счета
     IN inInvoice          TVarChar   , -- счет
@@ -57,7 +58,8 @@ BEGIN
                    ,  (tmp.CountInvNumberSP) AS CountSP
              FROM gpReport_Check_SP(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId
                                   , inUnitId:= inUnitId, inHospitalId:=inPartnerMedicalId, inJuridicalMedicId := inJuridicalMedicId
-                                  , inMedicalProgramSPId := inMedicalProgramSPId, inSession:=inSession) AS tmp
+                                  , inMedicalProgramSPId := inMedicalProgramSPId, inGroupMedicalProgramSPId := inGroupMedicalProgramSPId
+                                  , inSession:=inSession) AS tmp
              GROUP BY tmp.MovementId
                     , tmp.JuridicalId
                     , tmp.HospitalId
@@ -192,4 +194,4 @@ $BODY$
 */
 
 
-select * from gpInsert_Movement_Invoice_Check(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('31.10.2021')::TDateTime , inJuridicalId := 393038 , inUnitId := 0 , inPartnerMedicalId := 0 , inJuridicalMedicId := 10959824 , inDateInvoice := ('02.11.2021')::TDateTime , inInvoice := '57500' , inisInsert := 'True' ,  inSession := '3');
+-- select * from gpInsert_Movement_Invoice_Check(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('31.10.2021')::TDateTime , inJuridicalId := 393038 , inUnitId := 0 , inPartnerMedicalId := 0 , inJuridicalMedicId := 10959824 , inDateInvoice := ('02.11.2021')::TDateTime , inInvoice := '57500' , inisInsert := 'True' ,  inSession := '3');

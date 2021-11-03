@@ -4008,6 +4008,14 @@
 				<Form>AccommodationUnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMedicalProgramSPEdit.pas">
+				<Form>GroupMedicalProgramSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas">
+				<Form>GroupMedicalProgramSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

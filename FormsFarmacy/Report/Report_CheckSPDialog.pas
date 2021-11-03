@@ -38,6 +38,9 @@ type
     ceMedicalProgramSP: TcxButtonEdit;
     cxLabel3: TcxLabel;
     MedicalProgramSPGuides: TdsdGuides;
+    edGroupMedicalProgramSP: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    GroupMedicalProgramSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -43,7 +43,7 @@ object MedicalProgramSPForm: TMedicalProgramSPForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
@@ -52,14 +52,14 @@ object MedicalProgramSPForm: TMedicalProgramSPForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 63
       end
       object Name: TcxGridDBColumn
         Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 173
+        Width = 211
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,22 +76,22 @@ object MedicalProgramSPForm: TMedicalProgramSPForm
         DataBinding.FieldName = 'SPKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 149
+        Width = 144
       end
-      object ProgramId: TcxGridDBColumn
-        Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '
-        DataBinding.FieldName = 'ProgramId'
+      object GroupMedicalProgramSPName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1084#1077#1076#1080#1094#1080#1085#1089#1082#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
+        DataBinding.FieldName = 'GroupMedicalProgramSPName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 175
+        Width = 117
       end
       object isFree: TcxGridDBColumn
         Caption = #1041#1077#1079#1087#1083#1072#1090#1085#1086
         DataBinding.FieldName = 'isFree'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 74
+        Width = 88
       end
     end
     object cxGridLevel: TcxGridLevel
