@@ -1208,8 +1208,8 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Action = actPrint_TTN2
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
       ImageIndex = 15
     end
     object macInsert_LockUnique: TMultiAction [8]
@@ -3945,7 +3945,6 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbTTN: TdxBarButton
       Action = mactPrint_TTN
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053'_'
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
@@ -4028,7 +4027,6 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrint_TTN2: TdxBarButton
       Action = mactPrint_TTN2
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
       Category = 0
     end
     object bbExport: TdxBarButton
