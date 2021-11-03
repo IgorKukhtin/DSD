@@ -53,24 +53,32 @@ BEGIN
 
       WHERE Object_Accommodation.DescId = zc_Object_Accommodation()
         AND upper(Object_Accommodation.ValueData) = upper(TRIM(inAccommodationName));
-                       
-        -- Если связь есть
-      IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
-                                                        AND GoodsId = inGoodsId)
+                  
+      IF NOT EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
+                                                            AND GoodsId = inGoodsId
+                                                            AND AccommodationId <> vbAccommodationID
+                                                            AND isErased = False)
       THEN
-        UPDATE AccommodationLincGoods SET AccommodationId = vbAccommodationID, UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = False
-        WHERE UnitId = inUnitId
-          AND GoodsId = inGoodsId;
-      ELSE
-          -- сохранили связь с <Медикаментом>
-        INSERT INTO AccommodationLincGoods (AccommodationId, UnitId, GoodsId, UserUpdateId, DateUpdate, isErased)
-        VALUES (vbAccommodationID, inUnitId, inGoodsId, vbUserId, CURRENT_TIMESTAMP, False);
+     
+          -- Если связь есть
+        IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
+                                                          AND GoodsId = inGoodsId)
+        THEN
+          UPDATE AccommodationLincGoods SET AccommodationId = vbAccommodationID, UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = False
+          WHERE UnitId = inUnitId
+            AND GoodsId = inGoodsId;
+        ELSE
+            -- сохранили связь с <Медикаментом>
+          INSERT INTO AccommodationLincGoods (AccommodationId, UnitId, GoodsId, UserUpdateId, DateUpdate, isErased)
+          VALUES (vbAccommodationID, inUnitId, inGoodsId, vbUserId, CURRENT_TIMESTAMP, False);
+        END IF;
       END IF;
        
     ELSE
         -- Удаляем связь с <Медикаментом> если есть
       IF EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
-                                                        AND GoodsId = inGoodsId)
+                                                        AND GoodsId = inGoodsId
+                                                        AND isErased = False)
       THEN
         UPDATE AccommodationLincGoods SET UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = True
         WHERE UnitId = inUnitId

@@ -12,6 +12,11 @@ RETURNS TABLE (
                 UnitName TVarChar
               , GoodsCode Integer
               , GoodsName TVarChar
+              , isClose   boolean
+              , MakerId          Integer
+              , MakerCode        Integer      --ѕроизводитель
+              , MakerName        TVarChar     --Ќаименование производител€
+
               , MCSIsCloseDateChange TDateTime
               , CountUnit Integer
               , CountSelling Integer
@@ -116,8 +121,9 @@ BEGIN
                             , Object_Goods.objectcode           AS GoodsCode
                             , Object_Goods.valuedata            AS GoodsName
                             , MCS_Value.ValueData               AS MCSValue
-                            , MCS_isClose.ValueData             AS isClose
+                            , MCS_isClose.ValueData             AS isMCSClose
                             , MCSIsClose_DateChange.valuedata   AS MCSIsCloseDateChange
+                            , COALESCE (ObjectBoolean_Goods_Close.valuedata, False) AS isClose
                        FROM ObjectLink AS OL_Price_Unit
 
                             INNER JOIN ObjectBoolean AS MCS_isClose
@@ -146,6 +152,11 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                                    ON ObjectBoolean_Goods_Close.ObjectId  = OL_Price_Goods.ChildObjectId
+                                                   AND ObjectBoolean_Goods_Close.DescId    = zc_ObjectBoolean_Goods_Close()
+                                                
 
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Juridical_Retail.childobjectid = 4
@@ -214,6 +225,7 @@ BEGIN
                             , tmpGoods.GoodsId
                             , tmpGoods.GoodsCode
                             , tmpGoods.GoodsName
+                            , tmpGoods.isClose
                             , tmpGoods.MCSIsCloseDateChange
                             , tmpGoodsUnitCount.CountUnit::Integer     AS CountUnit
                             , tmpSellingCount.CountSelling::Integer    AS CountSelling
@@ -265,12 +277,70 @@ BEGIN
                               FROM tmpContainer AS Container
                               GROUP BY Container.ObjectId
                                      , Container.WhereObjectId
-                             )
+                             ),
+           tmpGoodsPromo AS (SELECT  MI_Goods.ObjectId  AS GoodsId        -- здесь товар
+                                   , MovementDate_StartPromo.ValueData  AS StartDate_Promo
+                                   , MovementDate_EndPromo.ValueData    AS EndDate_Promo
+                                   , MIFloat_Price.ValueData            AS Price
+                                   , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
+                                   , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
+                                   , MovementLinkObject_Maker.ObjectId  AS MakerId
+                              FROM Movement
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                              ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                        ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                       AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                        ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                       AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                   AND MI_Goods.DescId = zc_MI_Master()
+                                                                   AND MI_Goods.isErased = FALSE
+                                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                            ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                              ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                                             AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                              WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                                AND Movement.DescId = zc_Movement_Promo()
+                         ),
+            -- товары промо
+           tmpGoods_All AS (SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
+                                 , tmpGoodsPromo.StartDate_Promo
+                                 , tmpGoodsPromo.EndDate_Promo
+                                 , tmpGoodsPromo.MakerId
+                            FROM tmpGoodsPromo
+                                    -- !!!
+                                   INNER JOIN ObjectLink AS ObjectLink_Child
+                                                         ON ObjectLink_Child.ChildObjectId = tmpGoodsPromo.GoodsId
+                                                        AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                   INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                           AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                   INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                             AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                   INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                                              AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                             WHERE  ObjectLink_Child_R.ChildObjectId<>0
+                           ),                             
+           tmpListGodsMarket AS (SELECT tmpGoods_All.GoodsId
+                                      , Max(tmpGoods_All.MakerId)    AS MakerId
+                                 FROM tmpGoods_All
+                                 WHERE tmpGoods_All.StartDate_Promo <= CURRENT_DATE
+                                   AND tmpGoods_All.EndDate_Promo >= CURRENT_DATE
+                                 GROUP BY tmpGoods_All.GoodsId
+                                 )                             
 
            
     SELECT tmpDate.UnitName
          , tmpDate.GoodsCode
          , tmpDate.GoodsName
+         , tmpDate.isClose
+         , Object_Maker.Id
+         , Object_Maker.ObjectCode
+         , Object_Maker.ValueData
          , tmpDate.MCSIsCloseDateChange
          , tmpDate.CountUnit
          , tmpDate.CountSelling
@@ -292,6 +362,10 @@ BEGIN
          LEFT JOIN tmpRemains ON tmpRemains.GoodsId =  tmpDate.GoodsId
                              AND tmpRemains.UnitId =  tmpDate.UnitId 
 
+         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = tmpDate.GoodsId
+
+         LEFT JOIN Object AS Object_Maker
+                          ON Object_Maker.ID = tmpListGodsMarket.MakerId
     ;
 
 
