@@ -38,6 +38,12 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , PersonalKVKId Integer, PersonalKVKName TVarChar
               , PositionCode_KVK Integer, PositionName_KVK TVarChar
               , UnitCode_KVK Integer, UnitName_KVK TVarChar
+              
+              , InvNumber_Full   TVarChar
+              , StartSale_promo  TDateTime
+              , EndSale_promo    TDateTime
+              , DayOfWeekName_doc     TVarChar   --день недели даты документа
+              , DayOfWeekName_partner TVarChar   --день недели даты покупател€
                )
 AS
 $BODY$
@@ -83,6 +89,12 @@ BEGIN
               , '' :: TVarChar AS PositionName_KVK
               , 0              AS UnitCode_KVK
               , '' :: TVarChar AS UnitName_KVK
+
+              , '' :: TVarChar   AS InvNumber_Full
+              , NULL ::TDateTime AS StartSale_promo
+              , NULL ::TDateTime AS EndSale_promo
+              , '' :: TVarChar   AS DayOfWeekName_doc       --день недели даты документа
+              , '' :: TVarChar   AS DayOfWeekName_partner   --день недели даты покупател€
          FROM gpReport_GoodsGroup (inStartDate   := inStartDate
                                  , inEndDate     := inEndDate
                                  , inUnitGroupId := inUnitGroupId
@@ -143,11 +155,6 @@ BEGIN
                                                    THEN MIContainer.MovementItemId
                                               ELSE 0
                                          END AS MovementItemId
-                                       --док акци€ если есть
-                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   THEN MIFloat_PromoMovement.ValueData 
-                                              ELSE 0
-                                         END :: Integer AS MovementId_Promo
                                          
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                         THEN MIContainer.Amount
@@ -159,9 +166,6 @@ BEGIN
                                   FROM tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
-                                       LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                                   ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
-                                                                  AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                                   GROUP BY tmpContainer_Count.ContainerId
                                          , tmpContainer_Count.LocationId
                                          , tmpContainer_Count.GoodsId
@@ -179,10 +183,6 @@ BEGIN
                                            END
                                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                      THEN MIContainer.MovementItemId
-                                                ELSE 0
-                                           END
-                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                     THEN MIFloat_PromoMovement.ValueData 
                                                 ELSE 0
                                            END
                                          , MIContainer.MovementDescId
@@ -226,6 +226,7 @@ BEGIN
                                                   THEN MIContainer.MovementItemId
                                              ELSE 0
                                         END AS MovementItemId
+
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -265,7 +266,10 @@ BEGIN
                                         , MIContainer.isActive
                                 )
 
-         , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0)
+         , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive
+                                FROM tmpMI_Summ
+                                WHERE tmpMI_Summ.MovementItemId > 0
+                                )
          -- , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())
          , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementItemId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())
          , tmpMI_SummPartner AS (SELECT tmpMI_Summ_group.MovementItemId
@@ -591,12 +595,32 @@ BEGIN
                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                          )
 
-
   , tmpMovementBoolean AS (SELECT MovementBoolean.*
                            FROM MovementBoolean
                            WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMIContainer_group.MovementId FROM tmpMIContainer_group) 
                              AND MovementBoolean.DescId = zc_MovementBoolean_Peresort()
                            )
+   -- данные по акци€м
+  , tmpMIFloat_promo AS (SELECT MIFloat_PromoMovement.MovementItemId
+                              , MIFloat_PromoMovement.ValueData ::Integer AS MovementId_promo
+                         FROM MovementItemFloat AS MIFloat_PromoMovement
+                         WHERE MIFloat_PromoMovement.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group)  
+                           AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                        )
+  , tmpPromo AS (SELECT tmp.MovementId
+                      , ('є '||Movement.InvNumber||' от '|| Movement.OperDate ::Date ::TVarChar) :: TVarChar AS InvNumber_Full
+                      , MovementDate_StartSale.ValueData AS StartSale
+                      , MovementDate_EndSale.ValueData   AS EndSale
+                 FROM (SELECT DISTINCT tmpMIFloat_promo.MovementId_promo AS MovementId FROM tmpMIFloat_promo) AS tmp
+                     LEFT JOIN Movement ON Movement.Id = tmp.MovementId
+                     LEFT JOIN MovementDate AS MovementDate_StartSale
+                                            ON MovementDate_StartSale.MovementId = tmp.MovementId
+                                           AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                     LEFT JOIN MovementDate AS MovementDate_EndSale
+                                            ON MovementDate_EndSale.MovementId = Movement.Id
+                                           AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                 )
+
 
    -- –≈«”Ћ№“ј“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
@@ -763,6 +787,14 @@ BEGIN
                         , Object_PositionKVK.ValueData   AS PositionName_KVK
                         , Object_UnitKVK.ObjectCode      AS UnitCode_KVK
                         , Object_UnitKVK.ValueData       AS UnitName_KVK
+
+                        --јкци€
+                        , tmpPromo.InvNumber_Full  ::TVarChar
+                        , tmpPromo.StartSale       ::TDateTime AS StartSale_promo
+                        , tmpPromo.EndSale         ::TDateTime AS EndSale_promo
+                        --
+                        , tmpWeekDay_doc.DayOfWeekName     ::TVarChar AS DayOfWeekName_doc      --день недели даты документа
+                        , tmpWeekDay_partner.DayOfWeekName ::TVarChar AS DayOfWeekName_partner  --день недели даты покупател€
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -804,6 +836,11 @@ BEGIN
                                                            ON tmpMILO_GoodsKind.MovementItemId = tmpMIContainer_group.MovementItemId
                                                           --AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
 
+                        LEFT JOIN tmpMIFloat_promo AS MIFloat_PromoMovement
+                                                   ON MIFloat_PromoMovement.MovementItemId = tmpMIContainer_group.MovementItemId
+                                                  --AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                        LEFT JOIN tmpPromo ON tmpPromo.MovementId = MIFloat_PromoMovement.MovementId_promo 
+
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
                         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMIContainer_group.GoodsKindId, tmpMILO_GoodsKind.ObjectId)
                 
@@ -832,6 +869,9 @@ BEGIN
                                              ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
                                             AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
                         LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
+
+                        LEFT JOIN zfCalc_DayOfWeekName (Movement.OperDate) AS tmpWeekDay_doc ON 1=1
+                        LEFT JOIN zfCalc_DayOfWeekName (MovementDate_OperDatePartner.ValueData) AS tmpWeekDay_partner ON 1=1
                    )
 
    -- –≈«”Ћ№“ј“
@@ -911,6 +951,14 @@ BEGIN
         , tmpDataAll.UnitCode_KVK
         , tmpDataAll.UnitName_KVK
 
+        --јкци€
+        , tmpDataAll.InvNumber_Full  ::TVarChar
+        , tmpDataAll.StartSale_promo ::TDateTime
+        , tmpDataAll.EndSale_promo   ::TDateTime
+        --
+        , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END  ::TVarChar AS DayOfWeekName_doc --день недели даты документа
+        , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END ::TVarChar AS DayOfWeekName_partner --день недели даты покупател€
+
    FROM tmpDataAll
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
@@ -955,6 +1003,11 @@ BEGIN
         , tmpDataAll.PositionName_KVK
         , tmpDataAll.UnitCode_KVK
         , tmpDataAll.UnitName_KVK
+        , tmpDataAll.InvNumber_Full
+        , tmpDataAll.StartSale_promo
+        , tmpDataAll.EndSale_promo
+        , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END
+        , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END
    ;
 
    END IF;

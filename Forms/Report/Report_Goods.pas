@@ -107,6 +107,11 @@ type
     FormParams: TdsdFormParams;
     isPeresort: TcxGridDBColumn;
     cbPapty: TcxCheckBox;
+    InvNumber_Full: TcxGridDBColumn;
+    StartSale_promo: TcxGridDBColumn;
+    EndSale_promo: TcxGridDBColumn;
+    DayOfWeekName_doc: TcxGridDBColumn;
+    DayOfWeekName_partner: TcxGridDBColumn;
   private
     { Private declarations }
   public
