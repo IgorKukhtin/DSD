@@ -36,6 +36,22 @@ $BODY$
 BEGIN
 
      -- проверка
+     IF inMovementId_Invoice > 0
+     AND (COALESCE (inUnitId, 0) = 0
+       OR NOT EXISTS (SELECT 1 FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.UnitId = inUnitId AND lfSelect.ProfitLossDirectionId > 0)
+         )
+     THEN
+        IF COALESCE (inUnitId, 0) = 0
+        THEN RAISE EXCEPTION 'Ошибка.В счете не установлено <Подразделение использования>.';
+        ELSE RAISE EXCEPTION 'Ошибка.%Для подразделения <%>% нельзя определить <Административные ОС> или <Производственные ОС>.%Установите другое <Подразделение использования>'
+                           , CHR (13)
+                           , lfGet_Object_ValueData (inInfoMoneyId)
+                           , CHR (13)
+                           , CHR (13)
+                            ;
+        END IF;
+     END IF;
+     -- проверка
      IF COALESCE (inMovementId_Invoice, 0) = 0 AND EXISTS (SELECT 1 FROM Object_InfoMoney_View AS View_InfoMoney WHERE View_InfoMoney.InfoMoneyId = inInfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()) -- Инвестиции
      THEN
         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData (inInfoMoneyId);
