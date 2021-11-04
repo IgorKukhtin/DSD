@@ -539,6 +539,7 @@ type
     actInsUpPromoPlan_Master_calc: TdsdExecStoredProc;
     macInsUpPromoPlan_Master_calc: TMultiAction;
     bbInsUpPromoPlan_Master_calc: TdxBarButton;
+    Koef_ch5: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -60,9 +60,6 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                                         ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
-                            /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Master()
                          AND MovementItem.isErased = FALSE
@@ -123,14 +120,14 @@ BEGIN
                                 WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0)
                            ELSE 0 END) Amount
                         --, (SELECT tmp.TotalPlan FROM tmpMIFloat_avg AS tmp) AS TotalPlan
-                        , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN COALESCE (tmpMIFloat_avg.Plan1,0)
-                                WHEN tmpWeekDay.Number = 2 THEN COALESCE (tmpMIFloat_avg.Plan2,0)
-                                WHEN tmpWeekDay.Number = 3 THEN COALESCE (tmpMIFloat_avg.Plan3,0)
-                                WHEN tmpWeekDay.Number = 4 THEN COALESCE (tmpMIFloat_avg.Plan4,0)
-                                WHEN tmpWeekDay.Number = 5 THEN COALESCE (tmpMIFloat_avg.Plan5,0)
-                                WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0)
-                                WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0)
-                           ELSE 0 END) OVER () AS TotalPlan
+                        , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN COALESCE (tmpMIFloat_avg.Plan1,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 2 THEN COALESCE (tmpMIFloat_avg.Plan2,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 3 THEN COALESCE (tmpMIFloat_avg.Plan3,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 4 THEN COALESCE (tmpMIFloat_avg.Plan4,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 5 THEN COALESCE (tmpMIFloat_avg.Plan5,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0) ELSE 0 END
+                             + CASE WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0) ELSE 0 END) OVER (PARTITION BY tmpGoods.GoodsId, tmpGoods.GoodsKindId) AS TotalPlan
+
                         , CASE WHEN COALESCE (tmpMIFloat_avg.Plan_dn,0) <> 0 THEN TRUE ELSE FALSE END AS isDnepr
                    FROM tmpListDateSale
                     LEFT JOIN zfCalc_DayOfWeekName (tmpListDateSale.OperDate) AS tmpWeekDay ON 1=1
@@ -142,12 +139,12 @@ BEGIN
        SELECT tmpCalc.OperDate
             , tmpCalc.GoodsId
             , tmpCalc.GoodsKindId
-            , CAST (CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN (tmpCalc.Amount/ tmpCalc.TotalPlan) * tmpMI_Promo.AmountPlanMax ELSE 0 END AS NUMERIC (16,3)) AS Amount_calc
+            , CAST (CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN tmpCalc.Amount * tmpMI_Promo.AmountPlanMax / tmpCalc.TotalPlan ELSE 0 END AS NUMERIC (16,3)) AS Amount_calc
             , tmpCalc.isDnepr
        FROM tmpMI_Promo
            LEFT JOIN tmpCalc ON tmpCalc.GoodsId = tmpMI_Promo.GoodsId
                             --AND tmpCalc.GoodsKindId = tmpMI_Promo.GoodsKindId
-       WHERE CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN (tmpCalc.Amount/ tmpCalc.TotalPlan) * tmpMI_Promo.AmountPlanMax ELSE 0 END <> 0
+       WHERE CASE WHEN COALESCE (tmpCalc.TotalPlan,0) <> 0 THEN tmpCalc.Amount * tmpMI_Promo.AmountPlanMax / tmpCalc.TotalPlan ELSE 0 END <> 0
        ;
 
 
