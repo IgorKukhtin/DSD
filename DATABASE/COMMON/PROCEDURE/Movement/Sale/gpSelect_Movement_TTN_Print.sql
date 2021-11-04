@@ -167,9 +167,9 @@ BEGIN
                              , CASE WHEN COALESCE (ObjectFloat_Length.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Length.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Length
                              , CASE WHEN COALESCE (ObjectFloat_Width.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Width.ValueData AS NUMERIC (16,0))   ::TVarChar END :: TVarChar  AS Width 
                              , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
-                             , ObjectFloat_Weight.ValueData AS Weight
-                             , CASE WHEN COALESCE (ObjectFloat_Year.ValueData,0) = 0 THEN '' ELSE CAST (ObjectFloat_Year.ValueData AS NUMERIC (16,0))     ::TVarChar END :: TVarChar  AS Year
-                             , ObjectString_VIN.ValueData    :: TVarChar AS VIN
+                             , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
+                             , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
+                             , ObjectString_VIN.ValueData                 AS VIN
                         FROM (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT DISTINCT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods) AS tmp
                              ---
                              LEFT JOIN ObjectFloat AS ObjectFloat_Length
@@ -268,14 +268,14 @@ BEGIN
           , tmpCar_param.Length :: TVarChar  AS Length
           , tmpCar_param.Width  :: TVarChar  AS Width 
           , tmpCar_param.Height :: TVarChar  AS Height
-          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN '' ELSE (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) ::TVarChar END :: TVarChar AS Weight_car
-          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN ''
+          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN 0 ELSE (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) END :: TFloat AS Weight_car
+          , CASE WHEN (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)) = 0 THEN 0
                  ELSE CAST ((((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
-                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0))) AS NUMERIC (16,0))  ::TVarChar END ::TVarChar AS Weight_all
+                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0))) AS NUMERIC (16,0)) :: TFloat END :: TFloat AS Weight_all
           , ( ( ((COALESCE (tmpTransportGoods.TotalWeightBox, 0) + COALESCE (MovementFloat_TotalCountKg.ValueData, 0) + COALESCE (tmpPackage.TotalWeightPackage,0)) / 1)
-                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)))/1000)   AS Weight_all_t --в тоннах
-          , tmpCar_param.Year ::TVarChar
-          , tmpCar_param.VIN  ::TVarChar
+                      + (COALESCE (tmpCar_param.Weight,0) + COALESCE (tmpCarTrailer_param.Weight,0)))/1000) :: TFloat AS Weight_all_t --в тоннах
+          , CASE WHEN tmpCar_param.Year > 0 THEN CAST (tmpCar_param.Year AS Integer) :: TVarChar ELSE '' END ::TVarChar AS Year
+          , tmpCar_param.VIN  ::TVarChar AS VIN
  
           , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
           , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
@@ -592,7 +592,7 @@ BEGIN
       ;
 
     RETURN NEXT Cursor2;
-
+/*
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
      INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -633,7 +633,7 @@ BEGIN
                -- ProtocolData
              , inMovementId  :: TVarChar
     || ', ' || inSession
-              ;
+              ;*/
 
 END;
 $BODY$
