@@ -315,6 +315,7 @@ type
     spErasedUnErasedCC: TdsdStoredProc;
     bbSetErasedCC: TdxBarButton;
     bbSetUnErased——: TdxBarButton;
+    BranchName: TcxGridDBColumn;
 
   private
     { Private declarations }

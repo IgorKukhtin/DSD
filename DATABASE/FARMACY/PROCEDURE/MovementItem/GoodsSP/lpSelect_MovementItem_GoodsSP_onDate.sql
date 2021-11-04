@@ -1,12 +1,13 @@
 --- Function: lpSelect_MovementItem_GoodsSP_onDate()
 
 
-DROP FUNCTION IF EXISTS lpSelect_MovementItem_GoodsSP_onDate (TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpSelect_MovementItem_GoodsSP_onDate (TDateTime, TDateTime, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_MovementItem_GoodsSP_onDate(
-    IN inStartDate           TDateTime,   -- 
-    IN inEndDate             TDateTime,   -- 
-    IN inMedicalProgramSPId  Integer = 0  -- Медицинская программа соц. проектов
+    IN inStartDate               TDateTime,    -- 
+    IN inEndDate                 TDateTime,    -- 
+    IN inMedicalProgramSPId      Integer = 0,  -- Медицинская программа соц. проектов
+    IN inGroupMedicalProgramSPId Integer = 0   -- Группа медицинских программ соц. проектов
 )    
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , MovementItemId Integer
@@ -14,6 +15,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer 
+             , GroupMedicalProgramSPId Integer 
               )
 AS
 $BODY$
@@ -28,6 +30,7 @@ BEGIN
                 , MovementDate_OperDateStart.ValueData AS OperDateStart
                 , MovementDate_OperDateEnd.ValueData   AS OperDateEnd
                 , MLO_MedicalProgramSP.ObjectId        AS MedicalProgramSPId
+                , ObjectLink_GroupMedicalProgramSP.ChildObjectId AS GroupMedicalProgramSPId
            FROM Movement
                  INNER JOIN MovementDate AS MovementDate_OperDateStart
                                          ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -47,9 +50,14 @@ BEGIN
                                               ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                              AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                                                
+                 LEFT JOIN ObjectLink AS ObjectLink_GroupMedicalProgramSP
+                                      ON ObjectLink_GroupMedicalProgramSP.ObjectId = MLO_MedicalProgramSP.ObjectId
+                                     AND ObjectLink_GroupMedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP()
+                                     
            WHERE Movement.StatusId = zc_Enum_Status_Complete()
              AND Movement.DescId = zc_Movement_GoodsSP()
              AND (COALESCE (MLO_MedicalProgramSP.ObjectId, 0) = inMedicalProgramSPId OR COALESCE (inMedicalProgramSPId, 0) = 0)
+             AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
            ;
     
 END;

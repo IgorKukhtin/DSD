@@ -130,6 +130,8 @@ type
     macOpenDocument: TMultiAction;
     getMovementForm: TdsdStoredProc;
     bbOpenDocument: TdxBarButton;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
   private
   public
   end;

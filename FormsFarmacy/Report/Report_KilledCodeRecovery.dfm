@@ -201,6 +201,22 @@ inherited Report_KilledCodeRecoveryForm: TReport_KilledCodeRecoveryForm
             Options.Editing = False
             Width = 116
           end
+          object MakerName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
+          end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
         end
       end
     end

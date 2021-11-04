@@ -289,6 +289,32 @@ BEGIN
                                      , Object_Object.Id
                                      , Object_Object.ValueData
                                      , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False))
+       -- Отложенные технические переучеты
+       , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
+                                , MovementLinkObject_Unit.ObjectId AS UnitId
+                                , SUM(-MovementItemMaster.Amount)  AS Amount
+                           FROM Movement AS Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                             AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+                                                               
+                                INNER JOIN MovementItem AS MovementItemMaster
+                                                        ON MovementItemMaster.MovementId = Movement.Id
+                                                       AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                       AND MovementItemMaster.isErased   = FALSE
+                                                       AND MovementItemMaster.Amount     < 0
+                                                         
+                                INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                               ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                              AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                              AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                           WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           GROUP BY MovementItemMaster.ObjectId
+                                  , MovementLinkObject_Unit.ObjectId)
 
       SELECT Remains.UnitId                 AS PharmacyId
            , Object_Goods_Retail.Id         AS ProductId
@@ -299,7 +325,7 @@ BEGIN
            , REPLACE(Remains.SertificatNumber, ',', ';')::TVarChar                AS RegistrationNumber
            , REPLACE(Object_Goods_Juridical_Optima.Code, ',', ';')::TVarChar      AS Optima
            , REPLACE(Object_Goods_Juridical_Badm.Code, ',', ';')::TVarChar        AS Badm
-           , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
+           , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0) - COALESCE (Reserve_TP.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
            , to_char(zfCalc_PriceCash(Object_Price.Price, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                           COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                                                           ,'FM9999990.00')::TVarChar                   AS Price
@@ -346,6 +372,9 @@ BEGIN
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
                                                       AND Reserve_Goods.UnitId = Remains.UnitId
+
+           LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = Remains.ObjectId
+                                                      AND Reserve_TP.UnitId = Remains.UnitId
                                                       
            LEFT OUTER JOIN tmpRemainsPD AS RemainsPD ON RemainsPD.ObjectId = Remains.ObjectId
                                                     AND RemainsPD.UnitId = Remains.UnitId
@@ -356,7 +385,7 @@ BEGIN
            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
            LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
 
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0)) > 0
+      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0
         AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
         AND Object_Goods_Main.isNotUploadSites = FALSE
         AND COALESCE(Object_Goods_Juridical_Optima.Code, '') <> ''

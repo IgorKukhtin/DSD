@@ -1116,7 +1116,9 @@ uses
   WagesVIP_User in '..\..\FormsFarmacy\Document\WagesVIP_User.pas' {WagesVIP_UserForm: TParentForm},
   Category1303 in '..\..\FormsFarmacy\Guides\Category1303.pas' {Category1303Form: TParentForm},
   AccommodationUnitEdit in '..\..\FormsFarmacy\Guides\AccommodationUnitEdit.pas' {AccommodationUnitEditForm: TParentForm},
-  AccommodationUnit in '..\..\FormsFarmacy\Guides\AccommodationUnit.pas' {AccommodationUnitForm: TParentForm};
+  AccommodationUnit in '..\..\FormsFarmacy\Guides\AccommodationUnit.pas' {AccommodationUnitForm: TParentForm},
+  GroupMedicalProgramSPEdit in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSPEdit.pas' {GroupMedicalProgramSPEditForm: TParentForm},
+  GroupMedicalProgramSP in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas' {GroupMedicalProgramSPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -974,32 +974,32 @@
         Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' '#1090#1072#1073#1083#1077#1090#1086#1082
       end
       object cxLabel48: TcxLabel
-        Left = 227
-        Top = 236
+        Left = 14
+        Top = 270
         Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
       end
       object edPromoForSale: TcxTextEdit
-        Left = 227
-        Top = 255
+        Left = 14
+        Top = 289
         TabOrder = 21
         Width = 129
       end
       object ceSerialNumberMypharmacy: TcxCurrencyEdit
-        Left = 15
-        Top = 292
+        Left = 220
+        Top = 246
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 22
         Width = 168
       end
       object cxLabel49: TcxLabel
-        Left = 15
-        Top = 273
+        Left = 220
+        Top = 227
         Caption = #1057#1077#1088'. '#1085#1086#1084#1077#1088' '#1085#1072' '#1089#1072#1081#1090#1077' "'#1052#1086#1103' '#1072#1087#1090#1077#1082#1072'"'
       end
       object edTokenKashtan: TcxTextEdit
         Left = 15
-        Top = 338
+        Top = 336
         ParentShowHint = False
         ShowHint = True
         TabOrder = 24
@@ -1007,8 +1007,19 @@
       end
       object cxLabel52: TcxLabel
         Left = 15
-        Top = 316
+        Top = 314
         Caption = #9#1058#1086#1082#1077#1085' '#1072#1087#1090#1077#1095#1085#1086#1081' '#1089#1077#1090#1080' '#1074' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
+      end
+      object edTelegramId: TcxTextEdit
+        Left = 220
+        Top = 289
+        TabOrder = 26
+        Width = 129
+      end
+      object cxLabel53: TcxLabel
+        Left = 220
+        Top = 270
+        Caption = 'ID '#1072#1087#1090#1077#1082#1080' '#1074' Telegram'
       end
     end
   end
@@ -1592,9 +1603,17 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramId'
+        Value = Null
+        Component = edTelegramId
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 84
+    Left = 140
     Top = 25
   end
   object dsdFormParams: TdsdFormParams
@@ -2202,6 +2221,13 @@
         Component = edTokenKashtan
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramId'
+        Value = Null
+        Component = edTelegramId
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 36
@@ -2320,8 +2346,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 405
+    Left = 272
+    Top = 341
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'
@@ -2465,8 +2491,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 313
-    Top = 399
+    Left = 385
+    Top = 351
   end
   object GuidesUnitOverdue: TdsdGuides
     KeyField = 'Id'

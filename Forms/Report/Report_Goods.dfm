@@ -325,6 +325,22 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object DayOfWeekName_doc: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076'. '#1076#1072#1090#1072' '#1089#1082#1083#1072#1076
+            DataBinding.FieldName = 'DayOfWeekName_doc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DayOfWeekName_partner: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076'. '#1076#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'DayOfWeekName_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object isActive: TcxGridDBColumn
             Caption = #1055#1088#1080#1093' / '#1056#1072#1089#1093
             DataBinding.FieldName = 'isActive'
@@ -883,6 +899,32 @@ inherited Report_GoodsForm: TReport_GoodsForm
             DataBinding.FieldName = 'KVK'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082' '#1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'InvNumber_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartSale_promo: TcxGridDBColumn
+            Caption = #1054#1090#1075#1088#1091#1079#1082#1072' '#1089
+            DataBinding.FieldName = 'StartSale_promo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1075#1088#1091#1079#1082#1072' '#1089'  ('#1040#1082#1094#1080#1103')'
+            Options.Editing = False
+            Width = 70
+          end
+          object EndSale_promo: TcxGridDBColumn
+            Caption = #1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086
+            DataBinding.FieldName = 'EndSale_promo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086' ('#1040#1082#1094#1080#1103')'
             Options.Editing = False
             Width = 70
           end

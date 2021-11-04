@@ -24,11 +24,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
                                                       */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                       , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                      , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -70,6 +76,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inContractTermKindId  Integer  ,     -- Типы пролонгаций договоров 
     IN inCurrencyId          Integer  ,     -- Валюта
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
+    IN inBranchId            Integer  ,     -- Филиал (расчеты нал)
     IN inisDefault           Boolean  ,     -- По умолчанию (для вх. платежей)
     IN inisDefaultOut        Boolean  ,     -- По умолчанию (для исх. платежей)
     IN inisStandart          Boolean  ,     -- Типовой
@@ -387,7 +394,10 @@ BEGIN
 
    -- сохранили связь с <Банк>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
-   
+
+   -- сохранили связь с <Филиал (расчеты нал)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Branch(), ioId, inBranchId);
+
    -- сохранили связь с <>
    --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceList(), ioId, inPriceListId);
 
@@ -420,6 +430,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.11.21         * inBranchId Филиал (расчеты нал)
  27.05.21         * del inPriceListId
  
  04.02.19         * inBankAccountPartner

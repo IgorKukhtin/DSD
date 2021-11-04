@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , CurrencyId Integer, CurrencyName TVarChar
 
              , BankId Integer, BankName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
 
@@ -128,11 +129,13 @@ BEGIN
 
            , Object_CurrencyBasis.Id         AS CurrencyId 
            , Object_CurrencyBasis.ValueData  AS CurrencyName 
-     
 
            , 0 :: Integer     AS BankId
            , '' :: TVarChar   AS BankName
-           
+
+           , 0 :: Integer     AS BranchId
+           , '' :: TVarChar   AS BranchName
+
            , CAST (false as Boolean)   AS isDefault 
            , CAST (false as Boolean)   AS isDefaultOut
            , CAST (false as Boolean)   AS isStandart
@@ -230,9 +233,11 @@ BEGIN
            , COALESCE (Object_Currency.Id, Object_CurrencyBasis.Id)                AS CurrencyId 
            , COALESCE (Object_Currency.ValueData, Object_CurrencyBasis.ValueData)  AS CurrencyName 
 
-
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
+
+           , Object_Branch.Id          AS BranchId
+           , Object_Branch.ValueData   AS BranchName
 
            , COALESCE (ObjectBoolean_Default.ValueData, False)     AS isDefault
            , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)  AS isDefaultOut
@@ -378,6 +383,11 @@ BEGIN
                                 AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
             LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = ObjectLink_Contract_ContractTermKind.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Branch
+                                 ON ObjectLink_Contract_Branch.ObjectId = Object_Contract_View.ContractId 
+                                AND ObjectLink_Contract_Branch.DescId = zc_ObjectLink_Contract_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Contract_Branch.ChildObjectId 
+
             LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                  ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
@@ -422,6 +432,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.11.21         * add Branch
  04.02.19         * add BankAccountIn
  18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode

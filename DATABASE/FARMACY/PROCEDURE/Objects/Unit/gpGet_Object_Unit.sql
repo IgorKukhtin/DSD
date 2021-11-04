@@ -57,7 +57,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isBlockCommentSendTP Boolean,
                PharmacyManager TVarChar,
                PharmacyManagerPhone TVarChar,
-               TokenKashtan TVarChar
+               TokenKashtan TVarChar,
+               TelegramId TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -177,6 +178,7 @@ BEGIN
            , CAST ('' as TVarChar) AS PharmacyManager
            , CAST ('' as TVarChar) AS PharmacyManagerPhone
            , CAST ('' as TVarChar) AS TokenKashtan
+           , CAST ('' as TVarChar) AS TelegramId
 
 ;
    ELSE
@@ -298,6 +300,7 @@ BEGIN
       , ObjectString_PharmacyManager.ValueData                AS PharmacyManager
       , ObjectString_PharmacyManagerPhone.ValueData           AS PharmacyManagerPhone
       , ObjectString_TokenKashtan.ValueData                   AS TokenKashtan
+      , ObjectString_Unit_TelegramId.ValueData                                           AS TelegramId
       
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -401,6 +404,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 
                               AND ObjectString_PromoForSale.DescId = zc_ObjectString_Unit_PromoForSale()
+
+        LEFT JOIN ObjectString AS ObjectString_Unit_TelegramId
+                               ON ObjectString_Unit_TelegramId.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_TelegramId.DescId = zc_ObjectString_Unit_TelegramId()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id

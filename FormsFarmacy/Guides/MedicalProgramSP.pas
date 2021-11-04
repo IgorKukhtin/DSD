@@ -74,8 +74,8 @@ type
     FormParams: TdsdFormParams;
     bbStartLoad: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
-    ProgramId: TcxGridDBColumn;
     isFree: TcxGridDBColumn;
+    GroupMedicalProgramSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -51,6 +51,8 @@ type
     JuridicalName: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
+    isClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

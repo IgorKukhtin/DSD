@@ -1496,6 +1496,9 @@ CREATE OR REPLACE FUNCTION zc_Object_Category1303() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Category1303', 'Группы населения по постановлению КМУ 1303' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Category1303');
 
+CREATE OR REPLACE FUNCTION zc_Object_GroupMedicalProgramSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GroupMedicalProgramSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GroupMedicalProgramSP', 'Группы медицинских программ соц. проектов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GroupMedicalProgramSP');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1513,6 +1516,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 03.11.21                                                                                        * zc_Object_GroupMedicalProgramSP  
  27.10.21                                                                                        * zc_Object_Category1303  
  06.10.21                                                                                        * zc_Object_BanCommentSend  
  01.10.21                                                                                        * zc_Object_MedicalProgramSP, zc_Object_MedicalProgramSPLink

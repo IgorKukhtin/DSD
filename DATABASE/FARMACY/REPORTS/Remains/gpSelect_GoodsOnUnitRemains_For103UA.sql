@@ -149,11 +149,35 @@ BEGIN
                               AND TRIM (Object_Goods_BarCode.ValueData) <> ''
                             GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
+       -- Отложенные технические переучеты
+       , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
+                                , SUM(-MovementItemMaster.Amount)  AS Amount
+                           FROM Movement AS Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                             AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                                               
+                                INNER JOIN MovementItem AS MovementItemMaster
+                                                        ON MovementItemMaster.MovementId = Movement.Id
+                                                       AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                       AND MovementItemMaster.isErased   = FALSE
+                                                       AND MovementItemMaster.Amount     < 0
+                                                         
+                                INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                               ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                              AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                              AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                           WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           GROUP BY MovementItemMaster.ObjectId)
 
       SELECT REPLACE(Object_Unit.ValueData, ';', ',')::TVarChar                    AS Store
            , REPLACE(Object_Goods.ValueData, ';', ',')::TVarChar                   AS Name
            , REPLACE(Remains.MakerName, ';', ',')::TVarChar                        AS Producer
-           , to_char((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)),'FM9999990.0999')::TVarChar   AS Quantity
+           , to_char((Remains.Amount - COALESCE(Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)),'FM9999990.0999')::TVarChar   AS Quantity
            , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                                              AS Price
            , COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar                      AS BarCode
 
@@ -176,6 +200,8 @@ BEGIN
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 
+           LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = Remains.ObjectId
+
             -- получается GoodsMainId
            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -190,7 +216,7 @@ BEGIN
 
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0;
+      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0;
 
 END;
 $BODY$

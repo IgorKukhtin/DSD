@@ -184,6 +184,30 @@ BEGIN
                         FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                         WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                         )
+       -- Отложенные технические переучеты
+       , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
+                                , SUM(-MovementItemMaster.Amount)  AS Amount
+                           FROM Movement AS Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                             AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                                               
+                                INNER JOIN MovementItem AS MovementItemMaster
+                                                        ON MovementItemMaster.MovementId = Movement.Id
+                                                       AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                       AND MovementItemMaster.isErased   = FALSE
+                                                       AND MovementItemMaster.Amount     < 0
+                                                         
+                                INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                               ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                              AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                              AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                           WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           GROUP BY MovementItemMaster.ObjectId)
 
       SELECT Object_Goods_Retail.Id                                               AS Id
            , Object_Goods_Main.Name                                               AS name_ru
@@ -192,7 +216,7 @@ BEGIN
            , Object_Goods_Juridical_Badm.Code                                     AS badm_code
            , ''::TVarChar                                                         AS description
            , Object_Price.Price                                                   AS Price
-           , (Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0))::TFloat  AS Quantity
+           , (Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0) - COALESCE (Reserve_TP.Amount, 0))::TFloat  AS Quantity
       FROM Remains
 
            INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = Remains.ObjectId
@@ -207,9 +231,11 @@ BEGIN
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 
+           LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = Remains.ObjectId
+
            LEFT OUTER JOIN tmpRemainsPD AS RemainsPD ON RemainsPD.ObjectId = Remains.ObjectId
 
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0)) > 0;
+      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0;
 
 END;
 $BODY$

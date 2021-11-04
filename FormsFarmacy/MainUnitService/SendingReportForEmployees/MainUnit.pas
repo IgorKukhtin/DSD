@@ -354,7 +354,7 @@ begin
 end;
 
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
-  var Res : TArray<string>; I : Integer; ChatId : String;
+  var Res : TArray<string>; I : Integer;
 begin
   if FMessage.Count = 0 then Exit;
 
@@ -362,7 +362,7 @@ begin
 
   Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
 
-  for I := 0 to High(Res) do if (ChatId <> '') then
+  for I := 0 to High(Res) do if (Res[I] <> '') then
   try
 
     if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
@@ -370,14 +370,14 @@ begin
 
       if not FileExists(SavePath + FileName) then Break;
 
-      if not TelegramBot.SendPhoto(ChatId, SavePath + FileName, FMessage.Text) then
+      if not TelegramBot.SendPhoto(Res[I], SavePath + FileName, FMessage.Text) then
       begin
         FError := True;
         Add_Log(TelegramBot.ErrorText);
       end;
     end else
     begin
-      if not TelegramBot.SendMessage(ChatId, FMessage.Text) then
+      if not TelegramBot.SendMessage(Res[I], FMessage.Text) then
       begin
         FError := True;
         Add_Log(TelegramBot.ErrorText);
@@ -473,7 +473,7 @@ begin
   TelegramBot.FileNameChatId := ExtractFilePath(Application.ExeName) + 'SendingReportForEmployees_ChatId.xml';
   if TelegramBot.Id <> 0 then
   begin
-    TelegramBot.LoadChatId;
+    // TelegramBot.LoadChatId;
     ChatIdDS.DataSet := TelegramBot.ChatIdCDS;
   end else Add_Log(TelegramBot.ErrorText);
 

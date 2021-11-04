@@ -1,15 +1,16 @@
 -- Function: gpInsertUpdate_Object_MedicalProgramSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicalProgramSP(
- INOUT ioId	               Integer   ,    -- ключ объекта <Медицинские программы соц. проектов> 
-    IN inCode              Integer   ,    -- код объекта 
-    IN inName              TVarChar  ,    -- Название объекта <>
-    IN inSPKindId          Integer   ,    -- Виды соц. проектов
-    IN inProgramId         TVarChar  ,    -- Идентификатор медицинской программы
-    IN inisFree            Boolean   ,    -- Безплатно
-    IN inSession           TVarChar       -- сессия пользователя
+ INOUT ioId	                       Integer   ,    -- ключ объекта <Медицинские программы соц. проектов> 
+    IN inCode                      Integer   ,    -- код объекта 
+    IN inName                      TVarChar  ,    -- Название объекта <>
+    IN inSPKindId                  Integer   ,    -- Виды соц. проектов
+    IN inGroupMedicalProgramSPId   Integer   ,    -- Медицинские программы соц. проектов
+    IN inProgramId                 TVarChar  ,    -- Идентификатор медицинской программы
+    IN inisFree                    Boolean   ,    -- Безплатно
+    IN inSession                   TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -37,6 +38,8 @@ BEGIN
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MedicalProgramSP_SPKind(), ioId, inSPKindId);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP(), ioId, inGroupMedicalProgramSPId);
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_MedicalProgramSP_ProgramId(), ioId, inProgramId);

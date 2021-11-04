@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
-  ClientHeight = 286
+  ClientHeight = 323
   ClientWidth = 367
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 74
-    Top = 237
+    Top = 280
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 237
+    Top = 280
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -80,21 +80,38 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 154
+    Top = 197
     Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '
   end
   object edProgramId: TcxTextEdit
     Left = 40
-    Top = 177
+    Top = 220
     TabOrder = 9
     Width = 296
   end
   object cbisFree: TcxCheckBox
     Left = 48
-    Top = 208
+    Top = 251
     Caption = #1041#1077#1079#1087#1083#1072#1090#1085#1086
     TabOrder = 10
     Width = 121
+  end
+  object edGroupMedicalProgramSP: TcxButtonEdit
+    Left = 40
+    Top = 170
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 296
+  end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 152
+    Caption = #1043#1088#1091#1087#1087#1072' '#1084#1077#1076#1080#1094#1080#1085#1089#1082#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
   end
   object ActionList: TActionList
     Left = 256
@@ -161,6 +178,14 @@
         Name = 'inSPKindId'
         Value = Null
         Component = SPKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMedicalProgramSPId'
+        Value = Null
+        Component = GroupMedicalProgramSPGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -238,6 +263,21 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GroupMedicalProgramSPId'
+        Value = Null
+        Component = GroupMedicalProgramSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMedicalProgramSPName'
+        Value = Null
+        Component = GroupMedicalProgramSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ProgramId'
         Value = Null
         Component = edProgramId
@@ -302,5 +342,34 @@
       end>
     Left = 160
     Top = 108
+  end
+  object GroupMedicalProgramSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGroupMedicalProgramSP
+    FormNameParam.Value = 'TGroupMedicalProgramSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMedicalProgramSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GroupMedicalProgramSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GroupMedicalProgramSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 192
+    Top = 164
   end
 end

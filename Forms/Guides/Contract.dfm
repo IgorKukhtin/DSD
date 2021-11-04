@@ -1554,6 +1554,14 @@
           HeaderAlignmentVert = vaCenter
           Width = 60
         end
+        object BranchName: TcxGridDBColumn
+          Caption = #1060#1080#1083#1080#1072#1083' ('#1088#1072#1089#1095#1077#1090#1099' '#1085#1072#1083')'
+          DataBinding.FieldName = 'BranchName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object isVat: TcxGridDBColumn
           Caption = 'C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103')'
           DataBinding.FieldName = 'isVat'

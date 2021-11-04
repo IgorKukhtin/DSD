@@ -3119,6 +3119,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMedicalProgramSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMedicalProgramSPEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMedicalProgramSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMedicalProgramSPForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPLinkEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicalProgramSPLinkEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicalProgramSPLinkForm'));
