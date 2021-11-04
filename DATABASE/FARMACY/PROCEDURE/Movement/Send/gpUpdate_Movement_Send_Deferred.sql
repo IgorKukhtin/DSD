@@ -425,7 +425,7 @@ BEGIN
    -- Добавили в ТП
    IF vbIsSUN = TRUE 
    THEN
-      PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+      PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, True, inSession);
    END IF;
 
     -- Проверим а не провели за время отложки были прицеденты

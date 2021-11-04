@@ -1,9 +1,12 @@
 -- Function: gpSelect_MovementSUN_TechnicalRediscount()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementSUN_TechnicalRediscount (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementSUN_TechnicalRediscount (Integer, BOOLEAN, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementSUN_TechnicalRediscount(
     IN inMovementID    Integer   , --
+    IN isUnComplete    Boolean   , -- 
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -78,7 +81,7 @@ BEGIN
          -- сохранили признак
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NotDisplaySUN(), inMovementId, TRUE);
       END IF;
-      IF vbStatusId <> zc_Enum_Status_Erased() AND 
+      IF vbStatusId <> zc_Enum_Status_Erased() AND COALESCE(isUnComplete, FALSE) = FALSE AND
          NOT EXISTS(SELECT 1
                     FROM Movement
                     

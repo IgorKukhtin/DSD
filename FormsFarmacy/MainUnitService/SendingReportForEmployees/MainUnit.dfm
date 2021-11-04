@@ -235,7 +235,7 @@ object MainForm: TMainForm
     Height = 445
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet4
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 441
     ClientRectLeft = 4
@@ -381,14 +381,26 @@ object MainForm: TMainForm
           OptionsData.Inserting = False
           OptionsView.CellEndEllipsis = True
           OptionsView.CellAutoHeight = True
+          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
+          object ObjectId: TcxGridDBColumn
+            Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'ObjectId'
+            Options.Editing = False
+            Width = 80
+          end
+          object TelegramId: TcxGridDBColumn
+            DataBinding.FieldName = 'TelegramId'
+            Options.Editing = False
+            Width = 82
+          end
           object Message: TcxGridDBColumn
             Caption = #1058#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
             DataBinding.FieldName = 'Message'
-            Width = 964
+            Width = 841
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -562,5 +574,63 @@ object MainForm: TMainForm
       '')
     Left = 428
     Top = 472
+  end
+  object spLog_Send_Telegram: TZStoredProc
+    Connection = ZConnection1
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'inObjectId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inTelegramId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBoolean
+        Name = 'inisError'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftWideString
+        Name = 'inMessage'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inError'
+        ParamType = ptInput
+      end>
+    StoredProcName = 'lpLog_Send_Telegram'
+    Left = 428
+    Top = 545
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'inObjectId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inTelegramId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBoolean
+        Name = 'inisError'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftWideString
+        Name = 'inMessage'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inError'
+        ParamType = ptInput
+      end>
   end
 end
