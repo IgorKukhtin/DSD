@@ -45,7 +45,7 @@ BEGIN
                             INNER JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = Movement.Id
                                                          AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
-                                                         AND MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight()
+                                                         AND MLO_DocumentKind.ObjectId   IN (zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicMsg())
                             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
                             LEFT JOIN MovementDate AS MovementDate_StartWeighing
