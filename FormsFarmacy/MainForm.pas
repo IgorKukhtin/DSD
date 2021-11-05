@@ -884,6 +884,8 @@ type
     N323: TMenuItem;
     actWagesVIP_User: TdsdOpenForm;
     N324: TMenuItem;
+    actTelegramProtocol: TdsdOpenForm;
+    elegram1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

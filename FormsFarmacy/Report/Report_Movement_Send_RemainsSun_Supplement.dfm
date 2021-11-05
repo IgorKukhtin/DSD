@@ -1064,6 +1064,7 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBBandedTableView1
     Left = 272
     Top = 184
   end

@@ -112,6 +112,7 @@ type
     edPharmacyManager: TcxTextEdit;
     cxLabel19: TcxLabel;
     cbUseSubject: TcxCheckBox;
+    MinimumLot: TcxGridDBColumn;
   private
     { Private declarations }
   public

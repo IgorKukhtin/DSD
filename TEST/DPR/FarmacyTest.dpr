@@ -1118,7 +1118,8 @@ uses
   AccommodationUnitEdit in '..\..\FormsFarmacy\Guides\AccommodationUnitEdit.pas' {AccommodationUnitEditForm: TParentForm},
   AccommodationUnit in '..\..\FormsFarmacy\Guides\AccommodationUnit.pas' {AccommodationUnitForm: TParentForm},
   GroupMedicalProgramSPEdit in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSPEdit.pas' {GroupMedicalProgramSPEditForm: TParentForm},
-  GroupMedicalProgramSP in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas' {GroupMedicalProgramSPForm: TParentForm};
+  GroupMedicalProgramSP in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas' {GroupMedicalProgramSPForm: TParentForm},
+  TelegramProtocol in '..\..\FormsFarmacy\System\TelegramProtocol.pas' {TelegramProtocolForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

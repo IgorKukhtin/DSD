@@ -4766,6 +4766,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actTelegramProtocol: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1074' Telegram'
+      FormName = 'TTelegramProtocolForm'
+      FormNameParam.Value = 'TTelegramProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6198,6 +6209,11 @@
       end
       object FarmacyCash1: TMenuItem [28]
         Action = actUnitForFarmacyCash
+      end
+      inherited miProtocolAll: TMenuItem
+        object elegram1: TMenuItem
+          Action = actTelegramProtocol
+        end
       end
       object N10: TMenuItem [30]
         Caption = '-'
