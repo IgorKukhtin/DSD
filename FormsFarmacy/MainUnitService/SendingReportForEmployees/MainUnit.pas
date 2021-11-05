@@ -19,7 +19,7 @@ uses
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, UtilTelegram,
   cxDataControllerConditionalFormattingRulesManagerDialog, dxDateRanges,
-  dxBarBuiltInMenu, cxGridChartView, cxGridDBChartView, JPEG;
+  dxBarBuiltInMenu, cxGridChartView, cxGridDBChartView, JPEG, ZStoredProcedure;
 
 type
   TMainForm = class(TForm)
@@ -83,6 +83,9 @@ type
     btnTestSendTelegram: TButton;
     btnTestSendManualTelegram: TButton;
     btnUpdate: TButton;
+    spLog_Send_Telegram: TZStoredProc;
+    ObjectId: TcxGridDBColumn;
+    TelegramId: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -217,6 +220,8 @@ procedure TMainForm.btnExecuteClick(Sender: TObject);
 begin
   if not qrySendList.Active then Exit;
   if qrySendList.IsEmpty then Exit;
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+
 
   cxGridDBChartView1.DataController.DataSource := Nil;
   cxGridDBChartView2.DataController.DataSource := Nil;
@@ -257,6 +262,17 @@ begin
       qryReport.Close;
       qryReport.SQL.Text := qrySendList.FieldByName('SQL').AsString;
       qryReport.Open;
+    except
+      on E: Exception do Add_Log(E.Message);
+    end;
+  end else if qrySendList.FieldByName('ChatIDList').AsString = '' then
+  begin
+    cxPageControl1.Properties.ActivePage := cxTabSheet1;
+    try
+      qryReport_Upload.Close;
+      qryReport_Upload.SQL.Text := qrySendList.FieldByName('SQL').AsString;
+      qryReport_Upload.ParamByName('OperDate').Value := FDate;
+      qryReport_Upload.Open;
     except
       on E: Exception do Add_Log(E.Message);
     end;
@@ -341,6 +357,13 @@ begin
       AGraphic.Free;
       imJPEG.Free;
     end;
+  end else if qrySendList.FieldByName('ChatIDList').AsString = ''  then
+  begin
+
+    if not qryReport_Upload.Active then Exit;
+    if qryReport_Upload.IsEmpty then Exit;
+    Add_Log('Начало выгрузки списка сообщений');
+
   end else
   begin
 
@@ -354,43 +377,83 @@ begin
 end;
 
 procedure TMainForm.btnSendTelegramClick(Sender: TObject);
-  var Res : TArray<string>; I : Integer;
+  var Res : TArray<string>; I : Integer; nError : boolean;
 begin
-  if FMessage.Count = 0 then Exit;
 
-  Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
+  if qrySendList.FieldByName('ChatIDList').AsString = '' then
+  begin
 
-  Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
+    if qryReport_Upload.IsEmpty then Exit;
 
-  for I := 0 to High(Res) do if (Res[I] <> '') then
-  try
+    Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
 
-    if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
-    begin
-
-      if not FileExists(SavePath + FileName) then Break;
-
-      if not TelegramBot.SendPhoto(Res[I], SavePath + FileName, FMessage.Text) then
+    try
+      while not qryReport_Upload.Eof do
       begin
-        FError := True;
-        Add_Log(TelegramBot.ErrorText);
+
+        nError := False;
+        if not TelegramBot.SendMessage(qryReport_Upload.FieldByName('TelegramId').AsString, qryReport_Upload.FieldByName('Message').AsString) then
+        begin
+          nError := True;
+          Add_Log(TelegramBot.ErrorText);
+        end;
+
+        spLog_Send_Telegram.ParamByName('inObjectId').Value := qryReport_Upload.FieldByName('ObjectId').AsVariant;
+        spLog_Send_Telegram.ParamByName('inTelegramId').Value := qryReport_Upload.FieldByName('TelegramId').AsString;
+        spLog_Send_Telegram.ParamByName('inisError').Value := nError;
+        spLog_Send_Telegram.ParamByName('inMessage').Value := qryReport_Upload.FieldByName('Message').AsString;
+        spLog_Send_Telegram.ParamByName('inError').Value := TelegramBot.ErrorText;
+        spLog_Send_Telegram.ExecProc
+
+        qryReport_Upload.Next;
       end;
-    end else
-    begin
-      if not TelegramBot.SendMessage(Res[I], FMessage.Text) then
+    except
+      on E: Exception do
       begin
-        FError := True;
-        Add_Log(TelegramBot.ErrorText);
+        Add_Log(E.Message);
       end;
     end;
-  except
-    on E: Exception do
-    begin
-      Add_Log(E.Message);
+
+  end else
+  begin
+
+    if FMessage.Count = 0 then Exit;
+
+    Add_Log('Начало отправки сообщения: ' + qrySendList.FieldByName('Id').AsString);
+
+    Res := TRegEx.Split(qrySendList.FieldByName('ChatIDList').AsString, ',');
+
+    for I := 0 to High(Res) do if (Res[I] <> '') then
+    try
+
+      if qrySendList.FieldByName('Id').AsInteger in [2, 3, 4, 6] then
+      begin
+
+        if not FileExists(SavePath + FileName) then Break;
+
+        if not TelegramBot.SendPhoto(Res[I], SavePath + FileName, FMessage.Text) then
+        begin
+          FError := True;
+          Add_Log(TelegramBot.ErrorText);
+        end;
+      end else
+      begin
+        if not TelegramBot.SendMessage(Res[I], FMessage.Text) then
+        begin
+          FError := True;
+          Add_Log(TelegramBot.ErrorText);
+        end;
+      end;
+
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+      end;
     end;
+
+    if FileExists(SavePath + FileName) then DeleteFile(SavePath + FileName);
   end;
-
-  if FileExists(SavePath + FileName) then DeleteFile(SavePath + FileName);
 end;
 
 procedure TMainForm.btnTestSendManualTelegramClick(Sender: TObject);

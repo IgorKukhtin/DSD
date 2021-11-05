@@ -1346,7 +1346,7 @@ end if;*/
      -- Добавили в ТП
      IF vbSUN = TRUE
      THEN
-        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inUserId::TVarChar);
+        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, False, inUserId::TVarChar);
      END IF;
 
 

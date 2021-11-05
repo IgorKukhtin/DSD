@@ -33,6 +33,7 @@ RETURNS TABLE (
       , AmountPlanBranch5   TFloat -- Кол-во план отгрузки за пт.
       , AmountPlanBranch6   TFloat -- Кол-во план отгрузки за сб.
       , AmountPlanBranch7   TFloat -- Кол-во план отгрузки за вс.
+      , AmountPlan          TFloat -- Итого Кол-во план отгрузки
 
       , Amount1   TFloat
       , Amount2   TFloat
@@ -41,6 +42,8 @@ RETURNS TABLE (
       , Amount5   TFloat
       , Amount6   TFloat
       , Amount7   TFloat
+      , TotalAmount_Avg  TFloat  -- Итого по ср.за период акции (Сумма (ср.значение дня недели * кол.дней недели) )
+      , Koef      TFloat
       , WeekDay1  TFloat
       , WeekDay2  TFloat
       , WeekDay3  TFloat
@@ -130,6 +133,14 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 5 AND COALESCE (tmpMIFloat_avg.Plan5,0) <> 0 THEN 1 ELSE 0 END) WeekDay5
                      , SUM (CASE WHEN tmpWeekDay.Number = 6 AND COALESCE (tmpMIFloat_avg.Plan6,0) <> 0 THEN 1 ELSE 0 END) WeekDay6
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 AND COALESCE (tmpMIFloat_avg.Plan7,0) <> 0 THEN 1 ELSE 0 END) WeekDay7
+                     --
+                     , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN COALESCE (tmpMIFloat_avg.Plan1,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 2 THEN COALESCE (tmpMIFloat_avg.Plan2,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 3 THEN COALESCE (tmpMIFloat_avg.Plan3,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 4 THEN COALESCE (tmpMIFloat_avg.Plan4,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 5 THEN COALESCE (tmpMIFloat_avg.Plan5,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 6 THEN COALESCE (tmpMIFloat_avg.Plan6,0) ELSE 0 END
+                          + CASE WHEN tmpWeekDay.Number = 7 THEN COALESCE (tmpMIFloat_avg.Plan7,0) ELSE 0 END) TotalAmount
                 FROM tmpListDateSale
                     LEFT JOIN zfCalc_DayOfWeekName (tmpListDateSale.OperDate) AS tmpWeekDay ON 1=1
                     LEFT JOIN (SELECT tmpMI.ObjectId, tmpMI.GoodsKindId FROM tmpMI WHERE tmpMI.Ord = 1) AS tmpGoods ON  1=1
@@ -137,7 +148,19 @@ BEGIN
                 GROUP BY tmpGoods.ObjectId
                        , tmpGoods.GoodsKindId
                 )
-
+  --для товара береи AmountPlanMax из док Акция, для получения коэф.расчета 
+  , tmpMI_Promo AS (SELECT MovementItem.ObjectId AS GoodsId
+                         , SUM (COALESCE (MIFloat_AmountPlanMax.ValueData,0)) AS AmountPlanMax
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                                                     ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE
+                    GROUP BY MovementItem.ObjectId
+                    )
+                       
 
         SELECT MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
@@ -166,15 +189,41 @@ BEGIN
              , MIFloat_PlanBranch4.ValueData          AS AmountPlanBranch4
              , MIFloat_PlanBranch5.ValueData          AS AmountPlanBranch5
              , MIFloat_PlanBranch6.ValueData          AS AmountPlanBranch6
-             , MIFloat_PlanBranch7.ValueData          AS AmountPlanBranch7 
+             , MIFloat_PlanBranch7.ValueData          AS AmountPlanBranch7
 
-             , tmpCalc.Amount1   ::TFloat
-             , tmpCalc.Amount2   ::TFloat
-             , tmpCalc.Amount3   ::TFloat
-             , tmpCalc.Amount4   ::TFloat
-             , tmpCalc.Amount5   ::TFloat
-             , tmpCalc.Amount6   ::TFloat
-             , tmpCalc.Amount7   ::TFloat
+             , (COALESCE (MIFloat_Plan1.ValueData,0)
+              + COALESCE (MIFloat_Plan2.ValueData,0)
+              + COALESCE (MIFloat_Plan3.ValueData,0)
+              + COALESCE (MIFloat_Plan4.ValueData,0)
+              + COALESCE (MIFloat_Plan5.ValueData,0)
+              + COALESCE (MIFloat_Plan6.ValueData,0)
+              + COALESCE (MIFloat_Plan7.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch1.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch2.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch3.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch4.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch5.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch6.ValueData,0)
+              + COALESCE (MIFloat_PlanBranch7.ValueData,0)) ::TFloat AS AmountPlan
+
+             , tmpMIFloat_avg.Plan1 ::TFloat AS Amount1   
+             , tmpMIFloat_avg.Plan2 ::TFloat AS Amount2
+             , tmpMIFloat_avg.Plan3 ::TFloat AS Amount3
+             , tmpMIFloat_avg.Plan4 ::TFloat AS Amount4
+             , tmpMIFloat_avg.Plan5 ::TFloat AS Amount5
+             , tmpMIFloat_avg.Plan6 ::TFloat AS Amount6
+             , tmpMIFloat_avg.Plan7 ::TFloat AS Amount7
+             /*, (COALESCE (tmpCalc.Amount1,0)
+              + COALESCE (tmpCalc.Amount2,0)
+              + COALESCE (tmpCalc.Amount3,0)
+              + COALESCE (tmpCalc.Amount4,0)
+              + COALESCE (tmpCalc.Amount5,0)
+              + COALESCE (tmpCalc.Amount6,0)
+              + COALESCE (tmpCalc.Amount7,0)) ::TFloat AS TotalAmount_Avg*/
+
+             , tmpCalc.TotalAmount ::TFloat AS TotalAmount_Avg
+             , CASE WHEN COALESCE (tmpCalc.TotalAmount,0) <> 0 THEN tmpMI_Promo.AmountPlanMax/tmpCalc.TotalAmount ELSE 0 END ::TFloat AS Koef
+
              , tmpCalc.WeekDay1  ::TFloat
              , tmpCalc.WeekDay2  ::TFloat
              , tmpCalc.WeekDay3  ::TFloat
@@ -182,6 +231,8 @@ BEGIN
              , tmpCalc.WeekDay5  ::TFloat
              , tmpCalc.WeekDay6  ::TFloat
              , tmpCalc.WeekDay7  ::TFloat
+             
+
 
              , MovementItem.isErased                  AS isErased            -- Удален
         FROM tmpMI AS MovementItem
@@ -255,6 +306,11 @@ BEGIN
              LEFT JOIN tmpCalc ON tmpCalc.GoodsId = MovementItem.ObjectId
                               AND tmpCalc.GoodsKindId = MovementItem.GoodsKindId
                               AND MovementItem.Ord = 1 --привязываем к 1 строке
+
+             LEFT JOIN tmpMIFloat_avg ON tmpMIFloat_avg.ObjectId = MovementItem.ObjectId
+                                     AND MovementItem.Ord = 1 --привязываем к 1 строке
+             LEFT JOIN tmpMI_Promo ON tmpMI_Promo.GoodsId = MovementItem.ObjectId
+                                  AND MovementItem.Ord = 1 --привязываем к 1 строке
             ;
 
 END;

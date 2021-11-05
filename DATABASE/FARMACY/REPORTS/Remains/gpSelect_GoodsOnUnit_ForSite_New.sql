@@ -388,6 +388,7 @@ BEGIN
                                           ELSE zc_Enum_PartionDateKind_Good() END <> zc_Enum_PartionDateKind_Good()
                                   AND Container.GoodsGroupId <> 394744
                                 )
+
         SELECT Container.WhereObjectId
              , Container.ObjectId
              , Container.PartionDateKindId                                                  AS PartionDateKindId
@@ -789,6 +790,31 @@ BEGIN
                                  GROUP BY tmpUnitDiscount.UnitId
                                         , ObjectLink_BarCode_Goods.ChildObjectId
                           )
+       -- Отложенные технические переучеты
+       , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
+                                , MovementLinkObject_Unit.ObjectId AS UnitId
+                                , SUM(-MovementItemMaster.Amount)  AS Amount
+                           FROM Movement AS Movement
+
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                               
+                                INNER JOIN MovementItem AS MovementItemMaster
+                                                        ON MovementItemMaster.MovementId = Movement.Id
+                                                       AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                       AND MovementItemMaster.isErased   = FALSE
+                                                       AND MovementItemMaster.Amount     < 0
+                                                         
+                                INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                               ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                              AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                              AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                           WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           GROUP BY MovementItemMaster.ObjectId
+                                  , MovementLinkObject_Unit.ObjectId)
                       
                            
 
@@ -797,11 +823,17 @@ BEGIN
              , CASE WHEN Object_Goods.isErased = TRUE THEN 1 ELSE 0 END::Integer   AS deleted
 
              , tmpList.UnitId                                                      AS UnitId
-             , (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
-                                  COALESCE (PDGoodsRemains.Amount, 0))::TFloat     AS Remains
+             , CASE WHEN (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0)) <= 0 THEN NULL
+                    ELSE (tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
+                                            COALESCE (PDGoodsRemains.Amount, 0) -
+                                            COALESCE (Reserve_TP.Amount, 0))
+                    END ::TFloat                                                   AS Remains
 
              , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
-                                  COALESCE (PDGoodsRemains.Amount, 0)), 0) <= 0
+                                  COALESCE (PDGoodsRemains.Amount, 0) -
+                                  COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
                     THEN Null
                     WHEN tmpList.GoodsId_retail = tmpList.GoodsId
                     THEN CASE WHEN COALESCE(tmpPrice_Site.Price, 0) > 0 AND tmpPrice_Site.Price > Price_Unit.Price
@@ -810,7 +842,8 @@ BEGIN
              
              
              , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
-                                  COALESCE (PDGoodsRemains.Amount, 0)), 0) <= 0
+                                  COALESCE (PDGoodsRemains.Amount, 0) -
+                                  COALESCE (Reserve_TP.Amount, 0)), 0) <= 0
                     THEN Null
                     WHEN tmpList.GoodsId_retail = tmpList.GoodsId
                     THEN COALESCE (tmpPrice_Site.Price, Price_Unit.Price)
@@ -887,6 +920,9 @@ BEGIN
 
              LEFT JOIN tmpMI_Deferred ON tmpMI_Deferred.GoodsId = tmpList.GoodsId_retail
                                      AND tmpMI_Deferred.UnitId  = tmpList.UnitId
+
+             LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = tmpList.GoodsId_retail
+                                                        AND Reserve_TP.UnitId = tmpList.UnitId
 
              LEFT JOIN Price_Unit     ON Price_Unit.GoodsId     = tmpList.GoodsId
                                      AND Price_Unit.UnitId      = tmpList.UnitId
@@ -994,7 +1030,8 @@ $BODY$
 --  '13516058', TRUE, zfCalc_UserSite()) AS p LEFT JOIN OBJECT ON OBJECT.ID = p.UnitId;
 
 
-SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', '6649, 33004, 5925154, 5925280', TRUE, zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
+                                                                                             '6649, 33004, 5925154, 5925280, 16290423', TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

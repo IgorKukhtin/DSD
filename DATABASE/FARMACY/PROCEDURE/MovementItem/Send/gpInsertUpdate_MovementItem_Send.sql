@@ -268,7 +268,7 @@ BEGIN
                       AND DescId = zc_ObjectLink_CommentSend_CommentTR()), 0) AND
          (COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete() OR COALESCE (vbTotalCountOld, 0) = 0 OR vbisDeferred = TRUE)
       THEN
-        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, False, inSession);
       END IF;
 
       -- сохранили протокол
@@ -831,7 +831,7 @@ BEGIN
 
       IF COALESCE (vbTotalCount, 0) = 0 OR COALESCE (vbTotalCountOld, 0) = 0
       THEN
-        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+        PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, False, inSession);
       END IF;
     END IF;
 

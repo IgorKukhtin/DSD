@@ -398,7 +398,7 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     end
     object cxSplitter2: TcxSplitter
       Left = 1
-      Top = 660
+      Top = 257
       Width = 263
       Height = 8
       AlignSplitter = salTop

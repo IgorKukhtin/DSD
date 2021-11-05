@@ -197,7 +197,7 @@ BEGIN
     -- Добавили в ТП
     IF vbisSUN = TRUE 
     THEN
-       PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, inSession);
+       PERFORM  gpSelect_MovementSUN_TechnicalRediscount(inMovementId, True, inSession);
     END IF;
 
 END;
