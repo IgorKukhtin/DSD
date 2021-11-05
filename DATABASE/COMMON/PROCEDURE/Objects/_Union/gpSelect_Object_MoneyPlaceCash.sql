@@ -158,6 +158,11 @@ BEGIN
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+          LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                                ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
                               AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
@@ -176,6 +181,7 @@ BEGIN
                                                                 , 8357 -- 02-Поставщики
                                                                  )
             OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
+            OR Object_Personal.BranchId = vbObjectId_Constraint_Branch
             OR ObjectBoolean_isBranchAll.ValueData = TRUE
             OR vbIsConstraint = FALSE
            )
@@ -249,6 +255,11 @@ BEGIN
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+          LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                                ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
                               AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
@@ -267,6 +278,7 @@ BEGIN
                                                                 , 8357 -- 02-Поставщики
                                                                  )
             OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
+            OR Object_Personal.BranchId = vbObjectId_Constraint_Branch
             OR ObjectBoolean_isBranchAll.ValueData = TRUE
             OR vbIsConstraint = FALSE
            )

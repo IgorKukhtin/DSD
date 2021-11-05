@@ -82,7 +82,7 @@ BEGIN
                              OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
                                )
                         ) AS Movement
-                         LIMIT 1
+                         --LIMIT 1
                         );
 
 
