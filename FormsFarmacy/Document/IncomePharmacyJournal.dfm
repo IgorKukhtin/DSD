@@ -338,6 +338,22 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 78
           end
+          object isConduct: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1076#1077#1085' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+            DataBinding.FieldName = 'isConduct'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object DateConduct: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+            DataBinding.FieldName = 'DateConduct'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 124
+          end
         end
       end
     end

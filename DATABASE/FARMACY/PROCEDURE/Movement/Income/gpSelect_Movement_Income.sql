@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaymentDays TFloat
              , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
              , Comment TVarChar, isUseNDSKind Boolean
+             , isConduct Boolean, DateConduct TDateTime
              )
 
 AS
@@ -223,6 +224,9 @@ BEGIN
              , MovementDate_Check.ValueData         AS CheckDate
              , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
              , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)            AS isUseNDSKind 
+             
+             , COALESCE (MovementBoolean_Conduct.ValueData, FALSE)               AS isConduct
+             , MovementDate_Conduct.ValueData                                    AS DateConduct
         FROM Movement_Income
 
             LEFT JOIN tmpUnit ON tmpUnit.UnitId = Movement_Income.ToId
@@ -286,6 +290,10 @@ BEGIN
                                       ON MovementBoolean_UseNDSKind.MovementId = Movement_Income.Id
                                      AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Conduct
+                                      ON MovementBoolean_Conduct.MovementId = Movement_Income.Id
+                                     AND MovementBoolean_Conduct.DescId = zc_MovementBoolean_Conduct()
+
             LEFT JOIN tmpMovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_Income.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -306,6 +314,10 @@ BEGIN
             LEFT JOIN tmpMovementDate    AS MovementDate_Check
                                       ON MovementDate_Check.MovementId = Movement_Income.Id
                                      AND MovementDate_Check.DescId = zc_MovementDate_Check()
+
+            LEFT JOIN tmpMovementDate    AS MovementDate_Conduct
+                                      ON MovementDate_Conduct.MovementId = Movement_Income.Id
+                                     AND MovementDate_Conduct.DescId = zc_MovementDate_Conduct()
 
             LEFT JOIN tmpMovementString  AS MovementString_InvNumberBranch
                                       ON MovementString_InvNumberBranch.MovementId = Movement_Income.Id
@@ -383,4 +395,4 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 --SELECT * FROM gpSelect_Movement_Income (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
 --where PaymentDate is not null
 
-select * from gpSelect_Movement_Income(instartdate := ('01.09.2021')::TDateTime , inenddate := ('12.09.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_Income(instartdate := ('01.11.2021')::TDateTime , inenddate := ('12.11.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');

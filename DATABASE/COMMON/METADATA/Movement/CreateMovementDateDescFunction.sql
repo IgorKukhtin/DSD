@@ -221,9 +221,15 @@ INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_TimeClose', 'Время авто закрытия' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_TimeClose');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Conduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Conduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Conduct', 'Дата проведения по количеству' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Conduct');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 05.11.21                                                                                                        * zc_MovementDate_Conduct
  10.08.21         * zc_MovementDate_TimeClose
  09.08.21         * zc_MovementDate_CheckedHead
                     zc_MovementDate_CheckedPersonal

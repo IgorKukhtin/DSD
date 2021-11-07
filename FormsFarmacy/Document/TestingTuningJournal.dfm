@@ -416,13 +416,6 @@ inherited TestingTuningJournalForm: TTestingTuningJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsCurrentData'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outOperDate'
         Value = Null
         Component = MasterCDS

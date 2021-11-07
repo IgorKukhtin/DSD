@@ -27,6 +27,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , AmountAll TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
+             , DateChange TDateTime
              , PriceSaleIncome  TFloat
              , MinExpirationDate TDateTime
              , DailyCheck TFloat
@@ -390,6 +391,7 @@ BEGIN
                                       THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                       ELSE ROUND (Price_Value.ValueData, 2)
                                  END :: TFloat                           AS Price
+                               , price_datechange.valuedata              AS DateChange 
                           FROM tmpPrice AS Price_Goods
                                LEFT JOIN ObjectLink AS Price_Unit
                                       ON Price_Unit.ObjectId = Price_Goods.Id
@@ -397,7 +399,10 @@ BEGIN
                                LEFT JOIN ObjectFloat AS Price_Value
                                                      ON Price_Value.ObjectId = Price_Unit.ObjectId
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                               -- Фикс цена для всей Сети
+                               LEFT JOIN ObjectDate AS Price_DateChange
+                                                    ON Price_DateChange.ObjectId = Price_Unit.ObjectId
+                                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                                 -- Фикс цена для всей Сети
                                LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
                                                       ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.GoodsId
                                                      AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
@@ -455,6 +460,7 @@ BEGIN
                COALESCE (tmpDeferredSendIn.Amount, 0))                               :: TFloat AS AmountAll
              , COALESCE (Object_Price.Price, 0)                                      :: TFloat AS PriceSale
              , (tmpData.Amount * COALESCE (Object_Price.Price, 0))                   :: TFloat AS SummaSale
+             , Object_Price.DateChange                                                         AS DateChange 
              , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE (tmpIncome.SummSale,0) / COALESCE (tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
              , tmpData.MinExpirationDate  ::TDateTime
              , containerCheck.DailyCheck:: TFloat

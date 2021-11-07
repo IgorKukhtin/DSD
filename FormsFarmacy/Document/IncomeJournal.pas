@@ -105,6 +105,8 @@ type
     bbUpdate_BranchDate: TdxBarButton;
     macUpdate_BranchDateList: TMultiAction;
     isUseNDSKind: TcxGridDBColumn;
+    isConduct: TcxGridDBColumn;
+    DateConduct: TcxGridDBColumn;
   private
     { Private declarations }
   public

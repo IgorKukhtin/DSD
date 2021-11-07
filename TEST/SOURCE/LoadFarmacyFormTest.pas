@@ -2579,19 +2579,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');

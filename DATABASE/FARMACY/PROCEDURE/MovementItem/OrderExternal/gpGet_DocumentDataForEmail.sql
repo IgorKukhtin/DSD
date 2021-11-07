@@ -332,8 +332,8 @@ BEGIN
              CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
                   THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
                   ELSE ''
-             END), '')||CHR (13)||
-             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN 'ФИО Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData||CHR (13) ELSE '' END
+             END), '')||
+             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN CHR (13)||'ФИО Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData ELSE '' END
     INTO vbUnitData
     FROM Object AS Object_Unit
 
@@ -422,4 +422,4 @@ $BODY$
 -- тест
 -- 
 --
-SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25517982  , inSession:= '377790');
+SELECT * FROM gpGet_DocumentDataForEmail (inId:= 25521089    , inSession:= '374171');

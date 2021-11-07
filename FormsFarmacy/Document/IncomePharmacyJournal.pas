@@ -69,6 +69,8 @@ type
     actSetVisible: TdsdSetVisibleAction;
     spSetVisible: TdsdStoredProc;
     actExecStoredSetVisible: TdsdExecStoredProc;
+    isConduct: TcxGridDBColumn;
+    DateConduct: TcxGridDBColumn;
   private
     { Private declarations }
   public

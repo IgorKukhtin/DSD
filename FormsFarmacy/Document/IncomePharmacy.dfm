@@ -471,7 +471,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object cxLabel12: TcxLabel
       Left = 190
-      Top = 65
+      Top = 55
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085
     end
     object cxLabel11: TcxLabel
@@ -504,14 +504,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object cbFarmacyShow: TcxCheckBox
       Left = 173
-      Top = 63
+      Top = 53
       Action = mactFarmacyShow
       TabOrder = 17
       Width = 17
     end
     object cbisDocument: TcxCheckBox
       Left = 249
-      Top = 63
+      Top = 53
       Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 18
@@ -519,11 +519,19 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object cbisRegistered: TcxCheckBox
       Left = 405
-      Top = 63
+      Top = 53
       Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 119
+    end
+    object cbisConduct: TcxCheckBox
+      Left = 249
+      Top = 75
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 154
     end
   end
   object cxLabel13: TcxLabel [2]
@@ -1608,6 +1616,13 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConduct'
+        Value = Null
+        Component = cbisConduct
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

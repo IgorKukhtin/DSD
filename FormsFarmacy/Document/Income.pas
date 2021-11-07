@@ -191,6 +191,7 @@ type
     actOpenReturnOut: TdsdOpenForm;
     bbOpenReturnOut: TdxBarButton;
     PercentMarkupSP: TcxGridDBColumn;
+    cbisConduct: TcxCheckBox;
   private
     { Private declarations }
   public
