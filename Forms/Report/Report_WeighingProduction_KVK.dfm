@@ -272,6 +272,22 @@ inherited Report_WeighingProduction_KVKForm: TReport_WeighingProduction_KVKForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
+          object GoodsKindName_Complete: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'GoodsKindName_Complete'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object GoodsKindName_Partion: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'GoodsKindName_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -459,8 +475,8 @@ inherited Report_WeighingProduction_KVKForm: TReport_WeighingProduction_KVKForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'FromName;ToName;GoodsGroupNameFull;GoodsName;GoodsKindName;KVK;P' +
-            'ersonalKVKName;UserName'
+            'FromName;ToName;GoodsGroupNameFull;GoodsName;GoodsKindName;Inser' +
+            'tDate;KVK;PersonalKVKName;UserName'
           GridView = cxGridDBTableView
         end>
       Params = <
