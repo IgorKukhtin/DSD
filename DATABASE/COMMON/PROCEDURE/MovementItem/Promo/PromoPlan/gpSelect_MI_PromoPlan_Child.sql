@@ -16,6 +16,15 @@ RETURNS TABLE (
       , MeasureName         TVarChar --Единица измерения
       , TradeMarkName       TVarChar --Торговая марка
       , GoodsKindName       TVarChar --Наименование обьекта <Вид товара> 
+
+      , ReceiptId Integer
+      , ReceiptCode TVarChar
+      , ReceiptName TVarChar
+      , ReceiptId_basis Integer
+      , ReceiptCode_basis  TVarChar
+      , ReceiptName_basis  TVarChar
+      , TotalWeight_Receipt TFloat
+
       , GoodsWeight         TFloat -- 
       , Amount              TFloat
       , AmountPartner       TFloat
@@ -42,6 +51,15 @@ BEGIN
              , Object_Measure.ValueData               AS Measure             --Единица измерения
              , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
              , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
+
+             , Object_Receipt.Id                         AS ReceiptId
+             , ObjectString_Receipt_Code.ValueData       AS ReceiptCode
+             , Object_Receipt.ValueData                  AS ReceiptName
+             , Object_Receipt_basis.Id                   AS ReceiptId_basis
+             , ObjectString_Receipt_Code_basis.ValueData AS ReceiptCode_basis
+             , Object_Receipt_basis.ValueData            AS ReceiptName_basis
+             , ObjectFloat_TotalWeight.ValueData  ::TFloat AS TotalWeight_Receipt
+
              , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
 
              , MovementItem.Amount                    AS Amount
@@ -70,6 +88,27 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                              ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptBasis
+                                              ON MILinkObject_ReceiptBasis.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
+
+             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                   AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
+ 
+             LEFT JOIN Object AS Object_Receipt_basis ON Object_Receipt_basis.Id = MILinkObject_ReceiptBasis.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_Receipt_Code_basis
+                                    ON ObjectString_Receipt_Code_basis.ObjectId = Object_Receipt_basis.Id
+                                   AND ObjectString_Receipt_Code_basis.DescId = zc_ObjectString_Receipt_Code()
+ 
+             LEFT JOIN ObjectFloat AS ObjectFloat_TotalWeight
+                                   ON ObjectFloat_TotalWeight.ObjectId = Object_Receipt.Id
+                                  AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId

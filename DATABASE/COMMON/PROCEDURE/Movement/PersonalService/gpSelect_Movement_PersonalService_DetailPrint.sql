@@ -24,12 +24,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Блокируем ему просмотр
-     IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
+  /*   IF vbUserId = 9457 -- Климентьев К.И.
      THEN
          vbUserId:= NULL;
          RETURN;
      END IF;
-
+*/
 
      IF zc_Enum_Status_Erased() = (SELECT StatusId FROM Movement WHERE Id = inMovementId)
      THEN
@@ -640,6 +640,8 @@ BEGIN
                             , MILinkObject_ModelService.ObjectId       AS ModelServiceId
                             , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
                           -- , MILinkObject_StorageLine.ObjectId        AS StorageLineId
+                            , (COALESCE (MIFloat_Koeff.ValueData,1) * CASE WHEN COALESCE (MILinkObject_StaffListSummKind.ObjectId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END) :: TFloat AS Rate
+                            , MIFloat_Price.ValueData                  AS Price
 
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
@@ -657,25 +659,51 @@ BEGIN
                           /* LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()*/
+                           LEFT JOIN MovementItemFloat AS MIFloat_Koeff
+                                                       ON MIFloat_Koeff.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Child()
                          AND MovementItem.isErased = FALSE
                       )
-     , tmpChild_TotalSumm AS (SELECT tmpMI.MemberId, tmpMI.PositionId
+
+     , tmpChild_TotalSumm AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI_Child.Rate
                                    , SUM (tmpMI_Child.Amount) AS Amount
                               FROM tmpMI_Child
                                    LEFT JOIN tmpMI ON tmpMI.MovementItemId = tmpMI_Child.ParentId
-                              GROUP BY tmpMI.MemberId, tmpMI.PositionId
+                              GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI_Child.Rate
                               )
+
+     , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                                  AND MovementItemFloat.DescId IN (zc_MIFloat_DayCount()
+                                                                  , zc_MIFloat_MemberCount()
+                                                                  , zc_MIFloat_WorkTimeHoursOne()
+                                                                  , zc_MIFloat_WorkTimeHours()
+                                                                 -- , zc_MIFloat_Price()
+                                                                  , zc_MIFloat_HoursPlan()
+                                                                  , zc_MIFloat_HoursDay()
+                                                                  , zc_MIFloat_PersonalCount()
+                                                                  , zc_MIFloat_GrossOne()
+                                                                  )
+                                ) 
+
      , tmpChild AS (SELECT tmpMI.MemberId
                          , tmpMI.PositionId
                          , tmpMI_Child.PositionLevelId
                          , tmpMI_Child.StaffListId
                          , tmpMI_Child.ModelServiceId
-                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END   AS StaffListSummKindId -- доплата (тип доплаты)
-                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END                                AS Price        -- расценка
-                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)            AS Price_Dop    -- расценка за смену
-                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)     AS Price_Day    -- расценка за день
+                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END    AS StaffListSummKindId -- доплата (тип доплаты)
+                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN tmpMI_Child.Price ELSE 0 END                                AS Price        -- расценка
+                         , tmpMI_Child.Rate                                                                                                                                  -- тариф
+                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.Price ELSE 0 END)            AS Price_Dop    -- расценка за смену
+                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN tmpMI_Child.Price ELSE 0 END)     AS Price_Day    -- расценка за день
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)         AS DayCount_Dop -- кол. смен - доплата
                          --, SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)  AS DayCount     -- кол. смен
                          , SUM (CASE WHEN COALESCE (MIFloat_HoursDay.ValueData,0) <> 0 THEN MIFloat_WorkTimeHoursOne.ValueData / COALESCE (MIFloat_HoursDay.ValueData,0) ELSE 0 END) AS DayCount     -- кол. смен (часы, деленные на норму часов за 1 рабочий день)
@@ -689,52 +717,56 @@ BEGIN
                          , SUM (MIFloat_HoursDay.ValueData)               AS HoursDay
                          , SUM (MIFloat_PersonalCount.ValueData)          AS PersonalCount
                          , SUM (MIFloat_GrossOne.ValueData)               AS GrossOne                     -- выработка на человека
+                         
                     FROM tmpMI_Child
                          LEFT JOIN tmpMI ON tmpMI.MovementItemId = tmpMI_Child.ParentId
-                         LEFT JOIN MovementItemFloat AS MIFloat_MemberCount
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_MemberCount
                                                      ON MIFloat_MemberCount.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_MemberCount.DescId = zc_MIFloat_MemberCount()
-                         LEFT JOIN MovementItemFloat AS MIFloat_DayCount
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_DayCount
                                                      ON MIFloat_DayCount.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
-                         LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_WorkTimeHoursOne
                                                      ON MIFloat_WorkTimeHoursOne.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
 
-                         LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHours
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_WorkTimeHours
                                                      ON MIFloat_WorkTimeHours.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_WorkTimeHours.DescId = zc_MIFloat_WorkTimeHours()
 
-                         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                         /*LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = tmpMI_Child.Id
-                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                         LEFT JOIN MovementItemFloat AS MIFloat_HoursPlan
+                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()*/
+
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_HoursPlan
                                                      ON MIFloat_HoursPlan.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
 
-                         LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_HoursDay
                                                      ON MIFloat_HoursDay.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
 
-                         LEFT JOIN MovementItemFloat AS MIFloat_PersonalCount
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_PersonalCount
                                                      ON MIFloat_PersonalCount.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_PersonalCount.DescId = zc_MIFloat_PersonalCount()
-                         LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_GrossOne
                                                      ON MIFloat_GrossOne.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+
                        GROUP BY tmpMI.MemberId
                               , tmpMI.PositionId
                               , tmpMI_Child.PositionLevelId
                               , tmpMI_Child.StaffListId
                               , tmpMI_Child.ModelServiceId
                               , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END
-                              , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END
+                              , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN tmpMI_Child.Price ELSE 0 END
+                              , tmpMI_Child.Rate
                         )
 
-     , tmpChild_TotalDayCount AS (SELECT tmpChild.MemberId, tmpChild.PositionId
+     , tmpChild_TotalDayCount AS (SELECT tmpChild.MemberId, tmpChild.PositionId, tmpChild.Rate
                                        , SUM (tmpChild.DayCount) AS Amount
                                   FROM tmpChild
-                                  GROUP BY tmpChild.MemberId, tmpChild.PositionId
+                                  GROUP BY tmpChild.MemberId, tmpChild.PositionId, tmpChild.Rate
                                   )
 
        -- Результат
@@ -817,14 +849,17 @@ BEGIN
             , tmpChild.HoursDay            :: TFloat
             , tmpChild.PersonalCount       :: TFloat
             , tmpChild.GrossOne            :: TFloat
+            , tmpChild.Rate                :: TFloat
        FROM tmpMaster AS tmpAll
             LEFT JOIN tmpChild ON tmpChild.MemberId   = tmpAll.MemberId
                               AND tmpChild.PositionId = tmpAll.PositionId
 
             LEFT JOIN tmpChild_TotalSumm ON tmpChild_TotalSumm.MemberId   = tmpAll.MemberId
                                         AND tmpChild_TotalSumm.PositionId = tmpAll.PositionId
+                                        AND tmpChild_TotalSumm.Rate       = tmpChild.Rate
             LEFT JOIN tmpChild_TotalDayCount ON tmpChild_TotalDayCount.MemberId   = tmpAll.MemberId
                                             AND tmpChild_TotalDayCount.PositionId = tmpAll.PositionId
+                                            AND tmpChild_TotalDayCount.Rate       = tmpChild.Rate
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.MemberId -- tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = NULL -- tmpAll.UnitId
@@ -850,6 +885,7 @@ BEGIN
               , Object_ModelService.ValueData
               , Object_PositionLevel.ValueData
               , Object_StaffListSummKind.Id
+              , tmpChild.Rate
       ;
 
     RETURN NEXT Cursor2;
@@ -867,4 +903,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 1001606, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 10495948, inisShowAll:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 10495948, inisShowAll:= TRUE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 16>";

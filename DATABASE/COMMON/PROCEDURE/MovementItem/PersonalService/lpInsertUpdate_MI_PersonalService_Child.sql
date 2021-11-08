@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_PersonalService_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PersonalService_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PersonalService_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PersonalService_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PersonalService_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PersonalService_Child(
     IN inHoursDay            TFloat  , -- 
     IN inPersonalCount       TFloat    , -- 
     IN inGrossOne            TFloat  , -- 
+    IN inKoeff               TFloat  , -- 
 
     IN inUserId              Integer     -- пользователь
 )
@@ -58,6 +60,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PersonalCount(), ioId, inPersonalCount);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GrossOne(), ioId, inGrossOne);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Koeff(), ioId, inKoeff);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), ioId, inPositionLevelId);
@@ -79,7 +83,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 22.06.16         * 
+ 08.11.21         *
+ 22.06.16         *
 */
 
 -- тест

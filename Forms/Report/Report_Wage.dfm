@@ -23,6 +23,8 @@ inherited Report_WageForm: TReport_WageForm
       inherited cxGrid: TcxGrid
         Width = 991
         Height = 286
+        ExplicitLeft = 88
+        ExplicitTop = 3
         ExplicitWidth = 991
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1284,6 +1286,15 @@ inherited Report_WageForm: TReport_WageForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GrossOnOneMember'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KoeffHoursWork_car'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

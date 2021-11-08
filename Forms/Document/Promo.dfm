@@ -3304,6 +3304,52 @@
             Options.Editing = False
             Width = 94
           end
+          object ReceiptCode_basis_plan2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
+            DataBinding.FieldName = 'ReceiptCode_basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptName_basis_plan2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+            DataBinding.FieldName = 'ReceiptName_basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object ReceiptCode_plan2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
+            DataBinding.FieldName = 'ReceiptCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptName_plan2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
+            DataBinding.FieldName = 'ReceiptName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalWeight_plan2: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' ('#1088#1077#1094#1077#1087#1090#1091#1088#1072')'
+            DataBinding.FieldName = 'TotalWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
           object isErased_plan2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -10204,8 +10250,8 @@
   end
   object PlanChildDS: TDataSource
     DataSet = PlanChildCDS
-    Left = 836
-    Top = 158
+    Left = 756
+    Top = 222
   end
   object PlanChildCDS: TClientDataSet
     Aggregates = <>
