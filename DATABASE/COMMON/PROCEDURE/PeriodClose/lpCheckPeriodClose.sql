@@ -33,6 +33,7 @@ BEGIN
      IF inMovementDescId IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc(), zc_Movement_Invoice(), zc_Movement_IncomeAsset()
                            , zc_Movement_OrderExternal(), zc_Movement_StoreReal(), zc_Movement_Visit(), zc_Movement_Task(), zc_Movement_RouteMember()
                            , zc_Movement_Promo()
+                           , zc_Movement_SheetWorkTimeClose()
                             )
      THEN
           RETURN; -- !!!выход!!!

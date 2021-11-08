@@ -323,6 +323,10 @@ BEGIN
                   --WHEN ObjectLink_Cash_Branch.ChildObjectId > 0
                   --     THEN ObjectLink_Cash_Branch.ChildObjectId
 
+                    -- если есть - тогда как в договоре
+                    WHEN ObjectLink_Contract_Branch.ChildObjectId > 0
+                         THEN ObjectLink_Contract_Branch.ChildObjectId
+
                     -- по подразделению
                     WHEN MILinkObject_Unit.ObjectId > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
@@ -336,7 +340,12 @@ BEGIN
                -- Филиал ОПиУ: всегда по подразделению !!!но для выплаты ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN 0
+                    -- если есть - тогда как в договоре
+                    WHEN ObjectLink_Contract_Branch.ChildObjectId > 0
+                         THEN ObjectLink_Contract_Branch.ChildObjectId
+
                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+
                END AS BranchId_ProfitLoss
 
                -- Месяц начислений: есть
@@ -427,6 +436,9 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                   ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
                                  AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Branch
+                                  ON ObjectLink_Contract_Branch.ObjectId = MILinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_Branch.DescId = zc_ObjectLink_Contract_Branch()
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
@@ -444,7 +456,6 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
                                      ON ObjectBoolean_PartionDoc.ObjectId = ObjectLink_Cash_Branch.ChildObjectId
                                     AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc()
-
 
              /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Branch ON ObjectLink_Partner_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!*/
@@ -527,6 +538,9 @@ BEGIN
                -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                    -- если есть - тогда как в договоре
+                    WHEN ObjectLink_Contract_Branch.ChildObjectId > 0
+                         THEN ObjectLink_Contract_Branch.ChildObjectId
                     WHEN MILinkObject_Unit.ObjectId > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                     -- ELSE COALESCE (ObjectLink_Partner_Branch.ChildObjectId, COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())))
@@ -535,7 +549,12 @@ BEGIN
                -- Филиал ОПиУ: всегда по подразделению !!!но для выплаты ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN 0
+                    -- если есть - тогда как в договоре
+                    WHEN ObjectLink_Contract_Branch.ChildObjectId > 0
+                         THEN ObjectLink_Contract_Branch.ChildObjectId
+
                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+
                END AS BranchId_ProfitLoss
 
                -- Месяц начислений: есть
@@ -626,6 +645,9 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                   ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
                                  AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Branch
+                                  ON ObjectLink_Contract_Branch.ObjectId = MILinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_Branch.DescId = zc_ObjectLink_Contract_Branch()
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()

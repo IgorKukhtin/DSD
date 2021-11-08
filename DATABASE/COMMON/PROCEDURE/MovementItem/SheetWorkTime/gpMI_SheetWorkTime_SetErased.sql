@@ -25,11 +25,11 @@ BEGIN
        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate), DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
     -- 
-    CREATE TEMP TABLE tmpMI (MovementItemId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMI (MovementItemId Integer, OperDate TDateTime) ON COMMIT DROP;
 
     -- все данные по этому сотруднику + ...
-    INSERT INTO tmpMI (MovementItemId)
-                         SELECT MI_SheetWorkTime.Id 
+    INSERT INTO tmpMI (MovementItemId, OperDate)
+                         SELECT MI_SheetWorkTime.Id, Movement.OperDate
                          FROM tmpOperDate
                               INNER JOIN Movement ON Movement.OperDate = tmpOperDate.OperDate
                                                  AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -52,6 +52,61 @@ BEGIN
                            AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                            AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                         ;
+
+    -- Проверка - период закрыт
+    IF  EXISTS (SELECT 1
+                FROM tmpMI
+                     INNER JOIN Movement ON Movement.DescId = zc_Movement_SheetWorkTimeClose()
+                                        AND Movement.OperDate <= tmpMI.OperDate
+                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                     INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                             ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                            AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                                            AND MovementDate_OperDateEnd.ValueData >= tmpMI.OperDate
+                     LEFT JOIN MovementDate AS MovementDate_TimeClose
+                                            ON MovementDate_TimeClose.MovementId = Movement.Id
+                                           AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                               ON MovementBoolean_Closed.MovementId = Movement.Id
+                                              AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
+                                               ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
+                                              AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                WHERE (MovementBoolean_Closed.ValueData = TRUE
+                    OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                      )
+               )
+     --OR vbUserId = 5
+    THEN
+        RAISE EXCEPTION 'Ошибка.Период закрыт с <%>.'
+                      , (SELECT CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE
+                                          THEN zfConvert_DateTimeShortToString (MovementDate_TimeClose.ValueData)
+                                     ELSE zfConvert_DateToString (MovementDate_OperDateEnd.ValueData)
+                                END
+                         FROM tmpMI
+                              INNER JOIN Movement ON Movement.DescId = zc_Movement_SheetWorkTimeClose()
+                                                 AND Movement.OperDate <= tmpMI.OperDate
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                              INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                      ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                     AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                                                     AND MovementDate_OperDateEnd.ValueData >= tmpMI.OperDate
+                              LEFT JOIN MovementDate AS MovementDate_TimeClose
+                                                     ON MovementDate_TimeClose.MovementId = Movement.Id
+                                                    AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                        ON MovementBoolean_Closed.MovementId = Movement.Id
+                                                       AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
+                                                        ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
+                                                       AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                         WHERE (MovementBoolean_Closed.ValueData = TRUE
+                             OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                               )
+                         LIMIT 1
+                        )
+                       ;
+    END IF;
 
     -- устанавливаем новое значение
     IF ioIsErased = FALSE

@@ -38,6 +38,61 @@ BEGIN
     -- последнее число месяца
     vbEndDate := DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
+    -- Проверка - период закрыт
+    IF  EXISTS (SELECT 1
+                FROM Movement
+                     INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                             ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                            AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                                            AND MovementDate_OperDateEnd.ValueData >= inOperDate
+                     LEFT JOIN MovementDate AS MovementDate_TimeClose
+                                            ON MovementDate_TimeClose.MovementId = Movement.Id
+                                           AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                               ON MovementBoolean_Closed.MovementId = Movement.Id
+                                              AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
+                                               ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
+                                              AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                WHERE Movement.DescId = zc_Movement_SheetWorkTimeClose()
+                  AND Movement.OperDate <= inOperDate
+                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                  AND (MovementBoolean_Closed.ValueData = TRUE
+                    OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                      )
+               )
+     --OR vbUserId = 5
+    THEN
+        RAISE EXCEPTION 'Ошибка.Период закрыт с <%>.'
+                      , (SELECT CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE
+                                          THEN zfConvert_DateTimeShortToString (MovementDate_TimeClose.ValueData)
+                                     ELSE zfConvert_DateToString (MovementDate_OperDateEnd.ValueData)
+                                END
+                         FROM Movement
+                              INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                      ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                     AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                                                     AND MovementDate_OperDateEnd.ValueData >= inOperDate
+                              LEFT JOIN MovementDate AS MovementDate_TimeClose
+                                                     ON MovementDate_TimeClose.MovementId = Movement.Id
+                                                    AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                        ON MovementBoolean_Closed.MovementId = Movement.Id
+                                                       AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
+                                                        ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
+                                                       AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                         WHERE Movement.DescId = zc_Movement_SheetWorkTimeClose()
+                           AND Movement.OperDate <= inOperDate
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND (MovementBoolean_Closed.ValueData = TRUE
+                             OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                               )
+                         LIMIT 1
+                        )
+                       ;
+    END IF;
+
     -- Проверка
     IF NOT EXISTS (SELECT 1
                    FROM Object_Personal_View
@@ -46,6 +101,7 @@ BEGIN
                      AND Object_Personal_View.PositionId = inPositionId
                      AND Object_Personal_View.isErased   = FALSE
                   )
+     AND vbUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка.В справочнике Сотрудников <%> <%>  <%> не найден.'
                       , lfGet_Object_ValueData_sh (inMemberId)
@@ -63,7 +119,7 @@ BEGIN
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
                   )
-     --AND vbUserId <> 5
+       AND vbUserId <> 5
     THEN
         IF EXISTS (SELECT 1
                          FROM Object_Personal_View
@@ -101,7 +157,7 @@ BEGIN
         END IF;
     END IF;
 
-    --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
+   --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
    IF EXISTS (SELECT 1
                FROM MovementLinkObject AS MovementLinkObject_Member
                     INNER JOIN Movement AS Movement_MemberHoliday 
@@ -130,6 +186,16 @@ BEGIN
                                 ;
     END IF;
 
+   --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
+   IF ioTypeId IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
+    THEN
+        RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> уже установлен отпуск.Корретировка заблокирована.'
+                               , lfGet_Object_ValueData_sh (inMemberId)
+                               , lfGet_Object_ValueData_sh (inPositionId)
+                               , lfGet_Object_ValueData_sh (inUnitId)
+                               , zfConvert_DateToString(inOperDate)
+                                ;
+    END IF;
 
     
     IF (ioValue = '0' OR TRIM (ioValue) = '')
@@ -194,7 +260,8 @@ BEGIN
                                                   ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                  AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
                                                  AND MovementLinkObject_Unit.ObjectId = inUnitId
-                     WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate = inOperDate
+                     WHERE Movement_SheetWorkTime.OperDate = inOperDate
+                       AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime()
                        AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
                     );
  

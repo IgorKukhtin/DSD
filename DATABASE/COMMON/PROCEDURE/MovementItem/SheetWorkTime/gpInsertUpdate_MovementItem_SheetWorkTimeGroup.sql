@@ -47,6 +47,7 @@ BEGIN
                      AND Object_Personal_View.PositionId = inPositionId
                      AND Object_Personal_View.isErased   = FALSE
                   )
+     AND vbUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка.В справочнике Сотрудников <%> <%>  <%> не найден.'
                       , lfGet_Object_ValueData_sh (inMemberId)
@@ -64,6 +65,7 @@ BEGIN
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
                   )
+     AND vbUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка. Сотрудник <%> <%>  <%> уволен с <%>.Ввод в табеле закрыт.'
                       , lfGet_Object_ValueData_sh (inMemberId)
@@ -180,7 +182,7 @@ BEGIN
 
      END IF;                   
 
-if vbUserId = 5 
+if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%> <%>'
                       , zfConvert_DateToString (inOperDate)

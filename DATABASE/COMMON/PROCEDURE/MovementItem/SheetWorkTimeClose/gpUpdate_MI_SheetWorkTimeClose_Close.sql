@@ -14,15 +14,34 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTimeClose());
 
+
+     -- 1. если  update
+     IF inMovementId > 0 AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId <> zc_Enum_Status_UnComplete())
+     THEN
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId
+                                       );
+     END IF;
+
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_SheetWorkTimeClose (ioId         := 0
                                                            , inMovementId := inMovementId
                                                            , inAmount     := inAmount
                                                            , inUserId     := vbUserId
                                                             ) AS tmp;
-     --если были ручные правки убираем галку Авто
+     -- если
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Closed(), inMovementId, CASE WHEN inAmount > 0 THEN TRUE ELSE FALSE END);
+
+     -- если были ручные правки убираем галку Авто
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ClosedAuto(), inMovementId, FALSE);
      
+     -- проводим Документ
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_SheetWorkTimeClose()
+                                , inUserId     := vbUserId
+                                 );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
