@@ -15,6 +15,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Movem
              , FromName TVarChar, ToName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
+             , GoodsKindName_Complete TVarChar, GoodsKindName_Partion TVarChar
              , KVK TVarChar
              , PartionGoods TVarChar
              , PartionDate TDateTime
@@ -117,6 +118,8 @@ BEGIN
                       , CASE WHEN inisDetail = TRUE THEN tmp.MI_Id ELSE 0 END AS MI_Id
                       , tmp.GoodsId
                       , tmp.GoodsKindId
+                      , tmp.GoodsKindName_Complete
+                      , tmp.GoodsKindName_Partion
                       , tmp.KVK
                       , tmp.PersonalKVKId
                       , tmp.UserId
@@ -164,6 +167,8 @@ BEGIN
                             , MIString_KVK.ValueData                                    AS KVK
                             , MILinkObject_PersonalKVK.ObjectId                         AS PersonalKVKId
                             , MILinkObject_GoodsKind.ObjectId                           AS GoodsKindId
+                            , Object_GoodsKindComplete.ValueData                        AS GoodsKindName_Complete
+                            , Object_GoodsKindPartion.ValueData                         AS GoodsKindName_Partion
                             , MovementLinkObject_User.ObjectId                          AS UserId
                             , MovementLinkObject_From.ObjectId                          AS FromId
                             , MovementLinkObject_To.ObjectId                            AS ToId
@@ -218,6 +223,12 @@ BEGIN
                                                             ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
                                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+
+                           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindPartion
+                                                            ON MILO_GoodsKindPartion.MovementItemId = MI_Partion.Id
+                                                           AND MILO_GoodsKindPartion.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN Object AS Object_GoodsKindPartion ON Object_GoodsKindPartion.Id = MILO_GoodsKindPartion.ObjectId
+                           
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                        ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
@@ -229,6 +240,8 @@ BEGIN
                       , CASE WHEN inisDetail = TRUE THEN tmp.MI_Id ELSE 0 END
                       , tmp.GoodsId
                       , tmp.GoodsKindId
+                      , tmp.GoodsKindName_Complete
+                      , tmp.GoodsKindName_Partion
                       , tmp.KVK
                       , tmp.PersonalKVKId
                       , tmp.UserId
@@ -258,6 +271,8 @@ BEGIN
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                , Object_Measure.ValueData                    AS MeasureName
                , Object_GoodsKind.ValueData                  AS GoodsKindName
+               , tmpData.GoodsKindName_Complete ::TVarChar
+               , tmpData.GoodsKindName_Partion  ::TVarChar
 
                , tmpData.KVK            :: TVarChar               
                , tmpData.PartionGoods   :: TVarChar

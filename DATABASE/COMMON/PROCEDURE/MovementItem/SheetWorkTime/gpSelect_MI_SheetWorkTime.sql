@@ -281,6 +281,7 @@ BEGIN
            JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                      AND COALESCE (tmpMI.Amount,0) <> 0
                      AND tmpMI.isNoSheetCalc = FALSE
+                     AND tmpMI.isErased = 1
        Group by tmpOperDate.operdate
               , tmpMI.MemberId
               , tmpMI.PositionId
@@ -300,6 +301,7 @@ BEGIN
       FROM tmpOperDate
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                     AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
+                    AND tmpMI.isErased = 1
        Group by tmpOperDate.OperDate
               , tmpMI.MemberId
               , tmpMI.PositionId
@@ -328,15 +330,16 @@ BEGIN
                    END AS Amount
              FROM tmpOperDate
                   JOIN tmpMI ON tmpMI.OperDate = tmpOperDate.OperDate
-                                 AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
-                                                          , zc_Enum_WorkTimeKind_DayOff()
-                                                          , zc_Enum_WorkTimeKind_Holiday()
-                                                          , zc_Enum_WorkTimeKind_Hospital()
-                                                          , zc_Enum_WorkTimeKind_HolidayNoZp()
-                                                          , zc_Enum_WorkTimeKind_HospitalDoc()
-                                                         )
-                                 AND tmpMI.isNoSheetCalc = FALSE
-                                 AND COALESCE (tmpMI.Amount,0) <> 0
+                            AND tmpMI.ObjectId NOT IN (zc_Enum_WorkTimeKind_Quit()
+                                                     , zc_Enum_WorkTimeKind_DayOff()
+                                                     , zc_Enum_WorkTimeKind_Holiday()
+                                                     , zc_Enum_WorkTimeKind_Hospital()
+                                                     , zc_Enum_WorkTimeKind_HolidayNoZp()
+                                                     , zc_Enum_WorkTimeKind_HospitalDoc()
+                                                    )
+                            AND tmpMI.isNoSheetCalc = FALSE
+                            AND COALESCE (tmpMI.Amount,0) <> 0
+                            AND tmpMI.isErased = 1
                   -- данные из штатного расписания
                   LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpMI.PositionId
                                         AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
@@ -366,6 +369,7 @@ BEGIN
       FROM tmpOperDate
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                     AND tmpMI.ObjectId IN ( zc_Enum_WorkTimeKind_Hospital(), zc_Enum_WorkTimeKind_HospitalDoc())
+                    AND tmpMI.isErased = 1
        Group by tmpOperDate.OperDate
               , tmpMI.MemberId
               , tmpMI.PositionId
@@ -386,6 +390,7 @@ BEGIN
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                     AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Holiday()
                     -- AND COALESCE (tmpMI.Amount,0) <> 0
+                    AND tmpMI.isErased = 1
        Group by tmpOperDate.OperDate
               , tmpMI.MemberId
               , tmpMI.PositionId
@@ -406,6 +411,7 @@ BEGIN
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                     AND tmpMI.ObjectId = zc_Enum_WorkTimeKind_Skip()
                    -- AND COALESCE (tmpMI.Amount,0) <> 0
+                   AND tmpMI.isErased = 1
        Group by tmpOperDate.OperDate
               , tmpMI.MemberId
               , tmpMI.PositionId
