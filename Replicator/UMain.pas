@@ -26,6 +26,7 @@ uses
   ULog,
   UScriptFiles,
   UData,
+  UImages,
   USnapshotThread;
 
 

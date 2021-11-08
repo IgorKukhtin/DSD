@@ -32,7 +32,6 @@ type
     qryCompareRecCountMS: TZReadOnlyQuery;
     qrySlaveHelper: TZReadOnlyQuery;
     qryCompareSeqMS: TZReadOnlyQuery;
-    il16: TImageList;
     qrySnapshotTables: TZReadOnlyQuery;
   strict private
     FStartId: Int64;
@@ -1546,9 +1545,9 @@ begin
         if arrTables[I].MasterCount = arrTables[I].SlaveCount then Continue;
 
       if Length(sSQL) = 0 then
-        sSQL := Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)])
+        sSQL := Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[I].MasterCount - arrTables[I].SlaveCount)])
       else
-        sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[J].MasterCount - arrTables[J].SlaveCount)]);
+        sSQL := sSQL + cUnion + Format(cSelectUnion, [arrTables[I].Name, FormatFloat(',0.', arrTables[I].MasterCount), FormatFloat(',0.', arrTables[I].SlaveCount), FormatFloat(',0.', arrTables[I].MasterCount - arrTables[I].SlaveCount)]);
     end;
 
     if Length(sSQL) > 0 then

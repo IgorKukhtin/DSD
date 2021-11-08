@@ -12,7 +12,8 @@ uses
   UCommon in 'UCommon.pas',
   UScriptFiles in 'UScriptFiles.pas',
   UFileVersion in 'UFileVersion.pas',
-  USnapshotThread in 'USnapshotThread.pas';
+  USnapshotThread in 'USnapshotThread.pas',
+  UImages in 'UImages.pas' {dmImages: TDataModule};
 
 {$R *.res}
 
@@ -21,5 +22,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TdmImages, dmImages);
   Application.Run;
 end.

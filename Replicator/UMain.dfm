@@ -21,7 +21,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 984
     Height = 662
-    ActivePage = tsLog
+    ActivePage = tsSnapshot
     Align = alClient
     TabOrder = 0
     object tsLog: TTabSheet
@@ -489,6 +489,10 @@ object frmMain: TfrmMain
             Caption = 'tsChk'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -496,6 +500,10 @@ object frmMain: TfrmMain
     object tsCompare: TTabSheet
       Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' Master '#1080' Slave'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pgcCompare: TPageControl
         Left = 0
         Top = 0
@@ -506,6 +514,10 @@ object frmMain: TfrmMain
         TabOrder = 0
         object tsCompareRecCount: TTabSheet
           Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1087#1080#1089#1077#1081
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object pnlCompareGrid: TPanel
             Left = 0
             Top = 41
@@ -616,6 +628,10 @@ object frmMain: TfrmMain
         object tsCompareSequences: TTabSheet
           Caption = #1055#1086#1089#1083#1077#1076#1086#1074#1072#1090#1077#1083#1100#1085#1086#1089#1090#1080
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object pnl1: TPanel
             Left = 0
             Top = 41
@@ -1200,7 +1216,7 @@ object frmMain: TfrmMain
           end>
         DoubleBuffered = True
         ParentDoubleBuffered = False
-        SmallImages = dmData.il16
+        SmallImages = dmImages.il16
         TabOrder = 1
         ViewStyle = vsReport
       end
