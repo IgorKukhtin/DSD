@@ -35,7 +35,7 @@ ELSE
 END IF;
 
      -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
+     IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
          vbUserId:= NULL;
          RETURN;
