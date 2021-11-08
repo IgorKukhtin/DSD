@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UpdateDate_Order TDateTime
              , OrderKindId Integer, OrderKindName TVarChar
              , Comment TVarChar, isUseNDSKind Boolean
+             , isConduct Boolean, DateConduct TDateTime
               )
 AS
 $BODY$
@@ -80,6 +81,8 @@ BEGIN
              , CAST('' as TVarChar)                             AS OrderKindName
              , CAST ('' AS TVarChar) 		                    AS Comment
              , false                                            AS isUseNDSKind  
+             , false                                            AS isConduct 
+             , NULL ::TDateTime                                 AS DateConduct
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -168,6 +171,9 @@ BEGIN
           , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
           , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)            AS isUseNDSKind 
 
+          , COALESCE (MovementBoolean_Conduct.ValueData, FALSE)               AS isConduct
+          , MovementDate_Conduct.ValueData                                    AS DateConduct
+
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
              LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
@@ -200,6 +206,14 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_Update_Order
                                     ON MovementDate_Update_Order.MovementId = Movement_Order.Id
                                    AND MovementDate_Update_Order.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Conduct
+                                      ON MovementBoolean_Conduct.MovementId = Movement_Income.Id
+                                     AND MovementBoolean_Conduct.DescId = zc_MovementBoolean_Conduct()
+            LEFT JOIN MovementDate AS MovementDate_Conduct
+                                   ON MovementDate_Conduct.MovementId = Movement_Income.Id
+                                  AND MovementDate_Conduct.DescId = zc_MovementDate_Conduct()
+
         GROUP BY
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -236,6 +250,8 @@ BEGIN
           , Object_OrderKind.ValueData
           , COALESCE (MovementString_Comment.ValueData,'')
           , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)
+          , COALESCE (MovementBoolean_Conduct.ValueData, FALSE)
+          , MovementDate_Conduct.ValueData
           ;
     END IF;
 
@@ -261,4 +277,4 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Income (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_Income (inMovementId:= 25560862, inSession:= '9818')

@@ -540,6 +540,10 @@ type
     macInsUpPromoPlan_Master_calc: TMultiAction;
     bbInsUpPromoPlan_Master_calc: TdxBarButton;
     Koef_ch5: TcxGridDBColumn;
+    spInsUpPromoPlan_Child_calc: TdsdStoredProc;
+    actInsUpPromoPlan_Child_calc: TdsdExecStoredProc;
+    macInsUpPromoPlan_Child_calc: TMultiAction;
+    bbInsUpPromoPlan_Child_calc: TdxBarButton;
   private
     { Private declarations }
   public

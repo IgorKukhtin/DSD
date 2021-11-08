@@ -56,7 +56,7 @@ BEGIN
                                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                            WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                             AND ObjectLink_Unit_Juridical.ObjectId = 4103485  --inUnitId
+                             AND ObjectLink_Unit_Juridical.ObjectId = inUnitId
                             );
         ELSE
             vbRetailId := vbObjectId;

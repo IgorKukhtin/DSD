@@ -200,6 +200,14 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object MinimumLot: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
+            DataBinding.FieldName = 'MinimumLot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
           object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'

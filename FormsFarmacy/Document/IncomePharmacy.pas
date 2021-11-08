@@ -118,6 +118,7 @@ type
     actUpdate_ExpirationDate: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
     actAccommodationUnit: TOpenChoiceForm;
+    cbisConduct: TcxCheckBox;
   private
     { Private declarations }
   public

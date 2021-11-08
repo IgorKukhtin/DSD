@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingProduction_KVK(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
+             , InsertDate TDateTime
              , FromName TVarChar, ToName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar, GoodsKindName TVarChar
@@ -84,6 +85,11 @@ BEGIN
                                                                  , zc_MIString_KVK()
                                                                   )
                              )
+   , tmpMovementItemDate AS (SELECT *
+                             FROM MovementItemDate
+                             WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
+                               AND MovementItemDate.DescId = zc_MIDate_Insert()
+                             )
 
    , tmpMILO AS (SELECT *
                  FROM MovementItemLinkObject
@@ -107,6 +113,7 @@ BEGIN
                       , tmp.MovementDescName
                       , tmp.StartWeighing  
                       , tmp.EndWeighing
+                      , tmp.InsertDate
                       , CASE WHEN inisDetail = TRUE THEN tmp.MI_Id ELSE 0 END AS MI_Id
                       , tmp.GoodsId
                       , tmp.GoodsKindId
@@ -131,6 +138,7 @@ BEGIN
                             , tmpMI.MovementDescName
                             , tmpMI.StartWeighing  
                             , tmpMI.EndWeighing
+                            , MIDate_Insert.ValueData AS InsertDate
                             , tmpMI.MI_Id
                             , tmpMI.GoodsId
                             , tmpMI.Amount
@@ -188,6 +196,10 @@ BEGIN
                                                            ON MIString_KVK.MovementItemId = tmpMI.MI_Id
                                                           AND MIString_KVK.DescId = zc_MIString_KVK()
       
+                           LEFT JOIN tmpMovementItemDate AS MIDate_Insert
+                                                         ON MIDate_Insert.MovementItemId = tmpMI.MI_Id
+                                                        AND MIDate_Insert.DescId = zc_MIDate_Insert()
+
                            LEFT JOIN tmpMovementItemFloat AS MIFloat_WeightTare
                                                           ON MIFloat_WeightTare.MovementItemId = tmpMI.MI_Id
                                                          AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
@@ -228,6 +240,7 @@ BEGIN
                       , tmp.CuterCount
                       , tmp.StartWeighing  
                       , tmp.EndWeighing
+                      , tmp.InsertDate
                  )
 
           --–≈«”À‹“¿“
@@ -237,6 +250,7 @@ BEGIN
                , tmpData.MovementDescName
                , tmpData.StartWeighing  ::TDateTime
                , tmpData.EndWeighing    ::TDateTime
+               , tmpData.InsertDate     ::TDateTime
                , Object_From.ValueData    AS FromName
                , Object_To.ValueData      AS ToName
                , Object_Goods.ObjectCode ::Integer AS GoodsCode

@@ -19,6 +19,7 @@ RETURNS TABLE (
       , GoodsWeight         TFloat -- 
       , Amount              TFloat
       , AmountPartner       TFloat
+      , TermProduction      TFloat
       , OperDate            TDateTime --Дата пр-во
       , isErased            Boolean  --удален
 )
@@ -45,6 +46,7 @@ BEGIN
 
              , MovementItem.Amount                    AS Amount
              , MIFloat_AmountPartner.ValueData        AS AmountPartner
+             , ObjectFloat_TermProduction.ValueData   AS TermProduction
 
              , MIDate_OperDate.ValueData              AS OperDate
    
@@ -81,6 +83,14 @@ BEGIN
              LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                          ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             -- 	Срок производства
+             LEFT JOIN ObjectLink AS OrderType_Goods
+                                  ON OrderType_Goods.ChildObjectId = MovementItem.ObjectId
+                                 AND OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+  
+             LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction           
+                                   ON ObjectFloat_TermProduction.ObjectId = OrderType_Goods.ObjectId
+                                  AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
 
         WHERE Movement.DescId = zc_Movement_PromoPlan()
           AND Movement.ParentId = inMovementId;

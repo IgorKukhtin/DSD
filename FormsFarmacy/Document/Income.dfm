@@ -1074,6 +1074,14 @@
       TabOrder = 41
       Width = 222
     end
+    object cbisConduct: TcxCheckBox
+      Left = 670
+      Top = 120
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 154
+    end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
     Left = 564
@@ -2824,6 +2832,13 @@
         Name = 'isUseNDSKind'
         Value = Null
         Component = cbUseNDSKind
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConduct'
+        Value = Null
+        Component = cbisConduct
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

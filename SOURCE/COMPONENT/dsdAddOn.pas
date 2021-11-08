@@ -17,6 +17,8 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
 const
   WM_SETFLAG = WM_USER + 2;
   WM_SETFLAGHeaderSaver = WM_USER + 3;
+  CUSTOM_FILTER = -1;
+  MY_CUST_FILTER = '(Отметить все)';
 
 type
   TMultiplyType = (mtRight, mtBottom, mtLeft, mtTop);
@@ -371,6 +373,9 @@ type
     FGroupIndex: integer;
     FAfterScroll: TDataSetNotifyEvent;
     FMemoryStream: TMemoryStream;
+    FFilterSelectAll: boolean;
+    FOnGetFilterValues : TcxGridGetFilterValuesEvent;
+    FOnUserFiltering : TcxGridUserFilteringEvent;
 
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
@@ -407,6 +412,9 @@ type
     procedure onFilterChanged(Sender: TObject);
     // если при выходе из грида ДатаСет в Edit mode, то делаем Post
     procedure OnExit(Sender: TObject);
+    procedure OnGetFilterValues(Sender: TcxCustomGridTableItem; AValueList: TcxDataFilterValueList);
+    procedure OnUserFiltering(Sender: TcxCustomGridTableItem; const AValue: Variant;
+      const ADisplayText: string);
     procedure SetOnlyEditingCellOnEnter(const Value: boolean);
     function GetErasedColumn(Sender: TObject): TcxGridColumn;
     procedure SetSearchAsFilter(const Value: boolean);
@@ -453,6 +461,8 @@ type
     property KeepSelectColor: boolean read FKeepSelectColor write FKeepSelectColor default false;
     // Правила Properties ячейки
     property PropertiesCellList: TCollection read FPropertiesCellList write FPropertiesCellList;
+    // В автофильтре кнопка "Отметить все"
+    property FilterSelectAll: boolean read FFilterSelectAll write FFilterSelectAll default False;
 
   end;
 
@@ -1482,6 +1492,7 @@ begin
 
   FGroupByBox := False;
   FGroupIndex := -1;
+  FFilterSelectAll := False;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -2395,7 +2406,20 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
+  var I : Integer;
 begin
+
+  if FView = Value then Exit;
+
+  if Assigned(FView) and not (csDesigning  in ComponentState) then
+  begin
+    for I := 0 to FView.ColumnCount - 1 do
+    begin
+      FView.Columns[I].OnGetFilterValues := FOnGetFilterValues;
+      FView.Columns[I].OnUserFiltering := FOnUserFiltering;
+    end;
+  end;
+
   FView := Value;
   if csDesigning  in ComponentState then Exit;
   if Assigned(FView) then begin
@@ -2433,6 +2457,14 @@ begin
      end;
      FGroupByBox := FView.OptionsView.GroupByBox;
      FGroupIndex := -1;
+
+     for I := 0 to FView.ColumnCount - 1 do
+     begin
+       FOnGetFilterValues := FView.Columns[I].OnGetFilterValues;
+       FOnUserFiltering := FView.Columns[I].OnUserFiltering;
+       FView.Columns[I].OnGetFilterValues := OnGetFilterValues;
+       FView.Columns[I].OnUserFiltering := OnUserFiltering;
+     end
   end;
 end;
 
@@ -2449,6 +2481,59 @@ begin
             if Column = APrevFocusedItem then
                 onExitColumn.Action.Execute;
          end;
+end;
+
+procedure TdsdDBViewAddOn.OnGetFilterValues(Sender: TcxCustomGridTableItem; AValueList: TcxDataFilterValueList);
+begin
+  if FilterSelectAll then
+  begin
+    if (Sender is TcxGridDBBandedColumn) and Assigned(TcxGridDBBandedColumn(Sender).DataBinding.Field) and
+       (TcxGridDBBandedColumn(Sender).DataBinding.Field.DataType in [ftString, ftWideString]) then
+      AValueList.Add(fviUser, CUSTOM_FILTER, MY_CUST_FILTER, True);
+    if (Sender is TcxGridDBColumn) and Assigned(TcxGridDBColumn(Sender).DataBinding.Field) and
+       (TcxGridDBColumn(Sender).DataBinding.Field.DataType in [ftString, ftWideString]) then
+      AValueList.Add(fviUser, CUSTOM_FILTER, MY_CUST_FILTER, True);
+  end;
+end;
+
+procedure TdsdDBViewAddOn.OnUserFiltering(Sender: TcxCustomGridTableItem; const AValue: Variant;
+  const ADisplayText: string);
+  var I, J : Integer; lFilter : TStringList;
+      ItemList: TcxFilterCriteriaItemList;
+begin
+  if (AValue = CUSTOM_FILTER) then
+  begin
+
+    if not Assigned(Sender) or not Assigned(FView) then Exit;
+
+    with FView.DataController.Filter do
+    begin
+      lFilter := TStringList.Create;
+      lFilter.Sorted := True;
+      BeginUpdate;
+      try
+        Clear;
+        root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboAnd;
+        ItemList := root.AddItemList(TcxFilterBoolOperatorKind.fboOr);
+        for i := 0 to FView.DataController.RecordCount - 1 do
+        begin
+          if (FView.DataController.Values[I, Sender.Index] <> Null) and
+            (VarToStr(FView.DataController.Values[I, Sender.Index]) <> '') then
+             if not lFilter.Find(VarToStr(FView.DataController.Values[I, Sender.Index]), J) then
+             begin
+               ItemList.AddItem(FView.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
+                    FView.DataController.Values[I, Sender.Index],
+                    VarToStr(FView.DataController.Values[I, Sender.Index]));
+               lFilter.Add(VarToStr(FView.DataController.Values[I, Sender.Index]));
+             end;
+        end;
+        Active := true;
+      finally
+        EndUpdate;
+        lFilter.Free;
+      end;
+    end;
+  end;
 end;
 
 { TdsdUserSettingsStorageAddOn }

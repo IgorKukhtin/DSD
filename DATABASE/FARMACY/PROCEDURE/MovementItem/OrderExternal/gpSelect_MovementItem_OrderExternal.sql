@@ -25,6 +25,10 @@ RETURNS TABLE (Id Integer
              , isResolution_224 Boolean
              , PartionGoodsDateColor Integer
              , OrderShedule_Color    Integer
+             , MinimumLot            TFloat
+             , Multiplicity TFloat                      -- убрать со временем
+             , CalcAmount TFloat                         
+             , MultiplicityColor Integer                -- убрать со временем
               )
 AS
 $BODY$
@@ -106,11 +110,19 @@ BEGIN
                     , MovementItem.GoodsId
                     , MovementItem.PartionGoodsDate
                     , MovementItem.Comment
+                    , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
+                    , CEIL (MovementItem.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)  AS CalcAmount
+                    
                     
                FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                      JOIN MovementItem_OrderExternal_View AS MovementItem 
                                                           ON MovementItem.MovementId = inMovementId
                                                          AND MovementItem.isErased   = tmpIsErased.isErased
+
+                     LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                                            ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.PartnerGoodsId
+                                           AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                           AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
               )
    , tmpData AS (SELECT tmpMI.Id            AS Id
                       , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
@@ -123,6 +135,8 @@ BEGIN
                       , tmpMI.Summ::TFloat                            AS Summ
                       , tmpMI.PartionGoodsDate                        AS PartionGoodsDate
                       , tmpMI.Comment                                 AS Comment
+                      , tmpMI.MinimumLot                              AS MinimumLot
+                      , tmpMI.CalcAmount                              AS CalcAmount
                       , FALSE                                         AS isErased
                  FROM tmpGoods
                       FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
@@ -238,7 +252,14 @@ BEGIN
                     OR (COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%—“ћ%' 
                      OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%PL/%') AND vbJuridicalId = 59612  THEN zc_Color_Red()    --красный заказывать нельз€
                   ELSE zc_Color_White()
-             END  AS OrderShedule_Color
+              END  AS OrderShedule_Color
+           , tmpMI.MinimumLot  ::TFloat                           AS MinimumLot
+           , tmpMI.MinimumLot  ::TFloat                           AS Multiplicity
+           , tmpMI.CalcAmount  ::TFloat                           AS CalcAmount
+           , CASE
+                  WHEN COALESCE (tmpMI.MinimumLot <> 0) AND tmpMI.CalcAmount <> tmpMI.Amount THEN zc_Color_Red() --красный заказывать нельз€
+                  ELSE zc_Color_White()
+              END  AS MultiplicityColor
       
        FROM tmpData AS tmpMI
             -- торгова€ сеть
@@ -305,4 +326,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
---select * from gpSelect_MovementItem_OrderExternal22(inMovementId := 11528384 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--
+select * from gpSelect_MovementItem_OrderExternal(inMovementId := 25568251  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

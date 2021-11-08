@@ -482,6 +482,22 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 95
           end
+          object isConduct: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1076#1077#1085' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+            DataBinding.FieldName = 'isConduct'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object DateConduct: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
+            DataBinding.FieldName = 'DateConduct'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 137
+          end
         end
       end
     end
@@ -588,6 +604,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 194
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+    end
     object actGetDataForSendNew: TdsdExecStoredProc [2]
       Category = 'dsdImportExport'
       MoveParams = <>
@@ -640,10 +660,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-    end
-    inherited MovementProtocolOpenForm: TdsdOpenForm
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
     end
     object actisDocument: TdsdExecStoredProc [23]
       Category = 'DSDLib'
@@ -898,7 +914,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'CheckDate'
-          Value = 'NULL'
+          Value = Null
           Component = deCheckDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1092,7 +1108,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Name = 'PaymentDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'PaymentDate'
           DataType = ftDateTime
@@ -1463,7 +1479,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'outOperDate_Branch'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchDate'
         DataType = ftDateTime
@@ -1546,7 +1562,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'PaymentDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PaymentDate'
         DataType = ftDateTime
@@ -1813,7 +1829,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inCheckDate'
-        Value = 'NULL'
+        Value = Null
         Component = deCheckDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1885,7 +1901,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inBranchDate'
-        Value = 'NULL'
+        Value = Null
         Component = deBranchDate
         DataType = ftDateTime
         ParamType = ptInput

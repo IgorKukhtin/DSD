@@ -56,6 +56,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.ДОлжен быть выбран один из параметров торг.сеть или подразделение';
     END IF;
 
+     -- Разрешаем только сотрудникам с правами админа и маркетологов   
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491))
+    THEN
+      RAISE EXCEPTION 'Изменение цен со скидкой вам запрещено.';
+    END IF;
+    
     -- Если такая запись есть - достаем её ключу торг.сеть - товар или подразделение - товар
     SELECT Id, 
            PriceChange,

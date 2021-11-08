@@ -20,6 +20,33 @@ BEGIN
      -- проверка - если есть <Child> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
+     IF EXISTS(SELECT ValueData FROM  MovementBoolean 
+               WHERE MovementBoolean.DescId = zc_MovementBoolean_Conduct()
+                 AND MovementBoolean.MovementId = inMovementId
+                 AND MovementBoolean.ValueData = TRUE)
+     THEN
+       -- Отменяем проведения по ручному количеству
+       IF EXISTS(SELECT ValueData FROM MovementItem
+                        INNER JOIN MovementItemBoolean ON MovementItemBoolean.DescId = zc_MIBoolean_Conduct()
+                                                     AND MovementItemBoolean.MovementItemId = MovementItem.Id
+                                                     AND MovementItemBoolean.ValueData = TRUE
+                        WHERE MovementItem.MovementId = inMovementId)
+       THEN
+           PERFORM lpUnConduct_MovementItem_Income (inMovementId, MovementItem.Id, vbUserId) FROM MovementItem
+                        INNER JOIN MovementItemBoolean ON MovementItemBoolean.DescId = zc_MIBoolean_Conduct()
+                                                     AND MovementItemBoolean.MovementItemId = MovementItem.Id
+                                                     AND MovementItemBoolean.ValueData = TRUE
+                        WHERE MovementItem.MovementId = inMovementId;
+       END IF;
+
+       -- сохранили свойство <Проведен по количеству>
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Conduct(), inMovementId, False);
+
+       -- сохранили свойство <Дата проведения по количеству>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Conduct(), inMovementId, CURRENT_TIMESTAMP);
+     END IF;
+     
+     
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);

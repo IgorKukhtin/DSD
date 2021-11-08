@@ -8,7 +8,8 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
-  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, Winapi.ActiveX
+  System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
+  Winapi.ActiveX
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -1272,6 +1273,67 @@ type
     property SecondaryShortCuts;
   end;
 
+//  TSendTelegramBotType = (tbSendMessage, tbSendDocument, tbSendPhoto);
+
+  TdsdSendTelegramBotAction = class(TdsdCustomAction)
+  private
+    FIdHTTP: TIdHTTP;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+
+//    FSendType : TSendTelegramBotType;
+
+    FBaseURLParam: TdsdParam;
+    FTokenParam: TdsdParam;
+    FMessageParam: TdsdParam;
+//    FFileNameParam: TdsdParam;
+//    FCaptionFileParam: TdsdParam;
+    FChatIdParam: TdsdParam;
+
+    FisSeendParam: TdsdParam;
+    FisErroeSendParam: TdsdParam;
+    FErrorParam: TdsdParam;
+
+    Fid_bot : Boolean;
+    Ffirst_name : String;
+    Fusername : String;
+    Fcan_join_groups : Boolean;
+    Fcan_read_all_group_messages : Boolean;
+    Fsupports_inline_queries : Boolean;
+
+  protected
+    function LocalExecute: Boolean; override;
+    procedure SetError(AError : String);
+    function InitBot : Boolean;
+    function SendMessage : Boolean;
+//    function SendFile : Boolean;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+
+//    property SendType : TSendTelegramBotType read FSendType write FSendType default tbSendMessage;
+
+    property BaseURLParam: TdsdParam read FBaseURLParam write FBaseURLParam;
+    property Token: TdsdParam read FTokenParam write FTokenParam;
+    property ChatId: TdsdParam read FChatIdParam write FChatIdParam;
+
+    property isSeend: TdsdParam read FisSeendParam write FisSeendParam;
+    property isErroeSend: TdsdParam read FisErroeSendParam write FisErroeSendParam;
+    property Error: TdsdParam read FErrorParam write FErrorParam;
+
+    property Message: TdsdParam read FMessageParam write FMessageParam;
+//    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
+//    property CaptionFile: TdsdParam read FCaptionFileParam write FCaptionFileParam;
+
+  end;
+
 procedure Register;
 
 implementation
@@ -1335,6 +1397,7 @@ begin
   RegisterActions('DSDLib', [TdsdPreparePicturesAction], TdsdPreparePicturesAction);
   RegisterActions('DSDLib', [TdsdSetVisibleAction], TdsdSetVisibleAction);
   RegisterActions('DSDLib', [TdsdDataToJsonAction], TdsdDataToJsonAction);
+  RegisterActions('DSDLib', [TdsdSendTelegramBotAction], TdsdSendTelegramBotAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -5856,6 +5919,315 @@ begin
   end;
   FView := Value;
 end;
+
+  {TdsdSendSMSKyivstarAction}
+
+constructor TdsdSendTelegramBotAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+  FIdHTTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+
+//  FSendType := tbSendMessage;
+
+  FBaseURLParam := TdsdParam.Create(nil);
+  FBaseURLParam.DataType := ftString;
+  FBaseURLParam.Value := 'https://api.telegram.org';
+
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftString;
+  FTokenParam.Value := '';
+
+  FChatIdParam := TdsdParam.Create(nil);
+  FChatIdParam.DataType := ftString;
+  FChatIdParam.Value := '';
+
+  FMessageParam := TdsdParam.Create(nil);
+  FMessageParam.DataType := ftString;
+  FMessageParam.Value := '';
+
+  FisSeendParam := TdsdParam.Create(nil);
+  FisSeendParam.DataType := ftBoolean;
+  FisSeendParam.Value := True;
+
+  FisErroeSendParam := TdsdParam.Create(nil);
+  FisErroeSendParam.DataType := ftBoolean;
+  FisErroeSendParam.Value := False;
+
+  FErrorParam := TdsdParam.Create(nil);
+  FErrorParam.DataType := ftString;
+  FErrorParam.Value := '';
+
+//  FFileNameParam := TdsdParam.Create(nil);
+//  FFileNameParam.DataType := ftString;
+//  FFileNameParam.Value := '';
+//  FCaptionFileParam := TdsdParam.Create(nil);
+//  FCaptionFileParam.DataType := ftString;
+//  FCaptionFileParam.Value := '';
+
+end;
+
+destructor TdsdSendTelegramBotAction.Destroy;
+begin
+  FreeAndNil(FBaseURLParam);
+  FreeAndNil(FTokenParam);
+  FreeAndNil(FMessageParam);
+
+  FreeAndNil(FChatIdParam);
+//  FreeAndNil(FFileNameParam);
+//  FreeAndNil(FCaptionFileParam);
+
+  FreeAndNil(FisSeendParam);
+  FreeAndNil(FisErroeSendParam);
+  FreeAndNil(FErrorParam);
+
+  FreeAndNil(FIdSSLIOHandlerSocketOpenSSL);
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+procedure TdsdSendTelegramBotAction.SetError(AError : String);
+begin
+  FisErroeSendParam.Value := True;
+  FErrorParam.Value := AError;
+end;
+
+function TdsdSendTelegramBotAction.LocalExecute: Boolean;
+  var S, Json : String;
+  JsonToSend: TStringStream;
+begin
+  Result := False;
+  FisErroeSendParam.Value := False;
+  FErrorParam.Value := '';
+  try
+
+    if FisSeendParam.Value = False then
+    begin
+      Result := True;
+      Exit;
+    end;
+
+
+    if (FBaseURLParam.Value = '') then
+    begin
+      SetError('Св-во.Не заполнены Host.');
+      Exit;
+    end;
+
+    if FTokenParam.Value = '' then
+    begin
+      SetError('Св-во.Не заполнен токен бота.');
+      Exit;
+    end;
+
+    if FChatIdParam.Value = '' then
+    begin
+      SetError('Св-во.Не заполнен чат ID пользователя.');
+      Exit;
+    end;
+
+//    if FSendType = tbSendMessage then
+//    begin
+
+      if FMessageParam.Value = '' then
+      begin
+        SetError('Св-во.Не заполнен текст сообщения.');
+        Exit;
+      end;
+
+//    end else
+//    begin
+//      if FFileNameParam.Value = '' then
+//      begin
+//        ShowMessage('Св-во.Не заполнено имя файла.');
+//        Exit;
+//      end;
+//
+//      if not FileExists(FFileNameParam.Value) then
+//      begin
+//        ShowMessage('Св-во.Файл <' + FFileNameParam.Value + '> не найден.');
+//        Exit;
+//      end;
+//    end;
+//
+
+    Result := SendMessage;
+
+//    case FSendType of
+//      tbSendMessage : SendMessage;
+//      else SendFile;
+//    end;
+
+  finally
+    if FisErroeSendParam.Value = true then
+      ShowMessage(FErrorParam.Value);
+  end;
+end;
+
+function TdsdSendTelegramBotAction.InitBot : Boolean;
+  var jsonObj: TJSONObject; jsonPair: TJSONPair; S : String;
+begin
+
+  Result := False;
+
+  FIdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+
+  try
+    S := FIdHTTP.Get(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/GetMe'));
+  except
+  end;
+
+
+  if FIdHTTP.ResponseCode = 200 then
+  begin
+    jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+    try
+      jsonPair := jsonObj.Get('ok');
+      if jsonPair <> nil then
+      begin
+        Result := jsonPair.JsonValue.ToString = 'true';
+      end;
+      if not Result then
+      begin
+        jsonPair := jsonObj.Get('description');
+        if jsonPair <> nil then
+        begin
+          SetError(jsonPair.JsonValue.ToString);
+        end else SetError(jsonObj.ToString);
+      end;
+    finally
+      FreeAndNil(jsonObj);
+    end;
+  end else SetError(FIdHTTP.ResponseText);
+end;
+
+function TdsdSendTelegramBotAction.SendMessage : Boolean;
+  var jsonObj: TJSONObject; jsonPair: TJSONPair; S, str : String;
+begin
+
+  Result := False;
+
+  FIdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+  FIdHTTP.Request.ContentEncoding := 'utf-8';
+
+  str := StringReplace(FMessageParam.Value, '&', '??',[rfReplaceAll, rfIgnoreCase]);
+
+  try
+    S := FIdHTTP.Get(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/sendMessage' +
+      '?chat_id=' + FChatIdParam.Value + '&text=' + str));
+  except
+  end;
+
+  if FIdHTTP.ResponseCode = 200 then
+  begin
+    jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+    try
+      jsonPair := jsonObj.Get('ok');
+      if jsonPair <> nil then
+      begin
+        Result := jsonPair.JsonValue.ToString = 'true';
+      end;
+      if not Result then
+      begin
+        jsonPair := jsonObj.Get('description');
+        if jsonPair <> nil then
+        begin
+          SetError(jsonPair.JsonValue.ToString);
+        end else SetError(jsonObj.ToString);
+      end;
+    finally
+      FreeAndNil(jsonObj);
+    end;
+  end else SetError(FIdHTTP.ResponseText);
+end;
+
+//function TdsdSendTelegramBotAction.SendFile : Boolean;
+//  var jsonObj: TJSONObject; jsonPair: TJSONPair; S : String;
+//      FormData: TIdMultiPartFormDataStream;
+//      Source: TFileStream;
+//begin
+//
+//  Result := False;
+//
+//  FIdHTTP.Request.ContentType := 'multipart/form-data';
+//  FIdHTTP.Request.ContentEncoding := 'utf-8';
+//  FIdHTTP.Request.CharSet:='utf8';
+//  FIdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+//  FIdHTTP.Request.AcceptLanguage:='ru-RU,ru;q=0.9,en;q=0.8';
+//  FIdHTTP.Request.AcceptEncoding:='gzip, deflate';
+//  FIdHTTP.Request.Connection:='Keep-Alive';
+//
+// FIdHTTP.Request.UserAgent:='Opera/9.80 (Windows NT 6.1; WOW64; MRA 8.1 (build 6347)) Presto/2.12.388 Version/12.15';
+//            FIdHTTP.Request.Accept:='text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1';
+//            FIdHTTP.Request.AcceptLanguage:='ru-RU,ru;q=0.9,en;q=0.8';
+//            FIdHTTP.Request.AcceptEncoding:='gzip, deflate';
+//            FIdHTTP.Request.Referer:='http://rghost.ru/';
+//            FIdHTTP.Request.Connection:='Keep-Alive';
+//  FormData := TIdMultiPartFormDataStream.Create;
+////  FormData.AddFormField('utf8', '&#x2713;');
+//  case FSendType of
+//    tbSendDocument : FormData.AddFile ('document', FFileNameParam.Value, 'multipart/form-data');
+//    tbSendPhoto : FormData.AddFile ('photo', FFileNameParam.Value, 'multipart/form-data');
+//  end;
+//  FormData.AddFormField ('chat_id', FChatId.Value, 'utf-8');
+//  FormData.AddFormField ('caption', FCaptionFileParam.Value, 'utf-8');
+//
+////    FIdHTTP.Request.Accept := '*/*';
+////  FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+////  FIdHTTP.Request.Connection := 'keep-alive';
+////  FIdHTTP.Request.CharSet := 'utf-8';
+////  FIdHTTP.Request.UserAgent:='';
+////FIdHTTP.HTTPOptions := FIdHTTP.HTTPOptions + [hoKeepOrigProtocol];
+////
+//
+//
+////  Source := TFileStream.Create(FFileNameParam.Value, fmOpenRead);
+////   SetString(Result, PAnsiChar(Source.Memory), Source.Size);       // StreamToString
+//
+//  try
+//    try
+//      case FSendType of
+//        tbSendDocument : S := FIdHTTP.POST(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/sendDocument'), FormData);
+//        tbSendPhoto : S := FIdHTTP.POST(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/sendPhoto'), FormData);
+////        tbSendDocument : S := FIdHTTP.POST(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/sendDocument' +
+////          '?chat_id=' + FChatId.Value + '&caption=' + FCaptionFileParam.Value)+ '&document=', + FFileNameParam.Value);
+////        tbSendPhoto : S := FIdHTTP.POST(TIdURI.URLEncode(FBaseURLParam.Value + '/bot' + FTokenParam.Value + '/sendPhoto' +
+////          '?chat_id=' + FChatId.Value + '&caption=' + FCaptionFileParam.Value)+ '&photo=', + FFileNameParam.Value);
+//      end;
+//    except
+//    end;
+//  finally
+//    FormData.Free;
+////    Source.Free;
+//  end;
+//
+//  if FIdHTTP.ResponseCode = 200 then
+//  begin
+//    jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+//    try
+//      jsonPair := jsonObj.Get('ok');
+//      if jsonPair <> nil then
+//      begin
+//        Result := jsonPair.JsonValue.ToString = 'true';
+//      end;
+//      if not Result then
+//      begin
+//        jsonPair := jsonObj.Get('description');
+//        if jsonPair <> nil then
+//        begin
+//          ShowMessage(jsonPair.JsonValue.ToString);
+//        end else ShowMessage(jsonObj.ToString);
+//      end;
+//    finally
+//      FreeAndNil(jsonObj);
+//    end;
+//  end else ShowMessage(FIdHTTP.ResponseText);
+//end;
 
 initialization
 

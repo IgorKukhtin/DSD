@@ -403,7 +403,7 @@ begin
         spLog_Send_Telegram.ParamByName('inisError').Value := nError;
         spLog_Send_Telegram.ParamByName('inMessage').Value := qryReport_Upload.FieldByName('Message').AsString;
         spLog_Send_Telegram.ParamByName('inError').Value := TelegramBot.ErrorText;
-        spLog_Send_Telegram.ExecProc
+        spLog_Send_Telegram.ExecProc;
 
         qryReport_Upload.Next;
       end;

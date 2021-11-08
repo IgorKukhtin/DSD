@@ -2579,19 +2579,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
@@ -3138,29 +3138,32 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStringDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStringDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTelegramProtocolForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTextDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TTextDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClearDefaultUnitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TClearDefaultUnitForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStringDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TStringDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTextDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TTextDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClearDefaultUnitForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TClearDefaultUnitForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
 end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;

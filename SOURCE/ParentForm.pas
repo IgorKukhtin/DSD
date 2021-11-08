@@ -31,6 +31,7 @@ type
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
     procedure InitHelpSystem;
     procedure InitcxEditRepository;
+    procedure InitcxView;
     procedure btnHelpClick(Sender: TObject);
     procedure cxGridDBTableViewTextGetProperties(
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -391,6 +392,7 @@ begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
   InitHelpSystem;
   InitcxEditRepository;
+  InitcxView;
 end;
 
 procedure TParentForm.InitHelpSystem;
@@ -525,6 +527,15 @@ begin
     if C is TcxDateEdit then (C as TcxDateEdit).Properties.DateButtons := (C as TcxDateEdit).Properties.DateButtons + [btnToday];
   end;
 
+end;
+
+procedure TParentForm.InitcxView;
+  var I : Integer;
+begin
+  if gc_ProgramName = 'Farmacy.exe' then
+    for I := 0 to ComponentCount - 1 do
+      if Components[I] is TdsdDBViewAddOn then
+        TdsdDBViewAddOn(Components[I]).FilterSelectAll := True;
 end;
 
 procedure TParentForm.Loaded;
@@ -704,6 +715,7 @@ initialization
   RegisterClass (TdsdPreparePicturesAction);
   RegisterClass (TdsdSetVisibleAction);
   RegisterClass (TdsdDataToJsonAction);
+  RegisterClass (TdsdSendTelegramBotAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

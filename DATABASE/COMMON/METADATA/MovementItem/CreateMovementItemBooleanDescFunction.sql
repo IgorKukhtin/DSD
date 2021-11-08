@@ -181,9 +181,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_Passed() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_Passed', 'Сдано' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_Passed'); 
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Conduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MovementBoolean_Conduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Conduct', 'Проведен по количеству' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MovementBoolean_Conduct'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 05.11.21                                                                       * zc_MovementBoolean_Conduct
  23.10.21                                                                       * zc_MIBoolean_Passed
  22.10.21                                                                       * zc_MIBoolean_Storekeeper
  15.10.21                                                                       * zc_MIBoolean_Deferred

@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDocument Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , isConduct Boolean, DateConduct TDateTime
               )
 
 AS
@@ -101,6 +102,9 @@ BEGIN
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
 
+             , COALESCE (MovementBoolean_Conduct.ValueData, FALSE)               AS isConduct
+             , MovementDate_Conduct.ValueData                                    AS DateConduct
+
        FROM Movement_Income
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
             LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = Movement_Income.ToId
@@ -146,6 +150,14 @@ BEGIN
                                       ON MovementBoolean_Document.MovementId = Movement_Income.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Conduct
+                                      ON MovementBoolean_Conduct.MovementId = Movement_Income.Id
+                                     AND MovementBoolean_Conduct.DescId = zc_MovementBoolean_Conduct()
+
+            LEFT JOIN MovementDate AS MovementDate_Conduct
+                                   ON MovementDate_Conduct.MovementId = Movement_Income.Id
+                                  AND MovementDate_Conduct.DescId = zc_MovementDate_Conduct()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement_Income.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -184,3 +196,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_IncomePharmacy (inStartDate:= '01.08.2021', inEndDate:= '20.08.2021', inIsErased := FALSE, inSession:= '3')
+
+select * from gpSelect_Movement_IncomePharmacy(instartdate := ('22.10.2021')::TDateTime , inenddate := ('05.11.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');
