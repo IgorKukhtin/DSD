@@ -640,8 +640,11 @@ BEGIN
                             , MILinkObject_ModelService.ObjectId       AS ModelServiceId
                             , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
                           -- , MILinkObject_StorageLine.ObjectId        AS StorageLineId
-                            , (COALESCE (MIFloat_Koeff.ValueData,1) * CASE WHEN COALESCE (MILinkObject_StaffListSummKind.ObjectId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END) :: TFloat AS Rate
+                            , CAST (CASE WHEN MIFloat_Koeff.ValueData IS NULL THEN CASE WHEN COALESCE (MIFloat_GrossOne.ValueData,0) <> 0 THEN MovementItem.Amount / MIFloat_GrossOne.ValueData ELSE 0 END
+                                   ELSE (COALESCE (MIFloat_Koeff.ValueData,1) * CASE WHEN COALESCE (MILinkObject_StaffListSummKind.ObjectId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END)
+                              END  AS NUMERIC (16,2) ) :: TFloat AS Rate
                             , MIFloat_Price.ValueData                  AS Price
+                            , MIFloat_GrossOne.ValueData               AS GrossOne
 
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
@@ -667,6 +670,10 @@ BEGIN
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
+                           LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
+                                                       ON MIFloat_GrossOne.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Child()
                          AND MovementItem.isErased = FALSE
@@ -690,7 +697,7 @@ BEGIN
                                                                   , zc_MIFloat_HoursPlan()
                                                                   , zc_MIFloat_HoursDay()
                                                                   , zc_MIFloat_PersonalCount()
-                                                                  , zc_MIFloat_GrossOne()
+                                                                 -- , zc_MIFloat_GrossOne()
                                                                   )
                                 ) 
 
@@ -716,7 +723,8 @@ BEGIN
                          , SUM (MIFloat_HoursPlan.ValueData)              AS HoursPlan
                          , SUM (MIFloat_HoursDay.ValueData)               AS HoursDay
                          , SUM (MIFloat_PersonalCount.ValueData)          AS PersonalCount
-                         , SUM (MIFloat_GrossOne.ValueData)               AS GrossOne                     -- выработка на человека
+                         --, SUM (MIFloat_GrossOne.ValueData)               AS GrossOne                     -- выработка на человека
+                         , SUM (COALESCE (tmpMI_Child.GrossOne,0))        AS GrossOne                     -- выработка на человека
                          
                     FROM tmpMI_Child
                          LEFT JOIN tmpMI ON tmpMI.MovementItemId = tmpMI_Child.ParentId
