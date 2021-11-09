@@ -99,7 +99,7 @@ BEGIN
     END IF;
     
     -- сохранили св-во <расчетная цена>
-    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, 0);
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), inId, 0);
     -- сохранили св-во <фиксированная цена>
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_FixValue(), inId, 0);
     -- сохранили св-во <фиксированный % скидки>

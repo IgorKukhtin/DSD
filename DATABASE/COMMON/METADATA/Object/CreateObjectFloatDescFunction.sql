@@ -2162,9 +2162,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SupplementMin() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SupplementMin', 'Размазать в дополнении СУН не менее чем' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMin');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SupplementMinPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMinPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SupplementMinPP', 'Размазать в дополнении СУН для аптечных пунктов не менее чем' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMinPP');
+  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.11.21                                                                                      * zc_ObjectFloat_Goods_SupplementMinPP
  02.11.21         * zc_ObjectFloat_Car_Weight
                     zc_ObjectFloat_Car_Year 
  29.10.21                                                                                      * zc_ObjectFloat_Goods_SupplementMin

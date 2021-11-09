@@ -7255,6 +7255,18 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'JuridicalName'
         DataType = ftString
         Size = 120
+      end
+      item
+        Name = 'GoodsDiscountProcent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PriceSaleDiscount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'isPriceDiscount'
+        DataType = ftBoolean
       end>
     IndexDefs = <
       item

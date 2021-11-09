@@ -3443,32 +3443,28 @@ begin
           exit;
         end;
 
-        if ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) or
-           (FormParams.ParamByName('isDiscountCommit').Value = False) and
-           (FormParams.ParamByName('InvNumberOrder').Value <> '') and
-           (FormParams.ParamByName('isBanAdd').Value = False)) and
-           (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) and (DiscountServiceForm.gCode <> 2) then
+        if (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> 0) and
+           (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> DiscountServiceForm.gDiscountExternalId) and
+           (FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and
+           ((DiscountServiceForm.gDiscountExternalId <> 4521216) or
+           (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) then
         begin
-          spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := 4521216;
+          spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := RemainsCDS.FieldByName('GoodsDiscountID').AsInteger;
           spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
           spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
           spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
           spGet_Goods_CodeRazom.Execute;
           if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
           begin
-            ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект Abbott card)');
+            ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
             exit;
           end;
         end;
 
-        if (FormParams.ParamByName('isDiscountCommit').Value = False) and
-           (FormParams.ParamByName('InvNumberOrder').Value <> '') and
-           (FormParams.ParamByName('isBanAdd').Value = False) then
+        if (FormParams.ParamByName('isDiscountCommit').Value = False) then
         begin
           if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
-             (FieldByName('Amount').AsCurrency > 0) and
-             (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency > 0) and
-             (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency < 100) then
+             (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPriceDiscount').AsBoolean then
           begin
             ShowMessage('Со скидкой товар <' + FieldByName('GoodsName').AsString +
               '> не кратный упаковки отпускать запрещено, обнулите количество и пробейте отдельным чеком (без скидки)');
@@ -4222,6 +4218,10 @@ begin
             RemainsCDS.FieldByName('Multiplicity').AsVariant;
         if CheckCDS.FieldByName('isPresent').AsVariant then
           CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
+        // ***09.11.21
+        CheckCDS.FieldByName('GoodsDiscountProcent').AsVariant :=Null;
+        CheckCDS.FieldByName('PriceSaleDiscount').AsVariant := Null;
+        CheckCDS.FieldByName('isPriceDiscount').AsBoolean := False;
 
         CheckCDS.Post;
         Add_Log('Id - ' + vipList.FieldByName('Id').AsString + ' GoodsCode - ' +
@@ -5875,57 +5875,26 @@ begin
 
   nPriceSite := False;
 
-  // Проверим и пересчитаем цену без скидки для Abbott card с нашего сайта
-  if (FormParams.ParamByName('isDiscountCommit').Value = False) and
-     (FormParams.ParamByName('InvNumberOrder').Value <> '') and
-     (FormParams.ParamByName('isBanAdd').Value = False) then
+  with CheckCDS do
   begin
-    // Проверим цену
-    GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
-    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
-    NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
-    DiscountExternalGoodsID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
-    DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
-    try
-      RemainsCDS.DisableControls;
-      RemainsCDS.Filtered := false;
-      with CheckCDS do
+    First;
+    while not Eof do
+    begin
+
+      if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPriceDiscount').AsBoolean and (FieldByName('GoodsDiscountProcent').AsCurrency > 0) then
       begin
-        First;
-        while not Eof do
-        begin
-
-          if FieldByName('Amount').AsCurrency > 0 then
-          begin
-
-            if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-                VarArrayOf([FieldByName('GoodsId').AsInteger,
-                FieldByName('PartionDateKindId').AsVariant,
-                FieldByName('NDSKindId').AsVariant,
-                FieldByName('DiscountExternalID').AsVariant,
-                FieldByName('DivisionPartiesID').AsVariant]), []) then
-              if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
-                 (FieldByName('Amount').AsCurrency > 0) and
-                 (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency > 0) and
-                 (RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency < 100) then
-              begin
-                nPriceSite := True;
-                Edit;
-                FieldByName('PriceSale').AsCurrency := GetPrice(FieldByName('Price').AsCurrency * 100 / (100 - RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsCurrency), 0);
-                Post;
-              end;
-          end;
-
-          Next;
-        end;
+        nPriceSite := True;
+        Edit;
+        if FieldByName('GoodsDiscountProcent').AsCurrency < 100 then
+           FieldByName('PriceSale').AsCurrency := GetPrice(FieldByName('Price').AsCurrency * 100 / (100 - FieldByName('GoodsDiscountProcent').AsCurrency), 0)
+        else FieldByName('PriceSale').AsCurrency := FieldByName('PriceSaleDiscount').AsCurrency;
+        Post;
       end;
-    finally
-      RemainsCDS.Filtered := True;
-      RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-        VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalGoodsID, DivisionPartiesID]), []);
-      RemainsCDS.EnableControls;
+
+      Next;
     end;
   end;
+
 
   FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
   FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
@@ -9233,6 +9202,11 @@ begin
 
           if CheckCDS.FieldByName('isPresent').AsVariant then
             CheckCDS.FieldByName('Color_calc').AsInteger := TColor($FFB0FF);
+
+          // ***09.11.21
+          CheckCDS.FieldByName('GoodsDiscountProcent').AsVariant :=Null;
+          CheckCDS.FieldByName('PriceSaleDiscount').AsVariant := Null;
+          CheckCDS.FieldByName('isPriceDiscount').AsBoolean := False;
 
           CheckCDS.Post;
 

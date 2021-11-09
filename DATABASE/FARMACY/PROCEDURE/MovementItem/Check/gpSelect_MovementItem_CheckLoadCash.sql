@@ -53,6 +53,9 @@ RETURNS TABLE (Id Integer
              , FixEndDate TDateTime
              , JuridicalId Integer
              , JuridicalName TVarChar
+             , GoodsDiscountProcent TFloat
+             , PriceSaleDiscount TFloat
+             , isPriceDiscount boolean
               )
 AS
 $BODY$
@@ -287,7 +290,71 @@ BEGIN
      tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject 
                          WHERE MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)),
      tmpObject AS (SELECT * FROM Object 
-                         WHERE Object.Id IN (SELECT DISTINCT tmpMILinkObject.ObjectId FROM tmpMILinkObject))
+                         WHERE Object.Id IN (SELECT DISTINCT tmpMILinkObject.ObjectId FROM tmpMILinkObject)),
+     tmpGoodsDiscount AS (SELECT Object_Goods_Retail.GoodsMainId                           AS GoodsMainId
+                               , Object_Object.Id                                          AS GoodsDiscountId
+                               , Object_Object.ValueData                                   AS GoodsDiscountName
+                               , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)  AS isGoodsForProject
+                               , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
+                               , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent 
+                            FROM Object AS Object_BarCode
+                                INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                      ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                     AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = ObjectLink_BarCode_Goods.ChildObjectId
+
+                                LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                     ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                    AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId
+
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsForProject
+                                                        ON ObjectBoolean_GoodsForProject.ObjectId = Object_Object.Id 
+                                                       AND ObjectBoolean_GoodsForProject.DescId = zc_ObjectBoolean_DiscountExternal_GoodsForProject()
+
+                                LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                      ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                     AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                      ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                     AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+
+                            WHERE Object_BarCode.DescId = zc_Object_BarCode()
+                              AND Object_BarCode.isErased = False
+                            GROUP BY Object_Goods_Retail.GoodsMainId
+                                   , Object_Object.Id
+                                   , Object_Object.ValueData
+                                   , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)
+                            HAVING MAX(ObjectFloat_DiscountProcent.ValueData) > 0),
+     tmpGoodsDiscountPrice AS (SELECT MovementItem.Id
+                                    , CASE WHEN Object_Goods.isTop = TRUE
+                                            AND Object_Goods.Price > 0
+                                           THEN Object_Goods.Price
+                                           ELSE ObjectFloat_Price_Value.ValueData
+                                           END AS Price
+                                    , tmpGoodsDiscount.DiscountProcent
+                                    , tmpGoodsDiscount.MaxPrice
+                               FROM tmpGoodsDiscount
+                                            
+                                    INNER JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.GoodsMainId = tmpGoodsDiscount.GoodsMainId
+                                            
+                                    INNER JOIN tmpMI AS MovementItem ON MovementItem.GoodsId = Object_Goods.Id
+                        
+                                    INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                          ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
+                                                          ON ObjectLink_Price_Goods.ObjectId      = ObjectLink_Price_Unit.ObjectId
+                                                         AND ObjectLink_Price_Goods.ChildObjectId = Object_Goods.Id 
+                                                         AND ObjectLink_Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
+                                                          ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                         AND ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
+                                                            ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                           AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                               WHERE COALESCE(tmpGoodsDiscount.DiscountProcent, 0) > 0                                        
+                               )
 
        SELECT
              MovementItem.Id
@@ -342,6 +409,20 @@ BEGIN
            , Null::TDateTime                                                     AS FixEndDate 
            , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
            , Object_Juridical.ValueData                                          AS JuridicalName
+           , tmpGoodsDiscountPrice.DiscountProcent                               AS GoodsDiscountProcent
+           , CASE WHEN COALESCE (tmpGoodsDiscountPrice.DiscountProcent, 0) = 0 OR COALESCE(tmpGoodsDiscountPrice.Price, 0) = 0
+                  THEN NULL
+                  WHEN COALESCE(tmpGoodsDiscountPrice.MaxPrice, 0) = 0 OR tmpGoodsDiscountPrice.Price < tmpGoodsDiscountPrice.MaxPrice
+                  THEN tmpGoodsDiscountPrice.Price 
+                  ELSE tmpGoodsDiscountPrice.MaxPrice END :: TFLoat              AS PriceSaleDiscount
+           , CASE WHEN COALESCE (tmpGoodsDiscountPrice.DiscountProcent, 0) = 0 OR COALESCE(tmpGoodsDiscountPrice.Price, 0) = 0
+                  THEN FALSE
+                  WHEN COALESCE (tmpGoodsDiscountPrice.DiscountProcent, 0) = 100 AND COALESCE (MovementItem.Price, 0) = 0
+                  THEN TRUE
+                  ELSE MovementItem.Price <
+                      CASE WHEN COALESCE(tmpGoodsDiscountPrice.MaxPrice, 0) = 0 OR tmpGoodsDiscountPrice.Price < tmpGoodsDiscountPrice.MaxPrice
+                           THEN tmpGoodsDiscountPrice.Price ELSE tmpGoodsDiscountPrice.MaxPrice END * 98 / 100
+                  END :: BOOLEAN                                                 AS isPriceDiscount
            
        FROM tmpMI AS MovementItem
 
@@ -384,6 +465,8 @@ BEGIN
                                              ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
             LEFT JOIN tmpObject AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
+            
+            LEFT JOIN tmpGoodsDiscountPrice ON tmpGoodsDiscountPrice.Id = MovementItem.Id
        ;
 END;
 $BODY$
@@ -400,4 +483,4 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
 --
  
- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 24916938 ,  inSession := '3');
+ select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 25584616 ,  inSession := '3');
