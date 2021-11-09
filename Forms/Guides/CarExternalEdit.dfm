@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
-  ClientHeight = 312
+  ClientHeight = 391
   ClientWidth = 357
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088
   end
   object cxButton1: TcxButton
-    Left = 56
-    Top = 275
+    Left = 48
+    Top = 355
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 230
-    Top = 275
+    Left = 222
+    Top = 355
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -117,6 +117,92 @@
     TabOrder = 13
     Width = 273
   end
+  object edLength: TcxCurrencyEdit
+    Left = 32
+    Top = 275
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 14
+    Width = 60
+  end
+  object cxLabel12: TcxLabel
+    Left = 32
+    Top = 261
+    Caption = #1044#1083#1080#1085#1072', '#1084#1084
+  end
+  object cxLabel13: TcxLabel
+    Left = 170
+    Top = 261
+    Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
+  end
+  object edWidth: TcxCurrencyEdit
+    Left = 101
+    Top = 275
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 17
+    Width = 60
+  end
+  object cxLabel14: TcxLabel
+    Left = 101
+    Top = 261
+    Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
+  end
+  object edHeight: TcxCurrencyEdit
+    Left = 170
+    Top = 275
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 19
+    Width = 60
+  end
+  object cxLabel15: TcxLabel
+    Left = 240
+    Top = 261
+    Caption = #1042#1077#1089', '#1082#1075
+  end
+  object edWeight: TcxCurrencyEdit
+    Left = 240
+    Top = 275
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 21
+    Width = 65
+  end
+  object cxLabel16: TcxLabel
+    Left = 240
+    Top = 301
+    Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
+  end
+  object edYear: TcxCurrencyEdit
+    Left = 240
+    Top = 318
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 23
+    Width = 65
+  end
+  object cxLabel17: TcxLabel
+    Left = 32
+    Top = 301
+    Caption = 'VIN '#1082#1086#1076
+  end
+  object edVIN: TcxTextEdit
+    Left = 32
+    Top = 318
+    TabOrder = 25
+    Width = 198
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
@@ -160,12 +246,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -173,6 +261,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRegistrationCertificate'
@@ -180,6 +269,15 @@
         Component = ceRegistrationCertificate
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIN'
+        Value = Null
+        Component = edVIN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -187,12 +285,14 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarModelId'
         Value = ''
         Component = CarModelGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -200,6 +300,47 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLength'
+        Value = Null
+        Component = edLength
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth'
+        Value = Null
+        Component = edWidth
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHeight'
+        Value = Null
+        Component = edHeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = edWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYear'
+        Value = Null
+        Component = edYear
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -211,6 +352,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 96
@@ -226,23 +368,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelId'
         Value = ''
         Component = CarModelGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -250,24 +396,28 @@
         Component = CarModelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RegistrationCertificate'
         Value = ''
         Component = ceRegistrationCertificate
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -275,6 +425,49 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Height'
+        Value = Null
+        Component = edHeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Length'
+        Value = Null
+        Component = edLength
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight'
+        Value = Null
+        Component = edWeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width'
+        Value = Null
+        Component = edWidth
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Year'
+        Value = Null
+        Component = edYear
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VIN'
+        Value = Null
+        Component = edVIN
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 65528
@@ -304,6 +497,7 @@
     LookupControl = ceCarModel
     FormNameParam.Value = 'TCarModelForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -314,6 +508,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -322,6 +517,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 183
     Top = 127
@@ -331,6 +527,7 @@
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -341,6 +538,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -349,6 +547,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 175
     Top = 180

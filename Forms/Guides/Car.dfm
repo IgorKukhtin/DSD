@@ -204,17 +204,6 @@ object CarForm: TCarForm
         HeaderHint = #1054#1073#1097#1080#1081' '#1074#1077#1089' '#1072#1074#1090#1086', '#1082#1075
         Width = 75
       end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 72
-      end
       object Year: TcxGridDBColumn
         Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
         DataBinding.FieldName = 'Year'
@@ -238,6 +227,17 @@ object CarForm: TCarForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 72
       end
     end
     object cxGridLevel: TcxGridLevel

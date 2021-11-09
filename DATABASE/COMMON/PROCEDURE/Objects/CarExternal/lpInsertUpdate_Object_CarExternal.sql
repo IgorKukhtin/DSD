@@ -1,15 +1,22 @@
 -- Function: lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer,Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_CarExternal(
    INOUT ioId                       Integer, 
       IN incode                     Integer, 
       IN inName                     TVarChar, 
-      IN inRegistrationCertificate  TVarChar, 
+      IN inRegistrationCertificate  TVarChar,
+      IN inVIN                      TVarChar,    -- VIN код
       IN inComment                  TVarChar  ,    -- Примечание
       IN inCarModelId               Integer, 
-      IN inJuridicalId              Integer,        
+      IN inJuridicalId              Integer,
+      IN inLength                   TFloat ,     -- 
+      IN inWidth                    TFloat ,     -- 
+      IN inHeight                   TFloat ,     -- 
+      IN inWeight                   TFloat ,     --
+      IN inYear                     TFloat ,     --      
       IN inUserId                   Integer
 )
 RETURNS Integer
@@ -41,6 +48,18 @@ BEGIN
    -- сохранили связь с <юр.лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_Juridical(), ioId, inJuridicalId);
 
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_CarExternal_VIN(), ioId, inVIN);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CarExternal_Length(), ioId, inLength);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CarExternal_Height(), ioId, inHeight);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CarExternal_Width(), ioId, inWidth);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CarExternal_Weight(), ioId, inWeight);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CarExternal_Year(), ioId, inYear);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
@@ -51,6 +70,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.21         *
  17.03.16         *
 */
 

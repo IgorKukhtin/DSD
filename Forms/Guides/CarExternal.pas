@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxCurrencyEdit;
 
 type
   TCarExternalForm = class(TParentForm)
@@ -63,6 +63,8 @@ type
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    spUpdate_CarExternal_size: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

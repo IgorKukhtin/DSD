@@ -102,6 +102,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CarExternal_RegistrationCertificate()
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CarExternal_RegistrationCertificate', zc_object_CarExternal(), 'Техпаспорт Автомобиля' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CarExternal_RegistrationCertificate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_CarExternal_VIN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CarExternal_VIN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CarExternal_VIN', zc_Object_CarExternal(), ' 	VIN-код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CarExternal_VIN');
+
 
 -- CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_InvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Contract_InvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
