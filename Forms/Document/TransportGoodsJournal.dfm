@@ -136,6 +136,15 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
+          object isExternal: TcxGridDBColumn
+            Caption = #1057#1090#1086#1088#1086#1085#1085#1080#1077' '#1072#1074#1090#1086
+            DataBinding.FieldName = 'isExternal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1086#1088#1086#1085#1085#1080#1077' '#1072#1074#1090#1086' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 70
+          end
           object CarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'

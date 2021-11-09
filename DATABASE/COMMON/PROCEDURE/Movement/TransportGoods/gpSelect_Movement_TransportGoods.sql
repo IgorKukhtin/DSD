@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , PersonalDriverName_Transport TVarChar
              , CarName_Transport TVarChar
+             , isExternal Boolean
               )
 AS
 $BODY$
@@ -129,6 +130,8 @@ BEGIN
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_PersonalDriver_Transport.ValueData AS PersonalDriverName_Transport
            , Object_Car_Transport.ValueData            AS CarName_Transport
+           
+           , CASE WHEN Object_Car.DescId = zc_Object_Car() THEN FALSE ELSE TRUE END ::Boolean AS isExternal --свои (нет) или сторонние авто (Да)
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate

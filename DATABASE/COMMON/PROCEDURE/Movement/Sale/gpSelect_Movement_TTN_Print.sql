@@ -174,24 +174,22 @@ BEGIN
                              ---
                              LEFT JOIN ObjectFloat AS ObjectFloat_Length
                                                    ON ObjectFloat_Length.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Length.DescId = zc_ObjectFloat_Car_Length()
+                                                  AND ObjectFloat_Length.DescId IN (zc_ObjectFloat_Car_Length(),zc_ObjectFloat_CarExternal_Length())
                              LEFT JOIN ObjectFloat AS ObjectFloat_Width
                                                    ON ObjectFloat_Width.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Width.DescId = zc_ObjectFloat_Car_Width()
+                                                  AND ObjectFloat_Width.DescId IN (zc_ObjectFloat_Car_Width(),zc_ObjectFloat_CarExternal_Width())
                              LEFT JOIN ObjectFloat AS ObjectFloat_Height
                                                    ON ObjectFloat_Height.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Height.DescId = zc_ObjectFloat_Car_Height()
+                                                  AND ObjectFloat_Height.DescId IN (zc_ObjectFloat_Car_Height(), zc_ObjectFloat_CarExternal_Height())
                              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                    ON ObjectFloat_Weight.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Car_Weight()
-
+                                                  AND ObjectFloat_Weight.DescId IN (zc_ObjectFloat_Car_Weight(), zc_ObjectFloat_CarExternal_Weight())
                              LEFT JOIN ObjectFloat AS ObjectFloat_Year
                                                    ON ObjectFloat_Year.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
-
+                                                  AND ObjectFloat_Year.DescId IN (zc_ObjectFloat_Car_Year(), zc_ObjectFloat_CarExternal_Year())
                              LEFT JOIN ObjectString AS ObjectString_VIN
                                                     ON ObjectString_VIN.ObjectId = tmp.CarId
-                                                   AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
+                                                   AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
                         )
 
        --          
