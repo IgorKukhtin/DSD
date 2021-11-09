@@ -418,6 +418,10 @@ type
     actTelegramIdDialog: TExecuteDialog;
     spUpdate_TelegramId: TdsdStoredProc;
     dxBarButton23: TdxBarButton;
+    actSendTelegramBotName: TdsdSendTelegramBotAction;
+    dxBarButton24: TdxBarButton;
+    spGet_TelegramBotToken: TdsdStoredProc;
+    actGet_TelegramBotToken: TdsdExecStoredProc;
   private
     { Private declarations }
   public

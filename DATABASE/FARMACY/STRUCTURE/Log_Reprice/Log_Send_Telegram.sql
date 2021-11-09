@@ -9,6 +9,7 @@ CREATE TABLE Log_Send_Telegram (
   isError             BOOLEAN,    -- Признак ошибка отправки
   Message             TBLOB,      -- Текст сообщения
   Error               TVarChar,   -- Текст ошибки
+  UserId              Integer,    -- Сотрудник
 
   CONSTRAINT Log_Send_Telegram_pkey PRIMARY KEY(Id)
 );

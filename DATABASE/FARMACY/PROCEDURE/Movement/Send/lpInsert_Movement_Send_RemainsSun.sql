@@ -1214,7 +1214,7 @@ BEGIN
                                                           ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                          AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                 WHERE -- !!!оставили только эту категорию
-                                      ObjectDate_PartionGoods_Value.ValueData <= vbDate_3
+                                      ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '60 DAY'  --vbDate_3
                                       -- !!!оставили только эту категорию
                                 GROUP BY tmpNotSold.ContainerId
                                        , tmpNotSold.UnitID

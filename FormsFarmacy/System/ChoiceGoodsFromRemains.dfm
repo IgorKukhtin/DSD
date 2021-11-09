@@ -142,6 +142,14 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 85
           end
+          object DateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'DateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
           object colPriceSite: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
             DataBinding.FieldName = 'PriceSite'

@@ -1391,9 +1391,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_TelegramId() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_TelegramId', zc_object_Unit(), 'ID аптеки в Telegram	' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_TelegramId');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashSettings_TelegramBotToken() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_TelegramBotToken'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashSettings_TelegramBotToken', zc_Object_CashSettings(), 'Токен телеграм бота' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_TelegramBotToken');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 08.11.21                                                                                                         * zc_ObjectString_CashSettings_TelegramBotToken
  02.11.21                                                                                                         * zc_ObjectString_Unit_TelegramId
  22.10.21                                                                                                         * zc_ObjectString_Unit_TokenKashtan
  13.10.21                                                                                                         * zc_ObjectString_Unit_PharmacyManager, zc_ObjectString_Unit_PharmacyManagerPhone

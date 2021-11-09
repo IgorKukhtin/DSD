@@ -2,6 +2,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 524
   ClientWidth = 985
+  AddOnFormData.ClosePUSHMessage = actPUSH_CloseIncome
   ExplicitWidth = 1001
   ExplicitHeight = 563
   PixelsPerInch = 96
@@ -1005,6 +1006,15 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Action = actRefresh
+        end
+        item
+          Action = actGetTelegram
+        end
+        item
+          Action = actSendTelegramBot
+        end
+        item
+          Action = actInsert_TelegramBot_Protocol
         end>
       QuestionBeforeExecute = 
         #1055#1088#1086#1080#1079#1074#1077#1089#1090#1080' '#1095#1072#1089#1090#1080#1095#1085#1086#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1087#1086#1079#1080#1094#1080#1081' '#1089' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080 +
@@ -1129,6 +1139,75 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPUSH_CloseIncome: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH_CloseIncome
+      StoredProcList = <
+        item
+          StoredProc = spPUSH_CloseIncome
+        end>
+      Caption = 'actPUSH_CloseIncome'
+    end
+    object actGetTelegram: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetTelegram
+      StoredProcList = <
+        item
+          StoredProc = spGetTelegram
+        end>
+      Caption = 'actGetTelegram'
+    end
+    object actSendTelegramBot: TdsdSendTelegramBotAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSendTelegramBot'
+      BaseURLParam.Value = 'https://api.telegram.org'
+      BaseURLParam.DataType = ftString
+      BaseURLParam.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.Component = FormParams
+      Token.ComponentItem = 'TelegramBotToken'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      ChatId.Value = ''
+      ChatId.Component = FormParams
+      ChatId.ComponentItem = 'TelegramId'
+      ChatId.DataType = ftString
+      ChatId.MultiSelectSeparator = ','
+      isSeend.Value = True
+      isSeend.Component = FormParams
+      isSeend.ComponentItem = 'isSend'
+      isSeend.DataType = ftBoolean
+      isSeend.MultiSelectSeparator = ','
+      isErroeSend.Value = False
+      isErroeSend.Component = FormParams
+      isErroeSend.ComponentItem = 'isError'
+      isErroeSend.DataType = ftBoolean
+      isErroeSend.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.Component = FormParams
+      Error.ComponentItem = 'Error '
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      Message.Value = ''
+      Message.Component = FormParams
+      Message.ComponentItem = 'Message'
+      Message.DataType = ftString
+      Message.MultiSelectSeparator = ','
+    end
+    object actInsert_TelegramBot_Protocol: TdsdExecStoredProc
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_TelegramBot_Protocol
+      StoredProcList = <
+        item
+          StoredProc = spInsert_TelegramBot_Protocol
+        end>
+      Caption = 'actInsert_TelegramBot_Protocol'
     end
   end
   inherited MasterDS: TDataSource
@@ -1445,6 +1524,42 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramId'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramBotToken'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSend'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Message'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isError'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Error '
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -2339,5 +2454,150 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 370
     Top = 384
+  end
+  object spPUSH_CloseIncome: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_CloseIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 890
+    Top = 192
+  end
+  object spGetTelegram: TdsdStoredProc
+    StoredProcName = 'gpSelect_Income_SendTelegram'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTelegramId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'TelegramId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTelegramBotToken'
+        Value = 42132d
+        Component = FormParams
+        ComponentItem = 'TelegramBotToken'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSend'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessage'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Message'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 192
+  end
+  object spInsert_TelegramBot_Protocol: TdsdStoredProc
+    StoredProcName = 'gpInsert_TelegramBot_Protocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisInsert'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TelegramId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisError'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isError'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMessage'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Message'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inError'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Error '
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 248
   end
 end

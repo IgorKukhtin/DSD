@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -31,6 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inSamples21                  TFloat    ,     -- Скидка сэмплов кат 2.1 (от 90-200 дней)
     IN inSamples22                  TFloat    ,     -- Скидка сэмплов кат 2.2 (от 50-90 дней)
     IN inSamples3                   TFloat    ,     -- Скидка сэмплов кат 3 (от 0 до 50 дней)
+    IN inTelegramBotToken           TVarChar  ,     -- 	Токен телеграм бота
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -113,6 +114,9 @@ BEGIN
 
       -- сохранили Дней до компенсации по дисконтным проектам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AssortmentSales(), vbID, inAssortmentSales);
+
+   -- сохранили Токен телеграм бота
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashSettings_TelegramBotToken(), vbID, inTelegramBotToken);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);
