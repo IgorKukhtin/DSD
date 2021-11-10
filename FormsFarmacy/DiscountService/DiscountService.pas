@@ -152,6 +152,7 @@ begin
       Append(F);
     //
     try
+      Writeln(F, DateTimeToStr(Now));
       Writeln(F, AMessage);
     finally
       CloseFile(F);
@@ -1315,6 +1316,7 @@ begin
           aOrderRequest.Items := SendList;
 
           //!!!для теста!!!
+           SaveToXMLFile_ItemCommit(aOrderRequest);
           //***SaveToXMLFile_ItemOrder(aOrderRequest);
           //!!!для теста!!!
 
@@ -1322,6 +1324,7 @@ begin
           Res := (HTTPRIO as CardServiceSoap).commitOrder(aOrderRequest, gUserName, gPassword);
 
           //!!!для теста!!!
+           SaveToXMLFile_ItemCommit(Res);
           //***SaveToXMLFile_ItemCommitRes(ResList);
           //!!!для теста!!!
 

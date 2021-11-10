@@ -65,6 +65,7 @@ type
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
+    isExternal: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 484
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 523
   PixelsPerInch = 96
@@ -3719,6 +3718,53 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actSendTelegramBotName: TdsdSendTelegramBotAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGet_TelegramBotToken
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1085#1072#1079#1074#1072#1085#1080#1103' '#1072#1087#1090#1077#1077#1082#1080' '#1085#1072' '#1058#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1085#1072#1079#1074#1072#1085#1080#1103' '#1072#1087#1090#1077#1077#1082#1080' '#1085#1072' '#1058#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090
+      ImageIndex = 30
+      QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1085#1072#1079#1074#1072#1085#1080#1103' '#1072#1087#1090#1077#1077#1082#1080' '#1085#1072' '#1058#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090'?'
+      BaseURLParam.Value = 'https://api.telegram.org'
+      BaseURLParam.DataType = ftString
+      BaseURLParam.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.Component = FormParams
+      Token.ComponentItem = 'TelegramBotToken'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      ChatId.Value = ''
+      ChatId.Component = MasterCDS
+      ChatId.ComponentItem = 'TelegramId'
+      ChatId.DataType = ftString
+      ChatId.MultiSelectSeparator = ','
+      isSeend.Value = True
+      isSeend.DataType = ftBoolean
+      isSeend.MultiSelectSeparator = ','
+      isErroeSend.Value = False
+      isErroeSend.DataType = ftBoolean
+      isErroeSend.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      Message.Value = ''
+      Message.Component = MasterCDS
+      Message.ComponentItem = 'Name'
+      Message.DataType = ftString
+      Message.MultiSelectSeparator = ','
+    end
+    object actGet_TelegramBotToken: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_TelegramBotToken
+      StoredProcList = <
+        item
+          StoredProc = spGet_TelegramBotToken
+        end>
+      Caption = 'actGet_TelegramBotToken'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3894,11 +3940,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -4557,6 +4603,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton23: TdxBarButton
       Action = actUpdate_TelegramId
+      Category = 0
+    end
+    object dxBarButton24: TdxBarButton
+      Action = actSendTelegramBotName
       Category = 0
     end
   end
@@ -5565,6 +5615,12 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'TelegramId'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramBotToken'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -7404,5 +7460,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 384
     Top = 99
+  end
+  object spGet_TelegramBotToken: TdsdStoredProc
+    StoredProcName = 'gpSelect_CashSettings_TelegramBotToken'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outTelegramBotToken'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TelegramBotToken'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 139
   end
 end

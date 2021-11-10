@@ -59,6 +59,8 @@ type
     actExecuteDialog_Update_PriceSite: TExecuteDialog;
     spSetGoodsObjectPriceSite: TdsdStoredProc;
     bbUpdate_PriceSale: TdxBarButton;
+    DateChange: TcxGridDBColumn;
+    DateChangeSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

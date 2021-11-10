@@ -1,15 +1,22 @@
 -- Function: gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CarExternal(
    INOUT ioId                       Integer, 
       IN incode                     Integer, 
       IN inName                     TVarChar, 
       IN inRegistrationCertificate  TVarChar, 
+      IN inVIN                      TVarChar,    -- VIN код
       IN inComment                  TVarChar  ,    -- Примечание
       IN inCarModelId               Integer, 
-      IN inJuridicalId              Integer,        
+      IN inJuridicalId              Integer,
+      IN inLength                   TFloat ,     -- 
+      IN inWidth                    TFloat ,     -- 
+      IN inHeight                   TFloat ,     -- 
+      IN inWeight                   TFloat ,     --
+      IN inYear                     TFloat ,     --     
       IN inSession                  TVarChar
 )
 RETURNS Integer
@@ -27,9 +34,15 @@ BEGIN
                                             , inCode        := inCode
                                             , inName        := inName
                                             , inRegistrationCertificate := inRegistrationCertificate
+                                            , inVIN         := inVIN
                                             , inComment     := inComment
                                             , inCarModelId  := inCarModelId
                                             , inJuridicalId := inJuridicalId
+                                            , inLength      := inLength
+                                            , inWidth       := inWidth 
+                                            , inHeight      := inHeight
+                                            , inWeight      := inWeight
+                                            , inYear        := inYear  
                                             , inUserId      := vbUserId
                                               );
 
@@ -40,6 +53,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.21         *
  17.03.16         *
 */
 

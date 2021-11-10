@@ -35,6 +35,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , DeferredSend TFloat
              , DeferredSendIn TFloat
              , PriceSite TFloat
+             , DateChangeSite TDateTime
              , Color_calc Integer
              )
 AS
@@ -391,7 +392,7 @@ BEGIN
                                       THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                       ELSE ROUND (Price_Value.ValueData, 2)
                                  END :: TFloat                           AS Price
-                               , price_datechange.valuedata              AS DateChange 
+                               , Price_DateChange.ValueData              AS DateChange 
                           FROM tmpPrice AS Price_Goods
                                LEFT JOIN ObjectLink AS Price_Unit
                                       ON Price_Unit.ObjectId = Price_Goods.Id
@@ -413,6 +414,7 @@ BEGIN
       , tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
                                , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                                , Price_Goods.ChildObjectId                  AS GoodsId
+                               , PriceSite_DateChange.ValueData             AS DateChange 
                           FROM Object AS Object_PriceSite
                                INNER JOIN ObjectLink AS Price_Goods
                                        ON Price_Goods.ObjectId = Object_PriceSite.Id
@@ -420,6 +422,9 @@ BEGIN
                                LEFT JOIN ObjectFloat AS Price_Value
                                       ON Price_Value.ObjectId = Object_PriceSite.Id
                                      AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                               LEFT JOIN ObjectDate AS PriceSite_DateChange
+                                                    ON PriceSite_DateChange.ObjectId = Object_PriceSite.Id
+                                                   AND PriceSite_DateChange.DescId = zc_ObjectDate_PriceSite_DateChange()
                           WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
                             AND Price_Goods.ChildObjectId NOT IN (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
                                                                   FROM Object AS Object_BarCode
@@ -468,6 +473,7 @@ BEGIN
              , tmpDeferredSend.Amount:: TFloat AS DeferredSend
              , tmpDeferredSendIn.Amount:: TFloat AS DeferredSendIn
              , tmpPrice_Site.Price                      AS PriceSite
+             , tmpPrice_Site.DateChange                 AS DateChangeSite
              , CASE WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) < (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) THEN zc_Color_Red()
                     WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) > (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) * 3 THEN zc_Color_Greenl()
                     ELSE zc_Color_White() END      AS Color_calc

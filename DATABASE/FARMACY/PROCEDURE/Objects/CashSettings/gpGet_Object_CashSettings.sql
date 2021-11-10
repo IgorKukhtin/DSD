@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Samples21 TFloat
              , Samples22 TFloat
              , Samples3 TFloat
+             , TelegramBotToken TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -71,6 +72,7 @@ BEGIN
         , ObjectFloat_CashSettings_Samples21.ValueData                             AS Samples21
         , ObjectFloat_CashSettings_Samples22.ValueData                             AS Samples22
         , ObjectFloat_CashSettings_Samples3.ValueData                              AS Samples3
+        , ObjectString_CashSettings_TelegramBotToken.ValueData                     AS TelegramBotToken
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -157,6 +159,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_Samples3
                               ON ObjectFloat_CashSettings_Samples3.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_Samples3.DescId = zc_ObjectFloat_CashSettings_Samples3()
+        LEFT JOIN ObjectString AS ObjectString_CashSettings_TelegramBotToken
+                               ON ObjectString_CashSettings_TelegramBotToken.ObjectId = Object_CashSettings.Id 
+                              AND ObjectString_CashSettings_TelegramBotToken.DescId = zc_ObjectString_CashSettings_TelegramBotToken()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

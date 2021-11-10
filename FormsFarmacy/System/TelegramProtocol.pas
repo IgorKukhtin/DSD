@@ -12,13 +12,15 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxButtonEdit, dsdGuides, cxMemo, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus,
+  cxRichEdit;
 
 type
   TTelegramProtocolForm = class(TAncestorReportForm)
     DateSend: TcxGridDBColumn;
     ObjectName: TcxGridDBColumn;
     Message: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
   private
     { Private declarations }
   public

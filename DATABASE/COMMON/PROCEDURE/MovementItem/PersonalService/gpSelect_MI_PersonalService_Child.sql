@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, ParentId Integer, MemberId Integer, MemberName TVarCh
 
              , Amount TFloat, MemberCount TFloat, DayCount TFloat, WorkTimeHoursOne TFloat, WorkTimeHours TFloat, Price TFloat
              , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat, GrossOne TFloat
+             , Koeff TFloat
+             , Rate TFloat
              , isErased Boolean
               )
 AS
@@ -101,6 +103,10 @@ BEGIN
             , MIFloat_HoursDay.ValueData               AS HoursDay
             , MIFloat_PersonalCount.ValueData          AS PersonalCount
             , MIFloat_GrossOne.ValueData               AS GrossOne
+            , MIFloat_Koeff.ValueData        ::TFloat  AS Koeff
+
+            --CASE WHEN COALESCE (MIFloat_GrossOne.ValueData,0) <> 0 THEN tmpMI.Amount / MIFloat_GrossOne.ValueData ELSE 0 END
+            , CAST ( (COALESCE (MIFloat_Koeff.ValueData, 0) * MIFloat_Price.ValueData) AS NUMERIC (16,2) ) ::TFloat AS Rate
 
             , tmpMI.isErased
 
@@ -136,6 +142,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
                                         ON MIFloat_GrossOne.MovementItemId = tmpMI .MovementItemId
                                        AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+            LEFT JOIN MovementItemFloat AS MIFloat_Koeff
+                                        ON MIFloat_Koeff.MovementItemId = tmpMI .MovementItemId
+                                       AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
 
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI .MemberId
 
@@ -170,6 +179,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.11.21         *
  26.05.17         * add StorageLine
  21.06.16         *
 */

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_TelegramProtocol(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
+             , UserName TVarChar
              , DateSend TDateTime
              , ObjectName TVarChar
              , TelegramId TVarChar
@@ -25,6 +26,7 @@ BEGIN
 
   RETURN QUERY 
   SELECT Log_Send_Telegram.Id
+       , Object_User.ValueData          AS UserName
        , Log_Send_Telegram.DateSend
        , Object.ValueData               AS ObjectName
 
@@ -35,6 +37,8 @@ BEGIN
   FROM Log_Send_Telegram 
    
        JOIN Object AS Object ON Object.Id = Log_Send_Telegram.ObjectId
+
+       JOIN Object AS Object_User ON Object_User.Id = Log_Send_Telegram.UserId
 
  WHERE Log_Send_Telegram.DateSend BETWEEN inStartDate AND inEndDate
    AND (Log_Send_Telegram.ObjectId = inObjectId OR 0 = inObjectId);
@@ -54,4 +58,4 @@ ALTER FUNCTION gpSelect_TelegramProtocol (TDateTime, TDateTime, Integer, TVarCha
 -- тест
 -- 
 
-select * from gpSelect_TelegramProtocol(inStartDate := ('02.11.2021')::TDateTime , inEndDate := ('05.11.2021')::TDateTime , inObjectId := 0 ,  inSession := '3');
+select * from gpSelect_TelegramProtocol(inStartDate := ('02.11.2021')::TDateTime , inEndDate := ('10.11.2021')::TDateTime , inObjectId := 0 ,  inSession := '3');

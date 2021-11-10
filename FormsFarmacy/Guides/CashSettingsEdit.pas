@@ -74,6 +74,8 @@ type
     ceSamples22: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
     ceSamples3: TcxCurrencyEdit;
+    edTelegramBotToken: TcxTextEdit;
+    cxLabel22: TcxLabel;
   private
     { Private declarations }
   public

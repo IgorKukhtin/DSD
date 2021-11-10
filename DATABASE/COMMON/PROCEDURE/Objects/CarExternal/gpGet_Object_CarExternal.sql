@@ -10,6 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , Length TFloat, Width TFloat, Height TFloat
+             , Weight TFloat, Year TFloat
+             , VIN TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -37,6 +40,13 @@ BEGIN
            , CAST (0 as Integer)    AS JuridicalCode
            , CAST ('' as TVarChar)  AS JuridicalName
 
+           , CAST (0 AS TFloat)     AS Length
+           , CAST (0 AS TFloat)     AS Width 
+           , CAST (0 AS TFloat)     AS Height
+           , CAST (0 AS TFloat)     AS Weight
+           , CAST (0 AS TFloat)     AS Year
+           , CAST ('' as TVarChar)  AS VIN
+
            , CAST (NULL AS Boolean) AS isErased
 ;
    ELSE
@@ -56,7 +66,15 @@ BEGIN
            , Object_Juridical.Id          AS JuridicalId
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName           
-           
+
+           , COALESCE (ObjectFloat_Length.ValueData,0)         :: TFloat  AS Length
+           , COALESCE (ObjectFloat_Width.ValueData,0)          :: TFloat  AS Width 
+           , COALESCE (ObjectFloat_Height.ValueData,0)         :: TFloat  AS Height
+           , COALESCE (ObjectFloat_Weight.ValueData,0)         :: TFloat  AS Weight
+           , COALESCE (ObjectFloat_Year.ValueData,0)           :: TFloat  AS Year
+
+           , ObjectString_VIN.ValueData    :: TVarChar AS VIN
+
            , Object_CarExternal.isErased AS isErased
            
        FROM Object AS Object_CarExternal
@@ -67,7 +85,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_CarExternal.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_CarExternal_Comment()
-                                                             
+            LEFT JOIN ObjectString AS ObjectString_VIN
+                                   ON ObjectString_VIN.ObjectId = Object_CarExternal.Id
+                                  AND ObjectString_VIN.DescId = zc_ObjectString_CarExternal_VIN()
+
             LEFT JOIN ObjectLink AS CarExternal_CarModel 
                                  ON CarExternal_CarModel.ObjectId = Object_CarExternal.Id
                                 AND CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
@@ -77,6 +98,22 @@ BEGIN
                                  ON ObjectLink_CarExternal_Juridical.ObjectId = Object_CarExternal.Id
                                 AND ObjectLink_CarExternal_Juridical.DescId = zc_ObjectLink_CarExternal_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CarExternal_Juridical.ChildObjectId            
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Length
+                                  ON ObjectFloat_Length.ObjectId = Object_CarExternal.Id
+                                 AND ObjectFloat_Length.DescId = zc_ObjectFloat_CarExternal_Length()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                  ON ObjectFloat_Width.ObjectId = Object_CarExternal.Id
+                                 AND ObjectFloat_Width.DescId = zc_ObjectFloat_CarExternal_Width()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                  ON ObjectFloat_Height.ObjectId = Object_CarExternal.Id
+                                 AND ObjectFloat_Height.DescId = zc_ObjectFloat_CarExternal_Height()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_CarExternal.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_CarExternal_Weight()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                                  ON ObjectFloat_Year.ObjectId = Object_CarExternal.Id
+                                 AND ObjectFloat_Year.DescId = zc_ObjectFloat_CarExternal_Year()
 
        WHERE Object_CarExternal.Id = inId;
       

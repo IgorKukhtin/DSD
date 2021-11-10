@@ -3,7 +3,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
   ClientHeight = 569
-  ClientWidth = 892
+  ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -370,6 +370,17 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 48
     Width = 121
   end
+  object edTelegramBotToken: TcxTextEdit
+    Left = 531
+    Top = 87
+    TabOrder = 49
+    Width = 349
+  end
+  object cxLabel22: TcxLabel
+    Left = 531
+    Top = 67
+    Caption = #1058#1086#1082#1077#1085' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -608,6 +619,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTelegramBotToken'
+        Value = Null
+        Component = edTelegramBotToken
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -799,6 +818,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceSamples3
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramBotToken'
+        Value = Null
+        Component = edTelegramBotToken
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

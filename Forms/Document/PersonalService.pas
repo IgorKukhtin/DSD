@@ -232,6 +232,8 @@ type
     ChildDS_all: TDataSource;
     actGridToExcel_Child_all: TdsdGridToExcel;
     bbGridToExcel_Child_all: TdxBarButton;
+    cxRate: TcxGridDBColumn;
+    cxKoeff: TcxGridDBColumn;
   private
     { Private declarations }
   public

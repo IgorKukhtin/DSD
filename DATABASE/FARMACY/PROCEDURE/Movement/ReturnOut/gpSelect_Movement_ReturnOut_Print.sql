@@ -74,7 +74,7 @@ BEGIN
             Movement_ReturnOut.Id
           , Movement_ReturnOut.InvNumber
           , Movement_ReturnOut.OperDate
-          , Movement_ReturnOut.ToName
+          , ObjectHistory_ToDetails.FullName                  AS ToName
           , Movement_ReturnOut.IncomeInvNumber
           , Movement_ReturnOut.IncomeOperDate
           , Movement_ReturnOut.JuridicalName
@@ -214,3 +214,5 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,TVarChar) OWNER TO pos
 
 -- SELECT * FROM gpSelect_Movement_ReturnOut_Print (inMovementId := 570596, inSession:= '5');
 --select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 12521745 ,  inSession := '3');
+
+select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 25425883 ,  inSession := '3');

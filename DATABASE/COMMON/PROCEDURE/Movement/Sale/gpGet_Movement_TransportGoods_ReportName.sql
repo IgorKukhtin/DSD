@@ -60,9 +60,14 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                         ON MovementLinkObject_To.MovementId = COALESCE (MovementLinkMovement_TransportGoods.MovementId, Movement.Id)
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()

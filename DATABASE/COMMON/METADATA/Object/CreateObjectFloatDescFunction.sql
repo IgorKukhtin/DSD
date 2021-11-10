@@ -1117,7 +1117,28 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_Year() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Car_Year', zc_Object_Car(), 'Год выпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_Year');
 
+--
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CarExternal_Length() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Length'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CarExternal_Length', zc_Object_CarExternal(), 'Длина' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Length');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CarExternal_Width() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Width'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CarExternal_Width', zc_Object_CarExternal(), 'ширина' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Width');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CarExternal_Height() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Height'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CarExternal_Height', zc_Object_CarExternal(), 'высота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Height');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CarExternal_Weight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Weight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CarExternal_Weight', zc_Object_CarExternal(), 'Вес авто' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Weight');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CarExternal_Year() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Year'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CarExternal_Year', zc_Object_CarExternal(), 'Год выпуска' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CarExternal_Year');
+
+--
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
@@ -2141,9 +2162,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SupplementMin() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SupplementMin', 'Размазать в дополнении СУН не менее чем' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMin');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SupplementMinPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMinPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SupplementMinPP', 'Размазать в дополнении СУН для аптечных пунктов не менее чем' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMinPP');
+  
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.11.21                                                                                      * zc_ObjectFloat_Goods_SupplementMinPP
  02.11.21         * zc_ObjectFloat_Car_Weight
                     zc_ObjectFloat_Car_Year 
  29.10.21                                                                                      * zc_ObjectFloat_Goods_SupplementMin

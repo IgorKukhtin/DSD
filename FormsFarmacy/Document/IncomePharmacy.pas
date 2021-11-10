@@ -119,6 +119,13 @@ type
     dxBarButton5: TdxBarButton;
     actAccommodationUnit: TOpenChoiceForm;
     cbisConduct: TcxCheckBox;
+    actPUSH_CloseIncome: TdsdShowPUSHMessage;
+    spPUSH_CloseIncome: TdsdStoredProc;
+    spGetTelegram: TdsdStoredProc;
+    spInsert_TelegramBot_Protocol: TdsdStoredProc;
+    actGetTelegram: TdsdExecStoredProc;
+    actInsert_TelegramBot_Protocol: TdsdExecStoredProc;
+    actSendTelegramBot: TdsdSendTelegramBotAction;
   private
     { Private declarations }
   public

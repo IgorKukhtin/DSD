@@ -1214,7 +1214,7 @@ BEGIN
                                                           ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                          AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                 WHERE -- !!!оставили только эту категорию
-                                      ObjectDate_PartionGoods_Value.ValueData <= vbDate_3
+                                      ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '60 DAY'  --vbDate_3
                                       -- !!!оставили только эту категорию
                                 GROUP BY tmpNotSold.ContainerId
                                        , tmpNotSold.UnitID
@@ -1391,7 +1391,7 @@ BEGIN
                                      WHERE ObjectDate.ObjectId IN  (SELECT DISTINCT tmpCLO_PartionGoods.ObjectId FROM tmpCLO_PartionGoods)
                                        AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                        -- !!!оставили только эту категорию
-                                       AND ObjectDate.ValueData >  vbDate_3
+                                       AND ObjectDate.ValueData >  CURRENT_DATE + INTERVAL '60 DAY' -- vbDate_3
                                        AND ObjectDate.ValueData <= vbDate_6
                                        -- !!!оставили только эту категорию
                                     )

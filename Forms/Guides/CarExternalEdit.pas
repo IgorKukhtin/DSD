@@ -49,6 +49,18 @@ type
     JuridicalGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     ceComment: TcxTextEdit;
+    edLength: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edWidth: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edHeight: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edWeight: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    edYear: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edVIN: TcxTextEdit;
   private
     { Private declarations }
   public

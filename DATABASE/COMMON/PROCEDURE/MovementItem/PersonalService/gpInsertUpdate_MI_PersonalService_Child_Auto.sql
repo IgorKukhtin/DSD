@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Child_Auto()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Auto (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Auto (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Auto (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_Auto(
     IN inUnitId              Integer   , -- подразделение
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_Auto(
     -- IN inHoursDay            TFloat    , --
     -- IN inPersonalCount       TFloat    , --
     IN inGrossOne            TFloat    , --
+    IN inKoeff               TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -365,6 +367,7 @@ end if;
                                                      , inHoursDay             := COALESCE (vbHoursDay, 0)
                                                      , inPersonalCount        := COALESCE (vbPersonalCount, 0)
                                                      , inGrossOne             := COALESCE (inGrossOne, 0)
+                                                     , inKoeff                := COALESCE (inKoeff,0)::TFloat
                                                      , inUserId               := vbUserId
                                                      );
 
