@@ -1321,7 +1321,8 @@ uses
   OrderType_isPrEdit in '..\..\Forms\Guides\OrderType_isPrEdit.pas' {OrderType_isPrEditForm: TParentForm},
   Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   ModelService_Object in '..\..\Forms\Guides\ModelService_Object.pas' {ModelService_ObjectForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
+  Report_CheckBonusTestDialog in '..\..\Forms\Report\Report_CheckBonusTestDialog.pas' {Report_CheckBonusTestDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
