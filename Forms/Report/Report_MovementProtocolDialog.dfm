@@ -134,7 +134,7 @@ inherited Report_MovementProtocolDialogForm: TReport_MovementProtocolDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -142,7 +142,7 @@ inherited Report_MovementProtocolDialogForm: TReport_MovementProtocolDialogForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -196,8 +196,8 @@ inherited Report_MovementProtocolDialogForm: TReport_MovementProtocolDialogForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 224
-    Top = 7
+    Left = 304
+    Top = 39
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
