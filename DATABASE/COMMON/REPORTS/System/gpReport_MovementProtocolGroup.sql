@@ -193,7 +193,7 @@ BEGIN
           
      FROM tmpMI_Protocol AS tmpData
 
-          LEFT JOIN tmpMovement AS tmpMovementCost ON tmpMovementCost.MovementId = tmpData.MovementId AND tmpMovementCost.DescId_Movement =  zc_Movement_IncomeCost()
+          LEFT JOIN tmpMovement AS tmpMovementCost ON tmpMovementCost.MovementId = tmpData.MovementId AND tmpMovementCost.DescId_Movement IN (zc_Movement_IncomeCost(), zc_Movement_PromoPartner())
           LEFT JOIN Movement AS tmpMovement ON tmpMovement.Id = COALESCE (tmpMovementCost.ParentId, tmpData.MovementId)
           LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.DescId_Movement
 
