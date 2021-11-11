@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , Multiplicity TFloat, isMultiplicityError boolean
              , isUkrainianTranslation boolean
              , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
+             , isExpDateExcSite boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -330,6 +331,7 @@ BEGIN
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
+           , Object_Goods_Main.isExpDateExcSite
 
       FROM Object_Goods_Retail
 

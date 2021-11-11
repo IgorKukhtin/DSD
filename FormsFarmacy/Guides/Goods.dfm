@@ -600,6 +600,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 74
           end
+          object isExpDateExcSite: TcxGridDBColumn
+            Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')'
+            DataBinding.FieldName = 'isExpDateExcSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
         end
       end
     end
@@ -2564,6 +2572,31 @@ inherited GoodsForm: TGoodsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1058#1086#1074#1072#1088#1072'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
       ImageIndex = 43
     end
+    object mactUpdate_isExpDateExcSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_isExpDateExcSite
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
+      ImageIndex = 79
+    end
+    object actExecUpdate_isExpDateExcSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inExpDateExcSite_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inExpDateExcSite_Revert
+        end>
+      Caption = 'actExecUpdate_isExpDateExcSite'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2857,6 +2890,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton16'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -3005,6 +3042,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton15: TdxBarButton
       Action = mactUpdateGoodsAdditional
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = mactUpdate_isExpDateExcSite
       Category = 0
     end
   end
@@ -3950,7 +3991,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 496
-    Top = 328
+    Top = 320
   end
   object spUpdate_Goods_Analog: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_Analog'
@@ -4627,7 +4668,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 216
-    Top = 352
+    Top = 344
   end
   object spUpdate_Goods_LimitSun_T: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_LimitSUN_T'
@@ -5133,5 +5174,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 136
     Top = 200
+  end
+  object spUpdate_inExpDateExcSite_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inExpDateExcSite_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisExpDateExcSite'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isExpDateExcSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 368
   end
 end

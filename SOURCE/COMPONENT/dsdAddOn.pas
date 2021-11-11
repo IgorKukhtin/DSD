@@ -724,7 +724,9 @@ type
   public
     procedure LoadUserSettingsData(Data: String);
     procedure SaveUserSettings;
+    procedure SaveUserSettingsBack;
     procedure LoadUserSettings;
+    procedure LoadUserSettingsBack;
     constructor Create(AOwner: TComponent); override;
   published
     property Active: boolean read FActive write FActive default true;
@@ -2660,6 +2662,21 @@ begin
   if Data <> '' then LoadUserSettingsData(Data);
 end;
 
+procedure TdsdUserSettingsStorageAddOn.LoadUserSettingsBack;
+var
+  Data: String;
+  FormName: string;
+begin
+  if gc_isSetDefault then
+     exit;
+  if Owner is TParentForm then
+     FormName := TParentForm(Owner).FormClassName + '_Back'
+  else
+     FormName := Owner.ClassName + '_Back';
+  Data := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName);
+  if Data <> '' then LoadUserSettingsData(Data);
+end;
+
 procedure TdsdUserSettingsStorageAddOn.SaveUserSettings;
 var
   TempStream: TStringStream;
@@ -2723,6 +2740,68 @@ begin
   end;
 end;
 
+procedure TdsdUserSettingsStorageAddOn.SaveUserSettingsBack;
+var
+  TempStream: TStringStream;
+  i: integer;
+  xml: string;
+  FormName: string;
+begin
+  if gc_isSetDefault then
+     exit;
+  if Owner is TParentForm then
+     FormName := TParentForm(Owner).FormClassName + '_Back'
+  else
+     FormName := Owner.ClassName + '_Back';
+
+  I := 0;
+  while I < Owner.ComponentCount do
+  begin
+    if Owner.Components[I] is TdsdDBViewAddOn then TdsdDBViewAddOn(Owner.Components[I]).ClearDuplicateSearch;
+    if Owner.Components[I] is TCrossDBViewAddOn then TCrossDBViewAddOn(Owner.Components[I]).onAfterClose(Nil);
+    if Owner.Components[I] is TCrossDBViewReportAddOn then TCrossDBViewReportAddOn(Owner.Components[I]).onAfterClose(Nil);
+    Inc(I);
+  end;
+
+  TempStream :=  TStringStream.Create;
+  try
+    xml := '<root>';
+    // Сохраняем установки гридов
+    for i := 0 to Owner.ComponentCount - 1 do begin
+{      if Owner.Components[i] is TdxBarManager then
+         with TdxBarManager(Owner.Components[i]) do begin
+           SaveToStream(TempStream);
+           xml := xml + '<dxBarManager name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;}
+      if Owner.Components[i] is TcxCustomGridView then
+         with TcxCustomGridView(Owner.Components[i]) do begin
+           StoreToStream(TempStream);
+           xml := xml + '<cxGridView name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;
+      if Owner.Components[i] is TcxDBTreeList then
+         with TcxDBTreeList(Owner.Components[i]) do begin
+           StoreToStream(TempStream);
+           xml := xml + '<cxTreeList name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;
+      // сохраняем остальные установки
+      if Owner.Components[i] is TcxPropertiesStore then
+         with Owner.Components[i] as TcxPropertiesStore do begin
+            StorageType := stStream;
+            StorageStream := TempStream;
+            StoreTo;
+            xml := xml + '<cxPropertiesStore name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '"/>';
+            TempStream.Clear;
+         end;
+    end;
+    xml := xml + '</root>';
+    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FormName, gfStrToXmlStr(xml));
+  finally
+    TempStream.Free;
+  end;
+end;
 
 { THeaderSaver }
 

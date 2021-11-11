@@ -33,6 +33,8 @@ type
     procedure InitcxEditRepository;
     procedure InitcxView;
     procedure btnHelpClick(Sender: TObject);
+    procedure btnLoadUserSettings(Sender: TObject);
+    procedure btnSaveUserSettings(Sender: TObject);
     procedure cxGridDBTableViewTextGetProperties(
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -274,6 +276,48 @@ begin
   if Self.HelpFile = '' then exit;
   ShellExecute(0, 'open', PChar(Self.HelpFile), '', '', 1);
 
+end;
+
+procedure TParentForm.btnLoadUserSettings(Sender: TObject);
+  var i : integer;
+begin
+  if MessageDlg('Загрузить пользовательские настройки формы?',
+     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+
+  // Загрузить пользовательских настроек формы
+  for i := 0 to Self.ComponentCount - 1 do
+      if Self.Components[i] is TdsdUserSettingsStorageAddOn then
+      begin
+         TdsdUserSettingsStorageAddOn(Self.Components[i]).LoadUserSettingsBack;
+         Exit;
+      end;
+  ShowMessage('Форма не поддерживает сохранение пользовательских настроек.');
+end;
+
+procedure TParentForm.btnSaveUserSettings(Sender: TObject);
+  var i, j : integer;
+begin
+  if MessageDlg('Сохранить пользовательские настройки формы?',
+     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+
+  // Сохранение пользовательских настроек формы
+  for i := 0 to Self.ComponentCount - 1 do
+      if Self.Components[i] is TdsdUserSettingsStorageAddOn then
+      begin
+         TdsdUserSettingsStorageAddOn(Self.Components[i]).SaveUserSettingsBack;
+         if Assigned(AddOnFormData.RefreshAction) then
+         for j := 0 to Self.ComponentCount - 1 do
+          begin
+            if (Self.Components[J] is TCrossDBViewAddOn) or
+               (Self.Components[J] is TCrossDBViewReportAddOn) then
+            begin
+              AddOnFormData.RefreshAction.Execute;
+              Exit;
+            end;
+          end;
+         Exit;
+      end;
+  ShowMessage('Форма не поддерживает сохранение пользовательских настроек.');
 end;
 
 procedure TParentForm.CloseAction(Sender: TObject);
@@ -539,6 +583,10 @@ begin
 end;
 
 procedure TParentForm.Loaded;
+  var
+    C: TComponent;
+    mni: TMenuItem;
+    i : Integer;
 
 procedure dsdTranslateCurrForm(Form : TForm);
   var I : Integer;
@@ -561,6 +609,31 @@ begin
         AddOnFormData.OnLoadAction.Execute;
   TranslateForm(Self);
   dsdTranslateCurrForm(Self);
+
+  // Добавляем кнопки сохранения и востановления параметров
+  if gc_ProgramName = 'Farmacy.exe' then
+    for I := 0 to ComponentCount - 1 do
+      if Components[I] is TcxGrid then
+        for C in Self do
+        begin
+          //Находим все контексные меню
+          if C is TPopupMenu then
+          Begin
+            mni := TMenuItem.Create(C);
+            mni.Caption := '-';
+            (C as TPopupMenu).Items.Add(mni);
+            mni := TMenuItem.Create(C);
+            mni.Caption := 'Сохранить пользовательские настройки формы';
+            mni.ImageIndex := 79;
+            mni.OnClick := btnSaveUserSettings;
+            (C as TPopupMenu).Items.Add(mni);
+            mni := TMenuItem.Create(C);
+            mni.Caption := 'Загрузить пользовательские настройки формы';
+            mni.ImageIndex := 80;
+            mni.OnClick := btnLoadUserSettings;
+            (C as TPopupMenu).Items.Add(mni);
+          End;
+        end;
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;

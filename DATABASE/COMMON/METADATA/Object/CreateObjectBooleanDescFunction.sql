@@ -1109,9 +1109,14 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementSUN1Smudge', 'Дополнение СУН1 размазать товар' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementSUN1Smudge');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_ExpDateExcSite() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ExpDateExcSite'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_ExpDateExcSite', 'Исключение по сроку годности (для сайта)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ExpDateExcSite');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 11.11.21                                                                                                          * zc_ObjectBoolean_Goods_ExpDateExcSite
  19.10.21                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN1Smudge
  18.10.21         * zc_ObjectBoolean_OrderType_OrderPr...
                     zc_ObjectBoolean_OrderType_InPr...
