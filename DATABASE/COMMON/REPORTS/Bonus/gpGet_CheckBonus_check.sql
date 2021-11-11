@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpGet_CheckBonus_check(
     IN inisDetail          Boolean   , -- детализация  выводим группу тов, произ площадку, Goods_Business, GoodsTag, GoodsGroupAnalyst
     IN inisGoods           Boolean   , -- выводим товар + вид товара
     IN inGoodsGroup        TVarChar  ,
+   OUT outRez              TVarChar  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS VOID
+RETURNS TVarChar
 AS
 $BODY$
 BEGIN
@@ -17,6 +18,7 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Ошибка. Запуск процедуры создания документов запрещен. Включена детализация.';
   END IF;
+  outRez := 'Ok';
 
 END;
 $BODY$

@@ -4,7 +4,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1731,7 +1731,6 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     object actGet_Check: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
       StoredProc = spGet_Check
       StoredProcList = <
         item
@@ -2660,6 +2659,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
       item
         DataSet = MasterCDS
       end>
+    OutputType = otResult
     Params = <
       item
         Name = 'inisDetail'

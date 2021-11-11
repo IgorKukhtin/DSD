@@ -2171,13 +2171,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Losses_KVKDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Losses_KVKDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKDialogForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapDialogForm'));
@@ -2439,11 +2439,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
     exit;
@@ -2583,11 +2583,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
      exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
 
