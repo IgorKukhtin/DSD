@@ -60,7 +60,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log, MainCash2;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log, UnitGetCash;
 
 function СообщениеКА(k: string): boolean;
 begin

@@ -400,6 +400,12 @@
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
+        <DCCReference Include="..\FormsFarmacy\Cash\PrintSendDialog.pas">
+            <Form>PrintSendDialogForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\UnitGetCash.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -97,7 +97,14 @@ uses
   Calculation_SAUA in '..\FormsFarmacy\ConnectWithOld\Calculation_SAUA.pas' {Calculation_SAUAForm: TParentForm},
   UploadCheckoutTesting in '..\FormsFarmacy\Guides\UploadCheckoutTesting.pas' {UploadCheckoutTestingForm},
   TestingUser in '..\FormsFarmacy\Cash\TestingUser.pas' {TestingUserForm},
-  dsdPlaySound in '..\SOURCE\dsdPlaySound.pas';
+  dsdPlaySound in '..\SOURCE\dsdPlaySound.pas',
+  PrintSendDialog in '..\FormsFarmacy\Cash\PrintSendDialog.pas',
+  CashInterface in '..\FormsFarmacy\Cash\CashInterface.pas',
+  UnitGetCash in '..\FormsFarmacy\Document\UnitGetCash.pas',
+  Cash_Emulation in '..\FormsFarmacy\Cash\Cash_Emulation.pas',
+  Cash_FP3530T_NEW in '..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas',
+  FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
 
 {$R *.res}
 

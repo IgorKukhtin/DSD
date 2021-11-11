@@ -73,7 +73,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, RegularExpressions, Log;
 
 { TPrinterEmulation }
 procedure TPrinterEmulation.Sale(AGoodsCode : Integer; AAmount, APrice : Currency);

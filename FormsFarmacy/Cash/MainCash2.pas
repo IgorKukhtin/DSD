@@ -3445,19 +3445,29 @@ begin
 
         if (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> 0) and
            (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> DiscountServiceForm.gDiscountExternalId) and
-           (FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and
-           ((DiscountServiceForm.gDiscountExternalId <> 4521216) or
+           ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) or
            (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) then
         begin
-          spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := RemainsCDS.FieldByName('GoodsDiscountID').AsInteger;
-          spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
-          spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
-          spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
-          spGet_Goods_CodeRazom.Execute;
-          if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
+          if not gc_User.Local then
           begin
-            ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
-            exit;
+            spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := RemainsCDS.FieldByName('GoodsDiscountID').AsInteger;
+            spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
+            spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
+            spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
+            spGet_Goods_CodeRazom.Execute;
+            if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
+            begin
+              ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
+              exit;
+            end;
+          end
+          else
+          begin
+            if RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216 then
+            begin
+              ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
+              exit;
+            end;
           end;
         end;
 
@@ -6518,7 +6528,7 @@ begin
   if (spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = Null) or
      (spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = 0) then
   begin
-    ShowMessage('Медицынская программа <' + ProgramName + '> не подключена для аптеки.');
+    ShowMessage('Медицинская программа <' + ProgramName + '> не подключена для аптеки.');
     exit;
   end;
   FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;

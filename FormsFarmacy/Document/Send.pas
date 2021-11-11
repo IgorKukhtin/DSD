@@ -202,6 +202,8 @@ type
     spGet_SendPartionDateChangeId: TdsdStoredProc;
     actGet_SendPartionDateChangeId: TdsdExecStoredProc;
     dxBarButton9: TdxBarButton;
+    actPrintFP: TdsdOpenStaticForm;
+    dxBarButton10: TdxBarButton;
   private
     { Private declarations }
   public

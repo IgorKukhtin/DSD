@@ -335,7 +335,7 @@ BEGIN
              , Object_Goods_Main.UnitSupplementSUN1OutId
              , Object_Goods_Main.UnitSupplementSUN2OutId
              , Object_Goods_Main.isSupplementSmudge
-             , Object_Goods_Main.SupplementMin
+             , CASE WHEN Object_Goods_Main.Name ILIKE '¿œ%' THEN Object_Goods_Main.SupplementMinPP ELSE Object_Goods_Main.SupplementMin END
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -1154,4 +1154,4 @@ $BODY$
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('02.11.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('15.11.2021')::TDateTime ,  inSession := '3');
