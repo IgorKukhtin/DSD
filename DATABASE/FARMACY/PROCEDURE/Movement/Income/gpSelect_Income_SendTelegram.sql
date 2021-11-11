@@ -61,7 +61,7 @@ BEGIN
                              AND ObjectString_Unit_TelegramId.DescId = zc_ObjectString_Unit_TelegramId()
   WHERE Id = inMovementId;   
   
-  IF vbToId NOT IN (377595, 377574)
+  IF vbToId NOT IN (377595, 377574, 1529734, 8156016)
   THEN
     RETURN;
   END IF;

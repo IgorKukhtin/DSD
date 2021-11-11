@@ -37,7 +37,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
              , UnitSupplementSUN2OutId Integer, UnitSupplementSUN2OutName TVarChar
-             , SupplementMin Integer
+             , SupplementMin Integer, SupplementMinPP Integer
              , isUkrainianTranslation boolean
               ) AS
 $BODY$
@@ -158,6 +158,7 @@ BEGIN
            , Object_Goods_Main.UnitSupplementSUN1OutId 
            , Object_UnitSupplementSUN2Out.ValueData                              AS UnitSupplementSUN2OutName
            , Object_Goods_Main.SupplementMin 
+           , Object_Goods_Main.SupplementMinPP 
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
       FROM Object_Goods_Retail

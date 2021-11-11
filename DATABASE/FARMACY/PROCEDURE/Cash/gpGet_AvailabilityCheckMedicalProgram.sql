@@ -56,6 +56,11 @@ BEGIN
                                   AND ObjectString_ProgramId.ValueData = inProgramId
       WHERE Object_MedicalProgramSP.DescId = zc_Object_MedicalProgramSP();
     END IF;
+
+    IF COALESCE (outMedicalProgramSPID, 0) = 0
+    THEN
+      outMedicalProgramSPID := 0;
+    END IF;    
     
 END;
 $BODY$
@@ -68,6 +73,5 @@ LANGUAGE plpgsql VOLATILE;
  04.10.21                                                       *
 */
 
--- тест
-    
-select * from gpGet_AvailabilityCheckMedicalProgram(inSPKindId := 4823009 , inProgramId := '857588d8-9e12-4935-96c4-b08e95d19dce' ,  inSession := '3');
+-- тест select * from gpGet_AvailabilityCheckMedicalProgram(inSPKindId := 4823009 , inProgramId := '857588d8-9e12-4935-96c4-b08e95d19dce' ,  inSession := '3');
+select * from gpGet_AvailabilityCheckMedicalProgram(inSPKindId := 4823009 , inProgramId := 'f217889f-736f-462c-8f8b-ed99edddb3be' ,  inSession := '3990942');

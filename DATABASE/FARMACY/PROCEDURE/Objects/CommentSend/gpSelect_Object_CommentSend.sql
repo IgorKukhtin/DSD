@@ -1,18 +1,29 @@
 -- Function: gpSelect_Object_CommentSend()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_CommentSend(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_CommentSend(boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CommentSend(
+    IN inisShowAll   boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
              , isErased boolean) AS
-$BODY$BEGIN
+$BODY$
+  DECLARE vbUserId      Integer;
+BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Area()());
+  vbUserId:= lpGetUserBySession (inSession);
 
+   -- Если кассир
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_CashierPharmacy())
+   THEN
+     inisShowAll := False;
+   END IF;
+  
+  
    RETURN QUERY 
    SELECT Object_CommentSend.Id                             AS Id 
         , Object_CommentSend.ObjectCode                     AS Code
@@ -28,13 +39,15 @@ $BODY$BEGIN
                             AND ObjectLink_CommentSend_CommentTR.DescId = zc_ObjectLink_CommentSend_CommentTR()
         LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentSend_CommentTR.ChildObjectId
 
-   WHERE Object_CommentSend.DescId = zc_Object_CommentSend();
+   WHERE Object_CommentSend.DescId = zc_Object_CommentSend()
+     AND (Object_CommentSend.isErased = False OR inisShowAll = True);
+  
   
 END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_CommentSend(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_CommentSend(boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -46,4 +59,5 @@ ALTER FUNCTION gpSelect_Object_CommentSend(TVarChar) OWNER TO postgres;
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_CommentSend('3')
+
+select * from gpSelect_Object_CommentSend(inisShowAll := 'True' ,  inSession := '3');

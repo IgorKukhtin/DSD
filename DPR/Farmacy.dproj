@@ -313,6 +313,13 @@
 				<Form>TestingUserForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dsdPlaySound.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\PrintSendDialog.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\CashInterface.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Document\UnitGetCash.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\Cash_Emulation.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\FP3141_TLB.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -23,6 +23,9 @@ inherited TelegramProtocolForm: TTelegramProtocolForm
         ExplicitWidth = 930
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -52,7 +55,6 @@ inherited TelegramProtocolForm: TTelegramProtocolForm
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'Message'
             PropertiesClassName = 'TcxRichEditProperties'
-            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 505

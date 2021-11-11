@@ -431,6 +431,17 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 81
           end
+          object SupplementMinPP: TcxGridDBColumn
+            Caption = #1056#1072#1079#1084#1072#1079#1072#1090#1100' '#1074' '#1076#1086#1087'. '#1057#1059#1053' '#1076#1083#1103' '#1072#1087#1090'. '#1087#1091#1085#1082#1090'. '#1085#1077' '#1084#1077#1085#1077#1077' '#1095#1077#1084
+            DataBinding.FieldName = 'SupplementMinPP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
           object SummaWages: TcxGridDBColumn
             Caption = #1047#1072' 1 '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
             DataBinding.FieldName = 'SummaWages'
@@ -1735,6 +1746,60 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'actExec_Update_SupplementMin'
     end
+    object actExecuteDialog_SupplementMinPP: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialog_SupplementMinPP'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SupplementMin'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1056#1072#1079#1084#1072#1079#1072#1090#1100' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1080' '#1057#1059#1053' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090#1086#1074' '#1085#1077' '#1084#1077#1085#1077#1077' '#1095#1077#1084
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object mactUpdate_SupplementMinPP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialog_SupplementMinPP
+      ActionList = <
+        item
+          Action = actExec_Update_SupplementMinPP
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1056#1072#1079#1084#1072#1079#1072#1090#1100' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1080' '#1057#1059#1053' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090 +
+        #1086#1074' '#1085#1077' '#1084#1077#1085#1077#1077' '#1095#1077#1084'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1056#1072#1079#1084#1072#1079#1072#1090#1100' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1080' '#1057#1059#1053' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090 +
+        #1086#1074' '#1085#1077' '#1084#1077#1085#1077#1077' '#1095#1077#1084'"'
+      ImageIndex = 43
+    end
+    object actExec_Update_SupplementMinPP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = actUpdate_SupplementMinPP
+      StoredProcList = <
+        item
+          StoredProc = actUpdate_SupplementMinPP
+        end>
+      Caption = 'actExec_Update_SupplementMinPP'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2065,6 +2130,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           Visible = True
           ItemName = 'dxBarButton17'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton18'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -2239,6 +2308,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton17: TdxBarButton
       Action = mactUpdate_SupplementMin
+      Category = 0
+    end
+    object dxBarButton18: TdxBarButton
+      Action = mactUpdate_SupplementMinPP
       Category = 0
     end
   end
@@ -3252,5 +3325,30 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 1056
     Top = 120
+  end
+  object actUpdate_SupplementMinPP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_SupplementMinPP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSupplementMinPP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SupplementMin'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1056
+    Top = 176
   end
 end

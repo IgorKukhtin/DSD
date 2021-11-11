@@ -720,7 +720,6 @@ inherited SendForm: TSendForm
     Width = 992
     Height = 129
     TabOrder = 3
-    ExplicitTop = -1
     ExplicitWidth = 992
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -2019,6 +2018,26 @@ inherited SendForm: TSendForm
         end>
       Caption = 'actGet_SendPartionDateChangeId'
     end
+    object actPrintFP: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1085#1072' '#1092#1080#1089#1082#1072#1083#1100#1085#1099#1081' '#1087#1088#1080#1085#1090#1077#1088
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1085#1072' '#1092#1080#1089#1082#1072#1083#1100#1085#1099#1081' '#1087#1088#1080#1085#1090#1077#1088
+      ImageIndex = 18
+      FormName = 'TPrintSendDialogForm'
+      FormNameParam.Value = 'TPrintSendDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2210,6 +2229,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2330,6 +2353,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton9: TdxBarButton
       Action = actSendPartionDateChange
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = actPrintFP
       Category = 0
     end
   end

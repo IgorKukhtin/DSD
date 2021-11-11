@@ -142,6 +142,13 @@ BEGIN
     IF COALESCE (inCommentSendID, 0) <> 0
     THEN
     
+       IF EXISTS (SELECT 1 FROM Object
+                  WHERE Object.Id = inCommentSendID
+                    AND Object.isErased = True)
+       THEN
+          RAISE EXCEPTION 'Ошибка. Использование удаленных причин уменьшения количества запрещено.';       
+       END IF;
+
        IF COALESCE (vbisBlockCommentSendTP, False) = TRUE AND 
           COALESCE ((SELECT ChildObjectId FROM ObjectLink
                       WHERE ObjectId = inCommentSendID

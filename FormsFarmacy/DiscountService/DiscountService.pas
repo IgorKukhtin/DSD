@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Soap.InvokeRegistry, Vcl.StdCtrls, System.Contnrs,
   Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient, Data.DB,
   REST.Types, REST.Client, Data.Bind.Components, Soap.EncdDecd,
-  Data.Bind.ObjectScope, Math, System.Net.URLClient;
+  Data.Bind.ObjectScope, Math, System.Net.URLClient, DateUtils;
 
 type
 
@@ -63,7 +63,7 @@ type
     function fUpdateCDS_Discount (CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string; bFixPrice : Boolean = False) :Boolean;
     // Commit Дисконт из CDS - по всем
     function fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                  lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3) :Boolean;
+                                  lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3; nDay : Integer = 0) :Boolean;
     //
     // update DataSet - еще раз по всем "обновим" Дисконт
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
@@ -434,7 +434,7 @@ end;
 
 // Commit Дисконт из CDS - по всем
 function TDiscountServiceForm.fCommitCDS_Discount (fCheckNumber:String; CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer;
-                                                   lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3) :Boolean;
+                                                   lCardNumber : string; var AisDiscountCommit : Boolean; nHourOffset : Integer = 3; nDay : Integer = 0) :Boolean;
 var
   aSaleRequest : CardSaleRequest;
   SendList : ArrayOfCardSaleRequestItem;
@@ -558,7 +558,7 @@ begin
                  Item.OrderCode := FInvoiceNumber;
                  //Дата прихода
                  Item.OrderDate:= TXSDateTime.Create;
-                 Item.OrderDate.AsDateTime:= FInvoiceDate;
+                 Item.OrderDate.AsDateTime:= IncDay(FInvoiceDate, nDay);
                  Item.OrderDate.HourOffset := nHourOffset;
 
                 // Подготовили список для отправки
@@ -602,6 +602,7 @@ begin
               // Отправили запрос
               ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
 
+              //ResList := CardSaleResult.Create;
               //!!!для теста!!!
               //***SaveToXMLFile_ItemCommitRes(ResList);
               SaveToXMLFile_ItemCommit(ResList);
@@ -621,7 +622,11 @@ begin
                 begin
                   if nHourOffset = 3 then
                   begin
-                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2);
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2, nDay);
+                    Exit;
+                  end else if nDay = 0 then
+                  begin
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3, - 1);
                     Exit;
                   end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
                 end;

@@ -211,6 +211,12 @@ type
     actExec_Update_SupplementMin: TdsdExecStoredProc;
     actUpdate_SupplementMin: TdsdStoredProc;
     dxBarButton17: TdxBarButton;
+    SupplementMinPP: TcxGridDBColumn;
+    actUpdate_SupplementMinPP: TdsdStoredProc;
+    actExecuteDialog_SupplementMinPP: TExecuteDialog;
+    mactUpdate_SupplementMinPP: TMultiAction;
+    actExec_Update_SupplementMinPP: TdsdExecStoredProc;
+    dxBarButton18: TdxBarButton;
   private
     { Private declarations }
   public
