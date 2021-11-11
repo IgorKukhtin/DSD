@@ -107,6 +107,7 @@ BEGIN
                          , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                          , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
                          , CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END AS WorkTimeKindId
+                         , COALESCE (ObjectFloat_WorkTimeKind_Tax.ValueData,0) AS WorkTimeKind_Tax
                          , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
                          , MovementLinkObject_Unit.ObjectId AS UnitId
                     FROM tmpOperDate
@@ -126,6 +127,11 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                           ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                          AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
+                         LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
+                                               ON ObjectFloat_WorkTimeKind_Tax.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
+                                              AND ObjectFloat_WorkTimeKind_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
+
                          LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                                 ON ObjectString_WorkTimeKind_ShortName.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
                                                AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
@@ -202,13 +208,14 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
-               WHERE tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
+               WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                           , zc_Enum_WorkTimeKind_WorkD()
                                           , zc_Enum_WorkTimeKind_WorkN()
                                           , zc_Enum_WorkTimeKind_WorkDayOff()
                                           , zc_Enum_WorkTimeKind_RemoteAccess()
                                           , zc_Enum_WorkTimeKind_Trainee50()
                                           )
+                      OR tmp.WorkTimeKind_Tax <> 0)
                  AND tmp.Amount_calc <> COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0)
                )
 /*
@@ -237,13 +244,14 @@ BEGIN
                     LEFT JOIN tmpStaffList AS tmpStaffList2
                                            ON tmpStaffList2.PositionId = tmp.PositionId
                                           AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
-                  WHERE tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
+                  WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                              , zc_Enum_WorkTimeKind_WorkD()
                                              , zc_Enum_WorkTimeKind_WorkN()
                                              , zc_Enum_WorkTimeKind_WorkDayOff()
                                              , zc_Enum_WorkTimeKind_RemoteAccess()
                                              , zc_Enum_WorkTimeKind_Trainee50()
                                              )
+                         OR tmp.WorkTimeKind_Tax <> 0)
                     AND tmp.Amount_calc <> COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0)
                     AND COALESCE (tmpStaffList.StaffListSummKindId, tmpStaffList2.StaffListSummKindId,0) IN (12110, 582717)
                )
@@ -289,13 +297,14 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
-               WHERE tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
+               WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                           , zc_Enum_WorkTimeKind_WorkD()
                                           , zc_Enum_WorkTimeKind_WorkN()
                                           , zc_Enum_WorkTimeKind_WorkDayOff()
                                           , zc_Enum_WorkTimeKind_RemoteAccess()
                                           , zc_Enum_WorkTimeKind_Trainee50()
                                           )
+                     OR tmp.WorkTimeKind_Tax <> 0)
                  AND tmp.PositionLevelId NOT IN (1673855,1673854,3515083,4158388,1673853,12465,3970383)
                GROUP BY tmp.operdate
                       , tmp.MemberId

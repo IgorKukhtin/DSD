@@ -1,11 +1,11 @@
 -- Function: gpReport_UserProtocolGroup (TDateTime, TDateTime, TVarChar)
 
-DROP FUNCTION IF EXISTS gpReport_MovementProtocolGroup (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_MovementProtocolGroup (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MovementProtocolGroup (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MovementProtocolGroup(
     IN inStartDate          TDateTime , -- 
     IN inEndDate            TDateTime , --
-    IN inUnitId             Integer , --
     IN inUserId             Integer , --
     IN inIsMovement         Boolean , -- галка по дате док (по умолчанию - да) 
     IN inSession            TVarChar  -- сессия пользователя
@@ -26,8 +26,9 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , OperDatePartner TDateTime
              , StatusCode          Integer
              , StatusName          TVarChar
-             , FromName            TVarChar
-             , ToName              TVarChar
+             , UnitName_Movement   TVarChar
+             , JuridicalName       TVarChar
+             , PartnerName         TVarChar
               )
 AS
 $BODY$
@@ -63,63 +64,95 @@ BEGIN
                 WHERE Object_User.DescId = zc_Object_User()
                 )
 
-  , tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
-                FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup
-                WHERE inUnitId <> 0
-               UNION
-                SELECT Object.Id AS UnitId 
-                FROM Object
-                WHERE Object.DescId = zc_Object_Unit() 
-                  AND COALESCE (inUnitId, 0) = 0
-               )
-
     -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementProtocol.UserId              AS UserId
-                            , MovementProtocol.IsInsert            AS IsInsert
                             , MovementProtocol.OperDate            AS OperDate_Protocol
                             , MovementProtocol.MovementId          AS MovementId
+                            , Movement.ParentId                    AS ParentId
                             , Movement.StatusId                    AS StatusId_Movement
                             , Movement.OperDate                    AS OperDate_Movement
                             , Movement.Invnumber                   AS Invnumber_Movement
                             , Movement.DescId                      AS DescId_Movement
                             , MovementDesc.ItemName                AS DescName_Movement
-                            , MovementLinkObject_From.ObjectId     AS FromId_Movement
-                            , MovementLinkObject_To.ObjectId       AS ToId_Movement
                             , 1 AS Count -- параметр для расчета операций
-                            , MAX (MovementProtocol.OperDate) OVER (PARTITION BY MovementProtocol.MovementId, MovementProtocol.UserId) AS OperDate_Last
                        FROM MovementProtocol
                             LEFT JOIN Movement ON Movement.Id = MovementProtocol.MovementId
                             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                           
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                       WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                         AND (MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
+                         AND inIsMovement = FALSE
+                    UNION
+                       SELECT MovementProtocol.UserId              AS UserId
+                            , MovementProtocol.OperDate            AS OperDate_Protocol
+                            , MovementProtocol.MovementId          AS MovementId
+                            , Movement.ParentId                    AS ParentId
+                            , Movement.StatusId                    AS StatusId_Movement
+                            , Movement.OperDate                    AS OperDate_Movement
+                            , Movement.Invnumber                   AS Invnumber_Movement
+                            , Movement.DescId                      AS DescId_Movement
+                            , MovementDesc.ItemName                AS DescName_Movement
+                            , 1 AS Count -- параметр для расчета операций
+                       FROM Movement
+                            LEFT JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+                            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-                            INNER JOIN tmpUnit ON (tmpUnit.UnitId = MovementLinkObject_From.ObjectId 
-                                                  OR 
-                                                   tmpUnit.UnitId = MovementLinkObject_To.ObjectId)
-
-                       WHERE  (MovementProtocol.UserId = inUserId OR inUserId = 0)
-                          AND ( (inIsMovement = FALSE AND MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
-                               OR 
-                                (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
-                              )
+                       WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
+                         AND (Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
+                         AND inIsMovement = TRUE
                         
-                      ) 
+                      )
+        , tmpMovement AS (SELECT DISTINCT tmpMI_Protocol.MovementId, tmpMI_Protocol.ParentId
+                               , tmpMI_Protocol.DescId_Movement
+                               , tmpMI_Protocol.StatusId_Movement
+                               , tmpMI_Protocol.OperDate_Movement
+                               , tmpMI_Protocol.Invnumber_Movement
+                          FROM tmpMI_Protocol
+                         )
+
+
         , tmpMovementDate AS (SELECT MovementDate.*
                               FROM MovementDate
-                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMI_Protocol.MovementId FROM tmpMI_Protocol)
+                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement UNION SELECT DISTINCT tmpMovement.ParentId FROM tmpMovement)
                                 AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
                               )
+
+        , tmpMLO AS (SELECT MovementLinkObject.*
+                     FROM MovementLinkObject
+                     WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement UNION SELECT DISTINCT tmpMovement.ParentId FROM tmpMovement)
+                       AND MovementLinkObject.DescId IN (zc_MovementLinkObject_To()
+                                                       , zc_MovementLinkObject_From()
+                                                       , zc_MovementLinkObject_Juridical()
+                                                       , zc_MovementLinkObject_Car()
+                                                       , zc_MovementLinkObject_PersonalServiceList()
+                                                         )
+                     )
+
         , MovementProtocol_insert AS(SELECT MovementProtocol.*
                                      FROM MovementProtocol
-                                     WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMI_Protocol.MovementId FROM tmpMI_Protocol)
+                                     WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement UNION SELECT DISTINCT tmpMovement.ParentId FROM tmpMovement)
                                        AND MovementProtocol.IsInsert = TRUE
                                      )
+
+        , tmpMI AS (SELECT MI.*
+                    FROM MovementItem AS MI
+                    WHERE MI.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement
+                                            WHERE tmpMovement.DescId_Movement IN (zc_Movement_Cash()
+                                                                   , zc_Movement_Service()
+                                                                   , zc_Movement_BankAccount()
+                                                                   , zc_Movement_PersonalAccount()
+                                                                   , zc_Movement_ProfitLossService()
+                                                                   , zc_Movement_SendDebt()
+                                                                    )
+                                           )
+                      AND MI.DescId = zc_MI_Master()
+                    )
+
+        , tmpMILO AS (SELECT MILO_MoneyPlace.*
+                      FROM MovementItemLinkObject AS MILO_MoneyPlace
+                      WHERE MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                        AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                      )
 
 ------------------------
 
@@ -135,30 +168,92 @@ BEGIN
           , Object_Branch.Id                  AS BranchId
           , Object_Branch.ValueData           AS BranchName
 
-          , tmpData.MovementId         ::Integer
+          , tmpMovement.Id         ::Integer AS MovementId
           , MovementProtocol_insert.OperDate    ::TDateTime AS InsertDate
-          --, tmpData.OperDate_Last ::TDateTime   ::TDateTime AS UpdateDate --, дата/вр последн корр (или удаления) этим пользователем
+
           , MAX (tmpData.OperDate_Protocol) ::TDateTime AS UpdateDate
           , SUM (tmpData.Count)  ::TFloat AS Count_korr--, кол-во таких корр (или удалений.) этим пользователем
 
-          , CASE WHEN COALESCE (tmpData.Invnumber_Movement, '') = '' THEN '0' ELSE tmpData.Invnumber_Movement END ::Integer AS Invnumber_Movement
+          , tmpMovement.Invnumber      ::Integer AS Invnumber_Movement
           , tmpData.DescId_Movement    ::Integer
-          , tmpData.DescName_Movement  ::TVarChar
+          --, tmpData.DescName_Movement  ::TVarChar
+          , MovementDesc.ItemName      ::TVarChar AS DescName_Movement  
 
-          , tmpData.OperDate_Movement               ::TDateTime AS OperDate
+          --, tmpData.OperDate_Movement               ::TDateTime AS OperDate
+          , tmpMovement.OperDate             ::TDateTime AS OperDate
           , MovementDate_OperDatePartner.ValueData  ::TDateTime AS OperDatePartner
 
           , Object_Status.ObjectCode          AS StatusCode
           , Object_Status.ValueData           AS StatusName
  
-          , Object_From.ValueData     ::TVarChar  AS FromName
-          , Object_To.ValueData       ::TVarChar  AS ToName
+          , Object_Unit_mov.ValueData         ::TVarChar  AS UnitName_Movement
 
+          , Object_Juridical.ValueData ::TVarChar AS JuridicalName
+          , Object_Partner.ValueData  ::TVarChar  AS PartnerName
+          
      FROM tmpMI_Protocol AS tmpData
-          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId_Movement
 
-          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId_Movement --and 0=9
-          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId_Movement
+          LEFT JOIN tmpMovement AS tmpMovementCost ON tmpMovementCost.MovementId = tmpData.MovementId AND tmpMovementCost.DescId_Movement =  zc_Movement_IncomeCost()
+          LEFT JOIN Movement AS tmpMovement ON tmpMovement.Id = COALESCE (tmpMovementCost.ParentId, tmpData.MovementId)
+          LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.DescId_Movement
+
+          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
+
+          LEFT JOIN tmpMLO AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+          LEFT JOIN tmpMLO AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN tmpMLO AS MovementLinkObject_Car
+                                       ON MovementLinkObject_Car.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+          LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
+          LEFT JOIN tmpMLO AS MovementLinkObject_PersonalServiceList
+                                       ON MovementLinkObject_PersonalServiceList.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+
+          LEFT JOIN tmpMLO AS MovementLinkObject_Juridical
+                                       ON MovementLinkObject_Juridical.MovementId = tmpMovement.Id
+                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+
+          LEFT JOIN tmpMI ON tmpMI.MovementId = tmpMovement.Id
+
+          LEFT JOIN tmpMILO AS MILO_MoneyPlace
+                            ON MILO_MoneyPlace.MovementItemId = tmpMI.Id
+                          -- AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+
+          LEFT JOIN Object AS Object_Partner on Object_Partner.Id = CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id
+                                                                         WHEN Object_To.DescId   = zc_Object_Partner() THEN Object_To.Id
+                                                                         WHEN MILO_MoneyPlace.ObjectId > 0 THEN MILO_MoneyPlace.ObjectId
+                                                                         WHEN tmpMI.ObjectId > 0 THEN tmpMI.ObjectId
+                                                                    END
+
+          LEFT JOIN ObjectLink AS ObjectLink_Jur
+                               ON ObjectLink_Jur.ObjectId = Object_Partner.Id
+                              AND ObjectLink_Jur.DescId   = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = CASE WHEN Object_From.DescId = zc_Object_PartnerExternal() THEN Object_From.Id
+                                                                             WHEN ObjectLink_Jur.ChildObjectId > 0 THEN ObjectLink_Jur.ChildObjectId
+                                                                             WHEN MILO_MoneyPlace.ObjectId > 0 THEN MILO_MoneyPlace.ObjectId
+                                                                             WHEN tmpMI.ObjectId > 0 THEN tmpMI.ObjectId
+                                                                            -- WHEN Object_From.DescId = zc_Object_Juridical() THEN Object_From.Id
+                                                                             WHEN Object_To.DescId = zc_Object_Juridical() THEN Object_To.Id
+                                                                             ELSE MovementLinkObject_Juridical.ObjectId
+                                                                        END
+
+          LEFT JOIN Object AS Object_Unit_mov ON Object_Unit_mov.Id = CASE WHEN tmpData.DescId_Movement = zc_Movement_Loss() THEN Object_From.Id
+                                                                           WHEN tmpData.DescId_Movement = zc_Movement_TransportGoods() THEN Object_Car.Id
+                                                                           WHEN tmpData.DescId_Movement = zc_Movement_PersonalService() THEN MovementLinkObject_PersonalServiceList.ObjectId
+                                                                           ELSE CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id 
+                                                                                     WHEN Object_To.DescId = zc_Object_Unit() THEN Object_To.Id
+                                                                                END
+                                                                      END
+
 
           LEFT JOIN tmpUser ON tmpUser.UserId = tmpData.UserId
           LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId
@@ -168,10 +263,10 @@ BEGIN
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
 
-          LEFT JOIN MovementProtocol_insert ON MovementProtocol_insert.MovementId = tmpData.MovementId
+          LEFT JOIN MovementProtocol_insert ON MovementProtocol_insert.MovementId = tmpMovement.Id
                                            --AND MovementProtocol_insert.IsInsert = TRUE
           LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
-                                    ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
+                                    ON MovementDate_OperDatePartner.MovementId = tmpMovement.Id
                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
     GROUP BY tmpData.UserId
@@ -183,18 +278,18 @@ BEGIN
           , Object_Unit.ValueData  
           , Object_Branch.Id
           , Object_Branch.ValueData 
-          , tmpData.MovementId 
+          , tmpMovement.Id
           , MovementProtocol_insert.OperDate
-          --, tmpData.OperDate_Last
-          , CASE WHEN COALESCE (tmpData.Invnumber_Movement, '') = '' THEN '0' ELSE tmpData.Invnumber_Movement END
+          , tmpMovement.Invnumber
           , tmpData.DescId_Movement
-          , tmpData.DescName_Movement 
-          , tmpData.OperDate_Movement  
-          , MovementDate_OperDatePartner.ValueData 
+          , MovementDesc.ItemName
+          , tmpMovement.OperDate
+          , MovementDate_OperDatePartner.ValueData
           , Object_Status.ObjectCode 
           , Object_Status.ValueData
-          , Object_From.ValueData
-          , Object_To.ValueData
+          , Object_Unit_mov.ValueData
+          , Object_Juridical.ValueData
+          , Object_Partner.ValueData
 
     ;
 
@@ -211,7 +306,9 @@ $BODY$
 -- тест
 --
 /*
-SELECT * FROM gpReport_MovementProtocolGroup (inStartDate:= '01.10.2021' ::TDateTime, inEndDate:= '08.10.2021'::TDateTime, inUnitId:= 0, inUserId:= 343013, inIsMovement:=TRUE, inSession:= '5'::TVarChar)
+SELECT * FROM gpReport_MovementProtocolGroup (inStartDate:= '01.10.2021' ::TDateTime, inENDDate:= '08.10.2021'::TDateTime, inUnitId:= 0, inUserId:= 343013, inIsMovement:=TRUE, inSession:= '5'::TVarChar)
 where MovementId = 21161737
 order by DescName_Movement, OperDate, MovementId
 */
+
+--SELECT * FROM gpReport_MovementProtocolGroup (inStartDate:= '03.09.2021' ::TDateTime, inENDDate:= '03.09.2021'::TDateTime,  inUserId:= 6131893, inIsMovement:=TRUE, inSession:= '5'::TVarChar)

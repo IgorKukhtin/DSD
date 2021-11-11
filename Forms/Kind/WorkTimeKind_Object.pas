@@ -10,7 +10,7 @@ uses
   dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction,
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGrid, Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit;
 
 type
   TWorkTimeKind_ObjectForm = class(TAncestorEnumForm)

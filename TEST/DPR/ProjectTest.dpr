@@ -1323,7 +1323,8 @@ uses
   ModelService_Object in '..\..\Forms\Guides\ModelService_Object.pas' {ModelService_ObjectForm: TParentForm},
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_CheckBonusTestDialog in '..\..\Forms\Report\Report_CheckBonusTestDialog.pas' {Report_CheckBonusTestDialogForm: TParentForm},
-  Report_MovementProtocolGroup in '..\..\Forms\Report\Report_MovementProtocolGroup.pas' {Report_MovementProtocolGroupForm: TParentForm};
+  Report_MovementProtocolGroup in '..\..\Forms\Report\Report_MovementProtocolGroup.pas' {Report_MovementProtocolGroupForm: TParentForm},
+  Report_MovementProtocolGroupDialog in '..\..\Forms\Report\Report_MovementProtocolGroupDialog.pas' {Report_MovementProtocolGroupDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

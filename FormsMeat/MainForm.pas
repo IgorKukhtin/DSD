@@ -1337,7 +1337,6 @@ type
     actReport_Promo_Market: TdsdOpenForm;
     miReport_Promo_Market: TMenuItem;
     actReport_MovementProtocolGroup: TdsdOpenForm;
-    miReport_MovementProtocolGroup: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

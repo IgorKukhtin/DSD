@@ -4576,6 +4576,10 @@
 				<Form>Report_MovementProtocolGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MovementProtocolGroupDialog.pas">
+				<Form>Report_MovementProtocolGroupDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

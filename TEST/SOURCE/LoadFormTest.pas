@@ -2876,6 +2876,8 @@ procedure TLoadFormTest.LoadReportSystemFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupDialogForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolForm'));
@@ -3705,11 +3707,13 @@ end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_HolidayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_HolidayForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
+
     //форма выбора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');

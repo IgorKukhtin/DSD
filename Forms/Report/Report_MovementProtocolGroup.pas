@@ -36,9 +36,6 @@ type
     BranchName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
-    cxLabel4: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
     cxLabel5: TcxLabel;
     edUser: TcxButtonEdit;
     cbisMovement: TcxCheckBox;
@@ -52,8 +49,8 @@ type
     FormParams: TdsdFormParams;
     Invnumber_Movement: TcxGridDBColumn;
     DescName_Movement: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
+    UnitName_Movement: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     actMovementForm: TdsdExecStoredProc;
     actOpenForm: TdsdOpenForm;
@@ -63,6 +60,7 @@ type
     UpdateDate: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
