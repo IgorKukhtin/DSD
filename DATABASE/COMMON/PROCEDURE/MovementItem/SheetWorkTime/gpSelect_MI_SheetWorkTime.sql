@@ -110,7 +110,8 @@ BEGIN
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Holiday()      THEN 16492285
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Hospital()     THEN 5329407
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip()         THEN 16744448
-                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()    THEN 10223615
+                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()
+                                             AND ObjectFloat_WorkTimeKind_Tax.ValueData <> 0                      THEN 10223615
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trial()        THEN 8454143 
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HolidayNoZp()  THEN 2405712 
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HospitalDoc()  THEN 5329407 
