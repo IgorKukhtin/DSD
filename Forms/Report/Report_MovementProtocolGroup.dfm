@@ -15,63 +15,32 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
     Width = 1029
     Height = 493
     TabOrder = 3
-    ExplicitTop = 86
+    ExplicitTop = 59
     ExplicitWidth = 1029
-    ExplicitHeight = 466
+    ExplicitHeight = 493
     ClientRectBottom = 493
     ClientRectRight = 1029
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1029
-      ExplicitHeight = 466
+      ExplicitHeight = 493
       inherited cxGrid: TcxGrid
         Width = 1029
         Height = 493
         ExplicitWidth = 1029
-        ExplicitHeight = 466
+        ExplicitHeight = 493
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Count_korr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_doc
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
@@ -80,27 +49,12 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Count_korr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_doc
             end>
           OptionsData.Deleting = False
           OptionsData.Editing = False
@@ -268,7 +222,17 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 64
+          end
+          object Count_doc: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            DataBinding.FieldName = 'Count_doc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
         end
       end
@@ -604,6 +568,36 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
       ImageIndex = 28
       ShortCut = 13
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Invnumber_Movement'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -697,6 +691,18 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -714,6 +720,10 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
     end
     object bbOpenDocument: TdxBarButton
       Action = macOpenDocument
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end

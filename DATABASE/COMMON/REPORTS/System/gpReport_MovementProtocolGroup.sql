@@ -19,6 +19,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , InsertDate TDateTime
              , UpdateDate TDateTime 
              , Count_korr TFloat
+             , Count_doc TFloat
              , Invnumber_Movement  Integer
              , DescId_Movement     Integer
              , DescName_Movement   TVarChar
@@ -173,6 +174,7 @@ BEGIN
 
           , MAX (tmpData.OperDate_Protocol) ::TDateTime AS UpdateDate
           , SUM (tmpData.Count)  ::TFloat AS Count_korr--, кол-во таких корр (или удалений.) этим пользователем
+          , 1 ::TFloat  AS Count_doc
 
           , tmpMovement.Invnumber      ::Integer AS Invnumber_Movement
           , tmpData.DescId_Movement    ::Integer

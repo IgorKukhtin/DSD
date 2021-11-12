@@ -61,6 +61,8 @@ type
     MovementId: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
