@@ -83,7 +83,7 @@ BEGIN
                        WHERE (MovementProtocol.UserId = inUserId OR inUserId = 0)
                          AND (MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
                          AND inIsMovement = FALSE
-                    UNION
+                    UNION ALL
                        SELECT MovementProtocol.UserId              AS UserId
                             , MovementProtocol.OperDate            AS OperDate_Protocol
                             , MovementProtocol.MovementId          AS MovementId
@@ -129,10 +129,12 @@ BEGIN
                                                          )
                      )
 
-        , MovementProtocol_insert AS(SELECT MovementProtocol.*
+        , MovementProtocol_insert AS(SELECT MovementProtocol.MovementId
+                                          , MIN (MovementProtocol.OperDate) AS OperDate
                                      FROM MovementProtocol
                                      WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement UNION SELECT DISTINCT tmpMovement.ParentId FROM tmpMovement)
-                                       AND MovementProtocol.IsInsert = TRUE
+                                       --AND MovementProtocol.IsInsert = TRUE
+                                     GROUP BY MovementProtocol.MovementId
                                      )
 
         , tmpMI AS (SELECT MI.*
