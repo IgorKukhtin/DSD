@@ -13,18 +13,19 @@ inherited Report_JuridicalDefermentPayment_BranchForm: TReport_JuridicalDefermen
     Width = 1123
     Height = 311
     TabOrder = 3
+    ExplicitTop = 83
     ExplicitWidth = 1123
-    ExplicitHeight = 337
+    ExplicitHeight = 311
     ClientRectBottom = 311
     ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1123
-      ExplicitHeight = 337
+      ExplicitHeight = 311
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 311
         ExplicitWidth = 1123
-        ExplicitHeight = 337
+        ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -117,6 +118,11 @@ inherited Report_JuridicalDefermentPayment_BranchForm: TReport_JuridicalDefermen
               Format = ',0.00##'
               Kind = skSum
               Column = SaleSumm5
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

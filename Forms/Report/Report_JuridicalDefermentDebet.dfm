@@ -114,6 +114,11 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
               Format = ',0.00##'
               Kind = skSum
               Column = SaleSumm5
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -712,7 +717,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -819,7 +824,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -926,7 +931,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1033,7 +1038,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1140,7 +1145,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1322,7 +1327,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1827,7 +1832,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
       end
       item
         Name = 'inContractDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
@@ -1914,8 +1919,8 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 112
+    Left = 328
+    Top = 152
   end
   object spReport_JuridicalSaleDocument: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalSaleDocument'
@@ -1927,7 +1932,7 @@ inherited Report_JuridicalDefermentDebetForm: TReport_JuridicalDefermentDebetFor
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime

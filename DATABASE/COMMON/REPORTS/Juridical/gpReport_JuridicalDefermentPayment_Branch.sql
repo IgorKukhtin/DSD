@@ -31,6 +31,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
+             , BranchName_personal       TVarChar
+             , BranchName_personal_trade TVarChar
               )
 AS
 $BODY$
@@ -62,6 +64,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.21         *
  05.07.21         *
 */
 

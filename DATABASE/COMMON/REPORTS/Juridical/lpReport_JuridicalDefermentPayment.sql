@@ -31,6 +31,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
+             , BranchName_personal       TVarChar
+             , BranchName_personal_trade TVarChar
               )
 AS
 $BODY$
@@ -138,6 +140,9 @@ BEGIN
              , a.Condition, a.StartContractDate, a.Remains
              , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
              , a.AreaName, a.AreaName_Partner
+             
+             , a.BranchName_personal       ::TVarChar
+             , a.BranchName_personal_trade ::TVarChar
      from (
            SELECT 
               Object_Account_View.AccountId
@@ -243,6 +248,9 @@ BEGIN
          
                , Object_Area.ValueData AS AreaName
                , Object_Area_Partner.ValueData AS AreaName_Partner
+               
+               , Object_Branch_personal.ValueData       AS BranchName_personal
+               , Object_Branch_personal_trade.ValueData AS BranchName_personal_trade
          
            FROM (SELECT RESULT_all.AccountId
                       , RESULT_all.ContractId
@@ -474,6 +482,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.11.21         *
  05.07.21         * add lp + inStartDate_sale, inEndDate_sale
  13.09.14                                        * add inJuridicalGroupId
  07.09.14                                        * add Branch...

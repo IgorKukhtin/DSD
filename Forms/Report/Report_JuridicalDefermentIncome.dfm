@@ -116,6 +116,11 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
               Format = ',0.00##'
               Kind = skSum
               Column = SaleSumm5
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -702,7 +707,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -809,7 +814,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -916,7 +921,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1023,7 +1028,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1130,7 +1135,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1404,7 +1409,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Name = 'StartContractDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1708,7 +1713,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       end
       item
         Name = 'inContractDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
@@ -1808,7 +1813,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
