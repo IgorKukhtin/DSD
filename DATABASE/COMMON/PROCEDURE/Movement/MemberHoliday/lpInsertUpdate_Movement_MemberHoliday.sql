@@ -32,7 +32,7 @@ BEGIN
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := inUserId);
          --при распроведении или удалении - в табеле удаляется WorkTimeKind
-         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, inUserId::TVarChar);
+         PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (-1 * inUserId)::TVarChar);
      END IF;
      
      -- определяем признак Создание/Корректировка
@@ -77,7 +77,7 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
      --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, inUserId::TVarChar);
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
 
 END;
 $BODY$

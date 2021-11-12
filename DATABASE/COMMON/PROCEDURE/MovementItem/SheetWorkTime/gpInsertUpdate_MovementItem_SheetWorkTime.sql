@@ -29,10 +29,17 @@ $BODY$
    DECLARE vbEndDate   TDateTime;
 
    DECLARE vbValue TFloat;
+   DECLARE vbIsCheck Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
-    vbUserId:= lpGetUserBySession (inSession);
+    
+    IF zfConvert_StringToNumber (inSession) < 0
+    THEN vbUserId := lpGetUserBySession ((ABS (inSession :: Integer)) :: TVarChar);
+         vbIsCheck:= FALSE;
+    ELSE vbUserId := lpGetUserBySession (inSession);
+         vbIsCheck:= TRUE;
+    END IF;
 
     
     -- последнее число месяца
@@ -188,7 +195,8 @@ BEGIN
 
    --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
    IF ioTypeId IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
-    THEN
+      AND vbIsCheck = TRUE
+   THEN
         RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> уже установлен отпуск.Корретировка заблокирована.'
                                , lfGet_Object_ValueData_sh (inMemberId)
                                , lfGet_Object_ValueData_sh (inPositionId)

@@ -1,6 +1,32 @@
 -- View: Object_Contract_View
 
 CREATE OR REPLACE VIEW Object_Contract_View AS
+  WITH tmpContractCondition_Value_all AS (SELECT * 
+                                          FROM Object_ContractCondition_ValueView AS View_ContractCondition_Value
+                                          WHERE CURRENT_DATE BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
+                                          --AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd()) >= CURRENT_DATE
+                                          --AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd()) = zc_DateEnd()
+                                         )
+     , tmpContractCondition_Value AS (SELECT tmpContractCondition_Value_all.ContractId
+                                    
+                                           , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
+                                           , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
+                                           , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
+                                           
+                                           , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
+                                           , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
+                                           , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
+                                                      THEN (MAX (tmpContractCondition_Value_all.DayCalendar) :: Integer) :: TVarChar || ' К.дн.'
+                                                  WHEN 0 <> MAX (tmpContractCondition_Value_all.DayBank)
+                                                      THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
+                                                  ELSE '0 дн.'
+                                             END :: TVarChar  AS DelayDay
+                                    
+                                           , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
+                                           , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate
+                                      FROM tmpContractCondition_Value_all
+                                      GROUP BY tmpContractCondition_Value_all.ContractId
+                                     )
   SELECT Object_Contract_InvNumber_View.ContractId
        , Object_Contract_InvNumber_View.ContractCode  
        , Object_Contract_InvNumber_View.InvNumber
@@ -62,10 +88,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())     AS EndDate_condition
 
   FROM Object_Contract_InvNumber_View
-       LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
-                                                                                 --AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd()) >= CURRENT_DATE
-                                                                                 --AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd()) = zc_DateEnd()
-                                                                                   AND CURRENT_DATE BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
+       LEFT JOIN tmpContractCondition_Value AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
 
        LEFT JOIN ObjectDate AS ObjectDate_Start
                             ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId

@@ -46,7 +46,7 @@ BEGIN
 
 
      -- нашли/замена
-     ioChangePercentTo:= (SELECT Object_ContractCondition_ValueView.ChangePercentPartner
+     ioChangePercentTo:= (SELECT MAX (Object_ContractCondition_ValueView.ChangePercentPartner)
                           FROM Object_ContractCondition_ValueView
                           WHERE Object_ContractCondition_ValueView.ContractId = inContractId
                             AND inOperDatePartner BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate

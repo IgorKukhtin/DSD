@@ -102,7 +102,7 @@ BEGIN
                                                                            AND ObjectDate_EndDate.ValueData IS NOT NULL
                                                                         )
    THEN
-       --
+       -- StartDate - обновляем
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, inStartDate);
        
        -- EndDate - обнуляем ВСЕМ
@@ -137,10 +137,10 @@ BEGIN
                                                         AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                    INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                 AND Object_ContractCondition.isErased = FALSE
-                                   INNER JOIN ObjectDate AS ObjectDate_StartDate
-                                                         ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
-                                                        AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
-                                                        AND ObjectDate_StartDate.ValueData > zc_DateStart()
+                                   LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                        ON ObjectDate_StartDate.ObjectId  = ObjectLink_Contract.ObjectId
+                                                       AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
+                                                     --AND ObjectDate_StartDate.ValueData > zc_DateStart()
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
                              )

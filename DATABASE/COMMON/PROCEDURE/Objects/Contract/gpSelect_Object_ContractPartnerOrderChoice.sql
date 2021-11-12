@@ -430,7 +430,26 @@ BEGIN
      , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View)
      , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
      , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
-     , tmpObject_ContractCondition_ValueView AS (SELECT * FROM Object_ContractCondition_ValueView WHERE CURRENT_DATE BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
+     , tmpContractCondition_Value_all AS (SELECT * FROM Object_ContractCondition_ValueView WHERE CURRENT_DATE BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
+     , tmpObject_ContractCondition_ValueView AS (SELECT tmpContractCondition_Value_all.ContractId
+                                                      , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
+                                                      , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
+                                                      , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
+                                                      
+                                                      , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
+                                                      , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
+                                                      , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
+                                                                 THEN (MAX (tmpContractCondition_Value_all.DayCalendar) :: Integer) :: TVarChar || ' К.дн.'
+                                                             WHEN 0 <> MAX (tmpContractCondition_Value_all.DayBank)
+                                                                 THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
+                                                             ELSE '0 дн.'
+                                                        END :: TVarChar  AS DelayDay
+                                                
+                                                      , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
+                                                      , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate
+                                                 FROM tmpContractCondition_Value_all
+                                                 GROUP BY tmpContractCondition_Value_all.ContractId
+                                                )
      , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId   = zc_ObjectBoolean_Juridical_isBranchAll())
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id

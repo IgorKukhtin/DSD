@@ -32,7 +32,9 @@ BEGIN
         LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId
      WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
        AND Movement_Promo.ParentId = inMovementId
-       AND Movement_Promo.StatusId <> zc_Enum_Status_Erased();
+       AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
+       AND View_ContractCondition_Value.ChangePercent <> 0
+    ;
 
 
      -- если есть "без учета % скидки", тогда zc_MovementFloat_ChangePercent = 0" 

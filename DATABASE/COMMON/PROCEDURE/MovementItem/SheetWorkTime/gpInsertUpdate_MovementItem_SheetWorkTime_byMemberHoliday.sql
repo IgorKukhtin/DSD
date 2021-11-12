@@ -42,7 +42,7 @@ BEGIN
                               , lfSelect.UnitId
                               , lfSelect.PositionId
                               , lfSelect.BranchId
-                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                         FROM lfSelect_Object_Member_findPersonal (CASE WHEN zfConvert_StringToNumber (inSession) < 0 THEN (ABS (inSession :: Integer)) :: TVarChar ELSE inSession END) AS lfSelect
                          WHERE lfSelect.MemberId = vbMemberId AND lfSelect.Ord = 1
                          )
          , tmpMovement AS (SELECT MovementLinkObject_Member.ObjectId AS MemberId

@@ -50,7 +50,27 @@ BEGIN
    -- Результат
    RETURN QUERY
    WITH 
-     tmpContract AS (SELECT Object_Contract_InvNumber_View.ContractId
+       tmpContractCondition_Value_all AS (SELECT * FROM Object_ContractCondition_ValueView WHERE inOperDate BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
+     , tmpObject_ContractCondition_ValueView AS (SELECT tmpContractCondition_Value_all.ContractId
+                                                      , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
+                                                      , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
+                                                      , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
+                                                      
+                                                      , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
+                                                      , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
+                                                      , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
+                                                                 THEN (MAX (tmpContractCondition_Value_all.DayCalendar) :: Integer) :: TVarChar || ' К.дн.'
+                                                             WHEN 0 <> MAX (tmpContractCondition_Value_all.DayBank)
+                                                                 THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
+                                                             ELSE '0 дн.'
+                                                        END :: TVarChar  AS DelayDay
+                                                
+                                                      , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
+                                                      , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate
+                                                 FROM tmpContractCondition_Value_all
+                                                 GROUP BY tmpContractCondition_Value_all.ContractId
+                                                )
+   , tmpContract AS (SELECT Object_Contract_InvNumber_View.ContractId
                           , Object_Contract_InvNumber_View.InvNumber
                           , View_ContractCondition_Value.ChangePercent
                           , View_ContractCondition_Value.ChangePrice
@@ -66,8 +86,8 @@ BEGIN
                                          AND Object_Contract_InvNumber_View.InvNumber <> '-'
                                          AND inOperDate >= ObjectDate_Start.ValueData
                                       -- AND inOperDate BETWEEN Object_Contract_InvNumber_View.StartDate AND Object_Contract_InvNumber_View.EndDate
-                          LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
-                                                                                                      AND inOperDate BETWEEN COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())
+                          LEFT JOIN tmpObject_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
+                                                                                                       --AND inOperDate BETWEEN COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AND COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())
 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 

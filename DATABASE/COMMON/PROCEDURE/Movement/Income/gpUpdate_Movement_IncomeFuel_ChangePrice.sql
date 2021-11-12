@@ -19,7 +19,7 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT Movement.StatusId, View_ContractCondition_Value.ChangePrice
+     SELECT Movement.StatusId, MAX (View_ContractCondition_Value.ChangePrice) AS ChangePrice
             INTO vbStatusId, vbChangePrice
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -31,7 +31,9 @@ BEGIN
          LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value
                                                       ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId 
                                                      AND MovementDate_OperDatePartner.ValueData BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
-     WHERE Movement.Id = inId;
+     WHERE Movement.Id = inId
+     GROUP BY Movement.StatusId
+    ;
 
    
      -- сохранили свойство <скидка в цене>

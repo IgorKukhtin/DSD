@@ -18,8 +18,8 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
               ELSE '0 дн.'
          END :: TVarChar  AS DelayDay
 
-       , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
-       , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
+       , (COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())) :: TDateTime AS StartDate
+       , (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd()))     :: TDateTime AS EndDate
 
   FROM (SELECT zc_Enum_ContractConditionKind_ChangePercent()        AS Id -- (-)% Скидки (+)% Наценки
        UNION ALL
@@ -54,8 +54,8 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
                            AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
 
   GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
-         , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())
-         , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())
+       , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())
+       , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())
           ;
 
 ALTER TABLE Object_ContractCondition_ValueView  OWNER TO postgres;

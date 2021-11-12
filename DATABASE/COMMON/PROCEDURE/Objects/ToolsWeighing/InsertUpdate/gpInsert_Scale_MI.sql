@@ -517,7 +517,18 @@ BEGIN
                                                                                                                                                                         , inGoodsId    := inGoodsId
                                                                                                                                                                         , inGoodsKindId:= inGoodsKindId
                                                                                                                                                                         , inSession    := inSession
-                                                                                                                                                                         ) AS tmp), 0)
+                                                                                                                                                                         ) AS tmp
+                                                                                                            WHERE tmp.ValuePrice <> 0
+                                                                                                           )
+                                                                                                          ,(SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                                                                                                                        , inPriceListId:= vbPriceListId_Dnepr
+                                                                                                                                                                        , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inGoodsKindId:= NULL
+                                                                                                                                                                        , inSession    := inSession
+                                                                                                                                                                         ) AS tmp
+                                                                                                            WHERE tmp.ValuePrice <> 0
+                                                                                                           )
+                                                                                                          , 0)
                                                                                        -- если Возврат
                                                                                        WHEN vbMovementDescId = zc_Movement_ReturnIn()
                                                                                             THEN inPrice_Return
