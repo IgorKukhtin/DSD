@@ -291,6 +291,11 @@ type
     actDialogGoodsAdditional: TExecuteDialog;
     dxBarButton15: TdxBarButton;
     mactUpdateGoodsAdditional: TMultiAction;
+    isExpDateExcSite: TcxGridDBColumn;
+    mactUpdate_isExpDateExcSite: TMultiAction;
+    actExecUpdate_isExpDateExcSite: TdsdExecStoredProc;
+    spUpdate_inExpDateExcSite_Revert: TdsdStoredProc;
+    dxBarButton16: TdxBarButton;
   private
     { Private declarations }
   public

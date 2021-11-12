@@ -5422,6 +5422,10 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    inherited actProtocolMovement: TdsdOpenForm
+      FormName = 'TReport_MovementProtocolGroupForm'
+      FormNameParam.Value = 'TReport_MovementProtocolGroupForm'
+    end
     object actReport_LoginProtocol: TdsdOpenForm [363]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -10803,9 +10807,6 @@ inherited MainForm: TMainForm
         end
         object N148: TMenuItem
           Action = actReport_UserProtocol
-        end
-        object miReport_MovementProtocolGroup: TMenuItem
-          Action = actReport_MovementProtocolGroup
         end
       end
       object N80: TMenuItem [22]

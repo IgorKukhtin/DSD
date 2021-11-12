@@ -56,6 +56,8 @@ inherited WorkTimeKind_HolidayForm: TWorkTimeKind_HolidayForm
           object Tax: TcxGridDBColumn
             Caption = '% '#1080#1079#1084'. '#1088'.'#1095'.'
             DataBinding.FieldName = 'Tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
             Width = 92
           end

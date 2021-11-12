@@ -110,8 +110,8 @@ BEGIN
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Holiday()      THEN 16492285
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Hospital()     THEN 5329407
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip()         THEN 16744448
-                                        WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()
-                                             AND ObjectFloat_WorkTimeKind_Tax.ValueData <> 0                      THEN 10223615
+                                        WHEN /*MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()*/
+                                             ObjectFloat_WorkTimeKind_Tax.ValueData <> 0                          THEN 10223615   -- если стажер тогда у него % не равен нулю
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trial()        THEN 8454143 
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HolidayNoZp()  THEN 2405712 
                                         WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HospitalDoc()  THEN 5329407 
@@ -153,8 +153,8 @@ BEGIN
                                                                   ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                                  AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                                  LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
-                                                                  ON ObjectFloat_WorkTimeKind_Tax.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
-                                                                 AND ObjectFloat_WorkTimeKind_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
+                                                       ON ObjectFloat_WorkTimeKind_Tax.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
+                                                      AND ObjectFloat_WorkTimeKind_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
                                  LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                                                   ON ObjectString_WorkTimeKind_ShortName.ObjectId = CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END
                                                                  AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()

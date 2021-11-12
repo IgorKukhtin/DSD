@@ -4,9 +4,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -300
   ExplicitWidth = 1139
-  ExplicitHeight = 429
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -117,6 +116,11 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
               Format = ',0.00##'
               Kind = skSum
               Column = SaleSumm5
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1809,6 +1813,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Component = GuidesJuridicalGroup
       end>
+    Left = 88
+    Top = 152
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
@@ -1950,8 +1956,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 112
+    Left = 336
+    Top = 152
   end
   object spReport_JuridicalSaleDocument: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalSaleDocument'

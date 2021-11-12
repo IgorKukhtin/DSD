@@ -1871,6 +1871,7 @@ inherited TaxForm: TTaxForm
         MultiSelectSeparator = ','
       end>
     Left = 376
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
