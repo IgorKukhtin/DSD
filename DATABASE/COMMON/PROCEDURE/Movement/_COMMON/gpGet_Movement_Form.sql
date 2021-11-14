@@ -17,8 +17,8 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-            CASE WHEN 1=1 AND Movement.DescId = zc_Movement_Promo() AND vbUserId IN (280164, 5, 133035, 9463, 112324) THEN 'TPromoManagerForm'
-                 WHEN Movement.DescId = zc_Movement_Promo() AND vbUserId IN (5) THEN 'TPromoManagerForm'
+            CASE WHEN 1=1 AND Movement.DescId = zc_Movement_Promo() AND vbUserId IN (280164, /*5,*/ 133035, 9463, 112324) THEN 'TPromoManagerForm'
+                 WHEN Movement.DescId = zc_Movement_Promo() AND vbUserId IN (5) AND 1=0 THEN 'TPromoManagerForm'
                  ELSE COALESCE (Object_Form.ValueData, '')
             END ::TVarChar AS FromName
 

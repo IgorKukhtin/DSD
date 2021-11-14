@@ -6,8 +6,10 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -256
+  ExplicitTop = -130
   ExplicitWidth = 1045
-  ExplicitHeight = 590
+  ExplicitHeight = 587
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -57,27 +59,20 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
               Column = Count_doc
             end>
           OptionsData.Deleting = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
-            DataBinding.FieldName = 'InsertDate'
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
-          end
-          object UpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1082#1086#1088#1088'.'
-            DataBinding.FieldName = 'UpdateDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 118
           end
           object UserCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -91,35 +86,30 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
           object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 149
           end
-          object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083' ('#1087#1086#1083#1100#1079'.)'
-            DataBinding.FieldName = 'BranchName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 118
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'.)'
-            DataBinding.FieldName = 'UnitName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 152
-          end
           object MemberName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            Caption = #1060#1080#1079' '#1083#1080#1094#1086
             DataBinding.FieldName = 'MemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 136
           end
           object PositionName: TcxGridDBColumn
@@ -130,12 +120,65 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
             Options.Editing = False
             Width = 133
           end
-          object MovementId: TcxGridDBColumn
-            Caption = #1050#1083#1102#1095' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'MovementId'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Options.Editing = False
+            Width = 152
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 120
+          end
+          object InsertDate_user: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'InsertDate_user'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1084')'
+            Options.Editing = False
+            Width = 120
+          end
+          object UpdateDate_user: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'. ('#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'UpdateDate_user'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1084')'
+            Options.Editing = False
+            Width = 120
+          end
+          object DescName_Movement: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DescName_Movement'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object InvNumber_Movement: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber_Movement'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
           end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
@@ -160,6 +203,7 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
@@ -173,29 +217,23 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
           object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
-          end
-          object Invnumber_Movement: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'Invnumber_Movement'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 71
-          end
-          object DescName_Movement: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DescName_Movement'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 76
           end
           object UnitName_Movement: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName_Movement'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 110
@@ -203,6 +241,13 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
@@ -210,29 +255,77 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 106
           end
           object Count_korr: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1087#1077#1088#1072#1094#1080#1081
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'Count_korr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 64
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
+            Options.Editing = False
+            Width = 55
           end
           object Count_doc: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082'.'
             DataBinding.FieldName = 'Count_doc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+            Options.Editing = False
+            Width = 55
+          end
+          object MovementId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object DescCode_Movement: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescCode_Movement'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            Width = 70
+          end
+          object DescId_Movement: TcxGridDBColumn
+            DataBinding.FieldName = 'DescId_Movement'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end
@@ -566,7 +659,6 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
-      ShortCut = 13
     end
     object MovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -667,7 +759,7 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenDocument'
+          ItemName = 'bbDialog'
         end
         item
           Visible = True
@@ -675,7 +767,7 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbDialog'
+          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True

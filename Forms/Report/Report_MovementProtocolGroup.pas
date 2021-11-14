@@ -47,7 +47,7 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReport: TdxBarButton;
     FormParams: TdsdFormParams;
-    Invnumber_Movement: TcxGridDBColumn;
+    InvNumber_Movement: TcxGridDBColumn;
     DescName_Movement: TcxGridDBColumn;
     UnitName_Movement: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
@@ -57,12 +57,15 @@ type
     macOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     StatusCode: TcxGridDBColumn;
-    UpdateDate: TcxGridDBColumn;
+    UpdateDate_user: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpenForm: TdxBarButton;
+    InsertDate_user: TcxGridDBColumn;
+    DescCode_Movement: TcxGridDBColumn;
+    DescId_Movement: TcxGridDBColumn;
   private
     { Private declarations }
   public
