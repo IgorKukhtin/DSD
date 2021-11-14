@@ -387,6 +387,9 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
     TabOrder = 8
     Width = 174
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 328
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -733,12 +736,6 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 192
@@ -836,13 +833,7 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
         Component = PeriodChoice
       end
       item
-      end
-      item
-      end
-      item
         Component = GuidesUser
-      end
-      item
       end>
     Left = 464
     Top = 192
@@ -883,17 +874,6 @@ inherited Report_MovementProtocolGroupForm: TReport_MovementProtocolGroupForm
       end
       item
         Name = 'BranchName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
