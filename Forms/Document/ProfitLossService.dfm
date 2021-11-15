@@ -2,9 +2,9 @@
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
   ClientHeight = 354
-  ClientWidth = 614
-  ExplicitWidth = 620
-  ExplicitHeight = 379
+  ClientWidth = 777
+  ExplicitWidth = 783
+  ExplicitHeight = 382
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -157,7 +157,7 @@
     Left = 295
     Top = 280
     TabOrder = 11
-    Width = 304
+    Width = 467
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
     Left = 445
@@ -286,6 +286,67 @@
     Properties.ReadOnly = True
     TabOrder = 35
     Width = 304
+  end
+  object cxLabel17: TcxLabel [36]
+    Left = 608
+    Top = 14
+    Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+  end
+  object edAmountCurrency: TcxCurrencyEdit [37]
+    Left = 608
+    Top = 33
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 37
+    Width = 154
+  end
+  object cxLabel18: TcxLabel [38]
+    Left = 608
+    Top = 205
+    Caption = #1042#1072#1083#1102#1090#1072' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+  end
+  object edCurrency: TcxButtonEdit [39]
+    Left = 608
+    Top = 228
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 39
+    Width = 154
+  end
+  object edCurrencyPartnerValue: TcxCurrencyEdit [40]
+    Left = 608
+    Top = 178
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    Properties.ReadOnly = True
+    TabOrder = 40
+    Width = 73
+  end
+  object cxLabel19: TcxLabel [41]
+    Left = 608
+    Top = 158
+    Caption = #1050#1091#1088#1089
+  end
+  object cxLabel21: TcxLabel [42]
+    Left = 704
+    Top = 158
+    Caption = #1053#1086#1084#1080#1085#1072#1083
+  end
+  object edParPartnerValue: TcxCurrencyEdit [43]
+    Left = 704
+    Top = 178
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    Properties.ReadOnly = True
+    TabOrder = 43
+    Width = 58
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -739,6 +800,42 @@
         Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyPartnerId'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCurrency'
+        Value = Null
+        Component = edAmountCurrency
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 537
@@ -1238,5 +1335,35 @@
       end>
     Left = 362
     Top = 211
+  end
+  object GuidesCurrencyPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 664
+    Top = 223
   end
 end

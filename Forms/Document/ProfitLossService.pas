@@ -58,6 +58,15 @@ type
     cxLabel16: TcxLabel;
     cePartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    cxLabel17: TcxLabel;
+    edAmountCurrency: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    GuidesCurrencyPartner: TdsdGuides;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    cxLabel21: TcxLabel;
+    edParPartnerValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public
