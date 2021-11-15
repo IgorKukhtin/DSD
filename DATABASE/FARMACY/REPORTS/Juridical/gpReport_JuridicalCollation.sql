@@ -244,9 +244,23 @@ BEGIN
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id 
                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-      
-      LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                  
+      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                     ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+
+      LEFT JOIN Movement AS Movement_Income 
+                         ON Movement_Income.Id = MovementLinkMovement_Child.MovementChildId
+
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_IncomeFrom
+                                   ON MovementLinkObject_IncomeFrom.MovementId = Movement_Income.Id
+                                  AND MovementLinkObject_IncomeFrom.DescId = zc_MovementLinkObject_From()
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_IncomeTo
+                                   ON MovementLinkObject_IncomeTo.MovementId = Movement_Income.Id
+                                  AND MovementLinkObject_IncomeTo.DescId = zc_MovementLinkObject_To()
+                                        
+      LEFT JOIN Object AS Object_From ON Object_From.Id in (MovementLinkObject_From.ObjectId, MovementLinkObject_IncomeTo.ObjectId)
+      LEFT JOIN Object AS Object_To ON Object_To.Id in (MovementLinkObject_To.ObjectId, MovementLinkObject_IncomeFrom.ObjectId)
       
       LEFT JOIN MovementDate AS MovementDate_Payment
                              ON MovementDate_Payment.MovementId =  Movement.Id
@@ -294,4 +308,4 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Intege
 -- тест
 --select * from gpReport_JuridicalCollation(inStartDate := ('07.09.2015')::TDateTime , inEndDate := ('26.11.2015')::TDateTime , inJuridicalId := 183317 , inJuridical_BasisId := 393052 ,  inSession := '3');
 
-select * from gpReport_JuridicalCollation(inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('03.11.2020')::TDateTime , inJuridicalId := 9526799 , inJuridical_BasisId := 13310756 ,  inSession := '3');
+select * from gpReport_JuridicalCollation(inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('12.11.2021')::TDateTime , inJuridicalId := 16413271 , inJuridical_BasisId := 0 ,  inSession := '3');
