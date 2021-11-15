@@ -155,6 +155,7 @@ type
     procedure LoadReestrFormTest;
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportBonusFormTest;
     procedure LoadReestrIncomeFormTest;
     procedure LoadReestrReturnOutFormTest;
     procedure LoadReestrReturnFormTest;
@@ -2156,14 +2157,49 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TQualityEditForm');
 end;
 
+procedure TLoadFormTest.LoadReportBonusFormTest;
+begin
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
+  exit;
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTest2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTest2Form');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDetailForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
+     exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
+  exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_JournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_JournalDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_JournalDialogForm');
+  exit;
+end;
+
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Trade_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Trade_OlapDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_PaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_PaidKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_PaidKindDialogForm'));
@@ -2512,12 +2548,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment_BranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment_BranchDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_BranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchDialogForm'));
@@ -2550,11 +2586,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentDebetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentDebetForm');
-  {exit;
-  }
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentDialogForm'));
@@ -2565,7 +2601,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxDialogForm');
 
@@ -2576,35 +2612,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
-  exit;
-
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTest2Form'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTest2Form');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDetailForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDetailForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_SaleReturnForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_SaleReturnForm');
-  }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
-     exit;
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
-  exit;
-  {
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_JournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_JournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_JournalDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_JournalDialogForm');
-  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');

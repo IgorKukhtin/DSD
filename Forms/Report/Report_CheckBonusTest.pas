@@ -113,6 +113,7 @@ type
     cbGoods: TcxCheckBox;
     spGet_Check: TdsdStoredProc;
     actGet_Check: TdsdExecStoredProc;
+    CurrencyName_child: TcxGridDBColumn;
   private
     { Private declarations }
   public

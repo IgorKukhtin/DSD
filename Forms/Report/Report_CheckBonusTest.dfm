@@ -86,6 +86,41 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Return
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_CheckBonus_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_AccountSendDebt_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Bonus_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_SaleReturnIn_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Account_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return_curr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -152,6 +187,41 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
               Format = ',0.00##'
               Kind = skSum
               Column = Sum_Return
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_CheckBonus_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_AccountSendDebt_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Bonus_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_SaleReturnIn_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Account_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Sale_curr
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Sum_Return_curr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -242,6 +312,13 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 85
+          end
+          object CurrencyName_child: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1075'. '#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'CurrencyName_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
@@ -361,6 +438,30 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object Sum_Return: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sum_Return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Sale_curr: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_Sale_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Return_curr: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_Return_curr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
@@ -558,6 +659,67 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
           object Sum_Bonus: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Sum_Bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_CheckBonus_curr: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_CheckBonus_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_SaleReturnIn_curr: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#8212' '#1074#1086#1079#1074#1088#1072#1090' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_SaleReturnIn_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076#1072#1078#1072' - '#1074#1086#1079#1074#1088#1072#1090
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Account_curr: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_Account_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_AccountSendDebt_curr: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' + '#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_AccountSendDebt_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Bonus_curr: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1088#1072#1089#1095#1077#1090') ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'Sum_Bonus_curr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1731,6 +1893,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     object actGet_Check: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGet_Check
       StoredProcList = <
         item

@@ -72,6 +72,17 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
             , GoodsTagName          TVarChar
             , GoodsPlatformName     TVarChar
             , GoodsGroupAnalystName TVarChar  
+
+            , CurrencyId_child   Integer 
+            , CurrencyName_child TVarChar
+            , Sum_CheckBonus_curr      TFloat
+            , Sum_Bonus_curr           TFloat
+            , Sum_Account_curr         TFloat
+            , Sum_AccountSendDebt_curr TFloat
+            , Sum_Sale_curr            TFloat
+            , Sum_Return_curr          TFloat
+            , Sum_SaleReturnIn_curr    TFloat
+             
               ) 
 AS
 $BODY$
@@ -256,7 +267,16 @@ BEGIN
            , tmp.GoodsTagName          ::TVarChar
            , tmp.GoodsPlatformName     ::TVarChar
            , tmp.GoodsGroupAnalystName ::TVarChar
-            
+
+           , tmp.CurrencyId_child   ::Integer 
+           , tmp.CurrencyName_child ::TVarChar
+           , tmp.Sum_CheckBonus_curr      ::TFloat
+           , tmp.Sum_Bonus_curr           ::TFloat
+           , tmp.Sum_Account_curr         ::TFloat
+           , tmp.Sum_AccountSendDebt_curr ::TFloat
+           , tmp.Sum_Sale_curr            ::TFloat
+           , tmp.Sum_Return_curr          ::TFloat
+           , tmp.Sum_SaleReturnIn_curr    ::TFloat
       FROM lpReport_CheckBonus_test (inStartDate    := inStartDate                                --gpReport_CheckBonusTest2Test2_old
                                    , inEndDate      := inEndDate
                                    , inPaidKindID   := zc_Enum_PaidKind_FirstForm()
@@ -340,6 +360,16 @@ BEGIN
            , tmp.GoodsTagName          ::TVarChar
            , tmp.GoodsPlatformName     ::TVarChar
            , tmp.GoodsGroupAnalystName ::TVarChar
+
+           , tmp.CurrencyId_child   ::Integer
+           , tmp.CurrencyName_child ::TVarChar
+           , tmp.Sum_CheckBonus_curr      ::TFloat
+           , tmp.Sum_Bonus_curr           ::TFloat
+           , tmp.Sum_Account_curr         ::TFloat
+           , tmp.Sum_AccountSendDebt_curr ::TFloat
+           , tmp.Sum_Sale_curr            ::TFloat
+           , tmp.Sum_Return_curr          ::TFloat
+           , tmp.Sum_SaleReturnIn_curr    ::TFloat
       FROM lpReport_CheckBonus_test (inStartDate     := inStartDate                                --gpReport_CheckBonusTest2Test2_old
                                    , inEndDate       := inEndDate
                                    , inPaidKindID    := zc_Enum_PaidKind_SecondForm()
@@ -365,6 +395,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.11.21         *
  20.05.20         * add inBranchId
  14.06.17         *
  20.05.14                                        * add View_Contract_find_tag
