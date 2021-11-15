@@ -19,9 +19,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , TotalSumm  TFloat
              , PercentRet TFloat
              , PartKg     TFloat
+             , CurrencyPartnerValue TFloat
+             , ParPartnerValue      TFloat
              , AmountIn TFloat, AmountOut TFloat
              , BonusValue TFloat, AmountPartner TFloat, Summ TFloat
              , Summ_51201 TFloat
+             , AmountCurrency TFloat 
              , Comment TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
              , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
@@ -43,6 +46,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , PersonalId Integer, PersonalName TVarChar
              , PersonalId_main Integer, PersonalName_main TVarChar
              , PaidKindId_Child Integer, PaidKindName_Child TVarChar
+             , CurrencyPartnerId Integer
+             , CurrencyPartnerName TVarChar
              , isLoad Boolean
 
              , ProfitLossGroupName     TVarChar
@@ -97,7 +102,10 @@ BEGIN
                                  WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                    AND MovementFloat.DescId IN (zc_MovementFloat_TotalSumm()
                                                               , zc_MovementFloat_PercentRet()
-                                                              , zc_MovementFloat_PartKg())
+                                                              , zc_MovementFloat_PartKg()
+                                                              , zc_MovementFloat_CurrencyPartnerValue()
+                                                              , zc_MovementFloat_ParPartnerValue()
+                                                              )
                                 )
 
          -- ProfitLoss èç ïðîâîäîê
@@ -126,7 +134,9 @@ BEGIN
                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                       AND MovementItemFloat.DescId IN (zc_MIFloat_BonusValue()
                                                                      , zc_MIFloat_AmountPartner()
-                                                                     , zc_MIFloat_Summ())
+                                                                     , zc_MIFloat_Summ()
+                                                                     , zc_MIFloat_AmountCurrency()
+                                                                     )
                                     )
 
          , tmpMovementItemString AS (SELECT *
@@ -171,6 +181,9 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData   ::TFloat   AS TotalSumm
            , MovementFloat_PercentRet.ValueData  ::TFloat   AS PercentRet
            , MovementFloat_PartKg.ValueData      ::TFloat   AS PartKg
+           
+           , MovementFloat_CurrencyPartnerValue.ValueData ::TFloat AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData      ::TFloat AS ParPartnerValue
 
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
@@ -185,6 +198,7 @@ BEGIN
            , MIFloat_AmountPartner.ValueData                AS AmountPartner
            , MIFloat_Summ.ValueData                         AS Summ
            , COALESCE (tmpMI_Child.Amount, 0)     :: TFloat AS Summ_51201
+           , COALESCE (MIFloat_AmountCurrency.ValueData,0)  :: TFloat AS AmountCurrency
 
            , MIString_Comment.ValueData                     AS Comment
            , Object_Juridical.Id                            AS JuridicalId
@@ -246,6 +260,9 @@ BEGIN
            , Object_PaidKind_Child.Id                      AS PaidKindId_Child
            , Object_PaidKind_Child.ValueData               AS PaidKindName_Child
            
+           , Object_CurrencyPartner.Id                     AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
+
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
            , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
@@ -275,6 +292,11 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                        ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -284,6 +306,13 @@ BEGIN
             LEFT JOIN tmpMovementFloat AS MovementFloat_PartKg
                                        ON MovementFloat_PartKg.MovementId = Movement.Id
                                       AND MovementFloat_PartKg.DescId = zc_MovementFloat_PartKg()
+
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyPartnerValue
+                                       ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                      AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_ParPartnerValue
+                                       ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                      AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
             --
             LEFT JOIN tmpMIÑ_ProfitLoss ON tmpMIÑ_ProfitLoss.MovementId = Movement.Id
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMIÑ_ProfitLoss.ProfitLossId
@@ -308,14 +337,18 @@ BEGIN
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_BonusValue
-                                        ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
-                                       AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
+                                           ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                          AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
             LEFT JOIN tmpMovementItemFloat AS MIFloat_Summ
-                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                           ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                          AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountCurrency
+                                           ON MIFloat_AmountCurrency.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountCurrency.DescId = zc_MIFloat_AmountCurrency()
 
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id

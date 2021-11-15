@@ -41,25 +41,25 @@ BEGIN
      
      -- 
      UPDATE tmpData_res SET MovementId_pl = lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
-                                                      , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                      , inOperDate          := inEndDate
-                                                      , inAmountIn          := 0                               :: TFloat
-                                                      , inAmountOut         := Sum_Bonus_real                  :: TFloat
-                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat
-                                                      , inComment           := Comment                         :: TVarChar
-                                                      , inContractId        := ContractId_find
-                                                      , inContractMasterId  := ContractId_master
-                                                      , inContractChildId   := ContractId_Child
-                                                      , inInfoMoneyId       := InfoMoneyId_find
-                                                      , inJuridicalId       := CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
-                                                      , inPaidKindId        := PaidKindId
-                                                      , inUnitId            := 0                               :: Integer
-                                                      , inContractConditionKindId   := ConditionKindId
-                                                      , inBonusKindId       := BonusKindId
-                                                      , inBranchId          := BranchId
-                                                      , inIsLoad            := TRUE                            :: Boolean
-                                                      , inUserId            := vbUserId
-                                                       )
+                                                                                     , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
+                                                                                     , inOperDate          := inEndDate
+                                                                                     , inAmountIn          := 0                               :: TFloat
+                                                                                     , inAmountOut         := Sum_Bonus_real                  :: TFloat
+                                                                                     , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat
+                                                                                     , inComment           := Comment                         :: TVarChar
+                                                                                     , inContractId        := ContractId_find
+                                                                                     , inContractMasterId  := ContractId_master
+                                                                                     , inContractChildId   := ContractId_Child
+                                                                                     , inInfoMoneyId       := InfoMoneyId_find
+                                                                                     , inJuridicalId       := CASE WHEN PartnerId > 0 THEN PartnerId ELSE JuridicalId END  -- если выбран контрагент - записываем его а по нему уже понятно кто юр.лицо JuridicalId
+                                                                                     , inPaidKindId        := PaidKindId
+                                                                                     , inUnitId            := 0                               :: Integer
+                                                                                     , inContractConditionKindId   := ConditionKindId
+                                                                                     , inBonusKindId       := BonusKindId
+                                                                                     , inBranchId          := BranchId
+                                                                                     , inIsLoad            := TRUE                            :: Boolean
+                                                                                     , inUserId            := vbUserId
+                                                                                      )
      WHERE tmpData_res.Sum_Bonus <> 0 OR tmpData_res.Sum_Bonus_real <> 0
     ;
 
