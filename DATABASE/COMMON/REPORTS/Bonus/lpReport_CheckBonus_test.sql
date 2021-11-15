@@ -679,7 +679,7 @@ BEGIN
                                JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
                                                                                AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                           WHERE Container.ObjectId IN (SELECT DISTINCT tmpAccount.AccountId FROM tmpAccount)
-                            AND Container.DescId = zc_Container_Summ()
+                            AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummCurrency())
                          )
 
     , tmpContainer1 AS (SELECT DISTINCT
