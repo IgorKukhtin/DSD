@@ -194,7 +194,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
@@ -202,7 +202,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
@@ -221,7 +221,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
@@ -229,14 +229,14 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
@@ -325,11 +325,10 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvContractName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1044#1086#1075#1086#1074#1086#1088
       DataBinding.FieldName = 'ContractName'
-      Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
@@ -343,7 +342,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvPartnerName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
       DataBinding.FieldName = 'PartnerName'
@@ -356,6 +355,24 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
       DataBinding.FieldName = 'RetailName'
+      Visible = True
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvPersonalName: TcxDBPivotGridField
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088
+      DataBinding.FieldName = 'PersonalName'
+      Visible = True
+      Width = 55
+      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvPersonalTradeName: TcxDBPivotGridField
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1058#1086#1088#1075#1086#1074#1099#1081
+      DataBinding.FieldName = 'PersonalTradeName'
       Visible = True
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
@@ -400,18 +417,33 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       end
       item
         Component = GuidesJuridical
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end
       item
         Component = GuidesPartner
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end
       item
         Component = GuidesPersonal
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end
       item
         Component = GuidesPersonalTrade
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end
       item
         Component = GuidesRetail
+        Properties.Strings = (
+          'key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -768,6 +800,24 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesGoods
+      end
+      item
+        Component = GuidesJuridical
+      end
+      item
+        Component = GuidesPartner
+      end
+      item
+        Component = GuidesPersonal
+      end
+      item
+        Component = GuidesPersonalTrade
+      end
+      item
       end>
     Left = 472
     Top = 248
@@ -819,6 +869,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edJuridical
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString

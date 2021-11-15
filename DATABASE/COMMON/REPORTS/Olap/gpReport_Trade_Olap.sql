@@ -20,6 +20,8 @@ RETURNS TABLE (OperDate TDateTime
              , JuridicalName TVarChar
              , PartnerName TVarChar
              , RetailName TVarChar
+             , PersonalName       TVarChar
+             , PersonalTradeName  TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
@@ -39,13 +41,15 @@ BEGIN
     -- Результат
     RETURN QUERY
           WITH
-            tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+            tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId      AS PersonalId
+                                 , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                             FROM ObjectLink AS ObjectLink_Personal_Member
                             WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                               AND ObjectLink_Personal_Member.ChildObjectId = inPersonalId
                               AND COALESCE (inPersonalId,0) <> 0
                             )
-          , tmpPersonalTrade AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
+          , tmpPersonalTrade AS (SELECT ObjectLink_Personal_Member.ObjectId      AS PersonalId
+                                      , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                  FROM ObjectLink AS ObjectLink_Personal_Member
                                  WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                    AND ObjectLink_Personal_Member.ChildObjectId = inPersonalTradeId
@@ -122,6 +126,12 @@ BEGIN
                                , tmpPartner.PartnerId
                                , tmpPartner.RetailId
                                , MovementLinkObject_Contract.ObjectId
+                        HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
+                                          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
+                                          AND MIContainer.ContainerId_Analyzer <> 0
+                                              THEN -1 * MIContainer.Amount
+                                         ELSE 0
+                                    END) <> 0
                         )
           --заказы покупателей
           , tmpOrder AS (SELECT Movement.OperDate                           AS OperDate
@@ -176,13 +186,16 @@ BEGIN
                               , MovementLinkObject_Contract.ObjectId
                               , MovementItem.ObjectId
                               , MILinkObject_GoodsKind.ObjectId
+                       HAVING SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) <> 0
                        )
-
-          , tmpStoreRealDoc AS (SELECT tmp.PartnerId, tmp.JuridicalId, tmp.RetailId, tmp.MovementId, tmp.OperDate, tmp.InvNumber
+            --документы факт. остатков
+          , tmpStoreRealDoc AS (SELECT tmp.PartnerId, tmp.JuridicalId, tmp.RetailId, tmp.MovementId, tmp.OperDate, tmp.InvNumber, tmp.MemberId, tmp.MemberName
                                 FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
                                            , tmpPartner.JuridicalId
                                            , tmpPartner.RetailId
-                                           , Movement_StoreReal.Id AS MovementId
+                                           , Object_Member.Id        AS MemberId
+                                           , Object_Member.ValueData AS MemberName
+                                           , Movement_StoreReal.Id   AS MovementId
                                            , Movement_StoreReal.OperDate
                                            , Movement_StoreReal.InvNumber
                                            , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Partner.ObjectId ORDER BY Movement_StoreReal.OperDate DESC) AS RowNum
@@ -191,6 +204,15 @@ BEGIN
                                                                    ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
                                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                                            JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
+                                           --трговый
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                                         ON MovementLinkObject_Insert.MovementId = Movement_StoreReal.Id
+                                                                        AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
+                                           LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                                ON ObjectLink_User_Member.ObjectId = MovementLinkObject_Insert.ObjectId
+                                                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
                                       WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
                                         AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
                                         AND Movement_StoreReal.OperDate BETWEEN inStartDate AND inEndDate
@@ -201,7 +223,8 @@ BEGIN
                                   , tmpStoreRealDoc.PartnerId
                                   , tmpStoreRealDoc.JuridicalId
                                   , tmpStoreRealDoc.RetailId
-                                  , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                                  , tmpStoreRealDoc.MemberId
+                                  , tmpStoreRealDoc.MemberName
                                   , MovementItem.ObjectId                  AS GoodsId
                                   , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId
                                   , SUM (COALESCE (MovementItem.Amount,0)) AS Amount
@@ -212,19 +235,17 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                       ON ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                                      AND ObjectLink_Contract_Juridical.ChildObjectId = tmpStoreRealDoc.JuridicalId
                              GROUP BY tmpStoreRealDoc.OperDate
                                     , tmpStoreRealDoc.PartnerId
                                     , tmpStoreRealDoc.JuridicalId
                                     , tmpStoreRealDoc.RetailId
                                     , MovementItem.ObjectId
                                     , MILinkObject_GoodsKind.ObjectId
-                                    , ObjectLink_Contract_Juridical.ObjectId
+                                    , tmpStoreRealDoc.MemberId
+                                    , tmpStoreRealDoc.MemberName
                              )
                              
-          , tmpDataAll AS (SELECT tmp.OperDate
+          , tmpData_All AS (SELECT tmp.OperDate
                                 , tmp.OperDatePartner
                                 , tmp.ContractId
                                 , tmp.PartnerId
@@ -234,7 +255,6 @@ BEGIN
                                 , tmp.GoodsKindId
                                 , tmp.CountSaleReal AS AmountSale
                                 , 0 AS AmountOrder
-                                , 0 AS AmountStore
                            FROM tmpSale AS tmp
                           UNION ALL
                            SELECT tmp.OperDate
@@ -247,22 +267,31 @@ BEGIN
                                 , tmp.GoodsKindId
                                 , 0 AS AmountSale
                                 , tmp.Amount AS AmountOrder
-                                , 0 AS AmountStore
                            FROM tmpOrder AS tmp
-                          UNION ALL
-                           SELECT tmp.OperDate
-                                , tmp.OperDate AS OperDatePartner
-                                , tmp.ContractId
-                                , tmp.PartnerId
-                                , tmp.JuridicalId
-                                , tmp.RetailId
-                                , tmp.GoodsId
-                                , tmp.GoodsKindId
-                                , 0 AS AmountSale
-                                , 0 AS AmountOrder
-                                , tmp.Amount AS AmountStore
-                           FROM tmpStoreReal AS tmp
                            )
+
+          , tmpDataAll AS (SELECT COALESCE (tmp.OperDate, tmpStoreReal.OperDate)       AS OperDate
+                                , COALESCE (tmp.OperDatePartner, tmpStoreReal.OperDate) AS OperDatePartner
+                                , COALESCE (tmp.ContractId, 0)                         AS ContractId
+                                , COALESCE (tmpStoreReal.MemberId,0)                   AS MemberId
+                                , COALESCE (tmpStoreReal.MemberName,'')                AS MemberName
+                                , COALESCE (tmp.PartnerId, tmpStoreReal.PartnerId)     AS PartnerId
+                                , COALESCE (tmp.JuridicalId, tmpStoreReal.JuridicalId) AS JuridicalId
+                                , COALESCE (tmp.RetailId, tmpStoreReal.RetailId)       AS RetailId
+                                , COALESCE (tmp.GoodsId, tmpStoreReal.GoodsId)         AS GoodsId
+                                , COALESCE (tmp.GoodsKindId, tmpStoreReal.GoodsKindId) AS GoodsKindId
+                                , COALESCE (tmp.AmountSale,0)                          AS AmountSale
+                                , COALESCE (tmp.AmountOrder,0)                         AS AmountOrder
+                                , COALESCE (tmpStoreReal.Amount,0)                     AS AmountStore
+                           FROM tmpData_All AS tmp
+                               FULL JOIN tmpStoreReal ON tmpStoreReal.JuridicalId = tmp.JuridicalId
+                                                     AND tmpStoreReal.PartnerId = tmp.PartnerId
+                                                     AND tmpStoreReal.RetailId = tmp.RetailId
+                                                     AND tmpStoreReal.GoodsId = tmp.GoodsId
+                                                     AND COALESCE (tmpStoreReal.GoodsKindId,0) = COALESCE (tmp.GoodsKindId,0)
+                                                     AND tmp.OperDate = tmpStoreReal.OperDate
+                           )
+
 
           -- 5)ФИО сотрудник (супервайзер) 6) ФИО сотрудник (ТП)  из договора
           , tmpContract AS (SELECT tmp.ContractId
@@ -284,11 +313,13 @@ BEGIN
           -- ограничиваем данные 5)ФИО сотрудник (супервайзер) 6) ФИО сотрудник (ТП)
           , tmpData AS (SELECT tmpDataAll.*
                              , tmpContract.PersonalName
-                             , tmpContract.PersonalTradeName
+                             , COALESCE (tmpContract.PersonalTradeName, tmpDataAll.MemberName) AS PersonalTradeName
                         FROM tmpDataAll
                              LEFT JOIN tmpContract ON tmpContract.ContractId = tmpDataAll.ContractId
                              LEFT JOIN tmpPersonal ON tmpPersonal.PersonalId = tmpContract.PersonalId
-                             LEFT JOIN tmpPersonalTrade ON tmpPersonalTrade.PersonalId = tmpContract.PersonalTradeId
+                             LEFT JOIN tmpPersonalTrade ON ( (tmpPersonalTrade.PersonalId = tmpContract.PersonalTradeId AND COALESCE (tmpDataAll.MemberId,0) = 0)
+                                                          OR (tmpPersonalTrade.MemberId = tmpDataAll.MemberId AND COALESCE (tmpDataAll.MemberId,0) <> 0)
+                                                           )
                         WHERE (tmpPersonal.PersonalId IS NOT NULL OR inPersonalId = 0)
                           AND (tmpPersonalTrade.PersonalId IS NOT NULL OR inPersonalTradeId = 0)
 
@@ -336,6 +367,8 @@ BEGIN
            , Object_Juridical.ValueData       AS JuridicalName
            , Object_Partner.ValueData         AS PartnerName
            , Object_Retail.ValueData          AS RetailName
+           , tmpData.PersonalName      ::TVarChar
+           , tmpData.PersonalTradeName ::TVarChar
            , tmpGoodsParam.GoodsGroupNameFull
            , tmpGoodsParam.GoodsGroupName     AS GoodsGroupName 
            , Object_Goods.ObjectCode          AS GoodsCode
@@ -373,8 +406,7 @@ $BODY$
 */
 
 -- тест-
---
- SELECT * FROM gpReport_Trade_Olap (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inJuridicalId:= 878283, inPartnerId:= 0, inPersonalId:= 0, inPersonalTradeId:= 0, inRetailId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin()) limit 1;
+--  SELECT * FROM gpReport_Trade_Olap (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inJuridicalId:= 878283, inPartnerId:= 0, inPersonalId:= 0, inPersonalTradeId:= 0, inRetailId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin()) limit 1;
 
 /*
     IN inJuridicalId        Integer   , -- юр.лицо

@@ -341,6 +341,7 @@ object Report_Trade_OlapDialogForm: TReport_Trade_OlapDialogForm
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edJuridical
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
