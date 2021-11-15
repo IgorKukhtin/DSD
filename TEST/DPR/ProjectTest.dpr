@@ -1324,7 +1324,9 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_CheckBonusTestDialog in '..\..\Forms\Report\Report_CheckBonusTestDialog.pas' {Report_CheckBonusTestDialogForm: TParentForm},
   Report_MovementProtocolGroup in '..\..\Forms\Report\Report_MovementProtocolGroup.pas' {Report_MovementProtocolGroupForm: TParentForm},
-  Report_MovementProtocolGroupDialog in '..\..\Forms\Report\Report_MovementProtocolGroupDialog.pas' {Report_MovementProtocolGroupDialogForm: TParentForm};
+  Report_MovementProtocolGroupDialog in '..\..\Forms\Report\Report_MovementProtocolGroupDialog.pas' {Report_MovementProtocolGroupDialogForm: TParentForm},
+  Report_Trade_Olap in '..\..\Forms\Report\Report_Trade_Olap.pas' {Report_Trade_OlapForm: TParentForm},
+  Report_Trade_OlapDialog in '..\..\Forms\Report\Report_Trade_OlapDialog.pas' {Report_Trade_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
