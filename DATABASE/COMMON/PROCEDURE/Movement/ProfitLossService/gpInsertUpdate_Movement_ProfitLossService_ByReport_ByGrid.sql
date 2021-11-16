@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid 
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer , Integer, Integer ,Integer ,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (
     IN inOperDate               TDateTime ,  
     IN inSum_Bonus              TFloat ,
     IN inSumIn                  TFloat ,
     IN inValue                  TFloat ,
+    IN inAmountCurrency         TFloat ,
     IN inContractId_find        Integer ,
     IN inContractId_master      Integer ,
     IN inContractId_Child       Integer ,
@@ -18,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_By
     IN inConditionKindId        Integer,
     IN inBonusKindId            Integer,
     IN inBranchId               Integer,
+    IN inCurrencyPartnerId      Integer,
     IN inComment                TVarChar ,
     IN inSession                TVarChar        -- сессия пользователя
 )
@@ -44,7 +47,7 @@ BEGIN
                                                       , inAmountIn          := COALESCE (inSumIn,0)              :: TFloat
                                                       , inAmountOut         := COALESCE (inSum_Bonus,0)          :: TFloat
                                                       , inBonusValue        := CAST (inValue AS NUMERIC (16, 2)) :: TFloat
-                                                      , inAmountCurrency    := 0    :: TFloat
+                                                      , inAmountCurrency    := COALESCE (inAmountCurrency,0)     :: TFloat
                                                       , inComment           := inComment                         :: TVarChar
                                                       , inContractId        := inContractId_find
                                                       , inContractMasterId  := inContractId_master
@@ -56,7 +59,7 @@ BEGIN
                                                       , inContractConditionKindId   := inConditionKindId
                                                       , inBonusKindId       := inBonusKindId
                                                       , inBranchId          := inBranchId
-                                                      , inCurrencyPartnerId := 0
+                                                      , inCurrencyPartnerId := inCurrencyPartnerId
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )

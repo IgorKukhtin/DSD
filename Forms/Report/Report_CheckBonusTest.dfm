@@ -1722,6 +1722,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     object macInsertByReportGrid: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGet_Check
@@ -2146,6 +2147,7 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
     object bbInsertByReportGrid: TdxBarButton
       Action = macInsertByReportGrid
       Category = 0
+      UnclickAfterDoing = False
     end
     object bbOpenReportDetail: TdxBarButton
       Action = actOpenReportDetailForm
@@ -2693,6 +2695,15 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountCurrency'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Sum_Bonus_curr'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inContractId_find'
         Value = ''
         Component = MasterCDS
@@ -2769,6 +2780,14 @@ inherited Report_CheckBonusTestForm: TReport_CheckBonusTestForm
         Value = ''
         Component = MasterCDS
         ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyId_child'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
