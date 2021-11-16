@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StaffListSummKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Comment TVarChar
+             , Comment TVarChar, EnumName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -20,12 +20,16 @@ $BODY$BEGIN
       , Object_StaffListSummKind.ValueData    AS NAME
       
       , ObjectString_Comment.ValueData        AS Comment
+      , ObjectString_Enum.ValueData           AS EnumName
       
       , Object_StaffListSummKind.isErased     AS isErased
       
    FROM OBJECT AS Object_StaffListSummKind
         LEFT JOIN ObjectString AS ObjectString_Comment ON ObjectString_Comment.ObjectId = Object_StaffListSummKind.Id 
                                                       AND ObjectString_Comment.DescId = zc_ObjectString_StaffListSummKind_Comment()   
+                              
+        LEFT JOIN ObjectString AS ObjectString_Enum ON ObjectString_Enum.ObjectId = Object_StaffListSummKind.Id 
+                                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()   
                               
    WHERE Object_StaffListSummKind.DescId = zc_Object_StaffListSummKind();
   

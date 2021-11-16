@@ -1872,4 +1872,4 @@ $BODY$
 -- тест
 -- select * from gpSelect_Report_Wage_Server(inStartDate := ('01.03.2019')::TDateTime , inEndDate := ('31.03.2019')::TDateTime , inUnitId := 8395 , inModelServiceId := 3363159 , inMemberId := 0 , inPositionId := 0 , inDetailDay := 'True' , inDetailModelService := 'True' , inDetailModelServiceItemMaster := 'True' , inDetailModelServiceItemChild := 'True' ,  inSession := '5');
 -- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '02.06.2019', inEndDate:= '02.06.2019', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
--- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2019', inEndDate:= '01.10.2019', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2021', inEndDate:= '01.10.2021', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

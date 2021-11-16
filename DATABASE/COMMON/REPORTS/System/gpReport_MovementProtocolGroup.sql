@@ -1,6 +1,5 @@
 -- Function: gpReport_UserProtocolGroup (TDateTime, TDateTime, TVarChar)
 
---DROP FUNCTION IF EXISTS gpReport_MovementProtocolGroup (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_MovementProtocolGroup (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MovementProtocolGroup(
@@ -78,8 +77,6 @@ BEGIN
                                  , Movement.InvNumber                   AS InvNumber_Movement
                                  , Movement.DescId                      AS DescId_Movement
                                  , MovementDesc.ItemName                AS DescName_Movement
-                                   -- параметр для расчета операций
-                                 , 1 AS Count
                                    -- № п/п
                                  , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
                             FROM MovementProtocol
@@ -101,8 +98,6 @@ BEGIN
                                  , Movement.InvNumber                   AS InvNumber_Movement
                                  , Movement.DescId                      AS DescId_Movement
                                  , MovementDesc.ItemName                AS DescName_Movement
-                                   -- параметр для расчета операций
-                                 , 1 AS Count
                                    -- № п/п
                                  , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.Id ASC) AS Ord
                             FROM Movement
@@ -184,7 +179,7 @@ BEGIN
           , CASE WHEN MIN (tmpMovementProtocol.Id) = tmpMovementProtocol_insert.Id THEN tmpMovementProtocol_insert.OperDate ELSE NULL END   :: TDateTime AS InsertDate_user
           , MAX (CASE WHEN tmpMovementProtocol.Id = tmpMovementProtocol_insert.Id THEN NULL ELSE tmpMovementProtocol.OperDate_Protocol END) :: TDateTime AS UpdateDate_user
             -- кол-во таких корр (или удалений.) этим пользователем
-          , SUM (CASE WHEN tmpMovementProtocol.Id = tmpMovementProtocol_insert.Id THEN 0 ELSE tmpMovementProtocol.Count END) :: TFloat AS Count_korr
+          , SUM (CASE WHEN tmpMovementProtocol.Id = tmpMovementProtocol_insert.Id THEN 0 ELSE 1 END) :: TFloat AS Count_korr
           , 1 ::TFloat  AS Count_doc
 
           , Movement.InvNumber AS InvNumber_Movement

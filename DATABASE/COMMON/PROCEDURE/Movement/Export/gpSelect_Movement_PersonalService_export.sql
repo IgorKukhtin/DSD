@@ -141,7 +141,7 @@ BEGIN
          -- проверка ошибки
          IF COALESCE (vbBankId, 0) = 0
          THEN
-              RAISE EXCEPTION 'Ошибка.Для ведеомости <%> не установлено значение <Банк>.'
+              RAISE EXCEPTION 'Ошибка.Для ведомости <%> не установлено значение <Банк>.'
                             , lfGet_Object_ValueData_sh ((SELECT MLO_PersonalServiceList.ObjectId
                                                           FROM MovementLinkObject AS MLO_PersonalServiceList
                                                           WHERE MLO_PersonalServiceList.MovementId = inMovementId
