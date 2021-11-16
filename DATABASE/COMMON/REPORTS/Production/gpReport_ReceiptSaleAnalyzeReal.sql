@@ -1,18 +1,21 @@
 -- Function: gpReport_ReceiptSaleAnalyzeReal ()
 
-DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ReceiptSaleAnalyzeReal (
     IN inStartDate        TDateTime ,
     IN inEndDate          TDateTime ,
     IN inUnitId_sale      Integer   ,
     IN inUnitId_return    Integer   ,
+    IN inJuridicalId      Integer   ,
     IN inGoodsGroupId     Integer   ,
     IN inPriceListId_1    Integer,
     IN inPriceListId_2    Integer,
     IN inPriceListId_3    Integer,
     IN inPriceListId_sale Integer,
     IN inIsGoodsKind      Boolean,
+    IN inisExclude        Boolean, -- исключить да/нет выбранное юр.лицо
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -106,6 +109,20 @@ BEGIN
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         */
                        /*)*/
+
+        --выбираем контагентов ограничиваем входными параметрами
+        , tmpJuridical AS (SELECT Object_Juridical.Id AS JuridicalId
+                           FROM Object AS Object_Juridical
+                           WHERE Object_Juridical.DescId = zc_Object_Juridical()
+                             AND ((Object_Juridical.Id = inJuridicalId AND inisExclude = FALSE) OR inJuridicalId = 0)
+                         UNION
+                           SELECT Object_Juridical.Id AS JuridicalId
+                           FROM Object AS Object_Juridical
+                           WHERE Object_Juridical.DescId = zc_Object_Juridical()
+                             AND (Object_Juridical.Id <> inJuridicalId AND inJuridicalId <> 0)
+                             AND inisExclude = TRUE
+                          )
+
         , tmpMIContainer AS
            (SELECT tmpContainer.GoodsId
                  , tmpContainer.GoodsKindId
@@ -229,8 +246,18 @@ BEGIN
                  INNER JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                 --ограничения по юр.лицам
+                 LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                               ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_analyzer
+                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                 INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
+
                  -- LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                  LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+
+                 
+
+
             WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
               -- AND (_tmpUnit.UnitId > 0 OR COALESCE (inUnitId_sale, 0) = 0 OR COALESCE (inUnitId_return, 0) = 0)
             GROUP BY MIContainer.ObjectId_Analyzer
@@ -976,3 +1003,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2021', inEndDate:= '01.06.2021', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2021', inEndDate:= '01.06.2021', inUnitId_sale:= 8447, inUnitId_return:= 8447, inJuridicalId:= 15512, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inisExclude:=FALSE, inSession:= zfCalc_UserAdmin())

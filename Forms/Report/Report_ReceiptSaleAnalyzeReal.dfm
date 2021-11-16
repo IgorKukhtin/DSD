@@ -1,29 +1,27 @@
 inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1060#1040#1050#1058'>'
   ClientHeight = 430
-  ClientWidth = 1130
+  ClientWidth = 1266
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -241
-  ExplicitTop = -8
-  ExplicitWidth = 1146
-  ExplicitHeight = 465
+  ExplicitWidth = 1282
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1130
+    Width = 1266
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1130
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 1130
+    ClientRectRight = 1266
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1130
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 1130
+        Width = 1266
         Height = 347
         ExplicitWidth = 1130
         ExplicitHeight = 347
@@ -1303,7 +1301,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     end
   end
   inherited Panel: TPanel
-    Width = 1130
+    Width = 1266
     Height = 57
     ExplicitWidth = 1130
     ExplicitHeight = 57
@@ -1316,10 +1314,10 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     end
     inherited deEnd: TcxDateEdit
       Left = 118
-      Top = 32
+      Top = 30
       EditValue = 42736d
       ExplicitLeft = 118
-      ExplicitTop = 32
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
       Left = 27
@@ -1329,33 +1327,33 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 33
+      Top = 32
       ExplicitLeft = 8
-      ExplicitTop = 33
+      ExplicitTop = 32
     end
     object cxLabel4: TcxLabel
-      Left = 951
-      Top = 5
+      Left = 936
+      Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 951
-      Top = 29
+      Left = 1026
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 171
+      Width = 231
     end
     object cxLabel3: TcxLabel
-      Left = 211
-      Top = 6
+      Left = 205
+      Top = 8
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1077#1072#1083#1080#1079'.):'
     end
     object edFromUnit: TcxButtonEdit
-      Left = 352
+      Left = 342
       Top = 5
       Properties.Buttons = <
         item
@@ -1367,13 +1365,13 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 160
     end
     object cxLabel5: TcxLabel
-      Left = 209
-      Top = 29
+      Left = 205
+      Top = 31
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1074#1086#1079#1074#1088#1072#1090'):'
     end
     object edToUnit: TcxButtonEdit
-      Left = 352
-      Top = 29
+      Left = 341
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -1384,12 +1382,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 160
     end
     object cxLabel11: TcxLabel
-      Left = 519
-      Top = 6
+      Left = 506
+      Top = 7
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
     end
     object edPriceList_1: TcxButtonEdit
-      Left = 588
+      Left = 576
       Top = 5
       Properties.Buttons = <
         item
@@ -1401,13 +1399,13 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel6: TcxLabel
-      Left = 520
+      Left = 506
       Top = 32
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
     end
     object edPriceList_2: TcxButtonEdit
-      Left = 588
-      Top = 31
+      Left = 576
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -1418,12 +1416,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel7: TcxLabel
-      Left = 713
+      Left = 702
       Top = 6
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
     end
     object edPriceList_3: TcxButtonEdit
-      Left = 821
+      Left = 808
       Top = 5
       Properties.Buttons = <
         item
@@ -1435,12 +1433,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel8: TcxLabel
-      Left = 712
+      Left = 701
       Top = 31
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
     end
     object edPriceList_sale: TcxButtonEdit
-      Left = 822
+      Left = 809
       Top = 30
       Properties.Buttons = <
         item
@@ -1450,6 +1448,31 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 125
+    end
+    object cxLabel9: TcxLabel
+      Left = 936
+      Top = 32
+      Caption = #1070#1088'. '#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 988
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 187
+    end
+    object cbExclude: TcxCheckBox
+      Left = 1180
+      Top = 30
+      Hint = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
+      Caption = #1080#1089#1082#1083#1102#1095#1080#1090#1100
+      TabOrder = 20
+      Width = 79
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1549,7 +1572,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1560,7 +1583,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1604,7 +1627,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -1644,7 +1667,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1655,7 +1678,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1698,7 +1721,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -1738,7 +1761,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1749,7 +1772,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1796,7 +1819,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -1836,7 +1859,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1847,7 +1870,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1894,7 +1917,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -1934,7 +1957,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1945,7 +1968,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1992,7 +2015,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2032,7 +2055,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2043,7 +2066,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2086,7 +2109,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2126,7 +2149,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2137,7 +2160,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2180,7 +2203,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2220,7 +2243,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2231,7 +2254,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2274,7 +2297,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2433,6 +2456,31 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExclude'
+          Value = Null
+          Component = cbExclude
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2457,7 +2505,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2468,7 +2516,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2515,7 +2563,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
@@ -2589,6 +2637,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = Null
         Component = GoodsGroupGuides
@@ -2632,6 +2688,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         Name = 'inIsGoodsKind'
         Value = Null
         Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisExclude'
+        Value = Null
+        Component = cbExclude
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2851,8 +2915,8 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 976
-    Top = 32
+    Left = 1120
+    Top = 8
   end
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -2942,7 +3006,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3001,7 +3065,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3060,7 +3124,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3119,7 +3183,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3169,6 +3233,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = GroupNumber
@@ -3258,6 +3323,8 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 544
     Top = 320
   end
@@ -3321,5 +3388,66 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     AutoWidth = True
     Left = 280
     Top = 272
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1037
+    Top = 30
+  end
+  object spGet_Juridical: TdsdStoredProc
+    StoredProcName = 'gpGet_ReceiptSaleAnalyzeReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalId'
+        Value = '0'
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isExclude'
+        Value = Null
+        Component = cbExclude
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 208
   end
 end
