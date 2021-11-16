@@ -55,6 +55,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_51201
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCurrency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -81,6 +86,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_51201
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCurrency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -161,6 +171,17 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1089'/'#1089
             Width = 70
           end
+          object AmountCurrency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095'. ('#1074#1072#1083'.)'
+            DataBinding.FieldName = 'AmountCurrency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+            Width = 80
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
@@ -184,6 +205,36 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 85
+          end
+          object CurrencyPartnerName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'CurrencyPartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object CurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054

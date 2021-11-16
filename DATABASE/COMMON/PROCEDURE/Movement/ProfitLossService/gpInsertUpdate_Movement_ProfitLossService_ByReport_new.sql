@@ -46,8 +46,6 @@ BEGIN
                                                                                      , inAmountIn          := 0                               :: TFloat
                                                                                      , inAmountOut         := Sum_Bonus_real                  :: TFloat
                                                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat
-                                                                                     , inCurrencyPartnerValue := 0 :: TFloat
-                                                                                     , inParPartnerValue   := 0    :: TFloat
                                                                                      , inAmountCurrency    := 0    :: TFloat
                                                                                      , inComment           := Comment                         :: TVarChar
                                                                                      , inContractId        := ContractId_find

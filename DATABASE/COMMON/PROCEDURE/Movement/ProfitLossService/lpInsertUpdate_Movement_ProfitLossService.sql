@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVar
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -13,8 +13,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inBonusValue               TFloat    , -- % бонуса
-    IN inCurrencyPartnerValue     TFloat    , --
-    IN inParPartnerValue          TFloat    , --
     IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте)
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
@@ -38,6 +36,8 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbBranchId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbCurrencyPartnerValue TFloat;
+   DECLARE vbParPartnerValue TFloat;
 BEGIN
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
@@ -50,6 +50,19 @@ BEGIN
      -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
+     END IF;
+
+     IF COALESCE (ioId,0) = 0 
+     THEN
+          IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
+          THEN 
+              SELECT Amount, ParValue
+             INTO vbCurrencyPartnerValue, vbParPartnerValue
+               FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+          ELSE 
+               vbCurrencyPartnerValue:= 0;
+               vbParPartnerValue:=0;
+          END IF;
      END IF;
 
 
@@ -85,9 +98,9 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
      -- 
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, vbCurrencyPartnerValue);
      -- 
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, vbParPartnerValue);
      -- 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BonusValue(), vbMovementItemId, inAmountCurrency);
 

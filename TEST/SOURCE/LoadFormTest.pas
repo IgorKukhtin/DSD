@@ -3237,10 +3237,10 @@ end;
 
 procedure TLoadFormTest.LoadProfitLossServiceFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
   exit;

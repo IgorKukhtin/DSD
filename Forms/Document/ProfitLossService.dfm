@@ -324,7 +324,7 @@
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 40
     Width = 73
   end
@@ -344,7 +344,7 @@
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 43
     Width = 58
   end
@@ -430,6 +430,14 @@
         Name = 'inBonusValue'
         Value = Null
         Component = ceBonusValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCurrency'
+        Value = Null
+        Component = edAmountCurrency
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -526,6 +534,14 @@
         Name = 'inBranchId'
         Value = Null
         Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = Null
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -969,8 +985,8 @@
         Guides = GuidesInfoMoney
       end>
     ActionItemList = <>
-    Left = 209
-    Top = 252
+    Left = 145
+    Top = 204
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1195,8 +1211,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 247
-    Top = 220
+    Left = 223
+    Top = 204
   end
   object ContractChildGuides: TdsdGuides
     KeyField = 'Id'
@@ -1236,9 +1252,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 503
-    Top = 220
+    Left = 199
+    Top = 260
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'

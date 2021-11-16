@@ -87,7 +87,7 @@ BEGIN
            , 0                                AS CurrencyPartnerId
            , CAST ('' as TVarChar)            AS CurrencyPartnerName    
            , 0::TFloat                        AS CurrencyPartnerValue
-           , 1::TFloat                        AS ParPartnerValue
+           , 0::TFloat                        AS ParPartnerValue
            , 0::TFloat                        AS AmountCurrency
 
            , CAST (FALSE AS Boolean)          AS isLoad 
