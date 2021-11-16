@@ -4991,7 +4991,10 @@ begin
   if (Sender is TcxCheckBox) and (FValue <> TcxCheckBox(Sender).Checked) then isChanged := True;
   if (Sender is TcxCurrencyEdit) and (FValue <> TcxCurrencyEdit(Sender).Value) then isChanged := True;
   if (Sender is TcxComboBox) and (FValue <> TcxComboBox(Sender).Text) then isChanged := True;
-  if isChanged and Assigned(THeaderExit(Collection.Owner).Action) then THeaderExit(Collection.Owner).Action.Execute;
+  //
+  //if isChanged and Assigned(THeaderExit(Collection.Owner).Action) then THeaderExit(Collection.Owner).Action.Execute;
+  //будет всегда
+  if Assigned(THeaderExit(Collection.Owner).Action) then THeaderExit(Collection.Owner).Action.Execute;
 end;
 
 procedure TExitListItem.OnEnter(Sender: TObject);
