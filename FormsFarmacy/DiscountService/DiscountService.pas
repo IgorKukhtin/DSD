@@ -648,7 +648,11 @@ begin
                 begin
                   if nHourOffset = 3 then
                   begin
-                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2);
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 2, nDay);
+                    Exit;
+                  end else if nDay = 0 then
+                  begin
+                    Result := fCommitCDS_Discount (fCheckNumber, CheckCDS, lMsg, lDiscountExternalId, lCardNumber, AisDiscountCommit, 3, - 1);
                     Exit;
                   end else ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
                 end;

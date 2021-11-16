@@ -757,36 +757,37 @@ BEGIN
                                    AND Object_DiscountExternalTools.isErased = False
                                  )
           -- Товары дисконтной программы
-          , tmpGoodsDiscount AS (SELECT tmpUnitDiscount.UnitId                      AS UnitId
-                                      , ObjectLink_BarCode_Goods.ChildObjectId      AS GoodsId
+          , tmpGoodsDiscount AS (SELECT tmpUnitDiscount.UnitId                                 AS UnitId
+                                      , ObjectLink_BarCode_Goods.ChildObjectId                 AS GoodsId
+                                      , COALESCE (ObjectBoolean_DiscountSite.ValueData, False) AS isDiscountSite
                                                    
-                                      , MAX(ObjectFloat_MaxPrice.ValueData)         AS MaxPrice 
-                                      , MAX(ObjectFloat_DiscountProcent.ValueData)  AS DiscountProcent 
-                                         
+                                      , MAX(ObjectFloat_MaxPrice.ValueData)                    AS MaxPrice 
+                                      , MAX(ObjectFloat_DiscountProcent.ValueData)             AS DiscountProcent 
+                                                                               
                                   FROM Object AS Object_BarCode
 
-                                      INNER JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
-                                                               ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
-                                                              AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
-                                                              AND ObjectBoolean_DiscountSite.ValueData = True
+                                       LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
+                                                                ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
+                                                               AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
+                                                               AND ObjectBoolean_DiscountSite.ValueData = True
 
-                                     LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
-                                                          ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
-                                                         AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
-                                         
-                                     LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                                          ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
-                                                         AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                     LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
+                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Goods
+                                                            ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Goods.DescId = zc_ObjectLink_BarCode_Goods()
+                                           
+                                       LEFT JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                                            ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
+                                                           AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
+                                       LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_BarCode_Object.ChildObjectId           
 
-                                     LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
+                                       LEFT JOIN tmpUnitDiscount ON tmpUnitDiscount.DiscountExternalId = ObjectLink_BarCode_Object.ChildObjectId 
 
-                                     LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
-                                                           ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
-                                                          AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
-                                     LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
-                                                           ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
-                                                          AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_MaxPrice
+                                                             ON ObjectFloat_MaxPrice.ObjectId = Object_BarCode.Id
+                                                            AND ObjectFloat_MaxPrice.DescId = zc_ObjectFloat_BarCode_MaxPrice()
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_DiscountProcent
+                                                             ON ObjectFloat_DiscountProcent.ObjectId = Object_BarCode.Id
+                                                            AND ObjectFloat_DiscountProcent.DescId = zc_ObjectFloat_BarCode_DiscountProcent()
 
                                  WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                    AND Object_BarCode.isErased = False
@@ -794,6 +795,7 @@ BEGIN
                                    AND COALESCE (tmpUnitDiscount.DiscountExternalId, 0) <> 0
                                  GROUP BY tmpUnitDiscount.UnitId
                                         , ObjectLink_BarCode_Goods.ChildObjectId
+                                        , ObjectBoolean_DiscountSite.ValueData
                           )
        -- Отложенные технические переучеты
        , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId      AS GoodsId
@@ -884,7 +886,7 @@ BEGIN
              
              , CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) - COALESCE (PDGoodsRemains.Amount, 0)), 0) <= 0
                     THEN NULL
-                    WHEN COALESCE(Price_Unit.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0
+                    WHEN COALESCE(Price_Unit.Price, 0) > 0 AND COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
                                     THEN Price_Unit.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
                     ELSE NULL END  :: TFloat   AS Price_Discount
@@ -1036,7 +1038,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '840430' /* 6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
+                                                                                             '5925154, 14415983' /* 6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
@@ -13,6 +14,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inBonusValue               TFloat    , -- % бонуса
+    IN inCurrencyPartnerValue     TFloat    , --
+    IN inParPartnerValue          TFloat    , --
+    IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте)
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
     IN inContractMasterId         Integer   , -- Договор(условия)
@@ -25,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
     IN inBonusKindId              Integer   , -- Виды бонусов
     IN inBranchId                 Integer   , -- филиал
+    IN inCurrencyPartnerId        Integer   , -- Валюта Контрагента
     IN inIsLoad                   Boolean   , -- Сформирован автоматически (по отчету)
     IN inSession                  TVarChar    -- сессия пользователя
 )
@@ -45,6 +50,9 @@ BEGIN
                                                       , inAmountIn          := inAmountIn
                                                       , inAmountOut         := inAmountOut
                                                       , inBonusValue        := inBonusValue
+                                                      , inCurrencyPartnerValue := inCurrencyPartnerValue
+                                                      , inParPartnerValue   := inParPartnerValue
+                                                      , inAmountCurrency    := inAmountCurrency
                                                       , inComment           := inComment
                                                       , inContractId        := inContractId
                                                       , inContractMasterId  := inContractMasterId
@@ -56,6 +64,7 @@ BEGIN
                                                       , inContractConditionKindId := inContractConditionKindId
                                                       , inBonusKindId       := inBonusKindId
                                                       , inBranchId          := inBranchId
+                                                      , inCurrencyPartnerId := inCurrencyPartnerId
                                                       , inIsLoad            := inIsLoad
                                                       , inUserId            := vbUserId
                                                        );

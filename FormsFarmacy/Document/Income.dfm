@@ -1831,7 +1831,6 @@
     end
     object actExecuteDialogExpirationDate: TExecuteDialog
       Category = 'DSDLib'
-      ActiveControl = cbDifferent
       MoveParams = <>
       Caption = 'actExecuteDialogExpirationDate'
       FormName = 'TDataDialogForm'

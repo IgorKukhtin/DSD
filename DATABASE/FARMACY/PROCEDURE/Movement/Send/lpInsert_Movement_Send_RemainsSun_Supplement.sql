@@ -710,12 +710,12 @@ BEGIN
                        COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
      THEN
 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(Container.Amount)) 
-                                                         FROM Container 
-                                                         WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
-                                                           AND Container.Amount <> 0
-                                                           AND Container.WhereObjectId = _tmpRemains_all_Supplement.UnitId
-                                                           AND Container.DescId = zc_Container_Count())
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(_tmpRemains_all_Supplement.AmountRemains 
+                                                            - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0))) 
+                                                         FROM _tmpRemains_all_Supplement 
+                                                         WHERE _tmpRemains_all_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                           AND (_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) > 0
+                                                           AND _tmpRemains_all_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId)
        FROM (SELECT _tmpGoods_SUN_Supplement.GoodsId
                   , _tmpGoods_SUN_Supplement.UnitOutId
                   , _tmpGoods_SUN_Supplement.UnitOut2Id
@@ -728,13 +728,13 @@ BEGIN
               COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) = _tmpRemains_all_Supplement.UnitId);
                                                              
        
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT SUM(Container.Amount) 
-                                                                FROM Container 
-                                                                WHERE Container.ObjectId = _tmpRemains_all_Supplement.GoodsId
-                                                                  AND Container.Amount <> 0
-                                                                  AND (Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
-                                                                       Container.WhereObjectId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))
-                                                                  AND Container.DescId = zc_Container_Count()) / 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT SUM(_tmpRemains_all_Supplement.AmountRemains 
+                                                                           - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) 
+                                                                FROM _tmpRemains_all_Supplement 
+                                                                WHERE _tmpRemains_all_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                                  AND (_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) > 0
+                                                                  AND (_tmpRemains_all_Supplement.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
+                                                                       _tmpRemains_all_Supplement.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))) / 
                                                                (SELECT count(*) 
                                                                 FROM _tmpRemains_all_Supplement AS Remains_all
                                                                 WHERE Remains_all.GoodsId = _tmpRemains_all_Supplement.GoodsId
@@ -1154,4 +1154,4 @@ $BODY$
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 
 -- 
-select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('15.11.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');

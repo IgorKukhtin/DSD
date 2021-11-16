@@ -44,6 +44,9 @@ type
     FKey_startDate : TDateTime;
     FKey_expireDate : TDateTime;
 
+    FReject_Reason : String;
+    FReject_Reason_Code : String;
+
     // Номер рецепта
     FNumber : String;
 
@@ -233,7 +236,8 @@ var
 begin
   cError := ''; cDescription := '';
   jValue := FRESTResponse.JSONValue ;
-  if jValue.FindValue('error') <> Nil then
+
+  if (jValue.FindValue('error') <> Nil) and (cError <> '') then
   begin
     j := jValue.FindValue('error');
 
@@ -463,6 +467,13 @@ begin
           FMedical_program_id := DelDoubleQuote(j.FindValue('id').ToString);
           FMedical_program_Name := DelDoubleQuote(j.FindValue('name').ToString);
         end else FMedical_program_id := '';
+
+        if jValue.FindValue('reject_reason_code') <> Nil then
+        begin
+          FReject_Reason := jValue.FindValue('reject_reason').ToString;
+          FReject_Reason_Code := jValue.FindValue('reject_reason_code').ToString;
+          Exit;
+        end;
 
         if jValue.FindValue('medication_info') <> Nil then
         begin
@@ -1143,6 +1154,13 @@ begin
     ShellExecute(Screen.ActiveForm.Handle, 'open', PChar(HelsiApi.FShow_Location), nil, nil, SW_SHOWNORMAL);
     HelsiApi.FShow_eHealth := False;
     HelsiApi.FShow_Location := '';
+    Exit;
+  end;
+
+  if HelsiApi.FReject_Reason_Code <> '' then
+  begin
+    ShowMessage('Ошибка получения информации о рецепте с сайта Хелси...'#13#10#13#10 +
+      HelsiApi.FReject_Reason);
     Exit;
   end;
 

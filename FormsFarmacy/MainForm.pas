@@ -886,6 +886,8 @@ type
     N324: TMenuItem;
     actTelegramProtocol: TdsdOpenForm;
     elegram1: TMenuItem;
+    actReport_MonitoringCollectionSUN: TdsdOpenForm;
+    N325: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

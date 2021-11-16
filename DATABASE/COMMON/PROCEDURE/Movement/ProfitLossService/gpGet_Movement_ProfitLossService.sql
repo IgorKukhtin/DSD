@@ -26,6 +26,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
              , BranchId Integer, BranchName TVarChar
+             , CurrencyPartnerId Integer
+             , CurrencyPartnerName TVarChar
+             , CurrencyPartnerValue TFloat
+             , ParPartnerValue      TFloat
+             , AmountCurrency       TFloat
              , isLoad Boolean)
 AS
 $BODY$
@@ -71,6 +76,13 @@ BEGIN
            , CAST ('' as TVarChar)            AS BonusKindName
            , 0                                AS BranchIdId
            , CAST ('' as TVarChar)            AS BranchName
+
+           , 0                                AS CurrencyPartnerId
+           , CAST ('' as TVarChar)            AS CurrencyPartnerName    
+           , 0::TFloat                        AS CurrencyPartnerValue
+           , 1::TFloat                        AS ParPartnerValue
+           , 0::TFloat                        AS AmountCurrency
+
            , CAST (FALSE AS Boolean)          AS isLoad 
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
@@ -132,10 +144,28 @@ BEGIN
            , Object_Branch.Id                       AS BranchId
            , Object_Branch.ValueData                AS BranchName
 
+           , Object_CurrencyPartner.Id                                     AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData                              AS CurrencyPartnerName  
+           , MovementFloat_CurrencyPartnerValue.ValueData         ::TFloat AS CurrencyPartnerValue
+           , COALESCE (MovementFloat_ParPartnerValue.ValueData,1) ::TFloat AS ParPartnerValue
+           , COALESCE (MIFloat_AmountCurrency.ValueData,0)        ::TFloat AS AmountCurrency
+
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -150,6 +180,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
 
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountCurrency
+                                        ON MIFloat_AmountCurrency.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountCurrency.DescId = zc_MIFloat_AmountCurrency()
             LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
                                         ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
                                        AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
