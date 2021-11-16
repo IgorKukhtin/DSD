@@ -16,6 +16,7 @@ object GoodsForm: TGoodsForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  AddOnFormData.SetFocusedAction = actSetFocused
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -24,7 +25,7 @@ object GoodsForm: TGoodsForm
     Width = 982
     Height = 480
     Align = alClient
-    TabOrder = 0
+    TabOrder = 1
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -84,7 +85,14 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 70
+      end
+      object Article_all: TcxGridDBColumn
+        Caption = '***Artikel Nr'
+        DataBinding.FieldName = 'Article_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object ArticleVergl: TcxGridDBColumn
         Caption = 'Vergl. Nr'
@@ -449,6 +457,27 @@ object GoodsForm: TGoodsForm
       GridView = cxGridDBTableView
     end
   end
+  object edSearchArticle: TcxTextEdit
+    Left = 42
+    Top = 322
+    TabOrder = 0
+    DesignSize = (
+      151
+      21)
+    Width = 151
+  end
+  object lbArticle: TcxLabel
+    Left = 80
+    Top = 349
+    Caption = #1055#1086#1080#1089#1082' '#1079#1085#1072#1095#1077#1085#1080#1077'  :  '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -511,6 +540,22 @@ object GoodsForm: TGoodsForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchName'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
         item
           Visible = True
           ItemName = 'bbInsert'
@@ -640,6 +685,18 @@ object GoodsForm: TGoodsForm
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
+    end
+    object bbSearchArticle: TdxBarControlContainerItem
+      Caption = 'bbSearchArticle'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
+    object bbSearchName: TdxBarControlContainerItem
+      Caption = 'bbSearchArticle'
+      Category = 0
+      Visible = ivAlways
+      Control = lbArticle
     end
   end
   object ActionList: TActionList
@@ -1138,6 +1195,14 @@ object GoodsForm: TGoodsForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1088#1090#1080#1082#1091#1083#1099
       ImageIndex = 41
     end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = 'edSearchArticle'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -1300,5 +1365,14 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 448
     Top = 136
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = ClientDataSet
+    Column = Article_all
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 352
+    Top = 240
   end
 end
