@@ -1120,7 +1120,8 @@ uses
   GroupMedicalProgramSPEdit in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSPEdit.pas' {GroupMedicalProgramSPEditForm: TParentForm},
   GroupMedicalProgramSP in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas' {GroupMedicalProgramSPForm: TParentForm},
   TelegramProtocol in '..\..\FormsFarmacy\System\TelegramProtocol.pas' {TelegramProtocolForm: TParentForm},
-  Report_MonitoringCollectionSUN in '..\..\FormsFarmacy\Report\Report_MonitoringCollectionSUN.pas' {Report_MonitoringCollectionSUNForm: TParentForm};
+  Report_MonitoringCollectionSUN in '..\..\FormsFarmacy\Report\Report_MonitoringCollectionSUN.pas' {Report_MonitoringCollectionSUNForm: TParentForm},
+  Report_RelatedCodesSUN in '..\..\FormsFarmacy\Report\Report_RelatedCodesSUN.pas' {Report_RelatedCodesSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
