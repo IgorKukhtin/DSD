@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , isAuto Boolean, isDetail Boolean, isExport Boolean
+             , isMail Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
              , MemberName     TVarChar
@@ -246,6 +247,7 @@ BEGIN
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
            , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
            , COALESCE(MovementBoolean_Export.ValueData, False) :: Boolean  AS isExport
+           , COALESCE(MovementBoolean_Mail.ValueData, False)   :: Boolean  AS isMail
 
            , tmpSign.strSign
            , tmpSign.strSignNo 
@@ -409,6 +411,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Export
                                       ON MovementBoolean_Export.MovementId = Movement.Id
                                      AND MovementBoolean_Export.DescId = zc_MovementBoolean_Export()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Mail
+                                      ON MovementBoolean_Mail.MovementId = Movement.Id
+                                     AND MovementBoolean_Mail.DescId = zc_MovementBoolean_Mail()
+                                     
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
             ;
@@ -420,6 +426,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.11.21         * isMail
  27.09.21         * isExport
  28.04.21         * 
  04.06.20         * add TotalDayAudit

@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , isAuto Boolean, isDetail Boolean
+             , isMail Boolean
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              , MemberId         Integer     --
@@ -50,6 +51,7 @@ BEGIN
              , CAST ('' AS TVarChar) 	 AS JuridicalName
              , False                     AS isAuto
              , False                     AS isDetail
+             , False         :: Boolean  AS isMail
              , NULL::TVarChar            AS strSign
              , NULL::TVarChar            AS strSignNo
              , 0                         AS MemberId
@@ -75,6 +77,7 @@ BEGIN
            , Object_Juridical.ValueData           AS JuridicalName
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
            , COALESCE(MovementBoolean_Detail.ValueData, False) :: Boolean  AS isDetail
+           , COALESCE(MovementBoolean_Mail.ValueData, False)   :: Boolean  AS isMail
            , tmpSign.strSign
            , tmpSign.strSignNo
            , Object_Member.Id                     AS MemberId
@@ -96,6 +99,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Detail
                                       ON MovementBoolean_Detail.MovementId = Movement.Id
                                      AND MovementBoolean_Detail.DescId = zc_MovementBoolean_Detail()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Mail
+                                      ON MovementBoolean_Mail.MovementId = Movement.Id
+                                     AND MovementBoolean_Mail.DescId = zc_MovementBoolean_Mail()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
                                     ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
@@ -125,12 +131,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.21         *
  28.04.21         *
  20.09.18         *
  21.06.16         *

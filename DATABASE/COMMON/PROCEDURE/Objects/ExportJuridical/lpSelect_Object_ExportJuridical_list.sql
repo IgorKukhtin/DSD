@@ -118,7 +118,7 @@ BEGIN
                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                  LEFT JOIN tmpPartner_jur ON tmpPartner_jur.PartnerId = ObjectLink_Partner_Juridical.ObjectId
                             WHERE tmpList_all.ObjectDescId = zc_Object_Retail()
-                              AND tmpPartner_jur.PartnerId ID NULL
+                              AND tmpPartner_jur.PartnerId IS NULL
                            )
 
        SELECT 

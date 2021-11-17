@@ -466,6 +466,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object isMail: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+            DataBinding.FieldName = 'isMail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 76
+          end
           object isDetail: TcxGridDBColumn
             Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
             DataBinding.FieldName = 'isDetail'
@@ -1624,9 +1633,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Visible = True
           ItemName = 'bbExport'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbTax: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090

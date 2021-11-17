@@ -106,6 +106,7 @@ type
     actExport: TMultiAction;
     bbExport: TdxBarButton;
     actExport_file: TdsdStoredProcExportToFile;
+    isMail: TcxGridDBColumn;
   private
     { Private declarations }
   public

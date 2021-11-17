@@ -44,7 +44,7 @@ BEGIN
           , tmp.PaidKindId
           , tmp.ChangePercent
           , tmp.isDiscountPrice_juridical
-            INTO vbOperDate, vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
+  INTO vbOperDate, vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
      FROM (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
            SELECT Movement.OperDate AS OperDate
                 , MovementDate_OperDatePartner.ValueData AS OperDatePartner
