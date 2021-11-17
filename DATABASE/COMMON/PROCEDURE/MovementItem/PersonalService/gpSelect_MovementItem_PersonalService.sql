@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
              , SummAddOth TFloat, SummAddOthRecalc TFloat
+             , SummHouseAdd TFloat
              , SummCompensation TFloat, SummCompensationRecalc TFloat
              , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
@@ -329,9 +330,12 @@ BEGIN
 
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
+            , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
+
 
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
+            
             , MIFloat_DayCompensation.ValueData AS DayCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_PriceCompensation.ValueData       ELSE 0 END ::TFloat AS PriceCompensation
             
@@ -475,6 +479,10 @@ BEGIN
                                         ON MIFloat_SummAddOthRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                        ON MIFloat_SummHouseAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
+
             LEFT JOIN MovementItemFloat AS MIFloat_SummCompensation
                                         ON MIFloat_SummCompensation.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCompensation.DescId = zc_MIFloat_SummCompensation()
@@ -575,6 +583,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.21         *
  04.06.20         * DayAudit
  25.03.20         * add SummAuditAdd
  05.02.20         *

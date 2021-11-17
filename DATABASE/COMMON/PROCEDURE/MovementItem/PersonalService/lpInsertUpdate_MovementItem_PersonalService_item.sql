@@ -76,6 +76,7 @@ BEGIN
                                                      , inSummHospOthRecalc      := inSummHospOthRecalc
                                                      , inSummCompensationRecalc := inSummCompensationRecalc
                                                      , inSummAuditAdd           := inSummAuditAdd
+                                                     , inSummHouseAdd           := inSummHouseAdd
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
                                                      , inUnitId                 := inUnitId

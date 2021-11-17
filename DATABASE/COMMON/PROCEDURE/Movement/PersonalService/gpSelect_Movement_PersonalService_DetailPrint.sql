@@ -297,6 +297,7 @@ BEGIN
                            , COALESCE (MIFloat_SummTransport.ValueData, 0)     AS SummTransport
                            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0) AS SummTransportTaxi
                            , COALESCE (MIFloat_SummPhone.ValueData, 0)         AS SummPhone
+                           , COALESCE (MIFloat_SummHouseAdd.ValueData, 0)      AS SummHouseAdd
 
                            , MIString_Comment.ValueData         AS Comment
 
@@ -409,6 +410,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
                                                        ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                                       ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
+
                            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                          ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -455,6 +461,7 @@ BEGIN
                            , SUM (tmpMI_all.SummTransport)     AS SummTransport
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
+                           , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
 
                       FROM tmpMI_all
                       GROUP BY tmpMI_all.MovementItemId
@@ -522,6 +529,7 @@ BEGIN
                             , tmpMI.SummTransport
                             , tmpMI.SummTransportTaxi
                             , tmpMI.SummPhone
+                            , tmpMI.SummHouseAdd
                        FROM tmpMI
                       UNION ALL
                        SELECT 0 AS MovementItemId
@@ -554,6 +562,7 @@ BEGIN
                             , 0 AS SummTransport
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
+                            , 0 AS SummHouseAdd
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
                       )
@@ -581,7 +590,7 @@ BEGIN
                         , SUM (tmpAll.SummMinus)              :: TFloat AS SummMinus
                         , SUM (tmpAll.SummFine)               :: TFloat AS SummFine
                         , SUM (tmpAll.SummFineOth)            :: TFloat AS SummFineOth
-                        , SUM (tmpAll.SummAdd + tmpAll.SummAddOth)   :: TFloat AS SummAdd
+                        , SUM (COALESCE (tmpAll.SummAdd,0) + COALESCE (tmpAll.SummAddOth,0) + COALESCE (tmpAll.SummHouseAdd,0) )   :: TFloat AS SummAdd
                         , SUM (tmpAll.SummAuditAdd)           :: TFloat AS SummAuditAdd
             --            , SUM (tmpAll.SummSocialIn)         :: TFloat AS SummSocialIn
             --            , SUM (tmpAll.SummSocialAdd)        :: TFloat AS SummSocialAdd
@@ -622,6 +631,7 @@ BEGIN
                       OR 0 <> tmpAll.SummAdd
                       OR 0 <> tmpAll.SummAddOth
                       OR 0 <> tmpAll.SummAuditAdd
+                      OR 0 <> tmpAll.SummHouseAdd
                       -- OR 0 <> tmpAll.SummNalog
                       -- OR 0 <> tmpAll.SummNalogRet
                    GROUP BY tmpAll.PositionId

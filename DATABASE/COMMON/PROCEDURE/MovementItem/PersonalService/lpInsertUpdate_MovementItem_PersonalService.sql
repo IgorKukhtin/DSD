@@ -17,9 +17,13 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
 
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
@@ -56,6 +60,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummHospOthRecalc      TFloat    , -- больничный (ввод для распределения)
     IN inSummCompensationRecalc TFloat    , -- Компенсация ввод (ввод)
     IN inSummAuditAdd           TFloat    , -- Сумма доплата за аудит
+    IN inSummHouseAdd           TFloat    , -- Сумма Компенсация жилья 
 
     IN inComment                TVarChar  , -- 
     IN inInfoMoneyId            Integer   , -- Статьи назначения
@@ -238,6 +243,8 @@ BEGIN
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
                  -- "плюс" <компенсация(распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
+                 -- "плюс" компенсация жилья
+               + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                 ;
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
@@ -260,6 +267,8 @@ BEGIN
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
                       -- "плюс"" <компенсация(распределено)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
+                      -- "плюс" компенсация жилья
+                    + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay
@@ -297,17 +306,19 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd(), ioId, inSummAdd );
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd (), ioId, inSummAuditAdd );
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), ioId, inSummAuditAdd );
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), ioId, inSummAddOthRecalc);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHoliday (), ioId, inSummHoliday );
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHoliday(), ioId, inSummHoliday );
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialIn(), ioId, inSummSocialIn);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialAdd(), ioId, inSummSocialAdd);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHouseAdd(), ioId, inSummHouseAdd);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Main(), ioId, inisMain);
      -- сохранили свойство <>

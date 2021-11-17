@@ -304,6 +304,7 @@ BEGIN
                            , COALESCE (MIFloat_SummTransport.ValueData, 0)     AS SummTransport
                            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0) AS SummTransportTaxi
                            , COALESCE (MIFloat_SummPhone.ValueData, 0)         AS SummPhone
+                           , COALESCE (MIFloat_SummHouseAdd.ValueData, 0)      AS SummHouseAdd
 
                            , MIString_Comment.ValueData         AS Comment
 
@@ -416,6 +417,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
                                                        ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                                       ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
+
                            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                          ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -461,7 +467,7 @@ BEGIN
                            , SUM (tmpMI_all.SummTransport)     AS SummTransport
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
-
+                           , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
 
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
@@ -510,6 +516,7 @@ BEGIN
                            , SUM (tmpMI_all.SummTransport)     AS SummTransport
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
+                           , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
 
                       FROM tmpMI_all
                       WHERE inisShowAll = TRUE
@@ -613,6 +620,7 @@ BEGIN
                             , tmpMI.SummTransport
                             , tmpMI.SummTransportTaxi
                             , tmpMI.SummPhone
+                            , tmpMI.SummHouseAdd
                        FROM tmpMI
                       UNION ALL
                        SELECT 0 AS Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId
@@ -644,6 +652,7 @@ BEGIN
                             , 0 AS SummTransport
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
+                            , 0 AS SummHouseAdd
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
                       UNION ALL
@@ -678,6 +687,7 @@ BEGIN
                             , 0 AS SummTransport
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
+                            , 0 AS SummHouseAdd
                         FROM tmpMIContainer_pay
                              LEFT JOIN tmpMember_findPersonal ON tmpMember_findPersonal.MemberId = tmpMIContainer_pay.MemberId
                              LEFT JOIN tmpMI ON tmpMI.MemberId = tmpMIContainer_pay.MemberId
@@ -758,7 +768,7 @@ BEGIN
               -- !!!временно!!!
             , (tmpAll.SummMinus + tmpAll.SummFine + tmpAll.SummFineOth) :: TFloat AS SummMinus
             , (tmpAll.SummFine + tmpAll.SummFineOth)                    :: TFloat AS SummFine
-            , (tmpAll.SummAdd + tmpAll.SummAddOth) :: TFloat AS SummAdd
+            , (COALESCE (tmpAll.SummAdd,0) + COALESCE (tmpAll.SummAddOth,0) + COALESCE (tmpAll.SummHouseAdd,0) ) :: TFloat AS SummAdd  --суммируем комп. жилья с премией
             , tmpAll.SummAuditAdd           :: TFloat AS SummAuditAdd
 --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
@@ -823,6 +833,7 @@ BEGIN
           OR 0 <> tmpAll.SummAdd
           OR 0 <> tmpAll.SummAddOth
           OR 0 <> tmpAll.SummAuditAdd
+          OR 0 <> tmpAll.SummHouseAdd
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
           OR tmpMIContainer_pay.Amount_avance      <> 0
@@ -841,6 +852,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.21         * add SummHouseAdd
  25.03.20         * add SummAuditAdd
  20.06.17         * add SummCardSecondCash
  24.02.17         *

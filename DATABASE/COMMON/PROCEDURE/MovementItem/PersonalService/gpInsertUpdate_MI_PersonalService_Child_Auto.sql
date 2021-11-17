@@ -287,6 +287,7 @@ end if;
                                                                         , inSummHospOthRecalc      := 0
                                                                         , inSummCompensationRecalc := 0
                                                                         , inSummAuditAdd           := 0
+                                                                        , inSummHouseAdd           := 0
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
                                                                         , inUnitId                 := inUnitId
@@ -407,6 +408,7 @@ end if;
                                                           , inSummHospOthRecalc      := COALESCE (MIFloat_SummHospOthRecalc.ValueData, 0)
                                                           , inSummCompensationRecalc := COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)
                                                           , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
+                                                          , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId                 := inUnitId
@@ -445,7 +447,10 @@ end if;
             LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
                                         ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
-
+            LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                        ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
+                                       
             LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                         ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()

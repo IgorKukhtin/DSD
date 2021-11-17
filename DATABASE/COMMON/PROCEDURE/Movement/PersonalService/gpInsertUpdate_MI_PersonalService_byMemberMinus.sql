@@ -103,6 +103,7 @@ BEGIN
                                                         , inSummHospOthRecalc     := COALESCE (tmpMI.SummHospOthRecalc,0)                   ::TFloat
                                                         , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
                                                         , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
+                                                        , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
                                                         , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
                                                         , inInfoMoneyId           := zc_Enum_InfoMoney_60101()                              ::Integer
                                                         , inUnitId                := COALESCE (tmpMemberMinus.UnitId, tmpMI.UnitId)         ::Integer

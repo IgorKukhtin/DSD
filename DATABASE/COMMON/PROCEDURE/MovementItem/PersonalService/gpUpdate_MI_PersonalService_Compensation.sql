@@ -155,6 +155,7 @@ BEGIN
                                                         , inSummHospOthRecalc  := 0
                                                         , inSummCompensationRecalc := COALESCE (_tmpMI.Day_diff * _tmpMI.AmountCompensation, 0.0)
                                                         , inSummAuditAdd       := 0
+                                                        , inSummHouseAdd       := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

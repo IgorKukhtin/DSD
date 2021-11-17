@@ -1335,6 +1335,7 @@ BEGIN
                                                                   , inSummHospOthRecalc      := 0 :: TFloat
                                                                   , inSummCompensationRecalc := 0 :: TFloat
                                                                   , inSummAuditAdd           := 0 :: TFloat
+                                                                  , inSummHouseAdd           := 0 :: TFloat
                                                                   , inComment                := ''
                                                                   , inInfoMoneyId            := tmpMI.InfoMoneyId
                                                                   , inUnitId                 := tmpMI.UnitId

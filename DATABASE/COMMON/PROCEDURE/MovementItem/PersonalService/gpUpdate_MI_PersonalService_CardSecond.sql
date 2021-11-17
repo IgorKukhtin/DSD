@@ -389,6 +389,7 @@ END IF;
                                                         , inSummHospOthRecalc  := 0
                                                         , inSummCompensationRecalc := 0
                                                         , inSummAuditAdd           := 0
+                                                        , inSummHouseAdd           := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

@@ -109,6 +109,7 @@ end if;
                                                              , inSummHospOthRecalc      := 0
                                                              , inSummCompensationRecalc := 0
                                                              , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
+                                                             , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
                                                              , inComment                := MIString_Comment.ValueData
                                                              , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                              , inUnitId                 := MILinkObject_Unit.ObjectId
@@ -158,6 +159,9 @@ end if;
                LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
                                            ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
                                           AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
+               LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                           ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
                LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                            ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
                                           AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()

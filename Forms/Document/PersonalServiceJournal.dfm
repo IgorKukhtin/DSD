@@ -1933,6 +1933,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -2371,6 +2372,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput

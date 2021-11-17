@@ -346,6 +346,7 @@ BEGIN
                                                                   , inSummHospOthRecalc  := 0 :: TFloat
                                                                   , inSummCompensationRecalc:= 0 :: TFloat
                                                                   , inSummAuditAdd       := 0 :: TFloat
+                                                                  , inSummHouseAdd       := 0 :: TFloat
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
                                                                   , inUnitId             := _tmpMI_Recalc.UnitId

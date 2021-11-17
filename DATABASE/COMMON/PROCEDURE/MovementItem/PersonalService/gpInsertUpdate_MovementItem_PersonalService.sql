@@ -29,10 +29,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);*/
 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);*/
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+
                                                                    
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -68,6 +73,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummHospOthRecalc     TFloat    , -- больничный (ввод для распределения)
     IN inSummCompensationRecalc TFloat   , -- компенсация (ввод)
     IN inSummAuditAdd           TFloat   , -- Сумма доплаты за аудит
+    IN inSummHouseAdd           TFloat   , -- Сумма Компенсация жилья 
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -145,6 +151,7 @@ BEGIN
                                                      , inSummHospOthRecalc     := inSummHospOthRecalc
                                                      , inSummCompensationRecalc:= inSummCompensationRecalc
                                                      , inSummAuditAdd          := inSummAuditAdd
+                                                     , inSummHouseAdd          := inSummHouseAdd
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
                                                      , inUnitId                := inUnitId
@@ -202,6 +209,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.21         * inSummHouseAdd
  06.05.21         * inUnitFineSubjectId
  19.11.20         * ioBankOutDate
  25.03.20         * inSummAuditAdd

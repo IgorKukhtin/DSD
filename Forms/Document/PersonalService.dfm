@@ -10,6 +10,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 115
     Width = 1307
     Height = 566
+    ExplicitLeft = 8
     ExplicitTop = 115
     ExplicitWidth = 1307
     ExplicitHeight = 566
@@ -254,6 +255,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = DayAudit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHouseAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -485,6 +491,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = DayAudit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummHouseAdd
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1229,7 +1240,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Width = 70
           end
-          object InfoMoneyName_all: TcxGridDBColumn [72]
+          object SummHouseAdd: TcxGridDBColumn [72]
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
+            DataBinding.FieldName = 'SummHouseAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Width = 70
+          end
+          object InfoMoneyName_all: TcxGridDBColumn [73]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -4434,6 +4456,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummAuditAdd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHouseAdd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummHouseAdd'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
