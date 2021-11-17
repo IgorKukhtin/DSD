@@ -133,6 +133,11 @@ type
     bbPrint_Profit: TdxBarButton;
     Profit: TcxGridDBColumn;
     Color_Profit: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cbExclude: TcxCheckBox;
+    spGet_Juridical: TdsdStoredProc;
   private
     { Private declarations }
   public

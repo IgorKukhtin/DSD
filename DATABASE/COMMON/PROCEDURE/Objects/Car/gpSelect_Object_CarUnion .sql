@@ -20,12 +20,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbAccessKey_Kiev Boolean;
+   DECLARE vbAccessKey_Lviv Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
      vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+     
+     vbAccessKey_Kiev:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportKiev(), zc_Enum_Process_AccessKey_GuideKiev()));
+     vbAccessKey_Lviv:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportLviv(), zc_Enum_Process_AccessKey_GuideLviv()));
 
      -- Результат
      RETURN QUERY 
@@ -67,7 +72,7 @@ BEGIN
            , Object_Car.isErased          AS isErased
            
        FROM Object AS Object_Car
-            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
+            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON vbAccessKeyAll = FALSE AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
        
             LEFT JOIN ObjectString AS RegistrationCertificate 
                                    ON RegistrationCertificate.ObjectId = Object_Car.Id 
@@ -103,7 +108,10 @@ BEGIN
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Car.DescId
             
      WHERE Object_Car.DescId = zc_Object_Car()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 Транспорт - сбыт
+       AND (tmpRoleAccessKey.AccessKeyId > 0 OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395 -- 21000 Транспорт - сбыт
+            OR (vbAccessKey_Kiev = TRUE AND Object_Car.AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportLviv(), zc_Enum_Process_AccessKey_GuideLviv()))
+            OR (vbAccessKey_Lviv = TRUE AND Object_Car.AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportKiev(), zc_Enum_Process_AccessKey_GuideKiev()))
+           )
        AND (Object_Car.isErased = FALSE
         OR (Object_Car.isErased = TRUE AND inIsShowAll = TRUE))
       UNION

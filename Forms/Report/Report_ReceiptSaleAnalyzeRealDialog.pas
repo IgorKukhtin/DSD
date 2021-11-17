@@ -47,6 +47,11 @@ type
     spGetParams: TdsdStoredProc;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    cxLabel9: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cbExclude: TcxCheckBox;
+    GuidesJuridical: TdsdGuides;
+    spGet_Juridical: TdsdStoredProc;
   private
     { Private declarations }
   public

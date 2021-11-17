@@ -21,7 +21,8 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
-  cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls;
+  cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
+  cxLabel;
 
 type
   TGoodsForm = class(TParentForm)
@@ -106,6 +107,13 @@ type
     UpdateDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    Article_all: TcxGridDBColumn;
+    bbSearchArticle: TdxBarControlContainerItem;
+    bbSearchName: TdxBarControlContainerItem;
+    lbArticle: TcxLabel;
+    actSetFocused: TdsdSetFocusedAction;
   private
     { Private declarations }
   public

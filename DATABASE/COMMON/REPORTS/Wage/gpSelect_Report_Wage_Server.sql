@@ -243,7 +243,7 @@ BEGIN
        ,Report_2.Count_Day
        ,0              AS ModelServiceId
        ,Report_2.StaffListSummKindId
-       , 0 :: TFloat   AS KoeffHoursWork_car
+       ,Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car
     FROM gpSelect_Report_Wage_Sum_Server (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
                                         , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
                                         , inUnitId         := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inUnitId    END
@@ -654,4 +654,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
--- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '31.10.2021', inEndDate:= '31.10.2021', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

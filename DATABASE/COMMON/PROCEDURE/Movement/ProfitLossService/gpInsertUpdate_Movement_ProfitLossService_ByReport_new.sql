@@ -46,6 +46,7 @@ BEGIN
                                                                                      , inAmountIn          := 0                               :: TFloat
                                                                                      , inAmountOut         := Sum_Bonus_real                  :: TFloat
                                                                                      , inBonusValue        := CAST (Value AS NUMERIC (16, 2)) :: TFloat
+                                                                                     , inAmountCurrency    := 0    :: TFloat
                                                                                      , inComment           := Comment                         :: TVarChar
                                                                                      , inContractId        := ContractId_find
                                                                                      , inContractMasterId  := ContractId_master
@@ -57,6 +58,7 @@ BEGIN
                                                                                      , inContractConditionKindId   := ConditionKindId
                                                                                      , inBonusKindId       := BonusKindId
                                                                                      , inBranchId          := BranchId
+                                                                                     , inCurrencyPartnerId := 0
                                                                                      , inIsLoad            := TRUE                            :: Boolean
                                                                                      , inUserId            := vbUserId
                                                                                       )

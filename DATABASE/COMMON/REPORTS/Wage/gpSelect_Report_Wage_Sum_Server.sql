@@ -34,6 +34,7 @@ RETURNS TABLE(
     ,SheetWorkTime_Amount           TFloat    -- итого часов сотрудника
     ,Count_Day                      Integer   -- ќтраб. дн. 1 чел (инф.)
     ,Summ                           TFloat
+    ,Tax_Trainee                    TFloat
 )
 AS
 $BODY$
@@ -163,6 +164,10 @@ BEGIN
                       WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Personal() -- ƒоплата за 1 день на человека
                            THEN Setting.StaffListSumm_Value
                  END AS SummaAdd
+
+                 -- !!!стажеры!!!
+               , COALESCE (ObjectFloat_WorkTimeKind_Tax.ValueData, 0) AS Tax_Trainee
+
            FROM Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -177,6 +182,11 @@ BEGIN
                                                   ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
                                                  AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                 INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
+
+                LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
+                                      ON ObjectFloat_WorkTimeKind_Tax.ObjectId = MIObject_WorkTimeKind.ObjectId
+                                     AND ObjectFloat_WorkTimeKind_Tax.DescId   = zc_ObjectFloat_WorkTimeKind_Tax()
+
                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = MI_SheetWorkTime.ObjectId
 
                 LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
@@ -214,6 +224,9 @@ BEGIN
              --
            , COUNT (*) OVER (PARTITION BY SheetWorkTime.PositionId, SheetWorkTime.PositionLevelId) AS Count_Member
            , SUM (SummaAdd)                             AS SummaADD
+
+           , SheetWorkTime.Tax_Trainee
+
         FROM (SELECT MI_SheetWorkTime.MemberId
                    , MI_SheetWorkTime.MemberName
                    , MI_SheetWorkTime.PersonalGroupId
@@ -224,29 +237,32 @@ BEGIN
                    , COUNT(*) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS Count_MemberInDay
                    , SUM (MI_SheetWorkTime.SheetWorkTime_Amount) OVER (PARTITION BY MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId) AS SUM_MemberHours
                    , MI_SheetWorkTime.SummaAdd
-              FROM
-             (SELECT MI_SheetWorkTime.MemberId
-                   , MI_SheetWorkTime.MemberName
-                   , MI_SheetWorkTime.PersonalGroupId
-                   , MI_SheetWorkTime.PositionId
-                   , MI_SheetWorkTime.PositionLevelId
-                   , MI_SheetWorkTime.SheetWorkTime_Amount
-                   , MI_SheetWorkTime.Count_Day
-                   , MI_SheetWorkTime.SummaAdd
-              FROM MI_SheetWorkTime
-             UNION ALL
-              SELECT MI_SheetWorkTime.MemberId
-                   , MI_SheetWorkTime.MemberName
-                   , MI_SheetWorkTime.PersonalGroupId
-                   , MI_SheetWorkTime.PositionId
-                   , 0 AS PositionLevelId
-                   , MI_SheetWorkTime.SheetWorkTime_Amount
-                   , MI_SheetWorkTime.Count_Day
-                   , 0 AS SummaAdd
-              FROM (SELECT DISTINCT Setting_Wage_2.PositionId FROM Setting_Wage_2 WHERE Setting_Wage_2.isPositionLevel_all = TRUE) AS Setting
-                   INNER JOIN MI_SheetWorkTime ON MI_SheetWorkTime.PositionId = Setting.PositionId AND MI_SheetWorkTime.PositionLevelId <> 0
-             )AS MI_SheetWorkTime
-             )AS SheetWorkTime
+                   , MI_SheetWorkTime.Tax_Trainee
+
+              FROM (SELECT MI_SheetWorkTime.MemberId
+                         , MI_SheetWorkTime.MemberName
+                         , MI_SheetWorkTime.PersonalGroupId
+                         , MI_SheetWorkTime.PositionId
+                         , MI_SheetWorkTime.PositionLevelId
+                         , MI_SheetWorkTime.SheetWorkTime_Amount
+                         , MI_SheetWorkTime.Count_Day
+                         , MI_SheetWorkTime.SummaAdd
+                         , MI_SheetWorkTime.Tax_Trainee
+                    FROM MI_SheetWorkTime
+                   UNION ALL
+                    SELECT MI_SheetWorkTime.MemberId
+                         , MI_SheetWorkTime.MemberName
+                         , MI_SheetWorkTime.PersonalGroupId
+                         , MI_SheetWorkTime.PositionId
+                         , 0 AS PositionLevelId
+                         , MI_SheetWorkTime.SheetWorkTime_Amount
+                         , MI_SheetWorkTime.Count_Day
+                         , 0 AS SummaAdd
+                         , MI_SheetWorkTime.Tax_Trainee
+                    FROM (SELECT DISTINCT Setting_Wage_2.PositionId FROM Setting_Wage_2 WHERE Setting_Wage_2.isPositionLevel_all = TRUE) AS Setting
+                         INNER JOIN MI_SheetWorkTime ON MI_SheetWorkTime.PositionId = Setting.PositionId AND MI_SheetWorkTime.PositionLevelId <> 0
+                   )AS MI_SheetWorkTime
+             ) AS SheetWorkTime
         GROUP BY
              SheetWorkTime.MemberId
            , SheetWorkTime.MemberName
@@ -255,6 +271,7 @@ BEGIN
            , SheetWorkTime.PositionLevelId
            , SheetWorkTime.Count_MemberInDay
            , SheetWorkTime.SUM_MemberHours
+           , SheetWorkTime.Tax_Trainee
        )
 
    -- –езультат
@@ -284,10 +301,10 @@ BEGIN
        ,CASE 
             -- ‘онд за мес€ц
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0))
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0) * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд за мес€ц (по дн€м)
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_MonthDay()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberInDay,0) * Movement_SheetWorkTime.Count_Day)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberInDay,0) * Movement_SheetWorkTime.Count_Day * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ƒоплата за 1 день на всех
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
                 THEN Movement_SheetWorkTime.SummaADD
@@ -296,16 +313,19 @@ BEGIN
                 THEN Movement_SheetWorkTime.SummaADD
             -- ‘онд за общий план часов (посто€нный) в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlan()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд за план часов (расчетный) в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursDay()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд посто€нный дл€ факт часов в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
                 THEN Setting.StaffListSumm_Value
                    / NULLIF (Setting.Count_Member, 0) * Movement_SheetWorkTime.Count_Member
                    / NULLIF (Movement_SheetWorkTime.SUM_MemberHours, 0) * Movement_SheetWorkTime.SheetWorkTime_Amount
+                   * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END
         END :: TFloat AS Summ
+        
+       ,(Movement_SheetWorkTime.Tax_Trainee / 100) :: TFloat AS Summ
     FROM Setting_Wage_2 AS Setting
         LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                               AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
@@ -317,4 +337,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Sum_Server (inStartDate:= '01.04.2016', inEndDate:= '01.04.2016', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Sum_Server (inStartDate:= '01.04.2021', inEndDate:= '01.04.2021', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

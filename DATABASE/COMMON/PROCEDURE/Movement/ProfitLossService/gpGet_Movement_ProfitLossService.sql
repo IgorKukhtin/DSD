@@ -43,6 +43,13 @@ BEGIN
      IF COALESCE (inMovementId_Value, 0) = 0
      THEN
 
+     /*IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
+          THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+               FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+          ELSE outCurrencyValue:= 0;
+               outParValue:=0;
+          END IF;
+          */
      RETURN QUERY
        SELECT
              0                                AS Id
@@ -80,7 +87,7 @@ BEGIN
            , 0                                AS CurrencyPartnerId
            , CAST ('' as TVarChar)            AS CurrencyPartnerName    
            , 0::TFloat                        AS CurrencyPartnerValue
-           , 1::TFloat                        AS ParPartnerValue
+           , 0::TFloat                        AS ParPartnerValue
            , 0::TFloat                        AS AmountCurrency
 
            , CAST (FALSE AS Boolean)          AS isLoad 

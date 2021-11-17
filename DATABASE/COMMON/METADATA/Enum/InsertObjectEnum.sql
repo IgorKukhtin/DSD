@@ -987,7 +987,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Glad2514900150(),  inDescId:= zc_Object_ExportKind(), inCode:= 5, inName:= 'ФОП Гладкий - формат XML',   inEnumName:= 'zc_Enum_ExportKind_Glad2514900150');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Avion40110917(),   inDescId:= zc_Object_ExportKind(), inCode:= 6, inName:= 'Авіон+ ТОВ - формат CSV',    inEnumName:= 'zc_Enum_ExportKind_Avion40110917');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_Logistik41750857(),inDescId:= zc_Object_ExportKind(), inCode:= 7, inName:= 'ЧСПМ ЛОГІСТИК - формат XLS', inEnumName:= 'zc_Enum_ExportKind_Logistik41750857');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ExportKind_PersonalService(), inDescId:= zc_Object_ExportKind(), inCode:= 8, inName:= 'Ведомость ЗП - формат CSV', inEnumName:= 'zc_Enum_ExportKind_PersonalService');
+     
 END $$;
 
 DO $$

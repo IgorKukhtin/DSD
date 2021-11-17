@@ -349,7 +349,7 @@ BEGIN
        , Report_2.Summ AS AmountOnOneMember
        , 0             AS ModelServiceId
        , Report_2.StaffListSummKindId
-       , 0 :: TFloat   AS KoeffHoursWork_car
+       , Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car
 
     FROM gpSelect_Report_Wage_Sum (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
                                  , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
@@ -753,4 +753,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage (inStartDate:= '03.11.2017', inEndDate:= '03.11.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage (inStartDate:= '03.11.2021', inEndDate:= '03.11.2021', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
