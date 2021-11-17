@@ -608,6 +608,15 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 97
           end
+          object isHideOnTheSite: TcxGridDBColumn
+            Caption = #1057#1082#1088#1099#1074#1072#1090#1100' '#1085#1072' '#1089#1072#1081#1090#1077' '#1085#1077#1090' '#1085#1072#1083#1080#1095#1080#1103' '#1080' '#1087#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'isHideOnTheSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1088#1099#1074#1072#1090#1100' '#1085#1072' '#1089#1072#1081#1090#1077' '#1085#1077#1090' '#1074' '#1085#1072#1083#1080#1095#1080#1080' '#1080' '#1074' '#1087#1086#1089#1090#1072#1074#1082#1072#1093
+            Options.Editing = False
+            Width = 78
+          end
         end
       end
     end

@@ -1957,9 +1957,6 @@ inherited MainCashForm2: TMainCashForm2
         TabOrder = 0
         TabStop = False
         OnClick = btnGoodsSPReceiptListClick
-        ExplicitLeft = 935
-        ExplicitTop = 1
-        ExplicitHeight = 61
       end
     end
   end

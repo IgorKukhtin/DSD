@@ -243,35 +243,10 @@ BEGIN
                           AND (MI_Child.IsErased = inIsErased OR inIsErased = TRUE)
                         )
 --
-      , tmpMIDate_PartionGoods AS (SELECT MIDate_PartionGoods.*
-                                   FROM MovementItemDate AS MIDate_PartionGoods
-                                   WHERE MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                     AND MIDate_PartionGoods.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                         )
-      , tmpMIF AS (SELECT MovementItemFloat.*
-                   FROM MovementItemFloat
-                   WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                     AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                    , zc_MIFloat_JuridicalPrice())
-                    )
-      , tmpMIFloat_Price AS (SELECT tmpMIF.*
-                             FROM tmpMIF
-                             WHERE tmpMIF.DescId = zc_MIFloat_Price()
-                         )
-      , tmpMIFloat_JuridicalPrice AS (SELECT tmpMIF.*
-                                      FROM tmpMIF
-                                      WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
-                                      )
-      , tmpMIFloat_DefermentPrice AS (SELECT MovementItemFloat.*
-                                      FROM MovementItemFloat
-                                      WHERE MovementItemFloat.MovementItemId  IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                                        AND MovementItemFloat.DescId = zc_MIFloat_DefermentPrice()
-                                      )
-      , tmpMIString_Maker AS (SELECT MIString_Maker.*
-                              FROM MovementItemString AS MIString_Maker
-                              WHERE MIString_Maker.DescId = zc_MIString_Maker()
-                                AND MIString_Maker.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                              )
+      , tmpMIString AS (SELECT MIString.*
+                        FROM MovementItemString AS MIString
+                        WHERE MIString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                        )
       , tmpJuridical AS (SELECT MILinkObject_Juridical.MovementItemId
                               , Object_Juridical.Id                 AS JuridicalId
                               , Object_Juridical.ValueData          AS JuridicalName
@@ -415,14 +390,20 @@ BEGIN
              INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.ParentId = tmpMI.MovementItemId
              LEFT JOIN tmpGoods                 ON tmpGoods.GoodsId  = MI_Child.ObjectId
 
-             LEFT JOIN tmpMIDate_PartionGoods    AS MIDate_PartionGoods    ON MIDate_PartionGoods.MovementItemId    = MI_Child.Id
-             LEFT JOIN tmpMIFloat_Price          AS MIFloat_Price          ON MIFloat_Price.MovementItemId          = MI_Child.Id
-             LEFT JOIN tmpMIFloat_JuridicalPrice AS MIFloat_JuridicalPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoods.MovementItemId =  MI_Child.Id
+             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId =  MI_Child.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                         ON MIFloat_JuridicalPrice.MovementItemId =  MI_Child.Id
+                                        AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
           -- LEFT JOIN tmpMIFloat_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
              LEFT JOIN MovementItemFloat AS MIFloat_DefermentPrice
                                          ON MIFloat_DefermentPrice.MovementItemId = MI_Child.Id
                                         AND MIFloat_DefermentPrice.DescId = zc_MIFloat_DefermentPrice()
-             LEFT JOIN tmpMIString_Maker         AS MIString_Maker         ON MIString_Maker.MovementItemId         = MI_Child.Id
+           --  LEFT JOIN tmpMIString_Maker         AS MIString_Maker         ON MIString_Maker.MovementItemId         = MI_Child.Id
              LEFT JOIN tmpJuridical                                        ON tmpJuridical.MovementItemId           = MI_Child.Id
              LEFT JOIN tmpContract                                         ON tmpContract.MovementItemId            = MI_Child.Id
 
@@ -451,11 +432,11 @@ BEGIN
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
 
-            LEFT JOIN MovementItemString AS MIString_GoodsCode 
+            LEFT JOIN tmpMIString AS MIString_GoodsCode 
                                          ON MIString_GoodsCode.MovementItemId = MI_Child.Id
                                         AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()     
                                         AND vbStatusId = zc_Enum_Status_Complete() 
-            LEFT JOIN MovementItemString AS MIString_GoodsName 
+            LEFT JOIN tmpMIString AS MIString_GoodsName 
                                          ON MIString_GoodsName.MovementItemId = MI_Child.Id
                                         AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
                                         AND vbStatusId = zc_Enum_Status_Complete()                             
@@ -859,6 +840,7 @@ BEGIN
   ;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
+
 
      RETURN QUERY
      WITH
@@ -1617,4 +1599,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 23494456 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 25728291  , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

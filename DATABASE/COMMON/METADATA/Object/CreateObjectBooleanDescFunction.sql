@@ -1116,9 +1116,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_HideOnTheSite() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_HideOnTheSite', 'Скрывать на сайте нет в наличии и в поставках' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_HideOnTheSite');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_OnlyTiming() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_OnlyTiming'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_OnlyTiming', 'Отдавать только сроковый товар по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_OnlyTiming');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 17.11.21                                                                                                          * zc_ObjectBoolean_Unit_SUN_OnlyTiming
  17.11.21                                                                                                          * zc_ObjectBoolean_Goods_HideOnTheSite
  11.11.21                                                                                                          * zc_ObjectBoolean_Goods_ExpDateExcSite
  19.10.21                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN1Smudge

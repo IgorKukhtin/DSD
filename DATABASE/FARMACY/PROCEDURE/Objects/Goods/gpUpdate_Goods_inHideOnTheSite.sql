@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Goods_inHideOnTheSite(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Goods_inHideOnTheSite_Revert(
+CREATE OR REPLACE FUNCTION gpUpdate_Goods_inHideOnTheSite(
     IN inGoodsMainId             Integer   ,   -- ключ объекта <Товар>
     IN inisHideOnTheSite         Boolean  ,    -- Скрывать на сайте нет в наличии и в поставках
     IN inSession                 TVarChar      -- текущий пользователь
@@ -46,4 +46,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---select * from gpUpdate_Goods_inHideOnTheSite(inGoodsMainId := 39513 , inisHideOnTheSite := '',  inSession := '3');
+--select * from gpUpdate_Goods_inHideOnTheSite(inGoodsMainId := 39513 , inisHideOnTheSite := '',  inSession := '3');gpUpdate_Goods_inHideOnTheSite

@@ -296,6 +296,7 @@ type
     actExecUpdate_isExpDateExcSite: TdsdExecStoredProc;
     spUpdate_inExpDateExcSite_Revert: TdsdStoredProc;
     dxBarButton16: TdxBarButton;
+    isHideOnTheSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -303,6 +303,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object isOnlyTimingSUN: TcxGridDBColumn
+            Caption = #1054#1090#1076#1072#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' (V.1)'
+            DataBinding.FieldName = 'isOnlyTimingSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
           object isSUN_v3_in: TcxGridDBColumn
             Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1087#1088#1080#1077#1084')'
             DataBinding.FieldName = 'isSUN_v3_in'
@@ -3765,6 +3773,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actGet_TelegramBotToken'
     end
+    object mactUpdate_isOnlyTimingSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isOnlyTimingSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' (V.1)"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' (V.1)"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1089#1088#1086#1082#1086#1074#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' (V.1)"'
+      ImageIndex = 79
+    end
+    object actUpdate_isOnlyTimingSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isOnlyTimingSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isOnlyTimingSUN
+        end>
+      Caption = 'actUpdate_isOnlyTimingSUN'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4496,6 +4529,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton25'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4607,6 +4644,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton24: TdxBarButton
       Action = actSendTelegramBotName
+      Category = 0
+    end
+    object dxBarButton25: TdxBarButton
+      Action = mactUpdate_isOnlyTimingSUN
       Category = 0
     end
   end
@@ -6725,7 +6766,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1032
+    Left = 1016
     Top = 403
   end
   object spUpdate_UnitSAUA: TdsdStoredProc
@@ -7477,5 +7518,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 144
     Top = 139
+  end
+  object spUpdate_isOnlyTimingSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isOnlyTimingSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyTimingSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOnlyTimingSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOnlyTimingSUN'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 99
   end
 end

@@ -66,7 +66,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isShareFromPrice Boolean, isOutUKTZED_SUN1 Boolean
              , isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
-             , isBlockCommentSendTP Boolean
+             , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
              , TelegramId TVarChar
 ) AS
@@ -257,6 +257,7 @@ BEGIN
       , COALESCE (ObjectBoolean_PauseDistribListDiff.ValueData, FALSE)    :: Boolean     AS isPauseDistribListDiff
       , COALESCE (ObjectBoolean_RequestDistribListDiff.ValueData, FALSE)  :: Boolean     AS isRequestDistribListDiff
       , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE)      :: Boolean     AS isBlockCommentSendTP
+      , COALESCE (ObjectBoolean_OnlyTimingSUN.ValueData, FALSE)           :: Boolean     AS isOnlyTimingSUN
       
       , ObjectString_PharmacyManager.ValueData                                           AS PharmacyManager
       , ObjectString_PharmacyManagerPhone.ValueData                                      AS PharmacyManagerPhone
@@ -617,6 +618,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
                                 ON ObjectBoolean_BlockCommentSendTP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OnlyTimingSUN
+                                ON ObjectBoolean_OnlyTimingSUN.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

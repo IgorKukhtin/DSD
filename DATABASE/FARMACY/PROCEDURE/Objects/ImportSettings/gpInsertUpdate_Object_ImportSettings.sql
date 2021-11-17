@@ -94,7 +94,7 @@ BEGIN
        PERFORM gpInsertUpdate_Object_ImportSettingsItems (ioId                      := 0     	-- ключ объекта <>
                                                         , inName                    := tmp.ParamValue
                                                         , inImportSettingsId        := ioId
-                                                        , inImportTypeItemsId       := tmp.Id
+                                                        , inImportTypeItemsId       := tmp.ImportTypeItemsId
                                                         , inDefaultValue            := ''
                                                         , inConvertFormatInExcel    := FALSE
                                                         , inSession                 := inSession

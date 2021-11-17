@@ -25,19 +25,27 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , CASE WHEN COALESCE(ObjectBoolean_Goods_Published.ValueData,FALSE)=TRUE THEN 1::Integer ELSE 0::Integer END AS published
        , CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   AS deleted
        , ObjectLink_Goods_Object.ChildObjectId                  AS ObjectId
+       , COALESCE(ObjectBoolean_Goods_HideOnTheSite.ValueData, FALSE) AS isHideOnTheSite
 
     -- FROM Object_Goods_View AS Object_Goods
     FROM ObjectLink AS ObjectLink_Goods_Object
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-            LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                                   ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId
-                                  AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
-                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+        LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                               ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId
+                              AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
 
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                             ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
+                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                             ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                            AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+        LEFT JOIN ObjectLink AS ObjectLink_Main 
+                             ON ObjectLink_Main.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                            AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Site
                                     ON ObjectFloat_Goods_Site.ObjectId = ObjectLink_Goods_Object.ObjectId
@@ -45,6 +53,9 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectBoolean AS ObjectBoolean_Goods_Published
                                       ON ObjectBoolean_Goods_Published.ObjectId = ObjectLink_Goods_Object.ObjectId
                                      AND ObjectBoolean_Goods_Published.DescId = zc_ObjectBoolean_Goods_Published()
+        LEFT OUTER JOIN ObjectBoolean AS ObjectBoolean_Goods_HideOnTheSite
+                                      ON ObjectBoolean_Goods_HideOnTheSite.ObjectId = ObjectLink_Main.ChildObjectId 
+                                     AND ObjectBoolean_Goods_HideOnTheSite.DescId = zc_ObjectBoolean_Goods_HideOnTheSite()
         LEFT OUTER JOIN ObjectString AS ObjectString_Foto
                                      ON ObjectString_Foto.ObjectId = ObjectLink_Goods_Object.ObjectId
                                     AND ObjectString_Foto.DescId = zc_ObjectString_Goods_Foto()

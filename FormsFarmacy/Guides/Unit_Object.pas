@@ -422,6 +422,11 @@ type
     dxBarButton24: TdxBarButton;
     spGet_TelegramBotToken: TdsdStoredProc;
     actGet_TelegramBotToken: TdsdExecStoredProc;
+    isOnlyTimingSUN: TcxGridDBColumn;
+    mactUpdate_isOnlyTimingSUN: TMultiAction;
+    actUpdate_isOnlyTimingSUN: TdsdExecStoredProc;
+    spUpdate_isOnlyTimingSUN: TdsdStoredProc;
+    dxBarButton25: TdxBarButton;
   private
     { Private declarations }
   public

@@ -7545,6 +7545,7 @@ begin
                             '. Рек. произв. ' + LikiDniproReceiptApi.PositionCDS.FieldByName('doctor_recommended_manufacturer').AsString);
 
   SetMorionCodeFilter;
+  if cbMorionFilter.Checked = True then cbMorionFilter.Checked := False;
 
 end;
 
