@@ -391,10 +391,14 @@ end;
 
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJackdawsGreenJournalCashForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPReceiptListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPReceiptListForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJackdawsGreenJournalCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJackdawsGreenJournalCashForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCustomerThresho_RemainsGoodsCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCustomerThresho_RemainsGoodsCashForm');
 
@@ -1044,6 +1048,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_RelatedCodesSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSend_RelatedCodesSUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RelatedCodesSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RelatedCodesSUNForm');

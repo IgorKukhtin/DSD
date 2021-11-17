@@ -85,19 +85,27 @@ BEGIN
      , tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
                                   , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                             FROM tmpResult AS MovementItem
+                             FROM tmpMovement AS Movement
 
-                                  INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
+                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
+
+                                  INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                               AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                               AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                              UNION ALL
                              SELECT MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
                                   , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                             FROM tmpResult AS MovementItem
+                             FROM tmpMovement AS Movement
+
+                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
 
                                   INNER JOIN MovementItemProtocol_arc AS MovementItemProtocol
-                                                                      ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
+                                                                      ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                                      AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                             )
@@ -110,13 +118,14 @@ BEGIN
                             , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
                        FROM tmpProtocolAll
                        WHERE tmpProtocolAll.Ord = 1)
-     , tmpResulAll AS (SELECT Sum(tmpProtocol.AmountAuto)                                                 AS AmountZeroing
-                            , Sum(COALESCE( tmpProtocol.AmountAuto, MovementItem.Amount))                 AS AmountAuto
+     , tmpResulAll AS (SELECT Sum(COALESCE( tmpProtocol.AmountAuto, MovementItem.Amount) - MovementItem.Amount) AS AmountZeroing
+                            , Sum(COALESCE( tmpProtocol.AmountAuto, MovementItem.Amount))                       AS AmountAuto
                        FROM tmpMovement AS Movement
 
                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                   AND MovementItem.DescId = zc_MI_Master()
                                                   AND MovementItem.isErased = FALSE
+                                                  
                             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = MovementItem.Id
                      --  WHERE Movement.StatusId = zc_Enum_Status_Complete() 
                      )
@@ -183,4 +192,4 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 -- тест
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
 
-select * from gpReport_CommentSendSUN(inStartDate := ('08.02.2021')::TDateTime , inEndDate := ('14.02.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_CommentSendSUN(inStartDate := ('16.11.2021')::TDateTime , inEndDate := ('21.11.2021')::TDateTime ,  inSession := '3');

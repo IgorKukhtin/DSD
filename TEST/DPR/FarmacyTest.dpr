@@ -1121,7 +1121,9 @@ uses
   GroupMedicalProgramSP in '..\..\FormsFarmacy\Guides\GroupMedicalProgramSP.pas' {GroupMedicalProgramSPForm: TParentForm},
   TelegramProtocol in '..\..\FormsFarmacy\System\TelegramProtocol.pas' {TelegramProtocolForm: TParentForm},
   Report_MonitoringCollectionSUN in '..\..\FormsFarmacy\Report\Report_MonitoringCollectionSUN.pas' {Report_MonitoringCollectionSUNForm: TParentForm},
-  Report_RelatedCodesSUN in '..\..\FormsFarmacy\Report\Report_RelatedCodesSUN.pas' {Report_RelatedCodesSUNForm: TParentForm};
+  Report_RelatedCodesSUN in '..\..\FormsFarmacy\Report\Report_RelatedCodesSUN.pas' {Report_RelatedCodesSUNForm: TParentForm},
+  GoodsSPReceiptList in '..\..\FormsFarmacy\Cash\GoodsSPReceiptList.pas' {GoodsSPReceiptListForm: TParentForm},
+  Send_RelatedCodesSUN in '..\..\FormsFarmacy\Document\Send_RelatedCodesSUN.pas' {Send_RelatedCodesSUNForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

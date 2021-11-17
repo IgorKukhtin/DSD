@@ -25,7 +25,6 @@ object Report_RelatedCodesSUNForm: TReport_RelatedCodesSUNForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 863
     object deStart: TcxDateEdit
       Left = 119
       Top = 5
@@ -64,7 +63,6 @@ object Report_RelatedCodesSUNForm: TReport_RelatedCodesSUNForm
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 863
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -599,41 +597,42 @@ object Report_RelatedCodesSUNForm: TReport_RelatedCodesSUNForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TSendForm'
-      FormNameParam.Value = ''
+      FormName = 'TSend_RelatedCodesSUNForm'
+      FormNameParam.Value = 'TSend_RelatedCodesSUNForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id'
+          Name = 'OperDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsID'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
+          ComponentItem = 'GoodsID'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 43466d
-          Component = deEnd
-          DataType = ftDateTime
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
+      IdFieldName = 'GoodsID'
     end
   end
   object dsdStoredProc: TdsdStoredProc

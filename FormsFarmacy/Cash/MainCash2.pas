@@ -592,6 +592,8 @@ type
     spGet_Goods_CodeRazom: TdsdStoredProc;
     MainDeferredTR: TcxGridDBColumn;
     MemDataDEFERENDT: TCurrencyField;
+    btnGoodsSPReceiptList: TcxButton;
+    actGoodsSPReceiptList: TdsdOpenForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -747,6 +749,7 @@ type
     procedure actSenClipboardNameExecute(Sender: TObject);
     procedure actStartExamExecute(Sender: TObject);
     procedure actDoctorsExecute(Sender: TObject);
+    procedure btnGoodsSPReceiptListClick(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -1690,6 +1693,7 @@ begin
   lblAmount.Visible := false;
   pnlDiscount.Visible := false;
   pnlSP.Visible := false;
+  btnGoodsSPReceiptList.Visible := false;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   ceSummCard.Value := 0;
@@ -1991,6 +1995,7 @@ begin
     DateToStr(FormParams.ParamByName('OperDateSP').Value);
   lblMemberSP.Caption := '  ' + FormParams.ParamByName('MemberSP').Value;
   pnlSP.Visible := FormParams.ParamByName('InvNumberSP').Value <> '';
+  btnGoodsSPReceiptList.Visible := false;
 
   lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
   if (FormParams.ParamByName('ConfirmedKindName').AsString <> '') then
@@ -6311,6 +6316,7 @@ begin
   else
     lblSPKindName.Caption := '  ' + FormParams.ParamByName('SPKindName').Value;
   pnlSP.Visible := InvNumberSP <> '';
+  btnGoodsSPReceiptList.Visible := FormParams.ParamByName('HelsiIDList').Value <> '';
   if FormParams.ParamByName('HelsiID').Value <> '' then
   begin
     Label30.Caption := '     Медикамент.: ';
@@ -6403,6 +6409,7 @@ begin
       DateToStr(FormParams.ParamByName('OperDateSP').Value);
     lblMemberSP.Caption := '  ' + FormParams.ParamByName('MemberSP').Value;
     pnlSP.Visible := FormParams.ParamByName('InvNumberSP').Value <> '';
+    btnGoodsSPReceiptList.Visible := false;
   end;
 end;
 
@@ -6553,6 +6560,7 @@ begin
   else
     lblSPKindName.Caption := '  ' + FormParams.ParamByName('SPKindName').Value;
   pnlSP.Visible := InvNumberSP <> '';
+  btnGoodsSPReceiptList.Visible := FormParams.ParamByName('HelsiIDList').Value <> '';
   if FormParams.ParamByName('HelsiID').Value <> '' then
   begin
     Label30.Caption := '     Медикамент.: ';
@@ -7048,6 +7056,15 @@ begin
   End;
   APoint := btnCheck.ClientToScreen(Point(0, btnCheck.ClientHeight));
   pm_OpenCheck.Popup(APoint.X, APoint.Y);
+end;
+
+procedure TMainCashForm2.btnGoodsSPReceiptListClick(Sender: TObject);
+begin
+  //
+  actGoodsSPReceiptList.GuiParams.ParamByName('MedicalProgramSPId').Value := FormParams.ParamByName('MedicalProgramSPId').Value;
+  actGoodsSPReceiptList.GuiParams.ParamByName('Medication_ID_List').Value :=
+    StringReplace(FormParams.ParamByName('HelsiIDList').Value, FormatSettings.ListSeparator, ',', [rfReplaceAll]);
+  actGoodsSPReceiptList.Execute;
 end;
 
 procedure TMainCashForm2.cbMorionFilterPropertiesChange(Sender: TObject);
@@ -10090,6 +10107,7 @@ begin
   lblAmount.Visible := false;
   pnlDiscount.Visible := false;
   pnlSP.Visible := false;
+  btnGoodsSPReceiptList.Visible := false;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   ceSummCard.Value := 0;
