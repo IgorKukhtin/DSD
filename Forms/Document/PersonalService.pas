@@ -234,18 +234,18 @@ type
     bbGridToExcel_Child_all: TdxBarButton;
     cxRate: TcxGridDBColumn;
     cxKoeff: TcxGridDBColumn;
-    actSMTPFileCSV: TdsdSMTPFileAction;
-    actExport_GridCSV: TExportGrid;
-    actSelect_ExportCSV: TdsdExecStoredProc;
-    actGet_Export_FileNameCSV: TdsdExecStoredProc;
-    actGet_Export_CSV: TdsdExecStoredProc;
-    actExportMail: TMultiAction;
-    spGet_FileNameCSV: TdsdStoredProc;
-    spSelect_mail: TdsdStoredProc;
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
-    spGet_Export_Email: TdsdStoredProc;
     bb: TdxBarButton;
+    spGet_Export_EmailCSV: TdsdStoredProc;
+    actGet_Export_EmailCSV: TdsdExecStoredProc;
+    spGet_Export_FileNameCSV: TdsdStoredProc;
+    actGet_Export_FileNameCSV: TdsdExecStoredProc;
+    spSelect_ExportCSV: TdsdStoredProc;
+    actSelect_ExportCSV: TdsdExecStoredProc;
+    actExport_GridCSV: TExportGrid;
+    actSMTPFileCSV: TdsdSMTPFileAction;
+    mactExportCSV: TMultiAction;
   private
     { Private declarations }
   public

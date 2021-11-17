@@ -88,8 +88,8 @@ BEGIN
               FROM tmp
              UNION ALL
               --пустая строка
-             /* SELECT ''
-             UNION ALL*/
+              SELECT ''
+             UNION ALL
               --итого 
               SELECT ''
            || ';' || ''
