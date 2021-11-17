@@ -246,6 +246,7 @@ type
     actExport_GridCSV: TExportGrid;
     actSMTPFileCSV: TdsdSMTPFileAction;
     mactExportCSV: TMultiAction;
+    ExportGrid1: TExportGrid;
   private
     { Private declarations }
   public

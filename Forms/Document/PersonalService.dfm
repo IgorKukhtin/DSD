@@ -2464,7 +2464,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actExportZPDate: TMultiAction [3]
+    object ExportGrid1: TExportGrid [3]
+      Category = 'Export_Email'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_GridCSV'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+    end
+    object actExportZPDate: TMultiAction [4]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -2482,7 +2492,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actGridToExcel_Child_all: TdsdGridToExcel [4]
+    object actGridToExcel_Child_all: TdsdGridToExcel [5]
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -2493,7 +2503,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actRefreshMaster: TdsdDataSetRefresh [5]
+    object actRefreshMaster: TdsdDataSetRefresh [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -2559,7 +2569,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [13]
+    object actUpdateIsMain: TdsdExecStoredProc [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2578,7 +2588,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [15]
+    object actPrint_Detail: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -2619,7 +2629,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [16]
+    object actPrint_All: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2716,7 +2726,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [24]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2743,7 +2753,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [27]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3398,6 +3408,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object actExport_GridCSV: TExportGrid
       Category = 'Export_Email'
+      ActiveControl = ExportXmlGrid
       MoveParams = <>
       ExportType = cxegExportToText
       Grid = ExportXmlGrid
@@ -3471,8 +3482,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
       ImageIndex = 53
     end
   end

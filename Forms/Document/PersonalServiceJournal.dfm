@@ -1,27 +1,27 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 433
+  ClientHeight = 705
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 471
+  ExplicitHeight = 743
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1221
-    Height = 376
+    Height = 648
     TabOrder = 3
     ExplicitWidth = 1221
     ExplicitHeight = 376
-    ClientRectBottom = 376
+    ClientRectBottom = 648
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 376
+        Height = 563
         ExplicitWidth = 1221
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -919,6 +919,43 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           end
         end
       end
+      object ExportXmlGrid: TcxGrid
+        Left = 0
+        Top = 563
+        Width = 1221
+        Height = 85
+        Align = alBottom
+        TabOrder = 1
+        Visible = False
+        ExplicitTop = 457
+        ExplicitWidth = 1307
+        object ExportXmlGridDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ExportDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          OptionsView.Header = False
+          object RowData: TcxGridDBColumn
+            DataBinding.FieldName = 'RowData'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+        end
+        object ExportXmlGridLevel: TcxGridLevel
+          GridView = ExportXmlGridDBTableView
+        end
+      end
     end
   end
   inherited Panel: TPanel
@@ -1451,8 +1488,121 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       MoveParams = <>
       dsdStoredProcName = spSelect_Export
       FileExt = '.xml'
-      Left = 1208
-      Top = 176
+      Left = 1072
+      Top = 240
+    end
+    object actExport_GridCSV: TExportGrid
+      Category = 'Export_Email'
+      ActiveControl = ExportXmlGrid
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_GridCSV'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+    end
+    object actSMTPFileCSV: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actGet_Export_FileNameCSV: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameCSV
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameCSV
+        end>
+      Caption = 'actGet_Export_FileNameCSV'
+    end
+    object actGet_Export_EmailCSV: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_EmailCSV
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_EmailCSV
+        end>
+      Caption = 'actGet_Export_EmailCSV'
+    end
+    object actSelect_ExportCSV: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_ExportCSV
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ExportCSV
+        end>
+      Caption = 'actSelect_ExportCSV'
+    end
+    object mactExportCSV: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_EmailCSV
+        end
+        item
+          Action = actGet_Export_FileNameCSV
+        end
+        item
+          Action = actSelect_ExportCSV
+        end
+        item
+          Action = actExport_GridCSV
+        end
+        item
+          Action = actSMTPFileCSV
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
+      ImageIndex = 53
     end
   end
   inherited MasterDS: TDataSource
@@ -1632,6 +1782,18 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           Visible = True
           ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportCSV'
         end>
     end
     object bbTax: TdxBarButton
@@ -1689,6 +1851,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object bbExport: TdxBarButton
       Action = actExport
+      Category = 0
+    end
+    object bbExportCSV: TdxBarButton
+      Action = mactExportCSV
       Category = 0
     end
   end
@@ -1767,7 +1933,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -1899,9 +2064,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 80
-    Top = 200
+    Left = 160
+    Top = 408
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -2160,5 +2326,118 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 1104
     Top = 176
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 232
+    Top = 520
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 80
+    Top = 505
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 24
+    Top = 504
+  end
+  object spGet_Export_EmailCSV: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PersonalService_Email'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 512
+  end
+  object spGet_Export_FileNameCSV: TdsdStoredProc
+    StoredProcName = 'gpGet_PersonalService_FileNameCSV'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_GridCSV
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_GridCSV
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_GridCSV
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFileCSV
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_GridCSV
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 512
+  end
+  object spSelect_ExportCSV: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_mail'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 512
   end
 end

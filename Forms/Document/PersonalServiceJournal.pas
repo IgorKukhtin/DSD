@@ -107,6 +107,23 @@ type
     bbExport: TdxBarButton;
     actExport_file: TdsdStoredProcExportToFile;
     isMail: TcxGridDBColumn;
+    actExport_GridCSV: TExportGrid;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    ExportDS: TDataSource;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    spGet_Export_EmailCSV: TdsdStoredProc;
+    spGet_Export_FileNameCSV: TdsdStoredProc;
+    actSMTPFileCSV: TdsdSMTPFileAction;
+    actGet_Export_FileNameCSV: TdsdExecStoredProc;
+    actGet_Export_EmailCSV: TdsdExecStoredProc;
+    actSelect_ExportCSV: TdsdExecStoredProc;
+    spSelect_ExportCSV: TdsdStoredProc;
+    mactExportCSV: TMultiAction;
+    bbExportCSV: TdxBarButton;
   private
     { Private declarations }
   public
