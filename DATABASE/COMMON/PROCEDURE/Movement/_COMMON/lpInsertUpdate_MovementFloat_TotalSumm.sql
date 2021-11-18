@@ -45,6 +45,7 @@ $BODY$
   DECLARE vbTotalSummMinus            TFloat;
   DECLARE vbTotalSummAdd              TFloat;
   DECLARE vbTotalSummAuditAdd         TFloat;
+  DECLARE vbTotalSummHouseAdd         TFloat;
   DECLARE vbTotalDayAudit             TFloat;
   DECLARE vbTotalSummHoliday          TFloat;
   DECLARE vbTotalSummSocialIn         TFloat;
@@ -339,6 +340,7 @@ BEGIN
           , OperSumm_TransportAddLong
           , OperSumm_TransportTaxi
           , OperSumm_Phone
+          , OperSumm_HouseAdd
           , OperSumm_NalogRet
           , OperSumm_NalogRetRecalc
           , OperSumm_AddOth
@@ -361,7 +363,7 @@ BEGIN
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalDayAudit, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
-               , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
+               , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone, vbTotalSummHouseAdd
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
                , vbTotalSummAddOth, vbTotalSummAddOthRecalc
                , vbTotalSummFine, vbTotalSummHosp, vbTotalSummFineOth, vbTotalSummHospOth, vbTotalSummFineOthRecalc, vbTotalSummHospOthRecalc
@@ -471,6 +473,7 @@ BEGIN
                                , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0))   AS OperSumm_TransportAddLong
                                , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))      AS OperSumm_TransportTaxi
                                , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))              AS OperSumm_Phone
+                               , SUM (COALESCE (MIFloat_SummHouseAdd.ValueData, 0))           AS OperSumm_HouseAdd
 
                                , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))           AS OperSumm_NalogRet
                                , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))     AS OperSumm_NalogRetRecalc
@@ -697,6 +700,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                            ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                                           ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                            ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -922,6 +928,7 @@ BEGIN
                 , OperSumm_TransportAddLong
                 , OperSumm_TransportTaxi
                 , OperSumm_Phone
+                , OperSumm_HouseAdd
                 , OperSumm_NalogRet
                 , OperSumm_NalogRetRecalc
                 , OperSumm_AddOth
@@ -1076,6 +1083,7 @@ BEGIN
                       , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
                       , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
                       , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
+                      , SUM (tmpMI.OperSumm_HouseAdd)         AS OperSumm_HouseAdd
                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
@@ -1203,6 +1211,7 @@ BEGIN
                             , tmpMI.OperSumm_TransportAddLong
                             , tmpMI.OperSumm_TransportTaxi
                             , tmpMI.OperSumm_Phone
+                            , tmpMI.OperSumm_HouseAdd
                             , tmpMI.OperSumm_NalogRet
                             , tmpMI.OperSumm_NalogRetRecalc
 
@@ -1304,6 +1313,7 @@ BEGIN
                                    , tmpMI.OperSumm_TransportAddLong
                                    , tmpMI.OperSumm_TransportTaxi
                                    , tmpMI.OperSumm_Phone
+                                   , tmpMI.OperSumm_HouseAdd
 
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
@@ -1449,6 +1459,7 @@ BEGIN
                                    , tmpMI.OperSumm_TransportAddLong
                                    , tmpMI.OperSumm_TransportTaxi
                                    , tmpMI.OperSumm_Phone
+                                   , tmpMI.OperSumm_HouseAdd
 
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
@@ -1533,6 +1544,7 @@ BEGIN
                                    , tmpMI.OperSumm_TransportAddLong
                                    , tmpMI.OperSumm_TransportTaxi
                                    , tmpMI.OperSumm_Phone
+                                   , tmpMI.OperSumm_HouseAdd
 
                                    , tmpMI.OperSumm_NalogRet
                                    , tmpMI.OperSumm_NalogRetRecalc
@@ -1690,6 +1702,9 @@ BEGIN
          -- Сохранили свойство <Компенсация(ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCompensationRecalc(), inMovementId, vbTotalSummCompensationRecalc);
 
+         -- Сохранили свойство <Итого Сумма компенсации за жилье)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHouseAdd(), inMovementId, vbTotalSummHouseAdd);
+
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -1761,6 +1776,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.11.21         *
  25.03.20         *
  15.09.19         *
  29.07.19         *
