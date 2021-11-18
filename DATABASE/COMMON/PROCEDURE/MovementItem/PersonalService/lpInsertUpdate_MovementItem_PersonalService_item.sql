@@ -7,13 +7,23 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Intege
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
     IN inisMain              Boolean   , -- Основное место работы
+
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф.
@@ -37,6 +47,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
 
     IN inSummCompensationRecalc TFloat , -- компенсация (ввод)
     IN inSummAuditAdd           TFloat , -- Сумма доплата за аудит
+    IN inSummHouseAdd           TFloat , -- Сумма доплата за жилье
 
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
