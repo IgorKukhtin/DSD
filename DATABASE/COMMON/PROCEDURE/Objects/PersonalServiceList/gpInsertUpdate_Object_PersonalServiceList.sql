@@ -9,7 +9,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 
@@ -27,6 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inBankAccountId         Integer   ,     --
     IN inPSLExportKindId       Integer   ,     --
     IN inCompensation          TFloat    ,     -- месяц компенсации
+    IN inKoeffSummCardSecond   TFloat    ,     -- Коэфф для выгрузки ведомости Банк 2ф.
     IN inisSecond              Boolean   ,     -- 
     IN inisRecalc              Boolean   ,     -- 
     IN inisBankOut             Boolean   ,     -- 
@@ -99,7 +101,9 @@ BEGIN
     
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_Compensation(), ioId, inCompensation);
-        
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond(), ioId, inKoeffSummCardSecond);
+           
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -110,7 +114,8 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.0421          * inisDetail
+ 18.11.21         *
+ 28.04.21         * inisDetail
  18.03.21         * 
  17.11.20         * add inisBankOut
  17.02.20         * add inisRecalc

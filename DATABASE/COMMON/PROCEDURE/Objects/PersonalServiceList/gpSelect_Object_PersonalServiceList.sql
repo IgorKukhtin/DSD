@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PSLExportKindId Integer, PSLExportKindName TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
+             , KoeffSummCardSecond TFloat
              , Compensation TFloat, CompensationName TVarChar
              , isSecond Boolean
              , isRecalc Boolean
@@ -72,7 +73,8 @@ BEGIN
            , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
            , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
 
-           , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat   AS Compensation
+           , COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) :: TFloat AS KoeffSummCardSecond
+           , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
            , (CASE COALESCE (ObjectFloat_Compensation.ValueData, 0)
                    WHEN 1 THEN 'Январь'
                    WHEN 2 THEN 'Февраль'
@@ -118,6 +120,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
                                 AND ObjectFloat_Compensation.DescId = zc_ObjectFloat_PersonalServiceList_Compensation()
+           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
+                                 ON ObjectFloat_KoeffSummCardSecond.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
 
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Juridical
                                 ON ObjectLink_PersonalServiceList_Juridical.ObjectId = Object_PersonalServiceList.Id 
@@ -189,6 +194,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                  Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.11.21          *
  28.04.21          * isDetail
  17.11.20          * isBankOut
  25.05.20          * isPersonalOut

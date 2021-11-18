@@ -106,7 +106,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 11
-    Width = 273
+    Width = 177
   end
   object cxLabel16: TcxLabel
     Left = 10
@@ -198,7 +198,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cbRecalc: TcxCheckBox
     Left = 154
-    Top = 388
+    Top = 384
     Hint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
     ParentShowHint = False
@@ -281,6 +281,27 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     ShowHint = True
     TabOrder = 33
     Width = 94
+  end
+  object edKoeffSummCardSecond: TcxCurrencyEdit
+    Left = 193
+    Top = 164
+    Hint = #1050#1086#1101#1092#1092' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1041#1072#1085#1082' 2'#1092'.'
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    ShowHint = True
+    TabOrder = 34
+    Width = 90
+  end
+  object cxLabel13: TcxLabel
+    Left = 193
+    Top = 146
+    Hint = #1050#1086#1101#1092#1092' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1041#1072#1085#1082' 2'#1092'.'
+    Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
+    ParentShowHint = False
+    ShowHint = True
   end
   object ActionList: TActionList
     Left = 88
@@ -423,6 +444,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inKoeffSummCardSecond'
+        Value = Null
+        Component = edKoeffSummCardSecond
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisSecond'
         Value = Null
         Component = ceisSecond
@@ -471,8 +500,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 120
+    Left = 232
+    Top = 56
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -482,8 +511,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 128
+    Left = 64
+    Top = 96
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PersonalServiceList'
@@ -694,6 +723,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = cbDetail
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KoeffSummCardSecond'
+        Value = Null
+        Component = edKoeffSummCardSecond
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -745,8 +781,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 104
+    Left = 144
+    Top = 72
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -799,8 +835,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 149
+    Left = 120
+    Top = 189
   end
   object BankGuides: TdsdGuides
     KeyField = 'Id'

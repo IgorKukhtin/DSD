@@ -75,6 +75,8 @@ type
     edOnFlowType: TcxTextEdit;
     cxLabel11: TcxLabel;
     cbDetail: TcxCheckBox;
+    edKoeffSummCardSecond: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

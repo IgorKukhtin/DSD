@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail(
 RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
+   DECLARE vbKoeffSummCardSecond TFloat; 
 BEGIN
 
      -- Проверка
@@ -23,6 +24,16 @@ BEGIN
                          
      END IF;
 
+     -- определили данные из ведомости начисления
+     SELECT ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
+   INTO vbKoeffSummCardSecond
+     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+          LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
+                                ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                               AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
+     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
+
 /*
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК
@@ -33,9 +44,11 @@ BEGIN
           , ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId AS PSLExportKindId    -- Тип выгрузки ведомости в банк
           , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType  -- Content-Type
           , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType   -- Вид начисления в банке
+          , ObjectFloat_KoeffSummCardSecond.ValueData       AS KoeffSummCardSecond --Коэфф для выгрузки ведомости Банк 2ф.
    INTO vbBankId, vbBankName, vbMFO
       , vbBankAccountId, vbBankAccountName
       , vbPSLExportKindId, vbContentType, vbOnFlowType
+      , vbKoeffSummCardSecond
      FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
                                 ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
@@ -62,9 +75,18 @@ BEGIN
                                   ON ObjectString_MFO.ObjectId = Object_Bank.Id
                                  AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
+                                 ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
+
      WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 */
+     --если не внесен коєф. берем по умолчанию = 1.00807
+     IF COALESCE (vbKoeffSummCardSecond,0) = 0
+     THEN
+         vbKoeffSummCardSecond := 1.00807;
+     END IF;
 
      -- Таблица для результата
      CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
@@ -74,7 +96,7 @@ BEGIN
       WITH
       tmp AS (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond
                    , COALESCE (gpSelect.INN, '')  AS INN
-                   , SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00807 AS NUMERIC (16, 1))))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
+                   , SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
                    , UPPER (COALESCE (gpSelect.PersonalName, '') )  AS PersonalName
               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
            --   WHERE gpSelect.SummCardSecondRecalc <> 0
