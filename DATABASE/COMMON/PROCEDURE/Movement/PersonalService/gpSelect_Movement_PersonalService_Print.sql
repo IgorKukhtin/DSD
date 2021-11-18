@@ -72,6 +72,7 @@ BEGIN
             + COALESCE (MovementFloat_TotalSummHospOth.ValueData, 0)
             + CAST (COALESCE (MovementFloat_TotalSummCompensation.ValueData, 0) AS NUMERIC (16, 2))
             -- + COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)
+            + COALESCE (MovementFloat_TotalSummHouseAdd.ValueData, 0)
              ) :: TFloat AS TotalSummService
               -- !!!временно!!!
            , (COALESCE (MovementFloat_TotalSummMinus.ValueData, 0)
@@ -183,6 +184,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAuditAdd
                                     ON MovementFloat_TotalSummAuditAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAuditAdd.DescId = zc_MovementFloat_TotalSummAuditAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHouseAdd
+                                    ON MovementFloat_TotalSummHouseAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHouseAdd.DescId = zc_MovementFloat_TotalSummHouseAdd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHosp
                                     ON MovementFloat_TotalSummHosp.MovementId = Movement.Id
