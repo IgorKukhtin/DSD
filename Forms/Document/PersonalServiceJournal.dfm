@@ -13,17 +13,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Height = 648
     TabOrder = 3
     ExplicitWidth = 1221
-    ExplicitHeight = 376
+    ExplicitHeight = 648
     ClientRectBottom = 648
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 376
+      ExplicitHeight = 648
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
         ExplicitWidth = 1221
-        ExplicitHeight = 376
+        ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -927,8 +927,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitTop = 457
-        ExplicitWidth = 1307
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1493,7 +1491,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object actExport_GridCSV: TExportGrid
       Category = 'Export_Email'
-      ActiveControl = ExportXmlGrid
       MoveParams = <>
       ExportType = cxegExportToText
       Grid = ExportXmlGrid
@@ -1600,8 +1597,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
     end
   end

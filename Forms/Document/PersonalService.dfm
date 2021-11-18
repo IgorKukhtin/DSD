@@ -1,26 +1,25 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 681
-  ClientWidth = 1307
-  ExplicitWidth = 1323
+  ClientWidth = 1135
+  ExplicitWidth = 1151
   ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1307
+    Width = 1135
     Height = 566
-    ExplicitLeft = 8
     ExplicitTop = 115
     ExplicitWidth = 1307
     ExplicitHeight = 566
     ClientRectBottom = 566
-    ClientRectRight = 1307
+    ClientRectRight = 1135
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1307
       ExplicitHeight = 542
       inherited cxGrid: TcxGrid
-        Width = 1307
+        Width = 1135
         Height = 147
         ExplicitWidth = 1307
         ExplicitHeight = 147
@@ -1265,11 +1264,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 152
-        Width = 1307
+        Width = 1135
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1307
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -1638,19 +1638,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 147
-        Width = 1307
+        Width = 1135
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1307
       end
       object cxGrid2: TcxGrid
         Left = 0
         Top = 319
-        Width = 1307
+        Width = 1135
         Height = 138
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 3
+        ExplicitWidth = 1307
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -1792,21 +1794,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 313
-        Width = 1307
+        Width = 1135
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid2
+        ExplicitWidth = 1307
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 457
-        Width = 1307
+        Width = 1135
         Height = 85
         Align = alBottom
         TabOrder = 5
         Visible = False
+        ExplicitWidth = 1307
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1838,14 +1842,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitWidth = 1307
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1307
+        Width = 1135
         Height = 542
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1307
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1931,14 +1937,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitWidth = 1307
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1307
+        Width = 1135
         Height = 542
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1307
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -2262,7 +2270,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1307
+    Width = 1135
     Height = 89
     TabOrder = 3
     ExplicitWidth = 1307
@@ -2319,7 +2327,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Left = 708
       Top = 23
       TabOrder = 8
-      Width = 365
+      Width = 251
     end
     object cxLabel12: TcxLabel
       Left = 708
@@ -2404,6 +2412,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
       TabOrder = 19
       Width = 92
     end
+    object cbMail: TcxCheckBox
+      Left = 967
+      Top = 23
+      Hint = #1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088'. '#1087#1086' '#1087#1086#1095#1090#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 20
+      Width = 106
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 520
@@ -2486,17 +2505,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object ExportGrid1: TExportGrid [3]
-      Category = 'Export_Email'
-      MoveParams = <>
-      ExportType = cxegExportToText
-      Grid = ExportXmlGrid
-      Caption = 'actExport_GridCSV'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      DefaultFileExt = 'XML'
-    end
-    object actExportZPDate: TMultiAction [4]
+    object actExportZPDate: TMultiAction [3]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -2514,7 +2523,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
       ImageIndex = 67
     end
-    object actGridToExcel_Child_all: TdsdGridToExcel [5]
+    object actGridToExcel_Child_all: TdsdGridToExcel [4]
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
@@ -2525,7 +2534,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actRefreshMaster: TdsdDataSetRefresh [6]
+    object actRefreshMaster: TdsdDataSetRefresh [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -2591,7 +2600,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spSelectChild
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [14]
+    object actUpdateIsMain: TdsdExecStoredProc [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2610,7 +2619,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_Detail: TdsdPrintAction [16]
+    object actPrint_Detail: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintDetail
@@ -2651,7 +2660,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [17]
+    object actPrint_All: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2748,7 +2757,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [25]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2775,7 +2784,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [28]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3430,7 +3439,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object actExport_GridCSV: TExportGrid
       Category = 'Export_Email'
-      ActiveControl = ExportXmlGrid
       MoveParams = <>
       ExportType = cxegExportToText
       Grid = ExportXmlGrid
@@ -3504,8 +3512,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1084#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
     end
   end
@@ -4065,6 +4073,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Name = 'isDetail'
         Value = Null
         Component = cbDetail
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMail'
+        Value = Null
+        Component = cbMail
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -5381,8 +5396,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   object MessageDS: TDataSource
     DataSet = MessageDCS
-    Left = 864
-    Top = 592
+    Left = 856
+    Top = 568
   end
   object spSelectMIMessage: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Message'
@@ -5949,8 +5964,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 800
-    Top = 624
+    Left = 912
+    Top = 584
   end
   object spSelect_ExportCSV: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_mail'
@@ -5969,7 +5984,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 632
+    Left = 984
+    Top = 608
   end
 end

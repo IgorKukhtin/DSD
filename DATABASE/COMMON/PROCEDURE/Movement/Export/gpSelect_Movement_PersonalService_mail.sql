@@ -99,7 +99,7 @@ BEGIN
 
 
      -- сохранили свойство <Сформирована Выгрузка (да/нет)>
-     --PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
 
      -- Результат
      RETURN QUERY
