@@ -1385,6 +1385,8 @@ BEGIN
           ) AS tmpMovement
            ;
 
+     --при проведении/перепроведении признак Mail ставим = FALSE
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, FALSE);
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
