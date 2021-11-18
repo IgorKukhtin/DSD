@@ -3451,7 +3451,8 @@ begin
         if (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> 0) and
            (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> DiscountServiceForm.gDiscountExternalId) and
            ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) or
-           (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) then
+           (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) and
+           (FormParams.ParamByName('SPKindId').Value = 0) then
         begin
           if not gc_User.Local then
           begin

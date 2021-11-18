@@ -188,7 +188,7 @@ BEGIN
                   ) :: TVarChar;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isOnlyTimingSUN)
         SELECT OB.ObjectId
              , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
              , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
@@ -202,15 +202,17 @@ BEGIN
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
                -- TRUE = НЕТ товаров "убит код"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
+             , COALESCE (OB_OnlyTimingSUN.ValueData, FALSE)                               AS isOnlyTimingSUN
         FROM ObjectBoolean AS OB
-             LEFT JOIN ObjectFloat   AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
-             LEFT JOIN ObjectFloat   AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
-             LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
-             LEFT JOIN ObjectFloat   AS OF_DI          ON OF_DI.ObjectId          = OB.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
-             LEFT JOIN ObjectFloat   AS OF_DS          ON OF_DS.ObjectId          = OB.ObjectId AND OF_DS.DescId          = zc_ObjectFloat_Unit_HT_SUN_v1()
-             LEFT JOIN ObjectFloat   AS OF_DSA         ON OF_DSA.ObjectId         = OB.ObjectId AND OF_DSA.DescId         = zc_ObjectFloat_Unit_HT_SUN_All()
-             LEFT JOIN ObjectFloat   AS OF_SN          ON OF_SN.ObjectId          = OB.ObjectId AND OF_SN.DescId          = zc_ObjectFloat_Unit_LimitSUN_N()
-             LEFT JOIN ObjectString  AS OS_LL          ON OS_LL.ObjectId          = OB.ObjectId AND OS_LL.DescId          = zc_ObjectString_Unit_SUN_v1_Lock()
+             LEFT JOIN ObjectFloat   AS OF_KoeffInSUN    ON OF_KoeffInSUN.ObjectId    = OB.ObjectId AND OF_KoeffInSUN.DescId    = zc_ObjectFloat_Unit_KoeffInSUN()
+             LEFT JOIN ObjectFloat   AS OF_KoeffOutSUN   ON OF_KoeffOutSUN.ObjectId   = OB.ObjectId AND OF_KoeffOutSUN.DescId   = zc_ObjectFloat_Unit_KoeffOutSUN()
+             LEFT JOIN ObjectString  AS OS_ListDaySUN    ON OS_ListDaySUN.ObjectId    = OB.ObjectId AND OS_ListDaySUN.DescId    = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectFloat   AS OF_DI            ON OF_DI.ObjectId            = OB.ObjectId AND OF_DI.DescId            = zc_ObjectFloat_Unit_SunIncome()
+             LEFT JOIN ObjectFloat   AS OF_DS            ON OF_DS.ObjectId            = OB.ObjectId AND OF_DS.DescId            = zc_ObjectFloat_Unit_HT_SUN_v1()
+             LEFT JOIN ObjectFloat   AS OF_DSA           ON OF_DSA.ObjectId           = OB.ObjectId AND OF_DSA.DescId           = zc_ObjectFloat_Unit_HT_SUN_All()
+             LEFT JOIN ObjectFloat   AS OF_SN            ON OF_SN.ObjectId            = OB.ObjectId AND OF_SN.DescId            = zc_ObjectFloat_Unit_LimitSUN_N()
+             LEFT JOIN ObjectString  AS OS_LL            ON OS_LL.ObjectId            = OB.ObjectId AND OS_LL.DescId            = zc_ObjectString_Unit_SUN_v1_Lock()
+             LEFT JOIN ObjectBoolean AS OB_OnlyTimingSUN ON OB_OnlyTimingSUN.ObjectId = OB.ObjectId AND OB_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -2041,12 +2043,17 @@ BEGIN
              LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
+                                                 
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
+             
         WHERE -- !!!Отключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
           AND FLOOR(_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+          
+          AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
 
 /*          CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <= 0
@@ -2302,8 +2309,11 @@ BEGIN
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
 
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
+
         WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+          AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1

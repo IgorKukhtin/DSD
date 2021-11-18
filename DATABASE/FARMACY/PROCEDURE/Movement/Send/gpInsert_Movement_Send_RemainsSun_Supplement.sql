@@ -17,7 +17,7 @@ BEGIN
      vbUserId := inSession;
 
      -- все Товары для схемы SUN Supplement
-     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
 
      -- все Подразделения для схемы SUN Supplement
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement   (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat) ON COMMIT DROP;
@@ -33,7 +33,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
                                                      AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, GiveAway TFloat, AmountUse TFloat, 
-                                                     MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
+                                                     MinExpirationDate TDateTime, isCloseMCS boolean, SupplementMin Integer) ON COMMIT DROP;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
      CREATE TEMP TABLE _tmpStockRatio_all_Supplement   (GoodsId Integer, MCS TFloat, AmountRemains TFloat, AmountSalesDay TFloat, AverageSales TFloat, StockRatio TFloat) ON COMMIT DROP;

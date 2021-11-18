@@ -75,7 +75,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement (GoodsId Integer, KoeffSUN TFloat, UnitOutId Integer, UnitOut2Id Integer, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer) ON COMMIT DROP;
      END IF;
 
      -- все Подразделения для схемы SUN Supplement
@@ -119,7 +119,7 @@ BEGIN
      THEN
        CREATE TEMP TABLE _tmpRemains_all_Supplement   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
                                                        AmountSalesDay TFloat, AmountSalesMonth TFloat, AverageSalesMonth TFloat, Need TFloat, GiveAway TFloat, AmountUse TFloat, 
-                                                       MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
+                                                       MinExpirationDate TDateTime, isCloseMCS boolean, SupplementMin Integer) ON COMMIT DROP;
      END IF;
 
      -- 2. все остатки, НТЗ, и коэф. товарного запаса
@@ -329,13 +329,14 @@ BEGIN
      END IF;*/
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id, isSmudge, SupplementMin)
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id, isSmudge, SupplementMin, SupplementMinPP)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
              , Object_Goods_Main.UnitSupplementSUN1OutId
              , Object_Goods_Main.UnitSupplementSUN2OutId
              , Object_Goods_Main.isSupplementSmudge
-             , CASE WHEN Object_Goods_Main.Name ILIKE 'АП%' THEN Object_Goods_Main.SupplementMinPP ELSE Object_Goods_Main.SupplementMin END
+             , Object_Goods_Main.SupplementMin
+             , Object_Goods_Main.SupplementMinPP 
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
@@ -667,7 +668,8 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, MinExpirationDate, isCloseMCS)
+     INSERT INTO  _tmpRemains_all_Supplement (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, AmountSalesMonth, 
+                                              MinExpirationDate, isCloseMCS, SupplementMin)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -682,7 +684,8 @@ BEGIN
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
              , tmpRemains.MinExpirationDate
              , COALESCE (tmpObject_Price.isCloseMCS, FALSE)  AS isCloseMCS
-
+             , CASE WHEN Object_Unit.ValueData ILIKE 'АП%' THEN _tmpGoods_SUN_Supplement.SupplementMinPP ELSE _tmpGoods_SUN_Supplement.SupplementMin END
+             
         FROM tmpPrice AS tmpObject_Price
 
              LEFT JOIN tmpRemains AS tmpRemains
@@ -699,6 +702,10 @@ BEGIN
 
              LEFT JOIN _tmpGoods_Sun_exception_Supplement ON _tmpGoods_Sun_exception_Supplement.UnitId  = tmpObject_Price.UnitId
                                               AND _tmpGoods_Sun_exception_Supplement.GoodsId = tmpObject_Price.GoodsId
+                                              
+             LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId =  tmpObject_Price.GoodsId
+
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id =  tmpObject_Price.UnitId
 
        ;
               
@@ -841,19 +848,25 @@ BEGIN
                                          , Need = CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 THEN - _tmpRemains_all_Supplement.AmountRemains
                                                   ELSE (_tmpRemains_all_Supplement.AmountSalesMonth / extract('DAY' from CURRENT_DATE -
                                                        (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL))) *
-                                                       T1.StockRatio END + T1.SupplementMin
+                                                       T1.StockRatio END
                                          , AmountUse = 0
      FROM (SELECT _tmpStockRatio_all_Supplement.GoodsId
                 , _tmpUnit_SUN_Supplement.UnitId
                 , _tmpStockRatio_all_Supplement.StockRatio
                 , _tmpUnit_SUN_Supplement.MonthSupplSun1
-                , COALESCE (_tmpGoods_SUN_Supplement.SupplementMin, 0) AS SupplementMin
            FROM _tmpStockRatio_all_Supplement
                 LEFT JOIN _tmpUnit_SUN_Supplement ON 1 = 1
                 LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = _tmpStockRatio_all_Supplement.GoodsId
                 ) AS T1
      WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
+       
+     -- 2.2. Подправили места по размазке не менее
+     UPDATE _tmpRemains_all_Supplement SET Need = ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains)
+     WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+       AND _tmpRemains_all_Supplement.AmountRemains < COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)
+       AND _tmpRemains_all_Supplement.Need < (COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains);
+       
 
      -- 2.2. Подправили места где передача после округление больше чем остаток
      UPDATE _tmpRemains_all_Supplement SET Need = - floor(_tmpRemains_all_Supplement.AmountRemains)
@@ -962,7 +975,7 @@ BEGIN
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
-             /*IF vbGoodsId = 35755
+/*             IF vbGoodsId = 17140
              THEN
                raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
                  (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
@@ -974,12 +987,12 @@ BEGIN
              SELECT _tmpRemains_all_Supplement.UnitId
                   , FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                           CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                THEN - _tmpRemains_all_Supplement.AmountRemains
                                ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                END  - _tmpRemains_all_Supplement.AmountUse
                           ELSE
-                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
                                        THEN - _tmpRemains_all_Supplement.AmountRemains
                                        ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                        END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
@@ -997,18 +1010,18 @@ BEGIN
                                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
              WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
-                          CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                               THEN - _tmpRemains_all_Supplement.AmountRemains
-                               ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                               END  - _tmpRemains_all_Supplement.AmountUse
-                          ELSE
-                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
-                                       THEN - _tmpRemains_all_Supplement.AmountRemains
-                                       ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
-                                       END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
+                              CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
+                              CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                                   THEN - _tmpRemains_all_Supplement.AmountRemains
+                                   ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                   END  - _tmpRemains_all_Supplement.AmountUse
+                              ELSE
+                              FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                                           THEN - _tmpRemains_all_Supplement.AmountRemains
+                                           ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
+                                           END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
 
-                          END END) > 0
+                              END END) > 0
                AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
                AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
@@ -1033,12 +1046,12 @@ BEGIN
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
 
-            /* IF vbUnitId_to = 377610 AND vbGoodsId = 51814
+             IF vbGoodsId = 17140
              THEN
                raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
                  (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
-             END IF;*/
+             END IF;
 
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
@@ -1151,6 +1164,6 @@ $BODY$
  10.06.20                                                     *
 */
 
--- SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3); -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
-
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
+
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);
