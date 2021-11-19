@@ -2525,6 +2525,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actGridToExcel_Child_all: TdsdGridToExcel [5]
@@ -5285,8 +5286,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 992
-    Top = 227
+    Left = 1016
+    Top = 195
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_Sign'
