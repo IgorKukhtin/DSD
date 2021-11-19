@@ -45,7 +45,6 @@ type
     bbPrint_PactDepartment: TdxBarButton;
     InvNumber_Full: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
-    PriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -52,7 +52,6 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSumm_Check
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,7 +92,6 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSumm_Check
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -112,13 +110,23 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
             Width = 42
           end
           object InvNumber_Full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1063#1077#1082
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber_Full'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 68
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'DD.MM.YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
@@ -144,41 +152,21 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
             Options.Editing = False
             Width = 155
           end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'OperDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'DD.MM.YYYY'
+          object MemberICName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'MemberICName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 159
           end
-          object TotalSumm_Check: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1095#1077#1082')'
-            DataBinding.FieldName = 'TotalSumm_Check'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+          object InsuranceCardNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1072#1088#1090#1099
+            DataBinding.FieldName = 'InsuranceCardNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
-          end
-          object InsertName_Check: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.) ('#1095#1077#1082')'
-            DataBinding.FieldName = 'InsertName_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 101
-          end
-          object InsertDate_Check: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.) ('#1095#1077#1082')'
-            DataBinding.FieldName = 'InsertDate_Check'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 78
+            Width = 88
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -241,16 +229,6 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 155
-          end
-          object PriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'PriceWithVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
           end
         end
       end

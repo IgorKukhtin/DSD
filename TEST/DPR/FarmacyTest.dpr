@@ -1125,7 +1125,8 @@ uses
   GoodsSPReceiptList in '..\..\FormsFarmacy\Cash\GoodsSPReceiptList.pas' {GoodsSPReceiptListForm: TParentForm},
   Send_RelatedCodesSUN in '..\..\FormsFarmacy\Document\Send_RelatedCodesSUN.pas' {Send_RelatedCodesSUNForm: TParentForm},
   Report_InsuranceCompaniesDialog in '..\..\FormsFarmacy\Report\Report_InsuranceCompaniesDialog.pas' {Report_InsuranceCompaniesDialogForm: TParentForm},
-  Report_InsuranceCompanies in '..\..\FormsFarmacy\Report\Report_InsuranceCompanies.pas' {Report_InsuranceCompaniesForm: TParentForm};
+  Report_InsuranceCompanies in '..\..\FormsFarmacy\Report\Report_InsuranceCompanies.pas' {Report_InsuranceCompaniesForm: TParentForm},
+  ReturnOutPharmacy in '..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas' {ReturnOutPharmacyForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

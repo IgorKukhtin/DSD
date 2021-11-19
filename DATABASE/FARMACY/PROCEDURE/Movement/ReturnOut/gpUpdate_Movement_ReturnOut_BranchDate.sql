@@ -26,6 +26,10 @@ BEGIN
     
     -- сохранили связь с <Кто установил>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), inMovementId, vbUserId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

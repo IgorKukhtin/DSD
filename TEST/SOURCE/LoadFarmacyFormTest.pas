@@ -1893,6 +1893,8 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPharmacyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPharmacyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPharmacyJournalForm');
 
