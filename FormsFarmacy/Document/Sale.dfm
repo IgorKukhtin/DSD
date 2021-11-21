@@ -1,29 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 542
-  ClientWidth = 683
+  ClientWidth = 680
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 699
+  ExplicitWidth = 696
   ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 250
-    Width = 683
+    Width = 680
     Height = 292
-    ExplicitTop = 219
+    ExplicitTop = 250
     ExplicitWidth = 683
-    ExplicitHeight = 323
+    ExplicitHeight = 292
     ClientRectBottom = 292
-    ClientRectRight = 683
+    ClientRectRight = 680
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 683
-      ExplicitHeight = 299
+      ExplicitHeight = 268
       inherited cxGrid: TcxGrid
-        Width = 683
+        Width = 680
         Height = 170
         ExplicitWidth = 683
-        ExplicitHeight = 201
+        ExplicitHeight = 170
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -195,12 +195,12 @@ inherited SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 178
-        Width = 683
+        Width = 680
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 209
+        ExplicitWidth = 683
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -374,17 +374,17 @@ inherited SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 170
-        Width = 683
+        Width = 680
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 201
+        ExplicitWidth = 683
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 683
+    Width = 680
     Height = 224
     TabOrder = 3
     ExplicitWidth = 683
@@ -1024,6 +1024,35 @@ inherited SaleForm: TSaleForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrintInvoiceIC: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1132,6 +1161,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintInvoiceIC'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -1175,6 +1212,10 @@ inherited SaleForm: TSaleForm
     end
     object bbactUpdatePriceSale: TdxBarButton
       Action = actExec_Update_PriceSale
+      Category = 0
+    end
+    object bbPrintInvoiceIC: TdxBarButton
+      Action = actPrintInvoiceIC
       Category = 0
     end
   end

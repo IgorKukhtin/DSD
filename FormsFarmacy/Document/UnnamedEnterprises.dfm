@@ -507,7 +507,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         item
           Action = actPrintXLS
         end>
-      Caption = 'actPrintXLSCommercialOffer'
+      Caption = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
+      Hint = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
       ImageIndex = 3
     end
     object actExecSelectPrint: TdsdExecStoredProc
@@ -531,6 +532,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 3.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -16
@@ -541,6 +543,11 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = [fsBold]
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       ColumnParams = <
         item
           Caption = #1053#1044#1057
@@ -648,7 +655,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         item
           Action = actPrintScopeXLS
         end>
-      Caption = 'actPrintXLSScope'
+      Caption = #1057#1095#1077#1090
+      Hint = #1057#1095#1077#1090
       ImageIndex = 3
     end
     object actExecSelectPrintScore: TdsdExecStoredProc
@@ -671,6 +679,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       Orientation = orLandscape
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
@@ -682,6 +691,11 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = [fsBold]
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       ColumnParams = <
         item
           Caption = #1050#1086#1076
@@ -1096,7 +1110,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1592,6 +1606,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1604,6 +1619,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 318
