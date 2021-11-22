@@ -40,6 +40,11 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProfitLossService());
      vbUserId := lpGetUserBySession (inSession);
 
+     -- !!! странная замена!!!
+     IF COALESCE (inMovementId_Value, 0) = 0 AND inMovementId > 0
+     THEN inMovementId_Value:= inMovementId;
+     END IF;
+
      IF COALESCE (inMovementId_Value, 0) = 0
      THEN
 

@@ -88,7 +88,7 @@ BEGIN
                                    );
           END IF;
 
-          -- продолжаем поиск - еще 4 MONTH
+          -- продолжаем поиск - еще 12 MONTH
           IF COALESCE (vbMovementId_TTN, 0) = 0
           THEN
           vbMovementId_TTN:= (SELECT Movement.Id
@@ -96,7 +96,7 @@ BEGIN
                                          ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId = zc_Movement_TransportGoods()
-                                                          AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '15 MONTH' AND CURRENT_DATE - INTERVAL '12 MONTH'
+                                                          AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '24 MONTH' AND CURRENT_DATE - INTERVAL '12 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
           END IF;

@@ -386,7 +386,7 @@ BEGIN
                                    , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                                    , View_Contract.InvNumber        		                              AS ContractName
                                    , Object_To.ValueData                                                      AS PartnerName
-                                   , MovementString_InvNumberOrder.ValueData        AS InvNumber_Order
+                                   , MovementString_InvNumberOrder.ValueData                                  AS InvNumber_Order
                               FROM Movement
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
@@ -835,6 +835,10 @@ BEGIN
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
+                                             , ObjectString_Article.ValueData       AS Article
+                                             , ObjectString_Quality.ValueData       AS Quality
+                                             , ObjectString_Quality2.ValueData      AS Quality2
+                                             , ObjectString_Quality10.ValueData     AS Quality10
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -848,10 +852,27 @@ BEGIN
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                             LEFT JOIN ObjectString AS ObjectString_Article
+                                                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                             LEFT JOIN ObjectString AS ObjectString_Quality
+                                                                    ON ObjectString_Quality.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality.DescId = zc_ObjectString_GoodsPropertyValue_Quality()
+                                                                   AND ObjectString_Quality.ValueData <> ''
+                                             LEFT JOIN ObjectString AS ObjectString_Quality2
+                                                                    ON ObjectString_Quality2.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
+                                             LEFT JOIN ObjectString AS ObjectString_Quality10
+                                                                    ON ObjectString_Quality10.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
                                        )
        -- список Названия для товаров (нужны если не найдем по GoodsKindId)
      , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
                                                   , tmpObject_GoodsPropertyValue.Name
+                                                  , tmpObject_GoodsPropertyValue.Article
+                                                  , tmpObject_GoodsPropertyValue.Quality
+                                                  , tmpObject_GoodsPropertyValue.Quality2
+                                                  , tmpObject_GoodsPropertyValue.Quality10
                                              FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
                                                   ) AS tmpGoodsProperty_find
                                                   LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -859,12 +880,15 @@ BEGIN
      , tmpMovement_Params AS (SELECT Movement.Id
                                    , Movement.InvNumber
                                    , Movement.OperDate
-                                   , Object_To.ValueData                                                      AS PartnerName
                                    , COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber) AS InvNumberPartner
                                    , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
+                                   , OH_JuridicalDetails_From.Phone                                           AS Phone_From
                                    , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
+                                   , View_Contract.InvNumber        		                              AS ContractName
+                                   , Object_To.ValueData                                                      AS PartnerName
+                                   , MovementString_InvNumberOrder.ValueData                                  AS InvNumber_Order
                               FROM Movement
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
@@ -889,6 +913,10 @@ BEGIN
                                                             ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                                            AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+                                   LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                            ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                         ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
@@ -910,6 +938,8 @@ BEGIN
            , Movement.OperDatePartner
            , Movement.JuridicalName_From
            , Movement.JuridicalAddress_From
+           , Movement.Phone_From
+           , Movement.ContractName
            , Movement.PartnerName
 
            , Object_GoodsGroup.ValueData AS GoodsGroupName
@@ -931,12 +961,18 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS CodeUKTZED
 
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
+           --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))     AS Quality2_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
+
            , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
              ) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
 
            , tmpMI.AmountPartner                                                                                AS AmountPartner
+           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN tmpMI.AmountPartner:: TVarChar ELSE CAST (tmpMI.AmountPartner AS NUMERIC (16,0) ) ||' шт' END AS TVarChar) AS AmountPartner_str
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh()
                              THEN tmpMI.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                         ELSE tmpMI.AmountPartner
@@ -966,8 +1002,12 @@ BEGIN
            , tmpGoodsQuality.QualityCode
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
-           , tmpGoodsQuality.Value17
-           , tmpGoodsQuality.Value1
+
+         --, tmpGoodsQuality.Value17
+         --, tmpGoodsQuality.Value1
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
+
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
            , tmpGoodsQuality.Value4
@@ -990,6 +1030,8 @@ BEGIN
            , tmpMovement_QualityParams.Comment AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
            , tmpMovement_QualityParams.MovementId_find
+
+           , Movement.InvNumber_Order
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId

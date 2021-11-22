@@ -47,6 +47,15 @@ BEGIN
      -- !!!скидка - вес упаковки!!!
      IF vbIsBarCode = TRUE
      THEN
+         -- !!!из контрола!!! - % скидки для кол-ва
+         IF inIsChangePercentAmount = TRUE
+         THEN
+             IF vbMeasureId = zc_Measure_Kg()
+             THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
+             ELSE ioChangePercentAmount:= 0;
+             END IF;
+         END IF;
+
          -- проверка: если вводится кол склад надо сообщить что оно расчетное, вводить нельзя
          IF ioId <> 0 AND EXISTS (SELECT 1 FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId = ioId AND MIFloat.DescId = zc_MIFloat_AmountPartner() AND MIFloat.ValueData = ioAmountPartner)
                       AND NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = ioId AND MI.DescId = zc_MI_Master() AND MI.Amount = ioAmount)
@@ -76,10 +85,10 @@ BEGIN
          IF vbMeasureId = zc_Measure_Kg()
          THEN
              -- !!!только в этом случае расчет "кол-во склад"!!!
-             ioAmount:= ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) AS NUMERIC (16, 4));
+             ioAmount:= (ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) / (1 - CASE WHEN ioChangePercentAmount < 100 THEN ioChangePercentAmount/100 ELSE 0 END) AS NUMERIC (16, 4)));
              -- !!!обнуление "других" скидок!!!
-             ioChangePercentAmount:= 0;
-             inIsChangePercentAmount:= FALSE;
+             --ioChangePercentAmount:= 0;
+             --inIsChangePercentAmount:= FALSE;
              -- !!!расчет!!! - Количество c учетом % скидки
              outAmountChangePercent:= ioAmountPartner;
          ELSE
@@ -91,16 +100,16 @@ BEGIN
          END IF;
 
      ELSE
-     -- !!!из контрола!!! - % скидки для кол-ва
-     IF inIsChangePercentAmount = TRUE
-     THEN
-         IF vbMeasureId = zc_Measure_Kg()
-         THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
-         ELSE ioChangePercentAmount:= 0;
+         -- !!!из контрола!!! - % скидки для кол-ва
+         IF inIsChangePercentAmount = TRUE
+         THEN
+             IF vbMeasureId = zc_Measure_Kg()
+             THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
+             ELSE ioChangePercentAmount:= 0;
+             END IF;
          END IF;
-     END IF;
-     -- !!!расчет!!! - Количество c учетом % скидки
-     outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+         -- !!!расчет!!! - Количество c учетом % скидки
+         outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
 
      END IF;
 

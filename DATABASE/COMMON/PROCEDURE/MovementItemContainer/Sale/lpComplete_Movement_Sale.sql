@@ -1276,6 +1276,12 @@ END IF;*/
                                                      ;
      END IF;
 
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.GoodsId, 0) = 0)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Не заполнен парамет <Товар>.';
+     END IF;
+
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE))
      THEN
