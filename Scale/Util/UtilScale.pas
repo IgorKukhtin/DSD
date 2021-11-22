@@ -929,7 +929,7 @@ begin
          if (System.Pos('.',Value)>0)and(DecimalSeparator<>'.')
          then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
          else if (System.Pos(',',Value)>0)and(DecimalSeparator<>',')
-              then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
+              then Result:=StrToFloat(myReplaceStr(Value,',',DecimalSeparator))
               else Result:=StrToFloat(Value);
      except
             Result:=0;
