@@ -153,7 +153,16 @@ BEGIN
            UNION SELECT 9 AS ErrorCode, 'больше нормы' AS ErrorText
                  )
   , tmpRes1 AS (-- ошибки 1, 2
-               SELECT tmp.*
+               SELECT tmp.operdate
+                    , tmp.Amount
+                    , tmp.Amount_calc
+                    , tmp.MemberId
+                    , tmp.PositionId
+                    , tmp.PositionLevelId
+                    , tmp.PersonalGroupId
+                    , tmp.WorkTimeKindId
+                    , tmp.ShortName
+                    , tmp.UnitId
                     , COALESCE (tmpList.DateIn, tmpList_out.DateIn) AS DateIn
                     , COALESCE (tmpList.DateOut, tmpList_out.DateOut) AS DateOut
                     , COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0) AS HoursDay
@@ -184,11 +193,21 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                       AND tmpStaffList.PositionId  IS  NULL
                WHERE tmpList.MemberId IS NOT NULL or tmpList_out.MemberId IS NOT NULL
                )
 
   , tmpRes2 AS (--ошибки 3,4
-               SELECT tmp.*
+               SELECT tmp.operdate
+                    , tmp.Amount
+                    , tmp.Amount_calc
+                    , tmp.MemberId
+                    , tmp.PositionId
+                    , tmp.PositionLevelId
+                    , tmp.PersonalGroupId
+                    , tmp.WorkTimeKindId
+                    , tmp.ShortName
+                    , tmp.UnitId
                     , tmpListAll.DateIn
                     , tmpListAll.DateOut
                     , COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0) AS HoursDay
@@ -208,6 +227,7 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                       AND tmpStaffList.PositionId  IS  NULL
                WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                           , zc_Enum_WorkTimeKind_WorkD()
                                           , zc_Enum_WorkTimeKind_WorkN()
@@ -224,7 +244,16 @@ BEGIN
 	6.9.2 Фонд за месяц (по дням);        --582717
 */               
   , tmpRes2_2 AS (--ошибки 8,9
-                  SELECT tmp.*
+                  SELECT tmp.operdate
+                       , tmp.Amount
+                       , tmp.Amount_calc
+                       , tmp.MemberId
+                       , tmp.PositionId
+                       , tmp.PositionLevelId
+                       , tmp.PersonalGroupId
+                       , tmp.WorkTimeKindId
+                       , tmp.ShortName
+                       , tmp.UnitId
                        , tmpListAll.DateIn
                        , tmpListAll.DateOut
                        , COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0) AS HoursDay
@@ -244,6 +273,7 @@ BEGIN
                     LEFT JOIN tmpStaffList AS tmpStaffList2
                                            ON tmpStaffList2.PositionId = tmp.PositionId
                                           AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                          AND tmpStaffList.PositionId  IS  NULL
                   WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                              , zc_Enum_WorkTimeKind_WorkD()
                                              , zc_Enum_WorkTimeKind_WorkN()
@@ -277,6 +307,7 @@ BEGIN
                     , MAX (CASE WHEN tmpListAll.isMain = TRUE THEN tmp.PositionLevelId ELSE 0 END) AS PositionLevelId
                     , MAX (CASE WHEN tmpListAll.isMain = TRUE THEN tmp.PersonalGroupId ELSE 0 END) AS PersonalGroupId
                     , MAX (CASE WHEN tmpListAll.isMain = TRUE THEN tmp.WorkTimeKindId ELSE 0 END)  AS WorkTimeKindId
+                    
                     , MAX (CASE WHEN tmpListAll.isMain = TRUE THEN tmp.ShortName ELSE '' END) ::TVarChar     AS ShortName
                     , MAX (CASE WHEN tmpListAll.isMain = TRUE THEN tmp.UnitId ELSE 0 END)          AS UnitId
                          
@@ -297,6 +328,7 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
+                                       AND tmpStaffList.PositionId  IS  NULL
                WHERE (tmp.WorkTimeKindId IN (zc_Enum_WorkTimeKind_Work()
                                           , zc_Enum_WorkTimeKind_WorkD()
                                           , zc_Enum_WorkTimeKind_WorkN()
@@ -350,6 +382,7 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmpPersonal_work.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpPersonal_work.PositionLevelId,0)
+                                       AND tmpStaffList.PositionId  IS  NULL
                WHERE tmp.MemberId IS NULL
                )
 
@@ -388,7 +421,18 @@ BEGIN
                            )
                              
   , tmpRes5 AS (-- ошибки 7 - Не начислена ЗП
-               SELECT tmp.*
+               SELECT tmp.operdate
+                    , tmp.Amount
+                    , tmp.Amount_calc
+                    , tmp.MemberId
+                    , tmp.PositionId
+                    , tmp.PositionLevelId
+                    , tmp.PersonalGroupId
+                    , tmp.WorkTimeKindId
+                    , tmp.ShortName
+                    , tmp.UnitId
+                    , tmp.DateIn
+                    , tmp.DateOut
                     , COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay,0) AS HoursDay
                     , 7 AS ErrorCode
                FROM (SELECT MIN (tmp.OperDate) ::TDateTime AS OperDate
@@ -425,7 +469,7 @@ BEGIN
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmp.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
-                                       
+                                       AND tmpStaffList.PositionId  IS  NULL                                       
                  --
                  LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId_Personal = tmp.MemberId
                                              AND tmpPersonalService.PositionId        = tmp.PositionId
