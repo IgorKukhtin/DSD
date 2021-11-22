@@ -128,8 +128,16 @@ type
     edInsuranceCardNumber: TcxTextEdit;
     cxLabel21: TcxLabel;
     GuidesInsuranceCompanies: TdsdGuides;
-    actPrintInvoiceIC: TdsdPrintAction;
+    actPrintInvoiceIC_0: TdsdPrintAction;
     bbPrintInvoiceIC: TdxBarButton;
+    spSelectPrintInvoiceIC: TdsdStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    actPrintInvoiceIC_7: TdsdPrintAction;
+    actPrintInvoiceIC_20: TdsdPrintAction;
   private
     { Private declarations }
   public

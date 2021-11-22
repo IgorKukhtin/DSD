@@ -45,6 +45,8 @@ type
     bbPrint_PactDepartment: TdxBarButton;
     InvNumber_Full: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
   private
     { Private declarations }
   public

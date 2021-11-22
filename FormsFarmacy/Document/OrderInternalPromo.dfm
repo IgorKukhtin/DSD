@@ -1623,6 +1623,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     object actInsertChild: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actLoadListUnit
       PostDataSetBeforeExecute = False
       StoredProc = spInsertChild
       StoredProcList = <
@@ -3171,6 +3172,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCodeList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitCodeList'
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

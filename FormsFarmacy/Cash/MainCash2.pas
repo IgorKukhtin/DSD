@@ -6003,6 +6003,13 @@ begin
     while not CheckCDS.Eof do
     begin
 
+      RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+          VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+          CheckCDS.FieldByName('PartionDateKindId').AsVariant,
+          CheckCDS.FieldByName('NDSKindId').AsVariant,
+          CheckCDS.FieldByName('DiscountExternalID').AsVariant,
+          CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []);
+
       if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
@@ -6063,8 +6070,39 @@ begin
           FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         CheckCDS.Post;
+      end  // Если есть цена со скидкой
+      else if (RemainsCDS.FieldByName('PriceChange').asCurrency > 0) and
+        (CheckCDS.FieldByName('Price').asCurrency <> CheckCDS.FieldByName('PriceSale').asCurrency) and
+        (CheckCDS.FieldByName('Price').asCurrency = RemainsCDS.FieldByName('PriceChange').asCurrency) and
+        (RemainsCDS.FieldByName('FixEndDate').IsNull or (RemainsCDS.FieldByName('FixEndDate').AsDateTime >= Date)) then
+      begin
+
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('TypeDiscount').AsInteger := 1;
+        CheckCDS.Post;
+
+      end // Если есть процент скидки
+      else if (RemainsCDS.FieldByName('FixPercent').asCurrency > 0) and
+        (CheckCDS.FieldByName('Price').asCurrency <> CheckCDS.FieldByName('PriceSale').asCurrency) and
+        (CheckCDS.FieldByName('Price').asCurrency = GetPrice(CheckCDS.FieldByName('PriceSale').asCurrency, RemainsCDS.FieldByName('FixPercent').asCurrency)) and
+        (RemainsCDS.FieldByName('FixEndDate').IsNull or (RemainsCDS.FieldByName('FixEndDate').AsDateTime >= Date)) then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('TypeDiscount').AsInteger := 2;
+        CheckCDS.Post;
       end
-      else
+      else // Если есть сумма скидки
+      if (RemainsCDS.FieldByName('FixDiscount').asCurrency > 0) and
+        (CheckCDS.FieldByName('Price').asCurrency <> CheckCDS.FieldByName('PriceSale').asCurrency) and
+        (CheckCDS.FieldByName('Price').asCurrency = GetPrice(CheckCDS.FieldByName('PriceSale').asCurrency - RemainsCDS.FieldByName('FixDiscount').asCurrency, 0)) and
+        (RemainsCDS.FieldByName('FixEndDate').IsNull or (RemainsCDS.FieldByName('FixEndDate').AsDateTime >= Date)) then
+      begin
+
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('TypeDiscount').AsInteger := 3;
+        CheckCDS.Post;
+
+      end else
       begin
         CheckCDS.Edit;
         CheckCDS.FieldByName('Price').asCurrency :=

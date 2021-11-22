@@ -399,6 +399,46 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      CheckIDRecords = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'MovementId'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -486,6 +526,10 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -581,6 +625,10 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077'  ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
       Visible = ivAlways
       ImageIndex = 17
+    end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

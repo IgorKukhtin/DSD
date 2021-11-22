@@ -5,7 +5,6 @@ inherited SendCashSUNForm: TSendCashSUNForm
   inherited PageControl: TcxPageControl
     TabOrder = 3
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -208,10 +207,6 @@ inherited SendCashSUNForm: TSendCashSUNForm
           end
         end
       end
-      inherited cxSplitter1: TcxSplitter
-        Width = 992
-        ExplicitWidth = 992
-      end
       inherited cxGrid1: TcxGrid
         inherited cxGridDBTableView1: TcxGridDBTableView
           Styles.Content = nil
@@ -225,18 +220,472 @@ inherited SendCashSUNForm: TSendCashSUNForm
   end
   inherited DataPanel: TPanel
     TabOrder = 0
-    inherited cbConfirmed: TcxCheckBox
-      ExplicitHeight = 21
-    end
   end
   inherited ceChecked: TcxCheckBox
     TabOrder = 5
-    ExplicitHeight = 21
   end
-  inherited edisComplete: TcxCheckBox
-    ExplicitHeight = 21
+  inherited spInsertMaskMIMaster: TdsdStoredProc [4]
   end
-  inherited spGet: TdsdStoredProc [4]
+  inherited spGetTotalSumm: TdsdStoredProc [5]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [6]
+  end
+  inherited PrintHeaderCDS: TClientDataSet [7]
+    Left = 468
+    Top = 185
+  end
+  inherited PrintItemsCDS: TClientDataSet [8]
+  end
+  inherited PrintItemsSverkaCDS: TClientDataSet [9]
+  end
+  inherited spSelectPrint: TdsdStoredProc [10]
+  end
+  inherited GuidesFrom: TdsdGuides [11]
+  end
+  inherited GuidesTo: TdsdGuides [12]
+  end
+  inherited ActionList1: TActionList [13]
+  end
+  inherited ActionList2: TActionList [14]
+  end
+  inherited spMovementComplete: TdsdStoredProc [15]
+  end
+  inherited spInsert_Object_Price: TdsdStoredProc [16]
+  end
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [17]
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = False
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [18]
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = False
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spInsert_Send_WriteRestFromPoint: TdsdStoredProc [19]
+  end
+  inherited DetailDCS: TClientDataSet [20]
+  end
+  inherited DetailDS: TDataSource [21]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [22]
+  end
+  inherited spSelect_MI_Child: TdsdStoredProc [23]
+  end
+  inherited GuidesPartionDateKind: TdsdGuides [24]
+  end
+  inherited spUpdate_SendOverdue: TdsdStoredProc [25]
+  end
+  inherited spInsertUpdateMIChild: TdsdStoredProc [26]
+  end
+  inherited GuidesDriverSun: TdsdGuides [27]
+  end
+  inherited spUpdate_Movement_Received: TdsdStoredProc [28]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReceived'
+        Value = False
+        Component = cbReceived
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReceived'
+        Value = False
+        Component = cbReceived
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [29]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSent'
+        Value = False
+        Component = cbSent
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSent'
+        Value = False
+        Component = cbSent
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_Movement_NotDisplaySUN: TdsdStoredProc [30]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotDisplaySUN'
+        Value = False
+        Component = cbNotDisplaySUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotDisplaySUN'
+        Value = False
+        Component = cbNotDisplaySUN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spCreateLoss: TdsdStoredProc [31]
+  end
+  inherited spUpdate_Movement_Confirmed: TdsdStoredProc [32]
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'isConfirmed'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisConfirmed'
+        Value = False
+        Component = cbConfirmed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outConfirmedText'
+        Value = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
+        Component = edConfirmed
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spUpdate_MovementItem_ContainerId: TdsdStoredProc [33]
+  end
+  inherited spMovementItem_ShowPUSH_Comment: TdsdStoredProc [34]
+  end
+  inherited spAddIncome: TdsdStoredProc [35]
+  end
+  inherited spErasedMIMasterDetail: TdsdStoredProc [36]
+  end
+  inherited spUnErasedMIMasterDetail: TdsdStoredProc [37]
+  end
+  inherited spUpdateSendLoss: TdsdStoredProc [38]
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendLoss'
+        Value = False
+        Component = cbSendLoss
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited PopupMenu: TPopupMenu [39]
+  end
+  inherited FormParams: TdsdFormParams [40]
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameSend'
+        Value = 'PrintMovement_Sale1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameSendTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameSendBill'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43681d
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LossID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConfirmed'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContainerID'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAddNewLine'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IncomeId'
+        Value = 'False'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SetFocused'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited StatusGuides: TdsdGuides [41]
+  end
+  inherited spChangeStatus: TdsdStoredProc [42]
+  end
+  inherited MasterCDS: TClientDataSet [43]
+  end
+  inherited spSelect: TdsdStoredProc [44]
+  end
+  inherited BarManager: TdxBarManager [45]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [46]
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [47]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [48]
+  end
+  inherited ActionList: TActionList [49]
+    inherited actPartionGoodsChoiceForm: TOpenChoiceForm
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageName'
+          Component = MasterCDS
+          ComponentItem = 'StorageName_Partion'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDatePartion'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actClearCommentSend: TdsdSetDefaultParams
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.ComponentItem = 'CommentSendId'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.ComponentItem = 'CommentSendCode'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.ComponentItem = 'CommentSendName'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
+    end
+    inherited actSetFocused: TdsdSetFocusedAction
+      ControlName.Value = ''
+    end
+    inherited actSendPartionDateChange: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SendPartionDateChangeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+  end
+  inherited MasterDS: TDataSource [50]
+  end
+  inherited spGet: TdsdStoredProc [51]
     Params = <
       item
         Name = 'inMovementId'
@@ -505,7 +954,7 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spInsertUpdateMovement: TdsdStoredProc [5]
+  inherited spInsertUpdateMovement: TdsdStoredProc [52]
     Params = <
       item
         Name = 'ioId'
@@ -587,491 +1036,18 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited GuidesFiller: TGuidesFiller [6]
+  inherited GuidesFiller: TGuidesFiller [53]
   end
-  inherited HeaderSaver: THeaderSaver [7]
+  inherited HeaderSaver: THeaderSaver [54]
   end
-  inherited RefreshAddOn: TRefreshAddOn [8]
+  inherited RefreshAddOn: TRefreshAddOn [55]
     DataSet = 'ClientDataSet'
   end
-  inherited spErasedMIMaster: TdsdStoredProc [9]
+  inherited spErasedMIMaster: TdsdStoredProc [56]
   end
-  inherited spUnErasedMIMaster: TdsdStoredProc [10]
+  inherited spUnErasedMIMaster: TdsdStoredProc [57]
   end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc [11]
-  end
-  inherited spInsertMaskMIMaster: TdsdStoredProc [12]
-  end
-  inherited spGetTotalSumm: TdsdStoredProc [13]
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher [14]
-  end
-  inherited PrintHeaderCDS: TClientDataSet [15]
-    Left = 468
-    Top = 185
-  end
-  inherited PrintItemsCDS: TClientDataSet [16]
-  end
-  inherited PrintItemsSverkaCDS: TClientDataSet [17]
-  end
-  inherited spSelectPrint: TdsdStoredProc [18]
-  end
-  inherited GuidesFrom: TdsdGuides [19]
-  end
-  inherited GuidesTo: TdsdGuides [20]
-  end
-  inherited ActionList1: TActionList [21]
-  end
-  inherited ActionList2: TActionList [22]
-  end
-  inherited spMovementComplete: TdsdStoredProc [23]
-  end
-  inherited spInsert_Object_Price: TdsdStoredProc [24]
-  end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [25]
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDeferred'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisDeferred'
-        Value = False
-        Component = cbisDeferred
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [26]
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDeferred'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisDeferred'
-        Value = False
-        Component = cbisDeferred
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spInsert_Send_WriteRestFromPoint: TdsdStoredProc [27]
-  end
-  inherited DetailDCS: TClientDataSet [28]
-  end
-  inherited DetailDS: TDataSource [29]
-  end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [30]
-  end
-  inherited spSelect_MI_Child: TdsdStoredProc [31]
-  end
-  inherited GuidesPartionDateKind: TdsdGuides [32]
-  end
-  inherited spUpdate_SendOverdue: TdsdStoredProc [33]
-  end
-  inherited spInsertUpdateMIChild: TdsdStoredProc [34]
-  end
-  inherited GuidesDriverSun: TdsdGuides [35]
-  end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [36]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisReceived'
-        Value = False
-        Component = cbReceived
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisReceived'
-        Value = False
-        Component = cbReceived
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUpdate_Movement_Sent: TdsdStoredProc [37]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSent'
-        Value = False
-        Component = cbSent
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisSent'
-        Value = False
-        Component = cbSent
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUpdate_Movement_NotDisplaySUN: TdsdStoredProc [38]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNotDisplaySUN'
-        Value = False
-        Component = cbNotDisplaySUN
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisNotDisplaySUN'
-        Value = False
-        Component = cbNotDisplaySUN
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spCreateLoss: TdsdStoredProc [39]
-  end
-  inherited spUpdate_Movement_Confirmed: TdsdStoredProc [40]
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisConfirmed'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'isConfirmed'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisConfirmed'
-        Value = False
-        Component = cbConfirmed
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outConfirmedText'
-        Value = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
-        Component = edConfirmed
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited spUpdate_MovementItem_ContainerId: TdsdStoredProc [41]
-  end
-  inherited spMovementItem_ShowPUSH_Comment: TdsdStoredProc [42]
-  end
-  inherited spAddIncome: TdsdStoredProc [43]
-  end
-  inherited spErasedMIMasterDetail: TdsdStoredProc [44]
-  end
-  inherited spUnErasedMIMasterDetail: TdsdStoredProc [45]
-  end
-  inherited spUpdateSendLoss: TdsdStoredProc [46]
-    Params = <
-      item
-        Name = 'inMovementID'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSendLoss'
-        Value = False
-        Component = cbSendLoss
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited PopupMenu: TPopupMenu [47]
-  end
-  inherited FormParams: TdsdFormParams [48]
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSend'
-        Value = 'PrintMovement_Sale1'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSendTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSendBill'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 43681d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LossID'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSumm'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isConfirmed'
-        Value = False
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContainerID'
-        Value = '0'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isAddNewLine'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'IncomeId'
-        Value = 'False'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SetFocused'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited StatusGuides: TdsdGuides [49]
-  end
-  inherited spChangeStatus: TdsdStoredProc [50]
-  end
-  inherited MasterCDS: TClientDataSet [51]
-  end
-  inherited spSelect: TdsdStoredProc [52]
-  end
-  inherited BarManager: TdxBarManager [53]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn [54]
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [55]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [56]
-  end
-  inherited ActionList: TActionList [57]
-    inherited actPrint: TdsdPrintAction
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
-        end>
-    end
-    inherited actPartionGoodsChoiceForm: TOpenChoiceForm
-      GuiParams = <
-        item
-          Name = 'inGoodsId'
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitId'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Price'
-          Component = MasterCDS
-          ComponentItem = 'Price'
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StorageName'
-          Component = MasterCDS
-          ComponentItem = 'StorageName_Partion'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDatePartion'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsOperDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actClearCommentSend: TdsdSetDefaultParams
-      DefaultParams = <
-        item
-          Param.Value = Null
-          Param.Component = MasterCDS
-          Param.ComponentItem = 'CommentSendId'
-          Param.MultiSelectSeparator = ','
-          Value = Null
-        end
-        item
-          Param.Value = Null
-          Param.Component = MasterCDS
-          Param.ComponentItem = 'CommentSendCode'
-          Param.MultiSelectSeparator = ','
-          Value = Null
-        end
-        item
-          Param.Value = Null
-          Param.Component = MasterCDS
-          Param.ComponentItem = 'CommentSendName'
-          Param.DataType = ftString
-          Param.MultiSelectSeparator = ','
-          Value = Null
-        end>
-    end
-    inherited actSetFocused: TdsdSetFocusedAction
-      ControlName.Value = ''
-    end
-    inherited actSendPartionDateChange: TdsdOpenForm
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SendPartionDateChangeId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
-  end
-  inherited MasterDS: TDataSource [58]
+  inherited spInsertUpdateMIMaster: TdsdStoredProc [58]
   end
   inherited spGet_SendPartionDateChangeId: TdsdStoredProc
     Params = <
