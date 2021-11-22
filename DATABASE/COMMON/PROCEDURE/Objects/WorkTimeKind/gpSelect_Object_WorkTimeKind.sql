@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Tax       TFloat
              , Summ      TFloat
              , isNoSheetChoice Boolean
+             , PairDayId Integer, PairDayName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -33,6 +34,10 @@ $BODY$BEGIN
       , ObjectFloat_Tax.ValueData        AS Tax
       , COALESCE (ObjectFloat_Summ.ValueData,0) ::TFloat AS Summ
       , COALESCE (ObjectBoolean_NoSheetChoice.ValueData, FALSE) ::Boolean AS isNoSheetChoice
+      
+      , Object_PairDay.Id        AS PairDayId
+      , Object_PairDay.ValueData AS PairDayName
+
       , Object_WorkTimeKind.isErased     AS isErased
       
    FROM OBJECT AS Object_WorkTimeKind
@@ -54,6 +59,12 @@ $BODY$BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetChoice
                                 ON ObjectBoolean_NoSheetChoice.ObjectId = Object_WorkTimeKind.Id
                                AND ObjectBoolean_NoSheetChoice.DescId = zc_ObjectBoolean_WorkTimeKind_NoSheetChoice()
+
+        LEFT JOIN ObjectLink AS ObjectLink_WorkTimeKind_PairDay
+                             ON ObjectLink_WorkTimeKind_PairDay.ObjectId = Object_WorkTimeKind.Id 
+                            AND ObjectLink_WorkTimeKind_PairDay.DescId = zc_ObjectLink_WorkTimeKind_PairDay()
+        LEFT JOIN Object AS Object_PairDay ON Object_PairDay.Id = ObjectLink_WorkTimeKind_PairDay.ChildObjectId
+
    WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind()
      AND (COALESCE (ObjectBoolean_NoSheetChoice.ValueData, FALSE) = FALSE OR inisShowAll = TRUE)
      AND (Object_WorkTimeKind.isErased = FALSE OR inisErased = TRUE);
@@ -67,6 +78,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.11.21         *
  19.08.21         *
  04.06.20         *
  05.12.17         *

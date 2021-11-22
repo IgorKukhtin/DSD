@@ -44,14 +44,14 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 110
+            Width = 94
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 160
+            Width = 136
           end
           object Tax: TcxGridDBColumn
             Caption = '% '#1080#1079#1084'. '#1088'.'#1095'.'
@@ -59,7 +59,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
-            Width = 92
+            Width = 79
           end
           object clValue: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -67,7 +67,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 138
+            Width = 118
           end
           object clShortName: TcxGridDBColumn
             Caption = #1057#1083#1091#1078#1077#1073#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
@@ -95,6 +95,14 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             HeaderHint = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1073#1086#1088' '#1074' '#1058#1072#1073#1077#1083#1077
             Options.Editing = False
             Width = 50
+          end
+          object PairDayName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1084#1077#1085#1099
+            DataBinding.FieldName = 'PairDayName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
           end
         end
       end

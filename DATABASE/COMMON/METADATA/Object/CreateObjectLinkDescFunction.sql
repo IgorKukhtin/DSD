@@ -2465,6 +2465,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_WorkTimeKind_PayrollType() RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_WorkTimeKind_PayrollType', 'Тип расчета заработной платы', zc_Object_WorkTimeKind(), zc_Object_PayrollType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_WorkTimeKind_PayrollType');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_WorkTimeKind_PairDay() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_WorkTimeKind_PairDay'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_WorkTimeKind_PairDay', 'Вид смены', zc_Object_WorkTimeKind(), zc_Object_PairDay() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_WorkTimeKind_PairDay');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Position() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Position'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Member_Position', 'Связь Физ. лица с должностью', zc_Object_Member(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Position');

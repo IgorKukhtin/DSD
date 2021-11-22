@@ -126,6 +126,7 @@ type
     procedure LoadPartionGoodsChoiceFormTest;
     procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
+    procedure LoadPairDayFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalFormTest;
@@ -1863,6 +1864,15 @@ procedure TLoadFormTest.LoadPaidKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+end;
+
+
+procedure TLoadFormTest.LoadPairDayFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPairDayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPairDayForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPairDayEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPairDayEditForm');
 end;
 
 procedure TLoadFormTest.LoadReestrKindFormTest;
@@ -3720,12 +3730,14 @@ end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_HolidayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_HolidayForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindEditForm');
 
     //форма выбора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
@@ -3734,8 +3746,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindSummDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindSummDialogForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadSmsSettingsFormTest;

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1080#1087' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
-  ClientHeight = 227
+  ClientHeight = 288
   ClientWidth = 339
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 192
+    Top = 248
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 192
+    Top = 248
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -74,16 +74,33 @@
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 148
+    Top = 212
     Caption = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
   end
   object ceTax: TcxCurrencyEdit
     Left = 194
-    Top = 147
+    Top = 211
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
     Width = 49
+  end
+  object cxLabel4: TcxLabel
+    Left = 40
+    Top = 152
+    Caption = #1042#1080#1076' '#1089#1084#1077#1085#1099
+  end
+  object edPairDay: TcxButtonEdit
+    Left = 40
+    Top = 171
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 273
   end
   object ActionList: TActionList
     Left = 184
@@ -161,6 +178,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPairDayId'
+        Value = Null
+        Component = GuidesPairDay
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272
@@ -216,6 +241,21 @@
         Component = ceTax
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PairDayId'
+        Value = Null
+        Component = GuidesPairDay
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PairDayName'
+        Value = Null
+        Component = GuidesPairDay
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -237,7 +277,37 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 8
-    Top = 136
+    Left = 65520
+    Top = 72
+  end
+  object GuidesPairDay: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPairDay
+    FormNameParam.Value = 'TPairDayForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPairDayForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPairDay
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPairDay
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 239
+    Top = 168
   end
 end
