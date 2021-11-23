@@ -200,6 +200,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummAdd() RETURNS Integer AS $B
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummAdd', 'Премия' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummAdd');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummHouseAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummHouseAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummHouseAdd', 'Доплата за жилье' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummHouseAdd');
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummHoliday() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummHoliday'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummHoliday', 'Отпускные' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummHoliday');
@@ -606,6 +610,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 18.11.21         * zc_MovementFloat_TotalSummHouseAdd
  08.09.21                                                                                     * zc_MovementFloat_PercentMarkup
  07.09.21                                                                                     * zc_MovementFloat_QuestionStorekeeper, zc_MovementFloat_TimeStorekeeper
  06.09.21                                                                                     * zc_MovementFloat_TotalSummSaleNP

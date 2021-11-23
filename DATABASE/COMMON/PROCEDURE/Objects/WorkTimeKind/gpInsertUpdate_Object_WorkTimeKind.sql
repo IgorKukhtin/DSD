@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_WorkTimeKind (Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_WorkTimeKind (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_WorkTimeKind (Integer, Integer, TVarChar, TVarChar, Tfloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_WorkTimeKind (Integer, Integer, TVarChar, TVarChar, Tfloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_WorkTimeKind (Integer, Integer, TVarChar, TVarChar, Tfloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_WorkTimeKind(
  INOUT ioId            Integer   ,    -- ключ объекта <>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_WorkTimeKind(
     IN inName          TVarChar  ,    -- наименование
     IN inShortName     TVarChar  ,    -- Короткое наименование
     IN inTax           Tfloat    ,    -- % изменения рабочих часов
+    IN inPairDayId     Integer   ,    -- Вид смены
     IN inSession       TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -37,6 +39,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_WorkTimeKind_Tax(), ioId, inTax);
 
+   -- сохранили связь с <вид смены>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_WorkTimeKind_PairDay(), ioId, inPairDayId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, vbIsUpdate);
@@ -47,6 +51,7 @@ END;$BODY$ LANGUAGE plpgsql;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.11.21         *
  05.12.17         *
 */
 

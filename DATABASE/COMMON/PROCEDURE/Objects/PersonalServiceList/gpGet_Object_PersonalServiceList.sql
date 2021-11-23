@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
              , Compensation TFloat
+             , KoeffSummCardSecond TFloat
              , isSecond Boolean
              , isRecalc Boolean
              , isBankOut Boolean
@@ -65,6 +66,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS OnFlowType
                       
            , CAST (0 AS TFloat)     AS Compensation
+           , CAST (0 AS TFloat)     AS KoeffSummCardSecond
 
            , CAST(FALSE AS Boolean) AS isSecond
            , CAST(FALSE AS Boolean) AS isRecalc
@@ -108,7 +110,8 @@ BEGIN
            , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
 
            
-           , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat AS Compensation
+           , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
+           , COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) :: TFloat AS KoeffSummCardSecond
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc
@@ -137,6 +140,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
                                 AND ObjectFloat_Compensation.DescId = zc_ObjectFloat_PersonalServiceList_Compensation()
+           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
+                                 ON ObjectFloat_KoeffSummCardSecond.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
 
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Juridical
                                 ON ObjectLink_PersonalServiceList_Juridical.ObjectId = Object_PersonalServiceList.Id 
@@ -202,12 +208,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.11.21         * KoeffSummCardSecond
  28.04.21         * add isDetail
  18.08.21         *
  17.11.20         * add isBankOut

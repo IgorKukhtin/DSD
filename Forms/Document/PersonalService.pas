@@ -247,6 +247,7 @@ type
     actSMTPFileCSV: TdsdSMTPFileAction;
     mactExportCSV: TMultiAction;
     cbMail: TcxCheckBox;
+    actRefreshGet: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

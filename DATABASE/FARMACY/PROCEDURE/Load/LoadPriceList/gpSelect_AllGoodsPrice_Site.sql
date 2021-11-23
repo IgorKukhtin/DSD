@@ -278,7 +278,7 @@ BEGIN
                              ) ::TFloat AS NewPricePromo
 
         FROM
-            lpSelectMinPrice_AllGoodsSite(inObjectId := -1 * vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
+            lpSelectMinPrice_AllGoodsSite(inObjectId := vbObjectId -- !!!со знаком "-" что бы НЕ учитывать маркет. контракт!!!
                                         , inUserId   := vbUserId
                                           ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId

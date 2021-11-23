@@ -1,29 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 542
-  ClientWidth = 683
+  ClientWidth = 668
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 699
+  ExplicitWidth = 684
   ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 250
-    Width = 683
+    Width = 668
     Height = 292
-    ExplicitTop = 219
-    ExplicitWidth = 683
-    ExplicitHeight = 323
+    ExplicitTop = 250
+    ExplicitWidth = 680
+    ExplicitHeight = 292
     ClientRectBottom = 292
-    ClientRectRight = 683
+    ClientRectRight = 668
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 683
-      ExplicitHeight = 299
+      ExplicitWidth = 680
+      ExplicitHeight = 268
       inherited cxGrid: TcxGrid
-        Width = 683
+        Width = 668
         Height = 170
-        ExplicitWidth = 683
-        ExplicitHeight = 201
+        ExplicitWidth = 680
+        ExplicitHeight = 170
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -195,12 +195,12 @@ inherited SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 178
-        Width = 683
+        Width = 668
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 209
+        ExplicitWidth = 680
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -374,20 +374,20 @@ inherited SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 170
-        Width = 683
+        Width = 668
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 201
+        ExplicitWidth = 680
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 683
+    Width = 668
     Height = 224
     TabOrder = 3
-    ExplicitWidth = 683
+    ExplicitWidth = 680
     ExplicitHeight = 224
     inherited edInvNumber: TcxTextEdit
       Left = 161
@@ -1024,6 +1024,123 @@ inherited SaleForm: TSaleForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrintInvoiceIC_0: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 0.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 0%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 0%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInvoiceIC_7: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 7.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 7%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 7%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInvoiceIC_20: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 20.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 20%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 20%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1132,6 +1249,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -1175,6 +1300,53 @@ inherited SaleForm: TSaleForm
     end
     object bbactUpdatePriceSale: TdxBarButton
       Action = actExec_Update_PriceSale
+      Category = 0
+    end
+    object bbPrintInvoiceIC: TdxBarButton
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Visible = ivAlways
+      ImageIndex = 21
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Visible = ivAlways
+      ImageIndex = 21
+      ShowCaption = False
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end>
+      ItemOptions.ShowShortCuts = True
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actPrintInvoiceIC_0
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actPrintInvoiceIC_7
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actPrintInvoiceIC_20
       Category = 0
     end
   end
@@ -1236,6 +1408,12 @@ inherited SaleForm: TSaleForm
         Name = 'LabelPriceSale'
         Value = #1042#1074#1077#1076#1080#1090#1077' '#1094#1077#1085#1091' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceNDS'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2022,19 +2200,19 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 431
-    Top = 232
+    Left = 415
+    Top = 248
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 500
-    Top = 238
+    Left = 548
+    Top = 254
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 484
+    Left = 500
     Top = 257
   end
   object DetailDCS: TClientDataSet
@@ -2674,5 +2852,38 @@ inherited SaleForm: TSaleForm
       end>
     Left = 216
     Top = 184
+  end
+  object spSelectPrintInvoiceIC: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_PrintInvoiceIC'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceNDS'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceNDS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 376
   end
 end

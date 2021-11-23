@@ -67,6 +67,9 @@ type
     spPUSHInfo: TdsdStoredProc;
     actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
+    spUpdate_ClearBranchDate: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    actUpdate_ClearBranchDate: TdsdExecStoredProc;
   private
     { Private declarations }
   public

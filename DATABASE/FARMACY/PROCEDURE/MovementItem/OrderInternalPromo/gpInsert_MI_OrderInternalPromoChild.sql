@@ -1,9 +1,10 @@
 -- Function: gpInsert_MI_OrderInternalPromoChild()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_OrderInternalPromoChild (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_OrderInternalPromoChild (Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_OrderInternalPromoChild(
     IN inMovementId          Integer   , --  люч объекта <ƒокумент>
+    IN inUnitCodeList        TBlob     , -- ѕеречень аптек дл€ дораспределени€
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS VOID AS
@@ -14,6 +15,12 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE vbMiddleDate TDateTime;
    DECLARE vbDays TFloat;
+   DECLARE vbIndex Integer;
+   DECLARE vbAmountDist Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE curDistribution refcursor;
+   DECLARE vbId Integer;
+   DECLARE vbAmount Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId := inSession;
@@ -500,7 +507,123 @@ BEGIN
                 THEN COALESCE (tmpMI_Child.AmountManual, 0)
                 ELSE CEIL (tmpMI_Master.Amount - COALESCE (tmpRemains.Amount, 0)) END  > 0
          ;
+         
+         
+    -- ƒораспределение нерасспределенного
+    IF COALESCE (inUnitCodeList, '') <> '' AND
+       EXISTS(SELECT MovementItem.Id
+                   , MovementItem.ObjectId AS GoodsId
+                   , (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) AS Amount
+              FROM MovementItem
+                   LEFT JOIN (SELECT tmpData.ParentId
+                                   , SUM (tmpData.AmountIn) AS AmountIn
+                              FROM tmpData
+                              GROUP BY tmpData.ParentId
+                              ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.DescId = zc_MI_Master()
+                AND (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) > 0
+                AND MovementItem.isErased = FALSE)
+    THEN
+    
+       -- строки мастера с кол-вом дл€ распределени€
+       WITH 
+         tmpMI_Master AS (SELECT MovementItem.Id
+                               , MovementItem.ObjectId AS GoodsId
+                               , (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) AS Amount
+                          FROM MovementItem
+                               LEFT JOIN (SELECT tmpData.ParentId
+                                               , SUM (tmpData.AmountIn) AS AmountIn
+                                          FROM tmpData
+                                          GROUP BY tmpData.ParentId
+                                          ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId = zc_MI_Master()
+                            AND (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) > 0
+                            AND MovementItem.isErased = FALSE
+                          )
+                                
+                                
+       SELECT SUM(tmpMI_Master.Amount)::Integer
+       INTO vbAmountDist
+       FROM tmpMI_Master;
 
+       -- таблица
+       IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpUnit_List')
+       THEN
+           CREATE TEMP TABLE tmpUnit_List (Id Integer, UnitId Integer) ON COMMIT DROP;
+       ELSE
+           DELETE FROM tmpUnit_List;
+       END IF;
+
+       -- парсим подразделени€ дл€ перекрыти€ всего нераспределенного остатка
+       vbUnitId := 1;
+       WHILE vbUnitId < vbAmountDist LOOP
+         vbIndex := 1;
+         WHILE SPLIT_PART (inUnitCodeList, ',', vbIndex) <> '' LOOP
+            -- добавл€ем то что нашли
+            INSERT INTO tmpUnit_List (Id, UnitId)
+             SELECT vbUnitId
+                  , Object_Unit.Id
+             FROM Object AS Object_Unit 
+             WHERE Object_Unit.DescID = zc_Object_Unit()
+               AND Object_Unit.ObjectCode = SPLIT_PART (inUnitCodeList, ',', vbIndex) :: Integer;
+
+            -- теперь следуюющий
+            vbIndex := vbIndex + 1;
+            vbUnitId := vbUnitId + 1;
+         END LOOP;      
+       END LOOP;      
+
+       -- распредел€ем все нераспределенное
+       OPEN curDistribution FOR (SELECT MovementItem.Id
+                                      , (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) AS Amount
+                                 FROM MovementItem
+                                      LEFT JOIN (SELECT tmpData.ParentId
+                                                      , SUM (tmpData.AmountIn) AS AmountIn
+                                                 FROM tmpData
+                                                 GROUP BY tmpData.ParentId
+                                                 ) AS tmpChild ON tmpChild.ParentId = MovementItem.Id
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND (MovementItem.Amount - COALESCE (tmpChild.AmountIn, 0)) > 0
+                                   AND MovementItem.isErased = FALSE
+                                 );
+
+       vbIndex := 1;
+       -- начало цикла по курсору1
+       LOOP
+           -- данные по курсору1
+           FETCH curDistribution INTO vbId, vbAmount;
+           -- если данные закончились, тогда выход
+           IF NOT FOUND THEN EXIT; END IF;
+           
+           WHILE vbAmount > 0 LOOP
+           
+             SELECT tmpUnit_List.UnitId
+             INTO vbUnitId
+             FROM tmpUnit_List
+             WHERE tmpUnit_List.ID = vbIndex;
+             
+             -- ƒобавим
+             IF EXISTS (SELECT 1 FROM tmpData
+                        WHERE tmpData.ParentId = vbId AND UnitId = vbUnitId)
+             THEN
+               UPDATE tmpData SET AmountIn = AmountIn + CASE WHEN vbAmount >= 1 THEN 1 ELSE vbAmount END
+               WHERE tmpData.ParentId = vbId AND UnitId = vbUnitId;
+             ELSE
+               INSERT INTO tmpData (Id, ParentId, UnitId, AmountOut, Remains, AmountIn, AmountManual)
+               VALUES (NULL, vbId, vbUnitId, NULL, NULL, CASE WHEN vbAmount >= 1 THEN 1 ELSE vbAmount END, NULL);
+             END IF;
+             
+             vbAmount := vbAmount - 1;
+             vbIndex := vbIndex + 1;
+
+           END LOOP;      
+
+       END LOOP; -- финиш цикла по курсору1
+       CLOSE curDistribution; -- закрыли курсор1 
+    END IF;
 
     --- сохран€ем данные чайлд
     PERFORM lpInsertUpdate_MI_OrderInternalPromoChild (ioId           := COALESCE (tmpData.Id,0)
@@ -538,4 +661,4 @@ $BODY$
  16.04.19         *
 */
 
--- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 21126541 ,  inSession := '3');
+-- select * from gpInsert_MI_OrderInternalPromoChild(inMovementId := 25768416 , inUnitCodeList := '13,14,15,74,11,29,34,57,104,20,22,30,56,101,75,18,17,82,103,91,93,96,95,100,10,25,33,66,92,47,51,44,60,59,61,69,2,4,5,83,87,88,102' ,  inSession := '3');

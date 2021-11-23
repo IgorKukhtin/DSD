@@ -348,6 +348,18 @@ BEGIN
 
     -- —брос фиксированных скидок
     BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer = 2 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 15
+      THEN
+         PERFORM gpUpdate_Goods_SetinHideOnTheSite(inSession := zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_SetinHideOnTheSite', True, text_var1::TVarChar, vbUserId);
+    END;
+
+    -- ”чтановка признака "—крывать на сайте нет в наличии и в поставках" 
+    BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer = 4 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 25
       THEN
          PERFORM gpUpdate_Object_PriceChangeClear(inId := PriceChange.ID, inSession := inSession) 

@@ -844,6 +844,43 @@ BEGIN
      END IF;
    END IF;
    
+   -- Для роли "Кассир аптеки"
+   IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+            WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) OR
+      inSession = '3'
+   THEN
+
+     vbText := gpGet_Movement_ReturnOut_PUSH_NewDoc (inStartDate := vbDatePUSH, inSession:= inSession);
+        
+     IF COALESCE (vbText, '') <> ''
+     THEN         
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       VALUES (21, 'Внимание!!!'||CHR(13)|| 
+                   'По вашей аптеке создан НОВЫЙ ВОЗВРАТ:'||CHR(13)||vbText||CHR(13)||CHR(13)||
+                   'Распечатайте накладные.'||CHR(13)||
+                   'Подготовьте товар и документы.'||CHR(13)||
+                   'Поставьте галочку "ОТЛОЖЕН" в возвратной накладной.', 
+                   'TReturnOutPharmacyJournalForm', 'Возврат поставщику', 
+                   '', '', '');
+     END IF;
+
+     IF vbDatePUSH::Time < '10:00:00'::Time AND CURRENT_TIMESTAMP::Time >= '10:00:00'::Time
+     THEN
+       vbText := gpGet_Movement_ReturnOut_PUSH_NotGiven (inSession:= inSession);
+        
+       IF COALESCE (vbText, '') <> ''
+       THEN         
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         VALUES (21, 'Внимание!!!'||CHR(13)|| 
+                     'У Вас есть ВОЗВРАТЫ ПОСТАВЩИКУ , которые ЕМУ НЕ ОТДАНЫ:'||CHR(13)||vbText||CHR(13)||CHR(13)||
+                     'ПРОВЕРЬТЕ ИХ НАЛИЧИЕ В АПТЕКЕ !!!'||CHR(13)||CHR(13)||
+                     'Если товар отдан поставщику - заполните колонку "Дата передачи товара" в   журнале "Возврат поставщику"', 
+                     'TReturnOutPharmacyJournalForm', 'Возврат поставщику', 
+                     '', '', '');
+       END IF;
+     END IF;
+
+   END IF;
 
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id

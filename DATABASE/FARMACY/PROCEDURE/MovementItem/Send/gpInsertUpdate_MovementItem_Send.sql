@@ -609,7 +609,7 @@ BEGIN
       -- Для менеджеров
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                 WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
-         AND vbUserId NOT IN (183242 )
+         AND vbUserId NOT IN (183242, 11263040)
       THEN
 
         IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) OR

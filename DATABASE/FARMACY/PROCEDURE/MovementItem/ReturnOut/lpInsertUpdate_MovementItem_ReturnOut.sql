@@ -16,7 +16,11 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
+   DECLARE vbIsInsert Boolean;
 BEGIN
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- определяются данные из MovementItem
      SELECT MI.Amount 
@@ -38,6 +42,9 @@ BEGIN
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

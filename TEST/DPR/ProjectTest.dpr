@@ -1326,7 +1326,11 @@ uses
   Report_MovementProtocolGroup in '..\..\Forms\Report\Report_MovementProtocolGroup.pas' {Report_MovementProtocolGroupForm: TParentForm},
   Report_MovementProtocolGroupDialog in '..\..\Forms\Report\Report_MovementProtocolGroupDialog.pas' {Report_MovementProtocolGroupDialogForm: TParentForm},
   Report_Trade_Olap in '..\..\Forms\Report\Report_Trade_Olap.pas' {Report_Trade_OlapForm: TParentForm},
-  Report_Trade_OlapDialog in '..\..\Forms\Report\Report_Trade_OlapDialog.pas' {Report_Trade_OlapDialogForm: TParentForm};
+  Report_Trade_OlapDialog in '..\..\Forms\Report\Report_Trade_OlapDialog.pas' {Report_Trade_OlapDialogForm: TParentForm},
+  PairDayEdit in '..\..\Forms\Guides\PairDayEdit.pas' {PairDayEditForm: TParentForm},
+  PairDay in '..\..\Forms\Guides\PairDay.pas' {PairDayForm: TParentForm},
+  PersonalGroupJournal in '..\..\Forms\Document\PersonalGroupJournal.pas' {PersonalGroupJournalForm: TParentForm},
+  PersonalGroupMovement in '..\..\Forms\Document\PersonalGroupMovement.pas' {PersonalGroupMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummFine TFloat, TotalSummFineOth TFloat, TotalSummFineOthRecalc TFloat
              , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
+             , TotalSummHouseAdd TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -237,6 +238,8 @@ BEGIN
 
            , MovementFloat_TotalSummCompensation.ValueData        :: TFloat AS TotalSummCompensation
            , MovementFloat_TotalSummCompensationRecalc.ValueData  :: TFloat AS TotalSummCompensationRecalc
+           
+           , COALESCE (MovementFloat_TotalSummHouseAdd.ValueData,0) ::TFloat AS TotalSummHouseAdd
 
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
@@ -388,6 +391,10 @@ BEGIN
                                     ON MovementFloat_TotalSummCompensationRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCompensationRecalc.DescId = zc_MovementFloat_TotalSummCompensationRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummHouseAdd
+                                    ON MovementFloat_TotalSummHouseAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummHouseAdd.DescId = zc_MovementFloat_TotalSummHouseAdd()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -426,6 +433,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.11.21         * TotalSummHouseAdd
  16.11.21         * isMail
  27.09.21         * isExport
  28.04.21         * 

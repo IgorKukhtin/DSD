@@ -237,7 +237,7 @@ begin
   cError := ''; cDescription := '';
   jValue := FRESTResponse.JSONValue ;
 
-  if (jValue.FindValue('error') <> Nil) and (cError <> '') then
+  if (jValue.FindValue('error') <> Nil) then
   begin
     j := jValue.FindValue('error');
 

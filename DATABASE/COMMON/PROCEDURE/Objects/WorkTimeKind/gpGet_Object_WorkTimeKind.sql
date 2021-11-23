@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShortName TVarChar
              , Tax       TFloat
              , isNoSheetChoice Boolean
+             , PairDayId Integer, PairDayName TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -26,6 +27,8 @@ IF COALESCE (inId, 0) = 0
            , '' :: TVarChar       AS ShortName
            , 0  :: Tfloat         AS Tax
            , FALSE :: Boolean     AS isNoSheetChoice
+           , 0                    AS PairDayId
+           , '' :: TVarChar       AS PairDayName           
            , FALSE :: Boolean     AS isErased
          ;
    ELSE
@@ -39,6 +42,8 @@ IF COALESCE (inId, 0) = 0
           , ObjectString_ShortName.ValueData AS ShortName 
           , ObjectFloat_Tax.ValueData        AS Tax
           , COALESCE (ObjectBoolean_NoSheetChoice.ValueData, FALSE) ::Boolean AS isNoSheetChoice
+          , Object_PairDay.Id                AS PairDayId
+          , Object_PairDay.ValueData         AS PairDayName
           , Object_WorkTimeKind.isErased     AS isErased
           
        FROM OBJECT AS Object_WorkTimeKind
@@ -54,6 +59,12 @@ IF COALESCE (inId, 0) = 0
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetChoice
                                     ON ObjectBoolean_NoSheetChoice.ObjectId = Object_WorkTimeKind.Id
                                    AND ObjectBoolean_NoSheetChoice.DescId = zc_ObjectBoolean_WorkTimeKind_NoSheetChoice()
+
+            LEFT JOIN ObjectLink AS ObjectLink_WorkTimeKind_PairDay
+                                 ON ObjectLink_WorkTimeKind_PairDay.ObjectId = Object_WorkTimeKind.Id 
+                                AND ObjectLink_WorkTimeKind_PairDay.DescId = zc_ObjectLink_WorkTimeKind_PairDay()
+            LEFT JOIN Object AS Object_PairDay ON Object_PairDay.Id = ObjectLink_WorkTimeKind_PairDay.ChildObjectId
+
        WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind()
          AND Object_WorkTimeKind.Id = inId;
    END IF;
@@ -66,6 +77,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.11.21         *
  19.08.21         *
  05.12.17         *
 */

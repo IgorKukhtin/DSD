@@ -1123,7 +1123,10 @@ uses
   Report_MonitoringCollectionSUN in '..\..\FormsFarmacy\Report\Report_MonitoringCollectionSUN.pas' {Report_MonitoringCollectionSUNForm: TParentForm},
   Report_RelatedCodesSUN in '..\..\FormsFarmacy\Report\Report_RelatedCodesSUN.pas' {Report_RelatedCodesSUNForm: TParentForm},
   GoodsSPReceiptList in '..\..\FormsFarmacy\Cash\GoodsSPReceiptList.pas' {GoodsSPReceiptListForm: TParentForm},
-  Send_RelatedCodesSUN in '..\..\FormsFarmacy\Document\Send_RelatedCodesSUN.pas' {Send_RelatedCodesSUNForm: TParentForm};
+  Send_RelatedCodesSUN in '..\..\FormsFarmacy\Document\Send_RelatedCodesSUN.pas' {Send_RelatedCodesSUNForm: TParentForm},
+  Report_InsuranceCompaniesDialog in '..\..\FormsFarmacy\Report\Report_InsuranceCompaniesDialog.pas' {Report_InsuranceCompaniesDialogForm: TParentForm},
+  Report_InsuranceCompanies in '..\..\FormsFarmacy\Report\Report_InsuranceCompanies.pas' {Report_InsuranceCompaniesForm: TParentForm},
+  ReturnOutPharmacy in '..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas' {ReturnOutPharmacyForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

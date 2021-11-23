@@ -445,16 +445,16 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     inherited actSetErased: TdsdChangeMovementStatus
       Category = 'Complete'
     end
-    inherited actReCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
       Category = 'Complete'
     end
     inherited spReCompete: TdsdExecStoredProc
@@ -469,16 +469,16 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     inherited spErased: TdsdExecStoredProc
       Category = 'Complete'
     end
-    inherited actSimpleCompleteList: TMultiAction
+    inherited mactSimpleCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actSimpleUncompleteList: TMultiAction
+    inherited mactSimpleUncompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actSimpleReCompleteList: TMultiAction
+    inherited mactSimpleReCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actSimpleErased: TMultiAction
+    inherited mactSimpleErasedList: TMultiAction
       Category = 'Complete'
     end
     object actPrint: TdsdPrintAction

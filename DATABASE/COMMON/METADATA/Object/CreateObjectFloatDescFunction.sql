@@ -1142,7 +1142,12 @@ INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectFloat_PersonalServiceList_Compensation', zc_Object_Car(), 'В каком месяце начисляется компенсация' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation');
+  SELECT 'zc_ObjectFloat_PersonalServiceList_Compensation', zc_Object_PersonalServiceList(), 'В каком месяце начисляется компенсация' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond', zc_Object_PersonalServiceList(), 'Коэфф для выгрузки ведомости Банк 2ф.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_TotalSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_TotalSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
@@ -2170,6 +2175,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.11.21         * zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond
  10.11.21                                                                                      * zc_ObjectFloat_Goods_SupplementMinPP
  02.11.21         * zc_ObjectFloat_Car_Weight
                     zc_ObjectFloat_Car_Year 

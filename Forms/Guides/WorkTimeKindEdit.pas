@@ -8,7 +8,7 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TWorkTimeKindEditForm = class(TParentForm)
@@ -31,6 +31,9 @@ type
     edShortName: TcxTextEdit;
     cxLabel3: TcxLabel;
     ceTax: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edPairDay: TcxButtonEdit;
+    GuidesPairDay: TdsdGuides;
   private
     { Private declarations }
   public

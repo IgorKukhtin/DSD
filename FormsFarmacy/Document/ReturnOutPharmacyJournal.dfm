@@ -1,26 +1,26 @@
 inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
-  ClientWidth = 807
+  ClientWidth = 785
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitWidth = 801
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 807
+    Width = 785
     Height = 412
     TabOrder = 3
     ExplicitWidth = 807
     ExplicitHeight = 412
     ClientRectBottom = 412
-    ClientRectRight = 807
+    ClientRectRight = 785
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 807
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 807
+        Width = 785
         Height = 412
         ExplicitWidth = 807
         ExplicitHeight = 412
@@ -293,7 +293,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 807
+    Width = 785
     ExplicitWidth = 807
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -324,39 +324,6 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    inherited actInsert: TdsdInsertUpdateAction
-      Category = 'Edit'
-      ImageIndex = -1
-      FormName = 'TReturnOutForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actInsertMask: TdsdInsertUpdateAction
-      Category = 'Edit'
-    end
-    inherited actUpdate: TdsdInsertUpdateAction
-      Category = 'Edit'
-      FormName = 'TReturnOutForm'
-    end
     object actPrintOptima: TdsdPrintAction [5]
       Category = 'DSDLib'
       MoveParams = <
@@ -407,25 +374,72 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Category = 'Complete'
+    inherited actInsert: TdsdInsertUpdateAction
+      Category = 'Edit'
+      ImageIndex = -1
+      FormName = 'TReturnOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Category = 'Edit'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      Category = 'Edit'
+      FormName = 'TReturnOutPharmacyForm'
+      FormNameParam.Value = 'TReturnOutPharmacyForm'
+      CheckIDRecords = True
     end
     inherited actComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
       Category = 'Complete'
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Category = 'Complete'
     end
-    inherited actReCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Category = 'Complete'
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleUncompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleErasedList: TMultiAction
       Category = 'Complete'
     end
     inherited spReCompete: TdsdExecStoredProc
@@ -438,18 +452,6 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       Category = 'Complete'
     end
     inherited spErased: TdsdExecStoredProc
-      Category = 'Complete'
-    end
-    inherited actSimpleCompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited actSimpleUncompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited actSimpleReCompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited actSimpleErased: TMultiAction
       Category = 'Complete'
     end
     object actPrint: TdsdPrintAction
@@ -587,14 +589,14 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Name = 'StartData'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndData'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -638,7 +640,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -647,7 +649,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Name = 'AdjustingOurDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AdjustingOurDate'
           DataType = ftDateTime
@@ -778,6 +780,21 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       Caption = 'actPUSHMessage'
       PUSHMessageType = pmtInformation
     end
+    object actUpdate_ClearBranchDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearBranchDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearBranchDate
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1044#1072#1090#1072' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -814,7 +831,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -916,11 +933,15 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -941,6 +962,16 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
     end
     inherited bbInsert: TdxBarButton
       Action = mactInsert
+      Visible = ivNever
+    end
+    inherited bbComplete: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbUnComplete: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbDelete: TdxBarButton
+      Visible = ivNever
     end
     object bbTax: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -982,6 +1013,10 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       Action = actPrintOptima
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate_ClearBranchDate
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -992,6 +1027,31 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
     Top = 152
     inherited N3: TMenuItem
       Action = mactInsert
+      Visible = False
+    end
+    inherited N5: TMenuItem
+      Visible = False
+    end
+    inherited N7: TMenuItem
+      Visible = False
+    end
+    inherited N8: TMenuItem
+      Visible = False
+    end
+    inherited N9: TMenuItem
+      Visible = False
+    end
+    inherited miReComplete: TMenuItem
+      Visible = False
+    end
+    inherited N10: TMenuItem
+      Visible = False
+    end
+    inherited N11: TMenuItem
+      Visible = False
+    end
+    inherited N12: TMenuItem
+      Visible = False
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1102,7 +1162,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
@@ -1110,7 +1170,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       end
       item
         Name = 'AdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
@@ -1250,7 +1310,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       end
       item
         Name = 'inAdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
@@ -1276,7 +1336,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       end
       item
         Name = 'inBranchDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'BranchDate'
         DataType = ftDateTime
@@ -1328,5 +1388,22 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
     PackSize = 1
     Left = 410
     Top = 280
+  end
+  object spUpdate_ClearBranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_ClearBranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 347
   end
 end

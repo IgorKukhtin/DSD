@@ -1049,13 +1049,18 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_RelatedCodesSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InsuranceCompaniesDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_InsuranceCompaniesDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InsuranceCompaniesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_InsuranceCompaniesForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_RelatedCodesSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_RelatedCodesSUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RelatedCodesSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RelatedCodesSUNForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MonitoringCollectionSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MonitoringCollectionSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MonitoringCollectionSUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TopListDiffGoodsDialogForm'));
@@ -1888,6 +1893,8 @@ end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPharmacyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPharmacyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPharmacyJournalForm');
 

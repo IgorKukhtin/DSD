@@ -235,6 +235,7 @@ BEGIN
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
                + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) + COALESCE (inSummAuditAdd, 0)-- - COALESCE (inSummSocialIn, 0);
+               + COALESCE (inSummHouseAdd, 0)  -- "плюс" компенсация жилья
                  -- "плюс" <Премия (распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
                  -- "минус" <штраф (распределено)>
@@ -243,12 +244,11 @@ BEGIN
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
                  -- "плюс" <компенсация(распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
-                 -- "плюс" компенсация жилья
-               + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                 ;
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
                     + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0)  + COALESCE (inSummHosp, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummAuditAdd, 0)
+                    + COALESCE (inSummHouseAdd, 0)  -- "плюс" компенсация жилья
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
                       -- "плюс" <Премия (распределено)>
@@ -267,8 +267,6 @@ BEGIN
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
                       -- "плюс"" <компенсация(распределено)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
-                      -- "плюс" компенсация жилья
-                    + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay

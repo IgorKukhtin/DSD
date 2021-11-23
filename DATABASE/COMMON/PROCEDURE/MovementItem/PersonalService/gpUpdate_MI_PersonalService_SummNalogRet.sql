@@ -45,6 +45,8 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummHosp()), 0)
                     -- SummAuditAdd
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummAuditAdd()), 0)
+                    -- SummHouseAdd
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                     -- 
                   , MovementItem.ParentId
                   )
@@ -92,6 +94,8 @@ BEGIN
                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummMinusExt()), 0)
                     -- SummAuditAdd
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummAuditAdd()), 0)
+                    -- SummHouseAdd
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
                   );
 
 

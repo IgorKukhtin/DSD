@@ -23,8 +23,6 @@ BEGIN
                                   
      --при распроведении признак Export ставим  = FALSE
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, FALSE);
-     --при распроведении признак Mail ставим  = FALSE
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, FALSE);
 
 END;
 $BODY$

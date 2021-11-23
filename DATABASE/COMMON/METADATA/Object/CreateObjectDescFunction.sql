@@ -977,6 +977,9 @@ CREATE OR REPLACE FUNCTION zc_Object_ReasonOut() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReasonOut', 'Причина увольнения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReasonOut');
 
+CREATE OR REPLACE FUNCTION zc_Object_PairDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PairDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PairDay', 'Вид смены' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PairDay');
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1516,6 +1519,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 22.11.21         * zc_Object_PairDay
  03.11.21                                                                                        * zc_Object_GroupMedicalProgramSP  
  27.10.21                                                                                        * zc_Object_Category1303  
  06.10.21                                                                                        * zc_Object_BanCommentSend  

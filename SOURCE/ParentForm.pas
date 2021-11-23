@@ -614,6 +614,7 @@ begin
   if gc_ProgramName = 'Farmacy.exe' then
     for I := 0 to ComponentCount - 1 do
       if Components[I] is TcxGrid then
+      begin
         for C in Self do
         begin
           //Находим все контексные меню
@@ -634,6 +635,8 @@ begin
             (C as TPopupMenu).Items.Add(mni);
           End;
         end;
+        Break;
+      end;
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;

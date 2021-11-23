@@ -919,6 +919,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_SmsSettings_Message() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_SmsSettings_Message', zc_Object_SmsSettings(), 'Message' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SmsSettings_Message');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PairDay_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PairDay_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PairDay_Comment', zc_object_PairDay(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PairDay_Comment');
 
 ---!!! Аптека
 
@@ -1402,6 +1405,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 22.11.21         * zc_ObjectString_PairDay_Comment
  08.11.21                                                                                                         * zc_ObjectString_CashSettings_TelegramBotToken
  02.11.21                                                                                                         * zc_ObjectString_Unit_TelegramId
  22.10.21                                                                                                         * zc_ObjectString_Unit_TokenKashtan

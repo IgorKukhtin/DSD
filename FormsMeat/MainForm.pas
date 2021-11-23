@@ -1339,6 +1339,10 @@ type
     actReport_MovementProtocolGroup: TdsdOpenForm;
     actReport_Trade_Olap: TdsdOpenForm;
     miReport_Trade_Olap: TMenuItem;
+    actPairDay: TdsdOpenForm;
+    miPairDay: TMenuItem;
+    actPersonalGroupMovement: TdsdOpenForm;
+    miPersonalGroupMovement: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

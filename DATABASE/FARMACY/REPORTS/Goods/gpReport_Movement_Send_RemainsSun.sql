@@ -93,8 +93,8 @@ BEGIN
                );
 
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isOnlyTimingSUN Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isOnlyTimingSUN Boolean) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
@@ -746,5 +746,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpReport_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpReport_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
