@@ -1049,6 +1049,11 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InsuranceCompaniesDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InsuranceCompaniesDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InsuranceCompaniesForm'));

@@ -4810,6 +4810,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SummaInsuranceCompanies: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1089#1090#1088#1072#1093#1086#1074#1099#1084' '#1082#1086#1084#1087#1072#1085#1080#1103#1084' '#1076#1083#1103' '#1079'/'#1087' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
+      FormName = 'TReport_SummaInsuranceCompaniesForm'
+      FormNameParam.Value = 'TReport_SummaInsuranceCompaniesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4971,6 +4982,9 @@
         end
         object N327: TMenuItem
           Action = actReport_InsuranceCompanies
+        end
+        object N328: TMenuItem
+          Action = actReport_SummaInsuranceCompanies
         end
         object N316: TMenuItem
           Caption = '-'

@@ -47,6 +47,16 @@ type
     NDS: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrintInvoiceIC: TdsdStoredProc;
+    actPrintInvoiceIC_0: TdsdPrintAction;
+    actPrintInvoiceIC_7: TdsdPrintAction;
+    actPrintInvoiceIC_20: TdsdPrintAction;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

@@ -611,7 +611,7 @@ begin
   dsdTranslateCurrForm(Self);
 
   // Добавляем кнопки сохранения и востановления параметров
-  if gc_ProgramName = 'Farmacy.exe' then
+  if ExtractFileName(ParamStr(0)) = 'Farmacy.exe' then
     for I := 0 to ComponentCount - 1 do
       if Components[I] is TcxGrid then
       begin

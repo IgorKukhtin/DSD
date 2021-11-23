@@ -1126,7 +1126,9 @@ uses
   Send_RelatedCodesSUN in '..\..\FormsFarmacy\Document\Send_RelatedCodesSUN.pas' {Send_RelatedCodesSUNForm: TParentForm},
   Report_InsuranceCompaniesDialog in '..\..\FormsFarmacy\Report\Report_InsuranceCompaniesDialog.pas' {Report_InsuranceCompaniesDialogForm: TParentForm},
   Report_InsuranceCompanies in '..\..\FormsFarmacy\Report\Report_InsuranceCompanies.pas' {Report_InsuranceCompaniesForm: TParentForm},
-  ReturnOutPharmacy in '..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas' {ReturnOutPharmacyForm: TParentForm};
+  ReturnOutPharmacy in '..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas' {ReturnOutPharmacyForm: TParentForm},
+  Report_SummaInsuranceCompanies in '..\..\FormsFarmacy\Report\Report_SummaInsuranceCompanies.pas' {Report_SummaInsuranceCompaniesForm: TParentForm},
+  Report_SummaInsuranceCompaniesDialog in '..\..\FormsFarmacy\Report\Report_SummaInsuranceCompaniesDialog.pas' {Report_SummaInsuranceCompaniesDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
