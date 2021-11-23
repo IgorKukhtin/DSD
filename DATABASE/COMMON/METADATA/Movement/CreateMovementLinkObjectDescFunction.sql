@@ -535,6 +535,12 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Category1303() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLink_Category1303', 'Группы населения по постановлению КМУ 1303' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLink_Category1303');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PairDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PairDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PairDay', 'Вид смены' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PairDay');
+
+
+
 
 /*-------------------------------------------------------------------------------
 
