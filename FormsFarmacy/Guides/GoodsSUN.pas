@@ -209,14 +209,19 @@ type
     actExecuteDialog_SupplementMin: TExecuteDialog;
     mactUpdate_SupplementMin: TMultiAction;
     actExec_Update_SupplementMin: TdsdExecStoredProc;
-    actUpdate_SupplementMin: TdsdStoredProc;
+    spUpdate_SupplementMin: TdsdStoredProc;
     dxBarButton17: TdxBarButton;
     SupplementMinPP: TcxGridDBColumn;
-    actUpdate_SupplementMinPP: TdsdStoredProc;
+    spUpdate_SupplementMinPP: TdsdStoredProc;
     actExecuteDialog_SupplementMinPP: TExecuteDialog;
     mactUpdate_SupplementMinPP: TMultiAction;
     actExec_Update_SupplementMinPP: TdsdExecStoredProc;
     dxBarButton18: TdxBarButton;
+    isAllowedPlatesSUN: TcxGridDBColumn;
+    spUpdate_inAllowedPlatesSUN_Revert: TdsdStoredProc;
+    mactUpdate_inAllowedPlatesSUN_Revert: TMultiAction;
+    actUpdate_inAllowedPlatesSUN_Revert: TdsdExecStoredProc;
+    dxBarButton19: TdxBarButton;
   private
     { Private declarations }
   public

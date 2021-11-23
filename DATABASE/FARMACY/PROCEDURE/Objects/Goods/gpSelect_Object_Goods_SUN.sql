@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , DateUpdateClose TDateTime
              , isInvisibleSUN boolean
              
-             , isSupplementSUN1 boolean, isSupplementSmudge boolean
+             , isSupplementSUN1 boolean, isSupplementSmudge boolean, isAllowedPlatesSUN boolean
              , isOnlySP boolean
              , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
@@ -148,6 +148,7 @@ BEGIN
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
            , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
            , Object_Goods_Main.isSupplementSmudge                                AS isSupplementSmudge
+           , Object_Goods_Main.isAllowedPlatesSUN                                AS isAllowedPlatesSUN
            , Object_Goods_Main.isOnlySP                                          AS isOnlySP
            , Object_Goods_Retail.SummaWages                                      AS SummaWages
            , Object_Goods_Retail.PercentWages                                    AS PercentWages

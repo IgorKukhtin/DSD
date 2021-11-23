@@ -442,6 +442,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 112
           end
+          object isAllowedPlatesSUN: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1083#1072#1089#1090#1080#1085#1082#1072#1084#1080' '#1074' '#1057#1059#1053
+            DataBinding.FieldName = 'isAllowedPlatesSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object SummaWages: TcxGridDBColumn
             Caption = #1047#1072' 1 '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
             DataBinding.FieldName = 'SummaWages'
@@ -1739,10 +1747,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = actUpdate_SupplementMin
+      StoredProc = spUpdate_SupplementMin
       StoredProcList = <
         item
-          StoredProc = actUpdate_SupplementMin
+          StoredProc = spUpdate_SupplementMin
         end>
       Caption = 'actExec_Update_SupplementMin'
     end
@@ -1793,12 +1801,38 @@ inherited GoodsSUNForm: TGoodsSUNForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = actUpdate_SupplementMinPP
+      StoredProc = spUpdate_SupplementMinPP
       StoredProcList = <
         item
-          StoredProc = actUpdate_SupplementMinPP
+          StoredProc = spUpdate_SupplementMinPP
         end>
       Caption = 'actExec_Update_SupplementMinPP'
+    end
+    object mactUpdate_inAllowedPlatesSUN_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_inAllowedPlatesSUN_Revert
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1083#1072#1089#1090#1080#1085#1082#1072#1084#1080' '#1074' '#1057#1059#1053'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1083#1072#1089#1090#1080#1085#1082#1072#1084#1080' '#1074' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1083#1072#1089#1090#1080#1085#1082#1072#1084#1080' '#1074' '#1057#1059#1053'"'
+      ImageIndex = 79
+    end
+    object actUpdate_inAllowedPlatesSUN_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inAllowedPlatesSUN_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inAllowedPlatesSUN_Revert
+        end>
+      Caption = 'actUpdate_inAllowedPlatesSUN_Revert'
     end
   end
   inherited MasterDS: TDataSource
@@ -2113,6 +2147,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -2312,6 +2350,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton18: TdxBarButton
       Action = mactUpdate_SupplementMinPP
+      Category = 0
+    end
+    object dxBarButton19: TdxBarButton
+      Action = mactUpdate_inAllowedPlatesSUN_Revert
       Category = 0
     end
   end
@@ -3301,7 +3343,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
     Left = 664
     Top = 344
   end
-  object actUpdate_SupplementMin: TdsdStoredProc
+  object spUpdate_SupplementMin: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_SupplementMin'
     DataSets = <>
     OutputType = otResult
@@ -3326,7 +3368,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
     Left = 1056
     Top = 120
   end
-  object actUpdate_SupplementMinPP: TdsdStoredProc
+  object spUpdate_SupplementMinPP: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_SupplementMinPP'
     DataSets = <>
     OutputType = otResult
@@ -3350,5 +3392,31 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 1056
     Top = 176
+  end
+  object spUpdate_inAllowedPlatesSUN_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isAllowedPlatesSUN_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAllowedPlatesSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAllowedPlatesSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1048
+    Top = 240
   end
 end
