@@ -30,6 +30,7 @@ type
     AmountSend: TcxGridDBColumn;
     actFormClose: TdsdFormClose;
     dxBarButton3: TdxBarButton;
+    ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -38,7 +38,14 @@ RETURNS TABLE (
     JuridicalPromoId   Integer,
     ContractPromoId    Integer,
     PercentMarkupPromo TFloat,
-    PricePromo         TFloat
+    PricePromo1         TFloat,
+
+    JuridicalPromo2Id   Integer,
+    ContractPromo2Id    Integer,
+    PercentMarkupPromo2 TFloat,
+    PricePromo2         TFloat,
+
+    PricePromo          TFloat
 )
 
 AS
@@ -573,6 +580,13 @@ BEGIN
         FinalListOne.JuridicalId, 
         FinalListOne.ContractId, 
         FinalListOne.PercentMarkup :: TFloat AS PercentMarkupPromo,
+        FinalListOne.Price,
+
+        FinalListTwo.JuridicalId, 
+        FinalListTwo.ContractId, 
+        FinalListTwo.PercentMarkup :: TFloat AS PercentMarkupPromo,
+        FinalListTwo.Price,
+
         CASE WHEN COALESCE (FinalListTwo.Price, 0) = 0
              THEN FinalListOne.Price 
              ELSE ROUND((FinalListOne.Price + FinalListTwo.Price) / 2, 2) END :: TFloat
@@ -610,4 +624,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
 
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292 , -4, 3); 
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292 , 4, 3); 

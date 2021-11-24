@@ -379,9 +379,18 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_TopicsTestingTuning() RETURNS Integer
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_TopicsTestingTuning', 'Тема тестирования сотрудников' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_TopicsTestingTuning');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_JuridicalTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_JuridicalTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_JuridicalTwo', 'Юр. лицо' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_JuridicalTwo');
+  
+CREATE OR REPLACE FUNCTION zc_MILinkObject_ContractTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ContractTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_ContractTwo', 'Договора' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_ContractTwo');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 24.11.21                                                                    * zc_MILinkObject_JuridicalTwo, zc_MILinkObject_ContractTwo
  05.10.21         * zc_MILinkObject_CarTrailer
  06.07.21                                                                    * zc_MILinkObject_TopicsTestingTuning
  30.06.21         * zc_MILinkObject_PersonalKVK
