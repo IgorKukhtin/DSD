@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
              , Compensation TFloat
-             , KoeffSummCardSecond TFloat
+             , KoeffSummCardSecond NUMERIC (16,10)
              , isSecond Boolean
              , isRecalc Boolean
              , isBankOut Boolean
@@ -66,7 +66,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS OnFlowType
                       
            , CAST (0 AS TFloat)     AS Compensation
-           , CAST (0 AS TFloat)     AS KoeffSummCardSecond
+           , CAST (0 AS NUMERIC (16,10)) AS KoeffSummCardSecond
 
            , CAST(FALSE AS Boolean) AS isSecond
            , CAST(FALSE AS Boolean) AS isRecalc
@@ -111,7 +111,7 @@ BEGIN
 
            
            , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
-           , COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) :: TFloat AS KoeffSummCardSecond
+           , CAST (COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) AS NUMERIC (16,10)) AS KoeffSummCardSecond
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc

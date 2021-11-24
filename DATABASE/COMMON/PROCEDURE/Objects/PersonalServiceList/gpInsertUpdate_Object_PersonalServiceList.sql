@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inBankAccountId         Integer   ,     --
     IN inPSLExportKindId       Integer   ,     --
     IN inCompensation          TFloat    ,     -- месяц компенсации
-    IN inKoeffSummCardSecond   TFloat    ,     -- Коэфф для выгрузки ведомости Банк 2ф.
+    IN inKoeffSummCardSecond   NUMERIC (16,10),     -- Коэфф для выгрузки ведомости Банк 2ф.
     IN inisSecond              Boolean   ,     -- 
     IN inisRecalc              Boolean   ,     -- 
     IN inisBankOut             Boolean   ,     -- 

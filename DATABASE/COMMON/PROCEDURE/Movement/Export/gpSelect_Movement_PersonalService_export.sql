@@ -28,7 +28,7 @@ $BODY$
    DECLARE vbBankAccountName TVarChar;
    DECLARE vbContentType TVarChar;
    DECLARE vbOnFlowType TVarChar; 
-   DECLARE vbKoeffSummCardSecond TFloat; 
+   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
 BEGIN
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;

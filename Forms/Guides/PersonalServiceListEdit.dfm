@@ -289,8 +289,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
+    Properties.DecimalPlaces = 10
+    Properties.DisplayFormat = ',0.########'
     ShowHint = True
     TabOrder = 34
     Width = 90

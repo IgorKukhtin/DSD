@@ -33,13 +33,13 @@ BEGIN
      
      -- сохранили
      ioId := lpInsertUpdate_MovementItem_PersonalGroup (ioId             := ioId
-                                                     , inMovementId      := inMovementId
-                                                     , inPersonalId      := inPersonalId
-                                                     , inPositionId      := inPositionId
-                                                     , inPositionLevelId := inPositionLevelId
-                                                     , inAmount          := inAmount
-                                                     , inUserId          := vbUserId
-                                                      ) AS tmp;
+                                                      , inMovementId      := inMovementId
+                                                      , inPersonalId      := inPersonalId
+                                                      , inPositionId      := inPositionId
+                                                      , inPositionLevelId := inPositionLevelId
+                                                      , inAmount          := inAmount
+                                                      , inUserId          := vbUserId
+                                                       ) AS tmp;
 
 END;
 $BODY$

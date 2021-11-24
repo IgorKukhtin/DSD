@@ -9,11 +9,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail(
 RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
-   DECLARE vbKoeffSummCardSecond TFloat; 
+   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Mail() AND MB.ValueData = TRUE)
+        AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> уже была отправлена.%Для повторной отправки необходимо перепровести документ.'
                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
