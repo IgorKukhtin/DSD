@@ -31,6 +31,8 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , SummPartner TFloat, SummPartner_10200 TFloat, SummPartner_10300 TFloat
              , SummDiff TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
+             , ChangePercentAmount TFloat
+             , isBarCode  Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )   
 AS
@@ -206,6 +208,8 @@ BEGIN
                                                          ON MIFloat_CountForPrice.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
+
+
                              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                        ON MovementBoolean_PriceWithVAT.MovementId =  MIContainer.MovementId
                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -232,6 +236,19 @@ BEGIN
                          AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                          AND (ContainerLO_Juridical.ObjectId         = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                       )
+
+       , tmpMIBoolean_BarCode AS (SELECT MIBoolean_BarCode.*
+                                  FROM MovementItemBoolean AS MIBoolean_BarCode 
+                                  WHERE MIBoolean_BarCode.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
+                                    AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                                  )
+       , tmpMIFloat_ChangePercentAmount AS (SELECT MovementItemFloat.*
+                                  FROM MovementItemFloat
+                                  WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
+                                    AND MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
+                                  )
+
+
        , tmpOperationGroup_all AS
                 (SELECT tmpListContainerSumm.MovementId
                       , tmpListContainerSumm.JuridicalId
@@ -246,6 +263,8 @@ BEGIN
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.GoodsKindId ELSE 0 END AS GoodsKindId
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.MeasureId   ELSE 0 END AS MeasureId
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.Price       ELSE 0 END AS Price
+                      , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END AS isBarCode
+                      , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END AS ChangePercentAmount
                       , SUM (tmpListContainerSumm.Amount)              AS Amount
                       , SUM (tmpListContainerSumm.Amount_Sh)           AS Amount_Sh
                       , SUM (tmpListContainerSumm.AmountChangePercent)    AS AmountChangePercent
@@ -270,6 +289,7 @@ BEGIN
                             , tmpListContainerSumm.GoodsKindId
                             , tmpListContainerSumm.MeasureId
                             , tmpListContainerSumm.Price
+                            , COALESCE (MIBoolean_BarCode.ValueData,FALSE) AS isBarCode
                             , (tmpListContainerSumm.SummPartner)       AS SummPartner
                             , (tmpListContainerSumm.SummPartner_10200) AS SummPartner_10200
                             , (tmpListContainerSumm.SummPartner_10300) AS SummPartner_10300
@@ -290,8 +310,15 @@ BEGIN
                             , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.AmountPartner ELSE 0 END) AS AmountPartner_Sh
 
                             , tmpListContainerSumm.SummPartner_calc
+                            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
                        FROM tmpListContainerSumm
+                             LEFT JOIN tmpMIBoolean_BarCode AS MIBoolean_BarCode 
+                                                            ON MIBoolean_BarCode.MovementItemId = tmpListContainerSumm.MovementItemId
+                                                           AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                             LEFT JOIN tmpMIFloat_ChangePercentAmount AS MIFloat_ChangePercentAmount
+                                                                      ON MIFloat_ChangePercentAmount.MovementItemId = tmpListContainerSumm.MovementItemId
+                                                                     AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
                        ) AS tmpListContainerSumm
                  GROUP BY tmpListContainerSumm.MovementId
                         , tmpListContainerSumm.JuridicalId
@@ -302,6 +329,8 @@ BEGIN
                         , tmpListContainerSumm.GoodsKindId
                         , tmpListContainerSumm.MeasureId
                         , tmpListContainerSumm.Price
+                        , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END
+                        , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END
                 )
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
@@ -316,6 +345,8 @@ BEGIN
                       , tmpListContainerSumm.GoodsKindId
                       , tmpListContainerSumm.MeasureId
                       , tmpListContainerSumm.Price
+                      , tmpListContainerSumm.isBarCode
+                      , tmpListContainerSumm.ChangePercentAmount
                       , SUM (tmpListContainerSumm.Amount)              AS Amount
                       , SUM (tmpListContainerSumm.Amount_Sh)           AS Amount_Sh
                       , SUM (tmpListContainerSumm.AmountChangePercent)    AS AmountChangePercent
@@ -348,6 +379,8 @@ BEGIN
                         , tmpListContainerSumm.GoodsKindId
                         , tmpListContainerSumm.MeasureId
                         , tmpListContainerSumm.Price
+                        , tmpListContainerSumm.isBarCode
+                        , tmpListContainerSumm.ChangePercentAmount
                 )
     -- Результат
     SELECT tmpOperationGroup.ItemName
@@ -388,9 +421,14 @@ BEGIN
          , tmpOperationGroup.SummPartner_10200 :: TFloat  AS SummPartner_10200
          , tmpOperationGroup.SummPartner_10300 :: TFloat  AS SummPartner_10300
          , (tmpOperationGroup.SummPartner - tmpOperationGroup.SummPartner_calc) :: TFloat  AS SummDiff
+
+
          
            -- Вес в упаковке - GoodsByGoodsKind
          , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
+         --% скидки вес
+         , tmpOperationGroup.ChangePercentAmount :: TFloat
+         , tmpOperationGroup.isBarCode  ::Boolean
 
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -447,3 +485,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 -- тест
 -- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
+--select * from gpReport_GoodsMI_byMovement (inStartDate := ('24.11.2021')::TDateTime , inEndDate := ('24.11.2021')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
