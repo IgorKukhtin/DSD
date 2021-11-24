@@ -9,11 +9,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail(
 RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
-   DECLARE vbKoeffSummCardSecond TFloat; 
+   DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Mail() AND MB.ValueData = TRUE)
+        AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> уже была отправлена.%Для повторной отправки необходимо перепровести документ.'
                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
@@ -25,7 +29,8 @@ BEGIN
      END IF;
 
      -- определили данные из ведомости начисления
-     SELECT ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
+     SELECT --ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
+            CAST (ObjectFloat_KoeffSummCardSecond.ValueData/ 1000 AS NUMERIC (16,10)) AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
    INTO vbKoeffSummCardSecond
      FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
@@ -96,7 +101,7 @@ BEGIN
       WITH
       tmp AS (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond
                    , COALESCE (gpSelect.INN, '')  AS INN
-                   , SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
+                   , SUM (FLOOR (100 * CAST ( (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond) AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
                    , UPPER (COALESCE (gpSelect.PersonalName, '') )  AS PersonalName
               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
            --   WHERE gpSelect.SummCardSecondRecalc <> 0

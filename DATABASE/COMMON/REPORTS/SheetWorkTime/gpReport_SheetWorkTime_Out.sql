@@ -179,7 +179,7 @@ BEGIN
                                   AND tmpList.UnitId     = tmp.UnitId
                                   AND tmp.Amount            <> 0
                  LEFT JOIN tmpList AS tmpList_out
-                                   ON tmpList_out.DateOut   <= tmp.OperDate
+                                   ON tmpList_out.DateOut   < tmp.OperDate  -- <=
                                   AND tmpList_out.MemberId = tmp.MemberId
                                   AND tmpList_out.PositionId = tmp.PositionId
                                   AND COALESCE (tmpList_out.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)

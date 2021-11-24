@@ -286,11 +286,12 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Left = 193
     Top = 164
     Hint = #1050#1086#1101#1092#1092' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1041#1072#1085#1082' 2'#1092'.'
+    EditValue = 0.000000000000000000
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
+    Properties.DecimalPlaces = 16
+    Properties.DisplayFormat = ',0.########'
     ShowHint = True
     TabOrder = 34
     Width = 90
@@ -445,9 +446,9 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end
       item
         Name = 'inKoeffSummCardSecond'
-        Value = Null
+        Value = 0
         Component = edKoeffSummCardSecond
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

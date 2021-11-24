@@ -61,6 +61,11 @@ type
     edUpdateDate: TcxDateEdit;
     cxLabel9: TcxLabel;
     GuidesUnit: TdsdGuides;
+    actPositionChoiceForm: TOpenChoiceForm;
+    spInsert_MI: TdsdStoredProc;
+    actRefreshMI: TdsdDataSetRefresh;
+    HeaderExit: THeaderExit;
+    PersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

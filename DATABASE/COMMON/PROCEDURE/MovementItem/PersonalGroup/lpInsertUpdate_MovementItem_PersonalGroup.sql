@@ -20,7 +20,22 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не сохрнен.';
      END IF;
-    
+
+     -- проверка уникальности
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                       ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                                                      AND MILinkObject_Position.ObjectId = inPositionId
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.Id <> ioId
+                  AND MovementItem.ObjectId = inPersonalId
+                )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inPersonalId), lfGet_Object_ValueData (inPositionId);
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

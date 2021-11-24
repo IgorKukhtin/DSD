@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpSelectMinPrice_AllGoodsSite (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoodsSite(
+CREATE OR REPLACE FUNCTION lpSelectMinPrice_AllGoodsSite (
     IN inObjectId    Integer      , -- Торговая сеть
     IN inUserId      Integer        -- сессия пользователя
 )
@@ -41,9 +41,16 @@ RETURNS TABLE (
     PercentMarkup      TFloat,
 
     isJuridicalPromo   Boolean,
+    
     JuridicalPromoId   Integer,
     ContractPromoId    Integer,
     PercentMarkupPromo TFloat,
+    PricePromo1        TFloat,
+
+    JuridicalPromo2Id   Integer,
+    ContractPromo2Id    Integer,
+    PercentMarkupPromo2 TFloat,
+    PricePromo2         TFloat,
     PricePromo         TFloat
 )
 
@@ -51,11 +58,14 @@ AS
 $BODY$
   DECLARE vbIsGoodsPromo Boolean;
   DECLARE vbCostCredit TFloat;
+  DECLARE vbMainJuridicalId Integer;
 BEGIN
     -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
     vbIsGoodsPromo:= inObjectId >=0;
     -- !!!меняется параметр в нормальное значение!!!
     inObjectId:= ABS (inObjectId);
+    
+    vbMainJuridicalId := 1311462;
  
     -- Перечень активных аптек 
     CREATE TEMP TABLE _tmpUnit ON COMMIT DROP AS
@@ -445,7 +455,7 @@ BEGIN
                               , tmp.AreaId_Juridical         AS AreaId
                               , tmp.AreaName_Juridical       AS AreaName
                          FROM lpSelect_Object_JuridicalArea_byUnit (0, 0) AS tmp
-                         WHERE tmp.UnitId IN (select _tmpUnit.UnitId from _tmpUnit)
+                         WHERE tmp.UnitId IN (select _tmpUnit.UnitId from _tmpUnit WHERE _tmpUnit.JuridicalId = vbMainJuridicalId)
                          )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
@@ -513,7 +523,7 @@ BEGIN
 
              -- Установки для юр. лиц (для поставщика определяется договор и т.п)
             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_find_View.JuridicalId
-                                       AND JuridicalSettings.MainJuridicalId in (SELECT DISTINCT _tmpUnit.JuridicalId FROM _tmpUnit)
+                                       AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
                                        AND JuridicalSettings.ContractId      = LastPriceList_find_View.ContractId
             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                               AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
@@ -698,6 +708,11 @@ BEGIN
         FinalListOne.JuridicalId, 
         FinalListOne.ContractId, 
         FinalListOne.PercentMarkup :: TFloat AS PercentMarkupPromo,
+        FinalListOne.Price,
+        FinalListTwo.JuridicalId, 
+        FinalListTwo.ContractId, 
+        FinalListTwo.PercentMarkup :: TFloat AS PercentMarkupPromo,
+        FinalListTwo.Price,
         CASE WHEN COALESCE (FinalListTwo.Price, 0) = 0
              THEN FinalListOne.Price 
              ELSE ROUND((FinalListOne.Price + FinalListTwo.Price) / 2, 2) END :: TFloat
@@ -728,4 +743,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoodsSite (Integer, Integer) OWNER TO postgre
 
 -- тест
 
- SELECT * FROM lpSelectMinPrice_AllGoodsSite (-4, 3); 
+ SELECT * FROM lpSelectMinPrice_AllGoodsSite (4, 3); 

@@ -2514,12 +2514,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifDialogForm'));
@@ -3931,6 +3932,8 @@ end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionMember_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionMember_ObjectForm');
   {
   // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
@@ -3947,6 +3950,10 @@ end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalUnit_ObjectForm');
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
@@ -3963,15 +3970,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
 
   //  Установить пароль для подтверждения в Scale
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPswDialogForm');
-
+   }
   // группировки сотрудников
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
-  }
+
 end;
 
  procedure TLoadFormTest.LoadPersonalGroupMovementFormTest;

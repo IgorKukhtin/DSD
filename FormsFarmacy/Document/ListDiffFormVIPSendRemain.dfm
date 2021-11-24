@@ -1,27 +1,27 @@
 inherited ListDiffFormVIPSendRemainForm: TListDiffFormVIPSendRemainForm
   Caption = #1053#1072#1083#1080#1095#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084' l'#1076#1083#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   ClientHeight = 407
-  ClientWidth = 587
+  ClientWidth = 676
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 603
+  ExplicitWidth = 692
   ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 587
+    Width = 676
     Height = 348
     ExplicitTop = 59
     ExplicitWidth = 587
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 587
+    ClientRectRight = 676
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 587
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
-        Width = 587
+        Width = 676
         Height = 348
         ExplicitWidth = 587
         ExplicitHeight = 348
@@ -52,6 +52,14 @@ inherited ListDiffFormVIPSendRemainForm: TListDiffFormVIPSendRemainForm
             Options.Editing = False
             Width = 336
           end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
           object Amount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
@@ -77,12 +85,13 @@ inherited ListDiffFormVIPSendRemainForm: TListDiffFormVIPSendRemainForm
   object Panel1: TPanel [1]
     Left = 0
     Top = 0
-    Width = 587
+    Width = 676
     Height = 33
     Align = alTop
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 5
+    ExplicitWidth = 587
     object cxLabel1: TcxLabel
       Left = 16
       Top = 4

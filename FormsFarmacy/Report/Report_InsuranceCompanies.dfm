@@ -439,6 +439,123 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementId'
     end
+    object actPrintInvoiceIC_0: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 0.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 0%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 0%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInvoiceIC_7: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 7.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 7%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 7%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInvoiceIC_20: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = 20.000000000000000000
+          FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoiceNDS'
+          ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintInvoiceIC
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoiceIC
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 20%'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1053#1044#1057' 20%'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -541,6 +658,10 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -628,6 +749,39 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
     end
     object bbUpdate: TdxBarButton
       Action = actUpdate
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1089#1090#1088#1072#1093#1086#1074#1086#1081' '#1082#1086#1084#1087#1072#1085#1080#1080
+      Visible = ivAlways
+      ImageIndex = 21
+      ShowCaption = False
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end>
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrintInvoiceIC_0
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actPrintInvoiceIC_7
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actPrintInvoiceIC_20
       Category = 0
     end
   end
@@ -749,8 +903,91 @@ inherited Report_InsuranceCompaniesForm: TReport_InsuranceCompaniesForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceNDS'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 216
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 284
+    Top = 278
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 188
+    Top = 273
+  end
+  object spSelectPrintInvoiceIC: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SaleAll_PrintInvoiceIC'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInsuranceCompaniesId'
+        Value = Null
+        Component = GuidesInsuranceCompanies
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceNDS'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceNDS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 391
+    Top = 272
   end
 end

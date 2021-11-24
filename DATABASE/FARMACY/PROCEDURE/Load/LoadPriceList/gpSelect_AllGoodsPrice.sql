@@ -71,9 +71,21 @@ RETURNS TABLE (
     ContractPromoId      Integer,    -- договор Ид
     ContractPromoName    TVarChar,   -- договор 
     
-    Juridical_PricePromo TFloat,     -- Цена у поставщика
+    Juridical_PricePromo1 TFloat,     -- Цена у поставщика
     Juridical_PercentPromo   TFloat,     -- % Корректировки наценки Поставщика
     Contract_PercentPromo    TFloat,     -- % Корректировки наценки Договора
+
+    JuridicalPromo2Id     Integer,    -- Поставщик Id
+    JuridicalPromoName2   TVarChar,   -- Поставщик 
+    ContractPromo2Id      Integer,    -- договор Ид
+    ContractPromoName2    TVarChar,   -- договор 
+    
+    Juridical_PricePromo2 TFloat,     -- Цена у поставщика
+    Juridical_PercentPromo2   TFloat,     -- % Корректировки наценки Поставщика
+    Contract_PercentPromo2    TFloat,     -- % Корректировки наценки Договора
+
+    Juridical_PricePromo TFloat,     -- Цена у поставщика средняя
+
     NewPricePromo        TFloat,     -- Новая цена
     PriceDiffPromo       TFloat,     -- % отклонения
     RepricePromo         Boolean ,   --
@@ -399,13 +411,25 @@ BEGIN
             END::Boolean   AS isPromoBonus,
 
             SelectMinPrice_AllGoods.isJuridicalPromo,
+
             SelectMinPrice_AllGoods.JuridicalPromoId,
             Object_JuridicalPromo.ValueData                                              AS JuridicalPromoName,
             SelectMinPrice_AllGoods.ContractPromoId,
             Object_ContractPromo.ValueData                                               AS ContractPromoName,
-            (SelectMinPrice_AllGoods.PricePromo * (100 + Object_Goods.NDS)/100)::TFloat  AS Juridical_PricePromo,
+            (SelectMinPrice_AllGoods.PricePromo1 * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_PricePromo1,
             ObjectFloat_JuridicalPromo_Percent.ValueData   AS Juridical_PercentPromo,
             ObjectFloat_ContractPromo_Percent.ValueData    AS Contract_PercentPromo,
+            
+            SelectMinPrice_AllGoods.JuridicalPromo2Id,
+            Object_JuridicalPromo2.ValueData                                             AS JuridicalPromoName2,
+            SelectMinPrice_AllGoods.ContractPromo2Id,
+            Object_ContractPromo2.ValueData                                              AS ContractPromoName2,
+            (SelectMinPrice_AllGoods.PricePromo2 * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_PricePromo2,
+            ObjectFloat_JuridicalPromo_Percent2.ValueData   AS Juridical_PercentPromo2,
+            ObjectFloat_ContractPromo_Percent2.ValueData    AS Contract_PercentPromo2,
+
+            (SelectMinPrice_AllGoods.PricePromo * (100 + Object_Goods.NDS)/100)::TFloat  AS Juridical_PricePromo,
+            
             zfCalc_SalePrice(
                               (SelectMinPrice_AllGoods.PricePromo * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
                              --  * CASE WHEN vbObjectId = 4 THEN 1.015 ELSE 1 END                          -- 23.03. убрали  -- для сети НЕ БОЛЕЙ!!! к цене поставщика дополнительные +1.5 19.03.2020      ----  +3% - 17,03,2020 Люба
@@ -461,6 +485,9 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalPromo ON Object_JuridicalPromo.Id = SelectMinPrice_AllGoods.JuridicalPromoId
             LEFT JOIN Object AS Object_ContractPromo ON Object_ContractPromo.Id = SelectMinPrice_AllGoods.ContractPromoId
 
+            LEFT JOIN Object AS Object_JuridicalPromo2 ON Object_JuridicalPromo2.Id = SelectMinPrice_AllGoods.JuridicalPromo2Id
+            LEFT JOIN Object AS Object_ContractPromo2 ON Object_ContractPromo2.Id = SelectMinPrice_AllGoods.ContractPromo2Id
+
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
 
@@ -481,6 +508,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_JuridicalPromo_Percent
                                   ON ObjectFloat_JuridicalPromo_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalPromoId
                                  AND ObjectFloat_JuridicalPromo_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_JuridicalPromo_Percent2
+                                  ON ObjectFloat_JuridicalPromo_Percent2.ObjectId = SelectMinPrice_AllGoods.JuridicalPromo2Id
+                                 AND objectfloat_juridicalpromo_percent2.DescId = zc_ObjectFloat_Juridical_Percent()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
                                   ON ObjectFloat_Contract_Percent.ObjectId = SelectMinPrice_AllGoods.ContractId
@@ -489,6 +519,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_ContractPromo_Percent
                                   ON ObjectFloat_ContractPromo_Percent.ObjectId = SelectMinPrice_AllGoods.ContractPromoId
                                  AND ObjectFloat_ContractPromo_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_ContractPromo_Percent2
+                                  ON ObjectFloat_ContractPromo_Percent2.ObjectId = SelectMinPrice_AllGoods.ContractPromo2Id
+                                 AND ObjectFloat_ContractPromo_Percent2.DescId = zc_ObjectFloat_Contract_Percent()
 
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
                                                      ON Object_MarginCategoryLink_unit.UnitId      = inUnitId
@@ -658,9 +691,19 @@ BEGIN
         ResultSet.JuridicalPromoName  ,
         ResultSet.ContractPromoId ,
         ResultSet.ContractPromoName ,
-        ResultSet.Juridical_PricePromo ,
+        ResultSet.Juridical_PricePromo1 ,
         ResultSet.Juridical_PercentPromo,
         ResultSet.Contract_PercentPromo,
+
+        ResultSet.JuridicalPromoId  ,
+        ResultSet.JuridicalPromoName2  ,
+        ResultSet.ContractPromo2Id ,
+        ResultSet.ContractPromoName2 ,
+        ResultSet.Juridical_PricePromo2 ,
+        ResultSet.Juridical_PercentPromo2,
+        ResultSet.Contract_PercentPromo2,
+
+        ResultSet.Juridical_PricePromo ,
         ResultSet.NewPricePromo ,
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100

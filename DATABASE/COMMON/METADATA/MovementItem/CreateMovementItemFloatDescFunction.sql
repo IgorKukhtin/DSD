@@ -1515,9 +1515,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_WrongAnswersStorekeeper() RETURNS In
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_WrongAnswersStorekeeper', 'Количество неправильных ответов кладовщику'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementFloat_WrongAnswersStorekeeper');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_JuridicalPriceTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPriceTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_JuridicalPriceTwo', 'Цена поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPriceTwo');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 24.11.21                                                                                                     * zc_MIFloat_JuridicalPriceTwo
  22.10.21                                                                                                     * zc_MovementFloat_WrongAnswers, zc_MovementFloat_WrongAnswersStorekeeper
  11.10.21                                                                                                     * zc_MIFloat_PenaltyExam
  07.10.21                                                                                                     * zc_MIFloat_AmountStorekeeper

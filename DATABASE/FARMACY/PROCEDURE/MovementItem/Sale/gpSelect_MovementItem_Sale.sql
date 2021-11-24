@@ -28,6 +28,7 @@ $BODY$
     DECLARE vbStatusId Integer;
     DECLARE vbRetailId Integer;   
     DECLARE vbisNP Boolean;   
+    DECLARE vbInsuranceCompaniesId Integer;   
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -39,7 +40,8 @@ BEGIN
          , Movement.StatusId
          , COALESCE(ObjectLink_Juridical_Retail.ChildObjectId, 4)
          , COALESCE (MovementBoolean_NP.ValueData, FALSE)
-    INTO vbUnitId, vbSPKindId, vbStatusId, vbRetailId, vbisNP
+         , MLO_InsuranceCompanies.ObjectId  
+    INTO vbUnitId, vbSPKindId, vbStatusId, vbRetailId, vbisNP, vbInsuranceCompaniesId
     FROM Movement
          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -60,6 +62,10 @@ BEGIN
                                    ON MovementBoolean_NP.MovementId = Movement.Id
                                   AND MovementBoolean_NP.DescId = zc_MovementBoolean_NP()
 
+         LEFT JOIN MovementLinkObject AS MLO_InsuranceCompanies
+                                      ON MLO_InsuranceCompanies.MovementId = Movement.Id
+                                     AND MLO_InsuranceCompanies.DescId = zc_MovementLinkObject_InsuranceCompanies()
+                                     
     WHERE Movement.ID = inMovementId;
 
     -- Результат
@@ -83,7 +89,9 @@ BEGIN
                                         , MIFloat_Price.ValueData            AS Price
                                         , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
                                         , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                        , MIFloat_Summ.ValueData             AS Summ
+                                        , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
+                                               THEN MIFloat_Summ.ValueData
+                                               ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) END::TFloat AS Summ
                                         , MIBoolean_Sp.ValueData             AS isSp
                                         , MovementItem.isErased              AS isErased
                                      FROM  MovementItem
@@ -270,7 +278,9 @@ BEGIN
                                            , MIFloat_Price.ValueData            AS Price
                                            , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
                                            , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                           , MIFloat_Summ.ValueData             AS Summ
+                                           , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
+                                                  THEN MIFloat_Summ.ValueData
+                                                  ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) END::TFloat AS Summ
                                            , MIBoolean_Sp.ValueData             AS isSp
                                            , MovementItem.isErased              AS isErased
                                       FROM  MovementItem

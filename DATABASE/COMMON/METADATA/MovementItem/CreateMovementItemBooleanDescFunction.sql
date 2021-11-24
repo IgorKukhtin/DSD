@@ -185,9 +185,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Conduct() RETURNS Integer AS $BODY
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Conduct', 'Проведен по количеству' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MovementBoolean_Conduct'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_JuridicalTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_JuridicalTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_JuridicalTwo', 'Проведен по количеству' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_JuridicalTwo'); 
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 24.11.21                                                                       * zc_MIBoolean_JuridicalTwo
  05.11.21                                                                       * zc_MovementBoolean_Conduct
  23.10.21                                                                       * zc_MIBoolean_Passed
  22.10.21                                                                       * zc_MIBoolean_Storekeeper

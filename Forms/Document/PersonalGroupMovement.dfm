@@ -11,17 +11,17 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     Width = 915
     Height = 299
     ExplicitTop = 127
-    ExplicitWidth = 873
+    ExplicitWidth = 915
     ExplicitHeight = 299
     ClientRectBottom = 299
     ClientRectRight = 915
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 873
+      ExplicitWidth = 915
       ExplicitHeight = 275
       inherited cxGrid: TcxGrid
         Width = 915
         Height = 275
-        ExplicitWidth = 873
+        ExplicitWidth = 915
         ExplicitHeight = 275
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -137,6 +137,14 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           object PositionName: TcxGridDBColumn [2]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPositionChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 233
@@ -149,7 +157,15 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 163
           end
-          object Amount: TcxGridDBColumn [4]
+          object PersonalGroupName: TcxGridDBColumn [4]
+            Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,7 +174,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object UnitName_inf: TcxGridDBColumn [5]
+          object UnitName_inf: TcxGridDBColumn [6]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'UnitName_inf'
             Visible = False
@@ -168,7 +184,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 92
           end
-          object PositionName_inf: TcxGridDBColumn [6]
+          object PositionName_inf: TcxGridDBColumn [7]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PositionName_inf'
             Visible = False
@@ -189,9 +205,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     Width = 915
     Height = 101
     TabOrder = 3
-    ExplicitLeft = 8
-    ExplicitTop = 2
-    ExplicitWidth = 873
+    ExplicitWidth = 915
     ExplicitHeight = 101
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -361,6 +375,26 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   inherited ActionList: TActionList
     Left = 31
     Top = 175
+    object actRefreshMI: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spInsert_MI
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -444,13 +478,55 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           MultiSelectSeparator = ','
         end>
     end
+    object actPositionChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Partner_ObjectForm'
+      FormName = 'TPositionMember_ObjectForm'
+      FormNameParam.Value = 'TPositionMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterMemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterMemberName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actPersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'Partner_ObjectForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormName = 'TPersonalUnit_ObjectForm'
+      FormNameParam.Value = 'TPersonalUnit_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -474,6 +550,68 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalGroupName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1020,8 +1158,8 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
       item
         Component = edPairDay
       end>
-    Left = 336
-    Top = 144
+    Left = 364
+    Top = 112
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1127,9 +1265,24 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 236
-    Top = 48
+    Left = 220
+    Top = 64
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1160,5 +1313,31 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
       end>
     Left = 380
     Top = 16
+  end
+  object spInsert_MI: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_PersonalGroup'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 120
+    Top = 344
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edPersonalGroup
+      end>
+    Action = actRefreshMI
+    Left = 656
+    Top = 96
   end
 end

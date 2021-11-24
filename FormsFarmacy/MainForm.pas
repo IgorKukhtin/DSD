@@ -892,6 +892,8 @@ type
     N326: TMenuItem;
     actReport_InsuranceCompanies: TdsdOpenForm;
     N327: TMenuItem;
+    actReport_SummaInsuranceCompanies: TdsdOpenForm;
+    N328: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

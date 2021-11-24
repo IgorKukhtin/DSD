@@ -8,17 +8,18 @@ CREATE OR REPLACE FUNCTION gpSelect_ListDiffFormVIPSendRemain(
     IN inAmountDiff  TFloat,        -- Количество
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (UnitId       Integer
-             , UnitCode     Integer
-             , UnitName     TVarChar
-             , Price        TFloat
-             , Remains      TFloat
-             , Reserve      TFloat
-             , ReserveSend  TFloat
-             , Amount       TFloat
-             , MCSValue     TFloat
-             , Layout       TFloat
-             , AmountSend   TFloat
+RETURNS TABLE (UnitId         Integer
+             , UnitCode       Integer
+             , UnitName       TVarChar
+             , Price          TFloat
+             , Remains        TFloat
+             , Reserve        TFloat
+             , ReserveSend    TFloat
+             , Amount         TFloat
+             , MCSValue       TFloat
+             , Layout         TFloat
+             , AmountSend     TFloat
+             , ExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -39,15 +40,57 @@ BEGIN
                          AND Object_Unit.isErased = False
                          AND Object_Unit.Id <> inUnitId
                        ),
+           tmpContainerPD AS (SELECT Container.ParentId
+                                   , MIN(ObjectDate_ExpirationDate.ValueData)     AS ExpirationDate
+                              FROM Container
+
+                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                                
+                                   LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                        ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                       AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()                                                                
+
+                              WHERE Container.DescId = zc_Container_CountPartionDate()
+                                AND Container.Amount <> 0
+                                AND Container.ObjectId = inGoodsId
+                                AND Container.WhereObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)
+                              GROUP BY Container.ParentId
+                              HAVING SUM(Container.Amount) > 0
+                             ),
            tmpContainer AS (SELECT Container.ObjectId
                                  , Container.WhereObjectId
                                  , SUM(Container.Amount)                       AS Amount
+                                 , MIN(COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()))::TDateTime AS ExpirationDate
                             FROM Container
 
+                                 -- находим срок годности для партийного товара
+                                 LEFT JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.Id
+
+                                 -- находим срок годности из прихода
+                                 LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                               ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                              AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                 LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                 -- элемент прихода
+                                 LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                 -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                             ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                            AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                 -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                 LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                 LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id) :: Integer
+                                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                 LEFT JOIN Movement AS Movement_Income
+                                                    ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) :: Integer
+                                 
                             WHERE Container.DescId = zc_Container_Count()
                               AND Container.Amount <> 0
                               AND Container.ObjectId = inGoodsId
                               AND Container.WhereObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)
+                              AND Movement_Income.OperDate < CURRENT_DATE - INTERVAL '30 DAY'
                             GROUP BY Container.ObjectId, Container.WhereObjectId
                             HAVING SUM(Container.Amount) > 0
                            ),
@@ -236,6 +279,8 @@ BEGIN
                          COALESCE (tmpLayoutAll.Amount, 0) - 
                          COALESCE (tmpReserve.Amount, 0) - 
                          COALESCE (tmpSend.Amount, 0)) END::TFloat AS AmountSend
+                         
+             , Container.ExpirationDate
 
         FROM tmpContainer AS Container
 
@@ -269,4 +314,6 @@ $BODY$
 
 --ТЕСТ
 -- select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 16001195 , inGoodsId := 40999 , inAmountDiff := 1 ,  inSession := '3');
-select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 8393158 , inGoodsId := 8563 , inAmountDiff := 1 ,  inSession := '3');
+-- select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 8393158 , inGoodsId := 8563 , inAmountDiff := 1 ,  inSession := '3');
+
+select * from gpSelect_ListDiffFormVIPSendRemain(inUnitId := 377595 , inGoodsId := 48355 , inAmountDiff := 1 ,  inSession := '3');
