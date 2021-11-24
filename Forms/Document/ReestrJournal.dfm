@@ -6,7 +6,7 @@ inherited ReestrJournalForm: TReestrJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 459
+  ExplicitHeight = 456
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -253,6 +253,14 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object isNotPayForWeigh: TcxGridDBColumn
+            Caption = #1053#1077#1090' '#1086#1087#1083'. '#1079#1072' '#1084#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'isNotPayForWeigh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1084#1072#1088#1096#1088#1091#1090
+            Width = 80
           end
           object StatusCode_Transport: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' ('#1055'.'#1083'.)'

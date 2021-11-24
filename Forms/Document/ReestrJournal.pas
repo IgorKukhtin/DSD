@@ -54,6 +54,7 @@ type
     TotalCountKg: TcxGridDBColumn;
     actPrintForDriver: TdsdPrintAction;
     bbPrintForDriver: TdxBarButton;
+    isNotPayForWeigh: TcxGridDBColumn;
   private
     { Private declarations }
   public
