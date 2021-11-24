@@ -55,7 +55,7 @@ BEGIN
           , ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId AS PSLExportKindId    -- Тип выгрузки ведомости в банк
           , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType  -- Content-Type
           , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType   -- Вид начисления в банке
-          , CAST (ObjectFloat_KoeffSummCardSecond.ValueData/ 1000 AS NUMERIC (16,10))  AS KoeffSummCardSecond --Коэфф для выгрузки ведомости Банк 2ф.
+          , CAST ((ObjectFloat_KoeffSummCardSecond.ValueData/ 1000) AS NUMERIC (16,10))  AS KoeffSummCardSecond --Коэфф для выгрузки ведомости Банк 2ф.
    INTO vbBankId, vbBankName, vbMFO
       , vbBankAccountId, vbBankAccountName
       , vbPSLExportKindId, vbContentType, vbOnFlowType
