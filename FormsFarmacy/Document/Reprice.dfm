@@ -216,6 +216,64 @@ inherited RepriceForm: TRepriceForm
             Options.Editing = False
             Width = 79
           end
+          object isJuridicalTwo: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' 2 '#1087#1088#1072#1081#1089#1072#1084
+            DataBinding.FieldName = 'isJuridicalTwo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object JuridicalTwoName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1074#1090#1086#1088#1086#1081
+            DataBinding.FieldName = 'JuridicalTwoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object ContractTwoName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1074#1090#1086#1088#1086#1081
+            DataBinding.FieldName = 'ContractTwoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object JuridicalTwo_GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1091' '#1074#1090#1086#1088#1086#1075#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'JuridicalTwo_GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object Juridical_PriceTwo: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' 2 '#1087#1086#1089#1090'. '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Juridical_PriceTwo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object ExpirationDateTwo: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1091' '#1074#1090#1086#1088#1086#1075#1086
+            DataBinding.FieldName = 'ExpirationDateTwo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False

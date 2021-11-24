@@ -56,18 +56,25 @@ BEGIN
         reprice boolean,
         isPromoBonus Boolean,
         AddPercentRepriceMin TFloat, 
-        JuridicalPromoId     Integer,
-        ContractPromoId      Integer,
-        Juridical_PricePromo TFloat,
-        Juridical_PercentPromo TFloat,
-        Contract_PercentPromo  TFloat,
+        JuridicalPromoOneId       Integer,
+        ContractPromoOneId        Integer,
+        Juridical_PricePromoOne   TFloat,
+        ExpirationDateOne         TDateTime, 
+        Juridical_PercentPromoOne TFloat,
+        Contract_PercentPromoOne  TFloat,
+        JuridicalPromoTwoId       Integer,
+        ContractPromoTwoId        Integer,
+        Juridical_PricePromoTwo   TFloat,
+        ExpirationDateTwo         TDateTime,
+        Juridical_PercentPromoTwo TFloat,
+        Contract_PercentPromoTwo  TFloat,
         NewPricePromo        TFloat,
         PriceDiffPromo       TFloat,
         RepricePromo         Boolean ,
         AddPercentRepricePromoMin TFloat,
         
-        idRepriceMain         Boolean ,
-        idRepriceSecond       Boolean                
+        idRepriceOne         Boolean ,
+        idReprice            Boolean                
       ) ON COMMIT DROP;
     END IF;
 
@@ -114,17 +121,24 @@ BEGIN
                                   reprice,
                                   isPromoBonus,
                                   AddPercentRepriceMin,
-                                  JuridicalPromoId,
-                                  ContractPromoId,
-                                  Juridical_PricePromo,
-                                  Juridical_PercentPromo,
-                                  Contract_PercentPromo,
+                                  JuridicalPromoOneId,
+                                  ContractPromoOneId,
+                                  Juridical_PricePromoOne,
+                                  ExpirationDateOne,
+                                  Juridical_PercentPromoOne,
+                                  Contract_PercentPromoOne,
+                                  JuridicalPromoTwoId,
+                                  ContractPromoTwoId,
+                                  Juridical_PricePromoTwo,
+                                  ExpirationDateTwo,
+                                  Juridical_PercentPromoTwo,
+                                  Contract_PercentPromoTwo,                                  
                                   NewPricePromo,
                                   PriceDiffPromo,
                                   RepricePromo,
                                   AddPercentRepricePromoMin,
-                                  idRepriceMain,
-                                  idRepriceSecond
+                                  idRepriceOne,
+                                  idReprice 
                                  )
     SELECT id,
            id_retail,
@@ -163,20 +177,28 @@ BEGIN
            reprice,
            isPromoBonus,
            AddPercentRepriceMin,
-           JuridicalPromoId,
-           ContractPromoId,
-           Juridical_PricePromo,
-           Juridical_PercentPromo,
-           Contract_PercentPromo,
+           JuridicalPromoOneId,
+           ContractPromoOneId,
+           Juridical_PricePromoOne,
+           ExpirationDateOne,
+           Juridical_PercentPromoOne,
+           Contract_PercentPromoOne,
+           JuridicalPromoTwoId,
+           ContractPromoTwoId,
+           Juridical_PricePromoTwo,
+           ExpirationDateTwo,
+           Juridical_PercentPromoTwo,
+           Contract_PercentPromoTwo,           
            NewPricePromo,
            PriceDiffPromo,
            RepricePromo,
            AddPercentRepricePromoMin,
-           ABS(COALESCE(MidPriceDiff, 0)) <= 10,
-           False
+           (isPromoBonus = FALSE OR COALESCE(NewPricePromo, 0) = 0),
+           CASE WHEN (isPromoBonus = FALSE OR COALESCE(NewPricePromo, 0) = 0)
+                THEN ABS(COALESCE(PriceDiff, 0)) <= 10 AND Reprice
+                ELSE ABS(COALESCE(PriceDiffPromo, 0)) <= 10 AND RepricePromo END
     FROM gpSelect_AllGoodsPrice_Site(inSession := inSession)
-    WHERE COALESCE(NewPrice, 0) > 0 
-      AND COALESCE(NewPrice, 0) <> COALESCE(LastPrice, 0)
+    WHERE CASE WHEN (isPromoBonus = FALSE OR COALESCE(NewPricePromo, 0) = 0) THEN NewPrice ELSE NewPricePromo END <> COALESCE(LastPrice, 0)
     ;
 
     PERFORM gpInsertUpdate_MovementItem_RepriceSite(
@@ -190,12 +212,40 @@ BEGIN
       inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
       inPriceNew := COALESCE (tmpAllGoodsPrice.NewPrice, 0),
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
+      inisJuridicalTwo := False,
+      inJuridicalTwoId := 0,
+      inContractTwoId := 0,
+      inJuridical_PriceTwo := 0,
+      inExpirationDateTwo := Null,
       inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
-    WHERE Reprice = True;
+    WHERE idRepriceOne = True AND idReprice = TRUE;
       
+    PERFORM gpInsertUpdate_MovementItem_RepriceSite(
+      ioID := 0 ,
+      inGoodsId := tmpAllGoodsPrice.Id,
+      inJuridicalId := COALESCE (tmpAllGoodsPrice.JuridicalPromoOneId, 0),
+      inContractId := COALESCE (tmpAllGoodsPrice.ContractPromoOneId, 0),
+      inExpirationDate := tmpAllGoodsPrice.ExpirationDateOne,
+      inMinExpirationDate := tmpAllGoodsPrice.MinExpirationDate,
+      inAmount := COALESCE (tmpAllGoodsPrice.RemainsCount, 0),
+      inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
+      inPriceNew := COALESCE (tmpAllGoodsPrice.NewPricePromo, 0),
+      inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_PricePromoOne, 0),
+      inisJuridicalTwo := TRUE,
+      inJuridicalTwoId := COALESCE (tmpAllGoodsPrice.JuridicalPromoTwoId, 0),
+      inContractTwoId := COALESCE (tmpAllGoodsPrice.ContractPromoTwoId, 0),
+      inJuridical_PriceTwo := COALESCE (tmpAllGoodsPrice.Juridical_PricePromoTwo, 0),
+      inExpirationDateTwo := tmpAllGoodsPrice.ExpirationDateTwo,
+      inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
+      inGUID := vbGUID,
+      inSession := inSession)
+    FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
+    WHERE idRepriceOne = False AND idReprice = TRUE;
+      
+
     PERFORM gpInsertUpdate_MovementItem_RepriceSite_Clipped(
       ioID := 0 ,
       inGoodsId := tmpAllGoodsPrice.Id,
@@ -207,11 +257,40 @@ BEGIN
       inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
       inPriceNew := COALESCE (tmpAllGoodsPrice.NewPrice, 0),
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
+      inisJuridicalTwo := False,
+      inJuridicalTwoId := 0,
+      inContractTwoId := 0,
+      inJuridical_PriceTwo := 0,
+      inExpirationDateTwo := Null,
       inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
       inGUID := vbGUID,
       inSession := inSession)
     FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
-    WHERE Reprice = False;
+    WHERE idRepriceOne = True AND idReprice = False;
+    
+    PERFORM gpInsertUpdate_MovementItem_RepriceSite_Clipped(
+      ioID := 0 ,
+      inGoodsId := tmpAllGoodsPrice.Id,
+      inJuridicalId := COALESCE (tmpAllGoodsPrice.JuridicalPromoOneId, 0),
+      inContractId := COALESCE (tmpAllGoodsPrice.ContractPromoOneId, 0),
+      inExpirationDate := tmpAllGoodsPrice.ExpirationDateOne,
+      inMinExpirationDate := tmpAllGoodsPrice.MinExpirationDate,
+      inAmount := COALESCE (tmpAllGoodsPrice.RemainsCount, 0),
+      inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
+      inPriceNew := COALESCE (tmpAllGoodsPrice.NewPricePromo, 0),
+      inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_PricePromoOne, 0),
+      inisJuridicalTwo := TRUE,
+      inJuridicalTwoId := COALESCE (tmpAllGoodsPrice.JuridicalPromoTwoId, 0),
+      inContractTwoId := COALESCE (tmpAllGoodsPrice.ContractPromoTwoId, 0),
+      inJuridical_PriceTwo := COALESCE (tmpAllGoodsPrice.Juridical_PricePromoTwo, 0),
+      inExpirationDateTwo := tmpAllGoodsPrice.ExpirationDateTwo,
+      inisPromoBonus  := COALESCE (tmpAllGoodsPrice.isPromoBonus, False),
+      inGUID := vbGUID,
+      inSession := inSession)
+    FROM tmpAllGoodsPriceSite AS tmpAllGoodsPrice
+    WHERE idRepriceOne = False AND idReprice = False;
+    
+    
 
 
   EXCEPTION
@@ -223,12 +302,15 @@ BEGIN
 
 
 
-/*    RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>'
-                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceMain = True)
-                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceMain = False)
+/*    RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%> <%>'
+                                                     , (select Count(*) from tmpAllGoodsPriceSite)
+                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceOne = True AND idReprice = TRUE)
+                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceOne = False AND idReprice = TRUE)
+                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceOne = True AND idReprice = False)
+                                                     , (select Count(*) from tmpAllGoodsPriceSite WHERE idRepriceOne = False AND idReprice = False)
                                                      , (select Count(*) from Object AS Object_PriceSite WHERE Object_PriceSite.DescId = zc_Object_PriceSite());  
-*/
 
+*/
 
 /*  raise notice 'All: % % % % %', (select Count(*) from tmpAllGoodsPrice where Reprice = True or RepricePromo = True)
                       
@@ -259,9 +341,10 @@ ALTER FUNCTION gpRun_Object_RepriceSheduler_RepriceSite(TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 24.11.21                                                       *
  10.06.21                                                       *
 */
 
 -- тест
 -- 
-SELECT * FROM gpRun_Object_RepriceSheduler_RepriceSite ('3')
+--SELECT * FROM gpRun_Object_RepriceSheduler_RepriceSite ('3')

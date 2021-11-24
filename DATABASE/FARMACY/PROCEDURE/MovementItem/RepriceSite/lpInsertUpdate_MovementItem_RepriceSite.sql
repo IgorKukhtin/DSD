@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_RepriceSite()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_RepriceSite (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_RepriceSite (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_RepriceSite(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +14,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_RepriceSite(
     IN inPriceOld            TFloat    , -- Цена
     IN inPriceNew            TFloat    , -- НОВАЯ цена
     IN inJuridical_Price     TFloat    , -- Цена поставщика
+    IN inisJuridicalTwo      Boolean   , -- Расчет по 2 поставщикам  
+    IN inJuridicalTwoId      Integer   , -- поставщик
+    IN inContractTwoId       Integer   , -- Договор
+    IN inJuridical_PriceTwo  TFloat    , -- Цена поставщика
+    IN inExpirationDateTwo   TDateTime , -- Срок годности
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -45,6 +50,23 @@ BEGIN
     -- сохранили связь с <Договор>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
 
+    IF COALESCE (inisJuridicalTwo, False) = True
+    THEN
+      -- сохранили <Признак лог отсечения>
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_JuridicalTwo(), ioId, inisJuridicalTwo);
+      
+      IF COALESCE (inJuridicalTwoId, 0) <> 0
+      THEN
+        -- сохранили связь с <поставщик>
+        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_JuridicalTwo(), ioId, inJuridicalTwoId);
+        -- сохранили связь с <Договор>
+        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractTwo(), ioId, inContractTwoId);
+        -- сохранили <цену поставщика>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPriceTwo(), ioId, inJuridical_PriceTwo);      
+        -- сохранили <Срок годности>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDateTwo(), ioId, inExpirationDateTwo);
+      END IF;    
+    END IF;
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummRepriceSite (inMovementId);

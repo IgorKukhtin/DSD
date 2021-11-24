@@ -42,15 +42,18 @@ RETURNS TABLE (
 
     isJuridicalPromo   Boolean,
     
-    JuridicalPromoId   Integer,
-    ContractPromoId    Integer,
-    PercentMarkupPromo TFloat,
-    PricePromo1        TFloat,
+    JuridicalPromoOneId   Integer,
+    ContractPromoOneId    Integer,
+    PercentMarkupPromoOne TFloat,
+    PricePromoOne         TFloat,
+    PartionGoodsDateOne   TDateTime, 
 
-    JuridicalPromo2Id   Integer,
-    ContractPromo2Id    Integer,
-    PercentMarkupPromo2 TFloat,
-    PricePromo2         TFloat,
+    JuridicalPromoTwoId   Integer,
+    ContractPromoTwoId    Integer,
+    PercentMarkupPromoTwo TFloat,
+    PricePromoTwo         TFloat,
+    PartionGoodsDateTwo   TDateTime,
+    
     PricePromo         TFloat
 )
 
@@ -709,10 +712,14 @@ BEGIN
         FinalListOne.ContractId, 
         FinalListOne.PercentMarkup :: TFloat AS PercentMarkupPromo,
         FinalListOne.Price,
+        FinalListOne.PartionGoodsDate,
+        
         FinalListTwo.JuridicalId, 
         FinalListTwo.ContractId, 
         FinalListTwo.PercentMarkup :: TFloat AS PercentMarkupPromo,
         FinalListTwo.Price,
+        FinalListTwo.PartionGoodsDate,
+        
         CASE WHEN COALESCE (FinalListTwo.Price, 0) = 0
              THEN FinalListOne.Price 
              ELSE ROUND((FinalListOne.Price + FinalListTwo.Price) / 2, 2) END :: TFloat

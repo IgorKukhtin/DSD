@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_RepriceSite()
+-- Function: gpInsertUpdate_MovementItem_RepriceSite_Clipped()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceSite (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceSite_Clipped (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TDateTime, Boolean, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceSite(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceSite_Clipped(
  INOUT ioId                  Integer   , -- Ключ записи
     IN inGoodsId             Integer   , -- Товары
     IN inJuridicalId         Integer   , -- поставщик
@@ -14,6 +14,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceSite(
     IN inPriceOld            TFloat    , -- Цена старая
     IN inPriceNew            TFloat    , -- Цена новая
     IN inJuridical_Price     TFloat    , -- Цена поставщика
+
+    IN inisJuridicalTwo      Boolean   , -- Расчет по 2 поставщикам  
+    IN inJuridicalTwoId      Integer   , -- поставщик
+    IN inContractTwoId       Integer   , -- Договор
+    IN inJuridical_PriceTwo  TFloat    , -- Цена поставщика
+    IN inExpirationDateTwo   TDateTime , -- Срок годности
+
     IN inisPromoBonus        Boolean   , -- По маркетинговому бонусу  
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
@@ -23,14 +30,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
-
-    -- !!!Протокол - отладка Скорости!!!
-    vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
-
 
     -- найти документ
     vbMovementId:= (WITH tmpMS_GUID AS (SELECT MS_GUID.MovementId
@@ -46,6 +48,7 @@ BEGIN
                     FROM tmpMovement AS Movement
                     WHERE Movement.OperDate = CURRENT_DATE
                       AND Movement.DescId   = zc_Movement_RepriceSite()
+                      -- AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
                    );
 
 
@@ -53,18 +56,12 @@ BEGIN
     THEN
         --
         vbMovementId := lpInsertUpdate_Movement_RepriceSite(ioId        := COALESCE (vbMovementId,0),
-                                                        inInvNumber := CAST (NEXTVAL('movement_RepriceSite_seq') AS TVarChar),
-                                                        inOperDate  := CURRENT_DATE::TDateTime,
-                                                        inGUID      := inGUID,
-                                                        inUserId    := vbUserId);
-
+                                                            inInvNumber := CAST (NEXTVAL('movement_RepriceSite_seq') AS TVarChar),
+                                                            inOperDate  := CURRENT_DATE::TDateTime,
+                                                            inGUID      := inGUID,
+                                                            inUserId    := vbUserId);
     END IF;
-
-    -- переоценить товар
-    PERFORM lpInsertUpdate_Object_PriceSite(inGoodsId := inGoodsId,
-                                            inPrice   := inPriceNew,
-                                            inDate    := CURRENT_DATE::TDateTime,
-                                            inUserId  := vbUserId);
+        
 
     -- сохранить запись
     ioId := lpInsertUpdate_MovementItem_RepriceSite (ioId                 := COALESCE(ioId,0)
@@ -78,8 +75,16 @@ BEGIN
                                                    , inPriceOld           := inPriceOld
                                                    , inPriceNew           := inPriceNew
                                                    , inJuridical_Price    := inJuridical_Price
+                                                   , inisJuridicalTwo     := inisJuridicalTwo
+                                                   , inJuridicalTwoId     := inJuridicalTwoId
+                                                   , inContractTwoId      := inContractTwoId
+                                                   , inJuridical_PriceTwo := inJuridical_PriceTwo
+                                                   , inExpirationDateTwo  := inExpirationDateTwo
                                                    , inUserId             := vbUserId);
 
+    -- сохранили <Признак лог отсечения>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ClippedReprice(), ioId, True);
+    
     -- сохранили <По маркетинговому бонусу >
     IF COALESCE (inisPromoBonus, False) = TRUE
     THEN
@@ -95,6 +100,3 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
  10.06.21                                                      *  
 */
--- SELECT COUNT(*) FROM Log_RepriceSite
--- SELECT * FROM Log_RepriceSite WHERE TextValue NOT LIKE '%InsertUpdate%' ORDER BY Id DESC LIMIT 100
--- SELECT * FROM Log_RepriceSite ORDER BY Id DESC LIMIT 100
