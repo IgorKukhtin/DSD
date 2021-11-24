@@ -1,9 +1,9 @@
-object PersonalGroupForm: TPersonalGroupForm
+object PositionMember_ObjectForm: TPositionMember_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
-  ClientHeight = 367
-  ClientWidth = 853
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
+  ClientHeight = 407
+  ClientWidth = 742
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,8 +12,7 @@ object PersonalGroupForm: TPersonalGroupForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -21,8 +20,8 @@ object PersonalGroupForm: TPersonalGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 853
-    Height = 341
+    Width = 742
+    Height = 381
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -45,65 +44,85 @@ object PersonalGroupForm: TPersonalGroupForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Options.Editing = False
+        Width = 54
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 181
+        Options.Editing = False
+        Width = 241
       end
-      object WorkHours: TcxGridDBColumn
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1072#1089#1086#1074
-        DataBinding.FieldName = 'WorkHours'
+      object PositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 195
+      end
+      object PositionLevelname: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelname'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 91
+        Options.Editing = False
+        Width = 190
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
+        Visible = False
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 72
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object edUnit: TcxButtonEdit
-    Left = 408
-    Top = 143
+  object cxLabel6: TcxLabel
+    Left = 132
+    Top = 69
+    Caption = #1060#1080#1079'.'#1083#1080#1094#1086':'
+  end
+  object edMember: TcxButtonEdit
+    Left = 195
+    Top = 68
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 177
-  end
-  object cxLabel5: TcxLabel
-    Left = 408
-    Top = 125
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    TabOrder = 6
+    Width = 245
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -169,32 +188,11 @@ object PersonalGroupForm: TPersonalGroupForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -210,7 +208,7 @@ object PersonalGroupForm: TPersonalGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -218,7 +216,23 @@ object PersonalGroupForm: TPersonalGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -228,22 +242,6 @@ object PersonalGroupForm: TPersonalGroupForm
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
-      Category = 0
-    end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -260,32 +258,39 @@ object PersonalGroupForm: TPersonalGroupForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
-      Hint = 'New Item'
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'textPosition'
+      Category = 0
+      Hint = 'textPosition'
       Visible = ivAlways
-      Control = cxLabel5
+      Control = cxLabel6
     end
     object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = 'edPosition'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'edPosition'
       Visible = ivAlways
-      Control = edUnit
+      Control = edMember
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
-    object actRefresh: TdsdDataSetRefresh
+    object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -293,82 +298,19 @@ object PersonalGroupForm: TPersonalGroupForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsert: TdsdInsertUpdateAction
+    object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TPersonalGroupEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TPersonalGroupEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spSelect
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -387,6 +329,74 @@ object PersonalGroupForm: TPersonalGroupForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -403,9 +413,28 @@ object PersonalGroupForm: TPersonalGroupForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PersonalGroup'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_PositionMember'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -413,10 +442,18 @@ object PersonalGroupForm: TPersonalGroupForm
       end>
     Params = <
       item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
+        Name = 'inMemberId'
+        Value = 0
+        Component = GuidesMember
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -436,7 +473,6 @@ object PersonalGroupForm: TPersonalGroupForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -444,7 +480,6 @@ object PersonalGroupForm: TPersonalGroupForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -456,40 +491,23 @@ object PersonalGroupForm: TPersonalGroupForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 168
-    Top = 216
+    Left = 208
+    Top = 248
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 208
-  end
-  object GuidesUnit: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    isShowModal = True
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = edMember
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -497,34 +515,66 @@ object PersonalGroupForm: TPersonalGroupForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 484
-    Top = 128
+    Left = 288
+    Top = 72
   end
-  object FormParams: TdsdFormParams
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_PersonalPosition'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'MasterUnitId'
-        Value = Null
-        Component = GuidesUnit
+        Name = 'InId'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = GuidesMember
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterUnitName'
-        Value = Null
-        Component = GuidesUnit
+        Name = 'PositionName'
+        Value = ''
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 160
+    PackSize = 1
+    Left = 496
+    Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterMemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterMemberName'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 408
+    Top = 200
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -532,9 +582,9 @@ object PersonalGroupForm: TPersonalGroupForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesUnit
+        Component = GuidesMember
       end>
-    Left = 536
-    Top = 160
+    Left = 384
+    Top = 128
   end
 end

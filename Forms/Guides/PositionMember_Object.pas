@@ -1,4 +1,4 @@
-unit PersonalGroup;
+unit PositionMember_Object;
 
 interface
 
@@ -21,16 +21,15 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit,
-  cxButtonEdit;
+  DataModul, cxButtonEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxLabel;
 
 type
-  TPersonalGroupForm = class(TParentForm)
+  TPositionMember_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    WorkHours: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -38,34 +37,30 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
-    UnitName: TcxGridDBColumn;
-    edUnit: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    GuidesUnit: TdsdGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
+    spGet: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    FormParams: TdsdFormParams;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    FormParams: TdsdFormParams;
+    PositionName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    PositionLevelname: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -73,9 +68,12 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
- initialization
-  RegisterClass(TPersonalGroupForm);
+
+initialization
+  RegisterClass(TPositionMember_ObjectForm);
+
 end.

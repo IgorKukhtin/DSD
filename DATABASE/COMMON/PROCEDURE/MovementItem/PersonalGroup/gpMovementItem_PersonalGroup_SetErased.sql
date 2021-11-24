@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpMovementItem_PersonalGroup_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PersonalRate_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_PersonalGroup_SetErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Ёлемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь

@@ -20,14 +20,25 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalGroup());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      IF COALESCE (inMovementId, 0) = 0
      THEN
+         --при создании Unit берем по автору документа - основное место работы, если там пусто - хардкодим ÷ех ”паковки
+         vbUnitId := COALESCE ((SELECT tmpPersonal.UnitId
+                                FROM ObjectLink AS ObjectLink_User_Member
+                                     LEFT JOIN (SELECT lfSelect.MemberId
+                                                     , lfSelect.UnitId
+                                                FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                               ) AS tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+                                WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())
+                               , 8451 );   -- по умолчанию цех упаковки
+
          RETURN QUERY
          SELECT
                0 AS Id
@@ -35,8 +46,8 @@ BEGIN
              , inOperDate				AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
-             , 0                     		        AS UnitId
-             , '' :: TVarChar                           AS UnitName
+             , Object_Unit.Id                           AS UnitId
+             , Object_Unit.ValueData                    AS UnitName
              , 0                     		        AS PersonalGroupId
              , '' :: TVarChar                           AS PersonalGroupName
              , 0                     		        AS PairDayId
@@ -48,6 +59,7 @@ BEGIN
              , '' :: TVarChar                           AS UpdateName
              , CAST (NULL AS TDateTime)                 AS UpdateDate
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId
          ;
          
      ELSE
@@ -59,7 +71,7 @@ BEGIN
            , Movement.OperDate                   AS OperDate
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
-           , Object_Unit.ObjectCode              AS UnitId
+           , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
            , Object_PersonalGroup.ObjectCode     AS PersonalGroupId
            , Object_PersonalGroup.ValueData      AS PersonalGroupName

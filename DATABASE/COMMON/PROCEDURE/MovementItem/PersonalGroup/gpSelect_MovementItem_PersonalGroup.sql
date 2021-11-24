@@ -1,15 +1,17 @@
 -- Function: gpSelect_MovementItem_PersonalGroup (Integer, Boolean, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalGroup (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalGroup (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalGroup(
     IN inMovementId  Integer      , -- ключ Документа
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+RETURNS TABLE (Id Integer, MemberId Integer
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
              , Amount TFloat
              , isErased Boolean
@@ -42,6 +44,7 @@ BEGIN
             
        -- Результат
        SELECT MovementItem.Id
+            , View_Personal.MemberId
             , View_Personal.PersonalId
             , View_Personal.PersonalCode
             , View_Personal.PersonalName
@@ -50,6 +53,8 @@ BEGIN
             , Object_Position.ValueData      AS PositionName
             , Object_PositionLevel.Id        AS PositionLevelId
             , Object_PositionLevel.ValueData AS PositionLevelName
+            , Object_PersonalGroup.Id        AS PersonalGroupId
+            , Object_PersonalGroup.ValueData AS PersonalGroupName
 
             , View_Personal.UnitName         AS UnitName_inf
             , View_Personal.PositionName     AS PositionName_inf
@@ -70,6 +75,11 @@ BEGIN
                                              ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MILinkObject_PositionLevel.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                 ON ObjectLink_Personal_PersonalGroup.ObjectId = View_Personal.PersonalId
+                                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
       ;
 
 END;

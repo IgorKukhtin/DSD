@@ -1330,7 +1330,9 @@ uses
   PairDayEdit in '..\..\Forms\Guides\PairDayEdit.pas' {PairDayEditForm: TParentForm},
   PairDay in '..\..\Forms\Guides\PairDay.pas' {PairDayForm: TParentForm},
   PersonalGroupJournal in '..\..\Forms\Document\PersonalGroupJournal.pas' {PersonalGroupJournalForm: TParentForm},
-  PersonalGroupMovement in '..\..\Forms\Document\PersonalGroupMovement.pas' {PersonalGroupMovementForm: TParentForm};
+  PersonalGroupMovement in '..\..\Forms\Document\PersonalGroupMovement.pas' {PersonalGroupMovementForm: TParentForm},
+  PersonalUnit_Object in '..\..\Forms\Guides\PersonalUnit_Object.pas' {PersonalUnit_ObjectForm: TParentForm},
+  PositionMember_Object in '..\..\Forms\Guides\PositionMember_Object.pas' {PositionMember_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

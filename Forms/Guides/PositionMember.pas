@@ -1,4 +1,4 @@
-unit PersonalGroup;
+unit PositionMember;
 
 interface
 
@@ -21,16 +21,14 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit,
-  cxButtonEdit;
+  DataModul;
 
 type
-  TPersonalGroupForm = class(TParentForm)
+  TPositionForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    WorkHours: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -54,18 +52,12 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    UnitName: TcxGridDBColumn;
-    edUnit: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    GuidesUnit: TdsdGuides;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
-    FormParams: TdsdFormParams;
-    RefreshDispatcher: TRefreshDispatcher;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
@@ -73,9 +65,10 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
- initialization
-  RegisterClass(TPersonalGroupForm);
+initialization
+  RegisterClass(TPositionForm);
 end.

@@ -14,10 +14,23 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalGroup());
 
+     --проверка   можно менять inAmount но не больше чем было значение
+     IF COALESCE (ioId,0) <> 0
+     THEN
+         vbAmount := (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId);
+         IF COALESCE (inAmount,0) > COALESCE (vbAmount,0) AND COALESCE (vbAmount,0) <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Дневной план не может превышать <%>', vbAmount;
+         END IF;
+     END IF;
+     
+     
+     
      -- сохранили
      ioId := lpInsertUpdate_MovementItem_PersonalGroup (ioId             := ioId
                                                      , inMovementId      := inMovementId
