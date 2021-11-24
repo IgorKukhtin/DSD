@@ -111,7 +111,7 @@ BEGIN
 
            
            , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
-           , CAST (COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) AS NUMERIC (16,10)) AS KoeffSummCardSecond
+           , CAST ((COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) / 1000) AS NUMERIC (16,10)) AS KoeffSummCardSecond
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc

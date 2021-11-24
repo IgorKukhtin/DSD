@@ -73,7 +73,7 @@ BEGIN
            , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
            , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
 
-           , CAST (COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) AS NUMERIC (16,10)) AS KoeffSummCardSecond
+           , CAST ((COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0)/1000) AS NUMERIC (16,10)) AS KoeffSummCardSecond
            , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
            , (CASE COALESCE (ObjectFloat_Compensation.ValueData, 0)
                    WHEN 1 THEN 'январь'
