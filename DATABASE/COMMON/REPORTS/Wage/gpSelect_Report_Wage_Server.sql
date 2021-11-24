@@ -36,8 +36,8 @@ RETURNS TABLE(
     ,PersonalGroupName              TVarChar
     ,MemberId                       Integer
     ,MemberName                     TVarChar
-    ,SUM_MemberHours                TFloat  -- итого часов всех сотрудников (с этой должностью+...)
-    ,SheetWorkTime_Amount           TFloat  -- итого часов сотрудника
+    ,SUM_MemberHours                TFloat  -- Отраб. часов (все, с этой должностью+...)
+    ,SheetWorkTime_Amount           TFloat  -- Отраб. часов 1 чел
     ,ServiceModelCode               Integer
     ,ServiceModelName               TVarChar
     ,Price                          TFloat
@@ -207,7 +207,9 @@ BEGIN
                                      inMemberId       := inMemberId,   --сотрудник
                                      inPositionId     := inPositionId,   --должность
                                      inSession        := inSession
-                                    ) AS Report_1;
+                                    ) AS Report_1
+  --WHERE vbUserId <> 5
+   ;
 
 
     -- Report_2 - По штатному расписанию - Тип суммы ИЛИ по часам - из Табеля
@@ -258,6 +260,7 @@ BEGIN
                                
 
     WHERE COALESCE (inModelServiceId, 0) = 0
+    --AND vbUserId <> 5
     ;
 
     --
@@ -654,4 +657,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
--- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '31.10.2021', inEndDate:= '31.10.2021', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2021', inEndDate:= '31.10.2021', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

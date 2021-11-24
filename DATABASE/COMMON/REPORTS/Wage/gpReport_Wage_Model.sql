@@ -1116,17 +1116,17 @@ AS  (SELECT
          -- Данные для - Реестр Документов - из zc_Movement_Transport
        , tmpMovement_Reestr AS
        (SELECT Movement.OperDate
-             , tmpUnit_Reestr.FromId
+             , MIN (tmpUnit_Reestr.FromId) :: Integer AS FromId
              , DATE_PART ('ISODOW', Movement.OperDate)  AS OperDate_num
                -- Подразделение - Сотрудник
-             , Object_Unit.Id AS UnitId, Object_Unit.ObjectCode AS UnitCode
-             , Object_Unit.ValueData AS UnitName
+             , MIN (Object_Unit.Id) :: Integer AS UnitId, MIN (Object_Unit.ObjectCode) :: Integer AS UnitCode
+             , MIN (Object_Unit.ValueData) :: TVarChar AS UnitName
              -- , Movement.InvNumber AS UnitName
              -- , Movement.Id :: TVarChar AS UnitName
              , Object_PersonalDriver.Id AS PersonalId, Object_PersonalDriver.ObjectCode AS PersonalCode, Object_PersonalDriver.ValueData AS PersonalName
              , Object_Position.Id AS PositionId, Object_Position.ObjectCode AS PositionCode, Object_Position.ValueData AS PositionName
                -- Подразделение - из накладной реализации
-             , MovementLinkObject_From.ObjectId AS UnitId_from
+             , MIN (MovementLinkObject_From.ObjectId) :: Integer AS UnitId_from
                -- Подразделение - Автомобиль
              , OL_Car_Unit.ChildObjectId        AS UnitId_car
                -- Вес
@@ -1249,11 +1249,11 @@ AS  (SELECT
           AND OB_NotPayForWeight.ObjectId IS NULL
 
         GROUP BY Movement.OperDate
-               , tmpUnit_Reestr.FromId
-               , Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
+             --, tmpUnit_Reestr.FromId
+             --, Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
                , Object_PersonalDriver.Id, Object_PersonalDriver.ObjectCode, Object_PersonalDriver.ValueData
                , Object_Position.Id, Object_Position.ObjectCode, Object_Position.ValueData
-               , MovementLinkObject_From.ObjectId
+             --, MovementLinkObject_From.ObjectId
                , OL_Car_Unit.ChildObjectId
             -- , Movement.InvNumber
             -- , Movement.Id
@@ -1272,8 +1272,13 @@ AS  (SELECT
              , Movement_Sheet.AmountInDay
 
                -- № п/п
-             , ROW_NUMBER() OVER (PARTITION BY Movement_Sheet.OperDate, Movement_Sheet.PositionId, Movement_Sheet.PositionLevelId, Movement_Sheet.StorageLineId
-                                  ORDER BY Movement_Sheet.AmountInDay DESC) AS Ord
+             , ROW_NUMBER() OVER (PARTITION BY Movement_Sheet.PersonalGroupId
+                                             , Movement_Sheet.OperDate
+                                             , Movement_Sheet.PositionId
+                                             , Movement_Sheet.PositionLevelId
+                                             , Movement_Sheet.StorageLineId
+                                  ORDER BY Movement_Sheet.AmountInDay DESC
+                                 ) AS Ord
 
         FROM Setting_Wage_1 AS Setting
              CROSS JOIN tmpOperDate
@@ -1330,6 +1335,7 @@ AS  (SELECT
                                          END
                                        , Movement_Sheet.OperDate
                                        , COALESCE (Movement_Sheet.MemberId, 0)
+                                       , Movement_Sheet.Tax_Trainee
                            ) :: Integer AS Ord_SheetWorkTime
         --
        ,Setting.ServiceModelId
@@ -1419,7 +1425,7 @@ AS  (SELECT
                 END, 0)
               , 2) :: TFloat AS AmountOnOneMember
 
-       , 0 :: TFloat AS KoeffHoursWork_car
+         , (Movement_Sheet.Tax_Trainee / 100) :: TFloat AS KoeffHoursWork_car
 
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
@@ -1479,9 +1485,10 @@ AS  (SELECT
                                          OR (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
                                          AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
                                            )
-                                       AND (COALESCE (Movement_SheetGroup.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
-                                         OR COALESCE (Movement_SheetGroup.PersonalGroupId,  0) = 0
+                                       AND (COALESCE (Movement_Sheet.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
+                                         OR COALESCE (Movement_Sheet.PersonalGroupId,  0) = 0
                                          OR COALESCE (ServiceModelMovement.PersonalGroupId, 0) = 0
+                                         OR 1=1
                                            )
                                        /*AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                          OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
@@ -1502,9 +1509,9 @@ AS  (SELECT
                                        --
                                        AND Movement_Sheet.Tax_Trainee                           > 0
                                        AND Setting.ServiceModelKindId                           = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
-                                       AND (COALESCE (Movement_Sheet_Trainee.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
-                                         OR COALESCE (Movement_Sheet_Trainee.PersonalGroupId,  0) = 0
-                                         OR COALESCE (ServiceModelMovement.PersonalGroupId, 0)    = 0
+                                       AND (COALESCE (Movement_Sheet_Trainee.PersonalGroupId, 0)  = Movement_Sheet.PersonalGroupId -- COALESCE (ServiceModelMovement.PersonalGroupId, 0)
+                                       --OR COALESCE (Movement_Sheet_Trainee.PersonalGroupId,  0) = 0
+                                       --OR COALESCE (ServiceModelMovement.PersonalGroupId, 0)    = 0
                                            )
 
          LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)

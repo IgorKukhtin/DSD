@@ -305,10 +305,10 @@ BEGIN
        ,CASE 
             -- ‘онд за мес€ц
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0) * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_Member, 0) * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=1 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд за мес€ц (по дн€м)
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_MonthDay()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberInDay,0) * Movement_SheetWorkTime.Count_Day * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Movement_SheetWorkTime.Count_MemberInDay,0) * Movement_SheetWorkTime.Count_Day * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=1 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ƒоплата за 1 день на всех
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
                 THEN Movement_SheetWorkTime.SummaADD
@@ -317,16 +317,16 @@ BEGIN
                 THEN Movement_SheetWorkTime.SummaADD
             -- ‘онд за общий план часов (посто€нный) в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlan()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд за план часов (расчетный) в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursDay()
-                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
+                THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
             -- ‘онд посто€нный дл€ факт часов в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
                 THEN Setting.StaffListSumm_Value
                    / NULLIF (Setting.Count_Member, 0) * Movement_SheetWorkTime.Count_Member
                    / NULLIF (Movement_SheetWorkTime.SUM_MemberHours, 0) * Movement_SheetWorkTime.SheetWorkTime_Amount
-                   * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END
+                   * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END
         END :: TFloat AS Summ
 
        ,(Movement_SheetWorkTime.Tax_Trainee / 100) :: TFloat AS Summ
