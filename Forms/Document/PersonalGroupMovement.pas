@@ -29,7 +29,6 @@ type
   TPersonalGroupMovementForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edPairDay: TcxButtonEdit;
-    GuidesPairDay: TdsdGuides;
     PersonalCode: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
@@ -64,8 +63,8 @@ type
     actPositionChoiceForm: TOpenChoiceForm;
     spInsert_MI: TdsdStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
-    HeaderExit: THeaderExit;
     PersonalGroupName: TcxGridDBColumn;
+    GuidesPairDay: TdsdGuides;
   private
     { Private declarations }
   public

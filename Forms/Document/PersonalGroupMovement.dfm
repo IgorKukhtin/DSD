@@ -414,6 +414,9 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         end
         item
           StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -489,6 +492,21 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'MasterMemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterMemberName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'PositionId'
           Value = Null
           Component = MasterCDS
@@ -504,17 +522,24 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterMemberId'
+          Name = 'PersonalId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberId'
+          ComponentItem = 'PersonalId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MasterMemberName'
+          Name = 'PositionLevelId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalName'
+          ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -825,7 +850,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Task'
+    StoredProcName = 'gpUpdate_Status_PersonalGroup'
     Left = 40
     Top = 56
   end
@@ -1033,6 +1058,12 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         Control = edOperDate
       end
       item
+        Control = edUnit
+      end
+      item
+        Control = edPersonalGroup
+      end
+      item
         Control = edPairDay
       end>
     Left = 264
@@ -1153,7 +1184,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     IdParam.MultiSelectSeparator = ','
     ComponentList = <
       item
-        Component = GuidesPairDay
       end
       item
         Component = edPairDay
@@ -1208,36 +1238,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     PackSize = 1
     Left = 431
     Top = 168
-  end
-  object GuidesPairDay: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPairDay
-    isShowModal = True
-    FormNameParam.Value = 'TPairDayForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPairDayForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPairDay
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPairDay
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 420
-    Top = 48
   end
   object GuidesPersonalGroup: TdsdGuides
     KeyField = 'Id'
@@ -1331,13 +1331,34 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
     Left = 120
     Top = 344
   end
-  object HeaderExit: THeaderExit
-    ExitList = <
+  object GuidesPairDay: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPairDay
+    isShowModal = True
+    FormNameParam.Value = 'TPairDayForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPairDayForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
       item
-        Control = edPersonalGroup
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPairDay
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPairDay
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Action = actRefreshMI
-    Left = 656
-    Top = 96
+    Left = 412
+    Top = 56
   end
 end

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PositionMember(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , PositionId Integer, PositionName TVarChar
+             , PersonalId Integer, PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , isOfficial Boolean
              , BranchId Integer, BranchName TVarChar
@@ -50,6 +50,7 @@ BEGIN
            Object_Member.Id         AS Id
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
+         , tmpPersonal.PersonalId
          , tmpPersonal.PositionId
          , tmpPersonal.PositionName
          , Object_PositionLevel.Id           AS PositionLevelId

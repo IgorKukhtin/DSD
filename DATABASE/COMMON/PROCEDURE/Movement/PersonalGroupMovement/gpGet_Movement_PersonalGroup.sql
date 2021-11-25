@@ -73,7 +73,7 @@ BEGIN
            , Object_Status.ValueData             AS StatusName
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
-           , Object_PersonalGroup.ObjectCode     AS PersonalGroupId
+           , Object_PersonalGroup.Id             AS PersonalGroupId
            , Object_PersonalGroup.ValueData      AS PersonalGroupName
            , Object_PairDay.Id                   AS PairDayId
            , Object_PairDay.ValueData            AS PairDayName
