@@ -16,7 +16,6 @@ inherited Report_SummaInsuranceCompaniesForm: TReport_SummaInsuranceCompaniesFor
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 777
     object edDateStart: TcxDateEdit
       Left = 60
       Top = 6
@@ -52,8 +51,6 @@ inherited Report_SummaInsuranceCompaniesForm: TReport_SummaInsuranceCompaniesFor
     Height = 341
     Align = alClient
     TabOrder = 4
-    ExplicitWidth = 777
-    ExplicitHeight = 489
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -90,6 +87,11 @@ inherited Report_SummaInsuranceCompaniesForm: TReport_SummaInsuranceCompaniesFor
           Format = ',0.##'
           Kind = skSum
           Column = SummSale
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = SummWages
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -128,7 +130,17 @@ inherited Report_SummaInsuranceCompaniesForm: TReport_SummaInsuranceCompaniesFor
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 142
+        Width = 108
+      end
+      object SummWages: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074' '#1047#1055
+        DataBinding.FieldName = 'SummWages'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -2171,10 +2171,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_SupplementMinPP() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_SupplementMinPP', 'Размазать в дополнении СУН для аптечных пунктов не менее чем' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_SupplementMinPP');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PercentIC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PercentIC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PercentIC', 'Процент от продажи страховым компаниям для з/п фармацевтам' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PercentIC');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 25.11.21                                                                                      * zc_ObjectFloat_CashSettings_PercentIC
  18.11.21         * zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond
  10.11.21                                                                                      * zc_ObjectFloat_Goods_SupplementMinPP
  02.11.21         * zc_ObjectFloat_Car_Weight

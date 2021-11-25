@@ -18,6 +18,7 @@ RETURNS TABLE (JuridicalMainId Integer
              , UnitName TVarChar
 
              , SummSale TFloat
+             , SummWages TFloat
              )
 AS
 $BODY$
@@ -34,8 +35,15 @@ BEGIN
 
     RETURN QUERY
     WITH
+          tmpCashSettings AS (SELECT COALESCE(ObjectFloat_CashSettings_PercentIC.ValueData, 0)::TFloat   AS PercentIC
+                              FROM Object AS Object_CashSettings
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentIC
+                                                         ON ObjectFloat_CashSettings_PercentIC.ObjectId = Object_CashSettings.Id 
+                                                        AND ObjectFloat_CashSettings_PercentIC.DescId = zc_ObjectFloat_CashSettings_PercentIC()
+                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                              LIMIT 1)          
          -- список подразделений
-          tmpUnit AS (SELECT inUnitId                                  AS UnitId
+        , tmpUnit AS (SELECT inUnitId                                  AS UnitId
                       WHERE COALESCE (inUnitId, 0) <> 0 
                      UNION 
                       SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
@@ -101,6 +109,7 @@ BEGIN
            , Object_Unit.ValueData                   AS UnitName
 
            , tmp.SummSale           :: TFloat
+           , Round(tmp.SummSale * tmpCashSettings.PercentIC / 100, 2) :: TFloat
        FROM tmMISale AS tmp
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
 
@@ -108,6 +117,8 @@ BEGIN
                                      ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                
+                LEFT JOIN tmpCashSettings ON 1 = 1
                 
        ORDER BY Object_JuridicalMain.ValueData 
               , Object_Unit.ValueData;
