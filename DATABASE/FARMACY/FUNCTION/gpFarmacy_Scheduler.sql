@@ -285,6 +285,15 @@ BEGIN
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP', True, text_var1::TVarChar, vbUserId);
       END;    
     
+      -- Заполнение суммы от продажи страховым компаниям в дополнительные расходы
+      BEGIN
+         PERFORM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_IC (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:=  zfCalc_UserAdmin());
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_MovementItem_WagesAdditionalExpenses_IC', True, text_var1::TVarChar, vbUserId);
+      END;    
+
       -- Фиксация неликвидов
       BEGIN
          PERFORM gpInsertUpdate_Movement_IlliquidUnit_Formation(inOperDate := CURRENT_DATE, inSession:=  zfCalc_UserAdmin());

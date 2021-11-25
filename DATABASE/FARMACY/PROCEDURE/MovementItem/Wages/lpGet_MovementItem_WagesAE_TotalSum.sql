@@ -48,7 +48,7 @@ BEGIN
                           FROM MovementItemFloat AS MIFloat_SummaSUN1
                           WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
                             AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaCleaning(), zc_MIFloat_SummaSP(), zc_MIFloat_SummaOther(),
-                                                             zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1())), 0);
+                                                             zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1(), zc_MIFloat_SummaIC())), 0);
 
     IF vbOperDate >= '01.12.2020'
     THEN

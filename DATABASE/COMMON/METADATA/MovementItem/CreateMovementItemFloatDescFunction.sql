@@ -1519,15 +1519,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_JuridicalPriceTwo() RETURNS Integer AS $BO
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_JuridicalPriceTwo', 'Цена поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPriceTwo');
 
-CREATE OR REPLACE FUNCTION zc_MIFloat_SummaPercentIC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaPercentIC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaIC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaIC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
-  SELECT 'zc_MIFloat_SummaPercentIC', 'Сумма от продажи страховым компаниям' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaPercentIC');
+  SELECT 'zc_MIFloat_SummaIC', 'Сумма от продажи страховым компаниям' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaIC');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
- 25.11.21                                                                                                     * zc_MIFloat_SummaPercentIC
+ 25.11.21                                                                                                     * zc_MIFloat_SummaIC
  24.11.21                                                                                                     * zc_MIFloat_JuridicalPriceTwo
  22.10.21                                                                                                     * zc_MovementFloat_WrongAnswers, zc_MovementFloat_WrongAnswersStorekeeper
  11.10.21                                                                                                     * zc_MIFloat_PenaltyExam

@@ -588,9 +588,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_Exam() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_Exam', 'Сдача экзамена' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Exam');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_SurchargeWages_DateStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_SurchargeWages_DateStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_SurchargeWages(), 'zc_ObjectDate_SurchargeWages_DateStart', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_SurchargeWages_DateStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_SurchargeWages_DateEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_SurchargeWages_DateEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_SurchargeWages(), 'zc_ObjectDate_SurchargeWages_DateEnd', 'Дата окончания действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_SurchargeWages_DateEnd');
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.11.21                                                                                     * zc_ObjectDate_SurchargeWages_...
  07.10.21                                                                                     * zc_ObjectDate_Unit_Exam
  24.09.21                                                                                     * zc_ObjectDate_CorrectWagesPercentage_Date... 
  15.09.21                                                                                     * zc_ObjectDate_Goods_Update... 

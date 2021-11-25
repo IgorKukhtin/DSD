@@ -156,6 +156,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaIntentionalPeresort
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaPercentIC
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -216,7 +221,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object SummaValidationResults: TcxGridDBBandedColumn
@@ -228,7 +233,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object SummaIntentionalPeresort: TcxGridDBBandedColumn
@@ -240,7 +245,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object SummaSUN1: TcxGridDBBandedColumn
@@ -253,7 +258,19 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 5
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object SummaPercentIC: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1080' '#1089#1090#1088#1072#1093#1086#1074#1099#1084' '#1082#1086#1084#1087#1072#1085#1080#1103#1084
+            DataBinding.FieldName = 'SummaIC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object SummaFine: TcxGridDBBandedColumn
@@ -269,7 +286,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 76
             Position.BandIndex = 1
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object SummaTechnicalRediscount: TcxGridDBBandedColumn
@@ -604,14 +621,14 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -894,7 +911,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
@@ -1018,7 +1035,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1090,42 +1107,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 678
     Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 550
     Top = 256
   end
@@ -1206,6 +1191,15 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummaFullChargeFact'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaIC'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaIC'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

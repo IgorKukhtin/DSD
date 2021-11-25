@@ -2188,9 +2188,9 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
-//
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
+
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesSUN1Form'));
 //  TdsdFormStorageFactory.GetStorage.Load('TWagesSUN1Form');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesTechnicalRediscountForm'));
