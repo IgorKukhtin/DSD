@@ -2205,6 +2205,9 @@ begin
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrectWagesPercentageForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TCorrectWagesPercentageForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSurchargeWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSurchargeWagesForm');
 end;
 
 
