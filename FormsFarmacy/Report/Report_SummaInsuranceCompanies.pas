@@ -60,6 +60,7 @@ type
     PeriodChoice: TPeriodChoice;
     GridToExcel: TdsdGridToExcel;
     ExecuteDialog: TExecuteDialog;
+    SummWages: TcxGridDBColumn;
   private
   public
   end;

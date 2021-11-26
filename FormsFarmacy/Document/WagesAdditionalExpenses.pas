@@ -73,6 +73,7 @@ type
     actReport_FoundPositionsSUN: TdsdOpenForm;
     dxBarButton14: TdxBarButton;
     SummaIntentionalPeresort: TcxGridDBBandedColumn;
+    SummaPercentIC: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

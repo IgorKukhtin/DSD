@@ -228,6 +228,11 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisJuridicalTwo := False,
+      inJuridicalTwoId := 0,
+      inContractTwoId := 0,
+      inJuridical_PriceTwo := 0,
+      inExpirationDateTwo := Null,
       inisPromoBonus  := FALSE,
       inGUID := vbGUID,
       inSession := inSession)
@@ -252,6 +257,11 @@ BEGIN
       inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
       inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
       inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+      inisJuridicalTwo := False,
+      inJuridicalTwoId := 0,
+      inContractTwoId := 0,
+      inJuridical_PriceTwo := 0,
+      inExpirationDateTwo := Null,
       inisPromoBonus  := False,
       inGUID := vbGUID,
       inSession := inSession)

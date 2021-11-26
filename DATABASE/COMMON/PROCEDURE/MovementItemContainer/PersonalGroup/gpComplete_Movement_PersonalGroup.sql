@@ -19,8 +19,10 @@ BEGIN
 
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement_PersonalGroup (inMovementId := inMovementId
-                                             , inUserId     := vbUserId
+                                              , inUserId     := vbUserId
                                              );
+     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, FALSE, inSession);
 
 END;
 $BODY$

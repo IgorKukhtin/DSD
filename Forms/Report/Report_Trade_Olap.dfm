@@ -178,7 +178,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvOperDatePartner: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1086#1082#1091#1087'.)'
       DataBinding.FieldName = 'OperDatePartner'
@@ -193,8 +193,25 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
+    object pvDayOfWeekName_full: TcxDBPivotGridField
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080' ('#1044#1072#1090#1072' '#1087#1086#1082#1091#1087'.)'
+      DataBinding.FieldName = 'DayOfWeekName_full'
+      Visible = True
+      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object pvOperDate_inf: TcxDBPivotGridField
+      Area = faColumn
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082' ('#1087#1086#1082#1091#1087'.) ('#1080#1085#1092'.)'
+      DataBinding.FieldName = 'OperDate_inf'
+      Visible = True
+      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
@@ -202,7 +219,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
@@ -221,7 +238,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 12
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
@@ -229,14 +246,14 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 13
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvTradeMarkName: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
@@ -325,7 +342,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvContractName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1044#1086#1075#1086#1074#1086#1088
       DataBinding.FieldName = 'ContractName'
@@ -333,7 +350,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvJuridicalName: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1070#1088'.'#1083#1080#1094#1086
       DataBinding.FieldName = 'JuridicalName'
@@ -342,7 +359,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvPartnerName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
       DataBinding.FieldName = 'PartnerName'
@@ -351,7 +368,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvRetailName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
       DataBinding.FieldName = 'RetailName'
@@ -360,7 +377,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvPersonalName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1057#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088
       DataBinding.FieldName = 'PersonalName'
@@ -369,7 +386,7 @@ object Report_Trade_OlapForm: TReport_Trade_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvPersonalTradeName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1058#1086#1088#1075#1086#1074#1099#1081
       DataBinding.FieldName = 'PersonalTradeName'

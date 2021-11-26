@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_WagesAdditionalExpenses ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaValidationResults   TFloat    , -- Результаты проверки
     IN inSummaIntentionalPeresort TFloat    , -- Штраф за намеренный пересорт
     IN inSummaFullChargeFact      TFloat    , -- Полное списание факт
+    IN inSummaIC                  TFloat    , -- Сумма от продажи страховым компаниям
     IN inisIssuedBy               Boolean   , -- Выдано
     IN inComment                  TVarChar  , -- Примечание
     IN inUserId                   Integer   -- пользователь
@@ -46,6 +47,9 @@ BEGIN
             
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, inSummaFullChargeFact);
     
+     -- сохранили свойство <Сумма от продажи страховым компаниям>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIC(), ioId, inSummaIC);
+
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, lpGet_MovementItem_WagesAE_TotalSum (ioId, inUserId), 0);
 

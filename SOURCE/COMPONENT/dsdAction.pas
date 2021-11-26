@@ -65,6 +65,8 @@ type
     procedure SetPivotGrid(const Value: TcxDBPivotGrid);
   protected
     procedure SetDataSet(const Value: TDataSet); override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property UserName: String read FUserName write FUserName;
     property IndexFieldNames: String read FIndexFieldNames
@@ -3452,6 +3454,20 @@ begin
     exit
   end;
   FPivotGrid := Value;
+end;
+
+procedure TAddOnDataSet.Assign(Source: TPersistent);
+begin
+  if Source is TAddOnDataSet then
+    with TAddOnDataSet(Source) do
+    begin
+      Self.DataSet := TAddOnDataSet(Source).DataSet;
+      Self.UserName := TAddOnDataSet(Source).UserName;
+      Self.GridView := TAddOnDataSet(Source).GridView;
+      Self.PivotGrid := TAddOnDataSet(Source).PivotGrid;
+    end
+  else
+    inherited Assign(Source);
 end;
 
 { TFileDialogAction }

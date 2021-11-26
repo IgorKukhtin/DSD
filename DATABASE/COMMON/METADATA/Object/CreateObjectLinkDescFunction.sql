@@ -2712,9 +2712,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP(
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP', 'Группы медицинских программ соц. проектов', zc_Object_MedicalProgramSP(), zc_Object_GroupMedicalProgramSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SurchargeWages_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SurchargeWages_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SurchargeWages_Unit', 'Связь с Подразделением', zc_Object_SurchargeWages(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SurchargeWages_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SurchargeWages_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SurchargeWages_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SurchargeWages_User', 'Связь с пользователем', zc_Object_SurchargeWages(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SurchargeWages_User');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 25.11.21                                                                                      * zc_ObjectLink_SurchargeWages_...
  03.11.21         * zc_ObjectLink_Contract_Branch                                              * zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP
  04.10.21                                                                                      * zc_ObjectLink_BanCommentSend_...
  01.10.21                                                                                      * zc_ObjectLink_MedicalProgramSP...

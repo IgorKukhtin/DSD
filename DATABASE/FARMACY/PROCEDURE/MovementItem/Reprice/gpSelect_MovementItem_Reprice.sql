@@ -19,6 +19,12 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , IsTop_Goods Boolean
              , isResolution_224 boolean
              , isPromoBonus boolean
+             , isJuridicalTwo Boolean
+             , JuridicalTwoId Integer, JuridicalTwoName TVarChar
+             , JuridicalTwo_GoodsName TVarChar
+             , ContractTwoId Integer, ContractTwoName TVarChar
+             , Juridical_PriceTwo TFloat, ExpirationDateTwo TDateTime
+             , isPromo boolean
              , Color_calc Integer
              )
 AS
@@ -30,7 +36,10 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     RETURN QUERY
-    WITH tmpLinkGoods AS (select *
+    WITH GoodsPromo AS (SELECT DISTINCT tmp.GoodsId
+                        FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                         )
+     , tmpLinkGoods AS (select *
                           FROM (SELECT ROW_NUMBER() OVER (PARTITION BY LinkGoods.GoodsId,  Juridical.Id ORDER BY  LinkGoods_Main.GoodsMainId desc ) as nom
                                  , LinkGoods_Main.GoodsMainId
                                  , LinkGoods.GoodsId
@@ -135,6 +144,20 @@ BEGIN
              , COALESCE(Object_Goods.IsTop, false)                              AS IsTop_Goods
              , Object_Goods_Main.isResolution_224                               AS isResolution_224
              , COALESCE(MIBoolean_PromoBonus.ValueData, False)                  AS isPromoBonus
+             
+             
+             , COALESCE(MIBoolean_JuridicalTwo.ValueData, False)                AS isJuridicalTwo
+             , COALESCE(Object_JuridicalTwo.Id ,0)  ::Integer                   AS JuridicalTwoId
+             , COALESCE(Object_JuridicalTwo.ValueData,'')::TVarChar             AS JuridicalTwoName
+             , tmpLinkGoodsTwo.Juridical_GoodsName ::TVarChar                   AS JuridicalTwo_GoodsName
+             , COALESCE(Object_ContractTwo.Id ,0)  ::Integer                    AS ContractTwoId
+             , COALESCE(Object_ContractTwo.ValueData,'')::TVarChar              AS ContractTwoName
+
+             , MIFloat_JuridicalPriceTwo.ValueData                              AS Juridical_PriceTwo
+             , COALESCE (MIDate_ExpirationDateTwo.ValueData, Null) ::TDateTime  AS ExpirationDateTwo
+             
+             , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+             
              , CASE WHEN COALESCE(MIBoolean_ClippedReprice.ValueData, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_calc
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -157,6 +180,8 @@ BEGIN
             LEFT JOIN Object_Goods_Retail AS Object_Goods
                                           ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
 
             LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
@@ -183,9 +208,34 @@ BEGIN
                                             AND MI_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MI_Contract.ObjectId
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_JuridicalTwo
+                                          ON MIBoolean_JuridicalTwo.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_JuridicalTwo.DescId         = zc_MIBoolean_JuridicalTwo()
+
+            LEFT JOIN MovementItemLinkObject AS MI_JuridicalTwo
+                                             ON MI_JuridicalTwo.MovementItemId = MovementItem.Id
+                                            AND MI_JuridicalTwo.DescId = zc_MILinkObject_JuridicalTwo()
+            LEFT JOIN Object AS Object_JuridicalTwo ON Object_JuridicalTwo.Id = MI_JuridicalTwo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MI_ContractTwo
+                                             ON MI_ContractTwo.MovementItemId = MovementItem.Id
+                                            AND MI_ContractTwo.DescId = zc_MILinkObject_ContractTwo()
+            LEFT JOIN Object AS Object_ContractTwo ON Object_ContractTwo.Id = MI_ContractTwo.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceTwo
+                                    ON MIFloat_JuridicalPriceTwo.MovementItemId = MovementItem.Id
+                                   AND MIFloat_JuridicalPriceTwo.DescId = zc_MIFloat_JuridicalPriceTwo()
+
+            LEFT JOIN MovementItemDate AS MIDate_ExpirationDateTwo
+                                       ON MIDate_ExpirationDateTwo.MovementItemId = MovementItem.Id
+                                      AND MIDate_ExpirationDateTwo.DescId = zc_MIDate_ExpirationDateTwo()
+
             LEFT JOIN tmpLinkGoods ON tmpLinkGoods.GoodsId = MovementItem.ObjectId
                                   AND tmpLinkGoods.JuridicalId = Object_Juridical.Id
 
+            LEFT JOIN tmpLinkGoods AS tmpLinkGoodsTwo 
+                                   ON tmpLinkGoodsTwo.GoodsId = MovementItem.ObjectId
+                                  AND tmpLinkGoodsTwo.JuridicalId = Object_JuridicalTwo.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = MovementItem.MovementId
@@ -244,4 +294,5 @@ ALTER FUNCTION gpSelect_MovementItem_Reprice (Integer, TVarChar) OWNER TO postgr
 */
 
 -- реяр
--- select * from gpSelect_MovementItem_Reprice(inMovementId := 11512270 ,  inSession := '3') where GoodsCode = 23901;
+--
+ select * from gpSelect_MovementItem_Reprice(inMovementId := 11512270 ,  inSession := '3') where GoodsCode = 23901;

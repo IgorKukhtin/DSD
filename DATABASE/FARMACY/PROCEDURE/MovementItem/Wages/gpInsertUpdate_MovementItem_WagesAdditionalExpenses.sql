@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_WagesAdditionalExpenses()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaValidationResults   TFloat    , -- Результаты проверки
     IN inSummaIntentionalPeresort TFloat    , -- Штраф за намеренный пересорт
     IN inSummaFullChargeFact      TFloat    , -- Полное списание факт
+    IN inSummaIC                  TFloat    , -- Сумма от продажи страховым компаниям
     IN inisIssuedBy               Boolean   , -- Выдано
     IN inComment                  TVarChar  , -- Примечание
    OUT outSummaTotal              TFloat    , -- Итого
@@ -32,6 +33,7 @@ $BODY$
    DECLARE vbSummaValidationResults   TFloat;
    DECLARE vbSummaIntentionalPeresort TFloat;
    DECLARE vbSummaFullChargeFact      TFloat;
+   DECLARE vbSummaIC                  TFloat;
    DECLARE vbisIssuedBy               Boolean;
    DECLARE vbComment                  TVarChar;
    
@@ -81,6 +83,7 @@ BEGIN
       vbSummaValidationResults   := 0;
       vbSummaIntentionalPeresort := 0;
       vbSummaFullChargeFact      := 0;
+      vbSummaIC                  := 0;
       vbisIssuedBy               := False;
       vbComment                  := 0;
     ELSE
@@ -101,6 +104,7 @@ BEGIN
              COALESCE (MIFloat_IntentionalPeresort.ValueData, 0),
              COALESCE (MIFloat_SummaFullChargeFact.ValueData, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                               COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0)),
+             COALESCE (MIFloat_SummaIC.ValueData, 0),
              COALESCE (MIB_isIssuedBy.ValueData, FALSE),
              COALESCE (MIS_Comment.ValueData, '')
       INTO vbSummaCleaning,
@@ -109,6 +113,7 @@ BEGIN
            vbSummaValidationResults,
            vbSummaIntentionalPeresort,
            vbSummaFullChargeFact,
+           vbSummaIC,
            vbisIssuedBy,
            vbComment  
       FROM  MovementItem
@@ -142,6 +147,10 @@ BEGIN
                                         ON MIFloat_SummaFullChargeFact.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummaIC
+                                        ON MIFloat_SummaIC.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummaIC.DescId = zc_MIFloat_SummaIC()
+
             LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
                                           ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
                                          AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
@@ -158,7 +167,8 @@ BEGIN
            OR vbSummaOther <>  COALESCE (inSummaOther, 0)
            OR vbSummaValidationResults <>  COALESCE (inSummaValidationResults, 0)
            OR vbSummaIntentionalPeresort <>  COALESCE (inSummaIntentionalPeresort, 0)
-           OR vbSummaFullChargeFact <> COALESCE (inSummaFullChargeFact, 0))
+           OR vbSummaFullChargeFact <> COALESCE (inSummaFullChargeFact, 0)
+           OR vbSummaIC <> COALESCE (inSummaIC, 0))
          AND COALESCE (inisIssuedBy, FALSE) = TRUE
       THEN
         RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';            
@@ -188,6 +198,7 @@ BEGIN
     OR vbSummaValidationResults <>  COALESCE (inSummaValidationResults, 0)
     OR vbSummaIntentionalPeresort <>  COALESCE (inSummaIntentionalPeresort, 0) AND (vbUserId <> 11263040)
     OR vbSummaFullChargeFact <> COALESCE (inSummaFullChargeFact, 0)
+    OR vbSummaIC <> COALESCE (inSummaIC, 0)
     THEN
       PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
     END IF;
@@ -202,6 +213,7 @@ BEGIN
                                                                , inSummaValidationResults   := inSummaValidationResults   -- Результаты проверки
                                                                , inSummaIntentionalPeresort := inSummaIntentionalPeresort -- Штраф за намеренный пересорт
                                                                , inSummaFullChargeFact      := inSummaFullChargeFact -- Полное списание факт 
+                                                               , inSummaIC                  := inSummaIC             -- Сумма от продажи страховым компаниям 
                                                                , inisIssuedBy               := inisIssuedBy          -- Выдано
                                                                , inComment                  := inComment             -- Примечание
                                                                , inUserId                   := vbUserId              -- пользователь

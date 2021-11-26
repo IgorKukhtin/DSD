@@ -1402,9 +1402,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashSettings_TelegramBotToken() RETUR
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashSettings_TelegramBotToken', zc_Object_CashSettings(), 'Токен телеграм бота' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_TelegramBotToken');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_SurchargeWages_Description() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SurchargeWages_Description'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_SurchargeWages_Description', zc_Object_SurchargeWages(), 'Описание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_SurchargeWages_Description');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 25.11.21                                                                                                         * zc_ObjectString_SurchargeWages_Description
  22.11.21         * zc_ObjectString_PairDay_Comment
  08.11.21                                                                                                         * zc_ObjectString_CashSettings_TelegramBotToken
  02.11.21                                                                                                         * zc_ObjectString_Unit_TelegramId

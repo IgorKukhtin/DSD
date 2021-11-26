@@ -1,6 +1,6 @@
 -- Function: gpInsert_MovementItem_Reprice()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TDateTime, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи
@@ -19,6 +19,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
     IN inJuridical_Price     TFloat    , -- Цена поставщика
     IN inJuridical_Percent   TFloat    , -- % Корректировки наценки поставщика
     IN inContract_Percent    TFloat    , -- % Корректировки наценки Договора
+
+    IN inisJuridicalTwo      Boolean   , -- Расчет по 2 поставщикам  
+    IN inJuridicalTwoId      Integer   , -- поставщик
+    IN inContractTwoId       Integer   , -- Договор
+    IN inJuridical_PriceTwo  TFloat    , -- Цена поставщика
+    IN inExpirationDateTwo   TDateTime , -- Срок годности
+
     IN inisPromoBonus        Boolean   , -- По маркетинговому бонусу  
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
@@ -118,6 +125,11 @@ BEGIN
                                                , inJuridical_Price    := inJuridical_Price
                                                , inJuridical_Percent  := inJuridical_Percent
                                                , inContract_Percent   := inContract_Percent
+                                               , inisJuridicalTwo     := inisJuridicalTwo
+                                               , inJuridicalTwoId     := inJuridicalTwoId
+                                               , inContractTwoId      := inContractTwoId
+                                               , inJuridical_PriceTwo := inJuridical_PriceTwo
+                                               , inExpirationDateTwo  := inExpirationDateTwo
                                                , inUserId             := vbUserId);
 
     -- сохранили <По маркетинговому бонусу >

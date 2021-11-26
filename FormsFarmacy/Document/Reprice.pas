@@ -55,6 +55,13 @@ type
     dxBarStatic1: TdxBarStatic;
     isResolution_224: TcxGridDBColumn;
     isPromoBonus: TcxGridDBColumn;
+    isJuridicalTwo: TcxGridDBColumn;
+    JuridicalTwoName: TcxGridDBColumn;
+    ContractTwoName: TcxGridDBColumn;
+    JuridicalTwo_GoodsName: TcxGridDBColumn;
+    Juridical_PriceTwo: TcxGridDBColumn;
+    ExpirationDateTwo: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

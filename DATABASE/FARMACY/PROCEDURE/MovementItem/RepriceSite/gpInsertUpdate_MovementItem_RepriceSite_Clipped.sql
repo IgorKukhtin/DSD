@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_RepriceSite_Clipped()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceSite_Clipped (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceSite_Clipped (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TDateTime, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceSite_Clipped(
  INOUT ioId                  Integer   , -- Ключ записи
@@ -10,9 +10,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceSite_Clipped(
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inMinExpirationDate   TDateTime , -- Срок годности остатка
     IN inAmount              TFloat    , -- Количество (Остаток)
+
     IN inPriceOld            TFloat    , -- Цена старая
     IN inPriceNew            TFloat    , -- Цена новая
     IN inJuridical_Price     TFloat    , -- Цена поставщика
+
+    IN inisJuridicalTwo      Boolean   , -- Расчет по 2 поставщикам  
+    IN inJuridicalTwoId      Integer   , -- поставщик
+    IN inContractTwoId       Integer   , -- Договор
+    IN inJuridical_PriceTwo  TFloat    , -- Цена поставщика
+    IN inExpirationDateTwo   TDateTime , -- Срок годности
+
     IN inisPromoBonus        Boolean   , -- По маркетинговому бонусу  
     IN inGUID                TVarChar  , -- GUID для определения текущей переоценки
     IN inSession             TVarChar    -- сессия пользователя
@@ -67,6 +75,11 @@ BEGIN
                                                    , inPriceOld           := inPriceOld
                                                    , inPriceNew           := inPriceNew
                                                    , inJuridical_Price    := inJuridical_Price
+                                                   , inisJuridicalTwo     := inisJuridicalTwo
+                                                   , inJuridicalTwoId     := inJuridicalTwoId
+                                                   , inContractTwoId      := inContractTwoId
+                                                   , inJuridical_PriceTwo := inJuridical_PriceTwo
+                                                   , inExpirationDateTwo  := inExpirationDateTwo
                                                    , inUserId             := vbUserId);
 
     -- сохранили <Признак лог отсечения>

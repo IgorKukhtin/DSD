@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION gpReport_Trade_Olap (
 RETURNS TABLE (OperDate TDateTime
              , OperDatePartner TDateTime
              , MonthDate TDateTime
+             , DayOfWeekName_Full  TVarChar
+             , OperDate_inf TVarChar
              , ContractName TVarChar
              , JuridicalName TVarChar
              , PartnerName TVarChar
@@ -78,24 +80,15 @@ BEGIN
                           -- AND (ObjectLink_Partner_Juridical.ChildObjectId = 878283 OR 878283 = 0)
                         )
 
-          , tmpSale AS (SELECT MIContainer.OperDate                                 AS OperDate
-                             , MovementDate_OperDatePartner.ValueData               AS OperDatePartner
-                             --, MIContainer.MovementId                               AS MovementId
+          , tmpSale AS (SELECT Movement.OperDate                                    AS OperDate
+                             , MIContainer.OperDate                                 AS OperDatePartner
                              , tmpPartner.JuridicalId
                              , tmpPartner.PartnerId  
                              , tmpPartner.RetailId
-                             , MovementLinkObject_Contract.ObjectId AS ContractId                          
+                             , MovementLinkObject_Contract.ObjectId                 AS ContractId                          
                              , MIContainer.ObjectId_Analyzer                        AS GoodsId
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
 
-                             /*, SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN  MIContainer.Amount ELSE 0 END)  AS Amount
-
-                             , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
-                                          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
-                                              THEN -1 * MIContainer.Amount
-                                         ELSE 0
-                                    END) AS CountSale
-                              */
                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
                                           AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
                                           AND MIContainer.ContainerId_Analyzer <> 0
@@ -109,9 +102,7 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                          ON MovementLinkObject_Contract.MovementId = MIContainer.MovementId
                                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                                   ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
-                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                            LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
 
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.MovementDescId = zc_Movement_Sale()
@@ -120,7 +111,8 @@ BEGIN
                         GROUP BY MIContainer.MovementId
                                , MIContainer.ObjectId_Analyzer
                                , MIContainer.OperDate
-                               , MovementDate_OperDatePartner.ValueData
+                               , Movement.OperDate
+                               --, MovementDate_OperDatePartner.ValueData
                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                , tmpPartner.JuridicalId
                                , tmpPartner.PartnerId
@@ -246,29 +238,29 @@ BEGIN
                              )
                              
           , tmpData_All AS (SELECT tmp.OperDate
-                                , tmp.OperDatePartner
-                                , tmp.ContractId
-                                , tmp.PartnerId
-                                , tmp.JuridicalId
-                                , tmp.RetailId
-                                , tmp.GoodsId
-                                , tmp.GoodsKindId
-                                , tmp.CountSaleReal AS AmountSale
-                                , 0 AS AmountOrder
-                           FROM tmpSale AS tmp
-                          UNION ALL
-                           SELECT tmp.OperDate
-                                , tmp.OperDatePartner
-                                , tmp.ContractId
-                                , tmp.PartnerId
-                                , tmp.JuridicalId
-                                , tmp.RetailId
-                                , tmp.GoodsId
-                                , tmp.GoodsKindId
-                                , 0 AS AmountSale
-                                , tmp.Amount AS AmountOrder
-                           FROM tmpOrder AS tmp
-                           )
+                                 , tmp.OperDatePartner
+                                 , tmp.ContractId
+                                 , tmp.PartnerId
+                                 , tmp.JuridicalId
+                                 , tmp.RetailId
+                                 , tmp.GoodsId
+                                 , tmp.GoodsKindId
+                                 , tmp.CountSaleReal AS AmountSale
+                                 , 0 AS AmountOrder
+                            FROM tmpSale AS tmp
+                           UNION ALL
+                            SELECT tmp.OperDate
+                                 , tmp.OperDatePartner
+                                 , tmp.ContractId
+                                 , tmp.PartnerId
+                                 , tmp.JuridicalId
+                                 , tmp.RetailId
+                                 , tmp.GoodsId
+                                 , tmp.GoodsKindId
+                                 , 0 AS AmountSale
+                                 , tmp.Amount AS AmountOrder
+                            FROM tmpOrder AS tmp
+                            )
 
           , tmpDataAll AS (SELECT COALESCE (tmp.OperDate, tmpStoreReal.OperDate)       AS OperDate
                                 , COALESCE (tmp.OperDatePartner, tmpStoreReal.OperDate) AS OperDatePartner
@@ -358,11 +350,23 @@ BEGIN
                                                       AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                                   LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
                             )
+     , tmpListData AS (SELECT tmp.OperDate
+                            , ROW_NUMBER()OVER (ORDER BY tmp.OperDate) AS Num_day
+                            , tmpWeekDay.DayOfWeekName
+                       FROM (SELECT DISTINCT tmpData.OperDatePartner AS OperDate FROM tmpData
+                         UNION
+                             SELECT DISTINCT tmpData.OperDate AS OperDate FROM tmpData
+                             ) AS tmp
+                             LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1
+                       ) 
 
       -- Результат 
       SELECT tmpData.OperDate
            , tmpData.OperDatePartner
            , DATE_TRUNC ('Month', tmpData.OperDate) ::TDateTime AS MonthDate
+           , tmpWeekDay.DayOfWeekName_Full    ::TVarChar AS DayOfWeekName_Full
+--           , tmpWeekDay.DayOfWeekName         ::TVarChar AS DayOfWeekName
+           , (tmpListData.Num_day||'. '||zfConvert_DateToString (tmpData.OperDatePartner)||' ('||tmpListData.DayOfWeekName||')') ::TVarChar AS OperDate_inf
            , Object_Contract.ValueData        AS ContractName
            , Object_Juridical.ValueData       AS JuridicalName
            , Object_Partner.ValueData         AS PartnerName
@@ -393,6 +397,8 @@ BEGIN
        
              LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = Object_Goods.Id
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoodsParam.MeasureId
+             LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDatePartner) AS tmpWeekDay ON 1=1
+             LEFT JOIN tmpListData ON tmpListData.OperDate = tmpData.OperDatePartner
         ;
          
 END;
