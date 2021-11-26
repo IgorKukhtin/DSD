@@ -10878,7 +10878,7 @@ object MainForm: TMainForm
         item
           StoredProc = spSelectPrintSign
         end>
-      Caption = 'actExecSelectPrint'
+      Caption = 'actSelect_Export_xls'
     end
     object actExportToXLS_project: TdsdExportToXLS
       Category = 'Export_Email'
@@ -11017,7 +11017,6 @@ object MainForm: TMainForm
       NumberColumn = True
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' xls'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' xls'
-      ImageIndex = 18
     end
     object actGet_Export_FileName_xls: TdsdExecStoredProc
       Category = 'Export_Email'

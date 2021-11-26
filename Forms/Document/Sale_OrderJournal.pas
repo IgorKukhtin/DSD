@@ -24,7 +24,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction,
+  dsdExportToXLSAction;
 
 type
   TSale_OrderJournalForm = class(TAncestorJournalForm)
@@ -260,6 +261,16 @@ type
     PersonalName_4_TTN: TcxGridDBColumn;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    PrintSignCDS: TClientDataSet;
+    spGet_Export_FileName_xls: TdsdStoredProc;
+    spSelectPrintItem: TdsdStoredProc;
+    spSelectPrintHeader: TdsdStoredProc;
+    spSelectPrintSign: TdsdStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    actSelect_Export_xls: TdsdExecStoredProc;
+    actExportToXLS_project: TdsdExportToXLS;
+    mactExport_xls: TMultiAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
