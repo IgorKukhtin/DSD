@@ -6,7 +6,7 @@ interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
-  cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
+  cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
   Winapi.ActiveX
@@ -3524,8 +3524,9 @@ var
   ExpandedStr: String;
   ExpandedIdx: Integer;
   frxPDFExport1: TfrxPDFExport;
-  frxPDFExport_find: Boolean;
-  frxPDFExport1_ShowDialog: Boolean;
+  frxXLSExport1: TfrxXLSExport;
+  frxPDFExport_find, frxXLSExport_find: Boolean;
+  frxPDFExport1_ShowDialog, frxXLSExport1_ShowDialog: Boolean;
   FileNameExport: String;
   PrefixFileNameExport: String;
   ExportDirectory: String;
@@ -3697,10 +3698,12 @@ begin
     with FReport do
     Begin
       LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(AReportName));
-      // это НЕ выгрузка в PFD
+      // это НЕ выгрузка в PFD + XLS
       frxPDFExport_find:=false;
+      frxXLSExport_find:=false;
       // Показывать диалог при печати в DBF
       frxPDFExport1_ShowDialog:=True;
+      frxXLSExport1_ShowDialog:=True;
       FileNameExport:= '';
       PrefixFileNameExport:= '';
       ExportDirectory:= '';
@@ -3709,11 +3712,18 @@ begin
       begin
         // если есть такой параметр, тогда это выгрузка в PFD
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport_find')
-        then frxPDFExport_find:= true;
+        then frxPDFExport_find:= true
+        else if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxXLSExport_find')
+             then frxXLSExport_find:= true;
+
         // если есть такой параметр, тогда без диалога
         if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxPDFExport1_ShowDialog')) and
            (AParams[i].DataType = ftBoolean)
         then frxPDFExport1_ShowDialog:= AParams[i].Value;
+        // если есть такой параметр, тогда без диалога
+        if (AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('frxXLSExport1_ShowDialog')) and
+           (AParams[i].DataType = ftBoolean)
+        then frxXLSExport1_ShowDialog:= AParams[i].Value;
         // если есть такой параметр, Префикс файла экспорта
         if AnsiUpperCase(AParams[i].Name) = AnsiUpperCase('PrefixFileNameExport')
         then PrefixFileNameExport:= AParams[i].Value;
@@ -3792,6 +3802,24 @@ begin
                  frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;
                  FReport.Export(frxPDFExport1);
             end
+
+            else
+            if frxXLSExport_find = true then
+            begin
+                 frxXLSExport1:= TfrxXLSExport.Create(Self);
+                 if FileNameExport <> '' then
+                 begin
+                   FileNameExport := FileNameExport + '.xls';
+                   if PrefixFileNameExport <> '' then
+                     FileNameExport := PrefixFileNameExport + FileNameExport;
+                   if ExportDirectory <> '' then
+                     FileNameExport := ExportDirectory + '\' + FileNameExport;
+                 end;
+                 frxXLSExport1.FileName := FileNameExport;
+                 frxXLSExport1.ShowDialog := frxXLSExport1_ShowDialog;
+                 FReport.Export(frxXLSExport1);
+            end
+
             else ShowPreparedReport;
           end;
         finally //Previre
