@@ -706,10 +706,6 @@
 				<Form>InfoMoneyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\FormsUnit.pas">
-				<Form>FormsUnit</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLoss.pas">
 				<Form>ProfitLoss</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1168,6 +1164,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas">
 				<Form>PriceListGoodsItemPodiumEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\System\FormsUnit.pas">
+				<Form>FormsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

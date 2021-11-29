@@ -210,7 +210,6 @@ uses
   InfoMoney in '..\..\FormsBoutique\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
-  FormsUnit in '..\..\FormsBoutique\Guides\FormsUnit.pas' {FormsUnit: TParentForm},
   ProfitLoss in '..\..\FormsBoutique\Guides\ProfitLoss.pas' {ProfitLoss: TParentForm},
   ProfitLoss_Object in '..\..\FormsBoutique\Guides\ProfitLoss_Object.pas' {ProfitLoss_Object: TParentForm},
   ProfitLossEdit in '..\..\FormsBoutique\Guides\ProfitLossEdit.pas' {ProfitLossEdit: TParentForm},
@@ -339,7 +338,8 @@ uses
   CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
   PriceListItemPodium in '..\..\FormsBoutique\Guides\PriceListItemPodium.pas' {PriceListItemPodiumForm: TParentForm},
   PriceListGoodsItemPodium in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodium.pas' {PriceListGoodsItemPodiumForm: TParentForm},
-  PriceListGoodsItemPodiumEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas' {PriceListGoodsItemPodiumEditForm: TParentForm};
+  PriceListGoodsItemPodiumEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas' {PriceListGoodsItemPodiumEditForm: TParentForm},
+  FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
