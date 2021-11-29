@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SheetWorkTimeClose(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, OperDateEnd TDateTime
-             , OperDateEnd_fact TDateTime
+             , OperDateClose TDateTime
              , TimeClose Time                             -- Время авто закрытия  на следующий день после окончания периода
              , StatusCode Integer, StatusName TVarChar
              , isClosed Boolean, isClosedAuto Boolean
@@ -38,10 +38,10 @@ BEGIN
                        )
         , tmpMovement AS (SELECT Movement.*
                           FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.DescId = zc_Movement_SheetWorkTimeClose()
                                             AND Movement.StatusId = tmpStatus.StatusId
-                         ) 
+                         )
         -- нужно показать последную строку в журнале - последнее состояние
         , tmpMI AS (SELECT *
                     FROM (SELECT MovementItem.MovementId
@@ -67,13 +67,16 @@ BEGIN
            , Movement.InvNumber                  AS InvNumber
            , Movement.OperDate ::TDateTime       AS OperDate
            , MovementDate_OperDateEnd.ValueData ::TDateTime AS OperDateEnd
-           , (MovementDate_OperDateEnd.ValueData + INTERVAL '1 day') ::TDateTime AS OperDateEnd_fact
+             -- Дата авто закрытия
+           , DATE_TRUNC ('DAY', MovementDate_TimeClose.ValueData) :: TDateTime AS OperDateClose
+             -- Время авто закрытия
            , MovementDate_TimeClose.ValueData   ::Time AS TimeClose
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
-
+             -- Период закрыт (ручной режим)
            , COALESCE (MovementBoolean_Closed.ValueData, FALSE) ::Boolean     AS isClosed
-           , COALESCE (MovementBoolean_ClosedAuto.ValueData, FALSE) ::Boolean AS isClosedAuto
+             -- Период закрыт (автоматический режим)
+           , CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP THEN TRUE ELSE FALSE END ::Boolean AS isClosedAuto
 
            , Object_Insert.ValueData             AS InsertName
            , MovementDate_Insert.ValueData       AS InsertDate
@@ -85,7 +88,14 @@ BEGIN
            , Object_Member.ObjectCode  		AS MemberCode
            , Object_Member.ValueData   		AS MemberName
            , tmpMI.Count ::TFloat
-           , CASE WHEN COALESCE (tmpMI.Amount,0)=0 THEN FALSE ELSE TRUE END ::Boolean AS isAmount
+             -- Период Закрыт (да/нет)
+           , CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP
+                       THEN TRUE
+                  WHEN COALESCE (tmpMI.Amount,0) = 0
+                       THEN FALSE
+                  ELSE TRUE
+             END ::Boolean AS isAmount
+
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -125,7 +135,7 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
-            
+
             LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI.MemberId
       ;
