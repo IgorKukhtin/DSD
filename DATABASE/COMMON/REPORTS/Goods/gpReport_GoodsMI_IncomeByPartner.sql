@@ -240,10 +240,11 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
                                    AND MIContainer.MovementDescId = zc_Movement_ReturnOut()
-                                   AND MIContainer.isActive = TRUE
+                                   AND MIContainer.isActive = TRUE and 1=0  -- задваивает цену 
                                        THEN 1 * MIContainer.Amount
                                   ELSE 0
                              END) AS Summ_ProfitLoss
+
                  FROM MovementItemContainer AS MIContainer
                       INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
