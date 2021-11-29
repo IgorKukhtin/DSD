@@ -114,6 +114,7 @@ type
     Count: TcxGridDBColumn;
     actOpenForm: TdsdOpenForm;
     bbOpenForm: TdxBarButton;
+    OperDateClose: TcxGridDBColumn;
   private
   public
   end;

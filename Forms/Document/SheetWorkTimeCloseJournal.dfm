@@ -155,50 +155,57 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         Options.Editing = False
         Width = 90
       end
+      object OperDateClose: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103
+        DataBinding.FieldName = 'OperDateClose'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103'  - '#1085#1072' '#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1076#1077#1085#1100' '#1087#1086#1089#1083#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
+        Width = 70
+      end
       object TimeClose: TcxGridDBColumn
         Caption = #1042#1088#1077#1084#1103' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103
         DataBinding.FieldName = 'TimeClose'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1042#1088#1077#1084#1103' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103
+        HeaderHint = #1042#1088#1077#1084#1103' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103'  - '#1085#1072' '#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1076#1077#1085#1100' '#1087#1086#1089#1083#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
         Options.Editing = False
         Width = 80
       end
       object isClosed: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090
+        Caption = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' ('#1088#1091#1095#1085'.)'
         DataBinding.FieldName = 'isClosed'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         DateTimeGrouping = dtgRelativeToToday
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' ('#1088#1091#1095#1085#1086#1081' '#1088#1077#1078#1080#1084')'
         Options.Editing = False
-        Width = 64
+        Width = 70
       end
       object isClosedAuto: TcxGridDBColumn
-        Caption = #1055#1088'. '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1055#1077#1088#1080#1086#1076#1072
+        Caption = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086'.)'
         DataBinding.FieldName = 'isClosedAuto'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1055#1077#1088#1080#1086#1076#1072
+        HeaderHint = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1088#1077#1078#1080#1084')'
         Options.Editing = False
-        Width = 98
+        Width = 70
       end
       object isAmount: TcxGridDBColumn
-        Caption = #1054#1090#1082#1088#1099#1090' / '#1079#1072#1082#1088#1099#1090
+        Caption = #1047#1072#1082#1088#1099#1090' ('#1076#1072') / '#1054#1090#1082#1088#1099#1090' ('#1085#1077#1090')'
         DataBinding.FieldName = 'isAmount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1080#1086#1076' '#1047#1072#1082#1088#1099#1090' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
-        Width = 116
+        Width = 100
       end
       object Count: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1074#1090#1086#1088#1085#1099#1093' '#1079#1072#1082#1088'. '#1087#1077#1088#1080#1086#1076#1086#1074
+        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1079' '#1079#1072#1082#1088'. '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'Count'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1074#1090#1086#1088#1085#1099#1093' '#1079#1072#1082#1088'. '#1087#1077#1088#1080#1086#1076#1086#1074
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1074#1090#1086#1088#1085#1099#1093' '#1079#1072#1082#1088#1099#1090#1080#1081' '#1087#1077#1088#1080#1086#1076#1072
         Options.Editing = False
         Width = 70
       end
@@ -476,6 +483,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel

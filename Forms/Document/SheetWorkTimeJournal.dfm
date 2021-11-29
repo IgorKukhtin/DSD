@@ -13,6 +13,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.PUSHMessage = actPUSHMessage
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -463,6 +464,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbEdit: TdxBarButton
       Action = UpdateAction
@@ -678,6 +680,17 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPUSHMessage: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHMessage
+      StoredProcList = <
+        item
+          StoredProc = spPUSHMessage
+        end>
+      Caption = 'actPUSHMessage'
+      PUSHMessageType = pmtInformation
     end
   end
   object spSelect: TdsdStoredProc
@@ -926,5 +939,31 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     PackSize = 1
     Left = 416
     Top = 328
+  end
+  object spPUSHMessage: TdsdStoredProc
+    StoredProcName = 'gpGet_SheetWorkTime_ShowPUSH'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 125
+    Top = 301
   end
 end
