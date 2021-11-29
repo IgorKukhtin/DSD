@@ -110,6 +110,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummEnd_PriceList
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_cl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut_cl
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -196,6 +206,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = MovementDescName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_cl
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut_cl
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -435,6 +455,18 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
+          object AmountIn_cl: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086' ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountIn_cl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            Options.Editing = False
+            Width = 70
+          end
           object SummIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1074#1093'.'
             DataBinding.FieldName = 'SummIn'
@@ -479,6 +511,18 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountOut_cl: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086' ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountOut_cl'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
             Options.Editing = False
             Width = 70
           end
@@ -661,6 +705,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object isClient: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
@@ -1282,7 +1334,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'isGoodsSize'
-          Value = 'False'
+          Value = False
           Component = cbGoodsSizeAll
           DataType = ftBoolean
           ParamType = ptInput
@@ -1357,7 +1409,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1366,7 +1418,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Name = 'inChangePercentAmount'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1399,14 +1451,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1955,6 +2007,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -1963,6 +2016,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 792
     Top = 96
   end

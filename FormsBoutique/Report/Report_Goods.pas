@@ -97,6 +97,7 @@ type
     PartionId_mi: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     cxLabel4: TcxLabel;
+    isClient: TcxGridDBColumn;
   private
     { Private declarations }
   public

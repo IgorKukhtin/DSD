@@ -799,11 +799,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_AnalysisDialogForm');
   //exit;
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsCodeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsCodeDialogForm');
-  //
+ {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OH_DiscountPeriodForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OH_DiscountPeriodDialogForm'));
@@ -838,23 +839,24 @@ begin
   //Движ. по покупателю
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CollationByClientPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CollationByClientPodiumForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentPodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentPodiumForm');
   //exit;
-  {
+
   // Report_GoodsMI_Account
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountDialogForm');
-
+  }
   //Отчет Остаток товара
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
-
+  exit;
+  {
   //Отчет Текущий остаток товара
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentForm');

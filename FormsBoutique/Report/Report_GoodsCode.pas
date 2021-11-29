@@ -99,6 +99,7 @@ type
     RefreshDispatcher1: TRefreshDispatcher;
     actRefreshChoice: TdsdDataSetRefresh;
     edGoodsCode2: TcxCurrencyEdit;
+    isClient: TcxGridDBColumn;
   private
     { Private declarations }
   public

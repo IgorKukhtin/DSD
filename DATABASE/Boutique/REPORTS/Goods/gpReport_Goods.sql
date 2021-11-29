@@ -80,6 +80,7 @@ BEGIN
                                  , CLO_PartionMI.ObjectId          AS PartionId_mi
                                  , Object_PartionGoods.GoodsSizeId AS GoodsSizeId
                                  , Container.Amount
+                                 , CASE WHEN CLO_Client.ObjectId IS NULL THEN FALSE ELSE TRUE END AS isClient
                             FROM tmpWhere
                                  INNER JOIN Container ON Container.ObjectId = tmpWhere.GoodsId
                                                      AND Container.DescId = zc_Container_Count()
@@ -126,6 +127,7 @@ BEGIN
                           , SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_Total
                           , MIContainer.MovementDescId
                           , MIContainer.isActive
+                          , tmpContainer_Count.isClient
                      FROM tmpContainer_Count
                           INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                         AND (MIContainer.OperDate >= inStartDate OR inIsPeriodAll = TRUE)
@@ -152,6 +154,7 @@ BEGIN
                               END
                             , MIContainer.MovementDescId
                             , MIContainer.isActive
+                            , tmpContainer_Count.isClient
                     )
       , tmpPrice AS (SELECT OHF_PriceListItem_Value_Start.ValueData AS Price_Start
                           , OHF_PriceListItem_Value.ValueData       AS Price_End
@@ -223,6 +226,7 @@ BEGIN
                                                          ELSE CAST ( COALESCE (tmpMIContainer_all.AmountOut, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
                                                     END
                                           END) AS SummOut
+                                   , tmpMIContainer_all.isClient
 
                                FROM (
                                      -- 1.1. Остатки кол-во
@@ -242,6 +246,7 @@ BEGIN
                                            , tmpMI_Count.Amount - SUM (tmpMI_Count.Amount_Total) + SUM (tmpMI_Count.Amount_Period) AS AmountEnd
                                            , 0 AS AmountIn
                                            , 0 AS AmountOut
+                                           , tmpMI_Count.isClient
                                      FROM tmpMI_Count
                                      GROUP BY tmpMI_Count.ContainerId
                                             , tmpMI_Count.LocationId
@@ -250,6 +255,7 @@ BEGIN
                                             , tmpMI_Count.PartionId_mi
                                             , tmpMI_Count.GoodsSizeId
                                             , tmpMI_Count.Amount
+                                            , tmpMI_Count.isClient
                                      HAVING tmpMI_Count.Amount - SUM (tmpMI_Count.Amount_Total) <> 0
                                          OR SUM (tmpMI_Count.Amount_Period) <> 0
                                     UNION ALL
@@ -270,6 +276,7 @@ BEGIN
                                            , 0 AS AmountEnd
                                            , CASE WHEN tmpMI_Count.Amount_Period > 0 THEN      tmpMI_Count.Amount_Period ELSE 0 END AS AmountIn
                                            , CASE WHEN tmpMI_Count.Amount_Period < 0 THEN -1 * tmpMI_Count.Amount_Period ELSE 0 END AS AmountOut
+                                           , tmpMI_Count.isClient
                                      FROM tmpMI_Count
                                      WHERE tmpMI_Count.Amount_Period <> 0
                                      ) AS tmpMIContainer_all
@@ -287,6 +294,7 @@ BEGIN
                                       , tmpMIContainer_all.ContainerId_Analyzer
                                       , tmpMIContainer_all.isActive
                                       , COALESCE (Object_PartionGoods.CountForPrice, 1)
+                                      , tmpMIContainer_all.isClient
                               )
 
    SELECT Movement.Id                            AS MovementId
@@ -323,13 +331,18 @@ BEGIN
                 END AS TFloat) AS OperPrice
 
         , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
-        , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
-        , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
+        , CAST (CASE WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountIn ELSE 0 END AS TFloat)   AS AmountIn
+        , CAST (CASE WHEN tmpMIContainer_group.isClient = FALSE THEN tmpMIContainer_group.AmountOut ELSE 0 END AS TFloat)  AS AmountOut
+        --товар по покупателям
+        , CAST (CASE WHEN tmpMIContainer_group.isClient = TRUE THEN tmpMIContainer_group.AmountIn ELSE 0 END AS TFloat)    AS AmountIn_cl
+        , CAST (CASE WHEN tmpMIContainer_group.isClient = TRUE THEN tmpMIContainer_group.AmountOut ELSE 0 END AS TFloat)   AS AmountOut_cl
+        
         , CAST (tmpMIContainer_group.AmountEnd AS TFloat)   AS AmountEnd
 
         , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
         , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
         , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
+
         , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd
 
         , CAST (CASE WHEN tmpCurrency_Start.ParValue  > 0
@@ -372,6 +385,8 @@ BEGIN
         , tmpMIContainer_group.PartionId_mi
         , MI_PartionMI.Id AS MovementItemId_PartionMI
         , MovementItem.Id AS MovementItemId
+        
+        , tmpMIContainer_group.isClient :: Boolean
 
    FROM tmpMIContainer_group
         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
