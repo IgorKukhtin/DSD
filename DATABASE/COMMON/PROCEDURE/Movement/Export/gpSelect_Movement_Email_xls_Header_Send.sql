@@ -24,10 +24,23 @@ $BODY$
 
    DECLARE vbIsChangePrice Boolean;
    DECLARE vbIsDiscountPrice Boolean;
+   
+   DECLARE vbOKPO TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
+
+     vbOKPO:= (SELECT OH_JuridicalDetails.OKPO
+               FROM MovementLinkObject
+                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                    LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails
+                                                                  ON OH_JuridicalDetails.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+               WHERE MovementLinkObject.MovementId = inMovementId
+                 AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+               );
 
 
      -- параметры из документа
@@ -53,6 +66,7 @@ BEGIN
                            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                            , Object_From.ValueData                  AS FromName
                            , OH_JuridicalDetails_From.FullName      AS JuridicalName_From
+                           , OH_JuridicalDetails_From.JuridicalAddress AS JuridicalAddress_From
                            , OH_JuridicalDetails_From.OKPO          AS OKPO_from
                            , OH_JuridicalDetails_From.INN           AS INN_From
                            , OH_JuridicalDetails_From.NumberVAT     AS NumberVAT_From
@@ -103,6 +117,8 @@ BEGIN
                                   ELSE COALESCE (Movement_order.InvNumber, '')
                              END AS InvNumberOrder
                            , COALESCE (Movement_order.OperDate, Movement.OperDate) :: TDateTime AS OperDateOrder
+                           
+                           , MS_InvNumberPartner_Master.ValueData               AS InvNumberPartner_Master
                       FROM Movement
                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -262,21 +278,38 @@ BEGIN
                                                      AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 
-                       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                            ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
-                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                       LEFT JOIN ObjectString AS ObjectString_PlaceOf
-                                              ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
-                                             AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                             ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
+                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                        LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                                               ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                              AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+                                             
+                        --
+                        LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                                         AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                        LEFT JOIN MovementString AS MS_InvNumberPartner_Master
+                                                        ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                       AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+  
                       WHERE Movement.Id = inMovementId
                      )
    
-   
+   -- для vbOKPO = 2244900110  Недавній Олександр Миколайович ФОП  - максимально как печ. форма
       --- 
        SELECT ('Видаткова накладна № ' || tmpData.InvNumber||' від ' ||zfConvert_DateToString (tmpData.OperDatePartner)) :: TBlob
        FROM tmpData
          UNION ALL
        SELECT ('') :: TBlob
+         UNION ALL   --для 2244900110
+       SELECT ('                                                                              № ПНЕ '||tmpData.InvNumberPartner_Master) :: TBlob
+       FROM tmpData
+       WHERE vbOKPO = '2244900110'
+         UNION ALL   --для 2244900110
+       SELECT ('                                                                              '||tmpData.ToName) :: TBlob
+       FROM tmpData
+       WHERE vbOKPO = '2244900110'
          UNION ALL
        SELECT ('Постачальник:  '||tmpData.JuridicalName_From) :: TBlob
        FROM tmpData
@@ -289,11 +322,19 @@ BEGIN
          UNION ALL
        SELECT ('               код за ЄДРПОУ '||tmpData.OKPO_from||', IПН '||tmpData.INN_From ||', номер свiдоцтва '||tmpData.NumberVAT_From) :: TBlob
        FROM tmpData
+         UNION ALL   --для 2244900110
+       SELECT ('               адреса: '||tmpData.JuridicalAddress_From) :: TBlob
+       FROM tmpData
+       WHERE vbOKPO = '2244900110'
          UNION ALL
        SELECT ('') :: TBlob
          UNION ALL
        SELECT ('Одержувач:     '||tmpData.JuridicalName_To) :: TBlob
        FROM tmpData
+         UNION ALL   --для 2244900110
+       SELECT ('               адреса: '||tmpData.JuridicalAddress_to) :: TBlob
+       FROM tmpData
+       WHERE vbOKPO = '2244900110'
          UNION ALL
        SELECT ('               П/р '||tmpData.BankAccount_To||' у '||tmpData.BankName_To||' МФО '||tmpData.BankMFO_To) :: TBlob
        FROM tmpData
@@ -314,6 +355,14 @@ BEGIN
          UNION ALL
        SELECT ('Адреса доставки: '||tmpData.PartnerAddress_To) :: TBlob
        FROM tmpData
+       WHERE vbOKPO <> '2244900110'
+         UNION ALL
+       SELECT '' :: TBlob
+
+         UNION ALL   --для 2244900110
+       SELECT ('Місце складання: '||tmpData.PlaceOf) :: TBlob
+       FROM tmpData
+       WHERE vbOKPO = '2244900110'
 
          UNION ALL
        SELECT '' :: TBlob
@@ -336,3 +385,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Email_xls_Header_Send (inMovementId:= 19556147 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Email_xls_Header_Send (inMovementId:= 21495529 , inSession:= zfCalc_UserAdmin())
+-- 2244900110  Недавній Олександр Миколайович ФОП

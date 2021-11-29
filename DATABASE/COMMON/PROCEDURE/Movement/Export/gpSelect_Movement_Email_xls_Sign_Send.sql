@@ -29,10 +29,24 @@ $BODY$
     DECLARE vbTotalCountKg_only TFloat;
     
     DECLARE vbCount TFloat;
+    DECLARE vbOKPO TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
+
+
+     vbOKPO:= (SELECT OH_JuridicalDetails.OKPO
+               FROM MovementLinkObject
+                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                    LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails
+                                                                  ON OH_JuridicalDetails.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+               WHERE MovementLinkObject.MovementId = inMovementId
+                 AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+               );
+
 
     CREATE TEMP TABLE tmpObject_GoodsPropertyValue (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, Name TVarChar,
                                                     BarCode TVarChar, Article TVarChar,
@@ -193,7 +207,9 @@ BEGIN
                  )
           
 
-       SELECT tmp.Sign
+     SELECT tmp.Sign
+     FROM (
+       SELECT tmp.Sign, tmp.Num
        FROM (
 --     SELECT ('          Разом кг   ' || tmpData.TotalCountKg) :: TBlob
 --     FROM tmpData
@@ -267,7 +283,69 @@ BEGIN
             , 22 AS Num
 
       ) AS tmp
-      ORDER BY tmp.Num
+    WHERE vbOKPO <> '2244900110'
+    
+     UNION  
+     -- для vbOKPO = 2244900110  Недавній Олександр Миколайович ФОП  - максимально как печ. форма
+       SELECT tmp.Sign, tmp.Num
+       FROM (
+             SELECT ('                                              Всьго кількість (кг): ' || zfConvert_FloatToString (tmpData.TotalCountKg)
+                    ) :: TBlob AS Sign
+                  , 1 AS Num
+             FROM tmpData
+         UNION ALL
+             SELECT ('                                              Всьго кількість (шт):'|| zfConvert_FloatToString (tmpData.TotalCountSh)
+                    ) :: TBlob
+                  , 2 AS Num
+             FROM tmpData
+         UNION ALL
+             SELECT ('                                              Всього без ПДВ: '
+                  || '  '
+                  || zfConvert_FloatToString (tmpData.TotalSummMVAT)
+                  || '  '
+                    ) :: TBlob
+                  , 3 AS Num
+             FROM tmpData
+         UNION ALL
+             SELECT ('                                              ПДВ: '
+                  || '  '
+                  || zfConvert_FloatToString (tmpData.SummVAT)
+                  || '  '
+                    ) :: TBlob
+                  , 4 AS Num
+             FROM tmpData
+         UNION ALL
+             SELECT ('                                              Всього із ПДВ: '
+                  || '  '
+                  || zfConvert_FloatToString (tmpData.TotalSummPVAT)
+                  || '  '
+                    ) :: TBlob
+                  , 5 AS Num
+             FROM tmpData
+      
+         UNION ALL
+             SELECT '' :: TBlob
+                  , 6 AS Num
+         UNION ALL
+             SELECT '' :: TBlob
+                  , 10 AS Num
+             FROM tmpData
+      
+         UNION ALL
+           SELECT (' Здав: комірник ' || tmpData.StoreKeeper||'                       Прийняв:' ) :: TBlob
+                  , 11 AS Num
+             FROM tmpData
+      
+         UNION ALL
+             SELECT '' :: TBlob
+                  , 12 AS Num
+         UNION ALL
+             SELECT ('     ________________________________                           _____________________________' ) :: TBlob
+                  , 13 AS Num      
+            ) AS tmp
+       WHERE vbOKPO = '2244900110'
+        ) AS tmp
+       ORDER BY tmp.Num
 
        ;
 
@@ -284,3 +362,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Email_xls_Sign_Send (inMovementId:= 19556147, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Email_xls_Sign_Send (inMovementId:= 21495529, inSession:= zfCalc_UserAdmin())

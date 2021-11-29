@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_xls_Send(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Ord          TVarChar
+             , GoodsCode    Integer
              , BarCode      TVarChar
              , GoodsName    TVarChar
              , Amount       TFloat
@@ -458,6 +459,7 @@ BEGIN
                )
 
      SELECT ROW_NUMBER() OVER(ORDER BY tmpRes.GoodsName) :: TVarChar AS Ord
+          , tmpRes.GoodsCode     :: Integer
           , tmpRes.BarCode       :: TVarChar 
           , tmpRes.GoodsName     ::TVarChar
           , tmpRes.Amount        ::TFloat
@@ -485,4 +487,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Email_xls_Send (inMovementId:= 19556147 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Email_xls_Send (inMovementId:= 21495529 , inSession:= zfCalc_UserAdmin())
