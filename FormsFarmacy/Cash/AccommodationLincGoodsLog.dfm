@@ -1,9 +1,9 @@
-object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
+object AccommodationLincGoodsLogForm: TAccommodationLincGoodsLogForm
   Left = 0
   Top = 0
-  Caption = #1055#1088#1080#1074#1103#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
+  Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
   ClientHeight = 379
-  ClientWidth = 892
+  ClientWidth = 703
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,14 +13,14 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 892
-    Height = 353
+    Top = 83
+    Width = 703
+    Height = 296
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -36,7 +36,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = GoodsName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -48,29 +47,21 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+        DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 171
+        Width = 124
       end
-      object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
+      object UserName: TcxGridDBColumn
+        Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1083
+        DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
-      end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 195
+        Width = 141
       end
       object AccommodationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1072#1079#1084'.'
@@ -86,23 +77,7 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 238
-      end
-      object UserName: TcxGridDBColumn
-        Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1083
-        DataBinding.FieldName = 'UserName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 141
-      end
-      object DateUpdate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
-        DataBinding.FieldName = 'DateUpdate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 124
+        Width = 285
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -118,25 +93,56 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       GridView = cxGridDBTableView
     end
   end
-  object ceUnit: TcxButtonEdit
-    Left = 568
-    Top = 85
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Properties.ReadOnly = True
-    Properties.UseNullString = True
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 703
+    Height = 57
+    Align = alTop
+    ShowCaption = False
     TabOrder = 5
-    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Width = 288
-  end
-  object cxLabel3: TcxLabel
-    Left = 474
-    Top = 86
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    object cxLabel1: TcxLabel
+      Left = 26
+      Top = 32
+      Caption = #1058#1086#1074#1072#1088
+    end
+    object cxLabel3: TcxLabel
+      Left = 26
+      Top = 8
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object ceGoods: TcxButtonEdit
+      Left = 120
+      Top = 31
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 2
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Width = 369
+    end
+    object ceUnit: TcxButtonEdit
+      Left = 120
+      Top = 7
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 3
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Width = 369
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -158,12 +164,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = UnitGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -208,24 +208,7 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -241,10 +224,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -254,14 +233,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
         end>
       OneOnRow = True
       Row = 0
@@ -288,12 +259,20 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       ShortCut = 115
     end
     object bbErased: TdxBarButton
-      Action = dsdSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 46
     end
     object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 32776
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -306,8 +285,11 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       Visible = ivAlways
     end
     object dxBarButton1: TdxBarButton
-      Action = actShowAll
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Category = 0
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Visible = ivAlways
+      ImageIndex = 63
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
       Caption = 'New Item'
@@ -324,12 +306,18 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       Control = ceUnit
     end
     object dxBarButton2: TdxBarButton
-      Action = ExecuteDialog
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Visible = ivAlways
+      ImageIndex = 35
     end
     object bbProtocolOpenForm: TdxBarButton
-      Action = actProtocolOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Visible = ivAlways
+      ImageIndex = 34
     end
   end
   object ActionList: TActionList
@@ -350,37 +338,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
@@ -390,103 +347,9 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actShowAll: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
-    object ExecuteDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 35
-      FormName = 'TReport_UnitDialogForm'
-      FormNameParam.Value = 'TReport_UnitDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'UnitId'
-          Value = ''
-          Component = UnitGuides
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = UnitGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TAccommodationLincGoodsLogForm'
-      FormNameParam.Value = 'TAccommodationLincGoodsLogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'UnitId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsId'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccommodationLincGoods_Unit'
+    StoredProcName = 'gpSelect_Object_AccommodationLincGoodsLog'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -502,10 +365,10 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
+        Name = 'inGoodsId'
         Value = Null
-        Component = actShowAll
-        DataType = ftBoolean
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -516,31 +379,6 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
     Top = 160
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_AccommodationLincGoods_IsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inUnitID'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'UnitID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsID'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GoodsID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 312
-    Top = 224
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -572,6 +410,7 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -593,7 +432,70 @@ object AccommodationLincGoodsForm: TAccommodationLincGoodsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 80
+    Left = 160
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoods
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 16
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 232
   end
 end

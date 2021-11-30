@@ -1,4 +1,4 @@
-unit AccommodationLincGoods;
+unit AccommodationLincGoodsLog;
 
 interface
 
@@ -22,14 +22,12 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit,
-  cxButtonEdit;
+  cxButtonEdit, Vcl.ExtCtrls;
 
 type
-  TAccommodationLincGoodsForm = class(TParentForm)
+  TAccommodationLincGoodsLogForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -45,30 +43,28 @@ type
     dxBarStatic: TdxBarStatic;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     isErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actShowAll: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
-    ExecuteDialog: TExecuteDialog;
     ceUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    UnitGuides: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dxBarButton2: TdxBarButton;
-    UnitName: TcxGridDBColumn;
     AccommodationCode: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
-    DateUpdate: TcxGridDBColumn;
-    actProtocolOpenForm: TdsdOpenForm;
+    OperDate: TcxGridDBColumn;
     bbProtocolOpenForm: TdxBarButton;
+    ceGoods: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    Panel1: TPanel;
+    UnitGuides: TdsdGuides;
+    GoodsGuides: TdsdGuides;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -81,5 +77,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TAccommodationLincGoodsForm);
+  RegisterClass(TAccommodationLincGoodsLogForm);
 end.

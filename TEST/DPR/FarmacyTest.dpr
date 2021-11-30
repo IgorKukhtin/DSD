@@ -1129,7 +1129,8 @@ uses
   ReturnOutPharmacy in '..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas' {ReturnOutPharmacyForm: TParentForm},
   Report_SummaInsuranceCompanies in '..\..\FormsFarmacy\Report\Report_SummaInsuranceCompanies.pas' {Report_SummaInsuranceCompaniesForm: TParentForm},
   Report_SummaInsuranceCompaniesDialog in '..\..\FormsFarmacy\Report\Report_SummaInsuranceCompaniesDialog.pas' {Report_SummaInsuranceCompaniesDialogForm: TParentForm},
-  SurchargeWages in '..\..\FormsFarmacy\Guides\SurchargeWages.pas' {SurchargeWagesForm: TParentForm};
+  SurchargeWages in '..\..\FormsFarmacy\Guides\SurchargeWages.pas' {SurchargeWagesForm: TParentForm},
+  AccommodationLincGoodsLog in '..\..\FormsFarmacy\Cash\AccommodationLincGoodsLog.pas' {AccommodationLincGoodsLogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

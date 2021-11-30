@@ -410,6 +410,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationLincGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccommodationLincGoodsForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationLincGoodsLogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccommodationLincGoodsLogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDivisionLockForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsDivisionLockForm');
 
