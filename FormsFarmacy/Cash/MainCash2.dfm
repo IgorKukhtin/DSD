@@ -7933,6 +7933,9 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataDEFERENDT: TCurrencyField
       FieldName = 'DEFERENDT'
     end
+    object MemDataMORIONCODE: TIntegerField
+      FieldName = 'MORIONCODE'
+    end
   end
   object mdCheck: TdxMemData
     Indexes = <>

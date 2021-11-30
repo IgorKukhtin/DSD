@@ -372,6 +372,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
+          object Color_ExpirationDatePh: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_ExpirationDatePh'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -1458,6 +1463,21 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       item
         ColorColumn = AmountManual
         BackGroundValueColumn = Color_AmountManual
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsCode
+        BackGroundValueColumn = Color_ExpirationDatePh
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        BackGroundValueColumn = Color_ExpirationDatePh
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ExpirationDate
+        BackGroundValueColumn = Color_ExpirationDatePh
         ColorValueList = <>
       end>
     SummaryItemList = <

@@ -30,6 +30,8 @@ type
     actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
     TotalAmount: TcxGridDBColumn;
+    Distributed: TcxGridDBColumn;
+    DistributedSumma: TcxGridDBColumn;
   private
     { Private declarations }
   public

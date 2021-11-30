@@ -356,7 +356,7 @@ begin
         end;
         if FPositionCDS.IsEmpty then
         begin
-          if FRecipe.FRecipe_Number = '' then ShowMessage('Ошибка рецепт не найден.')
+          if FRecipe.FRecipe_Number = '' then ShowMessage('Ошибка рецепт не найден возможно он уже погашен.')
           else ShowMessage('Ошибка в рецепте не описаны медикаменты.');
         end else Result := True;
       end else ShowError;

@@ -126,6 +126,7 @@ type
     actGetTelegram: TdsdExecStoredProc;
     actInsert_TelegramBot_Protocol: TdsdExecStoredProc;
     actSendTelegramBot: TdsdSendTelegramBotAction;
+    Color_ExpirationDatePh: TcxGridDBColumn;
   private
     { Private declarations }
   public

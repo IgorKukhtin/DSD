@@ -61,7 +61,7 @@ BEGIN
                              AND ObjectString_Unit_TelegramId.DescId = zc_ObjectString_Unit_TelegramId()
   WHERE Id = inMovementId;   
   
-  IF vbToId NOT IN (377595, 377574, 1529734, 8156016)
+  IF vbToId NOT IN (377595, 377574, 1529734, 8156016) AND vbUserId <> 3 
   THEN
     RETURN;
   END IF;
@@ -161,4 +161,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- 
-SELECT * FROM gpSelect_Income_SendTelegram(inMovementID := 25504550   ,inSession := '3')
+SELECT * FROM gpSelect_Income_SendTelegram(inMovementID := 25856877   ,inSession := '3')

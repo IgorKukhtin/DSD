@@ -594,6 +594,7 @@ type
     MemDataDEFERENDT: TCurrencyField;
     btnGoodsSPReceiptList: TcxButton;
     actGoodsSPReceiptList: TdsdOpenForm;
+    MemDataMORIONCODE: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1376,6 +1377,8 @@ begin
         FLocalDataBaseDiff.FieldByName('GOODSDIMP').AsVariant;
       MemData.FieldByName('GOODSDIPR').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSDIPR').AsVariant;
+      MemData.FieldByName('MORIONCODE').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('MORIONCODE').AsVariant;
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -5357,6 +5360,8 @@ begin
           MemData.FieldByName('GOODSDIMP').AsVariant;
         RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsVariant :=
           MemData.FieldByName('GOODSDIPR').AsVariant;
+        RemainsCDS.FieldByName('MorionCode').AsVariant :=
+          MemData.FieldByName('MORIONCODE').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -5433,6 +5438,8 @@ begin
             MemData.FieldByName('GOODSDIMP').AsVariant;
           RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsVariant :=
             MemData.FieldByName('GOODSDIPR').AsVariant;
+          RemainsCDS.FieldByName('MorionCode').AsVariant :=
+            MemData.FieldByName('MORIONCODE').AsVariant;
           RemainsCDS.Post;
         End;
       End;

@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer
              , RetailId Integer
              , RetailName TVarChar
              , Comment TVarChar
+             , Distributed TFloat
+             , DistributedSumma TFloat
               )
 
 AS
@@ -30,7 +32,41 @@ BEGIN
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
+                       ),
+             tmpMovement AS (SELECT Movement.Id
+                                  , Movement.InvNumber
+                                  , Movement.OperDate
+                                  , Movement.StatusId
+                             FROM Movement 
+                             WHERE Movement.DescId = zc_Movement_OrderInternalPromo()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate),
+             tmpMIMaster AS (SELECT MovementItem.Id
+                                  , MovementItem.MovementID
+                                  , MIFloat_Price.ValueData         ::TFloat AS Price
+                             FROM tmpMovement AS Movement 
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = FALSE 
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            ),
+             tmpMIChild AS (SELECT MovementItem.ParentId
+                                 , MovementItem.Amount              AS Amount
+                            FROM tmpMovement AS Movement 
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId = zc_MI_Child()
+                                                        AND MovementItem.isErased = FALSE 
+                           ),
+             tmpMISum AS (SELECT MIMaster.MovementID
+                               , Sum(MIChild.Amount)::TFloat                             AS Distributed
+                               , Sum(MIMaster.Price * MIChild.Amount)::TFloat            AS DistributedSumma
+                          FROM tmpMIMaster AS MIMaster
+                           
+                               INNER JOIN tmpMIChild AS MIChild
+                                                     ON MIChild.ParentId = MIMaster.Id
+                          GROUP BY MIMaster.MovementID
+                           )
 
      SELECT Movement.Id
           , Movement.InvNumber
@@ -46,7 +82,9 @@ BEGIN
           , MovementLinkObject_Retail.ObjectId                             AS RetailId
           , Object_Retail.ValueData                                        AS RetailName
           , MovementString_Comment.ValueData                               AS Comment
-     FROM Movement 
+          , MISum.Distributed                                              AS Distributed
+          , MISum.DistributedSumma                                         AS DistributedSumma
+     FROM tmpMovement AS Movement 
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -78,9 +116,9 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                
+        LEFT JOIN tmpMISum AS MISum ON MISum.MovementID = Movement.Id
 
-     WHERE Movement.DescId = zc_Movement_OrderInternalPromo()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
      ORDER BY InvNumber;
 
 END;
@@ -96,3 +134,5 @@ $BODY$
 */
 -- select * from gpSelect_Movement_OrderInternalPromo(inStartDate := ('13.03.2019')::TDateTime ,inEndDate := ('13.03.2021')::TDateTime , inIsErased:= False, inSession := '3');
 
+
+select * from gpSelect_Movement_OrderInternalPromo(inStartDate := ('28.06.2021')::TDateTime , inEndDate := ('30.11.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3')

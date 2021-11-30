@@ -78,6 +78,16 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
               Format = ',0;-,0; ;'
               Kind = skSum
               Column = TotalAmount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Distributed
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = DistributedSumma
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -166,6 +176,25 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 260
+          end
+          object Distributed: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1087#1088#1077#1076'.'
+            DataBinding.FieldName = 'Distributed'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
+          object DistributedSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088'. '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'DistributedSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 115
           end
         end
       end
@@ -272,7 +301,7 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -310,7 +339,7 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -453,7 +482,7 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end

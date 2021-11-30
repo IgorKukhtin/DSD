@@ -37,7 +37,8 @@ RETURNS TABLE (
     isGoodsPairSun Boolean, 
     GoodsPairSunAmount TFloat,
     GoodsDiscountProcentSite TFloat,
-    DeferredTR TFloat
+    DeferredTR TFloat,
+    MorionCode Integer
 )
 AS
 $BODY$
@@ -630,7 +631,8 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                  THEN NULL
                  ELSE Object_Goods_PairSun.GoodsPairSunAmount END::TFloat     AS GoodsPairSunAmount,
             tmpGoodsDiscount.DiscountProcent                                  AS GoodsDiscountProcentSite,
-            _DIFF.DeferredTR
+            _DIFF.DeferredTR,
+            Object_Goods_Main.MorionCode
         FROM _DIFF
 
             -- Тип срок/не срок
