@@ -56,7 +56,7 @@ BEGIN
                   
       IF NOT EXISTS (SELECT * FROM AccommodationLincGoods WHERE UnitId = inUnitId
                                                             AND GoodsId = inGoodsId
-                                                            AND AccommodationId <> vbAccommodationID
+                                                            AND AccommodationId = vbAccommodationID
                                                             AND isErased = False)
       THEN
      
@@ -72,6 +72,13 @@ BEGIN
           INSERT INTO AccommodationLincGoods (AccommodationId, UnitId, GoodsId, UserUpdateId, DateUpdate, isErased)
           VALUES (vbAccommodationID, inUnitId, inGoodsId, vbUserId, CURRENT_TIMESTAMP, False);
         END IF;
+
+        -- Сохранили протокол
+        PERFORM gpInsert_AccommodationLincGoodsLog(inUnitID           := inUnitId
+                                                 , inGoodsId          := inGoodsId
+                                                 , inAccommodationId  := vbAccommodationID
+                                                 , inisErased         := False
+                                                 , inSession          := inSession);    
       END IF;
        
     ELSE
@@ -83,6 +90,17 @@ BEGIN
         UPDATE AccommodationLincGoods SET UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = True
         WHERE UnitId = inUnitId
           AND GoodsId = inGoodsId;
+
+        -- Сохранили протокол
+        PERFORM gpInsert_AccommodationLincGoodsLog(inUnitID           := AccommodationLincGoods.UnitId
+                                                 , inGoodsId          := AccommodationLincGoods.GoodsId
+                                                 , inAccommodationId  := AccommodationLincGoods.AccommodationID
+                                                 , inisErased         := True
+                                                 , inSession          := inSession)
+        FROM AccommodationLincGoods
+        WHERE AccommodationLincGoods.UnitId = inUnitId
+          AND AccommodationLincGoods.GoodsId = inGoodsId;    
+
       END IF;    
     END IF;
 

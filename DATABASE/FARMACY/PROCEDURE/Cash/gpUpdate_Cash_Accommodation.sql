@@ -60,6 +60,13 @@ BEGIN
       ioAccommodationName
     FROM Object
     WHERE ID = ioAccommodationID;
+    
+    -- Сохранили протокол
+    PERFORM gpInsert_AccommodationLincGoodsLog(inUnitID           := vbUnitId
+                                             , inGoodsId          := inGoodsId
+                                             , inAccommodationId  := ioAccommodationID
+                                             , inisErased         := False
+                                             , inSession          := inSession);    
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

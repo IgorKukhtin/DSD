@@ -26,6 +26,16 @@ BEGIN
     THEN
       UPDATE AccommodationLincGoods SET UserUpdateId = vbUserId, DateUpdate = CURRENT_TIMESTAMP, isErased = True
       WHERE UnitId = vbUnitId;
+
+      -- Сохранили протокол
+      PERFORM gpInsert_AccommodationLincGoodsLog(inUnitID           := AccommodationLincGoods.UnitId
+                                               , inGoodsId          := AccommodationLincGoods.GoodsId
+                                               , inAccommodationId  := AccommodationLincGoods.AccommodationID
+                                               , inisErased         := AccommodationLincGoods.isErased
+                                               , inSession          := inSession)
+      FROM AccommodationLincGoods
+      WHERE AccommodationLincGoods.UnitId = vbUnitId;    
+
     END IF;
           
 END;$BODY$

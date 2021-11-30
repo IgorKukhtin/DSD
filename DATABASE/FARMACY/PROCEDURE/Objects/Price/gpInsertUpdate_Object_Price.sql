@@ -62,6 +62,7 @@ $BODY$
         vbPercentMarkup TFloat;
         vbDate         TDateTime;
     DECLARE vbIsMCSAuto_old  Boolean;
+    DECLARE vbPriceMin TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -298,12 +299,41 @@ BEGIN
     -- сохранили св-во < Цена >
     IF (inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))
     THEN
+    
+        if inPrice < COALESCE(vbPrice,0)
+        THEN
+          SELECT tmp.PriceSaleMin
+          INTO vbPriceMin
+          FROM gpGet_GoodsPriceLastIncome(inUnitId := inUnitId , inGoodsId := inGoodsId ,  inSession := inSession) as tmp;
+          
+          IF COALESCE (vbPriceMin, 0) = 0
+          THEN
+            RAISE EXCEPTION 'Ошибка. Не найдена цена последнего прихода.';          
+          END IF;
+
+          IF inPrice < COALESCE (vbPriceMin, 0)
+          THEN
+            RAISE EXCEPTION '%', 'ВНИМАНИЕ!!!!!!'||Chr(13)||Chr(13)||
+                                 'Если вас просит точка удешевить препарат, то разрешено делать'||Chr(13)||
+                                 'для позиций из списка Маркетинговый контракт - 3%  от последней приходной цены на эту точку'||Chr(13)||
+                                 'для позиций , которых нет в списках по маркетинговым контрактам  - 4,5% от последней приходной цены на эту точку'||Chr(13)||Chr(13)||
+                                 'НЕ МЕНЕЕ '||zfConvert_FloatToString(vbPriceMin)||' грн. !!!!!!!!!!!!';          
+          END IF;
+
+        END IF;
+        
         PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_Value(), ioId, inPrice);
         -- сохранили св-во < Дата изменения >
         outDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_DateChange(), ioId, outDateChange);
     END IF;
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', inSession, inPrice, vbPrice, vbPriceMin;
+    END IF;
+    
     -- сохранили св-во < Неснижаемый товарный запас >
     IF COALESCE (inisMCSAuto, FALSE) = FALSE
     THEN
@@ -427,6 +457,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 30.11.21                                                                      * Проверка цены прихода
  21.01.20                                                                      * Кол-во дней для периода не более 7 для кассира
  21.12.19                                                                      * НТЗ для СУН
  30.11.18         *

@@ -1,4 +1,5 @@
 -- DROP TABLE AccommodationLincGoods;
+-- DROP TABLE AccommodationLincGoodsLog;
 
 -------------------------------------------------------------------------------
 CREATE TABLE AccommodationLincGoods
@@ -22,6 +23,30 @@ CREATE INDEX idx_AccommodationLincGoods_UnitId_GoodsId_Id ON public.Accommodatio
   
 -------------------------------------------------------------------------------
 
+CREATE TABLE AccommodationLincGoodsLog
+(
+  Id                Serial,               -- ID
+
+  OperDate          TDateTime,            -- Дата корректировки
+  UserId            Integer,              -- Пользователь (корректировка)
+  
+  UnitId            Integer     NOT NULL, -- Код подразделения
+  GoodsId           Integer     NOT NULL, -- Код медикамента
+  AccommodationId   Integer     NOT NULL, -- Размещение товара
+
+  isErased          Boolean     Not Null, -- Признак удален
+
+  CONSTRAINT PK_AccommodationLincGoodsLog PRIMARY KEY(Id)
+);
+
+ALTER TABLE AccommodationLincGoodsLog
+  OWNER TO postgres;
+
+CREATE INDEX idx_AccommodationLincGoodsLog_UnitId_GoodsId_DateUpdate ON public.AccommodationLincGoodsLog
+  USING btree (UnitId, GoodsId, OperDate);
+  
+-------------------------------------------------------------------------------
+
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
@@ -30,4 +55,3 @@ CREATE INDEX idx_AccommodationLincGoods_UnitId_GoodsId_Id ON public.Accommodatio
                  Шаблий О.В.
 22.08.2018         *
 */
-
