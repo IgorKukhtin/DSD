@@ -4612,6 +4612,14 @@
 				<Form>PositionMember_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_InventoryDetailDialog.pas">
+				<Form>Report_GoodsMI_InventoryDetailDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_InventoryDetail.pas">
+				<Form>Report_GoodsMI_InventoryDetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

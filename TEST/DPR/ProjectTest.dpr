@@ -1332,7 +1332,9 @@ uses
   PersonalGroupJournal in '..\..\Forms\Document\PersonalGroupJournal.pas' {PersonalGroupJournalForm: TParentForm},
   PersonalGroupMovement in '..\..\Forms\Document\PersonalGroupMovement.pas' {PersonalGroupMovementForm: TParentForm},
   PersonalUnit_Object in '..\..\Forms\Guides\PersonalUnit_Object.pas' {PersonalUnit_ObjectForm: TParentForm},
-  PositionMember_Object in '..\..\Forms\Guides\PositionMember_Object.pas' {PositionMember_ObjectForm: TParentForm};
+  PositionMember_Object in '..\..\Forms\Guides\PositionMember_Object.pas' {PositionMember_ObjectForm: TParentForm},
+  Report_GoodsMI_InventoryDetailDialog in '..\..\Forms\Report\Report_GoodsMI_InventoryDetailDialog.pas' {Report_GoodsMI_InventoryDetailDialogForm: TParentForm},
+  Report_GoodsMI_InventoryDetail in '..\..\Forms\Report\Report_GoodsMI_InventoryDetail.pas' {Report_GoodsMI_InventoryDetailForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
