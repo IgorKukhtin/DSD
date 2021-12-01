@@ -15,17 +15,17 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
     Height = 307
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 881
+    ExplicitWidth = 819
     ExplicitHeight = 307
     ClientRectBottom = 307
     ClientRectRight = 819
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 881
+      ExplicitWidth = 819
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 819
         Height = 307
-        ExplicitWidth = 881
+        ExplicitWidth = 819
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -487,7 +487,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
   inherited Panel: TPanel
     Width = 819
     Height = 57
-    ExplicitWidth = 881
+    ExplicitWidth = 819
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 121
@@ -546,8 +546,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
     object cbPartion: TcxCheckBox
       Left = 582
       Top = 6
-      Hint = #1055#1086' '#1086#1089#1085#1086#1074#1072#1085#1080#1103#1084
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Action = actRefreshPartion
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
@@ -596,6 +595,19 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshPartion: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>

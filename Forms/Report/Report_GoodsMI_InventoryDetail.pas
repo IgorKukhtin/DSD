@@ -70,6 +70,7 @@ type
     bbReport_Goods: TdxBarButton;
     actPrintArticleLossPrice: TdsdPrintAction;
     bbPrintArticleLossPrice: TdxBarButton;
+    actRefreshPartion: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
