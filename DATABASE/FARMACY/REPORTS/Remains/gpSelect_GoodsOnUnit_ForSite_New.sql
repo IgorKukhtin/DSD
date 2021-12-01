@@ -725,6 +725,9 @@ BEGIN
                                                                       WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                                                         AND Object_BarCode.isErased = False
                                                                         AND Object_Object.isErased = False)
+                                AND Price_Goods.ChildObjectId NOT IN (SELECT Promo.GoodsId
+                                                                      FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') as Promo
+                                                                      )
                               )
                               
           , MovementPromoBonus AS (SELECT Movement.id FROM Movement
@@ -821,8 +824,7 @@ BEGIN
                            WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            GROUP BY MovementItemMaster.ObjectId
-                                  , MovementLinkObject_Unit.ObjectId)
-                      
+                                  , MovementLinkObject_Unit.ObjectId)                      
                            
 
         SELECT Object_Goods.Id                                                     AS Id
@@ -1038,7 +1040,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '5925154, 14415983' /* 6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
+                                                                                             '16202529' /* 6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

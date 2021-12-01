@@ -1052,7 +1052,10 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesDialogForm');
@@ -1062,7 +1065,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InsuranceCompaniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InsuranceCompaniesForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_RelatedCodesSUNForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_RelatedCodesSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_RelatedCodesSUNForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RelatedCodesSUNForm'));
@@ -3169,8 +3172,11 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TTelegramProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataChoiceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataChoiceDialogForm');
+
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramProtocolForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TTelegramProtocolForm');
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStringDialogForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TStringDialogForm');

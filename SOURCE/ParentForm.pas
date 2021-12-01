@@ -703,6 +703,7 @@ initialization
   RegisterClass (TcxButtonEdit);
   RegisterClass (TcxCheckBox);
   RegisterClass (TcxCurrencyEdit);
+  RegisterClass (TcxDBCurrencyEdit);
   RegisterClass (TcxDateEdit);
   RegisterClass (TcxDBButtonEdit);
   RegisterClass (TcxDBEditorRow);

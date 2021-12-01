@@ -4832,6 +4832,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_TestingAttemptsUser: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1057#1088#1077#1076#1085#1080#1077' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1080' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1087#1086#1087#1099#1090#1086#1082' '#1089#1088#1077#1076#1080' '#1089#1076#1072#1074#1096#1080#1093' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1077
+      Hint = #1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
+      FormName = 'TReport_TestingAttemptsUserForm'
+      FormNameParam.Value = 'TReport_TestingAttemptsUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5178,6 +5190,9 @@
       end
       object N223: TMenuItem
         Action = actHelsiUser
+      end
+      object N330: TMenuItem
+        Action = actReport_TestingAttemptsUser
       end
       object N80: TMenuItem
         Caption = '-'

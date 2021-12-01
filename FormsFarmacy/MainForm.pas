@@ -896,6 +896,8 @@ type
     N328: TMenuItem;
     actSurchargeWages: TdsdOpenForm;
     N329: TMenuItem;
+    actReport_TestingAttemptsUser: TdsdOpenForm;
+    N330: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

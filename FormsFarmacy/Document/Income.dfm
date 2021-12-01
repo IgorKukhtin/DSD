@@ -1833,17 +1833,23 @@
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actExecuteDialogExpirationDate'
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inOperDate'
+          Name = 'OperDate'
           Value = Null
           Component = FormParams
           ComponentItem = 'ExpirationDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True

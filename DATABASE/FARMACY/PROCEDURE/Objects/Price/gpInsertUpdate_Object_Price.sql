@@ -329,11 +329,11 @@ BEGIN
     END IF;
 
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-    IF inSession = zfCalc_UserAdmin()
+/*    IF inSession = zfCalc_UserAdmin()
     THEN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', inSession, inPrice, vbPrice, vbPriceMin;
     END IF;
-    
+*/    
     -- сохранили св-во < Неснижаемый товарный запас >
     IF COALESCE (inisMCSAuto, FALSE) = FALSE
     THEN

@@ -56,7 +56,7 @@ BEGIN
          , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
          , Round(CASE WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData, False) THEN MIFloat_Price.ValueData
                       ELSE MIFloat_Price.ValueData * (1 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7)/100)
-                      END * CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN 1.03 ELSE 1.045 END, 2) ::TFloat  AS PriceSaleMin
+                      END * CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN 1.03 ELSE 1.045 END, 1) ::TFloat  AS PriceSaleMin
          
          , MovementItem.IsErased
 
