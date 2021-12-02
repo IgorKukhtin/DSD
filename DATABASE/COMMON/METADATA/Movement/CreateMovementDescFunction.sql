@@ -516,10 +516,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_PersonalGroup() RETURNS Integer AS $BODY$
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalGroup', 'Список бригады' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalGroup');
 
+CREATE OR REPLACE FUNCTION zc_Movement_Pretension() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Pretension'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_Pretension', 'Претензия' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Pretension');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 01.12.21                                                                                     * zc_Movement_Pretension
  22.11.21         * zc_Movement_PersonalGroup
  20.10.21         * zc_Movement_PromoStat
                     zc_Movement_PromoPlan

@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Samples3 TFloat
              , TelegramBotToken TVarChar
              , PercentIC TFloat
+             , PercentUntilNextSUN TFloat
              ) AS
 $BODY$
 BEGIN
@@ -75,6 +76,7 @@ BEGIN
         , ObjectFloat_CashSettings_Samples3.ValueData                              AS Samples3
         , ObjectString_CashSettings_TelegramBotToken.ValueData                     AS TelegramBotToken
         , ObjectFloat_CashSettings_PercentIC.ValueData                             AS PercentIC
+        , ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData                   AS PercentUntilNextSUN
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -167,6 +169,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentIC
                               ON ObjectFloat_CashSettings_PercentIC.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_PercentIC.DescId = zc_ObjectFloat_CashSettings_PercentIC()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentUntilNextSUN
+                              ON ObjectFloat_CashSettings_PercentUntilNextSUN.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_PercentUntilNextSUN.DescId = zc_ObjectFloat_CashSettings_PercentUntilNextSUN()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

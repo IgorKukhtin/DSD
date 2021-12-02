@@ -14,31 +14,38 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbPrice TFloat;
+   DECLARE vbChangePercent TFloat;
    DECLARE vbUnitId Integer;
    DECLARE vbId Integer;
+   DECLARE vbSPKindId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
-    THEN
-      RAISE EXCEPTION 'Изменение <Количества> вам запрещено.';
-    END IF;
-
     SELECT 
       StatusId,
-      MovementLinkObject_Unit.ObjectId 
+      MovementLinkObject_Unit.ObjectId,
+      COALESCE(MovementLinkObject_SPKind.ObjectId, 0) 
     INTO
       vbStatusId,
-      vbUnitId
+      vbUnitId,
+      vbSPKindId
     FROM Movement 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                      ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
     WHERE Id = inMovementId;
+
+    IF vbUserId NOT IN (375661, 4183126, 8001630, 9560329) AND 
+      (vbSPKindId <> zc_Enum_SPKind_1303() OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 11041603))
+    THEN
+      RAISE EXCEPTION 'Добавлять товар вам запрещено.';
+    END IF;
             
     IF COALESCE(inMovementId,0) = 0
     THEN
@@ -47,7 +54,7 @@ BEGIN
 
     IF vbStatusId <> zc_Enum_Status_UnComplete() 
     THEN
-        RAISE EXCEPTION 'Ошибка.Изменение подразделения в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
       -- Получили цену      
@@ -79,12 +86,53 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Не найдена отпускная цена товара.';
     END IF;
+    
+    -- Получение скидки для 1303
+    vbChangePercent := 0;
+    IF vbSPKindId = zc_Enum_SPKind_1303()
+    THEN
+      if EXISTS (SELECT *
+                 FROM MovementItem
+                 
+                      INNER JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                   ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                                 
+                 WHERE MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.MovementId = inMovementId
+                 )
+      THEN
+          
+        SELECT COALESCE (MIN(MIFloat_ChangePercent.ValueData), 0)
+        INTO vbChangePercent
+        FROM MovementItem
+                 
+             INNER JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                                 
+        WHERE MovementItem.DescId     = zc_MI_Master()
+          AND MovementItem.MovementId = inMovementId;      
+          
+      END IF;       
+    END IF;
 
--- сохранили <Элемент документа>
+    -- сохранили <Элемент документа>
     vbId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-    -- сохранили свойство <Цена>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbId, vbPrice);
+    IF vbChangePercent <> 0
+    THEN
+
+      -- сохранили свойство <% Скидки>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), vbId, vbChangePercent);
+    
+      -- сохранили свойство <Цена>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbId, ROUND(vbPrice * (100 - vbChangePercent) / 100, 2));
+
+    ELSE
+      -- сохранили свойство <Цена>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbId, vbPrice);
+    END IF;
 
     -- сохранили свойство <Цена без скидки>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), vbId, vbPrice);

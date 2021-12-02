@@ -76,6 +76,11 @@ BEGIN
                                        ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                       AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
                                       AND MovementString_InvNumberOrder.ValueData <> ''
+             INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                          AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_Complete()
+
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                           ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                          AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
@@ -231,6 +236,7 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                         
              LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient

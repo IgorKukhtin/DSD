@@ -4046,7 +4046,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOutPharmacy.pas">
 				<Form>ReturnOutPharmacyForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SummaInsuranceCompanies.pas">
@@ -4073,6 +4072,7 @@
 				<Form>Report_TestingAttemptsUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CreatePretension.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

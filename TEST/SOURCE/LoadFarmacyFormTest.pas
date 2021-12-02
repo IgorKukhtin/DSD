@@ -120,6 +120,7 @@ type
     procedure LoadPlanIventoryFormTest;
     procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPretensionFormTest;
     procedure LoadPriceFormTest;
     procedure LoadPriceSiteFormTest;
     procedure LoadPriceChangeFormTest;
@@ -1237,7 +1238,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommentSendSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CommentSendSUNForm');
-
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PositionsUKTVEDonSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PositionsUKTVEDonSUNForm');
@@ -2924,6 +2924,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TChangeIncomePaymentKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentKindForm');
+end;
+
+procedure TLoadFormTest.LoadPretensionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreatePretensionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreatePretensionForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

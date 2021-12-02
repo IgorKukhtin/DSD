@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar, TypeSUN TVarChar
              , Price TFloat, Amount TFloat, Summa TFloat, Formed TFloat, PercentZeroing TFloat
              , PercentZeroingRange TFloat
              , Sale TFloat
+             , Color_UntilNextSUN Integer
               )
 
 AS
@@ -26,7 +27,15 @@ BEGIN
 
   -- Результат
   RETURN QUERY
-  WITH tmpMovement AS (SELECT Movement.ID
+  WITH tmpCashSettings AS (SELECT COALESCE(ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData, 0)::TFloat   AS PercentUntilNextSUN
+                           FROM Object AS Object_CashSettings
+                                LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentUntilNextSUN
+                                                      ON ObjectFloat_CashSettings_PercentUntilNextSUN.ObjectId = Object_CashSettings.Id 
+                                                     AND ObjectFloat_CashSettings_PercentUntilNextSUN.DescId = zc_ObjectFloat_CashSettings_PercentUntilNextSUN()
+                           WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                           LIMIT 1)          
+         -- список подразделений
+     , tmpMovement AS (SELECT Movement.ID
                             , Movement.InvNumber
                             , Movement.StatusId
                             , Movement.OperDate
@@ -80,7 +89,7 @@ BEGIN
                           LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
                                                     ON MovementBoolean_SUN_v4.MovementId = Movement.Id
                                                    AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
-                     WHERE COALESCE (MILinkObject_CommentSend.ObjectId , 0) <> 0
+                     
                      )
      , tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
@@ -146,6 +155,17 @@ BEGIN
                         
                    GROUP BY tmpResultGroup.UnitId
                           , tmpResultGroup.GoodsID)
+     , tmpUntilNextSUN AS (SELECT tmpResult.UnitId
+                                 , (Sum(CASE WHEN tmpResult.CommentSendID = 14883299 
+                                            THEN ROUND(tmpResult.Price * (COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount ) -
+                                                       tmpResult.Amount + COALESCE(tmpSale.Sale, 0)), 2) ELSE 0 END) /
+                                   Sum(ROUND(tmpResult.Price * COALESCE(tmpProtocol.AmountAuto, tmpResult.Amount) , 2)) * 100)::TFloat                                       AS PercentUntilNextSUN
+                                                          
+                            FROM tmpResult 
+                                 LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpResult.MovementItemId
+                                 LEFT JOIN tmpSale ON tmpSale.UnitId = tmpResult.UnitId
+                                                  AND tmpSale.GoodsID = tmpResult.GoodsID
+                            GROUP BY tmpResult.UnitId)
 
   SELECT tmpResult.Id
        , Object_From.ObjectCode                                                           AS UnitCode
@@ -167,6 +187,10 @@ BEGIN
        , CASE WHEN tmpResulAll.AmountAuto > 0 
               THEN ROUND(tmpResulAll.AmountZeroing / tmpResulAll.AmountAuto * 100, 2) ELSE 0 END::TFloat                   AS PercentZeroingRange
        , tmpSale.Sale
+       , CASE WHEN COALESCE(tmpUntilNextSUN.PercentUntilNextSUN, 0) > 0 AND COALESCE(tmpCashSettings.PercentUntilNextSUN, 0) > 0 AND 
+                   tmpUntilNextSUN.PercentUntilNextSUN >= tmpCashSettings.PercentUntilNextSUN 
+              THEN zc_Color_Yelow()
+              ELSE zc_Color_White() END Color_UntilNextSUN
   FROM tmpResult
        LEFT JOIN Object AS Object_From ON Object_From.Id = tmpResult.UnitId
        LEFT JOIN Object AS Object_CommentSend ON Object_CommentSend.Id = tmpResult.CommentSendID
@@ -175,6 +199,9 @@ BEGIN
        LEFT JOIN tmpResulAll ON 1 = 1
        LEFT JOIN tmpSale ON tmpSale.UnitId = tmpResult.UnitId
                         AND tmpSale.GoodsID = tmpResult.GoodsID
+       LEFT JOIN tmpCashSettings ON 1 = 1
+       LEFT JOIN tmpUntilNextSUN ON tmpUntilNextSUN.UnitId = tmpResult.UnitId
+  WHERE COALESCE (tmpResult.CommentSendID , 0) <> 0
   ORDER BY Object_From.ValueData, tmpResult.Id;
 
 END;
@@ -192,4 +219,5 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 -- тест
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
 
-select * from gpReport_CommentSendSUN(inStartDate := ('16.11.2021')::TDateTime , inEndDate := ('21.11.2021')::TDateTime ,  inSession := '3');
+
+select * from gpReport_CommentSendSUN(inStartDate := ('29.11.2021')::TDateTime , inEndDate := ('02.12.2021')::TDateTime ,  inSession := '3');

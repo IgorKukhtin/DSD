@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 564
+  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -902,7 +902,7 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -911,7 +911,7 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Name = 'AdjustingOurDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AdjustingOurDate'
           DataType = ftDateTime
@@ -1282,14 +1282,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'AdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = edAdjustingOurDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1348,7 +1348,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1442,7 +1442,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1464,7 +1464,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'IncomeOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deIncomeOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1499,7 +1499,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'AdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = edAdjustingOurDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1551,7 +1551,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2163,7 +2163,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inOperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
@@ -2171,7 +2171,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inAdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = edAdjustingOurDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2269,7 +2269,7 @@ inherited ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end>
     Left = 480
-    Top = 96
+    Top = 88
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ReturnOut'
@@ -2286,7 +2286,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2317,14 +2317,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2348,14 +2348,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','

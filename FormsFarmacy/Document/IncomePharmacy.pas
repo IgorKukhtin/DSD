@@ -127,6 +127,8 @@ type
     actInsert_TelegramBot_Protocol: TdsdExecStoredProc;
     actSendTelegramBot: TdsdSendTelegramBotAction;
     Color_ExpirationDatePh: TcxGridDBColumn;
+    actCreatePretension: TdsdOpenForm;
+    bbCreatePretension: TdxBarButton;
   private
     { Private declarations }
   public

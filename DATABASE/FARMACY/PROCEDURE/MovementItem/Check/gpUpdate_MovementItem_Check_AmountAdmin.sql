@@ -12,24 +12,30 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbSPKindId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer AND zfCalc_UserSite() <> inSession
+    SELECT 
+      StatusId,
+      COALESCE(MovementLinkObject_SPKind.ObjectId, 0) 
+    INTO
+      vbStatusId,
+      vbSPKindId
+    FROM Movement 
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                      ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+    WHERE Id = inMovementId;
+
+    IF vbUserId NOT IN (375661, 4183126, 8001630, 9560329) AND 
+      (vbSPKindId <> zc_Enum_SPKind_1303() OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 11041603))
     THEN
       RAISE EXCEPTION 'Изменение <Количества> вам запрещено.';
     END IF;
-
-    SELECT 
-      StatusId
-    INTO
-      vbStatusId
-    FROM Movement 
-    WHERE Id = inMovementId;
             
     IF COALESCE(inMovementId,0) = 0
     THEN

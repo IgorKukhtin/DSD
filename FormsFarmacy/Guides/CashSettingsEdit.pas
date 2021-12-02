@@ -78,6 +78,8 @@ type
     cxLabel22: TcxLabel;
     cxLabel23: TcxLabel;
     cePercentIC: TcxCurrencyEdit;
+    cePercentUntilNextSUN: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
   private
     { Private declarations }
   public

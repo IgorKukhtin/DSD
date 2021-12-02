@@ -394,6 +394,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 52
     Width = 121
   end
+  object cePercentUntilNextSUN: TcxCurrencyEdit
+    Left = 404
+    Top = 447
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 53
+    Width = 121
+  end
+  object cxLabel24: TcxLabel
+    Left = 20
+    Top = 448
+    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1076#1083#1103' '#1087#1086#1076#1089#1074#1077#1090#1082#1080' '#1082#1086#1084#1077#1085#1090#1072' "'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'"'
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -648,6 +661,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentUntilNextSUN'
+        Value = Null
+        Component = cePercentUntilNextSUN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -852,6 +873,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'PercentIC'
         Value = Null
         Component = cePercentIC
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentUntilNextSUN'
+        Value = Null
+        Component = cePercentUntilNextSUN
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

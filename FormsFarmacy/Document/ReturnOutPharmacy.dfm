@@ -1,11 +1,8 @@
 inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
-  Caption = 'ReturnOutPharmacyForm'
-  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -29,9 +26,6 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
     end
     inherited ceStatus: TcxButtonEdit
       Enabled = False
-    end
-    inherited edPriceWithVAT: TcxCheckBox
-      ExplicitHeight = 21
     end
     inherited edNDSKind: TcxButtonEdit
       Enabled = False
@@ -76,9 +70,6 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
       Enabled = False
       Properties.ReadOnly = True
     end
-    inherited cbisDeferred: TcxCheckBox
-      ExplicitHeight = 21
-    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -98,31 +89,26 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
     inherited actMISetUnErased: TdsdUpdateErased
       ShortCut = 0
     end
-    inherited actPrintTTN: TdsdPrintAction
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-        end
-        item
-          DataSet = PrintItemsCDS
-        end>
-    end
     inherited actPrintOptima: TdsdPrintAction
       DataSets = <
         item
           DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
           DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
     end
     inherited actPrint: TdsdPrintAction
       DataSets = <
         item
           DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
           DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -520,7 +506,6 @@ inherited ReturnOutPharmacyForm: TReturnOutPharmacyForm
   inherited GuidesJuridicalActualAddress: TdsdGuides
     DisableGuidesOpen = True
     Left = 488
-    Top = 88
   end
   inherited spUpdate_isDeferred_No: TdsdStoredProc
     Params = <

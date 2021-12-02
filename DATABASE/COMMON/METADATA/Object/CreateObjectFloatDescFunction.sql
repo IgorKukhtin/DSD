@@ -2179,10 +2179,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_SurchargeWages_Summa() RETURNS Integer
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_SurchargeWages(), 'zc_ObjectFloat_SurchargeWages_Summa', 'Сумма доплаты' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_SurchargeWages_Summa');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PercentUntilNextSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PercentUntilNextSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PercentUntilNextSUN', 'Процент для подсветки комента "Продано/Продажа до след СУН"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PercentUntilNextSUN');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.12.21                                                                                      * zc_ObjectFloat_CashSettings_PercentUntilNextSUN
  25.11.21                                                                                      * zc_ObjectFloat_SurchargeWages_Summa
  25.11.21                                                                                      * zc_ObjectFloat_CashSettings_PercentIC
  18.11.21         * zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond

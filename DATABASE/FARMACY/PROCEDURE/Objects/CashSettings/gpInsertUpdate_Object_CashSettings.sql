@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -33,6 +33,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inSamples3                   TFloat    ,     -- Скидка сэмплов кат 3 (от 0 до 50 дней)
     IN inTelegramBotToken           TVarChar  ,     -- Токен телеграм бота
     IN inPercentIC                  TFloat    ,     -- Процент от продажи страховым компаниям для з/п фармацевтам
+    IN inPercentUntilNextSUN        TFloat    ,     -- Процент для подсветки комента "Продано/Продажа до след СУН"
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -121,6 +122,9 @@ BEGIN
 
       -- сохранили Процент от продажи страховым компаниям для з/п фармацевтам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PercentIC(), vbID, inPercentIC);
+
+      -- сохранили Процент для подсветки комента "Продано/Продажа до след СУН"
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PercentUntilNextSUN(), vbID, inPercentUntilNextSUN);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

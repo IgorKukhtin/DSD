@@ -344,6 +344,11 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         Options.Editing = False
         Width = 72
       end
+      object Color_UntilNextSUN: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_UntilNextSUN'
+        Visible = False
+        VisibleForCustomization = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -890,7 +895,12 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ChartList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_UntilNextSUN
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

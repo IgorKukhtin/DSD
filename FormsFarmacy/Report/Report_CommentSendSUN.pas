@@ -79,6 +79,7 @@ type
     edPercentZeroing: TcxDBTextEdit;
     cxLabel3: TcxLabel;
     Sale: TcxGridDBColumn;
+    Color_UntilNextSUN: TcxGridDBColumn;
   private
   public
   end;

@@ -1132,7 +1132,8 @@ uses
   SurchargeWages in '..\..\FormsFarmacy\Guides\SurchargeWages.pas' {SurchargeWagesForm: TParentForm},
   AccommodationLincGoodsLog in '..\..\FormsFarmacy\Cash\AccommodationLincGoodsLog.pas' {AccommodationLincGoodsLogForm: TParentForm},
   DataChoiceDialog in '..\..\FormsFarmacy\System\DataChoiceDialog.pas' {DataChoiceDialogForm: TParentForm},
-  Report_TestingAttemptsUser in '..\..\FormsFarmacy\Report\Report_TestingAttemptsUser.pas' {Report_TestingAttemptsUserForm: TParentForm};
+  Report_TestingAttemptsUser in '..\..\FormsFarmacy\Report\Report_TestingAttemptsUser.pas' {Report_TestingAttemptsUserForm: TParentForm},
+  CreatePretension in '..\..\FormsFarmacy\Document\CreatePretension.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
