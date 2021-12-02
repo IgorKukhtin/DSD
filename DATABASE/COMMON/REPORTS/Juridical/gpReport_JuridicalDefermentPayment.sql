@@ -1,4 +1,4 @@
--- Function: gpReport_JuridicalSold()
+ -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 

@@ -120,7 +120,7 @@ BEGIN
               --итого 
               SELECT ''
            || ';' || ''
-           || ';' || SUM (tmp.SummCardSecondRecalc)
+           || ';' || (SUM (tmp.SummCardSecondRecalc)) :: Integer
               FROM tmp;
               
 
