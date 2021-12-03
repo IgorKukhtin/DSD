@@ -1280,6 +1280,38 @@ type
     property EditRepository: TcxEditRepository read FEditRepository write FEditRepository;
   end;
 
+  // Формирование графика
+  TChartAddOn = class(TComponent)
+  private
+    FChartView: TcxGridDBChartView;
+
+    FSeriesDataSet: TDataSet;
+    FSeriesFieldName: String;
+    FSeriesDisplayText: String;
+
+    FBeforeOpen: TDataSetNotifyEvent;
+    FAfterOpen: TDataSetNotifyEvent;
+
+    FOnChange: TNotifyEvent;
+    procedure SetView(const Value: TcxGridDBChartView); virtual;
+    procedure OnBeforeOpen(ADataSet: TDataSet);
+    procedure OnAfterOpen(ADataSet: TDataSet);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  published
+    // ChartView графика
+    property ChartView: TcxGridDBChartView read FChartView write SetView;
+    // Дата сет c данными для формирования графика.
+    property SeriesDataSet: TDataSet read FSeriesDataSet write FSeriesDataSet;
+    // Поле в FSeriesDataSet с названиями колонок Series
+    property SeriesDisplayText: String read FSeriesDisplayText write FSeriesDisplayText;
+    // Поле в FSeriesDataSet с названиями колонок в данных для отображения
+    property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
+  end;
+
   procedure Register;
 
 implementation
@@ -1316,7 +1348,8 @@ begin
     TdsdFieldFilter,
     TdsdPropertiesСhange,
     THeaderExit,
-    TEnterMoveNext
+    TEnterMoveNext,
+    TChartAddOn
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -6943,6 +6976,102 @@ begin
      end;
      TCrossDBViewReportAddOn(Collection.Owner).View.Control.SetFocus;
    end;
+end;
+
+{ TChartAddOn }
+
+constructor TChartAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+end;
+
+destructor TChartAddOn.Destroy;
+begin
+  inherited;
+end;
+
+
+procedure TChartAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+  var I, J : Integer;
+begin
+  inherited;
+
+  if csDestroying in ComponentState then
+     exit;
+
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = ChartView then
+           ChartView := nil;
+     end;
+end;
+
+procedure TChartAddOn.SetView(const Value: TcxGridDBChartView);
+  var I : Integer;
+begin
+
+  if FChartView = Value then Exit;
+
+  FChartView := Value;
+  if csDesigning  in ComponentState then Exit;
+  if Assigned(FChartView) then
+  begin
+
+    if Assigned(TcxDBDataController(FChartView.DataController).DataSource) then
+       if Assigned(TcxDBDataController(FChartView.DataController).DataSource.DataSet) then begin
+          FBeforeOpen := TcxDBDataController(FChartView.DataController).DataSource.DataSet.BeforeOpen;
+          TcxDBDataController(FChartView.DataController).DataSource.DataSet.BeforeOpen := OnBeforeOpen;
+          FAfterOpen := TcxDBDataController(FChartView.DataController).DataSource.DataSet.AfterOpen;
+          TcxDBDataController(FChartView.DataController).DataSource.DataSet.AfterOpen := OnAfterOpen;
+     end;
+  end;
+end;
+
+procedure TChartAddOn.onBeforeOpen(ADataSet: TDataSet);
+var NewColumnIndex, I: integer;
+    Column: TcxGridColumn;
+    TemplateColorRule, ColorRule: TColorRule;
+begin
+  if Assigned(FBeforeOpen) then FBeforeOpen(ADataSet);
+  if not Assigned(SeriesDataSet) then Exit;
+
+  ChartView.BeginUpdate;
+  try
+    FChartView.ClearSeries;
+  finally
+    ChartView.EndUpdate;
+  end;
+end;
+
+procedure TChartAddOn.OnAfterOpen(ADataSet: TDataSet);
+  var I, J : Integer;
+begin
+  if Assigned(FAfterOpen) then
+     FAfterOpen(ADataSet);
+  if not Assigned(SeriesDataSet) then Exit;
+
+  ChartView.BeginUpdate;
+  try
+    FChartView.ClearSeries;
+    if not SeriesDataSet.Active then Exit;
+
+    SeriesDataSet.First;
+    while not SeriesDataSet.Eof do
+    begin
+
+      with FChartView.CreateSeries do
+      begin
+        DisplayText := SeriesDataSet.FieldByName(FSeriesDisplayText).AsString;
+        DataBinding.FieldName := SeriesDataSet.FieldByName(FSeriesFieldName).AsString;;
+      end;
+
+      SeriesDataSet.Next;
+    end;
+
+  finally
+    ChartView.EndUpdate;
+  end;
 end;
 
 end.

@@ -684,7 +684,7 @@ BEGIN
              , COALESCE (tmpSalesMonth.AmountSalesMonth, 0)  AS AmountSalesMonth
              , tmpRemains.MinExpirationDate
              , COALESCE (tmpObject_Price.isCloseMCS, FALSE)  AS isCloseMCS
-             , CASE WHEN Object_Unit.ValueData ILIKE 'АП%' THEN _tmpGoods_SUN_Supplement.SupplementMinPP ELSE _tmpGoods_SUN_Supplement.SupplementMin END
+             , CASE WHEN Object_Unit.ValueData LIKE 'АП %' THEN _tmpGoods_SUN_Supplement.SupplementMinPP ELSE _tmpGoods_SUN_Supplement.SupplementMin END
              
         FROM tmpPrice AS tmpObject_Price
 
@@ -868,6 +868,10 @@ BEGIN
        AND _tmpRemains_all_Supplement.Need < (COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains);
        
 
+ raise notice 'Value 05: % %', 
+    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) < 0), 
+    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 50);
+             
      -- 2.2. Подправили места где передача после округление больше чем остаток
      UPDATE _tmpRemains_all_Supplement SET Need = - floor(_tmpRemains_all_Supplement.AmountRemains)
      WHERE (_tmpRemains_all_Supplement.AmountRemains + _tmpRemains_all_Supplement.Need) < 0;
@@ -987,12 +991,12 @@ BEGIN
              SELECT _tmpRemains_all_Supplement.UnitId
                   , FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                           CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                          CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                                THEN - _tmpRemains_all_Supplement.AmountRemains
                                ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                END  - _tmpRemains_all_Supplement.AmountUse
                           ELSE
-                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                          FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)<= 0
                                        THEN - _tmpRemains_all_Supplement.AmountRemains
                                        ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                        END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
@@ -1011,12 +1015,12 @@ BEGIN
 
              WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                               CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                              CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                              CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                                    THEN - _tmpRemains_all_Supplement.AmountRemains
                                    ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                    END  - _tmpRemains_all_Supplement.AmountUse
                               ELSE
-                              FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0
+                              FLOOR ((CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                                            THEN - _tmpRemains_all_Supplement.AmountRemains
                                            ELSE (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)::Integer
                                            END  - _tmpRemains_all_Supplement.AmountUse) / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
@@ -1030,6 +1034,7 @@ BEGIN
                  OR COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) <> _tmpRemains_all_Supplement.UnitId 
                  AND COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> _tmpRemains_all_Supplement.UnitId)
                AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+               AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
              ORDER BY (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                             THEN - _tmpRemains_all_Supplement.AmountRemains
                             ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
@@ -1166,4 +1171,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

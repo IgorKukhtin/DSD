@@ -73,9 +73,8 @@ uses
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage,
-  cxEditRepositoryItems, dsdPivotGrid, dsdExportToXLSAction, dsdTranslator,
-  dsdExportToXMLAction {DataModul}
-  , StrUtils;
+  cxEditRepositoryItems, cxStyles, dsdPivotGrid, dsdExportToXLSAction,
+  dsdTranslator, dsdExportToXMLAction, StrUtils;
 
 {$R *.dfm}
 
@@ -731,6 +730,7 @@ initialization
   RegisterClass (TcxDateNavigator);
   RegisterClass (TcxMaskEdit);
   RegisterClass (TcxEditRepository);
+  RegisterClass (TcxStyleRepository);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
@@ -822,6 +822,7 @@ initialization
   RegisterClass (TdsdFieldFilter);
   RegisterClass (TdsdTranslator);
   RegisterClass (TEnterMoveNext);
+  RegisterClass (TChartAddOn);
 
 
 // ƒÀﬂ “≈—“¿

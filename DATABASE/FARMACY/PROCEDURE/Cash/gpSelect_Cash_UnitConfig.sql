@@ -309,7 +309,9 @@ BEGIN
        , 'https://preprod.ciet-holding.com/login'::TVarChar                             AS LikiDneproeLocation
        , '98bfd760a1b65cd45641ca2e1d59247d2f846f5a6e75a5d50dc44a213b7f8242'::TVarChar   AS LikiDneproeHealthToken
 
-       , tmpCashSettings.isRemovingPrograms                                        AS isRemovingPrograms
+       , tmpCashSettings.isRemovingPrograms AND
+         CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
+         WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) THEN FALSE ELSE TRUE END AS isRemovingPrograms
 
    FROM Object AS Object_Unit
 

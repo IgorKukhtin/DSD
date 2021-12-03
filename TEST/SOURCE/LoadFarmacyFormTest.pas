@@ -1140,12 +1140,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnderreportedDEForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnderreportedDEForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KilledCodeRecoveryDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KilledCodeRecoveryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KilledCodeRecoveryForm');
- {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PromoBonusDiscoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PromoBonusDiscoDialogForm');
@@ -1791,10 +1791,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
     TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
 

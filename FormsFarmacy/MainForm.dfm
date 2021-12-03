@@ -2975,8 +2975,8 @@
     object actReport_Liquidity: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1083#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1083#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1051#1080#1082#1074#1080#1076#1085#1086#1089#1090#1080
       FormName = 'TReport_LiquidityForm'
       FormNameParam.Value = 'TReport_LiquidityForm'
       FormNameParam.DataType = ftString
@@ -4844,6 +4844,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_FinancialMonitoring: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1084#1086#1085#1080#1090#1086#1088#1080#1085#1075
+      FormName = 'TReport_FinancialMonitoringForm'
+      FormNameParam.Value = 'TReport_FinancialMonitoringForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5678,6 +5689,9 @@
       end
       object N236: TMenuItem
         Action = actReport_ImplementationPeriod
+      end
+      object N331: TMenuItem
+        Action = actReport_FinancialMonitoring
       end
     end
     object N200: TMenuItem [6]

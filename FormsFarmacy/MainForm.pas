@@ -898,6 +898,8 @@ type
     N329: TMenuItem;
     actReport_TestingAttemptsUser: TdsdOpenForm;
     N330: TMenuItem;
+    actReport_FinancialMonitoring: TdsdOpenForm;
+    N331: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

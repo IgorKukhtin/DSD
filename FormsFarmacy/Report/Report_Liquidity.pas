@@ -15,7 +15,7 @@ uses
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridDBBandedTableView,
-  cxGridBandedTableView;
+  cxGridBandedTableView, cxGridChartView, cxGridDBChartView;
 
 type
   TReport_LiquidityForm = class(TAncestorReportForm)
@@ -57,6 +57,41 @@ type
     UpdateisOverdraft: TdsdUpdateDataSet;
     actOverdraft: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    spSelectChart: TdsdStoredProc;
+    ChartJuridicalDS: TDataSource;
+    ChartJuridicalCDS: TClientDataSet;
+    grChart: TcxGrid;
+    cxGridDBChartView1: TcxGridDBChartView;
+    grChartLevel1: TcxGridLevel;
+    dqOperDate: TcxGridDBChartDataGroup;
+    ChartSumDS: TDataSource;
+    ChartSumCDS: TClientDataSet;
+    cxGrid8: TcxGrid;
+    cxGridDBChartView4: TcxGridDBChartView;
+    cxGridDBChartDataGroup3: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries3: TcxGridDBChartSeries;
+    cxGridLevel4: TcxGridLevel;
+    HeaderChartCDS: TClientDataSet;
+    cxGridDBChartView4Series1: TcxGridDBChartSeries;
+    cxGridDBChartView4Series2: TcxGridDBChartSeries;
+    ChartAddOn1: TChartAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBChartView2: TcxGridDBChartView;
+    cxGridDBChartDataGroup1: TcxGridDBChartDataGroup;
+    cxGridLevel1: TcxGridLevel;
+    cxGrid2: TcxGrid;
+    cxGridDBChartView3: TcxGridDBChartView;
+    cxGridDBChartDataGroup2: TcxGridDBChartDataGroup;
+    cxGridLevel2: TcxGridLevel;
+    ChartAddOn2: TChartAddOn;
+    ChartAddOn3: TChartAddOn;
+    cxStyleRepository1: TcxStyleRepository;
+    cxStyle1: TcxStyle;
+    cxStyle2: TcxStyle;
+    cxStyle3: TcxStyle;
   private
     { Private declarations }
   public
