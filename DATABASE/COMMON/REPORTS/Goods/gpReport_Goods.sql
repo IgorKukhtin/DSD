@@ -44,6 +44,9 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , EndSale_promo    TDateTime
               , DayOfWeekName_doc     TVarChar   --день недели даты документа
               , DayOfWeekName_partner TVarChar   --день недели даты покупателя
+
+              , OperDate_Protocol TDateTime
+              , UserName_Protocol TVarChar
                )
 AS
 $BODY$
@@ -62,47 +65,77 @@ BEGIN
     IF inGoodsId = 0 AND inGoodsGroupId <> 0
     THEN
          RETURN QUERY
-         SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner
-              , gpReport.isPeresort
-              , gpReport.MovementDescName, gpReport.MovementDescName_order
-              , gpReport.isActive, gpReport.isRemains, gpReport.isRePrice, gpReport.isInv
-              , gpReport.LocationDescName, gpReport.LocationCode, gpReport.LocationName
-              , gpReport.CarCode, gpReport.CarName
-              , gpReport.ObjectByDescName, gpReport.ObjectByCode, gpReport.ObjectByName
-              , gpReport.PaidKindName
-              , gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsKindName, gpReport.GoodsKindName_complete, gpReport.PartionGoods
-              , gpReport.GoodsCode_parent, gpReport.GoodsName_parent, gpReport.GoodsKindName_parent
-              , gpReport.Price, gpReport.Price_branch, gpReport.Price_end, gpReport.Price_branch_end, gpReport.Price_partner
-              , gpReport.SummPartnerIn, gpReport.SummPartnerOut
-              , gpReport.AmountStart, gpReport.AmountIn, gpReport.AmountOut, gpReport.AmountEnd, gpReport.Amount
-              , gpReport.SummStart, gpReport.SummStart_branch, gpReport.SummIn, gpReport.SummIn_branch, gpReport.SummOut, gpReport.SummOut_branch, gpReport.SummEnd, gpReport.SummEnd_branch, gpReport.Summ, gpReport.Summ_branch
-              , gpReport.Amount_Change, gpReport.Summ_Change_branch, gpReport.Summ_Change_zavod
-              , gpReport.Amount_40200, gpReport.Summ_40200_branch, gpReport.Summ_40200_zavod
-              , gpReport.Amount_Loss, gpReport.Summ_Loss_branch, gpReport.Summ_Loss_zavod
-              , gpReport.isPage3, gpReport.isExistsPage3
-              
-              --
-              , '' :: TVarChar AS KVK
-              , 0              AS PersonalKVKId
-              , '' :: TVarChar AS PersonalKVKName
-              , 0              AS PositionCode_KVK
-              , '' :: TVarChar AS PositionName_KVK
-              , 0              AS UnitCode_KVK
-              , '' :: TVarChar AS UnitName_KVK
-
-              , '' :: TVarChar   AS InvNumber_Full
-              , NULL ::TDateTime AS StartSale_promo
-              , NULL ::TDateTime AS EndSale_promo
-              , '' :: TVarChar   AS DayOfWeekName_doc       --день недели даты документа
-              , '' :: TVarChar   AS DayOfWeekName_partner   --день недели даты покупателя
-         FROM gpReport_GoodsGroup (inStartDate   := inStartDate
-                                 , inEndDate     := inEndDate
-                                 , inUnitGroupId := inUnitGroupId
-                                 , inLocationId  := inLocationId
-                                 , inGoodsGroupId:= inGoodsGroupId
-                                 , inIsPartner   := inIsPartner
-                                 , inSession     := inSession
-                                  ) AS gpReport;
+         WITH 
+         
+         gpReport AS (SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner
+                           , gpReport.isPeresort
+                           , gpReport.MovementDescName, gpReport.MovementDescName_order
+                           , gpReport.isActive, gpReport.isRemains, gpReport.isRePrice, gpReport.isInv
+                           , gpReport.LocationDescName, gpReport.LocationCode, gpReport.LocationName
+                           , gpReport.CarCode, gpReport.CarName
+                           , gpReport.ObjectByDescName, gpReport.ObjectByCode, gpReport.ObjectByName
+                           , gpReport.PaidKindName
+                           , gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsKindName, gpReport.GoodsKindName_complete, gpReport.PartionGoods
+                           , gpReport.GoodsCode_parent, gpReport.GoodsName_parent, gpReport.GoodsKindName_parent
+                           , gpReport.Price, gpReport.Price_branch, gpReport.Price_end, gpReport.Price_branch_end, gpReport.Price_partner
+                           , gpReport.SummPartnerIn, gpReport.SummPartnerOut
+                           , gpReport.AmountStart, gpReport.AmountIn, gpReport.AmountOut, gpReport.AmountEnd, gpReport.Amount
+                           , gpReport.SummStart, gpReport.SummStart_branch, gpReport.SummIn, gpReport.SummIn_branch, gpReport.SummOut, gpReport.SummOut_branch, gpReport.SummEnd, gpReport.SummEnd_branch, gpReport.Summ, gpReport.Summ_branch
+                           , gpReport.Amount_Change, gpReport.Summ_Change_branch, gpReport.Summ_Change_zavod
+                           , gpReport.Amount_40200, gpReport.Summ_40200_branch, gpReport.Summ_40200_zavod
+                           , gpReport.Amount_Loss, gpReport.Summ_Loss_branch, gpReport.Summ_Loss_zavod
+                           , gpReport.isPage3, gpReport.isExistsPage3
+                           
+                           --
+                           , '' :: TVarChar AS KVK
+                           , 0              AS PersonalKVKId
+                           , '' :: TVarChar AS PersonalKVKName
+                           , 0              AS PositionCode_KVK
+                           , '' :: TVarChar AS PositionName_KVK
+                           , 0              AS UnitCode_KVK
+                           , '' :: TVarChar AS UnitName_KVK
+             
+                           , '' :: TVarChar   AS InvNumber_Full
+                           , NULL ::TDateTime AS StartSale_promo
+                           , NULL ::TDateTime AS EndSale_promo
+                           , '' :: TVarChar   AS DayOfWeekName_doc       --день недели даты документа
+                           , '' :: TVarChar   AS DayOfWeekName_partner   --день недели даты покупателя
+                      FROM gpReport_GoodsGroup (inStartDate   := inStartDate
+                                              , inEndDate     := inEndDate
+                                              , inUnitGroupId := inUnitGroupId
+                                              , inLocationId  := inLocationId
+                                              , inGoodsGroupId:= inGoodsGroupId
+                                              , inIsPartner   := inIsPartner
+                                              , inSession     := inSession
+                                               ) AS gpReport
+                      )
+     -- выбираем последнюю запись из протокола - дата/время + фио
+     , tmpProtocol AS (SELECT tmp.MovementId
+                            , tmp.OperDate
+                            , tmp.UserId
+                            , Object_User.ValueData AS UserName
+                       FROM (SELECT MovementProtocol.MovementId
+                                  , MovementProtocol.Id
+                                  , MovementProtocol.UserId
+                                  , MovementProtocol.OperDate
+                                  , MAX (MovementProtocol.Id) OVER (PARTITION BY MovementProtocol.MovementId) AS MaxId
+                             FROM MovementProtocol
+                             WHERE MovementProtocol.MovementId IN (SELECT DISTINCT gpReport.MovementId 
+                                                                   FROM gpReport
+                                                                   WHERE gpReport.MovementId IS NOT NULL)
+                             --GROUP BY MovementProtocol.MovementId
+                             ) AS tmp
+                          LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
+                       WHERE tmp.Id = tmp.MaxId
+                       )
+     ----
+     SELECT gpReport.*
+          , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
+          , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+     FROM gpReport
+          LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId
+         
+         ;
     ELSE
 
     RETURN QUERY
@@ -874,6 +907,29 @@ BEGIN
                         LEFT JOIN zfCalc_DayOfWeekName (MovementDate_OperDatePartner.ValueData) AS tmpWeekDay_partner ON 1=1
                    )
 
+
+     -- выбираем последнюю запись из протокола - дата/время + фио
+     , tmpProtocol AS (SELECT tmp.MovementId
+                            , tmp.OperDate
+                            , tmp.UserId
+                            , Object_User.ValueData AS UserName
+                       FROM (SELECT MovementProtocol.MovementId
+                                  , MovementProtocol.Id
+                                  , MovementProtocol.UserId
+                                  , MovementProtocol.OperDate
+                                  , MAX (MovementProtocol.Id) OVER (PARTITION BY MovementProtocol.MovementId) AS MaxId
+                             FROM MovementProtocol
+                             WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpDataAll.MovementId 
+                                                                   FROM tmpDataAll
+                                                                   WHERE tmpDataAll.MovementId IS NOT NULL
+                                                                   )
+                             --GROUP BY MovementProtocol.MovementId
+                             ) AS tmp
+                          LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
+                       WHERE tmp.Id = tmp.MaxId
+                       )
+
+
    -- РЕЗУЛЬТАТ
    SELECT tmpDataAll.MovementId AS MovementId
         , tmpDataAll.InvNumber  ::TVarChar AS InvNumber
@@ -959,7 +1015,11 @@ BEGIN
         , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END  ::TVarChar AS DayOfWeekName_doc --день недели даты документа
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END ::TVarChar AS DayOfWeekName_partner --день недели даты покупателя
 
+        , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
+        , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+
    FROM tmpDataAll
+        LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpDataAll.MovementId
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
         , tmpDataAll.OperDate
@@ -1008,6 +1068,8 @@ BEGIN
         , tmpDataAll.EndSale_promo
         , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END
+        , tmpProtocol.OperDate
+        , tmpProtocol.UserName
    ;
 
    END IF;
@@ -1020,6 +1082,7 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.12.21         *
  29.03.20         * add zc_Movement_SendAsset()
  02.03.20         *
  11.08.15                                        * add inUnitGroupId AND inGoodsGroupId

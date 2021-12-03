@@ -928,6 +928,22 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
+          object OperDate_Protocol: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1089#1083'. '#1082#1086#1088#1088'. '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'OperDate_Protocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object UserName_Protocol: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1082#1086#1088#1088'. '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'UserName_Protocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
         end
       end
       object cbSumm_branch: TcxCheckBox
