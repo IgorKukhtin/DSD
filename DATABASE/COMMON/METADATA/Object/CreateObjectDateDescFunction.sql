@@ -254,6 +254,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractPriceList_EndDate() RETURNS Int
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ContractPriceList(), 'zc_ObjectDate_ContractPriceList_EndDate', 'Дата действия по ...' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractPriceList_EndDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_JuridicalDefermentPayment_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalDefermentPayment(), 'zc_ObjectDate_JuridicalDefermentPayment_OperDate', 'Дата последней оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDate');
+
+
 --!!!FARMACY
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_DateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_DateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

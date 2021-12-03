@@ -1,27 +1,27 @@
 inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymentForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
-  ClientHeight = 394
+  ClientHeight = 371
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1139
-  ExplicitHeight = 432
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1123
-    Height = 337
+    Height = 314
     TabOrder = 3
     ExplicitWidth = 1123
     ExplicitHeight = 337
-    ClientRectBottom = 337
+    ClientRectBottom = 314
     ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1123
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1123
-        Height = 337
+        Height = 314
         ExplicitWidth = 1123
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1622,6 +1622,64 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdate_LastPayment: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_LastPayment
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_LastPayment
+        end>
+      Caption = 'actUpdate_LastPayment'
+      ImageIndex = 27
+    end
+    object ExecuteDialogLastPayment: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialogLastPayment'
+      ImageIndex = 27
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Name = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdate_LastPayment: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogLastPayment
+        end
+        item
+          Action = actUpdate_LastPayment
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1086#1087#1083#1072#1090
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1086#1087#1083#1072#1090
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Top = 155
@@ -1683,8 +1741,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         MultiSelectSeparator = ','
       end>
     AutoWidth = True
-    Left = 112
-    Top = 187
+    Left = 120
+    Top = 211
   end
   inherited BarManager: TdxBarManager
     Top = 155
@@ -1770,6 +1828,18 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_LastPayment'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbReportOneWeek: TdxBarButton
@@ -1807,6 +1877,10 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbUpdate_LastPayment: TdxBarButton
+      Action = macUpdate_LastPayment
       Category = 0
     end
   end
@@ -1868,8 +1942,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 8
+    Left = 568
   end
   object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalDefermentPaymentByDocument'
@@ -1960,8 +2033,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   object cdsReport: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 224
-    Top = 200
+    Left = 256
+    Top = 208
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2137,5 +2210,32 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       end>
     Left = 1000
     Top = 8
+  end
+  object spUpdate_LastPayment: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_JuridicalDefermentPayment'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 192
   end
 end

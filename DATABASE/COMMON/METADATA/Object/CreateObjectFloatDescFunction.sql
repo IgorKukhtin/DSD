@@ -1169,6 +1169,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Reason_PeriodTax() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Reason_PeriodTax', zc_Object_Reason(), 'Период в % от "Срок годности"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Reason_PeriodTax');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalDefermentPayment_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_JuridicalDefermentPayment_Amount', zc_Object_JuridicalDefermentPayment(), 'Сумма последней оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_Amount');
+
 
 
 

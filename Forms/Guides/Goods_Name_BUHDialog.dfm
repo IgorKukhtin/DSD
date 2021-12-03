@@ -44,7 +44,6 @@
   object edName_BUH: TcxTextEdit
     Left = 8
     Top = 75
-    Properties.ReadOnly = True
     TabOrder = 3
     Width = 260
   end

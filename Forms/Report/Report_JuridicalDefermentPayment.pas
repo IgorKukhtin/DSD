@@ -97,6 +97,11 @@ type
     ContractJuridicalDocName: TcxGridDBColumn;
     BranchName_personal: TcxGridDBColumn;
     BranchName_personal_trade: TcxGridDBColumn;
+    spUpdate_LastPayment: TdsdStoredProc;
+    actUpdate_LastPayment: TdsdExecStoredProc;
+    ExecuteDialogLastPayment: TExecuteDialog;
+    macUpdate_LastPayment: TMultiAction;
+    bbUpdate_LastPayment: TdxBarButton;
   private
     { Private declarations }
   public

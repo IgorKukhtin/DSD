@@ -271,6 +271,9 @@ type
     actExportToXLS_project: TdsdExportToXLS;
     mactExport_xls: TMultiAction;
     dxBarButton1: TdxBarButton;
+    spSelectPrintItem2244900110: TdsdStoredProc;
+    mactExport_xls_2244900110: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

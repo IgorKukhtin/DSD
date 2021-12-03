@@ -30,6 +30,7 @@ $BODY$
     
     DECLARE vbCount TFloat;
     DECLARE vbOKPO TVarChar;
+    DECLARE vbStoreKeeperName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
@@ -47,6 +48,17 @@ BEGIN
                  AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                );
 
+     -- параметры из Взвешивания
+     vbStoreKeeperName:= (SELECT Object_User.ValueData
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                          LIMIT 1
+                         );
 
     CREATE TEMP TABLE tmpObject_GoodsPropertyValue (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, Name TVarChar,
                                                     BarCode TVarChar, Article TVarChar,
@@ -158,8 +170,8 @@ BEGIN
                                                          )
                           )
      
-    , tmpData AS (SELECT zfConvert_FIO (Object_PersonalStore_View.PersonalName, 2, FALSE)  AS StoreKeeper -- кладовщик
-
+    , tmpData AS (SELECT --zfConvert_FIO (Object_PersonalStore_View.PersonalName, 2, FALSE)  AS StoreKeeper -- кладовщик
+                        CASE WHEN COALESCE (Object_PersonalStore_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_PersonalStore_View.PersonalName, 2, FALSE) ELSE vbStoreKeeperName END  AS StoreKeeper -- кладовщик
                       , MovementFloat_TotalCount.ValueData         AS TotalCount
 
                       , MovementFloat_TotalCountKg.ValueData  AS TotalCountKg
@@ -289,36 +301,27 @@ BEGIN
      -- для vbOKPO = 2244900110  Недавній Олександр Миколайович ФОП  - максимально как печ. форма
        SELECT tmp.Sign, tmp.Num
        FROM (
-             SELECT ('                                              Всьго кількість (кг): ' || zfConvert_FloatToString (tmpData.TotalCountKg)
+             SELECT ('                                             Всьго кількість (кг): ' || zfConvert_FloatToString (tmpData.TotalCountKg)
                     ) :: TBlob AS Sign
                   , 1 AS Num
              FROM tmpData
          UNION ALL
-             SELECT ('                                              Всьго кількість (шт):'|| zfConvert_FloatToString (tmpData.TotalCountSh)
+             SELECT ('                                             Всьго кількість (шт): '|| zfConvert_FloatToString (tmpData.TotalCountSh)
                     ) :: TBlob
                   , 2 AS Num
              FROM tmpData
          UNION ALL
-             SELECT ('                                              Всього без ПДВ: '
-                  || '  '
-                  || zfConvert_FloatToString (tmpData.TotalSummMVAT)
-                  || '  '
+             SELECT ('                                             Всього без ПДВ:       ' || zfConvert_FloatToString (tmpData.TotalSummMVAT)
                     ) :: TBlob
                   , 3 AS Num
              FROM tmpData
          UNION ALL
-             SELECT ('                                              ПДВ: '
-                  || '  '
-                  || zfConvert_FloatToString (tmpData.SummVAT)
-                  || '  '
+             SELECT ('                                             ПДВ:                  '|| zfConvert_FloatToString (tmpData.SummVAT)
                     ) :: TBlob
                   , 4 AS Num
              FROM tmpData
          UNION ALL
-             SELECT ('                                              Всього із ПДВ: '
-                  || '  '
-                  || zfConvert_FloatToString (tmpData.TotalSummPVAT)
-                  || '  '
+             SELECT ('                                             Всього із ПДВ:        '|| zfConvert_FloatToString (tmpData.TotalSummPVAT)
                     ) :: TBlob
                   , 5 AS Num
              FROM tmpData
@@ -328,20 +331,19 @@ BEGIN
                   , 6 AS Num
          UNION ALL
              SELECT '' :: TBlob
-                  , 10 AS Num
+                  , 7 AS Num
              FROM tmpData
       
          UNION ALL
-           SELECT (' Здав: комірник ' || tmpData.StoreKeeper||'                       Прийняв:' ) :: TBlob
-                  , 11 AS Num
+           SELECT (' Здав: комірник ' || tmpData.StoreKeeper||'                                             Прийняв:' ) :: TBlob
+                  , 8 AS Num
              FROM tmpData
-      
          UNION ALL
              SELECT '' :: TBlob
-                  , 12 AS Num
+                  , 9 AS Num
          UNION ALL
-             SELECT ('     ________________________________                           _____________________________' ) :: TBlob
-                  , 13 AS Num      
+             SELECT ('     ________________________________                                             _____________________________' ) :: TBlob
+                  , 10 AS Num      
             ) AS tmp
        WHERE vbOKPO = '2244900110'
         ) AS tmp
@@ -362,4 +364,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Email_xls_Sign_Send (inMovementId:= 19556147, inSession:= zfCalc_UserAdmin())
---SELECT * FROM gpSelect_Movement_Email_xls_Sign_Send (inMovementId:= 21495529, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Email_xls_Sign_Send (inMovementId:= 21495529, inSession:= zfCalc_UserAdmin())

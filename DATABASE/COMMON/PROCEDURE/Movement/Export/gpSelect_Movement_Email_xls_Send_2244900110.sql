@@ -1,20 +1,21 @@
 -- Function: gpSelect_Movement_Email_xls_Send(Integer, tvarchar)
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Email_xls_Send (Integer, tvarchar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Email_xls_Send_2244900110 (Integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_xls_Send(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_xls_Send_2244900110(
     IN inMovementId           Integer   ,
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Ord          TVarChar
              , GoodsCode    Integer
-             , BarCode      TVarChar
+             --, BarCode      TVarChar
              , GoodsName    TVarChar
-             , Amount       TFloat
+             , GoodsKindName TVarChar
              , MeasureName     TVarChar
+             , Amount       TFloat
              , PriceNoVAT      TFloat
              , AmountSummNoVAT TFloat
-             , VATPercent      TFloat
+             --, VATPercent      TFloat
                )
 AS
 $BODY$
@@ -46,7 +47,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
 
-     
      vbOKPO:= (SELECT OH_JuridicalDetails.OKPO
                FROM MovementLinkObject
                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -58,8 +58,8 @@ BEGIN
                  AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                );
 
-    --проверка  эта процедура не для ОКПО 2244900110 Недавній Олександр Миколайович ФОП
-    IF vbOKPO = '2244900110' THEN RETURN; END IF;
+    --проверка  эта процедура для ОКПО 2244900110 Недавній Олександр Миколайович ФОП
+    IF vbOKPO <> '2244900110' THEN RETURN; END IF;
     
      -- Таблица для результата
      CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
@@ -334,7 +334,7 @@ BEGIN
                              --WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE Object_Goods.ValueData
                         END
-                     || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                     --|| CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                        ) :: TVarChar AS GoodsName
                      , (CASE WHEN tmpObject_GoodsPropertyValue.Name            <> '' THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
@@ -475,14 +475,14 @@ BEGIN
 
      SELECT ROW_NUMBER() OVER(ORDER BY tmpRes.GoodsName) :: TVarChar AS Ord
           , tmpRes.GoodsCode     :: Integer
-          , tmpRes.BarCode       :: TVarChar 
+          --, tmpRes.BarCode       :: TVarChar 
           , tmpRes.GoodsName     ::TVarChar
-          , tmpRes.Amount        ::TFloat
+          , tmpRes.GoodsKindName ::TVarChar
           , tmpRes.MeasureName   ::TVarChar
-          
+          , tmpRes.Amount        ::TFloat
           , tmpRes.PriceNoVAT         ::TFloat
           , tmpRes.AmountSummNoVAT    ::TFloat
-          , vbVATPercent              ::TFloat AS VATPercent
+          --, vbVATPercent              ::TFloat AS VATPercent
      FROM tmpRes   
      ;
      ELSE

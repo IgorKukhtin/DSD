@@ -67,28 +67,18 @@ BEGIN
                                                           , inUserId           := vbUserId
                                                            ) AS tmpReport
                    )
-   --находим последнии оплаты
-   , tmpLastPayment AS (SELECT tmpReport.JuridicalId
-                             , tmpReport.ContractId
-                             , tmpReport.AccountId
-                             , tt.PaymentDate
-                             , tt.PaymentAmount
-                        FROM (SELECT DISTINCT tmpReport.JuridicalId, tmpReport.ContractId, tmpReport.AccountId
-                              FROM tmpReport) AS tmpReport
-                              LEFT JOIN (SELECT * 
-                                         FROM lpTest(tmpReport.JuridicalId, tmpReport.ContractId, tmpReport.AccountId)
-                                         ) AS tt ON tt.JuridicalId = tmpReport.JuridicalId
-                                                AND tt.ContractId = tmpReport.ContractId
-                                                AND tt.AccountId = tmpReport.AccountId
-                        )
+   --выбираем последнии оплаты
+   , tmpLastPayment AS ( SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
+
+
    ---
    SELECT tmpReport.*
-        , tmpLastPayment.PaymentDate     :: TDateTime AS PaymentDate
-        , tmpLastPayment.PaymentAmount   :: TFloat    AS PaymentAmount
+        , tmpLastPayment.OperDate     :: TDateTime AS PaymentDate
+        , tmpLastPayment.Amount       :: TFloat    AS PaymentAmount
    FROM tmpReport
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
                                 AND tmpLastPayment.ContractId = tmpReport.ContractId
-                                AND tmpLastPayment.AccountId = tmpReport.AccountId
+                                --AND tmpLastPayment.AccountId = tmpReport.AccountId
    ;
 
 END;
@@ -98,26 +88,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.11.21         *
- 05.07.21         * add lp + inStartDate_sale, inEndDate_sale
- 13.09.14                                        * add inJuridicalGroupId
- 07.09.14                                        * add Branch...
- 24.08.14                                        * add Partner...
- 11.07.14                                        * add RetailName
- 05.07.14                                        * add zc_Movement_TransferDebtOut
- 02.06.14                                        * change DefermentPaymentRemains
- 20.05.14                                        * add Object_Contract_View
- 12.05.14                                        * add RESULT.DelayCreditLimit
- 05.05.14                                        * add inPaidKindId
- 26.04.14                                        * add Object_Contract_ContractKey_View
- 15.04.14                                        * add StartDate and EndDate
- 10.04.14                                        * add AreaName
- 09.04.14                                        * add !!!
- 31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
- 30.03.14                          * 
- 06.02.14                          * 
+02.12.21         *
 */
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentPayment22 (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());

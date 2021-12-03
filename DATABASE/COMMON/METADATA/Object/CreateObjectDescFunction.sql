@@ -982,6 +982,11 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PairDay', 'Вид смены' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PairDay');
 
 
+CREATE OR REPLACE FUNCTION zc_Object_JuridicalDefermentPayment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalDefermentPayment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_JuridicalDefermentPayment', 'Последние оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalDefermentPayment');
+
+
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
 
