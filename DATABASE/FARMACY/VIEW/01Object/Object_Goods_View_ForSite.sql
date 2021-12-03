@@ -26,6 +26,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   AS deleted
        , ObjectLink_Goods_Object.ChildObjectId                  AS ObjectId
        , COALESCE(ObjectBoolean_Goods_HideOnTheSite.ValueData, FALSE) AS isHideOnTheSite
+       , tmpBarCode.BarCode
 
     -- FROM Object_Goods_View AS Object_Goods
     FROM ObjectLink AS ObjectLink_Goods_Object
@@ -76,6 +77,30 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Appointment
                                    ON ObjectLink_Goods_Appointment.ObjectId = ObjectLink_Goods_Object.ChildObjectId -- Object_Goods.ObjectId
                                   AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()
+                                  
+        LEFT OUTER JOIN (WITH  tmpBarCode AS (
+                           SELECT DISTINCT
+                                  Object_Goods_Retail.Id        AS GoodsId
+                                , Object_Goods.ValueData        AS GoodsName
+
+                           FROM ObjectLink AS ObjectLink_Goods_Object -- связь с Юридические лица или Торговая сеть или ...
+                                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                                -- получается GoodsMainId
+                                LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                                                         AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                LEFT JOIN  Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = ObjectLink_Main.ChildObjectId
+                                                              AND Object_Goods_Retail.RetailId = 4
+                           WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                             AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                             AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                             AND length(Object_Goods.ValueData) = 13)
+                               
+                         SELECT tmpBarCode.GoodsId
+                              , string_agg(tmpBarCode.GoodsName, ',') AS BarCode
+                         FROM tmpBarCode                        
+                         GROUP BY tmpBarCode.GoodsId) AS tmpBarCode ON tmpBarCode.GoodsId = ObjectLink_Goods_Object.ObjectId
 
     WHERE ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!ВРЕМЕННО!!!
       -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)
