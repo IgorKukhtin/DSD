@@ -151,6 +151,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 102
       end
+      object isNameOrig: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079'. '#1088#1077#1072#1083'. '#1085#1072#1079#1074'.'
+        DataBinding.FieldName = 'isNameOrig'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1088#1077#1072#1083#1100#1085#1086#1077' '#1085#1072#1079#1074'.'
+        Options.Editing = False
+        Width = 60
+      end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
@@ -996,6 +1005,23 @@ object GoodsForm: TGoodsForm
           ComponentItem = 'Code'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisNameOrig'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isNameOrig'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisNameOrig'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'isNameOrig'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -1434,6 +1460,15 @@ object GoodsForm: TGoodsForm
         Component = FormParams
         ComponentItem = 'Date_BUH'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNameOrig'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isNameOrig'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

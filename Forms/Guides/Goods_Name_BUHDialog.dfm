@@ -3,7 +3,7 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
-  ClientHeight = 161
+  ClientHeight = 207
   ClientWidth = 390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 105
-    Top = 121
+    Left = 97
+    Top = 153
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 121
+    Left = 208
+    Top = 153
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -88,9 +88,19 @@
     TabOrder = 9
     Width = 266
   end
+  object cbisNameOrig: TcxCheckBox
+    Left = 8
+    Top = 113
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1088#1077#1072#1083#1100#1085#1086#1077' '#1085#1072#1079#1074'.'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 10
+    Width = 172
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 127
-    Top = 124
+    Left = 119
+    Top = 156
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -135,8 +145,16 @@
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNameOrig'
+        Value = Null
+        Component = cbisNameOrig
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 103
-    Top = 84
+    Left = 319
+    Top = 116
   end
 end

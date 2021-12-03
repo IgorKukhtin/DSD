@@ -397,7 +397,7 @@ BEGIN
                   
                   --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
                   , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                         WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                         WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
                     END AS GoodsName
                   
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
@@ -420,6 +420,11 @@ BEGIN
                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                               AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                        ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
+                                                ON ObjectBoolean_NameOrig.ObjectId = Object_Goods.Id
+                                               AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
+
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
                  
@@ -473,7 +478,7 @@ BEGIN
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
            , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                  WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
              END AS GoodsName
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -572,6 +577,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+
+            ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
+                                    ON ObjectBoolean_NameOrig.ObjectId = tmpMI_Goods.GoodsId
+                                   AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -813,7 +824,7 @@ BEGIN
                               
                               --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
                               , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                                     WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                                     WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
                                 END AS GoodsName
                               
                               , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -911,9 +922,14 @@ BEGIN
                                                  AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
                    
                                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
-                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
-                                               ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                               LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                                      ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
+                                                     AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                               ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
+                                                       ON ObjectBoolean_NameOrig.ObjectId = tmpMI_Goods.GoodsId
+                                                      AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
+
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                     ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Goods.GoodsId
                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -1028,6 +1044,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.12.21         *
  09.08.21         *
  07.12.20         *
  16.03.20         * PartionGoodsDate

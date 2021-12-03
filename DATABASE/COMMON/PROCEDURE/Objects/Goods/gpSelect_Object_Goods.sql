@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
              , isPartionCount Boolean, isPartionSumm Boolean
              , isCheck_basis Boolean, isCheck_main Boolean
+             , isNameOrig Boolean
              , isErased Boolean
               )
 AS
@@ -99,6 +100,8 @@ BEGIN
 
             , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
             , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
+
+            ,  COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig
 
             , Object_Goods.isErased       AS isErased
 
@@ -189,6 +192,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
                                      ON ObjectBoolean_PartionSumm.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
+                                     ON ObjectBoolean_NameOrig.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -283,6 +289,7 @@ BEGIN
             , FALSE                           AS isPartionSumm
             , FALSE                           AS isCheck_basis
             , FALSE                           AS isCheck_main
+            , FALSE                           AS isNameOrig
             , FALSE                           AS isErased
       ;
 

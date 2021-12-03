@@ -115,6 +115,7 @@ type
     macUpdate_Name_BUH: TMultiAction;
     ExecuteDialog_Name_BUH: TExecuteDialog;
     bbUpdate_Name_BUH: TdxBarButton;
+    isNameOrig: TcxGridDBColumn;
   private
     { Private declarations }
   public

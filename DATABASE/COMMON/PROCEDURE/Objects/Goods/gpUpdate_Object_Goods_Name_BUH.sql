@@ -1,11 +1,14 @@
 -- Function: gpUpdateObject_Goods_Name_BUH()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Name_BUH (Integer, TVarChar, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Name_BUH (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Goods_Name_BUH (Integer, TVarChar, TDateTime, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Goods_Name_BUH(
     IN inId                Integer   , -- Ключ объекта <товар>
     IN inName_BUH          TVarChar  , -- 
     IN inDate_BUH          TDateTime , -- Дата до которой действует Название товара(бухг.)
+    IN inisNameOrig        Boolean   , -- Показывать реальное назв.
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -35,6 +38,8 @@ BEGIN
      -- сохранили свойство <Дата до которой действует Название товара(бухг.)>
      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), inId, CASE WHEN inDate_BUH = CURRENT_DATE THEN NULL ELSE inDate_BUH END);
 
+     -- сохранили свойство
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_NameOrig(), inId, inisNameOrig);
 
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
@@ -46,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.12.21         *
  09.09.21         *
 */
 
