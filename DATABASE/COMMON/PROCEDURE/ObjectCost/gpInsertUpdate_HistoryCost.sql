@@ -32,7 +32,7 @@ BEGIN
      -- !!!выход!!!
      -- IF inStartDate >= '01.03.2020' THEN RETURN; END IF;
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
-     -- IF inBranchId IN (8374) THEN RETURN; END IF;
+     -- IF inBranchId IN (0) THEN RETURN; END IF;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -913,7 +913,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
          -- !!!ВРЕМЕННО!!!
-         -- DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 112312312;
+         --DELETE FROM _tmpMaster WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
+         --UPDATE _tmpMaster SET  WHERE ABS (_tmpMaster.calcSumm) > 11231231201;
 
          -- т.к. ошибка
          IF vbItearation = vbItearationCount_err AND inStartDate < '01.07.2018'
@@ -1565,4 +1566,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2020', inEndDate:= '01.03.2020', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2021', inEndDate:= '30.09.2021', inBranchId:= 8374, inItearationCount:= 1000, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (149113)

@@ -146,7 +146,8 @@ BEGIN
                              )
              SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord = tmpData.Ord + 1
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord       = tmpData.Ord + 1
+                                                   AND tmpData_next.StartDate > zc_DateStart()
              ) AS tmp
       ;
 
@@ -229,8 +230,9 @@ BEGIN
                              )
              SELECT tmpData.Id, COALESCE (tmpData_next.StartDate - INTERVAL '1 DAY', zc_DateEnd()) AS EndDate
              FROM tmpData
-                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord      = tmpData.Ord + 1
-                                                   AND tmpData_next.ObjectId = tmpData.ObjectId
+                  LEFT JOIN tmpData AS tmpData_next ON tmpData_next.Ord       = tmpData.Ord + 1
+                                                   AND tmpData_next.ObjectId  = tmpData.ObjectId
+                                                   AND tmpData_next.StartDate > zc_DateStart()
              ) AS tmp
       ;
    END IF;

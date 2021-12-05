@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SheetWorkTimeClose(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата начала периода
     IN inOperDateEnd         TDateTime , -- Дата окончания периода
-    IN inTimeClose           TDateTime , -- Время авто закрытия
+    IN inTimeClose           TDateTime , -- Дата, Время авто закрытия
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -18,6 +18,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SheetWorkTimeClose());
 
+
+     -- Проверка
+     IF DATE_TRUNC ('DAY', inTimeClose) <= inOperDateEnd
+     THEN
+         RAISE EXCEPTION 'Ошибка. Дата+время авто закрытия не может быть раньше <%>.', zfConvert_DateToString (inOperDateEnd + INTERVAL '1 DAY');
+     END IF;
 
      -- 1. если  update
      IF ioId > 0 AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId <> zc_Enum_Status_UnComplete())
@@ -35,7 +41,7 @@ BEGIN
                                                     , inInvNumber    := inInvNumber
                                                     , inOperDate     := inOperDate
                                                     , inOperDateEnd  := inOperDateEnd
-                                                    , inTimeClose    := (DATE_TRUNC ('DAY', inOperDateEnd) + INTERVAL '1 DAY' + (inTimeClose - DATE_TRUNC ('DAY', inTimeClose))  :: INTERVAL) :: TDateTime
+                                                    , inTimeClose    := inTimeClose -- (DATE_TRUNC ('DAY', inOperDateEnd) + INTERVAL '1 DAY' + (inTimeClose - DATE_TRUNC ('DAY', inTimeClose))  :: INTERVAL) :: TDateTime
                                                     , inUserId       := vbUserId
                                                      ) AS tmp;
 

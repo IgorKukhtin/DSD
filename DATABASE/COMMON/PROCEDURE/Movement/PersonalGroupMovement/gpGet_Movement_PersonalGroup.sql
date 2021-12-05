@@ -36,7 +36,10 @@ BEGIN
                                                 FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                                ) AS tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
                                 WHERE ObjectLink_User_Member.ObjectId = vbUserId
-                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())
+                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                  AND 1=0
+                               )
+                                  
                                , 8451 );   -- по умолчанию цех упаковки
 
          RETURN QUERY
